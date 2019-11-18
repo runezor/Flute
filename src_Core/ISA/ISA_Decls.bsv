@@ -1,5 +1,17 @@
 // Copyright (c) 2013-2019 Bluespec, Inc. All Rights Reserved
 
+//-
+// RVFI_DII + CHERI modifications:
+//     Copyright (c) 2018 Jack Deeley (RVFI_DII)
+//     Copyright (c) 2019 Peter Rugg (CHERI)
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 // ================================================================
 // ISA defs for UC Berkeley RISC V
 //
@@ -24,6 +36,14 @@ package ISA_Decls;
 import DefaultValue :: *;
 import Vector       :: *;
 import BuildVector  :: *;
+`ifdef RVFI_DII
+import GetPut       :: *;
+import RVFI_DII     :: *;
+`endif
+`ifdef ISA_CHERI
+import CHERICap     :: *;
+import CHERICC_Fat  :: *;
+`endif
 
 // ================================================================
 // BSV project imports
@@ -33,6 +53,7 @@ import BuildVector  :: *;
 // ================================================================
 
 typedef 3 NO_OF_PRIVMODES;
+typedef 32 ILEN;
 
 // ================================================================
 // XLEN and related constants
@@ -107,6 +128,7 @@ endfunction
 // FLEN and related constants, for floating point data
 // Can have one or two fpu sizes (should they be merged sooner than later ?).
 
+
 // Cannot define ISA_D unless ISA_F is also defined
 // ISA_F - 32 bit FPU
 // ISA_D - 64 bit FPU
@@ -160,6 +182,7 @@ Integer  numRegs = valueOf (NumRegs);
 Instr  illegal_instr = 32'h0000_0000;
 
 function  Opcode     instr_opcode   (Instr x); return x [6:0]; endfunction
+
 
 function  Bit #(2)   instr_funct2   (Instr x); return x [26:25]; endfunction
 function  Bit #(3)   instr_funct3   (Instr x); return x [14:12]; endfunction
@@ -218,6 +241,11 @@ typedef struct {
    Bit #(7)  funct7;
    Bit #(10) funct10;
 
+`ifdef ISA_CHERI
+   Bit #(5)  funct5rs2;
+   Bit #(5)  funct5rd;
+`endif
+
    Bit #(12) imm12_I;
    Bit #(12) imm12_S;
    Bit #(13) imm13_SB;
@@ -244,6 +272,10 @@ function Decoded_Instr fv_decode (Instr instr);
 			 funct5:    instr_funct5   (instr),
 			 funct7:    instr_funct7   (instr),
 			 funct10:   instr_funct10  (instr),
+`ifdef ISA_CHERI
+			 funct5rs2: instr_cap_funct5rs2 (instr),
+			 funct5rd:  instr_cap_funct5rd  (instr),
+`endif
 
 			 imm12_I:   instr_I_imm12  (instr),
 			 imm12_S:   instr_S_imm12  (instr),
@@ -380,12 +412,18 @@ deriving (Eq, Bits, FShow);
 // ================================================================
 // LOAD/STORE instructions
 
-typedef Bit #(2) MemReqSize;
+typedef Bit #(3) MemReqSize;
 
-MemReqSize f3_SIZE_B = 2'b00;
-MemReqSize f3_SIZE_H = 2'b01;
-MemReqSize f3_SIZE_W = 2'b10;
-MemReqSize f3_SIZE_D = 2'b11;
+MemReqSize w_SIZE_B = 3'b000;
+MemReqSize w_SIZE_H = 3'b001;
+MemReqSize w_SIZE_W = 3'b010;
+MemReqSize w_SIZE_D = 3'b011;
+MemReqSize w_SIZE_Q = 3'b100;
+
+Bit#(3) f3_SIZE_B = w_SIZE_B;
+Bit#(3) f3_SIZE_H = w_SIZE_H;
+Bit#(3) f3_SIZE_W = w_SIZE_W;
+Bit#(3) f3_SIZE_D = w_SIZE_D;
 
 // ----------------
 // Load instructions
@@ -1100,11 +1138,15 @@ CSR_Addr   csr_addr_hpmcounter31h  = 12'hC9F;    // Upper 32 bits of performance
 
 // Information from the CSR on a new trap. 
 typedef struct {
+`ifdef ISA_CHERI
+   CapReg     pcc;
+`else
    Addr        pc;
+`endif
    WordXL      mstatus;
    WordXL      mcause;
    Priv_Mode   priv;
-} Trap_Info deriving (Bits, Eq, FShow);
+} Trap_Info_CSR deriving (Bits, FShow);
 
 // ================================================================
 // 'C' Extension ("compressed" instructions)
@@ -1117,6 +1159,11 @@ typedef struct {
 `include "ISA_Decls_Priv_S.bsv"
 
 // ================================================================
+// CHERI ISA defs
+
+`include "ISA_Decls_CHERI.bsv"
+
+// ================================================================
 // Hypervisor-Level ISA defs
 
 // `include "ISA_Decls_Priv_H.bsv"
@@ -1125,6 +1172,24 @@ typedef struct {
 // Machine-Level ISA defs
 
 `include "ISA_Decls_Priv_M.bsv"
+
+// ================================================================
+// Common RVFI_DII interface passed through several layers of Piccolo
+
+`ifdef RVFI_DII
+`ifdef ISA_CHERI
+    typedef TMin#(CLEN, 64) MEMWIDTH;
+`else
+    typedef XLEN MEMWIDTH;
+`endif
+
+    typedef 3 SEQ_LEN; // Number of bits to identify an instruction, i.e. must be > log(stages)
+    interface Piccolo_RVFI_DII_Server;
+        method Maybe#(UInt#(SEQ_LEN)) getSeqReq;
+        method Action putInst (Tuple2#(Bit#(32), UInt#(SEQ_LEN)) _inst);
+        interface Get #(RVFI_DII_Execution#(XLEN, MEMWIDTH)) trace_report;
+    endinterface
+`endif
 
 // ================================================================
 

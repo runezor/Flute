@@ -1,5 +1,18 @@
 // Copyright (c) 2017-2019 Bluespec, Inc. All Rights Reserved.
 
+//-
+// AXI (user fields) modifications:
+//     Copyright (c) 2019 Alexandre Joannou
+//     Copyright (c) 2019 Peter Rugg
+//     Copyright (c) 2019 Jonathan Woodruff
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package Debug_Module;
 
 // ================================================================
@@ -62,12 +75,12 @@ import SpecialFIFOs :: *;
 
 import Semi_FIFOF :: *;
 import Cur_Cycle  :: *;
+import AXI4       :: *;
 
 // ================================================================
 // Project imports
 
 import ISA_Decls    :: *;
-import AXI4_Types   :: *;
 import Fabric_Defs  :: *;
 
 import DM_Common            :: *;
@@ -119,7 +132,9 @@ interface Debug_Module_IFC;
    interface Client #(Bool, Bool) ndm_reset_client;
 
    // Read/Write RISC-V memory
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) master;
+   interface AXI4_Master_Synth #(Wd_MId_2x3, Wd_Addr, Wd_Data_Periph,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User,
+                                 Wd_AR_User, Wd_R_User) master;
 endinterface
 
 // ================================================================
@@ -154,7 +169,7 @@ module mkDebug_Module (Debug_Module_IFC);
    // Facing GDB/DMI (Debug Module Interface)
 
    interface DMI dmi;
-      method Action read_addr  (DM_Addr dm_addr);
+      method Action read_addr  (DM_Addr dm_addr) if (dm_run_control.dmactive);
 	 f_read_addr.enq(dm_addr);
 
 	 if (verbosity != 0)
@@ -223,7 +238,7 @@ module mkDebug_Module (Debug_Module_IFC);
 	 return dm_word;
       endmethod
 
-      method Action write (DM_Addr dm_addr, DM_Word dm_word);
+      method Action write (DM_Addr dm_addr, DM_Word dm_word) if (dm_run_control.dmactive);
 	 if (   (dm_addr == dm_addr_dmcontrol)
 	    || (dm_addr == dm_addr_dmstatus)
 	    || (dm_addr == dm_addr_hartinfo)

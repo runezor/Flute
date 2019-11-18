@@ -12,6 +12,7 @@ package DM_Run_Control;
 import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
+import ConfigReg    :: *;
 
 // ----------------
 // Other library imports
@@ -142,7 +143,7 @@ module mkDM_Run_Control (DM_Run_Control_IFC);
    // resumereq is a W1 field, no need for a register
    Reg #(Bool)  rg_dmcontrol_hartreset <- mkRegU;
    Reg #(Bool)  rg_dmcontrol_ndmreset  <- mkRegU;
-   Reg #(Bool)  rg_dmcontrol_dmactive  <- mkReg (False);
+   Reg #(Bool)  rg_dmcontrol_dmactive  <- mkConfigReg (False);
 
    DM_Word virt_rg_dmcontrol = {2'b0,  // haltreq, resumereq (w-o)
 				pack (rg_dmcontrol_hartreset),

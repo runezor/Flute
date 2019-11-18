@@ -45,6 +45,11 @@ import EX_ALU_functions :: *;
 import CPU_Decode_C     :: *;
 `endif
 
+`ifdef ISA_CHERI
+import CHERICap :: *;
+import CHERICC_Fat :: *;
+`endif
+
 // ================================================================
 // Interface
 
@@ -74,6 +79,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 		      GPR_RegFile_IFC  gpr_regfile,
 		      Bypass           bypass_from_stage2,
 		      Bypass           bypass_from_stage3,
+`ifdef ISA_CHERI
+                      CapPipe          fresh_pcc,
+                      CapPipe          ddc,
+`endif
 `ifdef ISA_F
 		      FPR_RegFile_IFC  fpr_regfile,
 		      FBypass          fbypass_from_stage2,
@@ -86,6 +95,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
    FIFOF #(Token) f_reset_reqs <- mkFIFOF;
    FIFOF #(Token) f_reset_rsps <- mkFIFOF;
+
+`ifdef ISA_CHERI
+   Reg #(PCC_T) rg_pcc <- mkRegU;
+`endif
 
    Reg #(Bool)                  rg_full        <- mkReg (False);
    Reg #(Data_StageD_to_Stage1) rg_stage_input <- mkRegU;
@@ -114,7 +127,11 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    match { .busy1a, .rs1a } = fn_gpr_bypass (bypass_from_stage3, rs1, rs1_val);
    match { .busy1b, .rs1b } = fn_gpr_bypass (bypass_from_stage2, rs1, rs1a);
    Bool rs1_busy = (busy1a || busy1b);
+`ifdef ISA_CHERI
+   CapPipe rs1_val_bypassed = ((rs1 == 0) ? nullCap : rs1b);
+`else
    Word rs1_val_bypassed = ((rs1 == 0) ? 0 : rs1b);
+`endif
 
    // Register rs2 read and bypass
    let rs2 = decoded_instr.rs2;
@@ -122,7 +139,11 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    match { .busy2a, .rs2a } = fn_gpr_bypass (bypass_from_stage3, rs2, rs2_val);
    match { .busy2b, .rs2b } = fn_gpr_bypass (bypass_from_stage2, rs2, rs2a);
    Bool rs2_busy = (busy2a || busy2b);
+`ifdef ISA_CHERI
+   CapPipe rs2_val_bypassed = ((rs2 == 0) ? nullCap : rs2b);
+`else
    Word rs2_val_bypassed = ((rs2 == 0) ? 0 : rs2b);
+`endif
 
 `ifdef ISA_F
    // FP Register rs1 read and bypass
@@ -150,15 +171,30 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
    // ALU function
    let alu_inputs = ALU_Inputs {cur_priv       : cur_priv,
+`ifdef ISA_CHERI
+				pcc            : rg_pcc,
+				ddc            : ddc,
+				pc             : getPC(rg_pcc),
+`else
 				pc             : rg_stage_input.pc,
+`endif
 				is_i32_not_i16 : rg_stage_input.is_i32_not_i16,
 				instr          : rg_stage_input.instr,
 `ifdef ISA_C
 				instr_C        : rg_stage_input.instr_C,
 `endif
 				decoded_instr  : rg_stage_input.decoded_instr,
+`ifdef ISA_CHERI
+				cap_rs1_val    : rs1_val_bypassed,
+				cap_rs2_val    : rs2_val_bypassed,
+				rs1_idx        : rs1,
+				rs2_idx        : rs2,
+				rs1_val        : getAddr(rs1_val_bypassed),
+				rs2_val        : getAddr(rs2_val_bypassed),
+`else
 				rs1_val        : rs1_val_bypassed,
 				rs2_val        : rs2_val_bypassed,
+`endif
 `ifdef ISA_F
 				frs1_val       : frs1_val_bypassed,
 				frs2_val       : frs2_val_bypassed,
@@ -170,17 +206,87 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
    let alu_outputs = fv_ALU (alu_inputs);
 
-   let data_to_stage2 = Data_Stage1_to_Stage2 {pc            : rg_stage_input.pc,
+   let fall_through_pc = getPC(rg_pcc) + (rg_stage_input.is_i32_not_i16 ? 4 : 2);
+
+   let next_pc_local = ((alu_outputs.control == CONTROL_BRANCH)
+		 ? alu_outputs.addr
+		 : fall_through_pc);
+
+   let next_pcc_local = ((alu_outputs.control == CONTROL_CAPBRANCH)
+     ? alu_outputs.pcc
+     : setPC(rg_pcc, next_pc_local).value); //TODO unrepresentable?
+
+   let redirect = getAddr(next_pcc_local) == rg_stage_input.pred_fetch_addr;
+
+`ifdef RVFI
+   CapReg tmp_val2 = cast(alu_outputs.cap_val2);
+   CapMem cap_val2 = cast(tmp_val2);
+   let info_RVFI = Data_RVFI_Stage1 {
+                       instr:          instr,
+                       rs1_addr:       rs1,
+                       rs2_addr:       rs2,
+`ifdef ISA_CHERI
+                       rs1_data:       getAddr(rs1_val_bypassed),
+                       rs2_data:       getAddr(rs2_val_bypassed),
+`else
+                       rs1_data:       rs1_val_bypassed,
+                       rs2_data:       rs2_val_bypassed,
+`endif
+                       pc_rdata:       getPC(rg_pcc),
+                       pc_wdata:       getPC(next_pcc_local),
+                       mem_wdata:      truncate(cap_val2),
+                       rd_addr:        alu_outputs.rd,
+                       rd_alu:         (alu_outputs.op_stage2 == OP_Stage2_ALU),
+                       rd_wdata_alu:   alu_outputs.val1,
+                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)) ? alu_outputs.addr : 0
+                   };
+`endif
+
+   let data_to_stage2 = Data_Stage1_to_Stage2 {
+`ifdef ISA_CHERI
+                                               pcc:       rg_pcc,
+`else
+                                               pc:        rg_stage_input.pc,
+`endif
 					       instr         : rg_stage_input.instr,
+`ifdef RVFI_DII
+                                               instr_seq     : rg_stage_input.instr_seq,
+`endif
 					       op_stage2     : alu_outputs.op_stage2,
 					       rd            : alu_outputs.rd,
 					       addr          : alu_outputs.addr,
-					       val1          : alu_outputs.val1,
-					       val2          : alu_outputs.val2,
+                                               mem_width_code: alu_outputs.mem_width_code,
+                                               mem_unsigned  : alu_outputs.mem_unsigned,
+`ifdef ISA_CHERI
+                                               mem_allow_cap : alu_outputs.mem_allow_cap,
+                                               val1          : alu_outputs.val1_cap_not_int ? embed_cap(alu_outputs.cap_val1)
 `ifdef ISA_F
+                                                                                            : alu_outputs.val1_flt_not_int ? embed_flt(truncate(alu_outputs.val1))
+`endif
+                                                                                            : embed_int(alu_outputs.val1),
+                                               val2          : alu_outputs.val2_cap_not_int ? embed_cap(alu_outputs.cap_val2)
+`ifdef ISA_F
+                                                                                            : alu_outputs.val2_flt_not_int ? embed_flt(truncate(alu_outputs.val2))
+`endif
+                                                                                            : embed_int(alu_outputs.val2),
+`else
+                                               val1          : alu_outputs.val1,
+                                               val2          : alu_outputs.val2,
+`endif
+`ifdef ISA_F
+                                               val1_flt_not_int: alu_outputs.val1_flt_not_int,
+                                               val2_flt_not_int: alu_outputs.val2_flt_not_int,
 					       val3          : alu_outputs.val3,
 					       rd_in_fpr     : alu_outputs.rd_in_fpr,
 					       rounding_mode : alu_outputs.rm,
+`endif
+`ifdef ISA_CHERI
+                                               check_enable       : alu_outputs.check_enable,
+                                               check_inclusive    : alu_outputs.check_inclusive,
+                                               check_authority    : alu_outputs.check_authority,
+                                               check_authority_idx: alu_outputs.check_authority_idx,
+                                               check_address_low  : alu_outputs.check_address_low,
+                                               check_address_high : alu_outputs.check_address_high,
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
 					       trace_data    : alu_outputs.trace_data,
@@ -204,7 +310,12 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	 output_stage1.control = CONTROL_DISCARD;
 
 	 // For debugging only
-	 let data_to_stage2 = Data_Stage1_to_Stage2 {pc:        rg_stage_input.pc,
+	 let data_to_stage2 = Data_Stage1_to_Stage2 {
+`ifdef ISA_CHERI
+                                                     pcc:       rg_pcc,
+`else
+                                                     pc:        rg_stage_input.pc,
+`endif
 						     instr:     rg_stage_input.instr,
 						     op_stage2: OP_Stage2_ALU,
 						     rd:        0,
@@ -215,6 +326,17 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 						     val3            : ?,
 						     rd_in_fpr       : ?,
 						     rounding_mode   : ?,
+`endif
+                                                     mem_unsigned  : ?,
+                                                     mem_width_code: ?,
+`ifdef ISA_CHERI
+                                               mem_allow_cap      : False,
+                                               check_enable       : False,
+                                               check_inclusive    : ?,
+                                               check_authority    : ?,
+                                               check_authority_idx: ?,
+                                               check_address_low  : ?,
+                                               check_address_high : ?,
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
 						     trace_data: alu_outputs.trace_data,
@@ -241,8 +363,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
       else if (rg_stage_input.exc) begin
 	 output_stage1.ostatus   = OSTATUS_NONPIPE;
 	 output_stage1.control   = CONTROL_TRAP;
-	 output_stage1.trap_info = Trap_Info {epc:      rg_stage_input.pc,
+	 output_stage1.trap_info = Trap_Info_Pipe {
 					      exc_code: rg_stage_input.exc_code,
+                                              cheri_exc_code: ?,
+                                              cheri_exc_reg: ?,
 					      tval:     rg_stage_input.tval};
 	 output_stage1.data_to_stage2 = data_to_stage2;
       end
@@ -251,7 +375,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
       // and non-pipe (CSRR_W, CSRR_S_or_C, FENCE.I, FENCE, SFENCE_VMA, xRET, WFI, TRAP)
       else begin
 	 let ostatus = (  (   (alu_outputs.control == CONTROL_STRAIGHT)
-			   || (alu_outputs.control == CONTROL_BRANCH))
+			   || (alu_outputs.control == CONTROL_BRANCH)
+			   || (alu_outputs.control == CONTROL_CAPBRANCH))
 			? OSTATUS_PIPE
 			: OSTATUS_NONPIPE);
 
@@ -268,23 +393,27 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	 else if (alu_outputs.exc_code == exc_code_INSTR_ADDR_MISALIGNED)
 	    tval = alu_outputs.addr;                           // The branch target pc
 	 else if (alu_outputs.exc_code == exc_code_BREAKPOINT)
+`ifdef ISA_CHERI
+	    tval = getPC(rg_pcc);                   // The faulting virtual address
+`else
 	    tval = rg_stage_input.pc;                          // The faulting virtual address
+`endif
 
-	 let trap_info = Trap_Info {epc:      rg_stage_input.pc,
+	 let trap_info = Trap_Info_Pipe {
 				    exc_code: alu_outputs.exc_code,
+                                    cheri_exc_code: ?,
+                                    cheri_exc_reg: ?,
 				    tval:     tval};
-
-	 let fall_through_pc = rg_stage_input.pc + (rg_stage_input.is_i32_not_i16 ? 4 : 2);
-	 let next_pc = ((alu_outputs.control == CONTROL_BRANCH)
-			? alu_outputs.addr
-			: fall_through_pc);
-	 let redirect = (next_pc != rg_stage_input.pred_pc);
 
 	 output_stage1.ostatus        = ostatus;
 	 output_stage1.control        = alu_outputs.control;
 	 output_stage1.trap_info      = trap_info;
 	 output_stage1.redirect       = redirect;
-	 output_stage1.next_pc        = next_pc;
+`ifdef ISA_CHERI
+         output_stage1.next_pcc       = next_pcc_local;
+`else
+	 output_stage1.next_pc        = next_pc_local;
+`endif
 	 output_stage1.data_to_stage2 = data_to_stage2;
       end
 
@@ -308,8 +437,11 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    // ---- Input
    method Action enq (Data_StageD_to_Stage1  data);
       rg_stage_input <= data;
+      if (data.refresh_pcc) begin
+          rg_pcc <= fresh_pcc;
+      end
       if (verbosity > 1)
-	 $display ("    CPU_Stage1.enq: 0x%08h", data.pc);
+	 $display ("    CPU_Stage1.enq: 0x%08h", getPC(data.refresh_pcc ? fresh_pcc : rg_pcc));
    endmethod
 
    method Action set_full (Bool full);

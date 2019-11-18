@@ -130,9 +130,9 @@ module mkTV_Encode (TV_Encode_IFC);
    rule rl_log_trace_MEM_WRITE (rg_reset_done && (f_trace_data.first.op == TRACE_MEM_WRITE));
       let td <- pop (f_trace_data);
 
-      Bit #(2)  mem_req_size        = td.word1 [1:0];
-      Byte      size_and_mem_req_op = { 2'b0, mem_req_size, te_mem_req_op_Store };
-      Byte      result_and_size     = { te_mem_result_success, 2'b0, mem_req_size };
+      MemReqSize mem_req_size        = zeroExtend(td.word1 [1:0]);
+      Byte      size_and_mem_req_op = { 1'b0, mem_req_size, te_mem_req_op_Store };
+      Byte      result_and_size     = { te_mem_result_success, 1'b0, mem_req_size };
 
       // Encode components of td into byte vecs
       match { .n0, .vb0 } = encode_byte (te_op_begin_group);
@@ -265,7 +265,7 @@ module mkTV_Encode (TV_Encode_IFC);
       let td <- pop (f_trace_data);
 
       let funct3 = instr_funct3 (td.instr);    // TODO: what if it's a 16b instr?
-      let mem_req_size = funct3 [1:0];
+      MemReqSize mem_req_size = zeroExtend(funct3 [1:0]);
 
       // Encode components of td into byte vecs
       match { .n0, .vb0 } = encode_byte (te_op_begin_group);
@@ -290,7 +290,7 @@ module mkTV_Encode (TV_Encode_IFC);
       let td <- pop (f_trace_data);
 
       let funct3 = instr_funct3 (td.instr);    // TODO: what if it's a 16b instr?
-      let mem_req_size = funct3 [1:0];
+      MemReqSize mem_req_size = zeroExtend(funct3 [1:0]);
 
       // Encode components of td into byte vecs
       match { .n0, .vb0 } = encode_byte (te_op_begin_group);

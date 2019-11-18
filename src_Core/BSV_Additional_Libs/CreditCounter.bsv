@@ -9,6 +9,7 @@ package CreditCounter;
 // BSV library imports
 
 import Cur_Cycle :: *;
+import ConfigReg :: *;
 
 // ================================================================
 // Interface
@@ -33,28 +34,29 @@ endinterface
 
 module mkCreditCounter (CreditCounter_IFC #(w));
 
-   Reg #(UInt #(w)) crg [3] <- mkCReg (3, 0);
+   Reg #(UInt #(w)) inrg <- mkConfigReg(0);
+   Reg #(UInt #(w)) outrg <- mkConfigReg(0);
 
-   method UInt #(w) value = crg [1];
+   method UInt #(w) value = inrg - outrg;
 
-   method Action incr;
-      if (crg [0] == maxBound) begin
+   method Action incr if (&(inrg - outrg) != 1'b1);
+      /*if (crg [0] == maxBound) begin
 	 $display ("%0d: ERROR: CreditCounter: overflow", cur_cycle);
 	 $finish (1);    // Assertion failure
-      end
-      crg [0] <= crg [0] + 1;
+      end*/
+      inrg <= inrg + 1;
    endmethod
 
-   method Action decr () if (crg [1] != 0);
-      if (crg [1] == 0) begin
+   method Action decr ();// if (crg [1] != 0);
+      /*if (crg [1] == 0) begin
 	 $display ("%0d: ERROR: CreditCounter: underflow", cur_cycle);
 	 $finish (1);    // Assertion failure
-      end
-      crg [1] <= crg [1] - 1;
+      end*/
+      outrg <= outrg + 1;
    endmethod
 
    method Action clear;
-      crg [2] <= 0;
+      outrg <= inrg;
    endmethod
 endmodule
 

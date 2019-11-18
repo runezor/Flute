@@ -1,5 +1,17 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
 
+//-
+// RVFI_DII + CHERI modifications:
+//     Copyright (c) 2018 Jack Deeley (RVFI_DII)
+//     Copyright (c) 2018 Peter Rugg (RVFI_DII + CHERI)
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package GPR_RegFile;
 
 // ================================================================
@@ -27,8 +39,37 @@ import GetPut_Aux :: *;
 // Project imports
 
 import ISA_Decls :: *;
+`ifdef ISA_CHERI
+import CHERICap :: *;
+import CHERICC_Fat :: *;
+`endif
 
 // ================================================================
+
+`ifdef ISA_CHERI
+`define INTERNAL_REG_TYPE CapReg
+`define EXTERNAL_REG_TYPE CapPipe
+`define ZERO_REG_CONTENTS nullCap
+`define INITIAL_CONTENTS almightyCap
+`else
+`define INTERNAL_REG_TYPE Word
+`define EXTERNAL_REG_TYPE Word
+`define ZERO_REG_CONTENTS 0
+`ifdef RVFI
+`define INITIAL_CONTENTS 0
+`endif
+`ifdef INCLUDE_TANDEM_VERIF
+`define INITIAL_CONTENTS 0
+`endif
+`endif
+
+`ifdef ISA_CHERI
+`define CAST cast
+`else
+function id x = x;
+`define CAST id
+`endif
+
 
 interface GPR_RegFile_IFC;
    // Reset
@@ -36,15 +77,21 @@ interface GPR_RegFile_IFC;
 
    // GPR read
    (* always_ready *)
-   method Word read_rs1 (RegName rs1);
+   method `EXTERNAL_REG_TYPE read_rs1 (RegName rs1);
    (* always_ready *)
-   method Word read_rs1_port2 (RegName rs1);    // For debugger access only
+   method `EXTERNAL_REG_TYPE read_rs1_port2 (RegName rs1);    // For debugger access only
    (* always_ready *)
-   method Word read_rs2 (RegName rs2);
+   method `EXTERNAL_REG_TYPE read_rs2 (RegName rs2);
 
    // GPR write
    (* always_ready *)
-   method Action write_rd (RegName rd, Word rd_val);
+   method Action write_rd (RegName rd, `EXTERNAL_REG_TYPE rd_val
+`ifdef ISA_CHERI_MERGED
+       , Bool is_cap_not_int   // Specifies whether the register is written back
+                               // by a capability or integer operation. This is
+                               // distinct from the tag of the capability.
+`endif
+       );
 
 endinterface
 
@@ -66,28 +113,29 @@ module mkGPR_RegFile (GPR_RegFile_IFC);
 
    // General Purpose Registers
    // TODO: can we use Reg [0] for some other purpose?
-   RegFile #(RegName, Word) regfile <- mkRegFileFull;
+   RegFile #(RegName, `INTERNAL_REG_TYPE) regfile <- mkRegFileFull;
 
    // ----------------------------------------------------------------
    // Reset.
    // This loop initializes all GPRs to 0.
    // The spec does not require this, but it's useful for debugging
    // and tandem verification
+   // Required for CHERI
 
-`ifdef INCLUDE_TANDEM_VERIF
+`ifdef INITIAL_CONTENTS
    Reg #(RegName) rg_j <- mkRegU;    // reset loop index
 `endif
 
    rule rl_reset_start (rg_state == RF_RESET_START);
       rg_state <= RF_RESETTING;
-`ifdef INCLUDE_TANDEM_VERIF
+`ifdef INITIAL_CONTENTS
       rg_j <= 1;
 `endif
    endrule
 
    rule rl_reset_loop (rg_state == RF_RESETTING);
-`ifdef INCLUDE_TANDEM_VERIF
-      regfile.upd (rg_j, 0);
+`ifdef INITIAL_CONTENTS
+      regfile.upd (rg_j, `INITIAL_CONTENTS);
       rg_j <= rg_j + 1;
       if (rg_j == 31)
 	 rg_state <= RF_RUNNING;
@@ -119,22 +167,22 @@ module mkGPR_RegFile (GPR_RegFile_IFC);
    endinterface
 
    // GPR read
-   method Word read_rs1 (RegName rs1);
-      return ((rs1 == 0) ? 0 : regfile.sub (rs1));
+   method `EXTERNAL_REG_TYPE read_rs1 (RegName rs1);
+      return `CAST ((rs1 == 0) ? `ZERO_REG_CONTENTS : regfile.sub (rs1));
    endmethod
 
    // GPR read
-   method Word read_rs1_port2 (RegName rs1);        // For debugger access only
-      return ((rs1 == 0) ? 0 : regfile.sub (rs1));
+   method `EXTERNAL_REG_TYPE read_rs1_port2 (RegName rs1);        // For debugger access only
+      return `CAST ((rs1 == 0) ? `ZERO_REG_CONTENTS : regfile.sub (rs1));
    endmethod
 
-   method Word read_rs2 (RegName rs2);
-      return ((rs2 == 0) ? 0 : regfile.sub (rs2));
+   method `EXTERNAL_REG_TYPE read_rs2 (RegName rs2);
+      return `CAST ((rs2 == 0) ? `ZERO_REG_CONTENTS : regfile.sub (rs2));
    endmethod
 
    // GPR write
-   method Action write_rd (RegName rd, Word rd_val);
-      if (rd != 0) regfile.upd (rd, rd_val);
+   method Action write_rd (RegName rd, `EXTERNAL_REG_TYPE rd_val);
+     if (rd != 0) regfile.upd (rd, `CAST (rd_val));
    endmethod
 
 endmodule

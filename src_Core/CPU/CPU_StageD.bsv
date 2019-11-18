@@ -105,7 +105,8 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
       end
       else begin
 	 output_stageD.ostatus        = OSTATUS_PIPE;
-	 output_stageD.data_to_stage1 = Data_StageD_to_Stage1 {pc:             rg_data.pc,
+	 output_stageD.data_to_stage1 = Data_StageD_to_Stage1 {
+                                                               fetch_addr:     rg_data.fetch_addr,
 							       priv:           rg_data.priv,
 							       epoch:          rg_data.epoch,
 							       is_i32_not_i16: rg_data.is_i32_not_i16,
@@ -116,7 +117,7 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 `ifdef ISA_C
 							       instr_C:        instr_C,
 `endif
-							       pred_pc:        rg_data.pred_pc,
+							       pred_fetch_addr:rg_data.pred_fetch_addr,
 							       decoded_instr:  decoded_instr};
       end
 

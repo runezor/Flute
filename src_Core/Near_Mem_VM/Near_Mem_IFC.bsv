@@ -1,5 +1,18 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved.
 
+//-
+// AXI (user fields) + CHERI modifications:
+//     Copyright (c) 2019 Alexandre Joannou
+//     Copyright (c) 2019 Peter Rugg
+//     Copyright (c) 2019 Jonathan Woodruff
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 // Near_Mem_IFC encapsulates the MMU and L1 cache.
 // It is 'near' the CPU (1-cycle access in common case).
 
@@ -29,13 +42,13 @@ import ClientServer :: *;
 // BSV additional libs
 
 import Cur_Cycle :: *;
+import AXI4      :: *;
 
 // ================================================================
 // Project imports
 
 import ISA_Decls :: *;
 
-import AXI4_Types  :: *;
 import Fabric_Defs :: *;
 
 // ================================================================
@@ -51,7 +64,9 @@ interface Near_Mem_IFC;
    interface IMem_IFC  imem;
 
    // Fabric side
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) imem_master;
+   interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User,
+                                 Wd_AR_User, Wd_R_User) imem_master;
 
    // ----------------
    // DMem
@@ -60,7 +75,9 @@ interface Near_Mem_IFC;
    interface DMem_IFC  dmem;
 
    // Fabric side
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) dmem_master;
+   interface AXI4_Master_Synth #(Wd_MId_2x3, Wd_Addr, Wd_Data,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User,
+                                 Wd_AR_User, Wd_R_User) dmem_master;
 
    // ----------------
    // Fences
@@ -72,7 +89,7 @@ interface Near_Mem_IFC;
    // SFENCE_VMA
    method Action sfence_vma;
 endinterface
-   
+
 // ================================================================
 // Near_Mem opcodes
 
@@ -84,25 +101,46 @@ typedef enum {  CACHE_LD
    } CacheOp
 deriving (Bits, Eq, FShow);
 
+typedef 128 Cache_Data_Width;
+`ifdef ISA_CHERI
+typedef TDiv#(Cache_Data_Width, CLEN) Cache_Cap_Tag_Width;
+typedef Tuple2#(Bit#(Cache_Cap_Tag_Width), Bit#(Cache_Data_Width)) Cache_Entry;
+`else
+typedef Tuple2#(Bit#(0), Bit#(Cache_Data_Width)) Cache_Entry;
+`endif
+
 // ================================================================
 // IMem interface
 
 interface IMem_IFC;
    // CPU side: IMem request
    (* always_ready *)
-   method Action  req (Bit #(3) f3,
+   method Action  req (Bit #(3) width_code,
 		       WordXL addr,
 		       // The following  args for VM
 		       Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
 		       Bit #(1)   mstatus_MXR,
-		       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+		       WordXL     satp
+`ifdef RVFI_DII
+             , UInt#(SEQ_LEN) seq_req
+`endif
+                              );    // { VM_Mode, ASID, PPN_for_page_table }
+
+`ifdef ISA_CHERI
+   (* always_ready *)  method Action commit;
+`endif
 
    // CPU side: IMem response
    (* always_ready *)  method Bool     valid;
    (* always_ready *)  method Bool     is_i32_not_i16;
    (* always_ready *)  method WordXL   pc;
-   (* always_ready *)  method Instr    instr;
+   (* always_ready *)  method
+`ifdef RVFI_DII
+                              Tuple2#(Instr, UInt#(SEQ_LEN)) instr;
+`else
+                              Instr    instr;
+`endif
    (* always_ready *)  method Bool     exc;
    (* always_ready *)  method Exc_Code exc_code;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
@@ -115,22 +153,28 @@ interface DMem_IFC;
    // CPU side: DMem request
    (* always_ready *)
    method Action  req (CacheOp op,
-		       Bit #(3) f3,
+		       Bit #(3) width_code,
+               Bool is_unsigned,
 `ifdef ISA_A
 		       Bit #(7) amo_funct7,
 `endif
 		       WordXL addr,
-		       Bit #(64) store_value,
+		       Tuple2#(Bool, Bit #(128)) store_value,
 		       // The following  args for VM
 		       Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
 		       Bit #(1)   mstatus_MXR,
 		       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
 
+`ifdef ISA_CHERI
+   (* always_ready *)  method Action commit;
+`endif
+
    // CPU side: DMem response
    (* always_ready *)  method Bool       valid;
-   (* always_ready *)  method Bit #(64)  word64;      // Load-value
-   (* always_ready *)  method Bit #(64)  st_amo_val;  // Final store-value for ST, SC, AMO
+   (* always_ready *)  method Tuple2#(Bool, Bit #(128))  word128;      // Load-value
+   (* always_ready *)  method Bit #(128)  st_amo_val;  // Final store-value for ST, SC, AMO
+                                                       // TODO this also needs tag?
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
 endinterface
@@ -145,59 +189,77 @@ endinterface
 // result:
 //  - word with correct byte(s) shifted into LSBs and properly extended
 
-function Bit #(64) fn_extract_and_extend_bytes (Bit #(3) f3, WordXL byte_addr, Bit #(64) word64);
-   Bit #(64) result    = 0;
-   Bit #(3)  addr_lsbs = byte_addr [2:0];
+//TODO make generic
+function Tuple2#(Bool, Bit #(128)) fn_extract_and_extend_bytes (Bit #(3) width_code, Bool is_unsigned, WordXL byte_addr, Cache_Entry word128_tagged);
+   Bit #(128) result    = 0;
+   Bit #(4)  addr_lsbs = byte_addr [3:0];
 
-   case (f3)
-      f3_LB: case (addr_lsbs)
-		'h0: result = signExtend (word64 [ 7: 0]);
-		'h1: result = signExtend (word64 [15: 8]);
-		'h2: result = signExtend (word64 [23:16]);
-		'h3: result = signExtend (word64 [31:24]);
-		'h4: result = signExtend (word64 [39:32]);
-		'h5: result = signExtend (word64 [47:40]);
-		'h6: result = signExtend (word64 [55:48]);
-		'h7: result = signExtend (word64 [63:56]);
-	     endcase
-      f3_LBU: case (addr_lsbs)
-		'h0: result = zeroExtend (word64 [ 7: 0]);
-		'h1: result = zeroExtend (word64 [15: 8]);
-		'h2: result = zeroExtend (word64 [23:16]);
-		'h3: result = zeroExtend (word64 [31:24]);
-		'h4: result = zeroExtend (word64 [39:32]);
-		'h5: result = zeroExtend (word64 [47:40]);
-		'h6: result = zeroExtend (word64 [55:48]);
-		'h7: result = zeroExtend (word64 [63:56]);
-	     endcase
+   Bool tag = False;
+   Bit #(128) word128 = tpl_2(word128_tagged);
 
-      f3_LH: case (addr_lsbs)
-		'h0: result = signExtend (word64 [15: 0]);
-		'h2: result = signExtend (word64 [31:16]);
-		'h4: result = signExtend (word64 [47:32]);
-		'h6: result = signExtend (word64 [63:48]);
-	     endcase
-      f3_LHU: case (addr_lsbs)
-		'h0: result = zeroExtend (word64 [15: 0]);
-		'h2: result = zeroExtend (word64 [31:16]);
-		'h4: result = zeroExtend (word64 [47:32]);
-		'h6: result = zeroExtend (word64 [63:48]);
+   let u_s_extend = is_unsigned ? zeroExtend : signExtend;
+
+   case (width_code)
+      0: case (addr_lsbs)
+		'h0: result = u_s_extend (word128 [ 7: 0]);
+		'h1: result = u_s_extend (word128 [15: 8]);
+		'h2: result = u_s_extend (word128 [23:16]);
+		'h3: result = u_s_extend (word128 [31:24]);
+		'h4: result = u_s_extend (word128 [39:32]);
+		'h5: result = u_s_extend (word128 [47:40]);
+		'h6: result = u_s_extend (word128 [55:48]);
+		'h7: result = u_s_extend (word128 [63:56]);
+		'h8: result = u_s_extend (word128 [71:64]);
+		'h9: result = u_s_extend (word128 [79:72]);
+		'ha: result = u_s_extend (word128 [87:80]);
+		'hb: result = u_s_extend (word128 [95:88]);
+		'hc: result = u_s_extend (word128 [103:96]);
+		'hd: result = u_s_extend (word128 [111:104]);
+		'he: result = u_s_extend (word128 [119:112]);
+		'hf: result = u_s_extend (word128 [127:120]);
 	     endcase
 
-      f3_LW: case (addr_lsbs)
-		'h0: result = signExtend (word64 [31: 0]);
-		'h4: result = signExtend (word64 [63:32]);
-	     endcase
-      f3_LWU: case (addr_lsbs)
-		'h0: result = zeroExtend (word64 [31: 0]);
-		'h4: result = zeroExtend (word64 [63:32]);
+      1: case (addr_lsbs)
+		'h0: result = u_s_extend (word128 [15: 0]);
+		'h2: result = u_s_extend (word128 [31:16]);
+		'h4: result = u_s_extend (word128 [47:32]);
+		'h6: result = u_s_extend (word128 [63:48]);
+		'h8: result = u_s_extend (word128 [79:64]);
+		'ha: result = u_s_extend (word128 [95:80]);
+		'hc: result = u_s_extend (word128 [111:96]);
+		'he: result = u_s_extend (word128 [127:112]);
 	     endcase
 
-      f3_LD: case (addr_lsbs)
-		'h0: result = word64;
+      2: case (addr_lsbs)
+		'h0: result = u_s_extend (word128 [31: 0]);
+		'h4: result = u_s_extend (word128 [63:32]);
+		'h8: result = u_s_extend (word128 [95:64]);
+		'hc: result = u_s_extend (word128 [127:96]);
 	     endcase
+
+      3: case (addr_lsbs)
+		'h0: begin
+           result = u_s_extend (word128 [63:0]);
+`ifdef ISA_CHERI
+           if (valueOf(CLEN) == 64) tag = tpl_1(word128_tagged)[0] == 1'b1;
+`endif
+         end
+		'h8: begin
+           result = u_s_extend (word128 [127:64]);
+`ifdef ISA_CHERI
+           if (valueOf(CLEN) == 64) tag = tpl_1(word128_tagged)[1] == 1'b1;
+`endif
+         end
+	     endcase
+
+      4: begin
+            result = word128;
+`ifdef ISA_CHERI
+            tag = tpl_1(word128_tagged)[0] == 1'b1;
+`endif
+         end
    endcase
-   return result;
+   return tuple2(tag, result);
 endfunction
 
 // ================================================================

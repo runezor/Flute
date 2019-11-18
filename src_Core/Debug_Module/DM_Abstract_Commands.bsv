@@ -12,6 +12,7 @@ package DM_Abstract_Commands;
 import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
+import ConfigReg    :: *;
 
 // ----------------
 // Other library imports
@@ -55,7 +56,7 @@ module mkDM_Abstract_Commands (DM_Abstract_Commands_IFC);
 
    // ----------------------------------------------------------------
 
-   Reg #(Bool) rg_start_reg_access <- mkReg (False);
+   Reg #(Bool) rg_start_reg_access <- mkConfigReg (False);
 
    // FIFOs for request/response to access GPRs
    FIFOF #(DM_CPU_Req #(5,  XLEN)) f_hart0_gpr_reqs <- mkFIFOF;
@@ -86,8 +87,8 @@ module mkDM_Abstract_Commands (DM_Abstract_Commands_IFC);
    // ----------------------------------------------------------------
    // rg_abstractcs
 
-   Reg #(Bool)                 rg_abstractcs_busy   <- mkRegU;
-   Reg #(DM_abstractcs_cmderr) rg_abstractcs_cmderr <- mkRegU;
+   Reg #(Bool)                 rg_abstractcs_busy   <- mkConfigRegU;
+   Reg #(DM_abstractcs_cmderr) rg_abstractcs_cmderr <- mkConfigRegU;
 
    // Size of program buffer, in 32b words
    Bit #(5) abstractcs_progbufsize = 0;
@@ -130,10 +131,10 @@ module mkDM_Abstract_Commands (DM_Abstract_Commands_IFC);
    // postexec no register, since we don't support Program Buffer
    // transfer no register, since we always do transfers
 
-   Reg #(Bool) rg_command_access_reg_write <- mkRegU;
+   Reg #(Bool) rg_command_access_reg_write <- mkConfigRegU;
 
    // regno: we only implement lower 13 bits of this 16-bit field
-   Reg #(Bit #(13)) rg_command_access_reg_regno <- mkRegU;
+   Reg #(Bit #(13)) rg_command_access_reg_regno <- mkConfigRegU;
 
    DM_Word virt_rg_command = fn_mk_command_access_reg (
         DM_COMMAND_ACCESS_REG_SIZE_LOWER32
@@ -391,13 +392,13 @@ module mkDM_Abstract_Commands (DM_Abstract_Commands_IFC);
 			    && rg_start_reg_access
 			    && rg_command_access_reg_write
 			    && is_fpr);
-      let req = DM_CPU_Req {write:   True,
+      DM_CPU_Req#(5, ISA_Decls::FLEN) req = DM_CPU_Req {write:   True,
 			    address: fpr_addr,
 `ifdef RV32
-			    data:    rg_data0
+			    data:    unpack(zeroExtend(rg_data0))
 `endif
 `ifdef RV64
-			    data:    {rg_data1, rg_data0}
+			    data:    unpack({rg_data1, rg_data0})
 `endif
 			    };
       f_hart0_fpr_reqs.enq (req);
@@ -426,7 +427,7 @@ module mkDM_Abstract_Commands (DM_Abstract_Commands_IFC);
 			   && rg_start_reg_access
 			   && (! rg_command_access_reg_write)
 			   && is_fpr);
-      Bit #(XLEN) data = ?;
+      Bit #(FLEN) data = ?;
       let req = DM_CPU_Req {write: False, address: fpr_addr, data: data };
       f_hart0_fpr_reqs.enq (req);
       rg_start_reg_access <= False;
@@ -444,11 +445,8 @@ module mkDM_Abstract_Commands (DM_Abstract_Commands_IFC);
       if (verbosity != 0)
 	 $display ("%0d: DM_Abstract_Commands.rl_fpr_read_finish: ", cur_cycle, fshow (rsp));
 
-`ifdef RV32
-      rg_data0 <= rsp.data;
-`endif
-`ifdef RV64
       rg_data0 <= truncate (rsp.data);
+`ifdef RV64
       rg_data1 <= rsp.data[63:32];
 `endif
       rg_abstractcs_cmderr <= (rsp.ok ? DM_ABSTRACTCS_CMDERR_NONE : DM_ABSTRACTCS_CMDERR_HALT_RESUME);

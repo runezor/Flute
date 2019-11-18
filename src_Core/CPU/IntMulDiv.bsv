@@ -163,6 +163,7 @@ interface IntMul_IFC #(numeric type w);
    (* always_ready *)
    method Action put_args (Bool x_is_signed, Bit #(w) x,
 			   Bool y_is_signed, Bit #(w) y);
+
    (* always_ready *)
    method Bool                result_valid;
    (* always_ready *)

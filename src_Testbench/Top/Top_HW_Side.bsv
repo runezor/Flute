@@ -1,5 +1,16 @@
 // Copyright (c) 2013-2019 Bluespec, Inc. All Rights Reserved.
 
+//-
+// RVFI_DII modifications:
+//     Copyright (c) 2018 Peter Rugg
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package Top_HW_Side;
 
 // ================================================================
@@ -50,13 +61,23 @@ import C_Imports      :: *;
 import External_Control :: *;
 `endif
 
+`ifdef RVFI_DII
+import RVFI_DII     :: *;
+`endif
+
 // ================================================================
 // Top-level module.
 // Instantiates the SoC.
 // Instantiates a memory model.
 
 (* synthesize *)
-module mkTop_HW_Side (Empty) ;
+module mkTop_HW_Side (
+`ifdef RVFI_DII
+Piccolo_RVFI_DII_Server
+`else
+Empty
+`endif
+) ;
 
    SoC_Top_IFC    soc_top   <- mkSoC_Top;
    Mem_Model_IFC  mem_model <- mkMem_Model;
@@ -67,6 +88,8 @@ module mkTop_HW_Side (Empty) ;
    // ================================================================
    // BEHAVIOR
 
+
+`ifndef RVFI_DII
    Reg #(Bool) rg_banner_printed <- mkReg (False);
 
    // Display a banner
@@ -126,6 +149,7 @@ module mkTop_HW_Side (Empty) ;
       // Open connection to remote debug client
 `ifdef INCLUDE_GDB_CONTROL
 `ifndef IVERILOG
+`ifndef BLUESIM
       // Note: see 'CAVEAT FOR IVERILOG USERS' above
       let dmi_status <- c_debug_client_connect (dmi_default_tcp_port);
       if (dmi_status != dmi_status_ok) begin
@@ -135,6 +159,8 @@ module mkTop_HW_Side (Empty) ;
       end
 `else
       $display ("Warning: Debug client connection not available in IVerilog");
+`endif
+      $display ("Warning: Debug client connection not available in Bluesim");
 `endif
 `endif
 
@@ -155,6 +181,7 @@ module mkTop_HW_Side (Empty) ;
 
       $finish (0);
    endrule
+`endif
 
    // ================================================================
    // Tandem verifier: drain and output vectors of bytes
@@ -292,8 +319,53 @@ module mkTop_HW_Side (Empty) ;
 
    //  None (this is top-level)
 
+   //  Except RVFI_DII interface if enabled
+`ifdef RVFI_DII
+    return soc_top.rvfi_dii_server;
+`endif
+
+
 endmodule
 
+// ================================================================
+
+`ifdef RVFI_DII
+// ================================================================
+// mkPiccolo_RVFI_DII instantiates the toplevel with the RVFI_DII
+// interfaces enabled, allowing testing with directly
+// ================================================================
+
+(* synthesize *)
+module mkPiccolo_RVFI_DII(Empty)
+    provisos (Add#(a__, TDiv#(XLEN,8), 8), Add#(b__, XLEN, 64), Add#(c__, TDiv#(XLEN,8), 8), Add#(d__, XLEN, 64));
+
+    Reg #(Bool) rg_banner_printed <- mkReg (False);
+
+    // Display a banner
+    rule rl_step0 (! rg_banner_printed);
+       $display ("================================================================");
+       $display ("Bluespec RISC-V standalone system simulation v1.2");
+       $display ("Copyright (c) 2017-2018 Bluespec, Inc. All Rights Reserved.");
+       $display ("================================================================");
+
+       rg_banner_printed <= True;
+    endrule
+
+    RVFI_DII_Bridge #(XLEN, MEMWIDTH, SEQ_LEN) bridge <- mkRVFI_DII_Bridge("RVFI_DII", 5001);
+    let    dut <- mkTop_HW_Side(reset_by bridge.new_rst);
+    mkConnection(bridge.client.report, dut.trace_report);
+
+    (* descending_urgency = "bridge.handleReset, rl_provide_instr" *)
+    rule rl_provide_instr;
+        let req = dut.getSeqReq;
+        if (isValid(req)) begin
+            let inst <- bridge.client.getInst(dut.getSeqReq.Valid);
+            dut.putInst(tuple2(inst, req.Valid));
+        end
+    endrule
+endmodule
+
+`endif
 // ================================================================
 
 endpackage: Top_HW_Side

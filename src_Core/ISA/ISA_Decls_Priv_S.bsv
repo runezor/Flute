@@ -34,6 +34,10 @@ CSR_Addr   csr_addr_sip        = 12'h144;    // Supervisor interrupt pending
 
 CSR_Addr   csr_addr_satp       = 12'h180;    // Supervisor address translation and protection
 
+`ifdef ISA_CHERI
+CSR_Addr   csr_addr_sccsr      = 12'h9c0;    // Supervisor capability control and status register
+`endif
+
 // ================================================================
 // SSTATUS
 

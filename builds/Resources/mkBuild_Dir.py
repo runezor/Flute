@@ -3,6 +3,18 @@
 # Copyright (c) 2018-2019 Bluespec, Inc.
 # See LICENSE for license details
 
+#-
+# RVFI_DII + CHERI modifications:
+#     Copyright (c) 2018 Jack Deeley (RVFI_DII)
+#     Copyright (c) 2018-19 Peter Rugg (RVFI_DII + CHERI)
+#     All rights reserved.
+#
+#     This software was developed by SRI International and the University of
+#     Cambridge Computer Laboratory (Department of Computer Science and
+#     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+#     DARPA SSITH research programme.
+#-
+
 # ================================================================
 
 usage_line = (
@@ -54,49 +66,83 @@ def main (argv = None):
     # Collect <arch> and check if legal
 
     known_arch_features = "ACDFGIMSU"
-    arch = arg_arch.upper ()
+    arch_split = arg_arch.split("x")
+    arch_std = arch_split[0]
+    arch = arch_std.upper ()
 
     # G is an abbreviation for IMAFD
-    arch = arch.replace ("G", "IMAFD")
+    arch_std = arch_std.replace ("G", "IMAFD")
 
     # We always have "I"
-    if ((not "I" in arch) and (not "G" in arch)): arch = arch + "I"
+    if ((not "I" in arch_std) and (not "G" in arch_std)): arch_std = arch_std + "I"
 
     # For Piccolo and Flute, we always have Priv U (along with Priv M)
-    if (not "U" in arch): arch = arch + "U"
+    if (not "U" in arch_std): arch_std = arch_std + "U"
 
-    if (not (arch.startswith ("RV32") or arch.startswith ("RV64"))):
-        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch))
+    if (not (arch_std.startswith ("RV32") or arch_std.startswith ("RV64"))):
+        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch_std))
         sys.stdout.write ("    Should begin with 'RV32' or 'RV64'\n")
         sys.stdout.write (usage_line.replace ("CMD", argv [0]))
         sys.stdout.write ("\n")
         return 1
-    if (not all (map ((lambda x: x in known_arch_features), arch [4:]))):
-        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch))
+    if (not all (map ((lambda x: x in known_arch_features), arch_std [4:]))):
+        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch_std))
         sys.stdout.write ("    Should only contain alphabets from {0} after RV32/RV64\n".format (known_arch_features))
         sys.stdout.write (usage_line.replace ("CMD", argv [0]))
         sys.stdout.write ("\n")
         return 1
-    if (not ('I' in arch)):
-        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch))
+    if (not ('I' in arch_std)):
+        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch_std))
         sys.stdout.write ("    Should contain 'I'\n")
         sys.stdout.write (usage_line.replace ("CMD", argv [0]))
         sys.stdout.write ("\n")
         return 1
-    if (('S' in arch) and not ('U' in arch)):
-        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch))
+    if (('S' in arch_std) and not ('U' in arch_std)):
+        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch_std))
         sys.stdout.write ("    Should contain 'U' since it contains 'S'\n")
         sys.stdout.write (usage_line.replace ("CMD", argv [0]))
         sys.stdout.write ("\n")
         return 1
-    if (('D' in arch) and not ('F' in arch)):
-        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch))
+    if (('D' in arch_std) and not ('F' in arch_std)):
+        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch_std))
         sys.stdout.write ("    Should contain 'F' since it contains 'D'\n")
         sys.stdout.write (usage_line.replace ("CMD", argv [0]))
         sys.stdout.write ("\n")
         return 1
 
-    arch = canonical_arch_string (arch)
+    # ----------------
+    # Collect optional <debug> and <tv> args
+
+    debug = ""
+    tv    = ""
+    rvfi_dii = ""
+
+    if ((len (opt_args) > 0) and (opt_args [0] == "debug")):
+        debug = "_debug"
+        opt_args = opt_args [1:]
+
+    if ((len (opt_args) > 0) and (opt_args [0] == "tv")):
+        tv = "_tv"
+        opt_args = opt_args [1:]
+
+    if ("RVFI_DII" in arch_std):
+        arch_std = arch_std.replace("_RVFI_DII","")
+        rvfi_dii = "_RVFI_DII"
+
+    for ext in arch_split:
+        if ("RVFI_DII" in ext):
+            rvfi_dii = "_RVFI_DII"
+
+    arch_split = list(map ((lambda x : x.replace("_RVFI_DII", "")), arch_split))
+
+    if (len (opt_args) > 0):
+        sys.stdout.write ("Error in optional command-line args (='{0}')\n".format (opt_args [0]))
+        sys.stdout.write ("    Should be  'debug', 'tv' or 'RVFI_DII'\n")
+        sys.stdout.write (usage_line.replace ("CMD", argv [0]))
+        sys.stdout.write ("\n")
+        return 1
+
+    arch = canonical_arch_string ("x".join([arch_std] + arch_split[1:])) + rvfi_dii
     sys.stdout.write ("Canonical arch string is:  '{0}'\n".format (arch))
 
     # ----------------
@@ -113,30 +159,9 @@ def main (argv = None):
         return 1
 
     # ----------------
-    # Collect optional <debug> and <tv> args
-
-    debug = ""
-    tv    = ""
-
-    if ((len (opt_args) > 0) and (opt_args [0] == "debug")):
-        debug = "_debug"
-        opt_args = opt_args [1:]
-
-    if ((len (opt_args) > 0) and (opt_args [0] == "tv")):
-        tv = "_tv"
-        opt_args = opt_args [1:]
-
-    if (len (opt_args) > 0):
-        sys.stdout.write ("Error in optional command-line args (='{0}')\n".format (opt_args [0]))
-        sys.stdout.write ("    Should be  'debug' or 'tv'\n")
-        sys.stdout.write (usage_line.replace ("CMD", argv [0]))
-        sys.stdout.write ("\n")
-        return 1
-
-    # ----------------
     # All args collected; create the build directory and its Makefile
 
-    make_build_dir (repo, repobase, arch, sim, debug, tv)
+    make_build_dir (repo, repobase, arch, sim, debug, tv, rvfi_dii)
 
     return 0
 
@@ -145,14 +170,16 @@ def main (argv = None):
 # Can be invoked with or without the leading "RV32" or "RV64"
 
 def canonical_arch_string (arch):
+    arch_split = arch.split('x');
+    arch_std = arch_split[0];
     prefix = ""
-    letters_s = arch
-    if arch.startswith ("RV32"):
+    letters_s = arch_std
+    if arch_std.startswith ("RV32"):
         prefix = "RV32"
-        letters_s = arch [4:]
-    elif arch.startswith ("RV64"):
+        letters_s = arch_std [4:]
+    elif arch_std.startswith ("RV64"):
         prefix = "RV64"
-        letters_s = arch [4:]
+        letters_s = arch_std [4:]
 
     # Convert  'letters_s'  string to list of single-char strings
     letters_l  = map  ((lambda j: letters_s [j]),  (range (len (letters_s))))
@@ -163,12 +190,12 @@ def canonical_arch_string (arch):
     # Join them back into a string
     letters_s  = "".join (letters_l)
 
-    return (prefix + letters_s)
+    return ("x".join([prefix + letters_s] + arch_split[1:]))
 
 # ================================================================
 # Create the build directory and its Makefile
 
-def make_build_dir (repo, repobase, arch, sim, debug, tv):
+def make_build_dir (repo, repobase, arch, sim, debug, tv, rvfi_dii):
 
     # debugging only
     if False:
@@ -178,6 +205,7 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv):
         sys.stdout.write ("sim      = '{0}'\n".format (sim))
         sys.stdout.write ("debug    = '{0}'\n".format (debug))
         sys.stdout.write ("tv       = '{0}'\n".format (tv))
+        sys.stdout.write ("RVFI_DII = '{0}'\n".format (rvfi_dii))
         return
 
     # Create the directory
@@ -187,6 +215,8 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv):
     else:
         sys.stdout.write ("Creating directory    '{0}'\n".format (dirname));
         os.mkdir (dirname)
+
+    arch = arch.replace("_RVFI_DII", "")
 
     # Create the Makefile (backing up existing copy, if any)
     Makefile_filename = os.path.join (dirname, "Makefile")
@@ -216,29 +246,53 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv):
     fo.write ("ARCH ?= {0}\n".format (arch))
     fo.write ("\n")
 
+    if (rvfi_dii != ""):
+        fo.write ("TOPMODULE ?= $(TOPMODULE_RVFI_DII)  \\\n")
+    else:
+        fo.write ("TOPMODULE ?= $(TOPMODULE_NORMAL)  \\\n")
+
+    arch_split = arch.split('x');
+    arch_std = arch_split[0]
+
+    # CHERI parameters
+    fo.write ("\n")
+    if (arch_std.startswith ("RV32")):
+        fo.write ("CAPSIZE = 64\n")
+    else:
+        fo.write ("CAPSIZE = 128\n")
+    fo.write ("TAGS_STRUCT = 0 128\n")
+    fo.write ("TAGS_ALIGN = 32\n")
+    fo.write ("\n")
+
     # RISC-V config macros passed into Bluespec 'bsc' compiler
     fo.write ("# ================================================================\n")
     fo.write ("# RISC-V config macros passed into Bluespec 'bsc' compiler\n")
     fo.write ("\n")
     fo.write ("BSC_COMPILATION_FLAGS += \\\n")
-    fo.write ("\t-D " + arch [0:4] + " \\\n")
+    fo.write ("\t-D " + arch_std [0:4] + " \\\n")
 
     # RISC-V privilege levels
     fo.write ("\t-D ISA_PRIV_M")
-    if ("U" in arch): fo.write ("  -D ISA_PRIV_U")
-    if ("S" in arch): fo.write ("  -D ISA_PRIV_S")
+    if ("U" in arch_std): fo.write ("  -D ISA_PRIV_U")
+    if ("S" in arch_std): fo.write ("  -D ISA_PRIV_S")
     fo.write ("  \\\n")
 
     # If 'S', specify Virtual Memory scheme
-    if ("S" in arch):
-        if (arch.startswith ("RV32")):
+    if ("S" in arch_std):
+        if (arch_std.startswith ("RV32")):
             fo.write ("\t-D SV32  \\\n")
         else:
             fo.write ("\t-D SV39  \\\n")
 
+    fo.write("\t-D RISCV\\\n");
+    if (arch_std.startswith ("RV32")):
+        fo.write ("\t-D CAP64\\\n")
+    else:
+        fo.write ("\t-D CAP128\\\n")
+
     # RISC-V arch features
     arch_flags = ""
-    if ("G" in arch):
+    if ("G" in arch_std):
         arch_flags = arch_flags + "  -D ISA_I"
         arch_flags = arch_flags + "  -D ISA_M"
         arch_flags = arch_flags + "  -D ISA_A"
@@ -246,13 +300,14 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv):
         arch_flags = arch_flags + "  -D ISA_D"
         arch_flags = arch_flags + "  -D ISA_FD_DIV"
     else:
-        if ("I" in arch): arch_flags = arch_flags + "  -D ISA_I"
-        if ("I" in arch): arch_flags = arch_flags + "  -D ISA_M"
-        if ("A" in arch): arch_flags = arch_flags + "  -D ISA_A"
-        if ("F" in arch): arch_flags = arch_flags + "  -D ISA_F"
-        if ("D" in arch): arch_flags = arch_flags + "  -D ISA_D"
-        if (("F" in arch) or ("D" in arch)): arch_flags = arch_flags + "  -D ISA_FD_DIV"
-    if ("C" in arch): arch_flags = arch_flags + "  -D ISA_C"
+        if ("I" in arch_std): arch_flags = arch_flags + "  -D ISA_I"
+        if ("I" in arch_std): arch_flags = arch_flags + "  -D ISA_M"
+        if ("A" in arch_std): arch_flags = arch_flags + "  -D ISA_A"
+        if ("F" in arch_std): arch_flags = arch_flags + "  -D ISA_F"
+        if ("D" in arch_std): arch_flags = arch_flags + "  -D ISA_D"
+        if (("F" in arch_std) or ("D" in arch_std)): arch_flags = arch_flags + "  -D ISA_FD_DIV"
+    if ("C" in arch_std): arch_flags = arch_flags + "  -D ISA_C"
+    arch_flags += "".join(["  -D ISA_" + non_std_ext for non_std_ext in arch_split[1:]])
     fo.write ("\t{0}  \\\n".format (arch_flags.lstrip()))
 
     # Bluespec HW implementation choice for shifter
@@ -278,6 +333,10 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv):
     # Support for Bluespec Tandem Verification traces
     if (tv != ""):
         fo.write ("\t-D INCLUDE_TANDEM_VERIF  \\\n")
+
+    if (rvfi_dii != ""):
+        fo.write ("\t-D RVFI_DII  \\\n")
+        fo.write ("\t-D RVFI  \\\n")
 
     fo.write ("\n")
 

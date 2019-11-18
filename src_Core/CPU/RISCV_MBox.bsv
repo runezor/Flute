@@ -79,12 +79,14 @@ module mkRISCV_MBox (RISCV_MBox_IFC);
    Reg #(Bool)    dw_valid  <- mkDWire (False);
    Reg #(WordXL)  dw_result <- mkDWire (?);
 
+
    // ----------------------------------------------------------------
    // MUL family: SYNTH implementation
    // Relies on the fav_MUL/MULH/MULHU/MULHSU/MULW functions later in
    // this package which do multiplication directly with Verilog's '*'
    // and rely on Verilog synthesis to implement the multiplier.
    // (DSPs on FPGAa).
+
 
 `ifdef MULT_SYNTH
 
@@ -212,6 +214,7 @@ module mkRISCV_MBox (RISCV_MBox_IFC);
       rg_v2              <= v2;
 
       // MUL, MULH, MULHU, MULHSU
+
       if (f3 [2] == 1'b0) begin
 	 rg_state <= STATE_MUL1;
 

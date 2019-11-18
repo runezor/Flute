@@ -182,6 +182,10 @@ CSR_Addr   csr_addr_dpc       = 12'h7B1;    // Debug PC
 CSR_Addr   csr_addr_dscratch0 = 12'h7B2;    // Debug scratch0
 CSR_Addr   csr_addr_dscratch1 = 12'h7B3;    // Debug scratch1
 
+`ifdef ISA_CHERI
+CSR_Addr   csr_addr_mccsr     = 12'hBC0;    // Machine Capability Control and Status
+`endif
+
 // ================================================================
 // MISA
 
@@ -463,7 +467,11 @@ endfunction
 
 function MTVec word_to_mtvec (WordXL x);
    return MTVec {base: truncate (x >> 2),
+`ifdef RVFI_DII
+                 mode: unpack (x[1] == 1 ? 0 : x[0])};
+`else
                  mode: unpack (x[0])};
+`endif
 endfunction
 
 // ================================================================
@@ -538,7 +546,12 @@ endfunction
 
 // Exception Codes in mcause
 
+`ifdef ISA_CHERI
+typedef Bit #(6) Exc_Code;
+Exc_Code  exc_code_CHERI                         = 32;
+`else
 typedef Bit #(4) Exc_Code;
+`endif
 
 // When Interrupt = 1 (interrupt)
 

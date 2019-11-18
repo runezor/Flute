@@ -1,5 +1,18 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
 
+//-
+// AXI (user fields) modifications:
+//     Copyright (c) 2019 Alexandre Joannou
+//     Copyright (c) 2019 Peter Rugg
+//     Copyright (c) 2019 Jonathan Woodruff
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package Mem_Controller;
 
 // ================================================================
@@ -69,13 +82,14 @@ import Cur_Cycle  :: *;
 import GetPut_Aux :: *;
 import Semi_FIFOF :: *;
 import ByteLane   :: *;
+import AXI4       :: *;
+import SourceSink :: *;
 
 // ================================================================
 // Project imports
 
 import Fabric_Defs :: *;
 import SoC_Map     :: *;
-import AXI4_Types  :: *;
 
 // ================================================================
 // Raw mem data width:    256 (bits/ 32 x Byte/ 8 x Word32/ 4 x Word64)
@@ -112,7 +126,7 @@ typedef TLog #(Word64s_per_Raw_Mem_Word)               Bits_per_Word64_in_Raw_Me
 // Type of index of a Word64 in a Raw_Mem_Word seen as a vector of Word64s
 typedef Bit #(Bits_per_Word64_in_Raw_Mem_Word)         Word64_in_Raw_Mem_Word;
 
-typedef TDiv #(Bytes_per_Raw_Mem_Word, Bytes_per_Fabric_Data)  Fabric_Data_per_Raw_Mem_Word;
+typedef TDiv #(Bytes_per_Raw_Mem_Word, Bytes_per_Fabric_Data_Periph)  Fabric_Data_per_Raw_Mem_Word;
 
 // Index of bit that selects a fabric data word in an address
 `ifdef FABRIC32
@@ -126,14 +140,14 @@ Integer  lo_fabric_data = 3;
 // ================================================================
 
 function Bool fn_addr_is_aligned (Fabric_Addr  addr, AXI4_Size  size);
-   Bool is_aligned = (   (size == axsize_1)
-		      || ((size == axsize_2)    && (addr [0]   == 1'h0))
-		      || ((size == axsize_4)    && (addr [1:0] == 2'h0))
-		      || ((size == axsize_8)    && (addr [2:0] == 3'h0))
-		      || ((size == axsize_16)   && (addr [3:0] == 4'h0))
-		      || ((size == axsize_32)   && (addr [4:0] == 5'h0))
-		      || ((size == axsize_64)   && (addr [5:0] == 6'h0))
-		      || ((size == axsize_128)  && (addr [6:0] == 7'h0)));
+   Bool is_aligned = (   (size == 1)
+		      || ((size == 2)    && (addr [0]   == 1'h0))
+		      || ((size == 4)    && (addr [1:0] == 2'h0))
+		      || ((size == 8)    && (addr [2:0] == 3'h0))
+		      || ((size == 16)   && (addr [3:0] == 4'h0))
+		      || ((size == 32)   && (addr [4:0] == 5'h0))
+		      || ((size == 64)   && (addr [5:0] == 6'h0))
+		      || ((size == 128)  && (addr [6:0] == 7'h0)));
    return is_aligned;
 endfunction
 
@@ -183,6 +197,17 @@ Integer status_mem_controller_terminated = 1;
 // ================================================================
 // Interface
 
+// XXX TODO FIXME XXX
+// This module seems to assume that
+// - user fields will be mirrored from AW to B and from AR to R
+// - the wuser field can be ignored
+// - awuser, buser, aruser, ruser are of the same width
+// We temporarily redefine the Wd_User width to be the same as that of
+// Wd_AW_User as defined in Fabric_Defs.
+typedef Wd_AW_User Wd_User;
+export Wd_User;
+// XXX TODO FIXME XXX
+
 interface Mem_Controller_IFC;
    // Reset
    interface Server #(Bit #(0), Bit #(0)) server_reset;
@@ -191,7 +216,8 @@ interface Mem_Controller_IFC;
    method Action set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim);
 
    // Main Fabric Reqs/Rsps
-   interface AXI4_Slave_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) slave;
+   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data,
+                                Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) slave;
 
    // To raw memory (outside the SoC)
    interface MemoryClient #(Bits_per_Raw_Mem_Addr, Bits_per_Raw_Mem_Word)  to_raw_mem;
@@ -215,7 +241,7 @@ deriving (Bits, Eq, FShow);
 typedef struct {Req_Op                     req_op;
 
 		// AW and AR channel info
-		Fabric_Id                  id;
+		Bit#(Wd_SId)               id;
 		Fabric_Addr                addr;
 		AXI4_Len                   len;
 		AXI4_Size                  size;
@@ -228,8 +254,8 @@ typedef struct {Req_Op                     req_op;
 		Bit #(Wd_User)             user;
 
 		// Write data info
-		Bit #(TDiv #(Wd_Data, 8))  wstrb;
-		Fabric_Data                data;
+		Bit #(TDiv #(Wd_Data_Periph, 8))  wstrb;
+		Fabric_Data_Periph         data;
    } Req
 deriving (Bits, FShow);
 
@@ -237,6 +263,8 @@ deriving (Bits, FShow);
 
 (* synthesize *)
 module mkMem_Controller (Mem_Controller_IFC);
+// XXX This module seems to assume the following constraints:
+// provisos(Add #(Wd_AW_User, 0, Wd_B_User), Add #(Wd_AR_User, 0, Wd_R_User));
 
    // verbosity 0: quiet
    // verbosity 1: reset, initialized
@@ -244,7 +272,8 @@ module mkMem_Controller (Mem_Controller_IFC);
    // verbosity 3: more detail of local raw_mem interactions
    Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (0);
 
-   Reg #(State)       rg_state     <- mkReg (STATE_POWER_ON_RESET);
+   Reg #(State)       rg_state     <- mkConfigReg (STATE_POWER_ON_RESET);
+   Reg #(Bool)        rg_mem_map_set <- mkReg (False);
    Reg #(Fabric_Addr) rg_addr_base <- mkRegU;
    Reg #(Fabric_Addr) rg_addr_lim  <- mkRegU;
 
@@ -252,7 +281,9 @@ module mkMem_Controller (Mem_Controller_IFC);
    FIFOF #(Bit #(0)) f_reset_rsps <- mkFIFOF;
 
    // Communication with fabric
-   AXI4_Slave_Xactor_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) slave_xactor <- mkAXI4_Slave_Xactor;
+   AXI4_Slave_Width_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, Wd_Data,
+                              Wd_AW_User_Periph, Wd_W_User_Periph, Wd_B_User_Periph, Wd_AR_User_Periph, Wd_R_User_Periph,
+                              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) slave_xactor <- mkAXI4_Slave_Widening_Xactor;
 
    // Requests merged from the (WrA, WrD) and RdA channels
    FIFOF #(Req) f_reqs <- mkPipelineFIFOF;
@@ -285,7 +316,7 @@ module mkMem_Controller (Mem_Controller_IFC);
 
    function Action fa_reset_actions;
       action
-	 slave_xactor.reset;
+	 slave_xactor.clear;
 	 f_raw_mem_reqs.clear;
 	 f_raw_mem_rsps.clear;
 	 rg_status <= 0;
@@ -326,7 +357,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    // Merge requests into a single queue, prioritizing reads over writes
 
    rule rl_merge_rd_req;
-      let rda <- pop_o (slave_xactor.o_rd_addr);
+      let rda <- get(slave_xactor.master.ar);
       let req = Req {req_op:     REQ_OP_RD,
 		     id:         rda.arid,
 		     addr:       rda.araddr,
@@ -351,8 +382,8 @@ module mkMem_Controller (Mem_Controller_IFC);
 
    (* descending_urgency = "rl_merge_rd_req, rl_merge_wr_req" *)
    rule rl_merge_wr_req;
-      let wra <- pop_o (slave_xactor.o_wr_addr);
-      let wrd <- pop_o (slave_xactor.o_wr_data);
+      let wra <- get(slave_xactor.master.aw);
+      let wrd <- get(slave_xactor.master.w);
       let req = Req {req_op:     REQ_OP_WR,
 		     id:         wra.awid,
 		     addr:       wra.awaddr,
@@ -405,7 +436,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    // different raw_mem_word-addr and is dirty;
    // it writes back the dirty raw_mem_word; the cached raw_mem_word becomes clean
 
-   rule rl_writeback_dirty (   (rg_state == STATE_READY)
+   rule rl_writeback_dirty (   (rg_state == STATE_READY) && rg_mem_map_set
 			    && fn_addr_is_ok (rg_addr_base, f_reqs.first.addr, rg_addr_lim, f_reqs.first.size)
 			    && (rg_cached_raw_mem_addr != req_raw_mem_addr)
 			    && (! rg_cached_clean));
@@ -425,7 +456,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    // different addr and is clean; we overwrite with the correct raw_mem_word
    // by reloading from memory; the new cached raw_mem_word is clean.
 
-   rule rl_miss_clean_req (   (rg_state == STATE_READY)
+   rule rl_miss_clean_req (   (rg_state == STATE_READY) && rg_mem_map_set
 			   && fn_addr_is_ok (rg_addr_base, f_reqs.first.addr, rg_addr_lim, f_reqs.first.size)
 			   && (rg_cached_raw_mem_addr != req_raw_mem_addr)
 			   && rg_cached_clean);
@@ -461,7 +492,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    // Returns the full Wd_Data-wide word containing the byte specified by the address.
    // i.e., we do not extract relevant bytes here, leaving that to the requestor.
 
-   rule rl_process_rd_req  (   (rg_state == STATE_READY)
+   rule rl_process_rd_req  (   (rg_state == STATE_READY) && rg_mem_map_set
 			    && fn_addr_is_ok (rg_addr_base, f_reqs.first.addr, rg_addr_lim, f_reqs.first.size)
 			    && (rg_cached_raw_mem_addr == req_raw_mem_addr)
 			    && (f_reqs.first.req_op == REQ_OP_RD));
@@ -470,7 +501,7 @@ module mkMem_Controller (Mem_Controller_IFC);
       // We need to select the fabric data word from the raw mem word that contains the target address.
 
       // View the raw mem word as a vector of fabric data words (Wd_Data width words)
-      Vector #(Fabric_Data_per_Raw_Mem_Word, Bit #(Wd_Data)) raw_mem_word_V_fabric_data = unpack (rg_cached_raw_mem_word);
+      Vector #(Fabric_Data_per_Raw_Mem_Word, Bit #(Wd_Data_Periph)) raw_mem_word_V_fabric_data = unpack (rg_cached_raw_mem_word);
 
       // Get the index into this vector of the fabric word containing the target address.
       // For this index, use a generous size (here Bit #(16)), and let zeroExtend pad it automaticallly.
@@ -479,14 +510,14 @@ module mkMem_Controller (Mem_Controller_IFC);
       n = (n >> lo_fabric_data);
 
       // Select the fabric data word of interest
-      Bit #(Wd_Data) rdata = raw_mem_word_V_fabric_data [n];
+      Bit #(Wd_Data_Periph) rdata = raw_mem_word_V_fabric_data [n];
 
-      let rdr = AXI4_Rd_Data {rid:   f_reqs.first.id,
-			      rdata: rdata,
-			      rresp: axi4_resp_okay,
-			      rlast: True,
-			      ruser: f_reqs.first.user};
-      slave_xactor.i_rd_data.enq (rdr);
+      let rdr = AXI4_RFlit {rid:   f_reqs.first.id,
+			    rdata: rdata,
+			    rresp: OKAY,
+			    rlast: True,
+			    ruser: f_reqs.first.user}; // XXX This requires that Wd_AR_User == Wd_R_User
+      slave_xactor.master.r.put(rdr);
       f_reqs.deq;
 
       if (cfg_verbosity > 1) begin
@@ -500,7 +531,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    // This rule fires on a fabric write request when the cached raw_mem_word has the
    // same addr ('hit'), whether clean or dirty.
 
-   rule rl_process_wr_req  (   (rg_state == STATE_READY)
+   rule rl_process_wr_req  (   (rg_state == STATE_READY) && rg_mem_map_set
 			    && fn_addr_is_ok (rg_addr_base, f_reqs.first.addr, rg_addr_lim, f_reqs.first.size)
 			    && (rg_cached_raw_mem_addr == req_raw_mem_addr)
 			    && (f_reqs.first.req_op == REQ_OP_WR));
@@ -512,7 +543,7 @@ module mkMem_Controller (Mem_Controller_IFC);
       // Lane-adjust the new word64
       Bit #(64) word64_new = zeroExtend (f_reqs.first.data);
       Bit #(8)  strobe     = zeroExtend (f_reqs.first.wstrb);
-      if ((valueOf (Wd_Data) == 32) && (f_reqs.first.addr [2] == 1'b1)) begin
+      if ((valueOf (Wd_Data_Periph) == 32) && (f_reqs.first.addr [2] == 1'b1)) begin
 	 // Upper 32b only
 	 word64_new = { word64_new [31:0], 0 };
 	 strobe     = { strobe     [3:0],  0 };
@@ -525,10 +556,10 @@ module mkMem_Controller (Mem_Controller_IFC);
       rg_cached_raw_mem_word <= pack (raw_mem_word_V_Word64);
       rg_cached_clean        <= False;
 
-      let wrr = AXI4_Wr_Resp {bid:   f_reqs.first.id,
-			      bresp: axi4_resp_okay,
-			      buser: f_reqs.first.user};
-      slave_xactor.i_wr_resp.enq (wrr);
+      let wrr = AXI4_BFlit {bid:   f_reqs.first.id,
+			    bresp: OKAY,
+			    buser: f_reqs.first.user}; // XXX This requires that Wd_AW_User == Wd_B_User
+      slave_xactor.master.b.put(wrr);
       f_reqs.deq;
 
       if (cfg_verbosity > 1) begin
@@ -589,16 +620,16 @@ module mkMem_Controller (Mem_Controller_IFC);
    // ================================================================
    // Invalid address
 
-   rule rl_invalid_rd_address (   (rg_state == STATE_READY)
+   rule rl_invalid_rd_address (   (rg_state == STATE_READY) && rg_mem_map_set
 			       && (! fn_addr_is_ok (rg_addr_base, f_reqs.first.addr, rg_addr_lim, f_reqs.first.size))
 			       && (f_reqs.first.req_op == REQ_OP_RD));
-      Fabric_Data rdata = zeroExtend (f_reqs.first.addr);
-      let rdr = AXI4_Rd_Data {rid:   f_reqs.first.id,
-			      rdata: rdata,                 // for debugging only
-			      rresp: axi4_resp_slverr,
-			      rlast: True,
-			      ruser: f_reqs.first.user};
-      slave_xactor.i_rd_data.enq (rdr);
+      Fabric_Data_Periph rdata = zeroExtend (f_reqs.first.addr);
+      let rdr = AXI4_RFlit {rid:   f_reqs.first.id,
+			    rdata: rdata,                 // for debugging only
+			    rresp: SLVERR,
+			    rlast: True,
+			    ruser: f_reqs.first.user}; // XXX This requires that Wd_AR_User == Wd_R_User
+      slave_xactor.master.r.put(rdr);
       f_reqs.deq;
 
       $write ("%0d: ERROR: Mem_Controller:", cur_cycle);
@@ -611,13 +642,13 @@ module mkMem_Controller (Mem_Controller_IFC);
       $display ("     => ", fshow (rdr));
    endrule
 
-   rule rl_invalid_wr_address (   (rg_state == STATE_READY)
+   rule rl_invalid_wr_address (   (rg_state == STATE_READY) && rg_mem_map_set
 			       && (! fn_addr_is_ok (rg_addr_base, f_reqs.first.addr, rg_addr_lim, f_reqs.first.size))
 			       && (f_reqs.first.req_op == REQ_OP_WR));
-      let wrr = AXI4_Wr_Resp {bid:   f_reqs.first.id,
-			      bresp: axi4_resp_slverr,
-			      buser: f_reqs.first.user};
-      slave_xactor.i_wr_resp.enq (wrr);
+      let wrr = AXI4_BFlit {bid:   f_reqs.first.id,
+			    bresp: SLVERR,
+			    buser: f_reqs.first.user}; // XXX This requires that Wd_AW_User == Wd_B_User
+      slave_xactor.master.b.put(wrr);
       f_reqs.deq;
 
       $write ("%0d: ERROR: Mem_Controller:", cur_cycle);
@@ -640,6 +671,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    method Action  set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim) if (rg_state == STATE_READY);
       rg_addr_base <= addr_base;
       rg_addr_lim  <= addr_lim;
+      rg_mem_map_set <= True;
       $display ("%0d: Mem_Controller.set_addr_map: addr_base 0x%0h addr_lim 0x%0h",
 		cur_cycle, addr_base, addr_lim);
 
@@ -652,7 +684,7 @@ module mkMem_Controller (Mem_Controller_IFC);
    endmethod
 
    // Main Fabric Reqs/Rsps
-   interface  slave = slave_xactor.axi_side;
+   interface  slave = slave_xactor.slaveSynth;
 
    // To raw memory (outside the SoC)
    interface  to_raw_mem = toGPClient (f_raw_mem_reqs, f_raw_mem_rsps);

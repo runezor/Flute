@@ -1,5 +1,6 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
 
+
 package FPR_RegFile;
 
 // ================================================================
@@ -18,6 +19,7 @@ import RegFile      :: *;
 import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
+
 
 // BSV additional libs
 
@@ -146,5 +148,6 @@ module mkFPR_RegFile (FPR_RegFile_IFC);
 endmodule
 
 // ================================================================
+
 
 endpackage

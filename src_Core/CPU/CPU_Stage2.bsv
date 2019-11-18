@@ -1,5 +1,17 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
 
+//-
+// RVFI_DII + CHERI modifications:
+//     Copyright (c) 2018 Jack Deeley
+//     Copyright (c) 2018-2019 Peter Rugg (RVFI_DII + CHERI)
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package CPU_Stage2;
 
 // ================================================================
@@ -45,6 +57,10 @@ import Cur_Cycle  :: *;
 
 import ISA_Decls     :: *;
 
+`ifdef RVFI
+import Verifier  :: *;
+import RVFI_DII  :: *;
+`endif
 import TV_Info       :: *;
 
 import CPU_Globals   :: *;
@@ -62,6 +78,11 @@ import RISCV_MBox  :: *;
 `ifdef ISA_F
 import FBox_Top    :: *;
 import FBox_Core   :: *;   // For fv_nanbox function
+`endif
+
+`ifdef ISA_CHERI
+import CHERICap :: *;
+import CHERICC_Fat :: *;
 `endif
 
 // ================================================================
@@ -100,6 +121,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    Reg #(Bool)                  rg_resetting  <- mkReg (False);
    Reg #(Bool)                  rg_full       <- mkReg (False);
    Reg #(Data_Stage1_to_Stage2) rg_stage2     <- mkRegU;    // From Stage 1
+   Reg #(Bit#(5))               rg_f5         <- mkReg (0);
 
    // ----------------
    // Serial shifter box
@@ -124,34 +146,43 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
    // ----------------
 
+`ifdef RVFI
+   let info_RVFI_s1 = rg_stage2.info_RVFI_s1;
+`endif
+
    let bypass_base = Bypass {bypass_state: BYPASS_RD_NONE,
 			     rd:           rg_stage2.rd,
-`ifdef ISA_D
-			     // TODO: is this ifdef necessary? Can't we always truncate?
-			     rd_val:       truncate (rg_stage2.val1)
-`else
-			     rd_val:       rg_stage2.val1
-`endif
+			     rd_val:       extract_cap(rg_stage2.val1)
 			     };
 
 `ifdef ISA_F
    let fbypass_base = FBypass {bypass_state: BYPASS_RD_NONE,
 			       rd:           rg_stage2.rd,
-`ifdef ISA_D
-			       rd_val:       rg_stage2.val1
-`else
-`ifdef RV64
-			       rd_val:       extend (rg_stage2.val1)
-`else
-			       rd_val:       rg_stage2.val1
-`endif
-`endif
+			       rd_val:       extract_flt(rg_stage2.val1)
 			       };
 `endif
 
+`ifdef RVFI
+    let info_RVFI_s2_base = Data_RVFI_Stage2 {
+                                    stage1:     info_RVFI_s1,
+                                    mem_rmask:  0,
+                                    mem_wmask:  0
+                                };
+`endif
+
    let data_to_stage3_base = Data_Stage2_to_Stage3 {priv:      rg_stage2.priv,
+`ifdef ISA_CHERI
+                pc:        getPC(rg_stage2.pcc),
+`else
 						    pc:        rg_stage2.pc,
+`endif
 						    instr:     rg_stage2.instr,
+`ifdef RVFI_DII
+						    instr_seq: rg_stage2.instr_seq,
+`endif
+`ifdef RVFI
+						    info_RVFI_s2: info_RVFI_s2_base,
+`endif
 `ifdef ISA_F
                                                     rd_in_fpr: False,
                                                     upd_flags: False,
@@ -161,15 +192,37 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 						    rd:        rg_stage2.rd,
 						    rd_val:    rg_stage2.val1};
 
-   let  trap_info_dmem = Trap_Info {epc:      rg_stage2.pc,
+   let  trap_info_dmem = Trap_Info_Pipe {
 				    exc_code: dcache.exc_code,
-				    tval:     rg_stage2.addr };
+`ifdef ISA_CHERI
+            cheri_exc_code: dcache.exc_code == exc_code_CHERI ? exc_code_CHERI_Length: exc_code_CHERI_None,
+            cheri_exc_reg: ?, //TODO
+            epcc: rg_stage2.pcc,
+`else
+            epc:  rg_stage2.pc,
+`endif
+				    tval: rg_stage2.addr };
 
 `ifdef ISA_F
    // The FBox can only generate ILLEGAL Instruction exceptions
-   let  trap_info_fbox = Trap_Info {epc:      rg_stage2.pc,
+   let  trap_info_fbox = Trap_Info_Pipe {
+`ifdef ISA_CHERI
+            epcc:     rg_stage2.pcc,
+            cheri_exc_code: ?,
+            cheri_exc_reg: ?,
+`else
+            epc:      rg_stage2.pc,
+`endif
 				    exc_code: exc_code_ILLEGAL_INSTRUCTION,
 				    tval:     0 };
+`endif
+
+`ifdef ISA_CHERI
+   let  trap_info_capbounds = Trap_Info_Pipe {epcc:    rg_stage2.pcc,
+                       exc_code: exc_code_CHERI,
+                       cheri_exc_code: exc_code_CHERI_Length,
+                       cheri_exc_reg: rg_stage2.check_authority_idx,
+                       tval: rg_stage2.check_address_low };
 `endif
 
    // ----------------------------------------------------------------
@@ -200,6 +253,11 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    function Output_Stage2 fv_out;
       Output_Stage2 output_stage2 = ?;
 
+`ifdef ISA_CHERI
+     let check_success =  rg_stage2.check_address_low >= getBase(rg_stage2.check_authority) &&
+                         (rg_stage2.check_inclusive ? (rg_stage2.check_address_high <= getTop(rg_stage2.check_authority)) : (rg_stage2.check_address_high < getTop(rg_stage2.check_authority)));
+`endif
+
       // This stage is empty
       if (! rg_full) begin
 	 output_stage2 = Output_Stage2 {ostatus:         OSTATUS_EMPTY,
@@ -212,9 +270,19 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 					trace_data:      ?
 					};
       end
-
       // This stage is just relaying ALU results from previous stage to next stage
-      else if (rg_stage2.op_stage2 == OP_Stage2_ALU) begin
+      else
+`ifdef ISA_CHERI
+     if (rg_stage2.check_enable && !check_success) begin
+         output_stage2 = Output_Stage2 {ostatus: OSTATUS_NONPIPE,
+                                        trap_info: trap_info_capbounds,
+                                        data_to_stage3: ?,
+                                        bypass: no_bypass,
+                                        trace_data: ? //TODO
+                                    };
+     end else
+`endif
+      if (rg_stage2.op_stage2 == OP_Stage2_ALU) begin
 	 let data_to_stage3 = data_to_stage3_base;
 	 data_to_stage3.rd_valid = True;
 
@@ -236,6 +304,28 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 					trace_data:      trace_data};
       end
 
+`ifdef ISA_CHERI
+      else if (   (rg_stage2.op_stage2 == OP_Stage2_TestSubset)) begin
+          let ostatus = OSTATUS_PIPE;
+          CapPipe result = nullWithAddr(zeroExtend(pack(check_success)));
+          let data_to_stage3 = data_to_stage3_base;
+          data_to_stage3.rd_valid = True;
+          data_to_stage3.rd_val = embed_cap(result);
+          let bypass = bypass_base;
+          bypass.bypass_state = BYPASS_RD_RDVAL;
+          bypass.rd_val       = result;
+`ifdef RVFI
+          let info_RVFI_s2 = info_RVFI_s2_base;
+          data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
+          output_stage2 = Output_Stage2 {ostatus:         ostatus,
+                 trap_info:       trap_info_dmem,
+                 data_to_stage3:  data_to_stage3,
+                 bypass:          bypass,
+                 trace_data:      ?};
+`endif
+      end
+`endif
+
       // This stage is doing a LOAD or AMO
       else if (   (rg_stage2.op_stage2 == OP_Stage2_LD)
 `ifdef ISA_A
@@ -248,10 +338,21 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 			   : (  dcache.exc
 			      ? OSTATUS_NONPIPE
 			      : OSTATUS_PIPE));
+        match {.mem_tag, .mem_val} = dcache.word128;
+`ifdef ISA_CHERI
+        CapPipe result = ?; //TODO any reason for this to be CapPipe not CapReg/CapMem?
+        if (rg_stage2.mem_width_code == w_SIZE_CAP) begin
+            CapMem capMem = {pack(rg_stage2.mem_allow_cap) & pack(mem_tag), truncate(mem_val)};
+            CapReg capReg = cast(capMem);
+            result = cast(capReg);
+        end else begin
+            result = nullWithAddr(truncate(mem_val));
+        end
+`else
+        WordXL result = truncate(mem_val);
+`endif
 
-	    WordXL result = truncate (dcache.word64);
-
-            let funct3 = instr_funct3 (rg_stage2.instr);
+        let funct3 = instr_funct3 (rg_stage2.instr);
 
 	    let data_to_stage3 = data_to_stage3_base;
 	    data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
@@ -262,27 +363,20 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
                if (funct3 == f3_FLW)
 `ifdef ISA_D
                   // needs nan-boxing when destined for a DP register file
-                  data_to_stage3.rd_val = fv_nanbox (dcache.word64);
+                  data_to_stage3.rd_val = embed_flt(fv_nanbox (truncate(tpl_2(dcache.word128))));
 `else
-                  data_to_stage3.rd_val = result;
+                  data_to_stage3.rd_val = embed_flt(truncate(tpl_2(dcache.word128)));
 `endif
                // A FLD result
                else
-                  data_to_stage3.rd_val = dcache.word64;
+                  data_to_stage3.rd_val = embed_flt(truncate(tpl_2(dcache.word128)));
             end
 
             // A GPR load in a FD system
             else
-`ifdef ISA_D
-               // rd_val is 64-bit to handle FP values
-               data_to_stage3.rd_val   = dcache.word64;
-`else
-               data_to_stage3.rd_val   = result;
 `endif
-`else
             // A GPR load in a non-FD system
-	    data_to_stage3.rd_val   = result;
-`endif
+	    data_to_stage3.rd_val   = embed_cap(result);
 
             // Update the bypass channel, if not trapping (NONPIPE)
 	    let bypass = bypass_base;
@@ -304,11 +398,11 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 		  // Option 1: longer critical path, since the data is bypassed back into previous stage.
 		  // We use data_to_stage3.rd_val since nanboxing has been done.
 		  // fbypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
-		  // fbypass.rd_val       = data_to_stage3.rd_val;
+		  // fbypass.rd_val       = extract_flt(data_to_stage3.rd_val);
 
 		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
 		  // (the bypassing is effectively delayed until the next stage).
-		  fbypass.bypass_state = BYPASS_RD;
+		   fbypass.bypass_state = BYPASS_RD;
                end
 
                // Bypassing GPR value in a FD system
@@ -322,7 +416,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
 		  // (the bypassing is effectively delayed until the next stage).
-		  bypass.bypass_state = BYPASS_RD;
+		   bypass.bypass_state = BYPASS_RD;
 	       end
 `else
                // Bypassing GPR value in a non-FD system. LD result meant for GPR
@@ -336,7 +430,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
 		  // (the bypassing is effectively delayed until the next stage).
-		  bypass.bypass_state = BYPASS_RD;
+		     bypass.bypass_state = BYPASS_RD;
 	       end
 `endif
 	    end
@@ -344,8 +438,39 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	    let trace_data   = ?;
 `ifdef INCLUDE_TANDEM_VERIF
 	    trace_data   = rg_stage2.trace_data;
+`elsif RVFI
+	    let info_RVFI_s2 = info_RVFI_s2_base;
+        // If we're doing a load or AMO other than SC, we need to set the read mask.
+        if((rg_stage2.op_stage2 == OP_Stage2_LD)
+        `ifdef ISA_A
+            ||((rg_stage2.op_stage2 == OP_Stage2_AMO) && (rg_f5 != f5_AMO_SC))
+        `endif
+        ) begin
+            info_RVFI_s2.mem_rmask = getMemMask({0,rg_stage2.mem_width_code},rg_stage2.addr);
+        end
+        `ifdef ISA_A
+        // If we're doing an AMO that's not an LR, we need to set the write mask as well.
+        if (rg_stage2.op_stage2 == OP_Stage2_AMO && rg_f5 != f5_AMO_LR) begin
+            // For most AMOs we can just go ahead and do it
+            if (rg_f5 != f5_AMO_SC) begin
+                info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
+            // For SC however we do need to check that it was successful, otherwise we've not written.
+            end else begin
+`ifdef ISA_CHERI
+                info_RVFI_s2.mem_wmask = ((getAddr(result) == 0) ? getMemMask(rg_stage2.mem_width_code,rg_stage2.addr) : 0);
+`else
+                info_RVFI_s2.mem_wmask = ((result == 0) ? getMemMask(rg_stage2.mem_width_code,rg_stage2.addr) : 0);
 `endif
-	    trace_data.word1 = result;
+            end
+        end
+        `endif
+        data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
+`endif
+`ifdef ISA_CHERI
+        trace_data.word1 = getAddr(result);
+`else
+        trace_data.word1 = result;
+`endif
 
 	    output_stage2 = Output_Stage2 {ostatus:         ostatus,
 					   trap_info:       trap_info_dmem,
@@ -368,7 +493,18 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 let data_to_stage3 = data_to_stage3_base;
 	 data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
 	 data_to_stage3.rd       = 0;
+`ifdef RVFI
+`ifdef ISA_CHERI
+	 data_to_stage3.rd_val   = embed_cap(nullCap);
+`else
+	 data_to_stage3.rd_val   = 0;
+`endif
+	 let info_RVFI_s2 = info_RVFI_s2_base;
+	 info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
+	 data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
+`else
 	 data_to_stage3.rd_val   = ?;
+`endif
 
 	 let trace_data   = ?;
 `ifdef INCLUDE_TANDEM_VERIF
@@ -407,6 +543,10 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 let trace_data   = ?;
 `ifdef INCLUDE_TANDEM_VERIF
 	 trace_data   = rg_stage2.trace_data;
+`elsif RVFI
+        // No memory op, so very simple.
+        let info_RVFI_s2 = info_RVFI_s2_base;
+        data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
 `endif
 	 trace_data.word1 = result;
 
@@ -430,19 +570,23 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 	 let data_to_stage3 = data_to_stage3_base;
 	 data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
-`ifdef ISA_D
-	 data_to_stage3.rd_val   = extend (result);
-`else
-	 data_to_stage3.rd_val   = result;
-`endif
+	 data_to_stage3.rd_val   = embed_int(result);
 
 	 let bypass = bypass_base;
 	 bypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
+`ifdef ISA_CHERI
+	 bypass.rd_val       = nullWithAddr(result);
+`else
 	 bypass.rd_val       = result;
+`endif
 
 	 let trace_data   = ?;
 `ifdef INCLUDE_TANDEM_VERIF
 	 trace_data   = rg_stage2.trace_data;
+`elsif RVFI
+        // No memory op, so very simple.
+        let info_RVFI_s2 = info_RVFI_s2_base;
+        data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
 `endif
 	 trace_data.word1 = result;
 
@@ -468,7 +612,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 	 let data_to_stage3      = data_to_stage3_base;
 	 data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
-	 data_to_stage3.rd_val   = value;
+	 data_to_stage3.rd_val   = rg_stage2.rd_in_fpr ? embed_flt(unpack(truncate(value))) : embed_int(truncate(value));
          data_to_stage3.rd_in_fpr= rg_stage2.rd_in_fpr;
          data_to_stage3.upd_flags= True;
          data_to_stage3.fpr_flags= fflags;
@@ -482,7 +626,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef ISA_D
             fbypass.rd_val          = value;
 `else
-            fbypass.rd_val          = truncate (value);
+            fbypass.rd_val          = truncate(value);
 `endif
          end
 
@@ -491,9 +635,9 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
             bypass.bypass_state     = ((ostatus==OSTATUS_PIPE) ? BYPASS_RD_RDVAL
                                                                : BYPASS_RD);
 `ifdef RV64
-            bypass.rd_val           = (value);
+            bypass.rd_val           = nullWithAddr(value);
 `else
-            bypass.rd_val           = truncate (value);
+            bypass.rd_val           = nullWithAddr(truncate(value));
 `endif
          end
 
@@ -501,6 +645,10 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 let trace_data = ?;
 `ifdef INCLUDE_TANDEM_VERIF
 	 trace_data = rg_stage2.trace_data;
+`elsif RVFI
+        // No memory op, so very simple.
+        let info_RVFI_s2 = info_RVFI_s2_base;
+        data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
 `endif
          // XXX Revisit. word1 should be sized similar to val (always 64-bit) if
          // FPU is enabled
@@ -516,7 +664,9 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 					trace_data:      trace_data};
       end
 `endif
-
+`ifdef ISA_CHERI
+      output_stage2.check_success = rg_stage2.check_enable && check_success;
+`endif
       return output_stage2;
    endfunction
 
@@ -532,7 +682,12 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 // If DMem access, initiate it
 `ifdef ISA_A
 	 Bool op_stage2_amo = (x.op_stage2 == OP_Stage2_AMO);
-	 Bit #(7) amo_funct7 = x.val1 [6:0];
+`ifdef ISA_CHERI
+	 Bit #(7) amo_funct7 = getAddr(extract_cap(x.val1)) [6:0];
+`else
+	 Bit #(7) amo_funct7 = pack(x.val1) [6:0];
+`endif
+     rg_f5 <= amo_funct7[6:2];
 `else
 	 Bool op_stage2_amo = False;
 	 Bit #(7) amo_funct7 = 0;
@@ -558,16 +713,26 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	    else if (x.op_stage2 == OP_Stage2_AMO) cache_op = CACHE_AMO;
 `endif
 
+`ifdef ISA_CHERI
+        CapReg capReg = cast(extract_cap(x.val2));
+        CapMem capMem = cast(capReg);
+        Bit#(TSub#(SizeOf#(CapMem),1)) tagless = truncate(capMem);
+`endif
+
 	    dcache.req (cache_op,
-			instr_funct3 (x.instr),
+			x.mem_width_code,
+            x.mem_unsigned,
 `ifdef ISA_A
 			amo_funct7,
 `endif
 			x.addr,
-`ifdef ISA_D
-			x.val2,
+`ifdef ISA_F
+			x.val2_flt_not_int ? tuple2(False,zeroExtend(pack(extract_flt(x.val2)))) :
+`endif
+`ifdef ISA_CHERI
+      tuple2(isValidCap(capMem) && x.mem_allow_cap, zeroExtend(tagless)),
 `else
-			zeroExtend (x.val2),
+      tuple2(False, zeroExtend(x.val2)),
 `endif
 			mem_priv,
 			sstatus_SUM,
@@ -601,18 +766,8 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	    Bool is_OP_not_OP_32 = (x.instr [3] == 1'b0);
             mbox.req (is_OP_not_OP_32,
 		      funct3,
-`ifdef ISA_D
-`ifdef RV64
-		      x.val1,
-		      x.val2
-`else
-		      truncate (x.val1),
-		      truncate (x.val2)
-`endif
-`else
-		      x.val1,
-		      x.val2
-`endif
+		      extract_int(x.val1),
+		      extract_int(x.val2)
 		      );
 	 end
 `endif
@@ -630,18 +785,15 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 		      x.rounding_mode, // rm
 		      rs2,
 `ifdef ISA_D
-		      x.val1,
-		      x.val2,
-		      x.val3 
-`else
-`ifdef RV32
-		      extend (x.val1),
-		      extend (x.val2),
-`else
-		      x.val1,
-		      x.val2,
+		      x.val1_flt_not_int ? extract_flt(x.val1) :
 `endif
-		      extend (x.val3)
+                                         zeroExtend(extract_int(x.val1)),
+`ifdef ISA_D
+		      x.val2_flt_not_int ? extract_flt(x.val2) :
+`endif
+                                         zeroExtend(extract_int(x.val2))
+`ifdef ISA_F
+		      , extend (x.val3)
 `endif
 		      );
          end

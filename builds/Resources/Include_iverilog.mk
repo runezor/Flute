@@ -27,7 +27,7 @@ compile:  build_dir  Verilog_RTL
 SIM_EXE_FILE = exe_HW_sim
 
 .PHONY: simulator
-simulator:
+simulator: compile
 	@echo INFO: iVerilog linking start ...
 	iverilog  -o ./$(SIM_EXE_FILE) \
 		-y  Verilog_RTL \

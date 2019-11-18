@@ -32,6 +32,15 @@ import CPU_Globals       :: *;
 import Near_Mem_IFC      :: *;
 import Branch_Predictor  :: *;
 
+`ifdef RVFI_DII
+import RVFI_DII          :: *
+`endif
+
+`ifdef ISA_CHERI
+import CHERICap          :: *;
+import CHERICC_Fat       :: *;
+`endif
+
 // ================================================================
 // Interface
 
@@ -49,9 +58,15 @@ interface CPU_StageF_IFC;
    // ---- Input
    (* always_ready *)
    method Action enq (Epoch            epoch,
-		      Maybe #(WordXL)  m_old_pc,
-		      WordXL           pc,
+		      Maybe #(WordXL)  m_old_fetch_addr,
+		      WordXL           fetch_addr,
+`ifdef ISA_CHERI
+                      Bool             refresh_pcc,
+`endif
 		      Priv_Mode        priv,
+`ifdef RVFI_DII
+                      UInt#(SEQ_LEN)   next_seq,
+`endif
 		      Bit #(1)         sstatus_SUM,
 		      Bit #(1)         mstatus_MXR,
 		      WordXL           satp);
@@ -93,7 +108,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
    // Combinational output function
 
    function Output_StageF fv_out;
-      let d = Data_StageF_to_StageD {pc:              imem.pc,
+      let d = Data_StageF_to_StageD {fetch_addr:      imem.pc,
 				     epoch:           rg_epoch,
 				     priv:            rg_priv,
 				     is_i32_not_i16:  imem.is_i32_not_i16,
@@ -101,7 +116,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 				     exc_code:        imem.exc_code,
 				     tval:            imem.tval,
 				     instr:           imem.instr,
-				     pred_pc:         branch_predictor.predict_rsp};
+				     pred_fetch_addr: branch_predictor.predict_rsp};
 
       let ostatus = (  (! rg_full) ? OSTATUS_EMPTY
 		     : (  (! imem.valid) ? OSTATUS_BUSY
@@ -129,20 +144,26 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 
    // ---- Input
    method Action enq (Epoch            epoch,
-		      Maybe #(WordXL)  m_old_pc,
-		      WordXL           pc,
+		      Maybe #(WordXL)  m_old_fetch_addr,
+                      WordXL           fetch_addr,
+`ifdef ISA_CHERI
+                      Bool             refresh_pcc,
+`endif
 		      Priv_Mode        priv,
+`ifdef RVFI_DII
+                      UInt#(SEQ_LEN)   next_seq,
+`endif
 		      Bit #(1)         sstatus_SUM,
 		      Bit #(1)         mstatus_MXR,
 		      WordXL           satp);
       if (verbosity > 1) begin
-	 $write   ("    CPU_StageF.enq:  pc:0x%0h  epoch:%0d  priv:%0d", pc, epoch, priv);
-	 $display ("  sstatus_SUM:%0d  mstatus_MXR:%0d  satp:0x%0h  m_old_pc:",
-		   sstatus_SUM, mstatus_MXR, satp, fshow (m_old_pc));
+	 $write   ("    CPU_StageF.enq:  fetch_addr:0x%0h  epoch:%0d  priv:%0d", fetch_addr, epoch, priv);
+	 $display ("  sstatus_SUM:%0d  mstatus_MXR:%0d  satp:0x%0h  m_old_addr:",
+		   sstatus_SUM, mstatus_MXR, satp, fshow (m_old_fetch_addr));
       end
 
-      imem.req (f3_LW, pc, priv, sstatus_SUM, mstatus_MXR, satp);
-      branch_predictor.predict_req (pc, m_old_pc);    // TODO: ASID.VA vs PA?
+      imem.req (f3_LW, fetch_addr, priv, sstatus_SUM, mstatus_MXR, satp);
+      branch_predictor.predict_req (fetch_addr, m_old_fetch_addr);    // TODO: ASID.VA vs PA?
 
       rg_epoch <= epoch;
       rg_priv  <= priv;

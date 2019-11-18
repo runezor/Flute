@@ -44,7 +44,7 @@ VTOP                = V$(TOPMODULE)_edited
 VERILATOR_RESOURCES = $(REPO)/builds/Resources/Verilator_resources
 
 .PHONY: simulator
-simulator:
+simulator: compile
 	@echo "INFO: Verilating Verilog files (in newly created obj_dir)"
 	sed  -f $(VERILATOR_RESOURCES)/sed_script.txt  Verilog_RTL/$(TOPMODULE).v > tmp1.v
 	cat  $(VERILATOR_RESOURCES)/verilator_config.vlt \

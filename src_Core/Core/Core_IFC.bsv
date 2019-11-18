@@ -1,5 +1,20 @@
 // Copyright (c) 2018-2019 Bluespec, Inc. All Rights Reserved.
 
+//-
+// RVFI_DII modifications:
+//     Copyright (c) 2018 Peter Rugg
+// AXI (user fields) modifications:
+//     Copyright (c) 2019 Alexandre Joannou
+//     Copyright (c) 2019 Peter Rugg
+//     Copyright (c) 2019 Jonathan Woodruff
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package Core_IFC;
 
 // ================================================================
@@ -19,11 +34,14 @@ import Vector        :: *;
 import GetPut        :: *;
 import ClientServer  :: *;
 
+// ----------------
+// BSV additional libs
+import AXI4 :: *;
+
 // ================================================================
 // Project imports
 
 // Main fabric
-import AXI4_Types   :: *;
 import Fabric_Defs  :: *;
 
 // External interrupt request interface
@@ -31,6 +49,11 @@ import PLIC  :: *;
 
 `ifdef INCLUDE_TANDEM_VERIF
 import TV_Info  :: *;
+`endif
+
+`ifdef RVFI_DII
+import RVFI_DII     :: *;
+import ISA_Decls      :: *;
 `endif
 
 `ifdef INCLUDE_GDB_CONTROL
@@ -57,10 +80,12 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    // AXI4 Fabric interfaces
 
    // CPU IMem to Fabric master interface
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) cpu_imem_master;
+   interface AXI4_Master_Synth #(TAdd#(Wd_MId,1), Wd_Addr, Wd_Data,
+                                 0, 0, 0, 0, 0) cpu_imem_master;
 
    // CPU DMem to Fabric master interface
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) cpu_dmem_master;
+   interface AXI4_Master_Synth #(TAdd#(Wd_MId,1), Wd_Addr, Wd_Data,
+                                 0, 0, 0, 0, 0) cpu_dmem_master;
 
    // ----------------------------------------------------------------
    // External interrupt sources
@@ -80,6 +105,8 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
 
 `ifdef INCLUDE_TANDEM_VERIF
    interface Get #(Info_CPU_to_Verifier)  tv_verifier_info_get;
+`elsif RVFI_DII
+   interface Piccolo_RVFI_DII_Server rvfi_dii_server;
 `endif
 
    // ----------------------------------------------------------------

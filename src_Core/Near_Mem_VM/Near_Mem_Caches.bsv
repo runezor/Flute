@@ -1,5 +1,16 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved.
 
+//-
+// CHERI modifications:
+//     Copyright (c) 2019 Peter Rugg
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 // Near_Mem_IFC is an abstraction of two alternatives: caches or TCM
 // (TCM = Tightly Coupled Memory).  Both are memories that are
 // 'near' the CPU (1-cycle access in common case).
@@ -33,6 +44,8 @@ import Connectable  :: *;
 
 import Cur_Cycle  :: *;
 import GetPut_Aux :: *;
+import Routable   :: *;
+import AXI4       :: *;
 
 // ================================================================
 // Project imports
@@ -40,7 +53,6 @@ import GetPut_Aux :: *;
 import ISA_Decls    :: *;
 import Near_Mem_IFC :: *;
 import MMU_Cache    :: *;
-import AXI4_Types   :: *;
 import Fabric_Defs  :: *;
 
 // System address map and pc_reset value
@@ -71,8 +83,8 @@ module mkNear_Mem (Near_Mem_IFC);
    // Reset response queue
    FIFOF #(Token) f_reset_rsps <- mkFIFOF;
 
-   MMU_Cache_IFC  icache <- mkMMU_Cache (False);
-   MMU_Cache_IFC  dcache <- mkMMU_Cache (True);
+   MMU_ICache_IFC  icache <- mkMMU_ICache;
+   MMU_DCache_IFC  dcache <- mkMMU_DCache;
 
    // ----------------------------------------------------------------
    // BEHAVIOR
@@ -126,27 +138,42 @@ module mkNear_Mem (Near_Mem_IFC);
    // CPU side
    interface IMem_IFC imem;
       // CPU side: IMem request
-      method Action  req (Bit #(3) f3,
+      method Action  req (Bit #(3) width_code,
 			  WordXL addr,
 			  // The following  args for VM
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
-			  WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+			  WordXL     satp
+`ifdef RVFI_DII
+            , UInt#(SEQ_LEN) seq_req
+`endif
+                             );    // { VM_Mode, ASID, PPN_for_page_table }
 	 Bit #(7)  amo_funct7  = ?;
-	 Bit #(64) store_value = ?;
-	 icache.req (CACHE_LD, f3,
+	 Bit #(128) store_value = ?;
+	 icache.req (CACHE_LD, width_code, True,
 `ifdef ISA_A
 		     amo_funct7,
 `endif
-		     addr, store_value, priv, sstatus_SUM, mstatus_MXR, satp);
+         addr, tuple2(False, store_value),
+                                priv, sstatus_SUM, mstatus_MXR, satp);
       endmethod
+
+`ifdef ISA_CHERI
+      method Action commit;
+          icache.commit;
+      endmethod
+`endif
 
       // CPU side: IMem response
       method Bool     valid          = icache.valid;
       method Bool     is_i32_not_i16 = True;
       method WordXL   pc             = icache.addr;
-      method Instr    instr          = truncate (icache.word64);
+`ifdef RVFI_DII
+      method Tuple2#(Instr,UInt#(SEQ_LEN))    instr    = tuple2(truncate(tpl_2(icache.word128)), 0);
+`else
+      method Instr    instr          = truncate(tpl_2(icache.word128));
+`endif
       method Bool     exc            = icache.exc;
       method Exc_Code exc_code       = icache.exc_code;
       method WordXL   tval           = icache.addr;
@@ -162,29 +189,37 @@ module mkNear_Mem (Near_Mem_IFC);
    interface DMem_IFC dmem;
       // CPU side: DMem request
       method Action  req (CacheOp op,
-			  Bit #(3) f3,
+			  Bit #(3) width_code,
+              Bool is_unsigned,
 `ifdef ISA_A
 			  Bit #(7) amo_funct7,
 `endif
 			  WordXL addr,
-			  Bit #(64) store_value,
+			  Tuple2#(Bool, Bit #(128)) store_value,
 			  // The following  args for VM
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
 			  WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
-	 dcache.req (op, f3,
+	 dcache.req (op, width_code, is_unsigned,
 `ifdef ISA_A
 		     amo_funct7,
 `endif
-		     addr, store_value, priv, sstatus_SUM, mstatus_MXR, satp);
+		     addr, store_value,
+                                priv, sstatus_SUM, mstatus_MXR, satp);
       endmethod
+
+`ifdef ISA_CHERI
+      method Action commit;
+          dcache.commit;
+      endmethod
+`endif
 
       // CPU side: DMem response
       method Bool       valid      = dcache.valid;
-      method Bit #(64)  word64     = dcache.word64;
+      method Tuple2#(Bool, Bit #(128))  word128     = dcache.word128;
 `ifdef ISA_A
-      method Bit #(64)  st_amo_val = dcache.st_amo_val;
+      method Bit #(128)  st_amo_val = tpl_2(dcache.st_amo_val);
 `endif
       method Bool       exc        = dcache.exc;
       method Exc_Code   exc_code   = dcache.exc_code;
@@ -198,7 +233,7 @@ module mkNear_Mem (Near_Mem_IFC);
 
    interface Server server_fence_i;
       interface Put request;
-	 method Action put (Token t);
+	 method Action put (Token t) if (rg_state != STATE_RESET);
 	    icache.server_flush.request.put (?);
 	    dcache.server_flush.request.put (?);
 	 endmethod

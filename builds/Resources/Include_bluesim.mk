@@ -29,12 +29,13 @@ BSC_C_FLAGS += \
 	-Xc -O3 -Xc++ -O3 \
 
 .PHONY: simulator
-simulator:
+simulator: compile
 	@echo "INFO: linking bsc-compiled objects into Bluesim executable"
 	bsc -sim -parallel-sim-link 8 \
 		$(TMP_DIRS) \
 		-e $(TOPMODULE) -o ./$(SIM_EXE_FILE) \
 		$(BSC_C_FLAGS) \
+		$(REPO)/src_Verifier/BSV-RVFI-DII/SocketPacketUtils/socket_packet_utils.c \
 		$(REPO)/src_Testbench/Top/C_Imported_Functions.c
 	@echo "INFO: linked bsc-compiled objects into Bluesim executable"
 

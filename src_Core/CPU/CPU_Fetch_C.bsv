@@ -56,6 +56,7 @@ module mkCPU_Fetch_C #(IMem_IFC  imem32) (IMem_IFC);
    Reg #(Bit #(1))  rg_sstatus_SUM <- mkRegU;
    Reg #(Bit #(1))  rg_mstatus_MXR <- mkRegU;
    Reg #(WordXL)    rg_satp        <- mkRegU;
+   Wire#(Bool)      dw_commit <- mkDWire(False);
 
    // Holds the faulting address
    Reg #(WordXL) rg_tval <- mkRegU;
@@ -141,6 +142,13 @@ module mkCPU_Fetch_C #(IMem_IFC  imem32) (IMem_IFC);
 		   imem32.pc, next_word_addr);
    endrule
 
+`ifdef ISA_CHERI
+   //Always commit to the actual icache: we will deal with cancelling fetches here
+   rule rl_commit;
+       imem32.commit;
+   endrule
+`endif
+
    // ----------------
    // Compose the 'instr' 32b output
 
@@ -198,6 +206,12 @@ module mkCPU_Fetch_C #(IMem_IFC  imem32) (IMem_IFC);
    method Bool     exc      = imem32.exc;
    method Exc_Code exc_code = imem32.exc_code;
    method WordXL   tval     = rg_tval;        // Can be different from rg_pc
+
+`ifdef ISA_CHERI
+   method Action commit;
+      dw_commit <= True; //TODO cancel fetch if no commit
+   endmethod
+`endif
 
 endmodule
 

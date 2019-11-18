@@ -19,6 +19,7 @@ package CSR_MIP;
 // Project imports
 
 import ISA_Decls :: *;
+import ConfigReg    :: *;
 
 // ================================================================
 // INTERFACE
@@ -77,7 +78,7 @@ module mkCSR_MIP (CSR_MIP_IFC);
    Reg #(Bit #(1)) rg_stip <- mkReg (0);
    Reg #(Bit #(1)) rg_utip <- mkReg (0);
 
-   Reg #(Bit #(1)) rg_msip <- mkReg (0);
+   Reg #(Bit #(1)) rg_msip <- mkConfigReg(0);
    Reg #(Bit #(1)) rg_ssip <- mkReg (0);
    Reg #(Bit #(1)) rg_usip <- mkReg (0);
 

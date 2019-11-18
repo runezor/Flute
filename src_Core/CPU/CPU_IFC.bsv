@@ -1,5 +1,21 @@
 // Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
 
+//-
+// RVFI_DII modifications:
+//     Copyright (c) 2018 Jack Deeley
+//     Copyright (c) 2018 Peter Rugg
+// AXI (user fields) modifications:
+//     Copyright (c) 2019 Alexandre Joannou
+//     Copyright (c) 2019 Peter Rugg
+//     Copyright (c) 2019 Jonathan Woodruff
+//     All rights reserved.
+//
+//     This software was developed by SRI International and the University of
+//     Cambridge Computer Laboratory (Department of Computer Science and
+//     Technology) under DARPA contract HR0011-18-C-0016 ("ECATS"), as part of the
+//     DARPA SSITH research programme.
+//-
+
 package CPU_IFC;
 
 // ================================================================
@@ -7,6 +23,7 @@ package CPU_IFC;
 
 import GetPut       :: *;
 import ClientServer :: *;
+import AXI4         :: *;
 
 // ================================================================
 // Project imports
@@ -21,8 +38,15 @@ import DM_CPU_Req_Rsp :: *;
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
+import Verifier  :: *;
 import TV_Info         :: *;
+import ISA_Decls       :: *;
+`elsif RVFI
+import Verifier  :: *;
+import RVFI_DII    :: *;
 `endif
+
+import Fabric_Defs :: *;
 
 // ================================================================
 // CPU interface
@@ -35,10 +59,14 @@ interface CPU_IFC;
    // SoC fabric connections
 
    // IMem to Fabric master interface
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User)  imem_master;
+   interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User,
+                                 Wd_AR_User, Wd_R_User)  imem_master;
 
    // DMem to Fabric master interface
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User)  dmem_master;
+   interface AXI4_Master_Synth #(Wd_MId_2x3, Wd_Addr, Wd_Data,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User,
+                                 Wd_AR_User, Wd_R_User)  dmem_master;
 
    // ----------------
    // External interrupts
@@ -64,6 +92,10 @@ interface CPU_IFC;
    (* always_ready, always_enabled *)
    method Action  nmi_req (Bool set_not_clear);
 
+`ifdef DETERMINISTIC_TIMING
+   method Bit#(64) take_minstret;
+`endif
+
    // ----------------
    // Set core's verbosity
 
@@ -72,8 +104,15 @@ interface CPU_IFC;
    // ----------------
    // Optional interface to Tandem Verifier
 
+`ifdef RVFI_DII
+   interface Piccolo_RVFI_DII_Server rvfi_dii_server;
+`else
 `ifdef INCLUDE_TANDEM_VERIF
    interface Get #(Trace_Data)  trace_data_out;
+`endif
+`ifdef RVFI
+   interface Get #(Trace_Data)  trace_data_out;
+`endif
 `endif
 
    // ----------------
