@@ -1518,7 +1518,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                 alu_outputs.check_address_high = zeroExtend(getAddr(cs2_val));
                 alu_outputs.check_inclusive = False;
 
-                alu_outputs.cap_val1 = setType(cs1_val, truncate(getAddr(cs2_val))).value;
+                alu_outputs.cap_val1 = setType(cs1_val, truncate(getAddr(cs2_val)));
                 alu_outputs.val1_cap_not_int = True;
             end
             f7_cap_CCSeal: begin
@@ -1539,7 +1539,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                     check_cs2_not_sealed = True;
                     check_cs2_addr_valid_type = True;
                     check_cs2_permit_seal = True;
-                    alu_outputs.cap_val1 = setType(cs1_val, truncate(getAddr(cs2_val))).value;
+                    alu_outputs.cap_val1 = setType(cs1_val, truncate(getAddr(cs2_val)));
                     alu_outputs.val1_cap_not_int = True;
                 end
             end
@@ -1556,9 +1556,9 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                         check_cs1_permit_ccall = True;
                         check_cs2_permit_ccall = True;
                         alu_outputs.val1_cap_not_int = True;
-                        alu_outputs.cap_val1 = setType(cs2_val, -1).value;
+                        alu_outputs.cap_val1 = setType(cs2_val, -1);
                         alu_outputs.rd = cCallRD;
-                        alu_outputs.pcc = setType(cs1_val, -1).value;
+                        alu_outputs.pcc = setType(cs1_val, -1);
                         alu_outputs.control = CONTROL_CAPBRANCH;
                         let target = {truncateLSB(getAddr(cs1_val)), 1'b0};
                         alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, zeroExtend(inputs.rs1_idx), target);
@@ -1581,7 +1581,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                 alu_outputs.check_address_high = zeroExtend(getAddr(cs2_val));
                 alu_outputs.check_inclusive = False;
 
-                alu_outputs.cap_val1 = setType(cs1_val, -1).value; // Always representable now type bit is orthogonal
+                alu_outputs.cap_val1 = setType(cs1_val, -1);
                 alu_outputs.val1_cap_not_int = True;
             end
             f7_cap_CTestSubset: begin
@@ -1689,7 +1689,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                 //Only question is whether there are representations that are usually unreachable, and whether cbuildcap should
                 //allow these.
                 let result = setValidCap(cs2_val, True);
-                alu_outputs.cap_val1 = setType(result, -1).value;
+                alu_outputs.cap_val1 = setType(result, -1);
                 alu_outputs.val1_cap_not_int = True;
             end
             f7_cap_Loads: begin
@@ -1793,7 +1793,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
 
     case(alu_outputs.val1_source)
     SET_OFFSET: begin
-        let result = setOffset(alu_outputs.internal_op1, alu_outputs.internal_op2, alu_outputs.internal_op_flag);
+        let result = modifyOffset(alu_outputs.internal_op1, alu_outputs.internal_op2, alu_outputs.internal_op_flag);
         alu_outputs.cap_val1 = result.value;
         alu_outputs.val1 = zeroExtend(getAddr(result.value));
         alu_outputs.val1_cap_not_int = result.exact;

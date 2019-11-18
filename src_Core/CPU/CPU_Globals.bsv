@@ -166,7 +166,7 @@ endtypeclass
 
 instance PCC#(CapPipe);
     function Exact#(CapPipe) setPC (CapPipe oldPCC, Addr newPC);
-        return setOffset(oldPCC, newPC, False);
+        return setOffset(oldPCC, newPC);
     endfunction
     function Addr getPC (CapPipe pcc);
         return getOffset(pcc);

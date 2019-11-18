@@ -1459,7 +1459,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       Addr vector_offset = (extend (exc_code)) << 2;
       if (interrupt && is_vectored)
 	 exc_pc = exc_pc + vector_offset;
-   CapPipe exc_pcc  = setOffset(xtcc, exc_pc, False).value; //TODO representability check
+   CapPipe exc_pcc  = setOffset(xtcc, exc_pc).value; //TODO representability check
 
       if (cfg_verbosity > 1) begin
 	 $write ("    Return: new pc 0x%0h  ", exc_pc);

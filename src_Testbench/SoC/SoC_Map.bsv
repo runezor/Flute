@@ -225,7 +225,7 @@ module mkSoC_Map (SoC_Map_IFC);
    CapReg pcc_reset_value  = almightyCap;
    CapPipe almightyPipe = almightyCap;
    CapReg ddc_reset_value = almightyCap;
-   CapReg mtcc_reset_value = cast(setOffset(almightyPipe, mtvec_reset_value, False).value);
+   CapReg mtcc_reset_value = cast(setOffset(almightyPipe, mtvec_reset_value).value);
    CapReg mepcc_reset_value = almightyCap;
 `endif
 
