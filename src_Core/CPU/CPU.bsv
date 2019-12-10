@@ -1622,7 +1622,7 @@ module mkCPU (CPU_IFC);
 		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
-                       False,
+                       True,
 `endif
 		       rg_cur_priv,
 		       mstatus_MXR,
@@ -1702,7 +1702,7 @@ module mkCPU (CPU_IFC);
 		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
-                       False,
+                       True,
 `endif
 		       rg_cur_priv,
 		       mstatus_MXR,
@@ -1789,7 +1789,7 @@ module mkCPU (CPU_IFC);
 		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
-                       False,
+                       True,
 `endif
 		       rg_cur_priv,
 		       mstatus_MXR,
@@ -1871,7 +1871,7 @@ module mkCPU (CPU_IFC);
 		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
-                       False,
+                       True,
 `endif
 		       rg_cur_priv,
 		       mstatus_MXR,
