@@ -853,6 +853,7 @@ module mkCPU (CPU_IFC);
             Maybe#(WordXL) m_old_fetch_addr;
             case (redirect_F) matches
             tagged Valid {.e, .nfa, .ofa}: begin
+                rg_next_pcc <= stage1.out.next_pcc;
                 epoch = e;
                 new_fetch_addr = nfa;
                 m_old_fetch_addr = Valid(ofa);
@@ -876,7 +877,7 @@ module mkCPU (CPU_IFC);
 	    fa_start_ifetch (epoch,
 			     m_old_fetch_addr,
                              new_fetch_addr,
-                             False,
+                             isValid(redirect_F),
 			     rg_cur_priv,
 `ifdef RVFI_DII
                              stageF.out.data_to_stageD.instr_seq + 1;
