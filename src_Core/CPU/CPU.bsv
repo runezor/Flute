@@ -341,10 +341,10 @@ module mkCPU (CPU_IFC);
    // ================================================================
    // Debugging: print instruction trace info
 
-   function fa_emit_instr_trace (instret, pc, instr, priv);
+   function fa_emit_instr_trace (instret, pcc, instr, priv);
       action
 	 if (cur_verbosity == 1)
-	    $display ("instret:%0d  PC:0x%0h  instr:0x%0h  priv:%0d", instret, pc, instr, priv);
+	    $display ("instret:%0d  PC:0x%0h  instr:0x%0h  priv:%0d", instret, getPC(pcc), instr, priv);
       endaction
    endfunction
 
@@ -470,8 +470,8 @@ module mkCPU (CPU_IFC);
 		      && fn_is_running (rg_state)
 		      && (rg_state != CPU_WFI_PAUSED));
       $display ("================================================================");
-      $display ("%0d: Pipeline State:  minstret:%0d  cur_priv:%0d  mstatus:%0x  epoch:%0d",
-		mcycle, minstret, rg_cur_priv, mstatus, rg_epoch);
+      $display ("%0d: Pipeline State:  minstret:%0d  cur_priv:%0d  mstatus:%0x  epoch:%0d rg_stage:",
+		mcycle, minstret, rg_cur_priv, mstatus, rg_epoch, fshow(rg_state));
       $display ("    ", fshow_mstatus (misa, mstatus));
 
       $display ("    Stage3: ", fshow (stage3.out));
@@ -480,7 +480,7 @@ module mkCPU (CPU_IFC);
       $display ("        FBypass to Stage1: ", fshow (stage3.out.fbypass));
 `endif
       $display ("    Stage2: pc 0x%08h instr 0x%08h priv %0d",
-		stage2.out.data_to_stage3.pc,
+		getPC(stage2.out.data_to_stage3.pcc),
 		stage2.out.data_to_stage3.instr,
 		stage2.out.data_to_stage3.priv);
       $display ("        ", fshow (stage2.out));
@@ -519,6 +519,7 @@ module mkCPU (CPU_IFC);
 //		stageF.out.data_to_stageD.instr,
 //		stageF.out.data_to_stageD.priv,
 //		stageF.out.data_to_stageD.epoch);
+      $display ("        ", fshow (stageD.out));
       $display ("        ", fshow (stageF.out));
       $display ("----------------");
    endrule
@@ -794,7 +795,7 @@ module mkCPU (CPU_IFC);
 	 // Note: this instr cannot be a CSRRx updating INSTRET, since
 	 // CSRRx is done off-pipe
 	 csr_regfile.csr_minstret_incr;
-	 fa_emit_instr_trace (minstret, stage2.out.data_to_stage3.pc, stage2.out.data_to_stage3.instr, rg_cur_priv);
+	 fa_emit_instr_trace (minstret, stage2.out.data_to_stage3.pcc, stage2.out.data_to_stage3.instr, rg_cur_priv);
       end
 
       // ----------------
@@ -1054,7 +1055,7 @@ module mkCPU (CPU_IFC);
 `endif
 `endif
 
-      fa_emit_instr_trace (minstret, epc, instr, rg_cur_priv);
+      fa_emit_instr_trace (minstret, epcc, instr, rg_cur_priv);
 
       // Debug
       if (cur_verbosity != 0)
@@ -1115,7 +1116,7 @@ module mkCPU (CPU_IFC);
 	 rg_state <= CPU_TRAP;
 
 	 // Debug
-	 fa_emit_instr_trace (minstret, getPC(stage1.out.data_to_stage2.pcc), instr, rg_cur_priv);
+	 fa_emit_instr_trace (minstret, stage1.out.data_to_stage2.pcc, instr, rg_cur_priv);
 	 if (cur_verbosity > 1) begin
 	    $display ("    rl_stage1_SCR_W: Trap on SCR permissions: Rs1 %0d Rs1_val 0x%0h csr 0x%0h Rd %0d",
 		      rs1, rs1_val, scr_addr, rd);
@@ -1173,7 +1174,7 @@ module mkCPU (CPU_IFC);
 `endif
 
 	 // Debug
-	 fa_emit_instr_trace (minstret, getPC(stage1.out.data_to_stage2.pcc), instr, rg_cur_priv);
+	 fa_emit_instr_trace (minstret, stage1.out.data_to_stage2.pcc, instr, rg_cur_priv);
 	 if (cur_verbosity > 1) begin
 	    $display ("    S1: write SRC_W Rs1 %0d Rs1_val 0x%0h scr 0x%0h scr_val 0x%0h Rd %0d",
 		      rs1, rs1_val, scr_addr, scr_val, rd);
@@ -1430,7 +1431,7 @@ module mkCPU (CPU_IFC);
 `endif
 
 	 // Debug
-	 fa_emit_instr_trace (minstret, getPC(rg_scr_pcc), instr, rg_cur_priv);
+	 fa_emit_instr_trace (minstret, rg_scr_pcc, instr, rg_cur_priv);
 	 if (cur_verbosity > 1) begin
 	    $display ("    S1: write CSRR_S_or_C: Rs1 %0d Rs1_val 0x%0h csr 0x%0h csr_val 0x%0h Rd %0d",
 		      rs1, rs1_val, csr_addr, csr_val, rd);
@@ -1464,7 +1465,7 @@ module mkCPU (CPU_IFC);
 		       m_old_fetch_addr,
 		       getAddr(next_pcc),
 `ifdef ISA_CHERI
-                       False,
+                       True,
 `endif
 		       rg_cur_priv,
 		       mstatus_MXR,
@@ -1901,7 +1902,7 @@ module mkCPU (CPU_IFC);
 		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
-                       False,
+                       True,
 `endif
 		       rg_cur_priv,
 		       rg_mstatus_MXR,
@@ -2156,8 +2157,8 @@ module mkCPU (CPU_IFC);
       f_gpr_rsps.enq (rsp);
 
       if (cur_verbosity > 1)
-	 $display ("%0d: %m.rl_debug_write_gpr: reg %0d <= 0x%0h",
-		   mcycle, regname, data);
+	 $display ("%0d: %m.rl_debug_write_gpr: reg %0d <= ",
+		   mcycle, regname, fshow(data));
    endrule
 
    rule rl_debug_gpr_access_busy (rg_state != CPU_DEBUG_MODE);

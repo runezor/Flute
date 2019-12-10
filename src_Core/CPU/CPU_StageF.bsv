@@ -89,6 +89,9 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
    Wire #(Bool)      dw_redirecting <- mkDWire (False);
 
    Reg #(Bool)       rg_full  <- mkReg (False);
+`ifdef ISA_CHERI
+   Reg #(Bool)       rg_refresh_pcc <- mkReg(False);
+`endif
    Reg #(Epoch)      rg_epoch <- mkReg (0);               // Toggles on redirections
    Reg #(Priv_Mode)  rg_priv  <- mkRegU;
 
@@ -104,11 +107,18 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
       f_reset_rsps.enq (?);
    endrule
 
+   rule rl_commit;
+      imem.commit; // always commit to imem, meaning OOB reads can happen over instr interface
+   endrule
+
    // ----------------
    // Combinational output function
 
    function Output_StageF fv_out;
       let d = Data_StageF_to_StageD {fetch_addr:      imem.pc,
+`ifdef ISA_CHERI
+                                     refresh_pcc:     rg_refresh_pcc,
+`endif
 				     epoch:           rg_epoch,
 				     priv:            rg_priv,
 				     is_i32_not_i16:  imem.is_i32_not_i16,
@@ -167,6 +177,9 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 
       rg_epoch <= epoch;
       rg_priv  <= priv;
+`ifdef ISA_CHERI
+      rg_refresh_pcc <= refresh_pcc;
+`endif
    endmethod
 
    method Action set_full (Bool full);

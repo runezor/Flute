@@ -82,7 +82,7 @@ instance FShow #(Bypass);
 		  ? $format ("Rd -")
 		  : $format ("Rd %0d ", x.rd) + ((x.bypass_state == BYPASS_RD)
 						 ? $format ("-")
-						 : $format ("rd_val:%h", x.rd_val)));
+						 : $format ("rd_val:", fshow(x.rd_val))));
       let fmt2 = $format ("}");
       return fmt0 + fmt1 + fmt2;
    endfunction
@@ -664,7 +664,7 @@ instance FShow #(Output_Stage2);
       if (x.ostatus == OSTATUS_EMPTY)
 	 fmt = fmt + $format (" EMPTY");
       else if (x.ostatus == OSTATUS_BUSY)
-	 fmt = fmt + $format (" BUSY: pc:%0h", x.data_to_stage3.pc);
+	 fmt = fmt + $format (" BUSY: pc:%0h", getPC(x.data_to_stage3.pcc));
       else if (x.ostatus == OSTATUS_NONPIPE) begin
 	 fmt = fmt + $format (" NONPIPE: ") + fshow (x.trap_info);
 	 fmt = fmt + $format (" ") + fshow (x.trap_info);
@@ -679,7 +679,7 @@ endinstance
 // Data communicated from stage 2 to stage 3
 
 typedef struct {
-   Addr      pc;            // For debugging only
+   CapPipe     pcc;            // For debugging only
    Instr     instr;         // For debugging only
 `ifdef RVFI_DII
    UInt#(SEQ_LEN) instr_seq;
@@ -718,7 +718,7 @@ typedef struct {
 
 instance FShow #(Data_Stage2_to_Stage3);
    function Fmt fshow (Data_Stage2_to_Stage3 x);
-      Fmt fmt =   $format ("data_to_Stage3 {pc:%h  instr:%h  priv:%0d\n", x.pc, x.instr, x.priv);
+      Fmt fmt =   $format ("data_to_Stage3 {pc:%h  instr:%h  priv:%0d\n", getPC(x.pcc), x.instr, x.priv);
       fmt = fmt + $format ("        rd_valid:", fshow (x.rd_valid));
 
 `ifdef ISA_F
@@ -729,7 +729,7 @@ instance FShow #(Data_Stage2_to_Stage3);
          fmt = fmt + $format ("  frd:%0d  rd_val:%h\n", x.rd, x.rd_val);
       else
 `endif
-         fmt = fmt + $format ("  grd:%0d  rd_val:%h\n", x.rd, x.rd_val);
+         fmt = fmt + $format ("  grd:%0d  rd_val:\n", x.rd, fshow(x.rd_val));
       return fmt;
    endfunction
 endinstance

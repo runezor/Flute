@@ -107,6 +107,9 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 	 output_stageD.ostatus        = OSTATUS_PIPE;
 	 output_stageD.data_to_stage1 = Data_StageD_to_Stage1 {
                                                                fetch_addr:     rg_data.fetch_addr,
+`ifdef ISA_CHERI
+                                                               refresh_pcc:    rg_data.refresh_pcc,
+`endif
 							       priv:           rg_data.priv,
 							       epoch:          rg_data.epoch,
 							       is_i32_not_i16: rg_data.is_i32_not_i16,

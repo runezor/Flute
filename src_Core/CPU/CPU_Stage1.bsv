@@ -216,7 +216,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
      ? alu_outputs.pcc
      : setPC(rg_pcc, next_pc_local).value); //TODO unrepresentable?
 
-   let redirect = getAddr(next_pcc_local) == rg_stage_input.pred_fetch_addr;
+   let redirect = getAddr(next_pcc_local) != rg_stage_input.pred_fetch_addr;
 
 `ifdef RVFI
    CapReg tmp_val2 = cast(alu_outputs.cap_val2);
@@ -364,6 +364,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	 output_stage1.ostatus   = OSTATUS_NONPIPE;
 	 output_stage1.control   = CONTROL_TRAP;
 	 output_stage1.trap_info = Trap_Info_Pipe {
+                                              epcc: rg_pcc,
 					      exc_code: rg_stage_input.exc_code,
                                               cheri_exc_code: ?,
                                               cheri_exc_reg: ?,
@@ -400,6 +401,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `endif
 
 	 let trap_info = Trap_Info_Pipe {
+                                    epcc: rg_pcc,
 				    exc_code: alu_outputs.exc_code,
                                     cheri_exc_code: ?,
                                     cheri_exc_reg: ?,
@@ -439,9 +441,11 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
       rg_stage_input <= data;
       if (data.refresh_pcc) begin
           rg_pcc <= fresh_pcc;
+      end else if (rg_stage_input.epoch == cur_epoch) begin
+          rg_pcc <= next_pcc_local;
       end
       if (verbosity > 1)
-	 $display ("    CPU_Stage1.enq: 0x%08h", getPC(data.refresh_pcc ? fresh_pcc : rg_pcc));
+	 $display ("    CPU_Stage1.enq: 0x%08h", getPC(data.refresh_pcc ? fresh_pcc : rg_stage_input.epoch == cur_epoch ? next_pcc_local : rg_pcc));
    endmethod
 
    method Action set_full (Bool full);

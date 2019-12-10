@@ -172,7 +172,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
    let data_to_stage3_base = Data_Stage2_to_Stage3 {priv:      rg_stage2.priv,
 `ifdef ISA_CHERI
-                pc:        getPC(rg_stage2.pcc),
+                pcc:        rg_stage2.pcc,
 `else
 						    pc:        rg_stage2.pc,
 `endif
