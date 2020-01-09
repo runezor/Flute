@@ -105,7 +105,7 @@ interface CPU_IFC;
    // Optional interface to Tandem Verifier
 
 `ifdef RVFI_DII
-   interface Piccolo_RVFI_DII_Server rvfi_dii_server;
+   interface Flute_RVFI_DII_Server rvfi_dii_server;
 `else
 `ifdef INCLUDE_TANDEM_VERIF
    interface Get #(Trace_Data)  trace_data_out;

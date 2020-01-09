@@ -70,15 +70,12 @@ import RVFI_DII     :: *;
 // Instantiates the SoC.
 // Instantiates a memory model.
 
+`ifndef RVFI_DII
 (* synthesize *)
-module mkTop_HW_Side (
-`ifdef RVFI_DII
-Piccolo_RVFI_DII_Server
+module mkTop_HW_Side (Empty);
 `else
-Empty
+module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
 `endif
-) ;
-
    SoC_Top_IFC    soc_top   <- mkSoC_Top;
    Mem_Model_IFC  mem_model <- mkMem_Model;
 
@@ -331,12 +328,12 @@ endmodule
 
 `ifdef RVFI_DII
 // ================================================================
-// mkPiccolo_RVFI_DII instantiates the toplevel with the RVFI_DII
+// mkFlute_RVFI_DII instantiates the toplevel with the RVFI_DII
 // interfaces enabled, allowing testing with directly
 // ================================================================
 
 (* synthesize *)
-module mkPiccolo_RVFI_DII(Empty)
+module mkTop_HW_Side(Empty)
     provisos (Add#(a__, TDiv#(XLEN,8), 8), Add#(b__, XLEN, 64), Add#(c__, TDiv#(XLEN,8), 8), Add#(d__, XLEN, 64));
 
     Reg #(Bool) rg_banner_printed <- mkReg (False);
@@ -351,17 +348,14 @@ module mkPiccolo_RVFI_DII(Empty)
        rg_banner_printed <= True;
     endrule
 
-    RVFI_DII_Bridge #(XLEN, MEMWIDTH, SEQ_LEN) bridge <- mkRVFI_DII_Bridge("RVFI_DII", 5001);
-    let    dut <- mkTop_HW_Side(reset_by bridge.new_rst);
+    RVFI_DII_Bridge_Scalar #(XLEN, MEMWIDTH) bridge <- mkRVFI_DII_Bridge_Scalar("RVFI_DII", 5001);
+    let    dut <- mkPre_Top_HW_Side(reset_by bridge.new_rst);
     mkConnection(bridge.client.report, dut.trace_report);
 
-    (* descending_urgency = "bridge.handleReset, rl_provide_instr" *)
     rule rl_provide_instr;
-        let req = dut.getSeqReq;
-        if (isValid(req)) begin
-            let inst <- bridge.client.getInst(dut.getSeqReq.Valid);
-            dut.putInst(tuple2(inst, req.Valid));
-        end
+        Dii_Id req <- dut.seqReq.get;
+        Maybe#(Dii_Inst) inst <- bridge.client.getInst(req);
+        dut.inst.put(tuple2(inst.Valid, req));
     endrule
 endmodule
 

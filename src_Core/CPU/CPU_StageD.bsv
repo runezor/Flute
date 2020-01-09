@@ -110,6 +110,9 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 `ifdef ISA_CHERI
                                                                refresh_pcc:    rg_data.refresh_pcc,
 `endif
+`ifdef RVFI_DII
+                                                               instr_seq:      rg_data.instr_seq,
+`endif
 							       priv:           rg_data.priv,
 							       epoch:          rg_data.epoch,
 							       is_i32_not_i16: rg_data.is_i32_not_i16,

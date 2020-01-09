@@ -146,7 +146,7 @@ module mkNear_Mem (Near_Mem_IFC);
 			  Bit #(1)   mstatus_MXR,
 			  WordXL     satp
 `ifdef RVFI_DII
-            , UInt#(SEQ_LEN) seq_req
+            , Dii_Id seq_req
 `endif
                              );    // { VM_Mode, ASID, PPN_for_page_table }
 	 Bit #(7)  amo_funct7  = ?;
@@ -170,7 +170,7 @@ module mkNear_Mem (Near_Mem_IFC);
       method Bool     is_i32_not_i16 = True;
       method WordXL   pc             = icache.addr;
 `ifdef RVFI_DII
-      method Tuple2#(Instr,UInt#(SEQ_LEN))    instr    = tuple2(truncate(tpl_2(icache.word128)), 0);
+      method Tuple2#(Instr,Dii_Id)    instr    = tuple2(truncate(tpl_2(icache.word128)), 0);
 `else
       method Instr    instr          = truncate(tpl_2(icache.word128));
 `endif

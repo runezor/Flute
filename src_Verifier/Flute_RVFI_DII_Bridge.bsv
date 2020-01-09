@@ -26,7 +26,7 @@
  * @BERI_LICENSE_HEADER_END@
  */
 
-package Piccolo_RVFI_DII_Bridge;
+package Flute_RVFI_DII_Bridge;
 
 // ================================================================
 // BSV library imports
@@ -38,7 +38,7 @@ import GetPut       :: *;
 // ================================================================
 // Project imports
 
-import Near_Mem_IFC :: *; 
+import Near_Mem_IFC :: *;
 import ISA_Decls :: *;
 
 import Verifier  :: *;
@@ -46,28 +46,32 @@ import RVFI_DII  :: *;
 
 // ================================================================
 
-    interface Piccolo_RVFI_DII_Bridge_IFC;
-        interface Piccolo_RVFI_DII_Server rvfi_dii_server;
+    interface Flute_RVFI_DII_Bridge_IFC;
+        interface Flute_RVFI_DII_Server rvfi_dii_server;
         interface IMem_IFC instr_CPU;
-        interface Put #(RVFI_DII_Execution #(XLEN,MEMWIDTH)) trace_report;
+        interface Put #(Rvfi_Trace) rvfi;
     endinterface
 
-    module mkPiccoloRVFIDIIBridge(Piccolo_RVFI_DII_Bridge_IFC);
-        Reg#(Maybe#(Tuple2#(Bit#(32), UInt#(SEQ_LEN)))) instr[2] <- mkCReg(2, Invalid);
+    module mkFluteRVFIDIIBridge(Flute_RVFI_DII_Bridge_IFC);
+        Reg#(Maybe#(Tuple2#(Bit#(32), Dii_Id))) instr[2] <- mkCReg(2, Invalid);
         Reg#(Maybe#(WordXL)) fake_addr <- mkReg(Invalid);
         FIFO#(RVFI_DII_Execution #(XLEN,MEMWIDTH)) reports <- mkFIFO;
-        Reg#(Maybe#(UInt#(SEQ_LEN))) seq_req[2] <- mkCReg(2, Invalid);
+        Reg#(Maybe#(Dii_Id)) seq_req[2] <- mkCReg(2, Invalid);
 
         Bit#(32) nop = 'h00000013;
 
-        interface Piccolo_RVFI_DII_Server rvfi_dii_server;
-            method Maybe#(UInt#(SEQ_LEN)) getSeqReq;
-                return seq_req[0];
-            endmethod
-            method Action putInst(Tuple2#(Bit#(32), UInt#(SEQ_LEN)) _inst);
-                instr[0] <= Valid(_inst);
-                seq_req[0] <= Invalid;
-            endmethod
+        interface Flute_RVFI_DII_Server rvfi_dii_server;
+            interface Get seqReq;
+                method ActionValue#(Dii_Id) get if (isValid(seq_req[0]));
+                  return seq_req[0].Valid;
+                endmethod
+            endinterface
+            interface Put inst;
+                method Action put (x);
+                  instr[0] <= Valid(x);
+                  seq_req[0] <= Invalid;
+                endmethod
+            endinterface
             interface trace_report = toGet (reports);
         endinterface
 
@@ -78,7 +82,7 @@ import RVFI_DII  :: *;
                 Bit #(1)       sstatus_SUM,
                 Bit #(1)       mstatus_MXR,
                 WordXL         satp,
-                UInt#(SEQ_LEN) seq_request);
+                Dii_Id seq_request);
                 fake_addr <= Valid(addr);
                 seq_req[1] <= Valid(seq_request);
                 if (isValid(instr[1])) begin
@@ -95,13 +99,13 @@ import RVFI_DII  :: *;
             method Bool valid = isValid (fake_addr) && isValid (instr[1]);
             method Bool is_i32_not_i16 = True;
             method WordXL pc = fake_addr.Valid;
-            method Tuple2#(Instr, UInt#(SEQ_LEN)) instr = instr[1].Valid;
+            method Tuple2#(Instr, Dii_Id) instr = instr[1].Valid;
             method Bool exc = False;
             method Exc_Code exc_code = 0;
             method WordXL tval = fake_addr.Valid; //TODO adjust this for compressed instructions?
         endinterface
 
-        interface Put trace_report = toPut(reports);
+        interface Put rvfi = toPut(reports);
     endmodule
 
 endpackage

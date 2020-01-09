@@ -106,7 +106,7 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
 `ifdef INCLUDE_TANDEM_VERIF
    interface Get #(Info_CPU_to_Verifier)  tv_verifier_info_get;
 `elsif RVFI_DII
-   interface Piccolo_RVFI_DII_Server rvfi_dii_server;
+   interface Flute_RVFI_DII_Server rvfi_dii_server;
 `endif
 
    // ----------------------------------------------------------------

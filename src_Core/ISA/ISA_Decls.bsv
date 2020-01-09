@@ -1174,7 +1174,7 @@ typedef struct {
 `include "ISA_Decls_Priv_M.bsv"
 
 // ================================================================
-// Common RVFI_DII interface passed through several layers of Piccolo
+// Common RVFI_DII interface passed through several layers of Flute
 
 `ifdef RVFI_DII
 `ifdef ISA_CHERI
@@ -1183,11 +1183,13 @@ typedef struct {
     typedef XLEN MEMWIDTH;
 `endif
 
-    typedef 3 SEQ_LEN; // Number of bits to identify an instruction, i.e. must be > log(stages)
-    interface Piccolo_RVFI_DII_Server;
-        method Maybe#(UInt#(SEQ_LEN)) getSeqReq;
-        method Action putInst (Tuple2#(Bit#(32), UInt#(SEQ_LEN)) _inst);
-        interface Get #(RVFI_DII_Execution#(XLEN, MEMWIDTH)) trace_report;
+    typedef Bit#(32) Dii_Inst;
+    typedef RVFI_DII_Types::Dii_Id Dii_Id;
+    typedef RVFI_DII_Execution#(XLEN, MEMWIDTH) Rvfi_Trace;
+    interface Flute_RVFI_DII_Server;
+        interface Get#(Dii_Id) seqReq;
+        interface Put#(Tuple2#(Dii_Inst, Dii_Id)) inst;
+        interface Get #(Rvfi_Trace) trace_report;
     endinterface
 `endif
 

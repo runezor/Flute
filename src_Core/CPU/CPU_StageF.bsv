@@ -33,7 +33,7 @@ import Near_Mem_IFC      :: *;
 import Branch_Predictor  :: *;
 
 `ifdef RVFI_DII
-import RVFI_DII          :: *
+import RVFI_DII          :: *;
 `endif
 
 `ifdef ISA_CHERI
@@ -65,7 +65,7 @@ interface CPU_StageF_IFC;
 `endif
 		      Priv_Mode        priv,
 `ifdef RVFI_DII
-                      UInt#(SEQ_LEN)   next_seq,
+                      Dii_Id   next_seq,
 `endif
 		      Bit #(1)         sstatus_SUM,
 		      Bit #(1)         mstatus_MXR,
@@ -125,7 +125,12 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 				     exc:             imem.exc,
 				     exc_code:        imem.exc_code,
 				     tval:            imem.tval,
+`ifdef RVFI_DII
+				     instr:           tpl_1(imem.instr),
+                                     instr_seq:       tpl_2(imem.instr),
+`else
 				     instr:           imem.instr,
+`endif
 				     pred_fetch_addr: branch_predictor.predict_rsp};
 
       let ostatus = (  (! rg_full) ? OSTATUS_EMPTY
@@ -161,7 +166,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 `endif
 		      Priv_Mode        priv,
 `ifdef RVFI_DII
-                      UInt#(SEQ_LEN)   next_seq,
+                      Dii_Id   next_seq,
 `endif
 		      Bit #(1)         sstatus_SUM,
 		      Bit #(1)         mstatus_MXR,
@@ -172,7 +177,11 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 		   sstatus_SUM, mstatus_MXR, satp, fshow (m_old_fetch_addr));
       end
 
-      imem.req (f3_LW, fetch_addr, priv, sstatus_SUM, mstatus_MXR, satp);
+      imem.req (f3_LW, fetch_addr, priv, sstatus_SUM, mstatus_MXR, satp
+`ifdef RVFI_DII
+                                                                       , next_seq
+`endif
+                                                                       );
       branch_predictor.predict_req (fetch_addr, m_old_fetch_addr);    // TODO: ASID.VA vs PA?
 
       rg_epoch <= epoch;

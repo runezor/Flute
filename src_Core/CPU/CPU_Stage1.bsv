@@ -222,7 +222,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    CapReg tmp_val2 = cast(alu_outputs.cap_val2);
    CapMem cap_val2 = cast(tmp_val2);
    let info_RVFI = Data_RVFI_Stage1 {
-                       instr:          instr,
+                       instr:          rg_stage_input.instr,
                        rs1_addr:       rs1,
                        rs2_addr:       rs2,
 `ifdef ISA_CHERI
@@ -291,6 +291,9 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `ifdef INCLUDE_TANDEM_VERIF
 					       trace_data    : alu_outputs.trace_data,
 `endif
+`ifdef RVFI
+                                               info_RVFI_s1  : info_RVFI,
+`endif
 					       priv          : cur_priv };
 
    // ----------------
@@ -317,6 +320,9 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                      pc:        rg_stage_input.pc,
 `endif
 						     instr:     rg_stage_input.instr,
+`ifdef RVFI_DII
+                                                     instr_seq: rg_stage_input.instr_seq,
+`endif
 						     op_stage2: OP_Stage2_ALU,
 						     rd:        0,
 						     addr:      ?,
@@ -340,6 +346,9 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
 						     trace_data: alu_outputs.trace_data,
+`endif
+`ifdef RVFI
+                                                     info_RVFI_s1 : ?,
 `endif
 						     priv:      cur_priv
 						     };

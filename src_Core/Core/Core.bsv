@@ -452,7 +452,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `endif
 
 `ifdef RVFI_DII
-   interface Piccolo_RVFI_DII_Server rvfi_dii_server = cpu.rvfi_dii_server;
+   interface Flute_RVFI_DII_Server rvfi_dii_server = cpu.rvfi_dii_server;
 `endif
 
    // ----------------------------------------------------------------

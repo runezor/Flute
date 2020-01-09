@@ -123,7 +123,7 @@ interface IMem_IFC;
 		       Bit #(1)   mstatus_MXR,
 		       WordXL     satp
 `ifdef RVFI_DII
-             , UInt#(SEQ_LEN) seq_req
+             , Dii_Id seq_req
 `endif
                               );    // { VM_Mode, ASID, PPN_for_page_table }
 
@@ -137,7 +137,7 @@ interface IMem_IFC;
    (* always_ready *)  method WordXL   pc;
    (* always_ready *)  method
 `ifdef RVFI_DII
-                              Tuple2#(Instr, UInt#(SEQ_LEN)) instr;
+                              Tuple2#(Instr, Dii_Id) instr;
 `else
                               Instr    instr;
 `endif

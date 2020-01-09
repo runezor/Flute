@@ -78,7 +78,7 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoCondensed(
 `else
         rvfi_rd_wdata:  data_s2_s3.rd == 0 ? 0 : data_s2_s3.rd_val,
 `endif
-        rvfi_pc_rdata:  data_s2_s3.pc,
+        rvfi_pc_rdata:  getPC(data_s2_s3.pcc),
         rvfi_pc_wdata:  isTrap ? trapPC : s1.pc_wdata,
         rvfi_mem_wdata: s1.mem_wdata,
         rvfi_mem_addr:  s1.mem_addr,
