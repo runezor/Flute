@@ -98,6 +98,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
 `ifdef ISA_CHERI
    Reg #(PCC_T) rg_pcc <- mkRegU;
+   Reg #(Bit#(TAdd#(XLEN,1))) rg_pcc_top <- mkRegU;
 `endif
 
    Reg #(Bool)                  rg_full        <- mkReg (False);
@@ -296,6 +297,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `endif
 					       priv          : cur_priv };
 
+`ifdef ISA_CHERI
+   let fetch_exc = checkValid(rg_pcc, rg_pcc_top, rg_stage_input.is_i32_not_i16);
+`endif
+
    // ----------------
    // Combinational output function
 
@@ -355,6 +360,20 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
 	 output_stage1.data_to_stage2 = data_to_stage2;
       end
+
+`ifdef ISA_CHERI
+      else if (isValid(fetch_exc)) begin
+	 output_stage1.ostatus   = OSTATUS_NONPIPE;
+	 output_stage1.control   = CONTROL_TRAP;
+	 output_stage1.trap_info = Trap_Info_Pipe {
+                exc_code: exc_code_CHERI,
+                cheri_exc_code : fetch_exc.Valid,
+                cheri_exc_reg : {1, scr_addr_PCC},
+                epcc: rg_pcc,
+                tval: rg_stage_input.tval};
+	 output_stage1.data_to_stage2 = data_to_stage2;
+      end
+`endif
 
       // Stall if bypass pending for GPR rs1 or rs2
       else if (rs1_busy || rs2_busy) begin
@@ -450,8 +469,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
       rg_stage_input <= data;
       if (data.refresh_pcc) begin
           rg_pcc <= fresh_pcc;
+          rg_pcc_top <= getTop(fresh_pcc);
       end else if (rg_stage_input.epoch == cur_epoch) begin
           rg_pcc <= next_pcc_local;
+          rg_pcc_top <= getTop(next_pcc_local);
       end
       if (verbosity > 1)
 	 $display ("    CPU_Stage1.enq: 0x%08h", getPC(data.refresh_pcc ? fresh_pcc : rg_stage_input.epoch == cur_epoch ? next_pcc_local : rg_pcc));
