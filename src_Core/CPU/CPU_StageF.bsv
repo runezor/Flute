@@ -104,6 +104,9 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
       f_reset_reqs.deq;
       rg_full  <= False;
       rg_epoch <= 0;
+`ifdef RVFI_DII
+      branch_predictor.reset();
+`endif
       f_reset_rsps.enq (?);
    endrule
 
