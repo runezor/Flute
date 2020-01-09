@@ -213,7 +213,7 @@ module mkCPU (CPU_IFC);
 `ifdef INCLUDE_TANDEM_VERIF
    Reg #(Trace_Data) rg_trap_trace_data <- mkRegU;
 `elsif RVFI
-   Reg #(Either#(Data_Stage1_to_Stage2, Data_Stage2_to_Stage3)) rg_trap_trace_data <- mkReg(Left(Data_Stage1_to_Stage2 {instr: 32'hdeadbeef}));
+   Reg #(Either#(Data_Stage1_to_Stage2, Data_Stage2_to_Stage3)) rg_trap_trace_data <- mkRegU;
 `endif
 
    // Save next_pc across split-phase FENCE.I and other split-phase ops. This
