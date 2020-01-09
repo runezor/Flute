@@ -859,7 +859,9 @@ module mkCPU (CPU_IFC);
             Epoch epoch;
             WordXL new_fetch_addr;
             Maybe#(WordXL) m_old_fetch_addr;
+`ifdef RVFI_DII
             Dii_Id new_instr_seq;
+`endif
             case (redirect_F) matches
             tagged Valid {.e, .nfa, .ofa}: begin
                 rg_next_pcc <= stage1.out.next_pcc;
