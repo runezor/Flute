@@ -676,6 +676,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `ifdef ISA_CHERI
    function Bool fv_scr_exists (SCR_Addr scr_addr);
      let result =
+         scr_addr == scr_addr_PCC ||
+         scr_addr == scr_addr_DDC ||
          scr_addr == scr_addr_MTCC ||
          scr_addr == scr_addr_MTDC ||
          scr_addr == scr_addr_MEPCC ||
@@ -1214,7 +1216,9 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
       Bool priv_ok = priv == 3;
 
-      return (exists && access_sys_regs && priv_ok);
+      Bool access_PCC = scr_addr == scr_addr_PCC; //Accesses to PCC that reach this point must be writes, so are illegal
+
+      return (exists && access_sys_regs && priv_ok && !access_PCC);
    endfunction: fv_access_permitted_scr
 `endif
 
