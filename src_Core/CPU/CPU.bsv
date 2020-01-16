@@ -1067,7 +1067,6 @@ module mkCPU (CPU_IFC);
         tagged Right .r: getRVFIInfoCondensed(r, next_pc);
       endcase;
       let outpacket = outpacketPart(minstret,True,exc_code,rg_handler,rg_donehalt);
-         $display("rg_trap_trace_data: ", fshow(rg_trap_trace_data));
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
       rg_handler <= True;
