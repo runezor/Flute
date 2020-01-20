@@ -548,7 +548,7 @@ endfunction
 
 `ifdef ISA_CHERI
 typedef Bit #(6) Exc_Code;
-Exc_Code  exc_code_CHERI                         = 32;
+Exc_Code  exc_code_CHERI                         = 28;
 `else
 typedef Bit #(4) Exc_Code;
 `endif
