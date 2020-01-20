@@ -1500,7 +1500,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    next_pcc = rg_sepcc_unpacked;
       end
 `endif
-      if (misa.c == 1'b1) next_pcc = maskAddr(next_pcc, signExtend(3'b100));
+      if (misa.c == 1'b0) next_pcc = maskAddr(next_pcc, signExtend(3'b100));
       return tuple3 (
 `ifdef ISA_CHERI
                     next_pcc,
