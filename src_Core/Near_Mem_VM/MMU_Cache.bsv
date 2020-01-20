@@ -62,6 +62,7 @@ import Vector       :: *;
 import BRAMCore     :: *;
 import ConfigReg    :: *;
 import FIFOF        :: *;
+import FIFO         :: *;
 import GetPut       :: *;
 import ClientServer :: *;
 
@@ -259,18 +260,16 @@ endfunction
 // Compute address, data and strobe (byte-enables) for writes to fabric
 
 function
-`ifdef ISA_CHERI
-         Tuple5
-`else
-         Tuple4
-`endif
+         Tuple8
                 #(Fabric_Addr,    // addr is 32b- or 64b-aligned
 		  Fabric_Data,    // data is lane-aligned
-`ifdef ISA_CHERI
-          Bit #(Wd_W_User),           // cap_tags
-`endif
+                  Bit #(Wd_W_User), // cap_tags
 		  Fabric_Strb,    // strobe
-		  AXI4_Size)      // 8 for 8-byte writes, else 4
+		  AXI4_Size,      // 8 for 8-byte writes, else 4
+                  Fabric_Data,
+                  Bit #(Wd_W_User),
+                  Fabric_Strb
+                  )
 
    fn_to_fabric_write_fields (Bit #(3)  width_code,      // RISC-V size code: B/H/W/D/Q
 			      Bit #(n)  addr,    // actual byte addr
@@ -279,38 +278,42 @@ function
 
    match {.write_cap, .word128} = write;
 
+   let word64 = word128[63:0];
+
    // First compute addr, data and strobe for a 64b-wide fabric
-   Bit #(16)  strobe128    = 0;
-   Bit #(4)   shift_bytes = addr [3:0];
-   Bit #(7)   shift_bits  = { shift_bytes, 3'b0 };
+   Bit #(8)  strobe64    = 0;
+   Bit #(8)  strobe2_64    = 0;
+   Bit #(3)   shift_bytes = addr [2:0];
+   Bit #(6)   shift_bits  = { shift_bytes, 3'b0 };
    Bit #(64)  addr64     = zeroExtend (addr);
-   AXI4_Size  axsize      = 128;    // Will be updated in 'case' below
+   AXI4_Size  axsize      = 64;    // Will be updated in 'case' below
 
    case (width_code)
       w_SIZE_B: begin
-		    word128   = (word128 << shift_bits);
-		    strobe128 = ('b_1   << shift_bytes);
+		    word64   = (word64 << shift_bits);
+		    strobe64 = ('b_1   << shift_bytes);
 		    axsize    = 1;
 		 end
       w_SIZE_H: begin
-		    word128   = (word128 << shift_bits);
-		    strobe128 = ('b_11  << shift_bytes);
+		    word64   = (word64 << shift_bits);
+		    strobe64 = ('b_11  << shift_bytes);
 		    axsize    = 2;
 		 end
       w_SIZE_W: begin
-		    word128   = (word128  << shift_bits);
-		    strobe128 = ('b_1111 << shift_bytes);
+		    word64   = (word64  << shift_bits);
+		    strobe64 = ('b_1111 << shift_bytes);
 		    axsize    = 4;
 		 end
       w_SIZE_D: begin
-        word128   = (word128 << shift_bits);
-	      strobe128 = ('b_1111_1111 << shift_bytes);
+        word64   = (word64 << shift_bits);
+	      strobe64 = ('b_1111_1111 << shift_bytes);
 		    axsize    = 8;
 		 end
       w_SIZE_Q: begin
-            word128   = word128;
-            strobe128 = 'b_1111_1111_1111_1111;
-            axsize    = 16;
+            word64   = word64;
+            strobe64 = 'b_1111_1111;
+            strobe2_64 = 'b_1111_1111;
+            axsize    = 8;
          end
    endcase
 
@@ -322,20 +325,12 @@ function
 `endif
 
    // Finally, create fabric addr/data/strobe
-   Fabric_Addr  fabric_addr   = truncate (addr64);
-   Fabric_Data  fabric_data   = truncate (word128);
-   Fabric_Strb  fabric_strobe = truncate (strobe128);
+   Fabric_Addr  fabric_addr   = addr64;
+   Fabric_Data  fabric_data   = word64;
+   Fabric_Strb  fabric_strobe = strobe64;
+   Fabric_Strb  fabric_strobe2 = strobe2_64;
 
-   return
-`ifdef ISA_CHERI
-          tuple5
-`else
-          tuple4
-`endif           (fabric_addr, fabric_data,
-`ifdef ISA_CHERI
-                                            user,
-`endif
-                                            fabric_strobe, axsize);
+   return tuple8 (fabric_addr, fabric_data, user, fabric_strobe, axsize, word128[127:64], user, fabric_strobe2);
 endfunction: fn_to_fabric_write_fields
 
 // ================================================================
@@ -533,6 +528,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 `ifdef ISA_CHERI
    Reg#(Bool) crg_commit[3] <- mkCReg(3,False);
+   FIFO #(AXI4_WFlit#(Wd_Data, Wd_W_User)) f_fabric_second_write_reqs <- mkFIFO1;
 `endif
 
    // Reset request/response: REQUESTOR_RESET_IFC, REQUESTOR_FLUSH_IFC
@@ -826,6 +822,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       endaction
    endfunction
 
+   (* descending_urgency = "rl_fabric_send_second_write_req, rl_fabric_send_write_req" *)
+   rule rl_fabric_send_second_write_req;
+      master_xactor.slave.w.put(f_fabric_second_write_reqs.first);
+      f_fabric_second_write_reqs.deq;
+   endrule
+
    rule rl_fabric_send_write_req;
       match { .f3, .pa, .st_val } <- pop (f_fabric_write_reqs);
 
@@ -835,11 +837,14 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
        .fabric_user,
 `endif
 	     .fabric_strb,
-	     .fabric_size} = fn_to_fabric_write_fields (f3, pa, st_val);
+	     .fabric_size,
+             .fabric_2_data,
+             .fabric_2_user,
+             .fabric_2_strb} = fn_to_fabric_write_fields (f3, pa, st_val);
 
       let mem_req_wr_addr = AXI4_AWFlit {awid:     default_mid,
 					  awaddr:   fabric_addr,
-					  awlen:    0,           // burst len = awlen+1
+					  awlen:    fabric_2_strb == 0 ? 0 : 1, // burst len = awlen+1
 					  awsize:   fabric_size,
 					  awburst:  fabric_default_burst,
 					  awlock:   fabric_default_lock,
@@ -851,8 +856,15 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       let mem_req_wr_data = AXI4_WFlit {wdata:  fabric_data,
 					  wstrb:  fabric_strb,
-					  wlast:  True,
+					  wlast:  fabric_2_strb == 0,
 					  wuser:  fabric_user};
+
+      let mem_req_wr_second_data = AXI4_WFlit {wdata: fabric_2_data,
+                                               wstrb: fabric_2_strb,
+                                               wlast: True,
+                                               wuser: fabric_2_user};
+
+      if (fabric_2_strb != 0) f_fabric_second_write_reqs.enq(mem_req_wr_second_data);
 
       master_xactor.slave.aw.put (mem_req_wr_addr);
       master_xactor.slave.w.put (mem_req_wr_data);
@@ -1657,8 +1669,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       end
 
       // For 64b fabrics, if this is lower Word64, just register it to hold until upper Word64 arrives
-      if ((valueOf (Wd_Data) == 64) && (! rg_lower_word64_full)) begin
-	 rg_lower_word64      <= truncate (mem_rsp.rdata);
+      if (! rg_lower_word64_full) begin
+	 rg_lower_word64      <= mem_rsp.rdata;
 	 rg_lower_word64_full <= True;
 	 if (cfg_verbosity > 2)
 	    $display ("        Recording rdata in rg_lower_word64");
@@ -1666,15 +1678,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Refill 128b of cache line
       else begin
-      Cache_Entry new_word128 = tuple2(mem_rsp.ruser, mem_rsp.rdata);
-// TODO reinstate this
-//	 if (valueOf (Wd_Data) == 64) begin
-//	    // Assert: rg_lower_64_full == True
-//	    new_word128 = { truncate(new_word128) << 64, rg_lower_word64 };
-//	    rg_lower_word64_full <= False;
-//	    if (cfg_verbosity > 2)
-//	       $display ("        64b fabric: concat with rg_lower_word64: new_word128 0x%0x", new_word128);
-//	 end
+      Cache_Entry new_word128 = tuple2(mem_rsp.ruser, zeroExtend(mem_rsp.rdata));
+
+      // Assert: rg_lower_64_full == True
+      new_word128 = tuple2(tpl_1(new_word128), { truncate(tpl_2(new_word128)) , rg_lower_word64 });
+      rg_lower_word64_full <= False;
+      if (cfg_verbosity > 2)
+         $display ("        64b fabric: concat with rg_lower_word64: new_word128 0x%0x", new_word128);
 
 	 // Update the Word128_Set (BRAM port A) (if this response was not an error)
 	 let new_word128_set = word128_set;

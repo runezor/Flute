@@ -89,7 +89,7 @@ module mkBoot_ROM (Boot_ROM_IFC);
 
    AXI4_Slave_Width_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, Wd_Data,
                               Wd_AW_User_Periph, Wd_W_User_Periph, Wd_B_User_Periph, Wd_AR_User_Periph, Wd_R_User_Periph,
-                              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) slave_xactor <- mkAXI4_Slave_Widening_Xactor;
+                              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) slave_xactor <- mkAXI4_Slave_Zeroing_Xactor;
 
    // ----------------
 
