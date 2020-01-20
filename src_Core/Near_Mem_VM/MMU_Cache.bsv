@@ -1320,13 +1320,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Memory read-response is a level 1 PTE
       let mem_rsp <- get(master_xactor.slave.r);
 
-      Bit #(128) x128 = mem_rsp.rdata;
+      Bit #(64) x64 = mem_rsp.rdata;
       WordXL pte;
 
-      // PTE is lower or upper 64b word of 128b mem response
-      pte = x128 [63:0];
-      if (rg_pte_pa [3] == 1'b1)
-	 pte = x128 [127:64];
+      pte = x64;
 
       // Bus error
       if (mem_rsp.rresp != OKAY) begin
@@ -1407,12 +1404,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Memory read-response is a level 1 PTE
       let mem_rsp <- get(master_xactor.slave.r);
 
-      Bit #(128) x128 = mem_rsp.rdata;
+      Bit #(64) x64 = mem_rsp.rdata;
       WordXL pte;
-      // PTE is lower or upper 64b word of 32b mem response
-      pte = x128 [63:0];
-      if (rg_pte_pa [3] == 1'b1)
-	 pte = x128 [127:64];
+      pte = x64;
 
       // Bus error
       if (mem_rsp.rresp != OKAY) begin
@@ -1498,12 +1492,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Memory read-response is a level 0 PTE
       let mem_rsp <- get(master_xactor.slave.r);
 
-      Bit #(128) x128 = mem_rsp.rdata;
+      Bit #(64) x64 = mem_rsp.rdata;
       WordXL pte;
-      // PTE is lower or upper 32b word of 64b mem response
-      pte = x128 [63:0];
-      if (rg_pte_pa [3] == 1'b1)
-	 pte = x128 [127:64];
+      pte = x64;
 
       // Bus error
       if (mem_rsp.rresp != OKAY) begin
