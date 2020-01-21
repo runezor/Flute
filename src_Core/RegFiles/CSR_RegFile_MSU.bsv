@@ -491,7 +491,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       rw_minstret.wset (0);
 
 `ifdef INCLUDE_GDB_CONTROL
+`ifdef ISA_CHERI
+      rg_dpcc <= cast(soc_map.m_pcc_reset_value);
+`else
       rg_dpc  <= truncate (soc_map.m_pc_reset_value);
+`endif
       rg_dcsr <= zeroExtend ({4'h4,    // [31:28]  xdebugver
 			      12'h0,   // [27:16]  reserved
 			      1'h0,    // [15]     ebreakm
@@ -1118,7 +1122,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				    end
 	       csr_addr_dpc:        begin
 				       result  = wordxl;
-				       rg_dpcc <= setOffset(rg_dpcc, result);
+				       rg_dpcc <= setOffset(rg_dpcc, result).value; //TODO unrepresentable?
 				    end
 	       csr_addr_dscratch0:  begin
 				       result        = wordxl;
@@ -1629,7 +1633,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    // Update dpcc
    method Action write_dpcc (CapPipe pcc);
-      rg_dpcc <= pc;
+      rg_dpcc <= pcc;
    endmethod
 
    // Break should enter Debug Mode

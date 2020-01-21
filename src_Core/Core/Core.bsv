@@ -222,9 +222,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Create a tap for DM's memory-writes to the bus, and merge-in the trace data.
    DM_Mem_Tap_IFC dm_mem_tap <- mkDM_Mem_Tap;
    mkConnection (debug_module.master, dm_mem_tap.slave);
-   let dm_mem_tap_nosynth <- fromAXI4_Master_Synth(dm_mem_tap.master);
-   let dm_master_nonsynth <- toWider_AXI4_Master(dm_mem_tap_nosynth);
-   let dm_master_local = toAXI4_Master_Synth(dm_master_nonsynth);
+   let dm_master_local = dm_mem_tap.master;
 
 `ifdef INCLUDE_TANDEM_VERIF
    // BEGIN SECTION: GDB and TV

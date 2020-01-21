@@ -632,12 +632,11 @@ module mkCPU (CPU_IFC);
 	 rg_state <= CPU_DEBUG_MODE;
 `ifdef ISA_CHERI
          rg_next_pcc <= cast(dpcc);
-         rg_next_ddc <= cast(dddc);
 `endif
 `ifdef INCLUDE_GDB_CONTROL
 	 csr_regfile.write_dcsr_cause_priv (DCSR_CAUSE_HALTREQ, m_Priv_Mode);
 `ifdef ISA_CHERI
-	 csr_regfile.write_dpcc (dpcc);
+	 csr_regfile.write_dpcc (cast(dpcc));
 `else
 	 csr_regfile.write_dpc (dpc);
 `endif
@@ -1989,7 +1988,7 @@ module mkCPU (CPU_IFC);
 `endif
       let instr = stage1.out.data_to_stage2.instr;
 
-      $display ("%0d: %m.rl_trap_BREAK_to_Debug_Mode: PC 0x%08h instr 0x%08h", mcycle, pc, instr);
+      //$display ("%0d: %m.rl_trap_BREAK_to_Debug_Mode: PC 0x%08h instr 0x%08h", mcycle, pc, instr);
       if (cur_verbosity > 1)
 	 $display ("    Flushing caches");
 
@@ -2095,12 +2094,12 @@ module mkCPU (CPU_IFC);
 
       // Report CPI only stop-req, but not on step-req (where it's not very useful)
       if (rg_stop_req) begin
-	 $display ("%0d: %m.rl_stage1_stop: Stop for debugger. minstret %0d priv %0d PC 0x%0h instr 0x%0h",
-		   mcycle, minstret, rg_cur_priv, pc, instr);
+	 //$display ("%0d: %m.rl_stage1_stop: Stop for debugger. minstret %0d priv %0d PC 0x%0h instr 0x%0h",
+	//	   mcycle, minstret, rg_cur_priv, pc, instr);
 	 fa_report_CPI;
       end
-      else
-	 $display ("%0d: %m.rl_stage1_stop: Stop after single-step. PC = 0x%08h", mcycle, pc);
+      //else
+	// $display ("%0d: %m.rl_stage1_stop: Stop after single-step. PC = 0x%08h", mcycle, pc);
 
       DCSR_Cause cause= (rg_stop_req ? DCSR_CAUSE_HALTREQ : DCSR_CAUSE_STEP);
       csr_regfile.write_dcsr_cause_priv (cause, rg_cur_priv);
@@ -2141,18 +2140,18 @@ module mkCPU (CPU_IFC);
 `endif
       fa_restart (
 `ifdef ISA_CHERI
-                  dpcc
+                  cast(dpcc)
 `else
                   dpc
 `endif
                   );
-      $display ("%0d: %m.rl_debug_run: restart at PC = 0x%0h", mcycle, dpc);
+      //$display ("%0d: %m.rl_debug_run: restart at PC = 0x%0h", mcycle, dpc);
 
       // Notify debugger that we've started running
       f_run_halt_rsps.enq (True);
 
-      if (cur_verbosity > 1)
-	 $display ("%0d: %m.rl_debug_run: 'run' from dpc 0x%0h", mcycle, dpc);
+      //if (cur_verbosity > 1)
+	 //$display ("%0d: %m.rl_debug_run: 'run' from dpc 0x%0h", mcycle, dpc);
    endrule
 
    (* descending_urgency = "rl_debug_run_redundant, rl_pipe" *)
@@ -2198,7 +2197,7 @@ module mkCPU (CPU_IFC);
       let req <- pop (f_gpr_reqs);
       Bit #(5) regname = req.address;
       let data = gpr_regfile.read_rs1_port2 (regname);
-      let rsp = DM_CPU_Rsp {ok: True, data: data};
+      let rsp = DM_CPU_Rsp {ok: True, data: getAddr(data)};
       f_gpr_rsps.enq (rsp);
       if (cur_verbosity > 1)
 	 $display ("%0d: %m.rl_debug_read_gpr: reg %0d => 0x%0h",
