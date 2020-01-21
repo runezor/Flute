@@ -682,6 +682,12 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
      let result =
          scr_addr == scr_addr_PCC ||
          scr_addr == scr_addr_DDC ||
+`ifdef ISA_PRIV_S
+         scr_addr == scr_addr_STCC ||
+         scr_addr == scr_addr_STDC ||
+         scr_addr == scr_addr_SEPCC ||
+         scr_addr == scr_addr_SScratchC ||
+`endif
          scr_addr == scr_addr_MTCC ||
          scr_addr == scr_addr_MTDC ||
          scr_addr == scr_addr_MEPCC ||
@@ -697,6 +703,13 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
        case (scr_addr)
            //pcc and ddc handled externally
+
+`ifdef ISA_PRIV_S
+           scr_addr_STCC: m_scr_value = tagged Valid rg_stcc;
+           scr_addr_STDC: m_scr_value = tagged Valid rg_stdc;
+           scr_addr_SScratchC: m_scr_value = tagged Valid rg_sscratchc;
+           scr_addr_SEPCC: m_scr_value = tagged Valid rg_sepcc;
+`endif
 
            scr_addr_MTCC: m_scr_value = tagged Valid rg_mtcc;
            scr_addr_MTDC: m_scr_value = tagged Valid rg_mtdc;
@@ -924,12 +937,12 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       result <- csr_mie.fav_sie_write (misa, wordxl);
 				    end
 	       csr_addr_stvec:      begin
-				       let mtvec = word_to_mtvec (wordxl);
-				       result    = mtvec_to_word (mtvec);
+				       let stvec = word_to_mtvec (wordxl);
+				       result    = mtvec_to_word (stvec);
 `ifdef ISA_CHERI
                rg_stcc <= cast(update_scr_via_csr(rg_stcc_unpacked, result));
 `else
-				       rg_stvec <= mtvec;
+				       rg_stvec <= stvec;
 `endif
 				    end
 	       csr_addr_scounteren: result = 0;    // Hardwired to zero
@@ -1157,6 +1170,33 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 CapPipe capUnpacked = cast(cap);
 
 	    case (scr_addr)
+`ifdef ISA_PRIV_S
+         scr_addr_STCC: begin
+             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))));
+             // This can be done much more efficiently by breaking into the compressed cap format
+             rg_stcc <= cast(capUnpacked);
+             result = cast(capUnpacked);
+         end
+         scr_addr_STDC: begin
+             rg_stdc <= cap;
+             result = cap;
+         end
+         scr_addr_SEPCC: begin
+             let newOffset = getOffset(capUnpacked);
+`ifdef ISA_C
+             newOffset[0] = 1'b0;
+`else
+             newOffset[1:0] = 2'b0;
+`endif
+             capUnpacked = update_scr_via_csr(capUnpacked, newOffset);
+             rg_sepcc <= cast(capUnpacked);
+             result = cast(capUnpacked);
+         end
+         scr_addr_SScratchC: begin
+             rg_sscratchc <= cap;
+             result = cap;
+         end
+`endif
          scr_addr_MTCC: begin
              capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))));
              // This can be done much more efficiently by breaking into the compressed cap format

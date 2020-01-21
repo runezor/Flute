@@ -97,7 +97,7 @@ SCR_Addr scr_addr_UEPCC = 7;
 
 SCR_Addr scr_addr_STCC = 12;
 SCR_Addr scr_addr_STDC = 13;
-SCR_Addr scr_addr_SScatchC = 14;
+SCR_Addr scr_addr_SScratchC = 14;
 SCR_Addr scr_addr_SEPCC = 15;
 
 SCR_Addr scr_addr_MTCC = 28;
