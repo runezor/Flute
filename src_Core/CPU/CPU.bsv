@@ -630,6 +630,10 @@ module mkCPU (CPU_IFC);
       end
       else begin
 	 rg_state <= CPU_DEBUG_MODE;
+`ifdef ISA_CHERI
+         rg_next_pcc <= cast(dpcc);
+         rg_next_ddc <= cast(dddc);
+`endif
 `ifdef INCLUDE_GDB_CONTROL
 	 csr_regfile.write_dcsr_cause_priv (DCSR_CAUSE_HALTREQ, m_Priv_Mode);
 `ifdef ISA_CHERI
