@@ -500,6 +500,8 @@ Opcode op_AMO = 7'b01_011_11;
 
 // NOTE: bit [4] for aq, and [3] for rl, are here set to zero
 
+Bit #(3)    f3_AMO_B     = 3'b000;
+Bit #(3)    f3_AMO_H     = 3'b001;
 Bit #(3)    f3_AMO_W     = 3'b010;
 Bit #(3)    f3_AMO_D     = 3'b011;
 

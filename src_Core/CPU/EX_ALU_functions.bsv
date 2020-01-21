@@ -1244,6 +1244,11 @@ function ALU_Outputs fv_AMO (ALU_Inputs inputs);
 
    // TODO: Cap width
    Bool legal_width = (   (funct3 == f3_AMO_W)
+`ifdef ISA_CHERI
+                     || (((funct5 == f5_AMO_LR)   || (funct5 == f5_AMO_SC)) &&
+                          (funct3 == f3_AMO_H
+                       || (funct3 == f3_AMO_B)))
+`endif
 		       || ((xlen == 64) && (funct3 == f3_AMO_D)) );
 
    let alu_outputs = alu_outputs_base;
