@@ -306,7 +306,7 @@ module mkSoC_Map(CLK,
   assign m_pc_reset_value = 64'h0000000070000000 ;
 
   // value method m_pcc_reset_value
-  assign m_pcc_reset_value = 153'h100000000000000000000FFFF1FFFFF44000000 ;
+  assign m_pcc_reset_value = 153'h1000000001C0000000000FFFF1FFFFF44000000 ;
 
   // value method m_ddc_reset_value
   assign m_ddc_reset_value = 153'h100000000000000000000FFFF1FFFFF44000000 ;
