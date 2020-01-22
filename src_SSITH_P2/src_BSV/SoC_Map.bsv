@@ -318,9 +318,9 @@ module mkSoC_Map (SoC_Map_IFC);
    Bit #(XLEN) nmivec_reset_value = ?;         // TODO
 
 `ifdef ISA_CHERI
-   CapReg pcc_reset_value = almightyCap;
-   CapReg ddc_reset_value = almightyCap;
    CapPipe almightyPipe = almightyCap;
+   CapReg pcc_reset_value  = cast(setOffset(almightyPipe, pc_reset_value).value);
+   CapReg ddc_reset_value = almightyCap;
    CapReg mtcc_reset_value = cast(setOffset(almightyPipe, mtvec_reset_value).value);
    CapReg mepcc_reset_value = almightyCap;
 `endif
