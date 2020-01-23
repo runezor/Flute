@@ -1774,7 +1774,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("    ", fshow (rd_data));
       end
 
-      let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, rg_addr, tuple2(0, zeroExtend (rd_data.rdata))); //TODO safe to assume no tags from IO reads?
+      let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend (rd_data.rdata)));
       rg_ld_val <= ld_val;
 
       // Successful read
@@ -1876,7 +1876,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("    ", fshow (rd_data));
       end
 
-      let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, rg_addr, tuple2(0, zeroExtend(rd_data.rdata)));
+      let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend(rd_data.rdata)));
 
       // Bus error for AMO read
       if (rd_data.rresp != OKAY) begin
