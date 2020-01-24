@@ -751,9 +751,6 @@ function ALU_Outputs fv_AUIPC (ALU_Inputs inputs);
    let alu_outputs       = alu_outputs_base;
    alu_outputs.op_stage2 = OP_Stage2_ALU;
    alu_outputs.rd        = inputs.decoded_instr.rd;
-`ifdef ISA_D
-   alu_outputs.val1      = extend (rd_val);
-`else
 `ifdef ISA_CHERI
    if (getFlags(inputs.pcc)[0] == 1'b1) begin
        alu_outputs.val1_source = SET_OFFSET;
@@ -763,9 +760,8 @@ function ALU_Outputs fv_AUIPC (ALU_Inputs inputs);
    end else
 `endif
    begin
-       alu_outputs.val1      = rd_val;
+       alu_outputs.val1      = extend(rd_val);
    end
-`endif
 
    // Normal trace output (if no trap)
    alu_outputs.trace_data = mkTrace_I_RD (fall_through_pc (inputs),
