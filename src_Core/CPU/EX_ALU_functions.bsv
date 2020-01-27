@@ -935,12 +935,13 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
                                                    : inputs.rs2_val;
 `endif
 `endif
-`else
 `ifdef ISA_CHERI
    alu_outputs.cap_val2      = inputs.cap_rs2_val;
    alu_outputs.val2_cap_not_int = width_code == w_SIZE_CAP;
 `else
+`ifndef ISA_F
    alu_outputs.val2      = inputs.rs2_val;
+`endif
 `endif
 `endif
 
