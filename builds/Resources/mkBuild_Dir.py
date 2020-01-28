@@ -255,7 +255,7 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv, rvfi_dii):
         fo.write ("CAPSIZE = 64\n")
     else:
         fo.write ("CAPSIZE = 128\n")
-    fo.write ("TAGS_STRUCT = 0 128\n")
+    fo.write ("TAGS_STRUCT = 0 64\n")
     fo.write ("TAGS_ALIGN = 32\n")
     fo.write ("\n")
 

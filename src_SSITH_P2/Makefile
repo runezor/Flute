@@ -42,7 +42,7 @@ BSC_COMPILATION_FLAGS += \
 
 # CHERI paramters
 CAPSIZE = 128
-TAGS_STRUCT = 0 128
+TAGS_STRUCT = 0 64
 TAGS_ALIGN = 32
 
 # ================================================================
