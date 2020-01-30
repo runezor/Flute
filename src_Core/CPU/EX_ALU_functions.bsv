@@ -833,7 +833,7 @@ function ALU_Outputs fv_LD (ALU_Inputs inputs, Maybe#(Bit#(3)) size);
 `endif
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, False, ?);
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, False, True, ?);
 `endif
 
    // Normal trace output (if no trap)
@@ -912,7 +912,7 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
    alu_outputs.mem_unsigned = False;
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, True, inputs.cap_rs2_val);
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, True, False, inputs.cap_rs2_val);
 `endif
 
    // The rs2_val would depend on the combination F/D-RV32/64 when FD is enabled
@@ -1242,6 +1242,7 @@ function ALU_Outputs fv_AMO (ALU_Inputs inputs);
    // TODO: Cap width
    Bool legal_width = (   (funct3 == f3_AMO_W)
 `ifdef ISA_CHERI
+                     || (((funct5 == f5_AMO_LR) || (funct5 == f5_AMO_SC) || (funct5 == f5_AMO_SWAP)) && (funct3 == f3_AMO_CAP))
                      || (((funct5 == f5_AMO_LR)   || (funct5 == f5_AMO_SC)) &&
                           (funct3 == f3_AMO_H
                        || (funct3 == f3_AMO_B)))
@@ -1258,9 +1259,15 @@ function ALU_Outputs fv_AMO (ALU_Inputs inputs);
    alu_outputs.mem_width_code = width_code;
    alu_outputs.mem_unsigned = False;
 
-   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, True, inputs.cap_rs2_val);
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, funct5 != f5_AMO_LR, funct5 != f5_AMO_SC, inputs.cap_rs2_val);
 
    alu_outputs.val1      = zeroExtend (inputs.decoded_instr.funct7);
+
+`ifdef ISA_CHERI
+   alu_outputs.cap_val2      = inputs.cap_rs2_val;
+   alu_outputs.val2_cap_not_int = width_code == w_SIZE_CAP;
+`endif
+
 `ifdef ISA_D
    alu_outputs.val2      = extend (inputs.rs2_val);
 `else
@@ -1292,13 +1299,19 @@ function ALU_Outputs fv_CHERI_exc(ALU_Outputs outputs, Bit#(6) regIdx, CHERI_Exc
   return outputs;
 endfunction
 
-function ALU_Outputs checkValidDereference(ALU_Outputs alu_outputs, CapPipe authority, Bit#(6) authIdx, WordXL base, Bit#(3) widthCode, Bool isStoreNotLoad, CapPipe data);
+function ALU_Outputs checkValidDereference(ALU_Outputs alu_outputs, CapPipe authority, Bit#(6) authIdx, WordXL base, Bit#(3) widthCode, Bool isStore, Bool isLoad, CapPipe data);
    if (!isValidCap(authority)) begin
        alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_Tag);
    end else if (isSealed(authority)) begin
        alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_Seal);
-   end else if ((isStoreNotLoad ? !getHardPerms(authority).permitStore : !getHardPerms(authority).permitLoad)) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, isStoreNotLoad ? exc_code_CHERI_WPerm : exc_code_CHERI_RPerm);
+   end else if (isLoad && !getHardPerms(authority).permitLoad) begin
+       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_RPerm);
+   end else if (isStore && !getHardPerms(authority).permitStore) begin
+       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_WPerm);
+   end else if (isStore && widthCode == w_SIZE_CAP && !getHardPerms(authority).permitStoreCap) begin
+       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_SCPerm);
+   end else if (isStore && widthCode == w_SIZE_CAP && !getHardPerms(data).global && !getHardPerms(authority).permitStoreLocalCap) begin
+       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_SCLocalPerm);
    end
    alu_outputs.check_enable = True;
    alu_outputs.check_authority = authority;
@@ -1308,16 +1321,8 @@ function ALU_Outputs checkValidDereference(ALU_Outputs alu_outputs, CapPipe auth
    alu_outputs.check_inclusive = True;
 
    //TODO check alignment?
-   if (widthCode == w_SIZE_CAP) begin //May be loading/storing caps
-       if (isStoreNotLoad) begin
-           if (getHardPerms(authority).permitStoreCap && (getHardPerms(data).global || getHardPerms(authority).permitStoreLocalCap)) begin
-               alu_outputs.mem_allow_cap = True;
-           end
-       end else begin
-           if (getHardPerms(authority).permitLoadCap) begin
-               alu_outputs.mem_allow_cap = True;
-           end
-       end
+   if (widthCode == w_SIZE_CAP && isLoad && getHardPerms(authority).permitLoadCap) begin
+       alu_outputs.mem_allow_cap = True;
    end
    return alu_outputs;
 endfunction
@@ -1358,7 +1363,7 @@ function ALU_Outputs memCommon(ALU_Outputs alu_outputs, Bool isStoreNotLoad, Boo
    let authority = useDDC ? ddc : addr;
    let authorityIdx = useDDC ? {1,scr_addr_PCC} : {0,addrIdx};
 
-   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, widthCode, isStoreNotLoad, data);
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, widthCode, isStoreNotLoad, !isStoreNotLoad, data);
 
    return alu_outputs;
 endfunction

@@ -422,8 +422,11 @@ function Tuple2 #(Tuple2#(Bool, Bit #(128)),
 					WordXL     addr,      // lsbs indicate which 32b W in 64b D (.W)
 					Cache_Entry ld_val,   // value loaded from mem
 					Tuple2#(Bool, Bit #(128)) st_val);   // Value from CPU reg Rs2
-   Bit #(64) w1     = truncate(tpl_2(fn_extract_and_extend_bytes(funct3, False, addr, ld_val)));
-   Bit #(64) w2     = truncate(tpl_2(st_val));
+   let extracted_q1 = fn_extract_and_extend_bytes(funct3, False, addr, ld_val);
+   Bit #(128) q1    = tpl_2(extracted_q1);
+   Bit #(128) q2    = tpl_2(st_val);
+   Bit #(64) w1     = truncate(q1);
+   Bit #(64) w2     = truncate(q2);
    Int #(64) i1     = unpack (w1);    // Signed, for signed ops
    Int #(64) i2     = unpack (w2);    // Signed, for signed ops
    if (funct3 == f3_AMO_W) begin
@@ -434,24 +437,35 @@ function Tuple2 #(Tuple2#(Bool, Bit #(128)),
    end
    Bit #(5)  f5     = funct7 [6:2];
    // new_st_val is new value to be stored back to mem (w1 op w2)
-   Bit #(64) new_st_val = ?;
-   case (f5)
-      f5_AMO_SWAP: new_st_val = w2;
-      f5_AMO_ADD:  new_st_val = pack (i1 + i2);
-      f5_AMO_XOR:  new_st_val = w1 ^ w2;
-      f5_AMO_AND:  new_st_val = w1 & w2;
-      f5_AMO_OR:   new_st_val = w1 | w2;
-      f5_AMO_MINU: new_st_val = ((w1 < w2) ? w1 : w2);
-      f5_AMO_MAXU: new_st_val = ((w1 > w2) ? w1 : w2);
-      f5_AMO_MIN:  new_st_val = ((i1 < i2) ? w1 : w2);
-      f5_AMO_MAX:  new_st_val = ((i1 > i2) ? w1 : w2);
-   endcase
+   Bit#(128) new_st_val_128;
+   Bool new_st_tag = False;
+   Bool old_ld_tag = False;
+   if (funct3 == f3_AMO_CAP) begin
+      new_st_val_128 = q2;
+      new_st_tag = tpl_1(st_val);
+      old_ld_tag = tpl_1(extracted_q1);
+   end else begin
+     Bit #(64) new_st_val_64 = ?;
+     case (f5)
+        f5_AMO_SWAP: new_st_val_64 = w2;
+        f5_AMO_ADD:  new_st_val_64 = pack (i1 + i2);
+        f5_AMO_XOR:  new_st_val_64 = w1 ^ w2;
+        f5_AMO_AND:  new_st_val_64 = w1 & w2;
+        f5_AMO_OR:   new_st_val_64 = w1 | w2;
+        f5_AMO_MINU: new_st_val_64 = ((w1 < w2) ? w1 : w2);
+        f5_AMO_MAXU: new_st_val_64 = ((w1 > w2) ? w1 : w2);
+        f5_AMO_MIN:  new_st_val_64 = ((i1 < i2) ? w1 : w2);
+        f5_AMO_MAX:  new_st_val_64 = ((i1 > i2) ? w1 : w2);
+     endcase
 
-   if (funct3 == f3_AMO_W)
-      new_st_val = zeroExtend (new_st_val [31:0]);
+     if (funct3 == f3_AMO_W)
+       new_st_val_64 = zeroExtend (new_st_val_64 [31:0]);
 
-   return tuple2 (tuple2(False, zeroExtend(pack(i1))),
-                  tuple2(False, zeroExtend(new_st_val)));
+     new_st_val_128 = zeroExtend(new_st_val_64);
+   end
+
+   return tuple2 (tuple2(old_ld_tag, q1),
+                  tuple2(new_st_tag, zeroExtend(new_st_val_128)));
 endfunction: fn_amo_op
 `endif
 

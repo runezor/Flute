@@ -342,7 +342,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef ISA_CHERI
         CapPipe result = ?; //TODO any reason for this to be CapPipe not CapReg/CapMem?
         if (rg_stage2.mem_width_code == w_SIZE_CAP) begin
-            CapMem capMem = {pack(rg_stage2.mem_allow_cap) & pack(mem_tag), truncate(mem_val)};
+            CapMem capMem = {pack(rg_stage2.mem_allow_cap && mem_tag), truncate(mem_val)};
             CapReg capReg = cast(capMem);
             result = cast(capReg);
         end else begin
@@ -730,7 +730,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 			x.val2_flt_not_int ? tuple2(False,zeroExtend(pack(extract_flt(x.val2)))) :
 `endif
 `ifdef ISA_CHERI
-      tuple2(isValidCap(capMem) && x.mem_allow_cap, zeroExtend(tagless)),
+      tuple2(x.mem_width_code == w_SIZE_CAP && isValidCap(capMem), zeroExtend(tagless)),
 `else
       tuple2(False, zeroExtend(x.val2)),
 `endif

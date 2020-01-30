@@ -226,4 +226,6 @@ Bit #(3) w_SIZE_CAP = w_SIZE_D;
 Bit #(3) w_SIZE_MAX = w_SIZE_D;
 `endif
 
+Bit #(3) f3_AMO_CAP = w_SIZE_CAP;
+
 `endif
