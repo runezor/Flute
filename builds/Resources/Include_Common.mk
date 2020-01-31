@@ -110,7 +110,7 @@ isa_tests:
 .PHONY: tagsparams
 tagsparams: $(REPO)/libs/TagController/tagsparams.py
 	@echo "INFO: Re-generating CHERI tag controller parameters"
-	$^ -v -c $(CAPSIZE) -s $(TAGS_STRUCT:"%"=%) -a $(TAGS_ALIGN) --covered-start-addr 0x80000000 --covered-mem-size 0x3ffff000 --top-addr 0xbffff000 -b TagTableStructure.bsv
+	$^ -v -c $(CAPSIZE) -s $(TAGS_STRUCT:"%"=%) -a $(TAGS_ALIGN) --covered-start-addr 0x80000000 --covered-mem-size 0x3fffe000 --top-addr 0xbffff000 -b TagTableStructure.bsv
 	@echo "INFO: Re-generated CHERI tag controller parameters"
 compile: tagsparams
 
