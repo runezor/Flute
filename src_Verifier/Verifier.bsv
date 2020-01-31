@@ -45,8 +45,6 @@ import CHERICC_Fat :: *;
 `ifdef RVFI
 // This function relies on info that is only passed in RVFI-mode.
 
-Bit#(32) ecall_insn = 32'h73;
-
 function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoCondensed(
             // Using the full data gives us access to rd_valid and a few other fields.
             Data_Stage2_to_Stage3   data_s2_s3,
@@ -65,7 +63,7 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoCondensed(
         rvfi_order:     order,
         // Not all traps are relevant in the Clifford-RVFI framework, e.g. page faults.
         rvfi_trap:      isTrap,
-        rvfi_halt:      (halted) ? True : (data_s2_s3.instr == ecall_insn),
+        rvfi_halt:      halted,
         rvfi_intr:      handler,
         rvfi_insn:      data_s2_s3.instr,
         rvfi_rs1_addr:  s1.rs1_addr,
@@ -110,7 +108,7 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoS1 (
     return RVFI_DII_Execution {
         rvfi_order:     order,
         rvfi_trap:      isTrap,
-        rvfi_halt:      (halted) ? True : (data_s1_s2.instr == ecall_insn),
+        rvfi_halt:      halted,
         rvfi_intr:      handler,
         rvfi_insn:      data_s1_s2.instr,
         rvfi_rs1_addr:  s1.rs1_addr,
