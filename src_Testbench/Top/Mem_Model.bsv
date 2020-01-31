@@ -49,6 +49,12 @@ interface Mem_Model_IFC;
 endinterface
 
 typedef 'h4000_0000 Bytes_Per_Mem;
+`ifdef RVFI_DII
+typedef 'h0000_0000 Zeroed_0_start;
+typedef 'h0001_0000 Zeroed_0_end;
+typedef 'h3f00_0000 Zeroed_1_start;
+typedef 'h3fff_ff00 Zeroed_1_end;
+`endif
 
 // ================================================================
 // Mem Model implementation
@@ -61,10 +67,15 @@ module mkMem_Model (Mem_Model_IFC);
    Raw_Mem_Addr alloc_size = fromInteger(valueOf(TDiv#(TMul#(Bytes_Per_Mem,8), Bits_per_Raw_Mem_Word))); //(raw mem words)
 
 `ifdef RVFI_DII
-   Raw_Mem_Addr zeroed_top = fromInteger(valueOf(TDiv#(RVFI_DII_Mem_Size, TDiv#(Bits_per_Raw_Mem_Word, 8))));
+   Raw_Mem_Addr zeroed_0_start = fromInteger(valueOf(TDiv#(Zeroed_0_start, TDiv#(Bits_per_Raw_Mem_Word, 8))));
+   Raw_Mem_Addr zeroed_0_end = fromInteger(valueOf(TDiv#(Zeroed_0_end, TDiv#(Bits_per_Raw_Mem_Word, 8))));
+   Raw_Mem_Addr zeroed_1_start = fromInteger(valueOf(TDiv#(Zeroed_1_start, TDiv#(Bits_per_Raw_Mem_Word, 8))));
+   Raw_Mem_Addr zeroed_1_end = fromInteger(valueOf(TDiv#(Zeroed_1_end, TDiv#(Bits_per_Raw_Mem_Word, 8))));
+
    RegFile #(Raw_Mem_Addr, Bit #(Bits_per_Raw_Mem_Word)) rf <- mkRegFile (0, alloc_size - 1);
    //zeroes register allows quick resetting of memory. If bit of zeroes is 0 then corresponding entry of rf is 0.
-   Reg#(Bit#(TDiv#(RVFI_DII_Mem_Size, TDiv#(Bits_per_Raw_Mem_Word, 8)))) zeroes <- mkReg(0);
+   Reg#(Bit#(TDiv#(TSub#(Zeroed_0_end, Zeroed_0_start), TDiv#(Bits_per_Raw_Mem_Word, 8)))) zeroes_0 <- mkReg(0);
+   Reg#(Bit#(TDiv#(TSub#(Zeroed_1_end, Zeroed_1_start), TDiv#(Bits_per_Raw_Mem_Word, 8)))) zeroes_1 <- mkReg(0);
 `else
    RegFile #(Raw_Mem_Addr, Bit #(Bits_per_Raw_Mem_Word)) rf <- mkRegFileLoad ("Mem.hex", 0, alloc_size - 1);
 `endif
@@ -84,12 +95,19 @@ module mkMem_Model (Mem_Model_IFC);
 	    end
 	    else if (req.write) begin
 `ifdef RVFI_DII
-            if (req.address < zeroed_top && zeroes[req.address] == 0) begin
+            if (req.address >= zeroed_0_start && req.address < zeroed_0_end && zeroes_0[req.address - zeroed_0_start] == 0) begin
                 for (Integer byteidx = 0; 8 * byteidx < valueOf(Bits_per_Raw_Mem_Word); byteidx = byteidx + 1) begin
                     req.data[byteidx] = req.byteen[byteidx] == 1 ? req.data[byteidx] : 0;
                     req.byteen[byteidx] = 1;
                 end
-                zeroes[req.address] <= 1;
+                zeroes_0[req.address - zeroed_0_start] <= 1;
+            end
+            if (req.address >= zeroed_1_start && req.address < zeroed_1_end && zeroes_1[req.address - zeroed_1_start] == 0) begin
+                for (Integer byteidx = 0; 8 * byteidx < valueOf(Bits_per_Raw_Mem_Word); byteidx = byteidx + 1) begin
+                    req.data[byteidx] = req.byteen[byteidx] == 1 ? req.data[byteidx] : 0;
+                    req.byteen[byteidx] = 1;
+                end
+                zeroes_1[req.address - zeroed_1_start] <= 1;
             end
 `endif
             rf.upd (req.address, req.data);
@@ -99,7 +117,9 @@ module mkMem_Model (Mem_Model_IFC);
 	    else begin
 	       let x = rf.sub (req.address);
 `ifdef RVFI_DII
-           if (req.address < zeroed_top && zeroes[req.address] == 0) x = 0;
+           $display("req addr: ", fshow(req.address), ", zeroed_0_start: ", fshow(zeroed_0_start), ", zeroed_1_start: ", fshow(zeroed_1_start));
+           if (req.address < zeroed_0_end && req.address >= zeroed_0_start && zeroes_0[req.address - zeroed_0_start] == 0) x = 0;
+           if (req.address < zeroed_1_end && req.address >= zeroed_1_start && zeroes_1[req.address - zeroed_1_start] == 0) x = 0;
 `endif
 	       let rsp = MemoryResponse {data: x};
 	       f_raw_mem_rsps.enq (rsp);
