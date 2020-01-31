@@ -1111,6 +1111,9 @@ module mkCPU (CPU_IFC);
       rg_scr_pcc <= stage1.out.data_to_stage2.pcc;
       rg_next_pcc <= stage1.out.next_pcc;
       rg_csr_val1 <= stage1.out.data_to_stage2.val1;
+`ifdef RVFI_DII
+      rg_next_seq <= stage1.out.data_to_stage2.instr_seq + 1;
+`endif
 
       // In case of trap (illegal CSpecialRW)
       rg_trap_info      <= Trap_Info_Pipe {
@@ -1238,6 +1241,10 @@ module mkCPU (CPU_IFC);
       rg_next_pc <= stage1.out.next_pc;
 `endif
 
+`ifdef RVFI_DII
+      rg_next_seq <= stage1.out.data_to_stage2.instr_seq + 1;
+`endif
+
       rg_csr_val1 <= stage1.out.data_to_stage2.val1;
 
       // In case of trap (illegal CSRRW)
@@ -1363,6 +1370,10 @@ module mkCPU (CPU_IFC);
       // Register required info and handle in next clock
       rg_scr_pcc  <= stage1.out.data_to_stage2.pcc;
       rg_next_pcc <= stage1.out.next_pcc;
+
+`ifdef RVFI_DII
+      rg_next_seq <= stage1.out.data_to_stage2.instr_seq + 1;
+`endif
 
       rg_csr_val1 <= stage1.out.data_to_stage2.val1;
 
@@ -1507,7 +1518,7 @@ module mkCPU (CPU_IFC);
 `endif
 		       rg_cur_priv,
 `ifdef RVFI_DII
-                       stage1.out.data_to_stage2.instr_seq + 1,
+                       rg_next_seq,
 `endif
 		       mstatus_MXR,
 		       sstatus_SUM);
