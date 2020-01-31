@@ -1258,7 +1258,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    function Bool fv_access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr,  Bool read_not_write, Bool access_sys_regs);
       Bool exists  = fv_scr_exists (scr_addr);    // Is this SCR implemented?
 
-      Bool priv_ok = priv == 3;
+      Bool priv_ok = priv >= scr_addr[4:3];
 
       Bool access_PCC = scr_addr == scr_addr_PCC; //Accesses to PCC that reach this point must be writes, so are illegal
 
