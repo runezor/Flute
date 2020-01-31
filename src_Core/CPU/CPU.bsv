@@ -351,7 +351,7 @@ module mkCPU (CPU_IFC);
 
    function fa_emit_instr_trace (instret, pcc, instr, priv);
       action
-	 if (cur_verbosity == 1)
+	 if (cur_verbosity >= 1)
 	    $display ("instret:%0d  PC:0x%0h  instr:0x%0h  priv:%0d", instret, getPC(pcc), instr, priv);
       endaction
    endfunction
