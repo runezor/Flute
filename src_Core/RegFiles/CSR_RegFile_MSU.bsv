@@ -1226,8 +1226,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    endcase
 
 	 if ((! success) && (cfg_verbosity > 1))
-	    $display ("%0d: ERROR: SCR-write addr 0x%0h val ", fshow(cap), " not successful", rg_mcycle,
-		      scr_addr);
+	    $display ("%0d: ERROR: SCR-write addr 0x%0h val ", rg_mcycle, scr_addr, fshow(cap), " not successful");
 
 	 return result;
       endactionvalue
