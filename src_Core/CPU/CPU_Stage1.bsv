@@ -98,7 +98,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
 `ifdef ISA_CHERI
    Reg #(PCC_T) rg_pcc <- mkRegU;
-   Reg #(Bit#(TAdd#(XLEN,1))) rg_pcc_top <- mkRegU;
+   RWire#(PCC_T) rw_next_pcc <- mkRWire;
+   RWire#(PCC_T) rw_fresh_pcc <- mkRWire;
 `endif
 
    Reg #(Bool)                  rg_full        <- mkReg (False);
@@ -298,7 +299,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 					       priv          : cur_priv };
 
 `ifdef ISA_CHERI
-   let fetch_exc = checkValid(rg_pcc, rg_pcc_top, rg_stage_input.is_i32_not_i16);
+   let fetch_exc = checkValid(rg_pcc, getTop(rg_pcc), rg_stage_input.is_i32_not_i16);
 `endif
 
    // ----------------
@@ -450,6 +451,14 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
       return output_stage1;
    endfunction: fv_out
 
+   (* fire_when_enabled, no_implicit_conditions *)
+   rule commit_pcc;
+      let new_pcc = fromMaybe(fromMaybe(rg_pcc, rw_next_pcc.wget), rw_fresh_pcc.wget);
+      rg_pcc <= new_pcc;
+      if (verbosity > 1)
+         $display ("    CPU_Stage1 PC: 0x%08h", new_pcc);
+   endrule
+
    // ================================================================
    // INTERFACE
 
@@ -462,20 +471,15 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    endmethod
 
    method Action deq ();
+      rw_next_pcc.wset(next_pcc_local);
    endmethod
 
    // ---- Input
    method Action enq (Data_StageD_to_Stage1  data);
-      rg_stage_input <= data;
       if (data.refresh_pcc) begin
-          rg_pcc <= fresh_pcc;
-          rg_pcc_top <= getTop(fresh_pcc);
-      end else if (rg_stage_input.epoch == cur_epoch) begin
-          rg_pcc <= next_pcc_local;
-          rg_pcc_top <= getTop(next_pcc_local);
+         rw_fresh_pcc.wset(fresh_pcc);
       end
-      if (verbosity > 1)
-	 $display ("    CPU_Stage1.enq: 0x%08h", getPC(data.refresh_pcc ? fresh_pcc : rg_stage_input.epoch == cur_epoch ? next_pcc_local : rg_pcc));
+      rg_stage_input <= data;
    endmethod
 
    method Action set_full (Bool full);
