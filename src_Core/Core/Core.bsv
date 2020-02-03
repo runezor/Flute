@@ -153,7 +153,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       near_mem_io.server_reset.request.put (?);        // Near_Mem_IO
       plic.server_reset.request.put (?);               // PLIC
 `ifdef ISA_CHERI
-      tagController.clear();
+      //tagController.clear(); XXX Temporarily do not clear the tag cache to avoid hanging on pending transactions
 `else
       shim.clear();
 `endif
