@@ -2650,68 +2650,87 @@ module mkCore(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [63 : 0] v__h40185;
-  reg [63 : 0] v__h39574;
-  reg [63 : 0] v__h44194;
-  reg [63 : 0] v__h43583;
-  reg [63 : 0] v__h74095;
-  reg [63 : 0] v__h73484;
-  reg [63 : 0] v__h76988;
-  reg [63 : 0] v__h76377;
-  reg [63 : 0] v__h54889;
-  reg [63 : 0] v__h54508;
-  reg [63 : 0] v__h56959;
-  reg [63 : 0] v__h56578;
-  reg [63 : 0] v__h58858;
-  reg [63 : 0] v__h58477;
-  reg [63 : 0] v__h86268;
-  reg [63 : 0] v__h85887;
-  reg [63 : 0] v__h88759;
-  reg [63 : 0] v__h88378;
-  reg [63 : 0] v__h91069;
-  reg [63 : 0] v__h90688;
-  reg [31 : 0] v__h12066;
-  reg [31 : 0] v__h12244;
-  reg [31 : 0] v__h12610;
-  reg [31 : 0] v__h12060;
-  reg [31 : 0] v__h12238;
-  reg [31 : 0] v__h12604;
+  reg [63 : 0] v__h43186;
+  reg [63 : 0] v__h42575;
+  reg [63 : 0] v__h47195;
+  reg [63 : 0] v__h46584;
+  reg [63 : 0] v__h77096;
+  reg [63 : 0] v__h76485;
+  reg [63 : 0] v__h79989;
+  reg [63 : 0] v__h79378;
+  reg [63 : 0] v__h57890;
+  reg [63 : 0] v__h57509;
+  reg [63 : 0] v__h59960;
+  reg [63 : 0] v__h59579;
+  reg [63 : 0] v__h61859;
+  reg [63 : 0] v__h61478;
+  reg [63 : 0] v__h89269;
+  reg [63 : 0] v__h88888;
+  reg [63 : 0] v__h91760;
+  reg [63 : 0] v__h91379;
+  reg [63 : 0] v__h94070;
+  reg [63 : 0] v__h93689;
+  reg [31 : 0] v__h15067;
+  reg [31 : 0] v__h15245;
+  reg [31 : 0] v__h15611;
+  reg [31 : 0] v__h15061;
+  reg [31 : 0] v__h15239;
+  reg [31 : 0] v__h15605;
   // synopsys translate_on
 
   // remaining internal signals
-  wire [63 : 0] araddr__h9118,
-		aw_awaddr__h7765,
+  wire [63 : 0] araddr__h12419,
+		aw_awaddr__h7766,
 		tmp__h5618,
-		x__h26991,
-		x__h27016,
-		x__h29799,
-		x__h29824,
+		tmp__h7681,
+		x__h29992,
+		x__h30017,
+		x__h32800,
+		x__h32825,
 		x__h5476,
-		x__h61434,
-		x__h61459,
-		x__h63916,
-		x__h63941,
-		x_araddr__h9135;
-  wire [39 : 0] x__h7796;
-  wire [8 : 0] x_port1__read__h62563, x_port1__read__h65027;
-  wire [7 : 0] arlen__h9119, x_arlen__h9136;
-  wire [5 : 0] x_arid__h9134;
-  wire [4 : 0] a_awid__h28151,
-	       a_awid__h30916,
-	       fatReq_arid__h62002,
-	       fatReq_arid__h64469,
+		x__h64435,
+		x__h64460,
+		x__h66917,
+		x__h66942,
+		x_araddr__h12436;
+  wire [39 : 0] x__h7798;
+  wire [8 : 0] x_port1__read__h65564, x_port1__read__h68028;
+  wire [7 : 0] arlen__h12420, x_arlen__h12437;
+  wire [5 : 0] x_arid__h12435;
+  wire [4 : 0] a_awid__h31152,
+	       a_awid__h33917,
+	       fatReq_arid__h65003,
+	       fatReq_arid__h67470,
 	       x__h5220,
 	       x__h6915;
-  wire [3 : 0] arcache__h9123, x__h7870, x__h9199;
-  wire [2 : 0] x_arsize_val__h9181;
-  wire [1 : 0] IF_IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dm_ETC___d1003,
-	       IF_IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug__ETC___d1108,
-	       IF_cpu_dmem_master_ar_araddr__634_BITS_63_TO_4_ETC___d1660,
-	       IF_debug_module_master_ar_araddr__726_BITS_63__ETC___d1752,
-	       SEXT_SEXT_arbiter_1_1_firstHot_115_116_BIT_0_1_ETC__q18,
-	       SEXT_SEXT_arbiter_1_firstHot_1_930_931_BIT_0_9_ETC__q13,
-	       SEXT_SEXT_arbiter_1_firstHot_473_474_BIT_0_475_ETC__q8,
-	       SEXT_SEXT_arbiter_firstHot_278_279_BIT_0_280_A_ETC__q3,
+  wire [3 : 0] _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d252,
+	       arcache__h12424,
+	       x__h11171,
+	       x__h12500,
+	       x__h7841,
+	       x__h9575,
+	       x__h9587,
+	       x__h9599,
+	       x__h9611,
+	       x__h9623,
+	       x__h9635,
+	       x__h9647,
+	       y__h9576,
+	       y__h9588,
+	       y__h9600,
+	       y__h9612,
+	       y__h9624,
+	       y__h9636,
+	       y__h9648;
+  wire [2 : 0] aw_awsize_val__h9505, x_arsize_val__h12482;
+  wire [1 : 0] IF_IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dm_ETC___d1044,
+	       IF_IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug__ETC___d1149,
+	       IF_cpu_dmem_master_ar_araddr__675_BITS_63_TO_4_ETC___d1701,
+	       IF_debug_module_master_ar_araddr__767_BITS_63__ETC___d1793,
+	       SEXT_SEXT_arbiter_1_1_firstHot_156_157_BIT_0_1_ETC__q18,
+	       SEXT_SEXT_arbiter_1_firstHot_1_971_972_BIT_0_9_ETC__q13,
+	       SEXT_SEXT_arbiter_1_firstHot_514_515_BIT_0_516_ETC__q8,
+	       SEXT_SEXT_arbiter_firstHot_319_320_BIT_0_321_A_ETC__q3,
 	       SEXT_arbiter_1_1_firstHot__q15,
 	       SEXT_arbiter_1_1_lastSelect_1__q17,
 	       SEXT_arbiter_1_1_lastSelect__q16,
@@ -2722,155 +2741,155 @@ module mkCore(CLK,
 	       SEXT_arbiter_1_lastSelect__q6,
 	       SEXT_arbiter_firstHot__q1,
 	       SEXT_arbiter_lastSelect__q2,
-	       SEXT_x2620__q14,
-	       SEXT_x3190__q9,
-	       SEXT_x3224__q10,
-	       SEXT_x4565__q19,
-	       SEXT_x4599__q20,
-	       SEXT_x8704__q4;
-  wire IF_NOT_ifcs_0_1_innerRoute_first__876_BIT_1_88_ETC___d1898,
-       IF_NOT_ifcs_0_innerRoute_first__224_BIT_1_233__ETC___d1246,
-       IF_NOT_ifcs_1_1_innerRoute_first__905_BIT_1_90_ETC___d1914,
-       IF_NOT_ifcs_1_innerRoute_first__253_BIT_1_257__ETC___d1262,
-       IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2150,
-       IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2156,
-       IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2162,
-       IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1950,
-       IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1954,
-       IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1508,
-       IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1514,
-       IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1520,
-       IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1298,
-       IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1302,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d1038,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d968,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d1001,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d980,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d982,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d985,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d987,
-       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d991,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1073,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1143,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1085,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1087,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1090,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1092,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1096,
-       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1106,
-       IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216,
-       IF_split_1_flitLeft_11_EQ_0_12_THEN_ssNoSynth__ETC___d1217,
-       IF_split_2_flitLeft_40_EQ_0_41_THEN_ssNoSynth__ETC___d1218,
-       SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131,
-       SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119,
-       SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125,
-       SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938,
-       SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489,
-       SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483,
-       SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934,
-       SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477,
-       SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286,
-       SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282,
-       cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1648,
-       cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1658,
-       cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1639,
-       cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1644,
-       cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_n_ETC___d1637,
-       cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_p_ETC___d1642,
-       debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1740,
-       debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1750,
-       debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1731,
-       debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1736,
-       debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1729,
-       debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1734,
-       plic_RDY_server_reset_request_put__64_AND_cpu__ETC___d270,
-       reqWires_1_0_whas__450_AND_reqWires_1_0_wget___ETC___d1460,
-       reqWires_1_1_0_whas__092_AND_reqWires_1_1_0_wg_ETC___d2102,
-       split_0_doPut_whas__74_AND_split_0_doPut_wget__ETC___d881,
-       split_1_doPut_whas__03_AND_split_1_doPut_wget__ETC___d910,
-       split_2_doPut_whas__32_AND_split_2_doPut_wget__ETC___d939,
-       state_1_1_1_103_AND_activeSource_1_1_0_197_198_ETC___d2200,
-       state_1_1_1_103_AND_activeSource_1_1_1_1_233_2_ETC___d2236,
-       state_1_1_1_103_AND_activeSource_1_1_2_269_270_ETC___d2272,
-       state_1_1_923_AND_activeSource_1_0_1_990_991_A_ETC___d1993,
-       state_1_1_923_AND_activeSource_1_1_1_030_031_A_ETC___d2033,
-       state_1_461_AND_activeSource_1_0_549_550_AND_i_ETC___d1552,
-       state_1_461_AND_activeSource_1_1_582_583_AND_i_ETC___d1585,
-       state_1_461_AND_activeSource_1_2_616_617_AND_i_ETC___d1619,
-       state_271_AND_activeSource_0_344_345_AND_ifcs__ETC___d1347,
-       state_271_AND_activeSource_1_388_389_AND_ifcs__ETC___d1391,
-       x__h38177,
-       x__h38280,
-       x__h38645,
-       x__h38704,
-       x__h38786,
-       x__h52369,
-       x__h52371,
-       x__h52520,
-       x__h52522,
-       x__h52656,
-       x__h52658,
-       x__h53128,
-       x__h53130,
-       x__h53190,
-       x__h53224,
-       x__h53316,
-       x__h53318,
-       x__h53497,
-       x__h53499,
-       x__h72093,
-       x__h72196,
-       x__h72561,
-       x__h72620,
-       x__h72702,
-       x__h83744,
-       x__h83746,
-       x__h83895,
-       x__h83897,
-       x__h84031,
-       x__h84033,
-       x__h84503,
-       x__h84505,
-       x__h84565,
-       x__h84599,
-       x__h84691,
-       x__h84693,
-       x__h84872,
-       x__h84874,
-       y__h38178,
-       y__h38281,
-       y__h38646,
-       y__h38787,
-       y__h52370,
-       y__h52372,
-       y__h52521,
-       y__h52523,
-       y__h52657,
-       y__h52659,
-       y__h53129,
-       y__h53131,
-       y__h53317,
-       y__h53319,
-       y__h53498,
-       y__h53500,
-       y__h72094,
-       y__h72197,
-       y__h72562,
-       y__h72703,
-       y__h83745,
-       y__h83747,
-       y__h83896,
-       y__h83898,
-       y__h84032,
-       y__h84034,
-       y__h84504,
-       y__h84506,
-       y__h84692,
-       y__h84694,
-       y__h84873,
-       y__h84875;
+	       SEXT_x1705__q4,
+	       SEXT_x5621__q14,
+	       SEXT_x6191__q9,
+	       SEXT_x6225__q10,
+	       SEXT_x7566__q19,
+	       SEXT_x7600__q20;
+  wire IF_NOT_ifcs_0_1_innerRoute_first__917_BIT_1_92_ETC___d1939,
+       IF_NOT_ifcs_0_innerRoute_first__265_BIT_1_274__ETC___d1287,
+       IF_NOT_ifcs_1_1_innerRoute_first__946_BIT_1_95_ETC___d1955,
+       IF_NOT_ifcs_1_innerRoute_first__294_BIT_1_298__ETC___d1303,
+       IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2191,
+       IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2197,
+       IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2203,
+       IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1991,
+       IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1995,
+       IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1549,
+       IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1555,
+       IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1561,
+       IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1339,
+       IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1343,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1009,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1079,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1021,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1023,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1026,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1028,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1032,
+       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1042,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1114,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1184,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1126,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1128,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1131,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1133,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1137,
+       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1147,
+       IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257,
+       IF_split_1_flitLeft_52_EQ_0_53_THEN_ssNoSynth__ETC___d1258,
+       IF_split_2_flitLeft_81_EQ_0_82_THEN_ssNoSynth__ETC___d1259,
+       SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172,
+       SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160,
+       SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166,
+       SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979,
+       SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530,
+       SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524,
+       SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975,
+       SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518,
+       SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327,
+       SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323,
+       cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1689,
+       cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1699,
+       cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1680,
+       cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1685,
+       cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_n_ETC___d1678,
+       cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_p_ETC___d1683,
+       debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1781,
+       debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1791,
+       debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1772,
+       debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1777,
+       debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1770,
+       debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1775,
+       plic_RDY_server_reset_request_put__05_AND_cpu__ETC___d311,
+       reqWires_1_0_whas__491_AND_reqWires_1_0_wget___ETC___d1501,
+       reqWires_1_1_0_whas__133_AND_reqWires_1_1_0_wg_ETC___d2143,
+       split_0_doPut_whas__15_AND_split_0_doPut_wget__ETC___d922,
+       split_1_doPut_whas__44_AND_split_1_doPut_wget__ETC___d951,
+       split_2_doPut_whas__73_AND_split_2_doPut_wget__ETC___d980,
+       state_1_1_1_144_AND_activeSource_1_1_0_238_239_ETC___d2241,
+       state_1_1_1_144_AND_activeSource_1_1_1_1_274_2_ETC___d2277,
+       state_1_1_1_144_AND_activeSource_1_1_2_310_311_ETC___d2313,
+       state_1_1_964_AND_activeSource_1_0_1_031_032_A_ETC___d2034,
+       state_1_1_964_AND_activeSource_1_1_1_071_072_A_ETC___d2074,
+       state_1_502_AND_activeSource_1_0_590_591_AND_i_ETC___d1593,
+       state_1_502_AND_activeSource_1_1_623_624_AND_i_ETC___d1626,
+       state_1_502_AND_activeSource_1_2_657_658_AND_i_ETC___d1660,
+       state_312_AND_activeSource_0_385_386_AND_ifcs__ETC___d1388,
+       state_312_AND_activeSource_1_429_430_AND_ifcs__ETC___d1432,
+       x__h41178,
+       x__h41281,
+       x__h41646,
+       x__h41705,
+       x__h41787,
+       x__h55370,
+       x__h55372,
+       x__h55521,
+       x__h55523,
+       x__h55657,
+       x__h55659,
+       x__h56129,
+       x__h56131,
+       x__h56191,
+       x__h56225,
+       x__h56317,
+       x__h56319,
+       x__h56498,
+       x__h56500,
+       x__h75094,
+       x__h75197,
+       x__h75562,
+       x__h75621,
+       x__h75703,
+       x__h86745,
+       x__h86747,
+       x__h86896,
+       x__h86898,
+       x__h87032,
+       x__h87034,
+       x__h87504,
+       x__h87506,
+       x__h87566,
+       x__h87600,
+       x__h87692,
+       x__h87694,
+       x__h87873,
+       x__h87875,
+       y__h41179,
+       y__h41282,
+       y__h41647,
+       y__h41788,
+       y__h55371,
+       y__h55373,
+       y__h55522,
+       y__h55524,
+       y__h55658,
+       y__h55660,
+       y__h56130,
+       y__h56132,
+       y__h56318,
+       y__h56320,
+       y__h56499,
+       y__h56501,
+       y__h75095,
+       y__h75198,
+       y__h75563,
+       y__h75704,
+       y__h86746,
+       y__h86748,
+       y__h86897,
+       y__h86899,
+       y__h87033,
+       y__h87035,
+       y__h87505,
+       y__h87507,
+       y__h87693,
+       y__h87695,
+       y__h87874,
+       y__h87876;
 
   // action method set_verbosity
   assign RDY_set_verbosity = 1'd1 ;
@@ -4482,7 +4501,7 @@ module mkCore(CLK,
   // rule RL_burst
   assign CAN_FIRE_RL_burst =
 	     ifcs_0_innerReq$EMPTY_N && ifcs_0_innerRoute$EMPTY_N &&
-	     state_271_AND_activeSource_0_344_345_AND_ifcs__ETC___d1347 ;
+	     state_312_AND_activeSource_0_385_386_AND_ifcs__ETC___d1388 ;
   assign WILL_FIRE_RL_burst = CAN_FIRE_RL_burst ;
 
   // rule RL_source_selected_1
@@ -4495,7 +4514,7 @@ module mkCore(CLK,
   // rule RL_burst_1
   assign CAN_FIRE_RL_burst_1 =
 	     ifcs_1_innerReq$EMPTY_N && ifcs_1_innerRoute$EMPTY_N &&
-	     state_271_AND_activeSource_1_388_389_AND_ifcs__ETC___d1391 ;
+	     state_312_AND_activeSource_1_429_430_AND_ifcs__ETC___d1432 ;
   assign WILL_FIRE_RL_burst_1 = CAN_FIRE_RL_burst_1 ;
 
   // rule __me_check_143
@@ -4508,19 +4527,19 @@ module mkCore(CLK,
 
   // rule RL_sink_selected
   assign CAN_FIRE_RL_sink_selected =
-	     IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216 &&
+	     IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257 &&
 	     flitToSink_0$whas ;
   assign WILL_FIRE_RL_sink_selected = CAN_FIRE_RL_sink_selected ;
 
   // rule RL_sink_selected_1
   assign CAN_FIRE_RL_sink_selected_1 =
-	     IF_split_1_flitLeft_11_EQ_0_12_THEN_ssNoSynth__ETC___d1217 &&
+	     IF_split_1_flitLeft_52_EQ_0_53_THEN_ssNoSynth__ETC___d1258 &&
 	     flitToSink_1$whas ;
   assign WILL_FIRE_RL_sink_selected_1 = CAN_FIRE_RL_sink_selected_1 ;
 
   // rule RL_sink_selected_2
   assign CAN_FIRE_RL_sink_selected_2 =
-	     IF_split_2_flitLeft_40_EQ_0_41_THEN_ssNoSynth__ETC___d1218 &&
+	     IF_split_2_flitLeft_81_EQ_0_82_THEN_ssNoSynth__ETC___d1259 &&
 	     flitToSink_2$whas ;
   assign WILL_FIRE_RL_sink_selected_2 = CAN_FIRE_RL_sink_selected_2 ;
 
@@ -4567,7 +4586,7 @@ module mkCore(CLK,
   // rule RL_burst_5
   assign CAN_FIRE_RL_burst_5 =
 	     ifcs_0_1_innerReq$EMPTY_N && ifcs_0_1_innerRoute$EMPTY_N &&
-	     state_1_1_923_AND_activeSource_1_0_1_990_991_A_ETC___d1993 ;
+	     state_1_1_964_AND_activeSource_1_0_1_031_032_A_ETC___d2034 ;
   assign WILL_FIRE_RL_burst_5 = CAN_FIRE_RL_burst_5 ;
 
   // rule RL_source_selected_6
@@ -4580,7 +4599,7 @@ module mkCore(CLK,
   // rule RL_burst_6
   assign CAN_FIRE_RL_burst_6 =
 	     ifcs_1_1_innerReq$EMPTY_N && ifcs_1_1_innerRoute$EMPTY_N &&
-	     state_1_1_923_AND_activeSource_1_1_1_030_031_A_ETC___d2033 ;
+	     state_1_1_964_AND_activeSource_1_1_1_071_072_A_ETC___d2074 ;
   assign WILL_FIRE_RL_burst_6 = CAN_FIRE_RL_burst_6 ;
 
   // rule __me_check_190
@@ -4884,7 +4903,7 @@ module mkCore(CLK,
 
   // rule RL_split_0_putFirst
   assign CAN_FIRE_RL_split_0_putFirst =
-	     split_0_doPut_whas__74_AND_split_0_doPut_wget__ETC___d881 &&
+	     split_0_doPut_whas__15_AND_split_0_doPut_wget__ETC___d922 &&
 	     split_0_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_0_putFirst = CAN_FIRE_RL_split_0_putFirst ;
 
@@ -4961,7 +4980,7 @@ module mkCore(CLK,
 
   // rule RL_split_1_putFirst
   assign CAN_FIRE_RL_split_1_putFirst =
-	     split_1_doPut_whas__03_AND_split_1_doPut_wget__ETC___d910 &&
+	     split_1_doPut_whas__44_AND_split_1_doPut_wget__ETC___d951 &&
 	     split_1_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_1_putFirst = CAN_FIRE_RL_split_1_putFirst ;
 
@@ -5036,7 +5055,7 @@ module mkCore(CLK,
 
   // rule RL_split_2_putFirst
   assign CAN_FIRE_RL_split_2_putFirst =
-	     split_2_doPut_whas__32_AND_split_2_doPut_wget__ETC___d939 &&
+	     split_2_doPut_whas__73_AND_split_2_doPut_wget__ETC___d980 &&
 	     split_2_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_2_putFirst = CAN_FIRE_RL_split_2_putFirst ;
 
@@ -5112,39 +5131,39 @@ module mkCore(CLK,
   // rule RL_ifcs_0_firstFlit
   assign CAN_FIRE_RL_ifcs_0_firstFlit =
 	     cpu$dmem_master_wvalid &&
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002 &&
 	     ifcs_0_innerReq$FULL_N &&
 	     ifcs_0_innerRoute$FULL_N &&
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d968 ||
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1009 ||
 	      cpu$dmem_master_awvalid) &&
 	     ifcs_0_state == 2'd0 &&
-	     IF_IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dm_ETC___d1003 ==
+	     IF_IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dm_ETC___d1044 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_firstFlit = CAN_FIRE_RL_ifcs_0_firstFlit ;
 
   // rule RL_ifcs_0_followFlits
   assign CAN_FIRE_RL_ifcs_0_followFlits =
 	     cpu$dmem_master_wvalid &&
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002 &&
 	     ifcs_0_innerReq$FULL_N &&
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d968 ||
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1009 ||
 	      cpu$dmem_master_awvalid) &&
 	     ifcs_0_state == 2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_followFlits = CAN_FIRE_RL_ifcs_0_followFlits ;
 
   // rule RL_ifcs_0_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_0_nonRoutableFlit =
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961 &&
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d1038 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1079 &&
 	     ifcs_0_state == 2'd0 &&
-	     IF_IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dm_ETC___d1003 !=
+	     IF_IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dm_ETC___d1044 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_nonRoutableFlit ;
 
   // rule RL_ifcs_0_drainFlits
   assign CAN_FIRE_RL_ifcs_0_drainFlits =
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002 &&
 	     cpu$dmem_master_wvalid &&
 	     ifcs_0_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_0_drainFlits = CAN_FIRE_RL_ifcs_0_drainFlits ;
@@ -5190,7 +5209,7 @@ module mkCore(CLK,
 
   // rule RL_arbitrate_1
   assign CAN_FIRE_RL_arbitrate_1 =
-	     reqWires_1_0_whas__450_AND_reqWires_1_0_wget___ETC___d1460 &&
+	     reqWires_1_0_whas__491_AND_reqWires_1_0_wget___ETC___d1501 &&
 	     !state_1 ;
   assign WILL_FIRE_RL_arbitrate_1 = CAN_FIRE_RL_arbitrate_1 ;
 
@@ -5204,7 +5223,7 @@ module mkCore(CLK,
   // rule RL_burst_2
   assign CAN_FIRE_RL_burst_2 =
 	     ifcs_0_rspBack$EMPTY_N && ifcs_0_routeBack$EMPTY_N &&
-	     state_1_461_AND_activeSource_1_0_549_550_AND_i_ETC___d1552 ;
+	     state_1_502_AND_activeSource_1_0_590_591_AND_i_ETC___d1593 ;
   assign WILL_FIRE_RL_burst_2 = CAN_FIRE_RL_burst_2 ;
 
   // rule RL_source_selected_3
@@ -5217,7 +5236,7 @@ module mkCore(CLK,
   // rule RL_burst_3
   assign CAN_FIRE_RL_burst_3 =
 	     ifcs_1_rspBack$EMPTY_N && ifcs_1_routeBack$EMPTY_N &&
-	     state_1_461_AND_activeSource_1_1_582_583_AND_i_ETC___d1585 ;
+	     state_1_502_AND_activeSource_1_1_623_624_AND_i_ETC___d1626 ;
   assign WILL_FIRE_RL_burst_3 = CAN_FIRE_RL_burst_3 ;
 
   // rule __me_check_158
@@ -5234,7 +5253,7 @@ module mkCore(CLK,
   // rule RL_burst_4
   assign CAN_FIRE_RL_burst_4 =
 	     ifcs_2_rspBack$EMPTY_N && ifcs_2_routeBack$EMPTY_N &&
-	     state_1_461_AND_activeSource_1_2_616_617_AND_i_ETC___d1619 ;
+	     state_1_502_AND_activeSource_1_2_657_658_AND_i_ETC___d1660 ;
   assign WILL_FIRE_RL_burst_4 = CAN_FIRE_RL_burst_4 ;
 
   // rule __me_check_156
@@ -5298,7 +5317,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_nonRoutableGenRsp =
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002 &&
 	     ifcs_0_noRoute_inner_pendingReq$port1__read &&
 	     ifcs_0_noRouteRsp$FULL_N &&
 	     cpu$dmem_master_wvalid ;
@@ -5478,7 +5497,7 @@ module mkCore(CLK,
 
   // rule RL_arbitrate_3
   assign CAN_FIRE_RL_arbitrate_3 =
-	     reqWires_1_1_0_whas__092_AND_reqWires_1_1_0_wg_ETC___d2102 &&
+	     reqWires_1_1_0_whas__133_AND_reqWires_1_1_0_wg_ETC___d2143 &&
 	     !state_1_1_1 ;
   assign WILL_FIRE_RL_arbitrate_3 = CAN_FIRE_RL_arbitrate_3 ;
 
@@ -5492,7 +5511,7 @@ module mkCore(CLK,
   // rule RL_burst_7
   assign CAN_FIRE_RL_burst_7 =
 	     ifcs_0_1_rspBack$EMPTY_N && ifcs_0_1_routeBack$EMPTY_N &&
-	     state_1_1_1_103_AND_activeSource_1_1_0_197_198_ETC___d2200 ;
+	     state_1_1_1_144_AND_activeSource_1_1_0_238_239_ETC___d2241 ;
   assign WILL_FIRE_RL_burst_7 = CAN_FIRE_RL_burst_7 ;
 
   // rule RL_source_selected_8
@@ -5505,7 +5524,7 @@ module mkCore(CLK,
   // rule RL_burst_8
   assign CAN_FIRE_RL_burst_8 =
 	     ifcs_1_1_rspBack$EMPTY_N && ifcs_1_1_routeBack$EMPTY_N &&
-	     state_1_1_1_103_AND_activeSource_1_1_1_1_233_2_ETC___d2236 ;
+	     state_1_1_1_144_AND_activeSource_1_1_1_1_274_2_ETC___d2277 ;
   assign WILL_FIRE_RL_burst_8 = CAN_FIRE_RL_burst_8 ;
 
   // rule __me_check_205
@@ -5522,7 +5541,7 @@ module mkCore(CLK,
   // rule RL_burst_9
   assign CAN_FIRE_RL_burst_9 =
 	     ifcs_2_1_rspBack$EMPTY_N && ifcs_2_1_routeBack$EMPTY_N &&
-	     state_1_1_1_103_AND_activeSource_1_1_2_269_270_ETC___d2272 ;
+	     state_1_1_1_144_AND_activeSource_1_1_2_310_311_ETC___d2313 ;
   assign WILL_FIRE_RL_burst_9 = CAN_FIRE_RL_burst_9 ;
 
   // rule __me_check_203
@@ -5627,7 +5646,7 @@ module mkCore(CLK,
 	     cpu$dmem_master_arvalid && ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_innerRoute$FULL_N &&
 	     ifcs_0_1_state == 2'd0 &&
-	     IF_cpu_dmem_master_ar_araddr__634_BITS_63_TO_4_ETC___d1660 ==
+	     IF_cpu_dmem_master_ar_araddr__675_BITS_63_TO_4_ETC___d1701 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_firstFlit = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
 
@@ -5642,15 +5661,15 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     ifcs_0_1_noRoute_flitCount == 9'd0 && cpu$dmem_master_arvalid &&
 	     ifcs_0_1_state == 2'd0 &&
-	     IF_cpu_dmem_master_ar_araddr__634_BITS_63_TO_4_ETC___d1660 !=
+	     IF_cpu_dmem_master_ar_araddr__675_BITS_63_TO_4_ETC___d1701 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ;
 
   // rule RL_ifcs_0_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
-	     x_port1__read__h62563 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h62563 != 9'd1 || cpu$dmem_master_arvalid) ;
+	     x_port1__read__h65564 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h65564 != 9'd1 || cpu$dmem_master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
 
@@ -5719,39 +5738,39 @@ module mkCore(CLK,
   // rule RL_ifcs_1_firstFlit
   assign CAN_FIRE_RL_ifcs_1_firstFlit =
 	     debug_module$master_wvalid &&
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107 &&
 	     ifcs_1_innerReq$FULL_N &&
 	     ifcs_1_innerRoute$FULL_N &&
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1073 ||
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1114 ||
 	      debug_module$master_awvalid) &&
 	     ifcs_1_state == 2'd0 &&
-	     IF_IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug__ETC___d1108 ==
+	     IF_IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug__ETC___d1149 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_firstFlit = CAN_FIRE_RL_ifcs_1_firstFlit ;
 
   // rule RL_ifcs_1_followFlits
   assign CAN_FIRE_RL_ifcs_1_followFlits =
 	     debug_module$master_wvalid &&
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107 &&
 	     ifcs_1_innerReq$FULL_N &&
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1073 ||
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1114 ||
 	      debug_module$master_awvalid) &&
 	     ifcs_1_state == 2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_followFlits = CAN_FIRE_RL_ifcs_1_followFlits ;
 
   // rule RL_ifcs_1_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_1_nonRoutableFlit =
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066 &&
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1143 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1184 &&
 	     ifcs_1_state == 2'd0 &&
-	     IF_IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug__ETC___d1108 !=
+	     IF_IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug__ETC___d1149 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_1_nonRoutableFlit ;
 
   // rule RL_ifcs_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_nonRoutableGenRsp =
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107 &&
 	     ifcs_1_noRoute_inner_pendingReq$port1__read &&
 	     ifcs_1_noRouteRsp$FULL_N &&
 	     debug_module$master_wvalid ;
@@ -5760,7 +5779,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_drainFlits
   assign CAN_FIRE_RL_ifcs_1_drainFlits =
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107 &&
 	     debug_module$master_wvalid &&
 	     ifcs_1_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_1_drainFlits = CAN_FIRE_RL_ifcs_1_drainFlits ;
@@ -5807,7 +5826,7 @@ module mkCore(CLK,
 	     debug_module$master_arvalid && ifcs_1_1_innerReq$FULL_N &&
 	     ifcs_1_1_innerRoute$FULL_N &&
 	     ifcs_1_1_state == 2'd0 &&
-	     IF_debug_module_master_ar_araddr__726_BITS_63__ETC___d1752 ==
+	     IF_debug_module_master_ar_araddr__767_BITS_63__ETC___d1793 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_1_firstFlit = CAN_FIRE_RL_ifcs_1_1_firstFlit ;
 
@@ -5823,15 +5842,15 @@ module mkCore(CLK,
 	     ifcs_1_1_noRoute_flitCount == 9'd0 &&
 	     debug_module$master_arvalid &&
 	     ifcs_1_1_state == 2'd0 &&
-	     IF_debug_module_master_ar_araddr__726_BITS_63__ETC___d1752 !=
+	     IF_debug_module_master_ar_araddr__767_BITS_63__ETC___d1793 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ;
 
   // rule RL_ifcs_1_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
-	     x_port1__read__h65027 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h65027 != 9'd1 || debug_module$master_arvalid) ;
+	     x_port1__read__h68028 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h68028 != 9'd1 || debug_module$master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
 
@@ -5933,15 +5952,15 @@ module mkCore(CLK,
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put__64_AND_cpu__ETC___d270 ;
+	     plic_RDY_server_reset_request_put__05_AND_cpu__ETC___d311 ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
-	     debug_module$RDY_hart0_reset_client_request_get &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
+	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
@@ -6115,19 +6134,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_burst_9 && ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_activeSource_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate &&
-	     IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1298 ;
+	     IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1339 ;
   assign MUX_activeSource_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate &&
-	     IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1302 ;
+	     IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1343 ;
   assign MUX_activeSource_1_1_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2150 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2191 ;
   assign MUX_activeSource_1_1_1_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2156 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2197 ;
   assign MUX_activeSource_1_1_2$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2162 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2203 ;
   assign MUX_merged_0_flitLeft$write_1__VAL_1 = merged_0_flitLeft - 8'd1 ;
   assign MUX_merged_1_flitLeft$write_1__VAL_1 = merged_1_flitLeft - 8'd1 ;
   always@(MUX_flitToSink_1_0$wset_1__SEL_1 or
@@ -6308,7 +6327,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_0_forwardRsp ;
   assign msNoSynth_0_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp &&
-	     x_port1__read__h62563 == 9'd1 ||
+	     x_port1__read__h65564 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_0_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit ;
@@ -6331,7 +6350,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_forwardRsp ;
   assign msNoSynth_1_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp &&
-	     x_port1__read__h65027 == 9'd1 ||
+	     x_port1__read__h68028 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_1_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_firstFlit ;
@@ -6405,13 +6424,13 @@ module mkCore(CLK,
 	       ifcs_1_innerReq$D_OUT ;
   assign reqWires_0$wget =
 	     (!ifcs_0_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216) ?
-	       IF_NOT_ifcs_0_innerRoute_first__224_BIT_1_233__ETC___d1246 :
+	      !IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257) ?
+	       IF_NOT_ifcs_0_innerRoute_first__265_BIT_1_274__ETC___d1287 :
 	       ifcs_0_innerRoute$D_OUT[0] ;
   assign reqWires_1$wget =
 	     (!ifcs_1_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216) ?
-	       IF_NOT_ifcs_1_innerRoute_first__253_BIT_1_257__ETC___d1262 :
+	      !IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257) ?
+	       IF_NOT_ifcs_1_innerRoute_first__294_BIT_1_298__ETC___d1303 :
 	       ifcs_1_innerRoute$D_OUT[0] ;
   assign flitToSink_0$whas =
 	     WILL_FIRE_RL_burst && ifcs_0_innerRoute$D_OUT[0] ||
@@ -6475,12 +6494,12 @@ module mkCore(CLK,
   assign reqWires_1_0_1$wget =
 	     (!ifcs_0_1_innerRoute$D_OUT[0] ||
 	      !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-	       IF_NOT_ifcs_0_1_innerRoute_first__876_BIT_1_88_ETC___d1898 :
+	       IF_NOT_ifcs_0_1_innerRoute_first__917_BIT_1_92_ETC___d1939 :
 	       ifcs_0_1_innerRoute$D_OUT[0] ;
   assign reqWires_1_1_1$wget =
 	     (!ifcs_1_1_innerRoute$D_OUT[0] ||
 	      !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-	       IF_NOT_ifcs_1_1_innerRoute_first__905_BIT_1_90_ETC___d1914 :
+	       IF_NOT_ifcs_1_1_innerRoute_first__946_BIT_1_95_ETC___d1955 :
 	       ifcs_1_1_innerRoute$D_OUT[0] ;
   assign flitToSink_1_0_1$whas =
 	     WILL_FIRE_RL_burst_5 && ifcs_0_1_innerRoute$D_OUT[0] ||
@@ -6559,19 +6578,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_firstFlit ;
   assign sourceSelect_1_0$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1508 ;
+	     IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1549 ;
   assign sourceSelect_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1514 ;
+	     IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1555 ;
   assign sourceSelect_1_2$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1520 ;
+	     IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1561 ;
   assign sourceSelect_1_0_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
-	     IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1950 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1991 ;
   assign sourceSelect_1_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
-	     IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1954 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1995 ;
   assign ifcs_0_noRoute_inner_currentReq$EN_port0__write =
 	     WILL_FIRE_RL_ifcs_0_nonRoutableFlit &&
 	     merged_0_flitLeft == 8'd0 ;
@@ -6644,11 +6663,11 @@ module mkCore(CLK,
   assign ifcs_0_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, cpu$dmem_master_arlen } + 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h62563 - 9'd1 ;
+	     x_port1__read__h65564 - 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ?
 	       ifcs_0_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h62563 ;
+	       x_port1__read__h65564 ;
   assign ifcs_1_1_noRoute_currentReq$port0__write_1 =
 	     { debug_module$master_arid,
 	       debug_module$master_araddr,
@@ -6667,11 +6686,11 @@ module mkCore(CLK,
   assign ifcs_1_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, debug_module$master_arlen } + 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h65027 - 9'd1 ;
+	     x_port1__read__h68028 - 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ?
 	       ifcs_1_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h65027 ;
+	       x_port1__read__h68028 ;
 
   // register activeSource_0
   assign activeSource_0$D_IN =
@@ -6789,52 +6808,52 @@ module mkCore(CLK,
 
   // register arbiter_1_1_firstHot
   assign arbiter_1_1_firstHot$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2162 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2203 ;
   assign arbiter_1_1_firstHot$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_1_lastSelect
   assign arbiter_1_1_lastSelect$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2150 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2191 ;
   assign arbiter_1_1_lastSelect$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_1_lastSelect_1
   assign arbiter_1_1_lastSelect_1$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2156 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2197 ;
   assign arbiter_1_1_lastSelect_1$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_firstHot
   assign arbiter_1_firstHot$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1520 ;
+	     IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1561 ;
   assign arbiter_1_firstHot$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_firstHot_1
   assign arbiter_1_firstHot_1$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1954 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1995 ;
   assign arbiter_1_firstHot_1$EN = CAN_FIRE_RL_arbitrate_2 ;
 
   // register arbiter_1_lastSelect
   assign arbiter_1_lastSelect$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1508 ;
+	     IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1549 ;
   assign arbiter_1_lastSelect$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_lastSelect_1
   assign arbiter_1_lastSelect_1$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1514 ;
+	     IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1555 ;
   assign arbiter_1_lastSelect_1$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_lastSelect_2
   assign arbiter_1_lastSelect_2$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1950 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1991 ;
   assign arbiter_1_lastSelect_2$EN = CAN_FIRE_RL_arbitrate_2 ;
 
   // register arbiter_firstHot
   assign arbiter_firstHot$D_IN =
-	     IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1302 ;
+	     IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1343 ;
   assign arbiter_firstHot$EN = CAN_FIRE_RL_arbitrate ;
 
   // register arbiter_lastSelect
   assign arbiter_lastSelect$D_IN =
-	     IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1298 ;
+	     IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1339 ;
   assign arbiter_lastSelect$EN = CAN_FIRE_RL_arbitrate ;
 
   // register ifcs_0_1_noRoute_currentReq
@@ -7263,7 +7282,7 @@ module mkCore(CLK,
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
   assign f_reset_reqs$DEQ =
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put__64_AND_cpu__ETC___d270 ;
+	     plic_RDY_server_reset_request_put__05_AND_cpu__ETC___d311 ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -7285,7 +7304,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerReq
   assign ifcs_0_1_innerReq$D_IN =
-	     { fatReq_arid__h62002,
+	     { fatReq_arid__h65003,
 	       cpu$dmem_master_araddr,
 	       cpu$dmem_master_arlen,
 	       cpu$dmem_master_arsize,
@@ -7305,11 +7324,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerRoute
   assign ifcs_0_1_innerRoute$D_IN =
-	     { cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1658,
+	     { cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1699,
 	       cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	       !cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_n_ETC___d1637 &&
-	       cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1639,
-	       cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1648 } ;
+	       !cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_n_ETC___d1678 &&
+	       cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1680,
+	       cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1689 } ;
   assign ifcs_0_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
   assign ifcs_0_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N ||
@@ -7320,7 +7339,7 @@ module mkCore(CLK,
   assign ifcs_0_1_noRouteRsp$D_IN =
 	     { ifcs_0_1_noRoute_currentReq$port1__read[96:93],
 	       66'h2AAAAAAAAAAAAAAAB,
-	       x_port1__read__h62563 == 9'd1,
+	       x_port1__read__h65564 == 9'd1,
 	       1'h0 } ;
   assign ifcs_0_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
   assign ifcs_0_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse ;
@@ -7347,7 +7366,7 @@ module mkCore(CLK,
   // submodule ifcs_0_innerReq
   assign ifcs_0_innerReq$D_IN =
 	     { merged_0_flitLeft != 8'd0,
-	       a_awid__h28151,
+	       a_awid__h31152,
 	       cpu$dmem_master_awaddr,
 	       cpu$dmem_master_awlen,
 	       cpu$dmem_master_awsize,
@@ -7371,11 +7390,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_innerRoute
   assign ifcs_0_innerRoute$D_IN =
-	     { IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d1001,
+	     { IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1042,
 	       cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d980 &&
-	       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d982,
-	       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d991 } ;
+	       !IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1021 &&
+	       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1023,
+	       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1032 } ;
   assign ifcs_0_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_firstFlit ;
   assign ifcs_0_innerRoute$DEQ =
 	     WILL_FIRE_RL_burst && ifcs_0_innerReq$D_OUT[1] ||
@@ -7409,7 +7428,7 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerReq
   assign ifcs_1_1_innerReq$D_IN =
-	     { fatReq_arid__h64469,
+	     { fatReq_arid__h67470,
 	       debug_module$master_araddr,
 	       debug_module$master_arlen,
 	       debug_module$master_arsize,
@@ -7429,11 +7448,11 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerRoute
   assign ifcs_1_1_innerRoute$D_IN =
-	     { debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1750,
+	     { debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1791,
 	       debug_module$master_araddr[63:40] == 24'd0 &&
-	       !debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1729 &&
-	       debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1731,
-	       debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1740 } ;
+	       !debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1770 &&
+	       debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1772,
+	       debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1781 } ;
   assign ifcs_1_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_1_1_firstFlit ;
   assign ifcs_1_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N ||
@@ -7444,7 +7463,7 @@ module mkCore(CLK,
   assign ifcs_1_1_noRouteRsp$D_IN =
 	     { ifcs_1_1_noRoute_currentReq$port1__read[96:93],
 	       66'h2AAAAAAAAAAAAAAAB,
-	       x_port1__read__h65027 == 9'd1,
+	       x_port1__read__h68028 == 9'd1,
 	       1'h0 } ;
   assign ifcs_1_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
   assign ifcs_1_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse ;
@@ -7475,7 +7494,7 @@ module mkCore(CLK,
   // submodule ifcs_1_innerReq
   assign ifcs_1_innerReq$D_IN =
 	     { merged_1_flitLeft != 8'd0,
-	       a_awid__h30916,
+	       a_awid__h33917,
 	       debug_module$master_awaddr,
 	       debug_module$master_awlen,
 	       debug_module$master_awsize,
@@ -7499,11 +7518,11 @@ module mkCore(CLK,
 
   // submodule ifcs_1_innerRoute
   assign ifcs_1_innerRoute$D_IN =
-	     { IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1106,
+	     { IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1147,
 	       debug_module$master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1085 &&
-	       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1087,
-	       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1096 } ;
+	       !IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1126 &&
+	       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1128,
+	       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1137 } ;
   assign ifcs_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_1_firstFlit ;
   assign ifcs_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_burst_1 && ifcs_1_innerReq$D_OUT[1] ||
@@ -8038,21 +8057,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_tagController_tmp_passCacheResponse &&
 	     (tagController_tmp_tagCon$cache_response_get[68:67] != 2'd0 ||
 	      tagController_tmp_tagCon$cache_response_get[66]) ;
-  assign tagController_tmp_limiter$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_limiter$CLR = 1'b0 ;
 
   // submodule tagController_tmp_newRst
-  assign tagController_tmp_newRst$ASSERT_IN =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_newRst$ASSERT_IN = 1'b0 ;
 
   // submodule tagController_tmp_shimMaster_arff
   assign tagController_tmp_shimMaster_arff$D_IN =
-	     { x_arid__h9134,
-	       x_araddr__h9135,
-	       x_arlen__h9136,
-	       x_arsize_val__h9181,
+	     { x_arid__h12435,
+	       x_araddr__h12436,
+	       x_arlen__h12437,
+	       x_arsize_val__h12482,
 	       3'd2,
-	       x__h9199,
+	       x__h12500,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_arff$ENQ =
 	     tagController_tmp_tagCon$RDY_memory_request_get &&
@@ -8060,16 +8077,16 @@ module mkCore(CLK,
   assign tagController_tmp_shimMaster_arff$DEQ =
 	     tagController_tmp_shimMaster_arff$EMPTY_N &&
 	     cpu_dmem_master_arready ;
-  assign tagController_tmp_shimMaster_arff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimMaster_arff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimMaster_awff
   assign tagController_tmp_shimMaster_awff$D_IN =
 	     { tagController_tmp_tagCon$memory_request_get[100:95],
-	       aw_awaddr__h7765,
+	       aw_awaddr__h7766,
 	       tagController_tmp_tagCon$memory_request_get[7:0],
-	       6'd26,
-	       x__h7870,
+	       aw_awsize_val__h9505,
+	       3'd2,
+	       x__h11171,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_awff$ENQ =
 	     tagController_tmp_tagCon$RDY_memory_request_get &&
@@ -8078,8 +8095,7 @@ module mkCore(CLK,
   assign tagController_tmp_shimMaster_awff$DEQ =
 	     tagController_tmp_shimMaster_awff$EMPTY_N &&
 	     cpu_dmem_master_awready ;
-  assign tagController_tmp_shimMaster_awff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimMaster_awff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimMaster_bff
   assign tagController_tmp_shimMaster_bff$D_IN =
@@ -8089,8 +8105,7 @@ module mkCore(CLK,
 	     tagController_tmp_shimMaster_bff$FULL_N ;
   assign tagController_tmp_shimMaster_bff$DEQ =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryResponseWrite ;
-  assign tagController_tmp_shimMaster_bff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimMaster_bff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimMaster_rff
   assign tagController_tmp_shimMaster_rff$D_IN =
@@ -8103,8 +8118,7 @@ module mkCore(CLK,
 	     tagController_tmp_shimMaster_rff$FULL_N ;
   assign tagController_tmp_shimMaster_rff$DEQ =
 	     CAN_FIRE_RL_tagController_tmp_passMemoryResponseRead ;
-  assign tagController_tmp_shimMaster_rff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimMaster_rff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimMaster_wff
   assign tagController_tmp_shimMaster_wff$D_IN =
@@ -8117,8 +8131,7 @@ module mkCore(CLK,
   assign tagController_tmp_shimMaster_wff$DEQ =
 	     tagController_tmp_shimMaster_wff$EMPTY_N &&
 	     cpu_dmem_master_wready ;
-  assign tagController_tmp_shimMaster_wff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimMaster_wff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimSlave_arff
   assign tagController_tmp_shimSlave_arff$D_IN =
@@ -8130,8 +8143,7 @@ module mkCore(CLK,
 	     tagController_tmp_shimSlave_arff$FULL_N ;
   assign tagController_tmp_shimSlave_arff$DEQ =
 	     CAN_FIRE_RL_tagController_tmp_passCacheRead ;
-  assign tagController_tmp_shimSlave_arff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimSlave_arff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimSlave_awff
   assign tagController_tmp_shimSlave_awff$D_IN =
@@ -8143,8 +8155,7 @@ module mkCore(CLK,
 	     tagController_tmp_shimSlave_awff$FULL_N ;
   assign tagController_tmp_shimSlave_awff$DEQ =
 	     CAN_FIRE_RL_tagController_tmp_getCacheAW ;
-  assign tagController_tmp_shimSlave_awff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimSlave_awff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimSlave_bff
   assign tagController_tmp_shimSlave_bff$D_IN =
@@ -8158,8 +8169,7 @@ module mkCore(CLK,
   assign tagController_tmp_shimSlave_bff$DEQ =
 	     tagController_tmp_shimSlave_bff$EMPTY_N &&
 	     ssNoSynth_0_b_dwReady$whas ;
-  assign tagController_tmp_shimSlave_bff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimSlave_bff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimSlave_rff
   assign tagController_tmp_shimSlave_rff$D_IN =
@@ -8174,8 +8184,7 @@ module mkCore(CLK,
   assign tagController_tmp_shimSlave_rff$DEQ =
 	     tagController_tmp_shimSlave_rff$EMPTY_N &&
 	     ssNoSynth_0_r_dwReady$whas ;
-  assign tagController_tmp_shimSlave_rff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimSlave_rff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_shimSlave_wff
   assign tagController_tmp_shimSlave_wff$D_IN =
@@ -8187,8 +8196,7 @@ module mkCore(CLK,
 	     tagController_tmp_shimSlave_wff$FULL_N ;
   assign tagController_tmp_shimSlave_wff$DEQ =
 	     WILL_FIRE_RL_tagController_tmp_passCacheWrite ;
-  assign tagController_tmp_shimSlave_wff$CLR =
-	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign tagController_tmp_shimSlave_wff$CLR = 1'b0 ;
 
   // submodule tagController_tmp_tagCon
   assign tagController_tmp_tagCon$cache_request_put_val =
@@ -8211,346 +8219,358 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_tagController_tmp_passMemoryResponseRead ;
 
   // remaining internal signals
-  assign IF_IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dm_ETC___d1003 =
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d991 ?
+  assign IF_IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dm_ETC___d1044 =
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1032 ?
 		2'd1 :
 		2'd0) +
 	     ((cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d980 &&
-	       IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d982) ?
+	       !IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1021 &&
+	       IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1023) ?
 		2'd1 :
 		2'd0) +
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d1001 ?
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1042 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug__ETC___d1108 =
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1096 ?
+  assign IF_IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug__ETC___d1149 =
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1137 ?
 		2'd1 :
 		2'd0) +
 	     ((debug_module$master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1085 &&
-	       IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1087) ?
+	       !IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1126 &&
+	       IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1128) ?
 		2'd1 :
 		2'd0) +
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1106 ?
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1147 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_NOT_ifcs_0_1_innerRoute_first__876_BIT_1_88_ETC___d1898 =
+  assign IF_NOT_ifcs_0_1_innerRoute_first__917_BIT_1_92_ETC___d1939 =
 	     (!ifcs_0_1_innerRoute$D_OUT[1] ||
 	      !ssNoSynth_1_ar_buffer_ff$FULL_N) ?
 	       ifcs_0_1_innerRoute$D_OUT[2] &&
 	       ssNoSynth_2_ar_buffer_ff$FULL_N :
 	       ifcs_0_1_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_0_innerRoute_first__224_BIT_1_233__ETC___d1246 =
+  assign IF_NOT_ifcs_0_innerRoute_first__265_BIT_1_274__ETC___d1287 =
 	     (!ifcs_0_innerRoute$D_OUT[1] ||
-	      !IF_split_1_flitLeft_11_EQ_0_12_THEN_ssNoSynth__ETC___d1217) ?
+	      !IF_split_1_flitLeft_52_EQ_0_53_THEN_ssNoSynth__ETC___d1258) ?
 	       ifcs_0_innerRoute$D_OUT[2] &&
-	       IF_split_2_flitLeft_40_EQ_0_41_THEN_ssNoSynth__ETC___d1218 :
+	       IF_split_2_flitLeft_81_EQ_0_82_THEN_ssNoSynth__ETC___d1259 :
 	       ifcs_0_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_1_1_innerRoute_first__905_BIT_1_90_ETC___d1914 =
+  assign IF_NOT_ifcs_1_1_innerRoute_first__946_BIT_1_95_ETC___d1955 =
 	     (!ifcs_1_1_innerRoute$D_OUT[1] ||
 	      !ssNoSynth_1_ar_buffer_ff$FULL_N) ?
 	       ifcs_1_1_innerRoute$D_OUT[2] &&
 	       ssNoSynth_2_ar_buffer_ff$FULL_N :
 	       ifcs_1_1_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_1_innerRoute_first__253_BIT_1_257__ETC___d1262 =
+  assign IF_NOT_ifcs_1_innerRoute_first__294_BIT_1_298__ETC___d1303 =
 	     (!ifcs_1_innerRoute$D_OUT[1] ||
-	      !IF_split_1_flitLeft_11_EQ_0_12_THEN_ssNoSynth__ETC___d1217) ?
+	      !IF_split_1_flitLeft_52_EQ_0_53_THEN_ssNoSynth__ETC___d1258) ?
 	       ifcs_1_innerRoute$D_OUT[2] &&
-	       IF_split_2_flitLeft_40_EQ_0_41_THEN_ssNoSynth__ETC___d1218 :
+	       IF_split_2_flitLeft_81_EQ_0_82_THEN_ssNoSynth__ETC___d1259 :
 	       ifcs_1_innerRoute$D_OUT[1] ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2150 =
-	     (SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 ||
-	      SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 ||
-	      SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131) ?
-	       x__h84503 | y__h84504 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2191 =
+	     (SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 ||
+	      SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 ||
+	      SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172) ?
+	       x__h87504 | y__h87505 :
 	       arbiter_1_1_lastSelect ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2156 =
-	     (SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 ||
-	      SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 ||
-	      SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131) ?
-	       x__h84691 | y__h84692 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2197 =
+	     (SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 ||
+	      SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 ||
+	      SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172) ?
+	       x__h87692 | y__h87693 :
 	       arbiter_1_1_lastSelect_1 ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_1_ETC___d2162 =
-	     (SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 ||
-	      SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 ||
-	      SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131) ?
-	       x__h84872 | y__h84873 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_1_ETC___d2203 =
+	     (SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 ||
+	      SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 ||
+	      SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172) ?
+	       x__h87873 | y__h87874 :
 	       arbiter_1_1_firstHot ;
-  assign IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1950 =
-	     (SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934 ||
-	      SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938) ?
-	       x__h72561 | y__h72562 :
+  assign IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1991 =
+	     (SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975 ||
+	      SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979) ?
+	       x__h75562 | y__h75563 :
 	       arbiter_1_lastSelect_2 ;
-  assign IF_SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_9_ETC___d1954 =
-	     (SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934 ||
-	      SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938) ?
-	       x__h72702 | y__h72703 :
+  assign IF_SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_9_ETC___d1995 =
+	     (SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975 ||
+	      SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979) ?
+	       x__h75703 | y__h75704 :
 	       arbiter_1_firstHot_1 ;
-  assign IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1508 =
-	     (SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 ||
-	      SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 ||
-	      SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489) ?
-	       x__h53128 | y__h53129 :
+  assign IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1549 =
+	     (SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 ||
+	      SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 ||
+	      SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530) ?
+	       x__h56129 | y__h56130 :
 	       arbiter_1_lastSelect ;
-  assign IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1514 =
-	     (SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 ||
-	      SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 ||
-	      SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489) ?
-	       x__h53316 | y__h53317 :
+  assign IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1555 =
+	     (SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 ||
+	      SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 ||
+	      SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530) ?
+	       x__h56317 | y__h56318 :
 	       arbiter_1_lastSelect_1 ;
-  assign IF_SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_ETC___d1520 =
-	     (SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 ||
-	      SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 ||
-	      SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489) ?
-	       x__h53497 | y__h53498 :
+  assign IF_SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_ETC___d1561 =
+	     (SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 ||
+	      SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 ||
+	      SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530) ?
+	       x__h56498 | y__h56499 :
 	       arbiter_1_firstHot ;
-  assign IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1298 =
-	     (SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282 ||
-	      SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286) ?
-	       x__h38645 | y__h38646 :
+  assign IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1339 =
+	     (SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323 ||
+	      SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327) ?
+	       x__h41646 | y__h41647 :
 	       arbiter_lastSelect ;
-  assign IF_SEXT_arbiter_lastSelect_274_275_BIT_0_276_A_ETC___d1302 =
-	     (SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282 ||
-	      SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286) ?
-	       x__h38786 | y__h38787 :
+  assign IF_SEXT_arbiter_lastSelect_315_316_BIT_0_317_A_ETC___d1343 =
+	     (SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323 ||
+	      SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327) ?
+	       x__h41787 | y__h41788 :
 	       arbiter_firstHot ;
-  assign IF_cpu_dmem_master_ar_araddr__634_BITS_63_TO_4_ETC___d1660 =
-	     (cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1648 ?
+  assign IF_cpu_dmem_master_ar_araddr__675_BITS_63_TO_4_ETC___d1701 =
+	     (cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1689 ?
 		2'd1 :
 		2'd0) +
 	     ((cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	       !cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_n_ETC___d1637 &&
-	       cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1639) ?
+	       !cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_n_ETC___d1678 &&
+	       cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1680) ?
 		2'd1 :
 		2'd0) +
-	     (cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1658 ?
+	     (cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1699 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_debug_module_master_ar_araddr__726_BITS_63__ETC___d1752 =
-	     (debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1740 ?
+  assign IF_debug_module_master_ar_araddr__767_BITS_63__ETC___d1793 =
+	     (debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1781 ?
 		2'd1 :
 		2'd0) +
 	     ((debug_module$master_araddr[63:40] == 24'd0 &&
-	       !debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1729 &&
-	       debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1731) ?
+	       !debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1770 &&
+	       debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1772) ?
 		2'd1 :
 		2'd0) +
-	     (debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1750 ?
+	     (debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1791 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d1038 =
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d968 ||
-	      cpu$dmem_master_awvalid) &&
-	     (merged_0_flitLeft != 8'd0 ||
-	      !ifcs_0_noRoute_inner_pendingReq && cpu$dmem_master_awvalid) ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_NOT_cpu_d_ETC___d968 =
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1009 =
 	     ((merged_0_flitLeft == 8'd0) ?
 		!cpu$dmem_master_awvalid || !cpu$dmem_master_wvalid :
 		!cpu$dmem_master_wvalid) ||
 	     merged_0_flitLeft != 8'd0 ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d1001 =
-	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d980 ||
-	      !IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d982) &&
-	     !IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d985 &&
-	     IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d987 ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d961 =
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1079 =
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_NOT_cpu_d_ETC___d1009 ||
+	      cpu$dmem_master_awvalid) &&
+	     (merged_0_flitLeft != 8'd0 ||
+	      !ifcs_0_noRoute_inner_pendingReq && cpu$dmem_master_awvalid) ;
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1002 =
 	     (merged_0_flitLeft == 8'd0) ?
 	       cpu$dmem_master_awvalid && cpu$dmem_master_wvalid :
 	       cpu$dmem_master_wvalid ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d980 =
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1021 =
 	     cpu$dmem_master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d982 =
-	     x__h26991 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d985 =
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1023 =
+	     x__h29992 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1026 =
 	     cpu$dmem_master_awaddr < soc_map$m_plic_addr_range[127:64] ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d987 =
-	     x__h27016 < soc_map$m_plic_addr_range[63:0] ;
-  assign IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d991 =
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1028 =
+	     x__h30017 < soc_map$m_plic_addr_range[63:0] ;
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1032 =
 	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d980 ||
-	      !IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d982) &&
-	     (IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d985 ||
-	      !IF_merged_0_flitLeft_38_EQ_0_39_THEN_cpu_dmem__ETC___d987) ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1073 =
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1021 ||
+	      !IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1023) &&
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1026 ||
+	      !IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1028) ;
+  assign IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1042 =
+	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
+	     (IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1021 ||
+	      !IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1023) &&
+	     !IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1026 &&
+	     IF_merged_0_flitLeft_79_EQ_0_80_THEN_cpu_dmem__ETC___d1028 ;
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1114 =
 	     ((merged_1_flitLeft == 8'd0) ?
 		!debug_module$master_awvalid || !debug_module$master_wvalid :
 		!debug_module$master_wvalid) ||
 	     merged_1_flitLeft != 8'd0 ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1143 =
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_NOT_debug_ETC___d1073 ||
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1184 =
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_NOT_debug_ETC___d1114 ||
 	      debug_module$master_awvalid) &&
 	     (merged_1_flitLeft != 8'd0 ||
 	      !ifcs_1_noRoute_inner_pendingReq &&
 	      debug_module$master_awvalid) ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1066 =
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1107 =
 	     (merged_1_flitLeft == 8'd0) ?
 	       debug_module$master_awvalid && debug_module$master_wvalid :
 	       debug_module$master_wvalid ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1085 =
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1126 =
 	     debug_module$master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1087 =
-	     x__h29799 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1090 =
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1128 =
+	     x__h32800 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1131 =
 	     debug_module$master_awaddr < soc_map$m_plic_addr_range[127:64] ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1092 =
-	     x__h29824 < soc_map$m_plic_addr_range[63:0] ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1096 =
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1133 =
+	     x__h32825 < soc_map$m_plic_addr_range[63:0] ;
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1137 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1085 ||
-	      !IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1087) &&
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1090 ||
-	      !IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1092) ;
-  assign IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1106 =
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1126 ||
+	      !IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1128) &&
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1131 ||
+	      !IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1133) ;
+  assign IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1147 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1085 ||
-	      !IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1087) &&
-	     !IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1090 &&
-	     IF_merged_1_flitLeft_58_EQ_0_59_THEN_debug_mod_ETC___d1092 ;
-  assign IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216 =
+	     (IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1126 ||
+	      !IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1128) &&
+	     !IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1131 &&
+	     IF_merged_1_flitLeft_99_EQ_0_00_THEN_debug_mod_ETC___d1133 ;
+  assign IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257 =
 	     (split_0_flitLeft == 8'd0) ?
 	       ssNoSynth_0_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_0_w_buffer_ff$FULL_N :
 	       ssNoSynth_0_w_buffer_ff$FULL_N ;
-  assign IF_split_1_flitLeft_11_EQ_0_12_THEN_ssNoSynth__ETC___d1217 =
+  assign IF_split_1_flitLeft_52_EQ_0_53_THEN_ssNoSynth__ETC___d1258 =
 	     (split_1_flitLeft == 8'd0) ?
 	       ssNoSynth_1_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_1_w_buffer_ff$FULL_N :
 	       ssNoSynth_1_w_buffer_ff$FULL_N ;
-  assign IF_split_2_flitLeft_40_EQ_0_41_THEN_ssNoSynth__ETC___d1218 =
+  assign IF_split_2_flitLeft_81_EQ_0_82_THEN_ssNoSynth__ETC___d1259 =
 	     (split_2_flitLeft == 8'd0) ?
 	       ssNoSynth_2_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_2_w_buffer_ff$FULL_N :
 	       ssNoSynth_2_w_buffer_ff$FULL_N ;
-  assign SEXT_SEXT_arbiter_1_1_firstHot_115_116_BIT_0_1_ETC__q18 =
-	     {2{SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131}} ;
-  assign SEXT_SEXT_arbiter_1_firstHot_1_930_931_BIT_0_9_ETC__q13 =
-	     {2{SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938}} ;
-  assign SEXT_SEXT_arbiter_1_firstHot_473_474_BIT_0_475_ETC__q8 =
-	     {2{SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489}} ;
-  assign SEXT_SEXT_arbiter_firstHot_278_279_BIT_0_280_A_ETC__q3 =
-	     {2{SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286}} ;
-  assign SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131 =
-	     x__h84031 | y__h84032 ;
+  assign SEXT_SEXT_arbiter_1_1_firstHot_156_157_BIT_0_1_ETC__q18 =
+	     {2{SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172}} ;
+  assign SEXT_SEXT_arbiter_1_firstHot_1_971_972_BIT_0_9_ETC__q13 =
+	     {2{SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979}} ;
+  assign SEXT_SEXT_arbiter_1_firstHot_514_515_BIT_0_516_ETC__q8 =
+	     {2{SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530}} ;
+  assign SEXT_SEXT_arbiter_firstHot_319_320_BIT_0_321_A_ETC__q3 =
+	     {2{SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327}} ;
+  assign SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172 =
+	     x__h87032 | y__h87033 ;
   assign SEXT_arbiter_1_1_firstHot__q15 = {2{arbiter_1_1_firstHot}} ;
-  assign SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 =
-	     x__h83744 | y__h83745 ;
-  assign SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 =
-	     x__h83895 | y__h83896 ;
+  assign SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 =
+	     x__h86745 | y__h86746 ;
+  assign SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 =
+	     x__h86896 | y__h86897 ;
   assign SEXT_arbiter_1_1_lastSelect_1__q17 = {2{arbiter_1_1_lastSelect_1}} ;
   assign SEXT_arbiter_1_1_lastSelect__q16 = {2{arbiter_1_1_lastSelect}} ;
-  assign SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938 =
-	     x__h72196 | y__h72197 ;
+  assign SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979 =
+	     x__h75197 | y__h75198 ;
   assign SEXT_arbiter_1_firstHot_1__q11 = {2{arbiter_1_firstHot_1}} ;
-  assign SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489 =
-	     x__h52656 | y__h52657 ;
+  assign SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530 =
+	     x__h55657 | y__h55658 ;
   assign SEXT_arbiter_1_firstHot__q5 = {2{arbiter_1_firstHot}} ;
-  assign SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 =
-	     x__h52520 | y__h52521 ;
+  assign SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 =
+	     x__h55521 | y__h55522 ;
   assign SEXT_arbiter_1_lastSelect_1__q7 = {2{arbiter_1_lastSelect_1}} ;
-  assign SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934 =
-	     x__h72093 | y__h72094 ;
+  assign SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975 =
+	     x__h75094 | y__h75095 ;
   assign SEXT_arbiter_1_lastSelect_2__q12 = {2{arbiter_1_lastSelect_2}} ;
-  assign SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 =
-	     x__h52369 | y__h52370 ;
+  assign SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 =
+	     x__h55370 | y__h55371 ;
   assign SEXT_arbiter_1_lastSelect__q6 = {2{arbiter_1_lastSelect}} ;
-  assign SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286 =
-	     x__h38280 | y__h38281 ;
+  assign SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327 =
+	     x__h41281 | y__h41282 ;
   assign SEXT_arbiter_firstHot__q1 = {2{arbiter_firstHot}} ;
-  assign SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282 =
-	     x__h38177 | y__h38178 ;
+  assign SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323 =
+	     x__h41178 | y__h41179 ;
   assign SEXT_arbiter_lastSelect__q2 = {2{arbiter_lastSelect}} ;
-  assign SEXT_x2620__q14 = {2{x__h72620}} ;
-  assign SEXT_x3190__q9 = {2{x__h53190}} ;
-  assign SEXT_x3224__q10 = {2{x__h53224}} ;
-  assign SEXT_x4565__q19 = {2{x__h84565}} ;
-  assign SEXT_x4599__q20 = {2{x__h84599}} ;
-  assign SEXT_x8704__q4 = {2{x__h38704}} ;
-  assign a_awid__h28151 = { 1'd0, cpu$dmem_master_awid } ;
-  assign a_awid__h30916 = { 1'd1, debug_module$master_awid } ;
-  assign araddr__h9118 =
+  assign SEXT_x1705__q4 = {2{x__h41705}} ;
+  assign SEXT_x5621__q14 = {2{x__h75621}} ;
+  assign SEXT_x6191__q9 = {2{x__h56191}} ;
+  assign SEXT_x6225__q10 = {2{x__h56225}} ;
+  assign SEXT_x7566__q19 = {2{x__h87566}} ;
+  assign SEXT_x7600__q20 = {2{x__h87600}} ;
+  assign _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d252 =
+	     x__h9575 + y__h9576 ;
+  assign a_awid__h31152 = { 1'd0, cpu$dmem_master_awid } ;
+  assign a_awid__h33917 = { 1'd1, debug_module$master_awid } ;
+  assign araddr__h12419 =
 	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
-  assign arcache__h9123 =
+  assign arcache__h12424 =
 	     tagController_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
-  assign arlen__h9119 =
+  assign arlen__h12420 =
 	     { 5'd0, tagController_tmp_tagCon$memory_request_get[5:3] } ;
-  assign aw_awaddr__h7765 = { 24'd0, x__h7796 } ;
-  assign cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1648 =
+  assign aw_awaddr__h7766 = tmp__h7681 + { 60'd0, x__h7841 } ;
+  assign aw_awsize_val__h9505 =
+	     _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d252[0] ?
+	       3'd0 :
+	       (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d252[1] ?
+		  3'd1 :
+		  (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d252[2] ?
+		     3'd2 :
+		     (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d252[3] ?
+			3'd3 :
+			3'd4))) ;
+  assign cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1689 =
 	     cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	     (cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_n_ETC___d1637 ||
-	      !cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1639) &&
-	     (cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_p_ETC___d1642 ||
-	      !cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1644) ;
-  assign cpu_dmem_master_ar_araddr__634_BITS_63_TO_40_6_ETC___d1658 =
+	     (cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_n_ETC___d1678 ||
+	      !cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1680) &&
+	     (cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_p_ETC___d1683 ||
+	      !cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1685) ;
+  assign cpu_dmem_master_ar_araddr__675_BITS_63_TO_40_6_ETC___d1699 =
 	     cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	     (cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_n_ETC___d1637 ||
-	      !cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1639) &&
-	     !cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_p_ETC___d1642 &&
-	     cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1644 ;
-  assign cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1639 =
-	     x__h61434 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_araddr__634_MINUS_soc_map_m_ETC___d1644 =
-	     x__h61459 < soc_map$m_plic_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_n_ETC___d1637 =
+	     (cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_n_ETC___d1678 ||
+	      !cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1680) &&
+	     !cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_p_ETC___d1683 &&
+	     cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1685 ;
+  assign cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1680 =
+	     x__h64435 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign cpu_dmem_master_ar_araddr__675_MINUS_soc_map_m_ETC___d1685 =
+	     x__h64460 < soc_map$m_plic_addr_range[63:0] ;
+  assign cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_n_ETC___d1678 =
 	     cpu$dmem_master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign cpu_dmem_master_ar_araddr__634_ULT_soc_map_m_p_ETC___d1642 =
+  assign cpu_dmem_master_ar_araddr__675_ULT_soc_map_m_p_ETC___d1683 =
 	     cpu$dmem_master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1740 =
+  assign debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1781 =
 	     debug_module$master_araddr[63:40] == 24'd0 &&
-	     (debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1729 ||
-	      !debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1731) &&
-	     (debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1734 ||
-	      !debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1736) ;
-  assign debug_module_master_ar_araddr__726_BITS_63_TO__ETC___d1750 =
+	     (debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1770 ||
+	      !debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1772) &&
+	     (debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1775 ||
+	      !debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1777) ;
+  assign debug_module_master_ar_araddr__767_BITS_63_TO__ETC___d1791 =
 	     debug_module$master_araddr[63:40] == 24'd0 &&
-	     (debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1729 ||
-	      !debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1731) &&
-	     !debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1734 &&
-	     debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1736 ;
-  assign debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1731 =
-	     x__h63916 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign debug_module_master_ar_araddr__726_MINUS_soc_m_ETC___d1736 =
-	     x__h63941 < soc_map$m_plic_addr_range[63:0] ;
-  assign debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1729 =
+	     (debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1770 ||
+	      !debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1772) &&
+	     !debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1775 &&
+	     debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1777 ;
+  assign debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1772 =
+	     x__h66917 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign debug_module_master_ar_araddr__767_MINUS_soc_m_ETC___d1777 =
+	     x__h66942 < soc_map$m_plic_addr_range[63:0] ;
+  assign debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1770 =
 	     debug_module$master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign debug_module_master_ar_araddr__726_ULT_soc_map_ETC___d1734 =
+  assign debug_module_master_ar_araddr__767_ULT_soc_map_ETC___d1775 =
 	     debug_module$master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign fatReq_arid__h62002 = { 1'd0, cpu$dmem_master_arid } ;
-  assign fatReq_arid__h64469 = { 1'd1, debug_module$master_arid } ;
-  assign plic_RDY_server_reset_request_put__64_AND_cpu__ETC___d270 =
+  assign fatReq_arid__h65003 = { 1'd0, cpu$dmem_master_arid } ;
+  assign fatReq_arid__h67470 = { 1'd1, debug_module$master_arid } ;
+  assign plic_RDY_server_reset_request_put__05_AND_cpu__ETC___d311 =
 	     plic$RDY_server_reset_request_put &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_reqs$EMPTY_N &&
 	     f_reset_requestor$FULL_N ;
-  assign reqWires_1_0_whas__450_AND_reqWires_1_0_wget___ETC___d1460 =
+  assign reqWires_1_0_whas__491_AND_reqWires_1_0_wget___ETC___d1501 =
 	     CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget ||
 	     CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget ;
-  assign reqWires_1_1_0_whas__092_AND_reqWires_1_1_0_wg_ETC___d2102 =
+  assign reqWires_1_1_0_whas__133_AND_reqWires_1_1_0_wg_ETC___d2143 =
 	     CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget ||
 	     CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget ;
-  assign split_0_doPut_whas__74_AND_split_0_doPut_wget__ETC___d881 =
+  assign split_0_doPut_whas__15_AND_split_0_doPut_wget__ETC___d922 =
 	     CAN_FIRE_RL_sink_selected &&
 	     (split_0_doPut$wget[172] ||
 	      ssNoSynth_0_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_0_w_buffer_ff$FULL_N) ;
-  assign split_1_doPut_whas__03_AND_split_1_doPut_wget__ETC___d910 =
+  assign split_1_doPut_whas__44_AND_split_1_doPut_wget__ETC___d951 =
 	     CAN_FIRE_RL_sink_selected_1 &&
 	     (split_1_doPut$wget[172] ||
 	      ssNoSynth_1_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_1_w_buffer_ff$FULL_N) ;
-  assign split_2_doPut_whas__32_AND_split_2_doPut_wget__ETC___d939 =
+  assign split_2_doPut_whas__73_AND_split_2_doPut_wget__ETC___d980 =
 	     CAN_FIRE_RL_sink_selected_2 &&
 	     (split_2_doPut$wget[172] ||
 	      ssNoSynth_2_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_2_w_buffer_ff$FULL_N) ;
-  assign state_1_1_1_103_AND_activeSource_1_1_0_197_198_ETC___d2200 =
+  assign state_1_1_1_144_AND_activeSource_1_1_0_238_239_ETC___d2241 =
 	     state_1_1_1 && activeSource_1_1_0 &&
 	     ifcs_0_1_routeBack$EMPTY_N &&
 	     ((!ifcs_0_1_routeBack$D_OUT[0] ||
@@ -8558,7 +8578,7 @@ module mkCore(CLK,
 		ifcs_0_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_0_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_1_103_AND_activeSource_1_1_1_1_233_2_ETC___d2236 =
+  assign state_1_1_1_144_AND_activeSource_1_1_1_1_274_2_ETC___d2277 =
 	     state_1_1_1 && activeSource_1_1_1_1 &&
 	     ifcs_1_1_routeBack$EMPTY_N &&
 	     ((!ifcs_1_1_routeBack$D_OUT[0] ||
@@ -8566,7 +8586,7 @@ module mkCore(CLK,
 		ifcs_1_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_1_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_1_103_AND_activeSource_1_1_2_269_270_ETC___d2272 =
+  assign state_1_1_1_144_AND_activeSource_1_1_2_310_311_ETC___d2313 =
 	     state_1_1_1 && activeSource_1_1_2 &&
 	     ifcs_2_1_routeBack$EMPTY_N &&
 	     ((!ifcs_2_1_routeBack$D_OUT[0] ||
@@ -8574,271 +8594,312 @@ module mkCore(CLK,
 		ifcs_2_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_2_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_923_AND_activeSource_1_0_1_990_991_A_ETC___d1993 =
+  assign state_1_1_964_AND_activeSource_1_0_1_031_032_A_ETC___d2034 =
 	     state_1_1 && activeSource_1_0_1 && ifcs_0_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_1_innerRoute$D_OUT[0] ||
 	       !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-		IF_NOT_ifcs_0_1_innerRoute_first__876_BIT_1_88_ETC___d1898 :
+		IF_NOT_ifcs_0_1_innerRoute_first__917_BIT_1_92_ETC___d1939 :
 		ifcs_0_1_innerRoute$D_OUT[0]) ;
-  assign state_1_1_923_AND_activeSource_1_1_1_030_031_A_ETC___d2033 =
+  assign state_1_1_964_AND_activeSource_1_1_1_071_072_A_ETC___d2074 =
 	     state_1_1 && activeSource_1_1_1 && ifcs_1_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_1_innerRoute$D_OUT[0] ||
 	       !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-		IF_NOT_ifcs_1_1_innerRoute_first__905_BIT_1_90_ETC___d1914 :
+		IF_NOT_ifcs_1_1_innerRoute_first__946_BIT_1_95_ETC___d1955 :
 		ifcs_1_1_innerRoute$D_OUT[0]) ;
-  assign state_1_461_AND_activeSource_1_0_549_550_AND_i_ETC___d1552 =
+  assign state_1_502_AND_activeSource_1_0_590_591_AND_i_ETC___d1593 =
 	     state_1 && activeSource_1_0 && ifcs_0_routeBack$EMPTY_N &&
 	     ((!ifcs_0_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_0_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_0_routeBack$D_OUT[0]) ;
-  assign state_1_461_AND_activeSource_1_1_582_583_AND_i_ETC___d1585 =
+  assign state_1_502_AND_activeSource_1_1_623_624_AND_i_ETC___d1626 =
 	     state_1 && activeSource_1_1 && ifcs_1_routeBack$EMPTY_N &&
 	     ((!ifcs_1_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_1_routeBack$D_OUT[0]) ;
-  assign state_1_461_AND_activeSource_1_2_616_617_AND_i_ETC___d1619 =
+  assign state_1_502_AND_activeSource_1_2_657_658_AND_i_ETC___d1660 =
 	     state_1 && activeSource_1_2 && ifcs_2_routeBack$EMPTY_N &&
 	     ((!ifcs_2_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_2_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_2_routeBack$D_OUT[0]) ;
-  assign state_271_AND_activeSource_0_344_345_AND_ifcs__ETC___d1347 =
+  assign state_312_AND_activeSource_0_385_386_AND_ifcs__ETC___d1388 =
 	     state && activeSource_0 && ifcs_0_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216) ?
-		IF_NOT_ifcs_0_innerRoute_first__224_BIT_1_233__ETC___d1246 :
+	       !IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257) ?
+		IF_NOT_ifcs_0_innerRoute_first__265_BIT_1_274__ETC___d1287 :
 		ifcs_0_innerRoute$D_OUT[0]) ;
-  assign state_271_AND_activeSource_1_388_389_AND_ifcs__ETC___d1391 =
+  assign state_312_AND_activeSource_1_429_430_AND_ifcs__ETC___d1432 =
 	     state && activeSource_1 && ifcs_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_82_EQ_0_83_THEN_ssNoSynth__ETC___d1216) ?
-		IF_NOT_ifcs_1_innerRoute_first__253_BIT_1_257__ETC___d1262 :
+	       !IF_split_0_flitLeft_23_EQ_0_24_THEN_ssNoSynth__ETC___d1257) ?
+		IF_NOT_ifcs_1_innerRoute_first__294_BIT_1_298__ETC___d1303 :
 		ifcs_1_innerRoute$D_OUT[0]) ;
   assign tmp__h5618 =
 	     tagController_tmp_awreqff$D_OUT[92:29] +
 	     tagController_tmp_addrOffset ;
-  assign x__h26991 =
+  assign tmp__h7681 = { 24'd0, x__h7798 } ;
+  assign x__h11171 =
+	     tagController_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
+  assign x__h12500 =
+	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
+	       arcache__h12424 :
+	       4'd0 ;
+  assign x__h29992 =
 	     cpu$dmem_master_awaddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h27016 =
+  assign x__h30017 =
 	     cpu$dmem_master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h29799 =
+  assign x__h32800 =
 	     debug_module$master_awaddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h29824 =
+  assign x__h32825 =
 	     debug_module$master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h38177 =
+  assign x__h41178 =
 	     SEXT_arbiter_lastSelect__q2[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h38280 =
+  assign x__h41281 =
 	     SEXT_arbiter_firstHot__q1[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h38645 =
-	     SEXT_SEXT_arbiter_firstHot_278_279_BIT_0_280_A_ETC__q3[0] &
+  assign x__h41646 =
+	     SEXT_SEXT_arbiter_firstHot_319_320_BIT_0_321_A_ETC__q3[0] &
 	     arbiter_firstHot ;
-  assign x__h38704 =
-	     !SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286 &&
-	     SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282 ;
-  assign x__h38786 = SEXT_x8704__q4[0] & arbiter_firstHot ;
+  assign x__h41705 =
+	     !SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327 &&
+	     SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323 ;
+  assign x__h41787 = SEXT_x1705__q4[0] & arbiter_firstHot ;
   assign x__h5220 =
 	     tagController_tmp_shimSlave_arff$D_OUT[97:93] -
 	     tagController_tmp_shimSlave_awff$D_OUT[97:93] ;
-  assign x__h52369 = x__h52371 | y__h52372 ;
-  assign x__h52371 =
-	     SEXT_arbiter_1_lastSelect__q6[0] &
-	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h52520 = x__h52522 | y__h52523 ;
-  assign x__h52522 =
-	     SEXT_arbiter_1_lastSelect_1__q7[0] &
-	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h52656 = x__h52658 | y__h52659 ;
-  assign x__h52658 =
-	     SEXT_arbiter_1_firstHot__q5[0] &
-	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h53128 = x__h53130 | y__h53131 ;
-  assign x__h53130 =
-	     SEXT_SEXT_arbiter_1_firstHot_473_474_BIT_0_475_ETC__q8[0] &
-	     arbiter_1_firstHot ;
-  assign x__h53190 =
-	     !SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489 &&
-	     SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 ;
-  assign x__h53224 =
-	     !SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 &&
-	     !SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489 &&
-	     SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 ;
-  assign x__h53316 = x__h53318 | y__h53319 ;
-  assign x__h53318 = SEXT_x3190__q9[0] & arbiter_1_firstHot ;
-  assign x__h53497 = x__h53499 | y__h53500 ;
-  assign x__h53499 = SEXT_x3224__q10[0] & arbiter_1_firstHot ;
   assign x__h5476 =
 	     tagController_tmp_addrOffset +
 	     (64'd1 << tagController_tmp_awreqff$D_OUT[20:18]) ;
-  assign x__h61434 =
+  assign x__h55370 = x__h55372 | y__h55373 ;
+  assign x__h55372 =
+	     SEXT_arbiter_1_lastSelect__q6[0] &
+	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
+  assign x__h55521 = x__h55523 | y__h55524 ;
+  assign x__h55523 =
+	     SEXT_arbiter_1_lastSelect_1__q7[0] &
+	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
+  assign x__h55657 = x__h55659 | y__h55660 ;
+  assign x__h55659 =
+	     SEXT_arbiter_1_firstHot__q5[0] &
+	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
+  assign x__h56129 = x__h56131 | y__h56132 ;
+  assign x__h56131 =
+	     SEXT_SEXT_arbiter_1_firstHot_514_515_BIT_0_516_ETC__q8[0] &
+	     arbiter_1_firstHot ;
+  assign x__h56191 =
+	     !SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530 &&
+	     SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 ;
+  assign x__h56225 =
+	     !SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 &&
+	     !SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530 &&
+	     SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 ;
+  assign x__h56317 = x__h56319 | y__h56320 ;
+  assign x__h56319 = SEXT_x6191__q9[0] & arbiter_1_firstHot ;
+  assign x__h56498 = x__h56500 | y__h56501 ;
+  assign x__h56500 = SEXT_x6225__q10[0] & arbiter_1_firstHot ;
+  assign x__h64435 =
 	     cpu$dmem_master_araddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h61459 =
+  assign x__h64460 =
 	     cpu$dmem_master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h63916 =
+  assign x__h66917 =
 	     debug_module$master_araddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h63941 =
+  assign x__h66942 =
 	     debug_module$master_araddr - soc_map$m_plic_addr_range[127:64] ;
   assign x__h6915 =
 	     tagController_tmp_shimSlave_awff$D_OUT[97:93] -
 	     tagController_tmp_shimSlave_arff$D_OUT[97:93] ;
-  assign x__h72093 =
+  assign x__h75094 =
 	     SEXT_arbiter_1_lastSelect_2__q12[0] &
 	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h72196 =
+  assign x__h75197 =
 	     SEXT_arbiter_1_firstHot_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h72561 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_930_931_BIT_0_9_ETC__q13[0] &
+  assign x__h75562 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_971_972_BIT_0_9_ETC__q13[0] &
 	     arbiter_1_firstHot_1 ;
-  assign x__h72620 =
-	     !SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938 &&
-	     SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934 ;
-  assign x__h72702 = SEXT_x2620__q14[0] & arbiter_1_firstHot_1 ;
-  assign x__h7796 =
+  assign x__h75621 =
+	     !SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979 &&
+	     SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975 ;
+  assign x__h75703 = SEXT_x5621__q14[0] & arbiter_1_firstHot_1 ;
+  assign x__h7798 =
 	     { tagController_tmp_tagCon$memory_request_get[140:104], 3'd0 } ;
-  assign x__h7870 =
-	     tagController_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
-  assign x__h83744 = x__h83746 | y__h83747 ;
-  assign x__h83746 =
+  assign x__h7841 =
+	     tagController_tmp_tagCon$memory_request_get[81] ?
+	       4'd0 :
+	       (tagController_tmp_tagCon$memory_request_get[82] ?
+		  4'd1 :
+		  (tagController_tmp_tagCon$memory_request_get[83] ?
+		     4'd2 :
+		     (tagController_tmp_tagCon$memory_request_get[84] ?
+			4'd3 :
+			(tagController_tmp_tagCon$memory_request_get[85] ?
+			   4'd4 :
+			   (tagController_tmp_tagCon$memory_request_get[86] ?
+			      4'd5 :
+			      (tagController_tmp_tagCon$memory_request_get[87] ?
+				 4'd6 :
+				 (tagController_tmp_tagCon$memory_request_get[88] ?
+				    4'd7 :
+				    4'd8))))))) ;
+  assign x__h86745 = x__h86747 | y__h86748 ;
+  assign x__h86747 =
 	     SEXT_arbiter_1_1_lastSelect__q16[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h83895 = x__h83897 | y__h83898 ;
-  assign x__h83897 =
+  assign x__h86896 = x__h86898 | y__h86899 ;
+  assign x__h86898 =
 	     SEXT_arbiter_1_1_lastSelect_1__q17[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h84031 = x__h84033 | y__h84034 ;
-  assign x__h84033 =
+  assign x__h87032 = x__h87034 | y__h87035 ;
+  assign x__h87034 =
 	     SEXT_arbiter_1_1_firstHot__q15[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h84503 = x__h84505 | y__h84506 ;
-  assign x__h84505 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_115_116_BIT_0_1_ETC__q18[0] &
+  assign x__h87504 = x__h87506 | y__h87507 ;
+  assign x__h87506 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_156_157_BIT_0_1_ETC__q18[0] &
 	     arbiter_1_1_firstHot ;
-  assign x__h84565 =
-	     !SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131 &&
-	     SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 ;
-  assign x__h84599 =
-	     !SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 &&
-	     !SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131 &&
-	     SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 ;
-  assign x__h84691 = x__h84693 | y__h84694 ;
-  assign x__h84693 = SEXT_x4565__q19[0] & arbiter_1_1_firstHot ;
-  assign x__h84872 = x__h84874 | y__h84875 ;
-  assign x__h84874 = SEXT_x4599__q20[0] & arbiter_1_1_firstHot ;
-  assign x__h9199 =
+  assign x__h87566 =
+	     !SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172 &&
+	     SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 ;
+  assign x__h87600 =
+	     !SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 &&
+	     !SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172 &&
+	     SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 ;
+  assign x__h87692 = x__h87694 | y__h87695 ;
+  assign x__h87694 = SEXT_x7566__q19[0] & arbiter_1_1_firstHot ;
+  assign x__h87873 = x__h87875 | y__h87876 ;
+  assign x__h87875 = SEXT_x7600__q20[0] & arbiter_1_1_firstHot ;
+  assign x__h9575 = x__h9587 + y__h9588 ;
+  assign x__h9587 = x__h9599 + y__h9600 ;
+  assign x__h9599 = x__h9611 + y__h9612 ;
+  assign x__h9611 = x__h9623 + y__h9624 ;
+  assign x__h9623 = x__h9635 + y__h9636 ;
+  assign x__h9635 = x__h9647 + y__h9648 ;
+  assign x__h9647 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[88] } ;
+  assign x_araddr__h12436 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arcache__h9123 :
-	       4'd0 ;
-  assign x_araddr__h9135 =
-	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       araddr__h9118 :
+	       araddr__h12419 :
 	       64'hAAAAAAAAAAAAAAAA ;
-  assign x_arid__h9134 =
+  assign x_arid__h12435 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[100:95] :
 	       6'd0 ;
-  assign x_arlen__h9136 =
+  assign x_arlen__h12437 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arlen__h9119 :
+	       arlen__h12420 :
 	       8'd0 ;
-  assign x_arsize_val__h9181 =
+  assign x_arsize_val__h12482 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[2:0] :
 	       3'b0 ;
-  assign x_port1__read__h62563 =
+  assign x_port1__read__h65564 =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ?
 	       ifcs_0_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_0_1_noRoute_flitCount ;
-  assign x_port1__read__h65027 =
+  assign x_port1__read__h68028 =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ?
 	       ifcs_1_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_1_1_noRoute_flitCount ;
-  assign y__h38178 =
+  assign y__h41179 =
 	     SEXT_arbiter_firstHot__q1[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h38281 =
+  assign y__h41282 =
 	     SEXT_arbiter_lastSelect__q2[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h38646 = SEXT_x8704__q4[0] & arbiter_lastSelect ;
-  assign y__h38787 =
-	     SEXT_SEXT_arbiter_firstHot_278_279_BIT_0_280_A_ETC__q3[0] &
+  assign y__h41647 = SEXT_x1705__q4[0] & arbiter_lastSelect ;
+  assign y__h41788 =
+	     SEXT_SEXT_arbiter_firstHot_319_320_BIT_0_321_A_ETC__q3[0] &
 	     arbiter_lastSelect ;
-  assign y__h52370 =
+  assign y__h55371 =
 	     SEXT_arbiter_1_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h52372 =
+  assign y__h55373 =
 	     SEXT_arbiter_1_lastSelect_1__q7[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h52521 =
+  assign y__h55522 =
 	     SEXT_arbiter_1_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h52523 =
+  assign y__h55524 =
 	     SEXT_arbiter_1_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h52657 =
+  assign y__h55658 =
 	     SEXT_arbiter_1_lastSelect_1__q7[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h52659 =
+  assign y__h55660 =
 	     SEXT_arbiter_1_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h53129 = SEXT_x3224__q10[0] & arbiter_1_lastSelect ;
-  assign y__h53131 = SEXT_x3190__q9[0] & arbiter_1_lastSelect_1 ;
-  assign y__h53317 =
-	     SEXT_SEXT_arbiter_1_firstHot_473_474_BIT_0_475_ETC__q8[0] &
+  assign y__h56130 = SEXT_x6225__q10[0] & arbiter_1_lastSelect ;
+  assign y__h56132 = SEXT_x6191__q9[0] & arbiter_1_lastSelect_1 ;
+  assign y__h56318 =
+	     SEXT_SEXT_arbiter_1_firstHot_514_515_BIT_0_516_ETC__q8[0] &
 	     arbiter_1_lastSelect ;
-  assign y__h53319 = SEXT_x3224__q10[0] & arbiter_1_lastSelect_1 ;
-  assign y__h53498 = SEXT_x3190__q9[0] & arbiter_1_lastSelect ;
-  assign y__h53500 =
-	     SEXT_SEXT_arbiter_1_firstHot_473_474_BIT_0_475_ETC__q8[0] &
+  assign y__h56320 = SEXT_x6225__q10[0] & arbiter_1_lastSelect_1 ;
+  assign y__h56499 = SEXT_x6191__q9[0] & arbiter_1_lastSelect ;
+  assign y__h56501 =
+	     SEXT_SEXT_arbiter_1_firstHot_514_515_BIT_0_516_ETC__q8[0] &
 	     arbiter_1_lastSelect_1 ;
-  assign y__h72094 =
+  assign y__h75095 =
 	     SEXT_arbiter_1_firstHot_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h72197 =
+  assign y__h75198 =
 	     SEXT_arbiter_1_lastSelect_2__q12[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h72562 = SEXT_x2620__q14[0] & arbiter_1_lastSelect_2 ;
-  assign y__h72703 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_930_931_BIT_0_9_ETC__q13[0] &
+  assign y__h75563 = SEXT_x5621__q14[0] & arbiter_1_lastSelect_2 ;
+  assign y__h75704 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_971_972_BIT_0_9_ETC__q13[0] &
 	     arbiter_1_lastSelect_2 ;
-  assign y__h83745 =
+  assign y__h86746 =
 	     SEXT_arbiter_1_1_firstHot__q15[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h83747 =
+  assign y__h86748 =
 	     SEXT_arbiter_1_1_lastSelect_1__q17[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h83896 =
+  assign y__h86897 =
 	     SEXT_arbiter_1_1_lastSelect__q16[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h83898 =
+  assign y__h86899 =
 	     SEXT_arbiter_1_1_firstHot__q15[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h84032 =
+  assign y__h87033 =
 	     SEXT_arbiter_1_1_lastSelect_1__q17[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h84034 =
+  assign y__h87035 =
 	     SEXT_arbiter_1_1_lastSelect__q16[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h84504 = SEXT_x4599__q20[0] & arbiter_1_1_lastSelect ;
-  assign y__h84506 = SEXT_x4565__q19[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h84692 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_115_116_BIT_0_1_ETC__q18[0] &
+  assign y__h87505 = SEXT_x7600__q20[0] & arbiter_1_1_lastSelect ;
+  assign y__h87507 = SEXT_x7566__q19[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h87693 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_156_157_BIT_0_1_ETC__q18[0] &
 	     arbiter_1_1_lastSelect ;
-  assign y__h84694 = SEXT_x4599__q20[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h84873 = SEXT_x4565__q19[0] & arbiter_1_1_lastSelect ;
-  assign y__h84875 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_115_116_BIT_0_1_ETC__q18[0] &
+  assign y__h87695 = SEXT_x7600__q20[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h87874 = SEXT_x7566__q19[0] & arbiter_1_1_lastSelect ;
+  assign y__h87876 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_156_157_BIT_0_1_ETC__q18[0] &
 	     arbiter_1_1_lastSelect_1 ;
+  assign y__h9576 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[81] } ;
+  assign y__h9588 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[82] } ;
+  assign y__h9600 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[83] } ;
+  assign y__h9612 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[84] } ;
+  assign y__h9624 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[85] } ;
+  assign y__h9636 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[86] } ;
+  assign y__h9648 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[87] } ;
 
   // handling of inlined registers
 
@@ -9084,13 +9145,13 @@ module mkCore(CLK,
     #0;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate &&
-	  !SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282 &&
-	  !SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286)
+	  !SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323 &&
+	  !SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate &&
-	  !SEXT_arbiter_lastSelect_274_275_BIT_0_276_AND__ETC___d1282 &&
-	  !SEXT_arbiter_firstHot_278_279_BIT_0_280_AND_re_ETC___d1286)
+	  !SEXT_arbiter_lastSelect_315_316_BIT_0_317_AND__ETC___d1323 &&
+	  !SEXT_arbiter_firstHot_319_320_BIT_0_321_AND_re_ETC___d1327)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9099,7 +9160,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h40185 = $time;
+	  v__h43186 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9108,9 +9169,8 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[1] ? 2'd1 : 2'd0) +
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h40185,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h43186,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9219,14 +9279,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	begin
-	  v__h39574 = $time;
+	  v__h42575 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h39574,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h42575,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
@@ -9238,7 +9297,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h44194 = $time;
+	  v__h47195 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9247,9 +9306,8 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[1] ? 2'd1 : 2'd0) +
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h44194,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h47195,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && ifcs_1_innerRoute$EMPTY_N &&
@@ -9358,14 +9416,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	begin
-	  v__h43583 = $time;
+	  v__h46584 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h43583,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h46584,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
@@ -9382,20 +9439,20 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 114, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_source_selected_1] and\n  [RL_burst_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sink_selected && WILL_FIRE_RL_sink_selected_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 155, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected] and\n  [RL_sink_selected_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected] and\n  [RL_sink_selected_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if ((WILL_FIRE_RL_sink_selected || WILL_FIRE_RL_sink_selected_1) &&
 	  WILL_FIRE_RL_sink_selected_2)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 155, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected,\n  RL_sink_selected_1] and [RL_sink_selected_2] ) fired in the same clock\n  cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected,\n  RL_sink_selected_1] and [RL_sink_selected_2] ) fired in the same clock\n  cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_2 &&
-	  !SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934 &&
-	  !SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938)
+	  !SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975 &&
+	  !SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_2 &&
-	  !SEXT_arbiter_1_lastSelect_2_926_927_BIT_0_928__ETC___d1934 &&
-	  !SEXT_arbiter_1_firstHot_1_930_931_BIT_0_932_AN_ETC___d1938)
+	  !SEXT_arbiter_1_lastSelect_2_967_968_BIT_0_969__ETC___d1975 &&
+	  !SEXT_arbiter_1_firstHot_1_971_972_BIT_0_973_AN_ETC___d1979)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9404,7 +9461,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h74095 = $time;
+	  v__h77096 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9413,9 +9470,8 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[1] ? 2'd1 : 2'd0) +
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h74095,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h77096,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9524,14 +9580,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	begin
-	  v__h73484 = $time;
+	  v__h76485 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h73484,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h76485,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
@@ -9543,7 +9598,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h76988 = $time;
+	  v__h79989 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9552,9 +9607,8 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[1] ? 2'd1 : 2'd0) +
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h76988,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h79989,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N &&
@@ -9663,14 +9717,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	begin
-	  v__h76377 = $time;
+	  v__h79378 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h76377,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h79378,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
@@ -9687,11 +9740,11 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 114, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_source_selected_6] and\n  [RL_burst_6] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sink_selected_5 && WILL_FIRE_RL_sink_selected_6)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 155, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_5] and\n  [RL_sink_selected_6] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_5] and\n  [RL_sink_selected_6] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if ((WILL_FIRE_RL_sink_selected_5 || WILL_FIRE_RL_sink_selected_6) &&
 	  WILL_FIRE_RL_sink_selected_7)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 155, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_5,\n  RL_sink_selected_6] and [RL_sink_selected_7] ) fired in the same clock\n  cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_5,\n  RL_sink_selected_6] and [RL_sink_selected_7] ) fired in the same clock\n  cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cpu_imem_ug_u_aw_warnDoDrop)
 	$display("WARNING: dropping from Source that can't be dropped from");
@@ -9803,18 +9856,18 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_nonRoutableFlit &&
 	  WILL_FIRE_RL_ifcs_0_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_nonRoutableFlit] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_nonRoutableFlit] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_1 &&
-	  !SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 &&
-	  !SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 &&
-	  !SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489)
+	  !SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 &&
+	  !SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 &&
+	  !SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_1 &&
-	  !SEXT_arbiter_1_lastSelect_464_465_BIT_0_466_AN_ETC___d1477 &&
-	  !SEXT_arbiter_1_lastSelect_1_468_469_BIT_0_470__ETC___d1483 &&
-	  !SEXT_arbiter_1_firstHot_473_474_BIT_0_475_AND__ETC___d1489)
+	  !SEXT_arbiter_1_lastSelect_505_506_BIT_0_507_AN_ETC___d1518 &&
+	  !SEXT_arbiter_1_lastSelect_1_509_510_BIT_0_511__ETC___d1524 &&
+	  !SEXT_arbiter_1_firstHot_514_515_BIT_0_516_AND__ETC___d1530)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -9822,7 +9875,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h54889 = $time;
+	  v__h57890 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9830,9 +9883,8 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[0] ? 2'd1 : 2'd0) +
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h54889,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h57890,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -9907,14 +9959,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	begin
-	  v__h54508 = $time;
+	  v__h57509 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h54508,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h57509,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
@@ -9925,7 +9976,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h56959 = $time;
+	  v__h59960 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9933,9 +9984,8 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[0] ? 2'd1 : 2'd0) +
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h56959,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h59960,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && ifcs_1_routeBack$EMPTY_N &&
@@ -10010,14 +10060,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	begin
-	  v__h56578 = $time;
+	  v__h59579 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h56578,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h59579,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
@@ -10031,7 +10080,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h58858 = $time;
+	  v__h61859 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10039,9 +10088,8 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[0] ? 2'd1 : 2'd0) +
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h58858,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h61859,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && ifcs_2_routeBack$EMPTY_N &&
@@ -10116,14 +10164,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	begin
-	  v__h58477 = $time;
+	  v__h61478 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h58477,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h61478,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
@@ -10146,36 +10193,36 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 114, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_source_selected_4] and\n  [RL_burst_4] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sink_selected_3 && WILL_FIRE_RL_sink_selected_4)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 155, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_3] and\n  [RL_sink_selected_4] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_3] and\n  [RL_sink_selected_4] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_firstFlit &&
 	  WILL_FIRE_RL_ifcs_0_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_firstFlit && WILL_FIRE_RL_ifcs_0_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_firstFlit &&
 	  WILL_FIRE_RL_ifcs_0_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_firstFlit && WILL_FIRE_RL_ifcs_0_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit] and\n  [RL_ifcs_0_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_followFlits &&
 	  WILL_FIRE_RL_ifcs_0_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_followFlits] and\n  [RL_ifcs_0_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_followFlits] and\n  [RL_ifcs_0_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_followFlits && WILL_FIRE_RL_ifcs_0_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_followFlits] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_followFlits] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_followFlits &&
 	  WILL_FIRE_RL_ifcs_0_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_followFlits] and\n  [RL_ifcs_0_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_followFlits] and\n  [RL_ifcs_0_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_drainFlits &&
 	  WILL_FIRE_RL_ifcs_0_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_drainFlits] and\n  [RL_ifcs_0_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_drainFlits] and\n  [RL_ifcs_0_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_merged_0_genOther && cpu$dmem_master_wlast &&
 	  merged_0_flitLeft > 8'd1)
@@ -10195,25 +10242,25 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_0_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 284, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit_1] and\n  [RL_ifcs_0_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 283, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit_1] and\n  [RL_ifcs_0_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_1_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 284, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit_1] and\n  [RL_ifcs_1_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 283, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit_1] and\n  [RL_ifcs_1_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_2_firstFlit && WILL_FIRE_RL_ifcs_2_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 283, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_firstFlit] and\n  [RL_ifcs_2_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_firstFlit] and\n  [RL_ifcs_2_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_3 &&
-	  !SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 &&
-	  !SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 &&
-	  !SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131)
+	  !SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 &&
+	  !SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 &&
+	  !SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_3 &&
-	  !SEXT_arbiter_1_1_lastSelect_106_107_BIT_0_108__ETC___d2119 &&
-	  !SEXT_arbiter_1_1_lastSelect_1_110_111_BIT_0_11_ETC___d2125 &&
-	  !SEXT_arbiter_1_1_firstHot_115_116_BIT_0_117_AN_ETC___d2131)
+	  !SEXT_arbiter_1_1_lastSelect_147_148_BIT_0_149__ETC___d2160 &&
+	  !SEXT_arbiter_1_1_lastSelect_1_151_152_BIT_0_15_ETC___d2166 &&
+	  !SEXT_arbiter_1_1_firstHot_156_157_BIT_0_158_AN_ETC___d2172)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10221,7 +10268,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h86268 = $time;
+	  v__h89269 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10229,9 +10276,8 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[0] ? 2'd1 : 2'd0) +
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h86268,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h89269,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10306,14 +10352,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	begin
-	  v__h85887 = $time;
+	  v__h88888 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h85887,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h88888,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
@@ -10324,7 +10369,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h88759 = $time;
+	  v__h91760 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10332,9 +10377,8 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[0] ? 2'd1 : 2'd0) +
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h88759,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h91760,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
@@ -10409,14 +10453,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	begin
-	  v__h88378 = $time;
+	  v__h91379 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h88378,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h91379,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
@@ -10430,7 +10473,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h91069 = $time;
+	  v__h94070 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10438,9 +10481,8 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[0] ? 2'd1 : 2'd0) +
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
-	$write("%0t -- mkOneWayBus error: input %0d was selected but the",
-	       " requested path ",
-	       v__h91069,
+	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
+	       v__h94070,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
@@ -10515,14 +10557,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	begin
-	  v__h90688 = $time;
+	  v__h93689 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
-	$display("%0t -- mkOneWayBus error: input %0d was selected but there",
-		 " was no requested path.",
-		 v__h90688,
+	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
+		 v__h93689,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
@@ -10545,78 +10586,78 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 114, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_source_selected_9] and\n  [RL_burst_9] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sink_selected_8 && WILL_FIRE_RL_sink_selected_9)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 155, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_8] and\n  [RL_sink_selected_9] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_8] and\n  [RL_sink_selected_9] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop)
 	$display("WARNING: dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit && WILL_FIRE_RL_ifcs_0_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_0_1_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit] and\n  [RL_ifcs_0_1_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_followFlits] and\n  [RL_ifcs_0_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_followFlits] and\n  [RL_ifcs_0_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_0_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_followFlits] and\n  [RL_ifcs_0_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_followFlits] and\n  [RL_ifcs_0_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_followFlits] and\n  [RL_ifcs_0_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_followFlits] and\n  [RL_ifcs_0_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit &&
 	  WILL_FIRE_RL_ifcs_0_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_nonRoutableFlit] and\n  [RL_ifcs_0_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_nonRoutableFlit] and\n  [RL_ifcs_0_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_drainFlits &&
 	  WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_drainFlits] and\n  [RL_ifcs_0_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_drainFlits] and\n  [RL_ifcs_0_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_firstFlit && WILL_FIRE_RL_ifcs_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_1_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_firstFlit && WILL_FIRE_RL_ifcs_1_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit] and\n  [RL_ifcs_1_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_followFlits] and\n  [RL_ifcs_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_followFlits] and\n  [RL_ifcs_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_followFlits && WILL_FIRE_RL_ifcs_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_followFlits] and\n  [RL_ifcs_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_followFlits] and\n  [RL_ifcs_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_1_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_followFlits] and\n  [RL_ifcs_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_followFlits] and\n  [RL_ifcs_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_nonRoutableFlit &&
 	  WILL_FIRE_RL_ifcs_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_nonRoutableFlit] and\n  [RL_ifcs_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_nonRoutableFlit] and\n  [RL_ifcs_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_drainFlits &&
 	  WILL_FIRE_RL_ifcs_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_drainFlits] and\n  [RL_ifcs_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_drainFlits] and\n  [RL_ifcs_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_merged_1_genOther && debug_module$master_wlast &&
 	  merged_1_flitLeft > 8'd1)
@@ -10636,80 +10677,80 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_firstFlit && WILL_FIRE_RL_ifcs_1_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_1_1_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_1_1_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit] and\n  [RL_ifcs_1_1_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_followFlits] and\n  [RL_ifcs_1_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_followFlits] and\n  [RL_ifcs_1_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_1_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_followFlits] and\n  [RL_ifcs_1_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_followFlits] and\n  [RL_ifcs_1_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_followFlits &&
 	  WILL_FIRE_RL_ifcs_1_1_nonRoutableFlit)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_followFlits] and\n  [RL_ifcs_1_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 41: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_followFlits] and\n  [RL_ifcs_1_1_nonRoutableFlit] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_nonRoutableFlit &&
 	  WILL_FIRE_RL_ifcs_1_1_drainFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_nonRoutableFlit] and\n  [RL_ifcs_1_1_drainFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_nonRoutableFlit] and\n  [RL_ifcs_1_1_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_drainFlits &&
 	  WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 217, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_drainFlits] and\n  [RL_ifcs_1_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 216, column 73: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_drainFlits] and\n  [RL_ifcs_1_1_nonRoutableGenRsp] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_0_1_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 284, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit_1] and\n  [RL_ifcs_0_1_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 283, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit_1] and\n  [RL_ifcs_0_1_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_1_1_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 284, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit_1] and\n  [RL_ifcs_1_1_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 283, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit_1] and\n  [RL_ifcs_1_1_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_2_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_2_1_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 283, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_1_firstFlit] and\n  [RL_ifcs_2_1_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_1_firstFlit] and\n  [RL_ifcs_2_1_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
 	begin
-	  v__h12066 = $stime;
+	  v__h15067 = $stime;
 	  #0;
 	end
-    v__h12060 = v__h12066 / 32'd10;
+    v__h15061 = v__h15067 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h12060);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h15061);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
 	begin
-	  v__h12244 = $stime;
+	  v__h15245 = $stime;
 	  #0;
 	end
-    v__h12238 = v__h12244 / 32'd10;
+    v__h15239 = v__h15245 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h12238);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h15239);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
 	begin
-	  v__h12610 = $stime;
+	  v__h15611 = $stime;
 	  #0;
 	end
-    v__h12604 = v__h12610 / 32'd10;
+    v__h15605 = v__h15611 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
-	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h12604);
+	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h15605);
   end
   // synopsys translate_on
 endmodule  // mkCore

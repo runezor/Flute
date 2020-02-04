@@ -807,6 +807,7 @@ module mkCSR_RegFile(CLK,
        MUX_rg_scause$write_1__SEL_3,
        MUX_rg_sepcc$write_1__SEL_2,
        MUX_rg_sepcc$write_1__SEL_4,
+       MUX_rg_state$write_1__SEL_2,
        MUX_rg_stcc$write_1__SEL_2,
        MUX_rg_stcc$write_1__SEL_3,
        MUX_rg_stval$write_1__SEL_1,
@@ -828,8 +829,8 @@ module mkCSR_RegFile(CLK,
   reg [1 : 0] x1_avValue_fst_reserved__h20551;
   reg CASE_mav_scr_write_scr_addr_12_mav_scr_write_c_ETC__q4,
       CASE_new_priv2556_0b1_SEXT__0_CONCAT_rg_stcc_6_ETC__q3,
-      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726,
-      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829,
+      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728,
+      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831,
       IF_mav_scr_write_scr_addr_EQ_12_575_THEN_SEXT__ETC___d1769,
       x1_avValue_fst_flags__h20550,
       x__h19631;
@@ -1048,10 +1049,10 @@ module mkCSR_RegFile(CLK,
 		x_addrBits__h11827,
 		x_addrBits__h13565,
 		x_addrBits__h14148;
-  wire [5 : 0] IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2907,
-	       IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2909,
-	       IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2910,
-	       IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2912,
+  wire [5 : 0] IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2909,
+	       IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2911,
+	       IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2912,
+	       IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2914,
 	       IF_csr_trap_actions_nmi_THEN_DONTCARE_ELSE_IF__ETC___d2313,
 	       exc_code__h24796,
 	       ie_from_x__h25808,
@@ -1074,15 +1075,15 @@ module mkCSR_RegFile(CLK,
   wire [1 : 0] IF_csr_mstatus_rg_mstatus_45_BITS_12_TO_11_041_ETC___d1043,
 	       IF_rg_mepcc_64_BITS_13_TO_11_67_ULT_rg_mepcc_6_ETC___d376,
 	       IF_rg_sepcc_90_BITS_13_TO_11_93_ULT_rg_sepcc_9_ETC___d302,
-	       _theResult____h27660,
-	       _theResult____h27872,
-	       _theResult____h28084,
-	       _theResult____h28296,
-	       _theResult____h28508,
-	       _theResult____h28720,
-	       _theResult____h28932,
-	       _theResult____h29144,
-	       _theResult____h29356,
+	       _theResult____h27681,
+	       _theResult____h27893,
+	       _theResult____h28105,
+	       _theResult____h28317,
+	       _theResult____h28529,
+	       _theResult____h28741,
+	       _theResult____h28953,
+	       _theResult____h29165,
+	       _theResult____h29377,
 	       _theResult___fst__h22694,
 	       new_priv__h22556,
 	       to_y__h26024,
@@ -1101,16 +1102,16 @@ module mkCSR_RegFile(CLK,
        NOT_access_permitted_1_csr_addr_ULT_0xC03_437__ETC___d2547,
        NOT_access_permitted_2_csr_addr_ULT_0xC03_553__ETC___d2661,
        NOT_cfg_verbosity_read__504_ULE_1_505___d1506,
-       NOT_csr_mip_fv_read__94_BIT_0_796_887_OR_NOT_c_ETC___d2894,
-       NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2832,
-       NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2859,
-       NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2886,
-       NOT_csr_mip_fv_read__94_BIT_1_763_860_OR_NOT_c_ETC___d2867,
-       NOT_csr_mip_fv_read__94_BIT_3_730_833_OR_NOT_c_ETC___d2840,
-       NOT_csr_mip_fv_read__94_BIT_5_774_869_OR_NOT_c_ETC___d2876,
-       NOT_csr_mip_fv_read__94_BIT_7_741_842_OR_NOT_c_ETC___d2849,
-       NOT_csr_mip_fv_read__94_BIT_8_785_878_OR_NOT_c_ETC___d2885,
-       NOT_csr_mip_fv_read__94_BIT_9_752_851_OR_NOT_c_ETC___d2858,
+       NOT_csr_mip_fv_read__94_BIT_0_798_889_OR_NOT_c_ETC___d2896,
+       NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2834,
+       NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2861,
+       NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2888,
+       NOT_csr_mip_fv_read__94_BIT_1_765_862_OR_NOT_c_ETC___d2869,
+       NOT_csr_mip_fv_read__94_BIT_3_732_835_OR_NOT_c_ETC___d2842,
+       NOT_csr_mip_fv_read__94_BIT_5_776_871_OR_NOT_c_ETC___d2878,
+       NOT_csr_mip_fv_read__94_BIT_7_743_844_OR_NOT_c_ETC___d2851,
+       NOT_csr_mip_fv_read__94_BIT_8_787_880_OR_NOT_c_ETC___d2887,
+       NOT_csr_mip_fv_read__94_BIT_9_754_853_OR_NOT_c_ETC___d2860,
        NOT_csr_trap_actions_nmi_138_AND_csr_trap_acti_ETC___d2254,
        NOT_mav_scr_write_cap_BITS_13_TO_11_578_MINUS__ETC___d1619,
        NOT_mav_scr_write_cap_BITS_33_TO_28_592_ULT_50_ETC___d1627,
@@ -1124,39 +1125,39 @@ module mkCSR_RegFile(CLK,
        NOT_mav_scr_write_scr_addr_EQ_12_575_684_AND_N_ETC___d1759,
        SEXT__0_CONCAT_mav_scr_write_cap_BITS_85_TO_72_ETC___d1631,
        SEXT__0_CONCAT_mav_scr_write_cap_BITS_85_TO_72_ETC___d1667,
-       _0_OR_access_permitted_scr_scr_addr_EQ_1_667_66_ETC___d2687,
+       _0_OR_access_permitted_scr_scr_addr_EQ_1_667_66_ETC___d2689,
        b__h22781,
        b__h25861,
-       csr_mip_fv_read__94_BIT_0_796_AND_csr_mie_fv_r_ETC___d2805,
-       csr_mip_fv_read__94_BIT_11_712_AND_csr_mie_fv__ETC___d2729,
-       csr_mip_fv_read__94_BIT_11_712_AND_csr_mie_fv__ETC___d2795,
-       csr_mip_fv_read__94_BIT_1_763_AND_csr_mie_fv_r_ETC___d2772,
-       csr_mip_fv_read__94_BIT_3_730_AND_csr_mie_fv_r_ETC___d2739,
-       csr_mip_fv_read__94_BIT_4_807_AND_csr_mie_fv_r_ETC___d2816,
-       csr_mip_fv_read__94_BIT_5_774_AND_csr_mie_fv_r_ETC___d2783,
-       csr_mip_fv_read__94_BIT_7_741_AND_csr_mie_fv_r_ETC___d2750,
-       csr_mip_fv_read__94_BIT_8_785_AND_csr_mie_fv_r_ETC___d2794,
-       csr_mip_fv_read__94_BIT_9_752_AND_csr_mie_fv_r_ETC___d2761,
+       csr_mip_fv_read__94_BIT_0_798_AND_csr_mie_fv_r_ETC___d2807,
+       csr_mip_fv_read__94_BIT_11_714_AND_csr_mie_fv__ETC___d2731,
+       csr_mip_fv_read__94_BIT_11_714_AND_csr_mie_fv__ETC___d2797,
+       csr_mip_fv_read__94_BIT_1_765_AND_csr_mie_fv_r_ETC___d2774,
+       csr_mip_fv_read__94_BIT_3_732_AND_csr_mie_fv_r_ETC___d2741,
+       csr_mip_fv_read__94_BIT_4_809_AND_csr_mie_fv_r_ETC___d2818,
+       csr_mip_fv_read__94_BIT_5_776_AND_csr_mie_fv_r_ETC___d2785,
+       csr_mip_fv_read__94_BIT_7_743_AND_csr_mie_fv_r_ETC___d2752,
+       csr_mip_fv_read__94_BIT_8_787_AND_csr_mie_fv_r_ETC___d2796,
+       csr_mip_fv_read__94_BIT_9_754_AND_csr_mie_fv_r_ETC___d2763,
        csr_trap_actions_interrupt_AND_NOT_csr_trap_ac_ETC___d2153,
        csr_trap_actions_nmi_OR_NOT_csr_trap_actions_i_ETC___d2305,
        deleg_bit___1__h22703,
        deleg_bit___1__h22718,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2718,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2736,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2747,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2758,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2769,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2780,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2791,
-       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2802,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2717,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2735,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2746,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2757,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2768,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2779,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2790,
-       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2801,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2720,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2738,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2749,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2760,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2771,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2782,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2793,
+       interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2804,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2719,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2737,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2748,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2759,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2770,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2781,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2792,
+       interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2803,
        mav_csr_write_csr_addr_ULE_0x33F___d1015,
        mav_csr_write_csr_addr_ULE_0xB1F___d1011,
        mav_csr_write_csr_addr_ULT_0x323_014_OR_NOT_ma_ETC___d1502,
@@ -1660,7 +1661,7 @@ module mkCSR_RegFile(CLK,
 
   // value method access_permitted_scr
   assign access_permitted_scr =
-	     _0_OR_access_permitted_scr_scr_addr_EQ_1_667_66_ETC___d2687 &&
+	     _0_OR_access_permitted_scr_scr_addr_EQ_1_667_66_ETC___d2689 &&
 	     access_permitted_scr_scr_addr != 5'd0 ;
 
   // value method csr_counter_read_fault
@@ -1697,10 +1698,10 @@ module mkCSR_RegFile(CLK,
 
   // value method interrupt_pending
   assign interrupt_pending =
-	     { csr_mip_fv_read__94_BIT_11_712_AND_csr_mie_fv__ETC___d2795 ||
-	       csr_mip_fv_read__94_BIT_0_796_AND_csr_mie_fv_r_ETC___d2805 ||
-	       csr_mip_fv_read__94_BIT_4_807_AND_csr_mie_fv_r_ETC___d2816,
-	       IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2912 } ;
+	     { csr_mip_fv_read__94_BIT_11_714_AND_csr_mie_fv__ETC___d2797 ||
+	       csr_mip_fv_read__94_BIT_0_798_AND_csr_mie_fv_r_ETC___d2807 ||
+	       csr_mip_fv_read__94_BIT_4_809_AND_csr_mie_fv_r_ETC___d2818,
+	       IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2914 } ;
 
   // value method wfi_resume
   assign wfi_resume = (csr_mip$fv_read & csr_mie$fv_read) != 64'd0 ;
@@ -1822,8 +1823,7 @@ module mkCSR_RegFile(CLK,
 
   // rule RL_rl_reset_start
   assign CAN_FIRE_RL_rl_reset_start = !rg_state ;
-  assign WILL_FIRE_RL_rl_reset_start =
-	     CAN_FIRE_RL_rl_reset_start && !EN_mav_csr_write ;
+  assign WILL_FIRE_RL_rl_reset_start = MUX_rg_state$write_1__SEL_2 ;
 
   // rule RL_rl_mcycle_incr
   assign CAN_FIRE_RL_rl_mcycle_incr = 1'd1 ;
@@ -1896,6 +1896,8 @@ module mkCSR_RegFile(CLK,
   assign MUX_rg_sepcc$write_1__SEL_4 =
 	     EN_mav_csr_write &&
 	     mav_csr_write_csr_addr_ULT_0xB03_010_OR_NOT_ma_ETC___d1144 ;
+  assign MUX_rg_state$write_1__SEL_2 =
+	     CAN_FIRE_RL_rl_reset_start && !EN_mav_csr_write ;
   assign MUX_rg_stcc$write_1__SEL_2 =
 	     EN_mav_scr_write && mav_scr_write_scr_addr == 5'd12 ;
   assign MUX_rg_stcc$write_1__SEL_3 =
@@ -2274,7 +2276,7 @@ module mkCSR_RegFile(CLK,
 
   // register rg_nmi_vector
   assign rg_nmi_vector$D_IN = soc_map$m_nmivec_reset_value ;
-  assign rg_nmi_vector$EN = WILL_FIRE_RL_rl_reset_start ;
+  assign rg_nmi_vector$EN = MUX_rg_state$write_1__SEL_2 ;
 
   // register rg_satp
   assign rg_satp$D_IN =
@@ -2422,7 +2424,7 @@ module mkCSR_RegFile(CLK,
   assign csr_mie$fav_sie_write_wordxl = mav_csr_write_word ;
   assign csr_mie$fav_write_misa = 28'd135532845 ;
   assign csr_mie$fav_write_wordxl = mav_csr_write_word ;
-  assign csr_mie$EN_reset = WILL_FIRE_RL_rl_reset_start ;
+  assign csr_mie$EN_reset = MUX_rg_state$write_1__SEL_2 ;
   assign csr_mie$EN_fav_write =
 	     EN_mav_csr_write &&
 	     mav_csr_write_csr_addr_ULT_0xB03_010_OR_NOT_ma_ETC___d1215 ;
@@ -2442,7 +2444,7 @@ module mkCSR_RegFile(CLK,
   assign csr_mip$software_interrupt_req_req =
 	     software_interrupt_req_set_not_clear ;
   assign csr_mip$timer_interrupt_req_req = timer_interrupt_req_set_not_clear ;
-  assign csr_mip$EN_reset = WILL_FIRE_RL_rl_reset_start ;
+  assign csr_mip$EN_reset = MUX_rg_state$write_1__SEL_2 ;
   assign csr_mip$EN_fav_write =
 	     EN_mav_csr_write &&
 	     mav_csr_write_csr_addr_ULT_0xB03_010_OR_NOT_ma_ETC___d1321 ;
@@ -2475,37 +2477,37 @@ module mkCSR_RegFile(CLK,
 	       { csr_mstatus_rg_mstatus_45_AND_INV_1_SL_1_CONCA_ETC___d2112[63:9],
 		 csr_trap_actions_from_priv[0],
 		 csr_mstatus_rg_mstatus_45_AND_INV_1_SL_1_CONCA_ETC___d2112[7:0] } ;
-  assign IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2907 =
-	     (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2832 &&
-	      NOT_csr_mip_fv_read__94_BIT_3_730_833_OR_NOT_c_ETC___d2840 &&
-	      NOT_csr_mip_fv_read__94_BIT_7_741_842_OR_NOT_c_ETC___d2849) ?
+  assign IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2909 =
+	     (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2834 &&
+	      NOT_csr_mip_fv_read__94_BIT_3_732_835_OR_NOT_c_ETC___d2842 &&
+	      NOT_csr_mip_fv_read__94_BIT_7_743_844_OR_NOT_c_ETC___d2851) ?
 	       6'd9 :
-	       ((NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2832 &&
-		 NOT_csr_mip_fv_read__94_BIT_3_730_833_OR_NOT_c_ETC___d2840) ?
+	       ((NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2834 &&
+		 NOT_csr_mip_fv_read__94_BIT_3_732_835_OR_NOT_c_ETC___d2842) ?
 		  6'd7 :
-		  (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2832 ?
+		  (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2834 ?
 		     6'd3 :
 		     6'd11)) ;
-  assign IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2909 =
-	     (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2859 &&
-	      NOT_csr_mip_fv_read__94_BIT_1_763_860_OR_NOT_c_ETC___d2867) ?
+  assign IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2911 =
+	     (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2861 &&
+	      NOT_csr_mip_fv_read__94_BIT_1_765_862_OR_NOT_c_ETC___d2869) ?
 	       6'd5 :
-	       (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2859 ?
+	       (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2861 ?
 		  6'd1 :
-		  IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2907) ;
-  assign IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2910 =
-	     (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2859 &&
-	      NOT_csr_mip_fv_read__94_BIT_1_763_860_OR_NOT_c_ETC___d2867 &&
-	      NOT_csr_mip_fv_read__94_BIT_5_774_869_OR_NOT_c_ETC___d2876) ?
+		  IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2909) ;
+  assign IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2912 =
+	     (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2861 &&
+	      NOT_csr_mip_fv_read__94_BIT_1_765_862_OR_NOT_c_ETC___d2869 &&
+	      NOT_csr_mip_fv_read__94_BIT_5_776_871_OR_NOT_c_ETC___d2878) ?
 	       6'd8 :
-	       IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2909 ;
-  assign IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2912 =
-	     (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2886 &&
-	      NOT_csr_mip_fv_read__94_BIT_0_796_887_OR_NOT_c_ETC___d2894) ?
+	       IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2911 ;
+  assign IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2914 =
+	     (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2888 &&
+	      NOT_csr_mip_fv_read__94_BIT_0_798_889_OR_NOT_c_ETC___d2896) ?
 	       6'd4 :
-	       (NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2886 ?
+	       (NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2888 ?
 		  6'd0 :
-		  IF_NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_N_ETC___d2910) ;
+		  IF_NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_N_ETC___d2912) ;
   assign IF_SEXT__0_CONCAT_mav_scr_write_cap_BITS_85_TO_ETC___d1624 =
 	     SEXT__0_CONCAT_mav_scr_write_cap_BITS_85_TO_72_ETC___d1599[63] ?
 	       x__h18151[13:0] >= toBounds__h18554 &&
@@ -2723,56 +2725,56 @@ module mkCSR_RegFile(CLK,
 	      !csr_mstatus_rg_mstatus[20]) ;
   assign NOT_cfg_verbosity_read__504_ULE_1_505___d1506 =
 	     cfg_verbosity > 4'd1 ;
-  assign NOT_csr_mip_fv_read__94_BIT_0_796_887_OR_NOT_c_ETC___d2894 =
+  assign NOT_csr_mip_fv_read__94_BIT_0_798_889_OR_NOT_c_ETC___d2896 =
 	     !csr_mip$fv_read[0] || !csr_mie$fv_read[0] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2801 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2802 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2832 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2803 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2804 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2834 =
 	     !csr_mip$fv_read[11] || !csr_mie$fv_read[11] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2717 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2718 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2859 =
-	     NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2832 &&
-	     NOT_csr_mip_fv_read__94_BIT_3_730_833_OR_NOT_c_ETC___d2840 &&
-	     NOT_csr_mip_fv_read__94_BIT_7_741_842_OR_NOT_c_ETC___d2849 &&
-	     NOT_csr_mip_fv_read__94_BIT_9_752_851_OR_NOT_c_ETC___d2858 ;
-  assign NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2886 =
-	     NOT_csr_mip_fv_read__94_BIT_11_712_818_OR_NOT__ETC___d2859 &&
-	     NOT_csr_mip_fv_read__94_BIT_1_763_860_OR_NOT_c_ETC___d2867 &&
-	     NOT_csr_mip_fv_read__94_BIT_5_774_869_OR_NOT_c_ETC___d2876 &&
-	     NOT_csr_mip_fv_read__94_BIT_8_785_878_OR_NOT_c_ETC___d2885 ;
-  assign NOT_csr_mip_fv_read__94_BIT_1_763_860_OR_NOT_c_ETC___d2867 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2719 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2720 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2861 =
+	     NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2834 &&
+	     NOT_csr_mip_fv_read__94_BIT_3_732_835_OR_NOT_c_ETC___d2842 &&
+	     NOT_csr_mip_fv_read__94_BIT_7_743_844_OR_NOT_c_ETC___d2851 &&
+	     NOT_csr_mip_fv_read__94_BIT_9_754_853_OR_NOT_c_ETC___d2860 ;
+  assign NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2888 =
+	     NOT_csr_mip_fv_read__94_BIT_11_714_820_OR_NOT__ETC___d2861 &&
+	     NOT_csr_mip_fv_read__94_BIT_1_765_862_OR_NOT_c_ETC___d2869 &&
+	     NOT_csr_mip_fv_read__94_BIT_5_776_871_OR_NOT_c_ETC___d2878 &&
+	     NOT_csr_mip_fv_read__94_BIT_8_787_880_OR_NOT_c_ETC___d2887 ;
+  assign NOT_csr_mip_fv_read__94_BIT_1_765_862_OR_NOT_c_ETC___d2869 =
 	     !csr_mip$fv_read[1] || !csr_mie$fv_read[1] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2768 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2769 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_3_730_833_OR_NOT_c_ETC___d2840 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2770 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2771 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_3_732_835_OR_NOT_c_ETC___d2842 =
 	     !csr_mip$fv_read[3] || !csr_mie$fv_read[3] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2735 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2736 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_5_774_869_OR_NOT_c_ETC___d2876 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2737 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2738 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_5_776_871_OR_NOT_c_ETC___d2878 =
 	     !csr_mip$fv_read[5] || !csr_mie$fv_read[5] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2779 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2780 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_7_741_842_OR_NOT_c_ETC___d2849 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2781 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2782 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_7_743_844_OR_NOT_c_ETC___d2851 =
 	     !csr_mip$fv_read[7] || !csr_mie$fv_read[7] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2746 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2747 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_8_785_878_OR_NOT_c_ETC___d2885 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2748 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2749 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_8_787_880_OR_NOT_c_ETC___d2887 =
 	     !csr_mip$fv_read[8] || !csr_mie$fv_read[8] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2790 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2791 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
-  assign NOT_csr_mip_fv_read__94_BIT_9_752_851_OR_NOT_c_ETC___d2858 =
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2792 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2793 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
+  assign NOT_csr_mip_fv_read__94_BIT_9_754_853_OR_NOT_c_ETC___d2860 =
 	     !csr_mip$fv_read[9] || !csr_mie$fv_read[9] ||
-	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2757 &&
-	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2758 ||
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829) ;
+	     !interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2759 &&
+	     (!interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2760 ||
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831) ;
   assign NOT_csr_trap_actions_nmi_138_AND_csr_trap_acti_ETC___d2254 =
 	     !csr_trap_actions_nmi && csr_trap_actions_interrupt &&
 	     exc_code__h24796 != 6'd0 &&
@@ -2905,7 +2907,7 @@ module mkCSR_RegFile(CLK,
 	     { result_d_address__h25261,
 	       result_d_addrBits__h25262,
 	       (new_priv__h22556 == 2'b11) ? rg_mtcc[71:0] : rg_stcc[71:0] } ;
-  assign _0_OR_access_permitted_scr_scr_addr_EQ_1_667_66_ETC___d2687 =
+  assign _0_OR_access_permitted_scr_scr_addr_EQ_1_667_66_ETC___d2689 =
 	     (access_permitted_scr_scr_addr == 5'd1 ||
 	      access_permitted_scr_scr_addr == 5'd12 ||
 	      access_permitted_scr_scr_addr == 5'd13 ||
@@ -2916,20 +2918,20 @@ module mkCSR_RegFile(CLK,
 	      access_permitted_scr_scr_addr == 5'd31 ||
 	      access_permitted_scr_scr_addr == 5'd30) &&
 	     access_permitted_scr_access_sys_regs &&
-	     access_permitted_scr_priv == 2'd3 ;
+	     access_permitted_scr_priv >= access_permitted_scr_scr_addr[4:3] ;
   assign _theResult_____2__h24013 =
 	     csr_trap_actions_interrupt_AND_NOT_csr_trap_ac_ETC___d2153 ?
 	       exc_pc___1__h24103 :
 	       exc_pc__h24011 ;
-  assign _theResult____h27660 = rg_mideleg[11] ? 2'b01 : 2'b11 ;
-  assign _theResult____h27872 = rg_mideleg[3] ? 2'b01 : 2'b11 ;
-  assign _theResult____h28084 = rg_mideleg[7] ? 2'b01 : 2'b11 ;
-  assign _theResult____h28296 = rg_mideleg[9] ? 2'b01 : 2'b11 ;
-  assign _theResult____h28508 = rg_mideleg[1] ? 2'b01 : 2'b11 ;
-  assign _theResult____h28720 = rg_mideleg[5] ? 2'b01 : 2'b11 ;
-  assign _theResult____h28932 = rg_mideleg[8] ? 2'b01 : 2'b11 ;
-  assign _theResult____h29144 = rg_mideleg[0] ? 2'b01 : 2'b11 ;
-  assign _theResult____h29356 = rg_mideleg[4] ? 2'b01 : 2'b11 ;
+  assign _theResult____h27681 = rg_mideleg[11] ? 2'b01 : 2'b11 ;
+  assign _theResult____h27893 = rg_mideleg[3] ? 2'b01 : 2'b11 ;
+  assign _theResult____h28105 = rg_mideleg[7] ? 2'b01 : 2'b11 ;
+  assign _theResult____h28317 = rg_mideleg[9] ? 2'b01 : 2'b11 ;
+  assign _theResult____h28529 = rg_mideleg[1] ? 2'b01 : 2'b11 ;
+  assign _theResult____h28741 = rg_mideleg[5] ? 2'b01 : 2'b11 ;
+  assign _theResult____h28953 = rg_mideleg[8] ? 2'b01 : 2'b11 ;
+  assign _theResult____h29165 = rg_mideleg[0] ? 2'b01 : 2'b11 ;
+  assign _theResult____h29377 = rg_mideleg[4] ? 2'b01 : 2'b11 ;
   assign _theResult___fst__h22694 =
 	     (csr_trap_actions_interrupt ?
 		deleg_bit___1__h22703 :
@@ -2999,59 +3001,59 @@ module mkCSR_RegFile(CLK,
 	     { 2'd0, bot__h19328 } + { 2'd0, offsetAddr__h17264 } ;
   assign capUnpacked_capFat_address__h18277 =
 	     { 2'd0, bot__h19328 } + { 2'd0, offsetAddr__h17902 } ;
-  assign csr_mip_fv_read__94_BIT_0_796_AND_csr_mie_fv_r_ETC___d2805 =
+  assign csr_mip_fv_read__94_BIT_0_798_AND_csr_mie_fv_r_ETC___d2807 =
 	     csr_mip$fv_read[0] && csr_mie$fv_read[0] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2801 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2802 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_11_712_AND_csr_mie_fv__ETC___d2729 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2803 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2804 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_11_714_AND_csr_mie_fv__ETC___d2731 =
 	     csr_mip$fv_read[11] && csr_mie$fv_read[11] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2717 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2718 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_11_712_AND_csr_mie_fv__ETC___d2795 =
-	     csr_mip_fv_read__94_BIT_11_712_AND_csr_mie_fv__ETC___d2729 ||
-	     csr_mip_fv_read__94_BIT_3_730_AND_csr_mie_fv_r_ETC___d2739 ||
-	     csr_mip_fv_read__94_BIT_7_741_AND_csr_mie_fv_r_ETC___d2750 ||
-	     csr_mip_fv_read__94_BIT_9_752_AND_csr_mie_fv_r_ETC___d2761 ||
-	     csr_mip_fv_read__94_BIT_1_763_AND_csr_mie_fv_r_ETC___d2772 ||
-	     csr_mip_fv_read__94_BIT_5_774_AND_csr_mie_fv_r_ETC___d2783 ||
-	     csr_mip_fv_read__94_BIT_8_785_AND_csr_mie_fv_r_ETC___d2794 ;
-  assign csr_mip_fv_read__94_BIT_1_763_AND_csr_mie_fv_r_ETC___d2772 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2719 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2720 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_11_714_AND_csr_mie_fv__ETC___d2797 =
+	     csr_mip_fv_read__94_BIT_11_714_AND_csr_mie_fv__ETC___d2731 ||
+	     csr_mip_fv_read__94_BIT_3_732_AND_csr_mie_fv_r_ETC___d2741 ||
+	     csr_mip_fv_read__94_BIT_7_743_AND_csr_mie_fv_r_ETC___d2752 ||
+	     csr_mip_fv_read__94_BIT_9_754_AND_csr_mie_fv_r_ETC___d2763 ||
+	     csr_mip_fv_read__94_BIT_1_765_AND_csr_mie_fv_r_ETC___d2774 ||
+	     csr_mip_fv_read__94_BIT_5_776_AND_csr_mie_fv_r_ETC___d2785 ||
+	     csr_mip_fv_read__94_BIT_8_787_AND_csr_mie_fv_r_ETC___d2796 ;
+  assign csr_mip_fv_read__94_BIT_1_765_AND_csr_mie_fv_r_ETC___d2774 =
 	     csr_mip$fv_read[1] && csr_mie$fv_read[1] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2768 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2769 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_3_730_AND_csr_mie_fv_r_ETC___d2739 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2770 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2771 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_3_732_AND_csr_mie_fv_r_ETC___d2741 =
 	     csr_mip$fv_read[3] && csr_mie$fv_read[3] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2735 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2736 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_4_807_AND_csr_mie_fv_r_ETC___d2816 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2737 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2738 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_4_809_AND_csr_mie_fv_r_ETC___d2818 =
 	     csr_mip$fv_read[4] && csr_mie$fv_read[4] &&
-	     (interrupt_pending_cur_priv < _theResult____h29356 ||
-	      interrupt_pending_cur_priv == _theResult____h29356 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_5_774_AND_csr_mie_fv_r_ETC___d2783 =
+	     (interrupt_pending_cur_priv < _theResult____h29377 ||
+	      interrupt_pending_cur_priv == _theResult____h29377 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_5_776_AND_csr_mie_fv_r_ETC___d2785 =
 	     csr_mip$fv_read[5] && csr_mie$fv_read[5] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2779 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2780 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_7_741_AND_csr_mie_fv_r_ETC___d2750 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2781 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2782 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_7_743_AND_csr_mie_fv_r_ETC___d2752 =
 	     csr_mip$fv_read[7] && csr_mie$fv_read[7] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2746 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2747 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_8_785_AND_csr_mie_fv_r_ETC___d2794 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2748 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2749 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_8_787_AND_csr_mie_fv_r_ETC___d2796 =
 	     csr_mip$fv_read[8] && csr_mie$fv_read[8] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2790 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2791 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
-  assign csr_mip_fv_read__94_BIT_9_752_AND_csr_mie_fv_r_ETC___d2761 =
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2792 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2793 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
+  assign csr_mip_fv_read__94_BIT_9_754_AND_csr_mie_fv_r_ETC___d2763 =
 	     csr_mip$fv_read[9] && csr_mie$fv_read[9] &&
-	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2757 ||
-	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2758 &&
-	      IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726) ;
+	     (interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2759 ||
+	      interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2760 &&
+	      IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728) ;
   assign csr_mstatus_rg_mstatus_45_AND_INV_1_SL_0_CONCA_ETC___d2391 =
 	     x__h25857 | mask__h25845 ;
   assign csr_mstatus_rg_mstatus_45_AND_INV_1_SL_1_CONCA_ETC___d2112 =
@@ -3176,38 +3178,38 @@ module mkCSR_RegFile(CLK,
   assign in__h6438 = rg_mtcc[151:86] & y__h6455 ;
   assign in__h6658 = rg_mepcc[151:86] & y__h6675 ;
   assign in__h6893 = rg_dpcc[161:96] & y__h6910 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2718 =
-	     interrupt_pending_cur_priv == _theResult____h27660 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2736 =
-	     interrupt_pending_cur_priv == _theResult____h27872 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2747 =
-	     interrupt_pending_cur_priv == _theResult____h28084 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2758 =
-	     interrupt_pending_cur_priv == _theResult____h28296 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2769 =
-	     interrupt_pending_cur_priv == _theResult____h28508 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2780 =
-	     interrupt_pending_cur_priv == _theResult____h28720 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2791 =
-	     interrupt_pending_cur_priv == _theResult____h28932 ;
-  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2802 =
-	     interrupt_pending_cur_priv == _theResult____h29144 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2717 =
-	     interrupt_pending_cur_priv < _theResult____h27660 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2735 =
-	     interrupt_pending_cur_priv < _theResult____h27872 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2746 =
-	     interrupt_pending_cur_priv < _theResult____h28084 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2757 =
-	     interrupt_pending_cur_priv < _theResult____h28296 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2768 =
-	     interrupt_pending_cur_priv < _theResult____h28508 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2779 =
-	     interrupt_pending_cur_priv < _theResult____h28720 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2790 =
-	     interrupt_pending_cur_priv < _theResult____h28932 ;
-  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2801 =
-	     interrupt_pending_cur_priv < _theResult____h29144 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2720 =
+	     interrupt_pending_cur_priv == _theResult____h27681 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2738 =
+	     interrupt_pending_cur_priv == _theResult____h27893 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2749 =
+	     interrupt_pending_cur_priv == _theResult____h28105 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2760 =
+	     interrupt_pending_cur_priv == _theResult____h28317 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2771 =
+	     interrupt_pending_cur_priv == _theResult____h28529 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2782 =
+	     interrupt_pending_cur_priv == _theResult____h28741 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2793 =
+	     interrupt_pending_cur_priv == _theResult____h28953 ;
+  assign interrupt_pending_cur_priv_EQ_IF_rg_mideleg_27_ETC___d2804 =
+	     interrupt_pending_cur_priv == _theResult____h29165 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2719 =
+	     interrupt_pending_cur_priv < _theResult____h27681 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2737 =
+	     interrupt_pending_cur_priv < _theResult____h27893 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2748 =
+	     interrupt_pending_cur_priv < _theResult____h28105 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2759 =
+	     interrupt_pending_cur_priv < _theResult____h28317 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2770 =
+	     interrupt_pending_cur_priv < _theResult____h28529 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2781 =
+	     interrupt_pending_cur_priv < _theResult____h28741 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2792 =
+	     interrupt_pending_cur_priv < _theResult____h28953 ;
+  assign interrupt_pending_cur_priv_ULT_IF_rg_mideleg_2_ETC___d2803 =
+	     interrupt_pending_cur_priv < _theResult____h29165 ;
   assign length__h20181 = { 50'd0, x__h20186 } << mav_scr_write_cap[33:28] ;
   assign mask__h19326 = 50'h3FFFFFFFFFFFF << mav_scr_write_cap[33:28] ;
   assign mask__h19448 = 52'hFFFFFFFFFFFFF << mav_scr_write_cap[33:28] ;
@@ -3988,12 +3990,12 @@ module mkCSR_RegFile(CLK,
   begin
     case (interrupt_pending_cur_priv)
       2'b0:
-	  IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726 =
+	  IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728 =
 	      csr_mstatus_rg_mstatus[0];
       2'b01:
-	  IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726 =
+	  IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728 =
 	      csr_mstatus_rg_mstatus[1];
-      default: IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2726 =
+      default: IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2728 =
 		   interrupt_pending_cur_priv == 2'b11 &&
 		   csr_mstatus_rg_mstatus[3];
     endcase
@@ -4002,12 +4004,12 @@ module mkCSR_RegFile(CLK,
   begin
     case (interrupt_pending_cur_priv)
       2'b0:
-	  IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829 =
+	  IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831 =
 	      !csr_mstatus_rg_mstatus[0];
       2'b01:
-	  IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829 =
+	  IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831 =
 	      !csr_mstatus_rg_mstatus[1];
-      default: IF_interrupt_pending_cur_priv_EQ_0b0_719_THEN__ETC___d2829 =
+      default: IF_interrupt_pending_cur_priv_EQ_0b0_721_THEN__ETC___d2831 =
 		   interrupt_pending_cur_priv != 2'b11 ||
 		   !csr_mstatus_rg_mstatus[3];
     endcase
@@ -5518,7 +5520,9 @@ module mkCSR_RegFile(CLK,
 	  mav_scr_write_scr_addr != 5'd31 &&
 	  mav_scr_write_scr_addr != 5'd30 &&
 	  NOT_cfg_verbosity_read__504_ULE_1_505___d1506)
-	$write("%0d: ERROR: SCR-write addr 0x%0h val ");
+	$write("%0d: ERROR: SCR-write addr 0x%0h val ",
+	       rg_mcycle,
+	       mav_scr_write_scr_addr);
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_mav_scr_write && mav_scr_write_scr_addr != 5'd12 &&
 	  mav_scr_write_scr_addr != 5'd13 &&
@@ -5836,7 +5840,7 @@ module mkCSR_RegFile(CLK,
 	  mav_scr_write_scr_addr != 5'd31 &&
 	  mav_scr_write_scr_addr != 5'd30 &&
 	  NOT_cfg_verbosity_read__504_ULE_1_505___d1506)
-	$write(" not successful", rg_mcycle, mav_scr_write_scr_addr, "\n");
+	$write(" not successful", "\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (NOT_cfg_verbosity_read__504_ULE_1_505___d1506)
 	$display("%0d: CSR_RegFile: m_external_interrupt_req: %x",
