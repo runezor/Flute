@@ -351,7 +351,7 @@ function Priv_Mode fv_new_priv_on_exception (MISA       misa,
 					     Priv_Mode  from_priv,
 					     Bool       interrupt,
 					     Exc_Code   exc_code,
-					     Bit #(16)  medeleg,
+					     Bit #(29)  medeleg,
 					     Bit #(12)  mideleg,
 					     Bit #(16)  sedeleg,
 					     Bit #(12)  sideleg);

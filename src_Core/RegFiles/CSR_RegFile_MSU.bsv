@@ -362,10 +362,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(Word)       rg_stval     <- mkRegU;
    Reg #(WordXL)     rg_satp      <- mkRegU;
 
-   Reg #(Bit #(16))  rg_medeleg   <- mkRegU;    // TODO: also in M-U systems with user-level traps
+   Reg #(Bit #(29))  rg_medeleg   <- mkRegU;    // TODO: also in M-U systems with user-level traps
    Reg #(Bit #(12))  rg_mideleg   <- mkRegU;    // TODO: also in M-U systems with user-level traps
 `else
-   Bit #(16)         rg_medeleg   = 0;
+   Bit #(29)         rg_medeleg   = 0;
    Bit #(12)         rg_mideleg   = 0;
 `endif
 
@@ -980,7 +980,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       rg_satp <= result;
 				    end
 	       csr_addr_medeleg:    begin
-				       result      = (wordxl & 'h_B3FF);  // 16 bits relevant and some are 0
+				       result      = (wordxl & 'h_1000B3FF);  // 16 bits relevant and some are 0, plus CHERI exception at bit 28
 				       rg_medeleg <= truncate (result);
 				    end
 	       csr_addr_mideleg:    begin
@@ -1270,7 +1270,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    function Action fa_show_trap_csrs (Priv_Mode priv,
 				      WordXL ip, WordXL ie,
-				      Bit #(16) edeleg, Bit #(12) ideleg,
+				      Bit #(29) edeleg, Bit #(12) ideleg,
 				      MCause cause, WordXL status, MTVec tvec,
 				      WordXL epc, WordXL tval);
       action
