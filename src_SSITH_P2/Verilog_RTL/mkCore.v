@@ -5958,9 +5958,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
+	     debug_module$RDY_hart0_reset_client_request_get &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
-	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;

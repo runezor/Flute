@@ -807,7 +807,6 @@ module mkCSR_RegFile(CLK,
        MUX_rg_scause$write_1__SEL_3,
        MUX_rg_sepcc$write_1__SEL_2,
        MUX_rg_sepcc$write_1__SEL_4,
-       MUX_rg_state$write_1__SEL_2,
        MUX_rg_stcc$write_1__SEL_2,
        MUX_rg_stcc$write_1__SEL_3,
        MUX_rg_stval$write_1__SEL_1,
@@ -1823,7 +1822,8 @@ module mkCSR_RegFile(CLK,
 
   // rule RL_rl_reset_start
   assign CAN_FIRE_RL_rl_reset_start = !rg_state ;
-  assign WILL_FIRE_RL_rl_reset_start = MUX_rg_state$write_1__SEL_2 ;
+  assign WILL_FIRE_RL_rl_reset_start =
+	     CAN_FIRE_RL_rl_reset_start && !EN_mav_csr_write ;
 
   // rule RL_rl_mcycle_incr
   assign CAN_FIRE_RL_rl_mcycle_incr = 1'd1 ;
@@ -1896,8 +1896,6 @@ module mkCSR_RegFile(CLK,
   assign MUX_rg_sepcc$write_1__SEL_4 =
 	     EN_mav_csr_write &&
 	     mav_csr_write_csr_addr_ULT_0xB03_010_OR_NOT_ma_ETC___d1144 ;
-  assign MUX_rg_state$write_1__SEL_2 =
-	     CAN_FIRE_RL_rl_reset_start && !EN_mav_csr_write ;
   assign MUX_rg_stcc$write_1__SEL_2 =
 	     EN_mav_scr_write && mav_scr_write_scr_addr == 5'd12 ;
   assign MUX_rg_stcc$write_1__SEL_3 =
@@ -2276,7 +2274,7 @@ module mkCSR_RegFile(CLK,
 
   // register rg_nmi_vector
   assign rg_nmi_vector$D_IN = soc_map$m_nmivec_reset_value ;
-  assign rg_nmi_vector$EN = MUX_rg_state$write_1__SEL_2 ;
+  assign rg_nmi_vector$EN = WILL_FIRE_RL_rl_reset_start ;
 
   // register rg_satp
   assign rg_satp$D_IN =
@@ -2424,7 +2422,7 @@ module mkCSR_RegFile(CLK,
   assign csr_mie$fav_sie_write_wordxl = mav_csr_write_word ;
   assign csr_mie$fav_write_misa = 28'd135532845 ;
   assign csr_mie$fav_write_wordxl = mav_csr_write_word ;
-  assign csr_mie$EN_reset = MUX_rg_state$write_1__SEL_2 ;
+  assign csr_mie$EN_reset = WILL_FIRE_RL_rl_reset_start ;
   assign csr_mie$EN_fav_write =
 	     EN_mav_csr_write &&
 	     mav_csr_write_csr_addr_ULT_0xB03_010_OR_NOT_ma_ETC___d1215 ;
@@ -2444,7 +2442,7 @@ module mkCSR_RegFile(CLK,
   assign csr_mip$software_interrupt_req_req =
 	     software_interrupt_req_set_not_clear ;
   assign csr_mip$timer_interrupt_req_req = timer_interrupt_req_set_not_clear ;
-  assign csr_mip$EN_reset = MUX_rg_state$write_1__SEL_2 ;
+  assign csr_mip$EN_reset = WILL_FIRE_RL_rl_reset_start ;
   assign csr_mip$EN_fav_write =
 	     EN_mav_csr_write &&
 	     mav_csr_write_csr_addr_ULT_0xB03_010_OR_NOT_ma_ETC___d1321 ;
