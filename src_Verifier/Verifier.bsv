@@ -68,13 +68,25 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoCondensed(
         rvfi_insn:      data_s2_s3.instr,
         rvfi_rs1_addr:  s1.rs1_addr,
         rvfi_rs2_addr:  s1.rs2_addr,
+`ifdef ISA_F
+        rvfi_rd_addr:   data_s2_s3.rd_in_fpr ? 0 : (data_s2_s3.rd_valid ? data_s2_s3.rd : 0),
+`else
         rvfi_rd_addr:   data_s2_s3.rd_valid ? data_s2_s3.rd : 0,
+`endif
         rvfi_rs1_data:  s1.rs1_data,
         rvfi_rs2_data:  s1.rs2_data,
 `ifdef ISA_CHERI
+`ifdef ISA_F
+        rvfi_rd_wdata:  data_s2_s3.rd == 0 ? 0 : (data_s2_s3.rd_in_fpr ? 0 : extract_int(data_s2_s3.rd_val)),
+`else
         rvfi_rd_wdata:  data_s2_s3.rd == 0 ? 0 : extract_int(data_s2_s3.rd_val),
+`endif
+`else
+`ifdef ISA_F
+        rvfi_rd_wdata:  data_s2_s3.rd == 0 ? 0 : (data_s2_s3.rd_in_fpr ? 0 : data_s2_s3.rd_val),
 `else
         rvfi_rd_wdata:  data_s2_s3.rd == 0 ? 0 : data_s2_s3.rd_val,
+`endif
 `endif
         rvfi_pc_rdata:  getPC(data_s2_s3.pcc),
         rvfi_pc_wdata:  isTrap ? trapPC : s1.pc_wdata,
