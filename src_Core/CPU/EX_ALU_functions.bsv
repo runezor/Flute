@@ -108,7 +108,8 @@ typedef enum {
   LITERAL,
   SET_OFFSET,
   SET_BOUNDS,
-  SET_ADDR
+  SET_ADDR,
+  GET_PRECISION
   } Output_Select deriving (Bits, FShow, Eq);
 `endif
 
@@ -1755,6 +1756,14 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                 f5rs2_cap_CGetSealed: begin
                     alu_outputs.val1 = zeroExtend(pack(isSealed(cs1_val)));
                 end
+                f5rs2_cap_CRRL: begin
+                    alu_outputs.val1_source = GET_PRECISION;
+                    alu_outputs.internal_op_flag = True;
+                end
+                f5rs2_cap_CRAM: begin
+                    alu_outputs.val1_source = GET_PRECISION;
+                    alu_outputs.internal_op_flag = False;
+                end
                 f5rs2_cap_CMove: begin
                     alu_outputs.cap_val1 = cs1_val;
                     alu_outputs.val1_cap_not_int = True;
@@ -1828,6 +1837,14 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
         alu_outputs.check_inclusive = True;
         alu_outputs.check_address_low = getAddr(cs1_val);
         alu_outputs.check_address_high = zeroExtend(getAddr(cs1_val)) + zeroExtend(alu_outputs.internal_op2);
+    end
+    GET_PRECISION: begin
+        CapReg nullCapReg = nullCap;
+        let result = getRepresentableAlignmentMask(nullCapReg, inputs.rs1_val);
+        if (alu_outputs.internal_op_flag) begin
+            result = (inputs.rs1_val + ~result) & result;
+        end
+        alu_outputs.val1 = result;
     end
     SET_ADDR: begin
         let result = setAddr(cs1_val, alu_outputs.internal_op2);
