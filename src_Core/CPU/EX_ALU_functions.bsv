@@ -1032,13 +1032,16 @@ function ALU_Outputs fv_SYSTEM (ALU_Inputs inputs);
 
 	    // MRET instruction
 	    else if (   (inputs.cur_priv >= m_Priv_Mode)
-		     && (inputs.decoded_instr.imm12_I == f12_MRET)
-`ifdef ISA_CHERI
-         && getHardPerms(inputs.pcc).accessSysRegs
-`endif
-                                               )
+		     && (inputs.decoded_instr.imm12_I == f12_MRET))
 	       begin
-		  alu_outputs.control = CONTROL_MRET;
+                  if (getHardPerms(inputs.pcc).accessSysRegs) begin
+                     alu_outputs.control = CONTROL_MRET;
+                  end else begin
+                     alu_outputs.control = CONTROL_TRAP;
+                     alu_outputs.exc_code = exc_code_CHERI;
+                     alu_outputs.cheri_exc_code = exc_code_CHERI_SysRegsPerm;
+                     alu_outputs.cheri_exc_reg = {1'b1, scr_addr_PCC};
+                  end
 	       end
 
 	    // SRET instruction
@@ -1047,7 +1050,14 @@ function ALU_Outputs fv_SYSTEM (ALU_Inputs inputs);
 			     && (inputs.mstatus [mstatus_tsr_bitpos] == 0)))
 		     && (inputs.decoded_instr.imm12_I == f12_SRET))
 	       begin
-		  alu_outputs.control = CONTROL_SRET;
+                  if (getHardPerms(inputs.pcc).accessSysRegs) begin
+                     alu_outputs.control = CONTROL_SRET;
+                  end else begin
+                     alu_outputs.control = CONTROL_TRAP;
+                     alu_outputs.exc_code = exc_code_CHERI;
+                     alu_outputs.cheri_exc_code = exc_code_CHERI_SysRegsPerm;
+                     alu_outputs.cheri_exc_reg = {1'b1, scr_addr_PCC};
+                  end
 	       end
 
 
