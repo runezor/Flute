@@ -573,7 +573,7 @@ module mkFBox_Core(CLK,
 		res__h202104,
 		res__h203926,
 		res__h204710,
-		res__h204864,
+		res__h204907,
 		res__h42283,
 		res__h42520,
 		res__h47670,
@@ -8645,7 +8645,7 @@ module mkFBox_Core(CLK,
 	       64'd1 :
 	       64'd0 ;
   assign res__h204710 = requestR[191] ? 64'd2 : 64'd64 ;
-  assign res__h204864 = { 32'hFFFFFFFF, fpu$server_core_response_get[36:5] } ;
+  assign res__h204907 = { 32'hFFFFFFFF, fpu$server_core_response_get[36:5] } ;
   assign res__h42283 =
 	     { 32'hFFFFFFFF,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38 } ;
@@ -8968,8 +8968,14 @@ module mkFBox_Core(CLK,
 		  IF_requestR_3_BITS_190_TO_180_608_EQ_0_618_AND_ETC___d5294) ;
   assign x__h204831 =
 	     fpu$server_core_response_get[69] ?
-	       res__h204864 :
-	       fpu$server_core_response_get[68:5] ;
+	       ((fpu$server_core_response_get[35:28] == 8'd255 &&
+		 fpu$server_core_response_get[27:5] != 23'd0) ?
+		  64'hFFFFFFFF7FC00000 :
+		  res__h204907) :
+	       ((fpu$server_core_response_get[67:57] == 11'd2047 &&
+		 fpu$server_core_response_get[56:5] != 52'd0) ?
+		  64'h7FF8000000000000 :
+		  fpu$server_core_response_get[68:5]) ;
   assign x__h23336 =
 	     _64_MINUS_0_CONCAT_IF_requestR_3_BIT_191_47_THE_ETC___d923 +
 	     9'd127 ;
