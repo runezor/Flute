@@ -51,7 +51,7 @@ endinterface
 typedef 'h4000_0000 Bytes_Per_Mem;
 `ifdef RVFI_DII
 typedef 'h0000_0000 Zeroed_0_start;
-typedef 'h0001_0000 RVFI_DII_Mem_Size;
+typedef RVFI_DII_Mem_Size Zeroed_0_end;
 typedef 'h3f00_0000 Zeroed_1_start;
 typedef 'h3fff_ff00 Zeroed_1_end;
 `endif

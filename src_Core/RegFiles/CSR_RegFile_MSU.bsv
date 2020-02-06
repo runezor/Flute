@@ -311,14 +311,14 @@ deriving (Eq, Bits, FShow);
 
 // ================================================================
 
+(* synthesize *)
+module mkCSR_RegFile (CSR_RegFile_IFC);
+
 `ifdef RVFI_DII
     let mkCSRReg = mkReg(unpack(0));
 `else
     let mkCSRReg = mkRegU;
 `endif
-
-(* synthesize *)
-module mkCSR_RegFile (CSR_RegFile_IFC);
 
    Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (0);
    Reg #(RF_State) rg_state      <- mkReg (RF_RESET_START);
