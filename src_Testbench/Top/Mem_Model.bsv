@@ -51,7 +51,7 @@ endinterface
 typedef 'h4000_0000 Bytes_Per_Mem;
 `ifdef RVFI_DII
 typedef 'h0000_0000 Zeroed_0_start;
-typedef 'h0001_0000 Zeroed_0_end;
+typedef 'h0001_0000 RVFI_DII_Mem_Size;
 typedef 'h3f00_0000 Zeroed_1_start;
 typedef 'h3fff_ff00 Zeroed_1_end;
 `endif
@@ -96,17 +96,9 @@ module mkMem_Model (Mem_Model_IFC);
 	    else if (req.write) begin
 `ifdef RVFI_DII
             if (req.address >= zeroed_0_start && req.address < zeroed_0_end && zeroes_0[req.address - zeroed_0_start] == 0) begin
-                for (Integer byteidx = 0; 8 * byteidx < valueOf(Bits_per_Raw_Mem_Word); byteidx = byteidx + 1) begin
-                    req.data[byteidx] = req.byteen[byteidx] == 1 ? req.data[byteidx] : 0;
-                    req.byteen[byteidx] = 1;
-                end
                 zeroes_0[req.address - zeroed_0_start] <= 1;
             end
             if (req.address >= zeroed_1_start && req.address < zeroed_1_end && zeroes_1[req.address - zeroed_1_start] == 0) begin
-                for (Integer byteidx = 0; 8 * byteidx < valueOf(Bits_per_Raw_Mem_Word); byteidx = byteidx + 1) begin
-                    req.data[byteidx] = req.byteen[byteidx] == 1 ? req.data[byteidx] : 0;
-                    req.byteen[byteidx] = 1;
-                end
                 zeroes_1[req.address - zeroed_1_start] <= 1;
             end
 `endif

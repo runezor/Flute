@@ -311,6 +311,12 @@ deriving (Eq, Bits, FShow);
 
 // ================================================================
 
+`ifdef RVFI_DII
+    let mkCSRReg = mkReg(unpack(0));
+`else
+    let mkCSRReg = mkRegU;
+`endif
+
 (* synthesize *)
 module mkCSR_RegFile (CSR_RegFile_IFC);
 
@@ -325,8 +331,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    // CSRs
    // User-mode CSRs
 `ifdef ISA_F
-   Reg #(Bit #(5)) rg_fflags <- mkRegU;    // floating point flags
-   Reg #(Bit #(3)) rg_frm    <- mkRegU;    // floating point rounding mode
+   Reg #(Bit #(5)) rg_fflags <- mkCSRReg;    // floating point flags
+   Reg #(Bit #(3)) rg_frm    <- mkCSRReg;    // floating point rounding mode
 `endif
 
    // Supervisor-mode CSRs
@@ -339,10 +345,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    // scounteren hardwired to 0 for now
 
-   Reg #(Word)       rg_sscratch  <- mkRegU;
-   Reg #(MCause)     rg_scause    <- mkRegU;
+   Reg #(Word)       rg_sscratch  <- mkCSRReg;
+   Reg #(MCause)     rg_scause    <- mkCSRReg;
 `ifdef ISA_CHERI
-   Reg #(XCCSR)      rg_sccsr     <- mkRegU;
+   Reg #(XCCSR)      rg_sccsr     <- mkCSRReg;
    Reg #(CapReg)     rg_stcc      <- mkReg(nullCap);
    CapPipe           rg_stcc_unpacked = cast(rg_stcc);
    Reg #(CapReg)     rg_stdc      <- mkReg(nullCap);
@@ -355,15 +361,15 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    let               rg_stvec = word_to_mtvec(getOffset(rg_stcc_unpacked));
    let               rg_sepc  = getOffset(rg_sepcc_unpacked);
 `else
-   Reg #(MTVec)      rg_stvec     <- mkRegU;
-   Reg #(Word)       rg_sepc      <- mkRegU;
+   Reg #(MTVec)      rg_stvec     <- mkCSRReg;
+   Reg #(Word)       rg_sepc      <- mkCSRReg;
 `endif
 
-   Reg #(Word)       rg_stval     <- mkRegU;
-   Reg #(WordXL)     rg_satp      <- mkRegU;
+   Reg #(Word)       rg_stval     <- mkCSRReg;
+   Reg #(WordXL)     rg_satp      <- mkCSRReg;
 
-   Reg #(Bit #(29))  rg_medeleg   <- mkRegU;    // TODO: also in M-U systems with user-level traps
-   Reg #(Bit #(12))  rg_mideleg   <- mkRegU;    // TODO: also in M-U systems with user-level traps
+   Reg #(Bit #(29))  rg_medeleg   <- mkCSRReg;    // TODO: also in M-U systems with user-level traps
+   Reg #(Bit #(12))  rg_mideleg   <- mkCSRReg;    // TODO: also in M-U systems with user-level traps
 `else
    Bit #(29)         rg_medeleg   = 0;
    Bit #(12)         rg_mideleg   = 0;
@@ -381,14 +387,14 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    CSR_MIE_IFC       csr_mie       <- mkCSR_MIE;
    CSR_MIP_IFC       csr_mip       <- mkCSR_MIP;
 
-   Reg #(MCounteren) rg_mcounteren <- mkRegU;
+   Reg #(MCounteren) rg_mcounteren <- mkCSRReg;
 
-   Reg #(Word)       rg_mscratch <- mkRegU;
-   Reg #(MCause)     rg_mcause   <- mkRegU;
-   Reg #(Word)       rg_mtval    <- mkRegU;
+   Reg #(Word)       rg_mscratch <- mkCSRReg;
+   Reg #(MCause)     rg_mcause   <- mkCSRReg;
+   Reg #(Word)       rg_mtval    <- mkCSRReg;
 
 `ifdef ISA_CHERI
-   Reg #(XCCSR)      rg_mccsr    <- mkRegU;
+   Reg #(XCCSR)      rg_mccsr    <- mkCSRReg;
    Reg #(CapReg)     rg_mtcc      <- mkReg(nullCap);
    CapPipe           rg_mtcc_unpacked = cast(rg_mtcc);
    Reg #(CapReg)     rg_mtdc      <- mkReg(nullCap);
@@ -401,13 +407,13 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    let               rg_mtvec = word_to_mtvec(getOffset(rg_mtcc_unpacked));
    let               rg_mepc  = getOffset(rg_mepcc_unpacked);
 `else
-   Reg #(MTVec)      rg_mtvec    <- mkRegU;
-   Reg #(Word)       rg_mepc     <- mkRegU;
+   Reg #(MTVec)      rg_mtvec    <- mkCSRReg;
+   Reg #(Word)       rg_mepc     <- mkCSRReg;
 `endif
 
 
    // RegFile #(Bit #(2), WordXL)  rf_pmpcfg   <- mkRegFileFull;
-   // Vector #(16, Reg #(WordXL))  vrg_pmpaddr <- replicateM (mkRegU);
+   // Vector #(16, Reg #(WordXL))  vrg_pmpaddr <- replicateM (mkCSRReg);
 
    // mcycle is needed even for user-mode RDCYCLE instruction
    // It can be updated by a CSR instruction (in Priv_M), and by the clock
@@ -426,20 +432,20 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `endif
 
    // Debug/Trace
-   Reg #(WordXL)    rg_tselect <- mkRegU;
-   Reg #(WordXL)    rg_tdata1  <- mkRegU;
-   Reg #(WordXL)    rg_tdata2  <- mkRegU;
-   Reg #(WordXL)    rg_tdata3  <- mkRegU;
+   Reg #(WordXL)    rg_tselect <- mkCSRReg;
+   Reg #(WordXL)    rg_tdata1  <- mkCSRReg;
+   Reg #(WordXL)    rg_tdata2  <- mkCSRReg;
+   Reg #(WordXL)    rg_tdata3  <- mkCSRReg;
 
    // Debug
-   Reg #(Bit #(32)) rg_dcsr      <- mkRegU;    // Is 32b even in RV64
-   Reg #(CapPipe)   rg_dpcc      <- mkRegU;
-   Reg #(WordXL)    rg_dscratch0 <- mkRegU;
-   Reg #(WordXL)    rg_dscratch1 <- mkRegU;
+   Reg #(Bit #(32)) rg_dcsr      <- mkCSRReg;    // Is 32b even in RV64
+   Reg #(CapPipe)   rg_dpcc      <- mkCSRReg;
+   Reg #(WordXL)    rg_dscratch0 <- mkCSRReg;
+   Reg #(WordXL)    rg_dscratch1 <- mkCSRReg;
 
    // Non-maskable interrupt
    Reg #(Bool)    rg_nmi <- mkReg (False);
-   Reg #(WordXL)  rg_nmi_vector <- mkRegU;
+   Reg #(WordXL)  rg_nmi_vector <- mkCSRReg;
 
    // ----------------------------------------------------------------
    // Reset.

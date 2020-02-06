@@ -182,13 +182,14 @@ instance PCC#(CapPipe);
     function Maybe#(CHERI_Exc_Code) checkValid (CapPipe pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
         let toRet = Invalid;
         //TODO alignment checks?
+        CapPipe ac = almightyCap;
         if (!isValidCap(pcc))
             toRet = Valid(exc_code_CHERI_Tag);
         else if (isSealed(pcc))
             toRet = Valid(exc_code_CHERI_Seal);
         else if (!getHardPerms(pcc).permitExecute)
             toRet = Valid(exc_code_CHERI_XPerm);
-        else if (zeroExtend(getAddr(pcc)) + (is_i32_not_i16 ? 4 : 2) > top)
+        else if (!isInBounds(pcc, False) || !isInBounds(setAddrUnsafe(pcc, getAddr(pcc) + (is_i32_not_i16 ? 4 : 2)), True))
             toRet = Valid(exc_code_CHERI_Length);
         return toRet;
     endfunction
