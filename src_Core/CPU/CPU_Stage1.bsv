@@ -432,8 +432,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	 let trap_info = Trap_Info_Pipe {
                                     epcc: rg_pcc,
 				    exc_code: alu_outputs.exc_code,
-                                    cheri_exc_code: ?,
-                                    cheri_exc_reg: ?,
+                                    cheri_exc_code: alu_outputs.cheri_exc_code,
+                                    cheri_exc_reg: alu_outputs.cheri_exc_reg,
 				    tval:     tval};
 
 	 output_stage1.ostatus        = ostatus;
