@@ -774,40 +774,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    endfunction
 
    // Send a read-request into the fabric
-   function Action fa_fabric_send_read_req (Fabric_Addr  addr, AXI4_Size  size);
+   function Action fa_fabric_send_read_req (Fabric_Addr  addr, AXI4_Size  size, AXI4_Len len);
       action
 	 let mem_req_rd_addr = AXI4_ARFlit {arid:     default_mid,
 				            araddr:   addr,
-					    arlen:    0,           // burst len = arlen+1
-					    arsize:   size,
-					    arburst:  fabric_default_burst,
-					    arlock:   fabric_default_lock,
-					    arcache:  fabric_default_arcache,
-					    arprot:   fabric_default_prot,
-					    arqos:    fabric_default_qos,
-					    arregion: fabric_default_region,
-					    aruser:   fabric_default_aruser};
-
-	 master_xactor.slave.ar.put(mem_req_rd_addr);
-
-	 // Debugging
-	 if (cfg_verbosity > 1) begin
-	    $display ("            To fabric: ", fshow (mem_req_rd_addr));
-	 end
-      endaction
-   endfunction
-
-   // Send a read-burst request into the fabric to get a cache line.
-   // 'addr' is already aligned to a cache-line.
-   function Action fa_fabric_send_read_burst_req (Fabric_Addr  addr);
-      action
-	 AXI4_Size size = ((bytes_per_fabric_data == 8) ? 8 : 16);
-	 // Note: AXI4 codes a burst length of 'n' as 'n-1'
-	 AXI4_Len  len  = fromInteger ((bytes_per_cline / bytes_per_fabric_data) - 1);
-
-	 let mem_req_rd_addr = AXI4_ARFlit {arid:     default_mid,
-					    araddr:   addr,
-					    arlen:    len,
+					    arlen:    len,           // burst len = arlen+1
 					    arsize:   size,
 					    arburst:  INCR,
 					    arlock:   fabric_default_lock,
@@ -821,7 +792,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	 // Debugging
 	 if (cfg_verbosity > 1) begin
-	    $display ("    To fabric: ", fshow (mem_req_rd_addr));
+	    $display ("            To fabric: ", fshow (mem_req_rd_addr));
 	 end
       endaction
    endfunction
@@ -1301,7 +1272,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       PA           lev_1_pte_pa        = satp_pa + vpn_1_pa;
       PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
       Fabric_Addr  lev_1_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
-      fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 4);
+      fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 4, 1 - 1);
 
       rg_pte_pa <= lev_1_pte_pa;
       rg_state  <= PTW_LEVEL_1;
@@ -1317,7 +1288,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       PA           lev_2_pte_pa        = satp_pa + vpn_2_pa;
       PA           lev_2_pte_pa_w64    = { lev_2_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
       Fabric_Addr  lev_2_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_2_pte_pa_w64);
-      fa_fabric_send_read_req (lev_2_pte_pa_w64_fa, 8);
+      fa_fabric_send_read_req (lev_2_pte_pa_w64_fa, 8, 1 - 1);
 
       rg_pte_pa <= lev_2_pte_pa;
       rg_state  <= PTW_LEVEL_2;
@@ -1372,7 +1343,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 PA           lev_1_pte_pa        = lev_1_PTN_pa + vpn_1_pa;
 	 PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
 	 Fabric_Addr  lev_1_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
-	 fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 8);
+	 fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 8, 1 - 1);
 
 	 rg_pte_pa <= lev_1_pte_pa;
 	 rg_state  <= PTW_LEVEL_1;
@@ -1460,7 +1431,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `else
 	 AXI4_Size    axi4_size           = 8;
 `endif
-	 fa_fabric_send_read_req (lev_0_pte_pa_w64_fa, axi4_size);
+	 fa_fabric_send_read_req (lev_0_pte_pa_w64_fa, axi4_size, 1 - 1);
 
 	 rg_pte_pa <= lev_0_pte_pa;
 	 rg_state  <= PTW_LEVEL_0;
@@ -1572,7 +1543,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Send burst request into fabric for full cache line
       PA             cline_addr        = fn_align_Addr_to_CLine (rg_pa);
       Fabric_Addr    cline_fabric_addr = fn_PA_to_Fabric_Addr (cline_addr);
-      fa_fabric_send_read_burst_req (cline_fabric_addr);
+      fa_fabric_send_read_req (cline_fabric_addr, ((bytes_per_fabric_data == 8) ? 8 : 16), fromInteger ((bytes_per_cline / bytes_per_fabric_data) - 1));
 
       // TODO: DELETE after testing bursts
       // DELETE rg_requesting_cline  <= True;
@@ -1768,7 +1739,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		   cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa);
 
       Fabric_Addr fabric_addr = fn_PA_to_Fabric_Addr (rg_pa);
-      fa_fabric_send_read_req (fabric_addr, fn_width_code_to_AXI4_Size (rg_width_code));
+      if (fromInteger(bytes_per_fabric_data) >= fromAXI4_Size(fn_width_code_to_AXI4_Size(rg_width_code)))
+        fa_fabric_send_read_req (fabric_addr, fn_width_code_to_AXI4_Size(rg_width_code), 1 - 1);
+      else
+        fa_fabric_send_read_req (fabric_addr, fromInteger(bytes_per_fabric_data), 2 - 1); // XXX only bursts of size 2 supported
 
 `ifdef ISA_A
       // Invalidate LR/SC reservation if AMO_LR
@@ -1783,27 +1757,47 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    rule rl_io_read_rsp (!resetting && (rg_state == IO_AWAITING_READ_RSP));
 
       let rd_data <- get(master_xactor.slave.r);
+
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %s.rl_io_read_rsp: vaddr 0x%0h  paddr 0x%0h", cur_cycle, d_or_i, rg_addr, rg_pa);
 	 $display ("    ", fshow (rd_data));
       end
 
-      let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend (rd_data.rdata)));
-      rg_ld_val <= ld_val;
+      if (!rg_lower_word64_full && rd_data.rlast) begin // Single flit response
+        let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend (rd_data.rdata)));
+        rg_ld_val <= ld_val;
 
-      // Successful read
-      if (rd_data.rresp == OKAY) begin
-	 fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, ld_val);
-	 rg_state <= IO_READ_RSP;
-      end
+        // Successful read
+        if (rd_data.rresp == OKAY) begin
+           fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, ld_val);
+           rg_state <= IO_READ_RSP;
+        end
 
-      // Bus error
-      else begin
-	 rg_state    <= MODULE_EXCEPTION_RSP;
-	 rg_exc_code <= exc_code_LOAD_ACCESS_FAULT;
-	 if (cfg_verbosity > 1)
-	    $display ("%0d: %s.rl_io_read_rsp: FABRIC_RSP_ERR: raising trap LOAD_ACCESS_FAULT",
-		      cur_cycle, d_or_i);
+        // Bus error
+        else begin
+           rg_state    <= MODULE_EXCEPTION_RSP;
+           rg_exc_code <= exc_code_LOAD_ACCESS_FAULT;
+           if (cfg_verbosity > 1)
+              $display ("%0d: %s.rl_io_read_rsp: FABRIC_RSP_ERR: raising trap LOAD_ACCESS_FAULT",
+          	      cur_cycle, d_or_i);
+        end
+      end else begin
+        if (!rd_data.rlast) begin
+          rg_lower_word64_full <= True;
+          rg_lower_word64 <= rd_data.rdata;
+        end else begin // rg_lower_word64_full && rd_data.rlast
+          if (rd_data.rresp == OKAY) begin
+            fa_drive_IO_read_rsp(rg_width_code, rg_is_unsigned, rg_addr, tuple2(False, {rd_data.rdata, rg_lower_word64})); // No tags from IO mem
+            rg_ld_val <= tuple2(False, {rd_data.rdata, rg_lower_word64});
+            rg_lower_word64_full <= False;
+          end else begin
+            rg_state    <= MODULE_EXCEPTION_RSP;
+            rg_exc_code <= exc_code_LOAD_ACCESS_FAULT;
+            if (cfg_verbosity > 1)
+              $display ("%0d: %s.rl_io_read_rsp: FABRIC_RSP_ERR: raising trap LOAD_ACCESS_FAULT",
+          	      cur_cycle, d_or_i);
+          end
+        end
       end
    endrule
 
@@ -1867,7 +1861,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		   cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa);
 
       Fabric_Addr fabric_addr = fn_PA_to_Fabric_Addr (rg_pa);
-      fa_fabric_send_read_req (fabric_addr, fn_width_code_to_AXI4_Size (rg_width_code));
+      if (fromInteger(bytes_per_fabric_data) >= fromAXI4_Size(fn_width_code_to_AXI4_Size(rg_width_code)))
+        fa_fabric_send_read_req (fabric_addr, fn_width_code_to_AXI4_Size(rg_width_code), 1 - 1);
+      else
+        fa_fabric_send_read_req (fabric_addr, fromInteger(bytes_per_fabric_data), 2 - 1); // XXX only bursts of size 2 supported
 
       rg_state <= IO_AWAITING_AMO_READ_RSP;
 
@@ -1890,7 +1887,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("    ", fshow (rd_data));
       end
 
-      let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend(rd_data.rdata)));
 
       // Bus error for AMO read
       if (rd_data.rresp != OKAY) begin
@@ -1902,23 +1898,35 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       end
       // Successful AMO read
       else begin
-	 if (cfg_verbosity > 1)
-	    $display ("%0d: %s: rl_io_AMO_read_rsp; f3 0x%0h  vaddr %0h  paddr %0h  word128 0x%0h",
-		      cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa, rg_st_amo_val);
+         if (!rg_lower_word64_full && !rd_data.rlast) begin
+           rg_lower_word64_full <= True;
+           rg_lower_word64 <= rd_data.rdata;
+         end else begin
+            let ld_val = ?;
+            if (rg_lower_word64_full) begin
+               ld_val = tuple2(False, {rd_data.rdata, rg_lower_word64});
+               rg_lower_word64_full <= False;
+            end else begin
+               ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend(rd_data.rdata)));
+            end
+	    if (cfg_verbosity > 1)
+	       $display ("%0d: %s: rl_io_AMO_read_rsp; f3 0x%0h  vaddr %0h  paddr %0h  word128 0x%0h",
+	                 cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa, rg_st_amo_val);
 
-	 // Do the AMO op on the loaded value and the store value
-	 match {.new_ld_val,
-		.new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct7, rg_addr, tuple2(0, tpl_2(ld_val)), rg_st_amo_val);
+	    // Do the AMO op on the loaded value and the store value
+	    match {.new_ld_val,
+	           .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct7, rg_addr, tuple2(0, tpl_2(ld_val)), rg_st_amo_val);
 
-	 // Write back new st_val to fabric
-	 fa_fabric_send_write_req (rg_width_code, rg_pa, new_st_val);
+	    // Write back new st_val to fabric
+	    fa_fabric_send_write_req (rg_width_code, rg_pa, new_st_val);
 
-	 fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, new_ld_val);
-	 rg_ld_val <= new_ld_val;
-	 rg_state  <= IO_READ_RSP;
+	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, new_ld_val);
+	    rg_ld_val <= new_ld_val;
+	    rg_state  <= IO_READ_RSP;
 
-	 if (cfg_verbosity > 1)
-	    $display ("    => rl_ST_AMO_response");
+	    if (cfg_verbosity > 1)
+	       $display ("    => rl_ST_AMO_response");
+         end
       end
    endrule
 `endif
