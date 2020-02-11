@@ -615,6 +615,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 		     || (csr_addr == csr_addr_medeleg)
 		     || (csr_addr == csr_addr_mideleg)
+
+`ifdef ISA_CHERI
+		     || (csr_addr == csr_addr_sccsr)
+`endif
 `endif
 
 		     // Machine mode csrs
