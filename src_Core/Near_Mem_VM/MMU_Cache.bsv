@@ -124,7 +124,7 @@ interface MMU_Cache_IFC#(numeric type mID);
 		       Bit #(3) width_code,
                Bool is_unsigned,
 `ifdef ISA_A
-		       Bit #(7) amo_funct7,
+		       Bit #(5) amo_funct5,
 `endif
 		       WordXL addr,
 		       Tuple2#(Bool, Bit #(128)) st_value,
@@ -411,65 +411,6 @@ function Word128_Set fn_update_word128_set (Word128_Set   old_word128_set,
 endfunction: fn_update_word128_set
 
 // ================================================================
-// ALU for AMO ops.
-// Returns the value to be stored back to mem.
-
-`ifdef ISA_A
-function Tuple2 #(Tuple2#(Bool, Bit #(128)),
-		  Tuple2 #(Bool, Bit#(Cache_Data_Width))) fn_amo_op (
-		                        Bit #(3)   funct3,    // encodes data size (.W or .D)
-					Bit #(7)   funct7,    // encodes the AMO op
-					WordXL     addr,      // lsbs indicate which 32b W in 64b D (.W)
-					Cache_Entry ld_val,   // value loaded from mem
-					Tuple2#(Bool, Bit #(128)) st_val);   // Value from CPU reg Rs2
-   let extracted_q1 = fn_extract_and_extend_bytes(funct3, False, addr, ld_val);
-   Bit #(128) q1    = tpl_2(extracted_q1);
-   Bit #(128) q2    = tpl_2(st_val);
-   Bit #(64) w1     = truncate(q1);
-   Bit #(64) w2     = truncate(q2);
-   Int #(64) i1     = unpack (w1);    // Signed, for signed ops
-   Int #(64) i2     = unpack (w2);    // Signed, for signed ops
-   if (funct3 == f3_AMO_W) begin
-      w1 = zeroExtend (w1 [31:0]);
-      w2 = zeroExtend (w2 [31:0]);
-      i1 = unpack (signExtend (w1 [31:0]));
-      i2 = unpack (signExtend (w2 [31:0]));
-   end
-   Bit #(5)  f5     = funct7 [6:2];
-   // new_st_val is new value to be stored back to mem (w1 op w2)
-   Bit#(128) new_st_val_128;
-   Bool new_st_tag = False;
-   Bool old_ld_tag = False;
-   if (funct3 == f3_AMO_CAP) begin
-      new_st_val_128 = q2;
-      new_st_tag = tpl_1(st_val);
-      old_ld_tag = tpl_1(extracted_q1);
-   end else begin
-     Bit #(64) new_st_val_64 = ?;
-     case (f5)
-        f5_AMO_SWAP: new_st_val_64 = w2;
-        f5_AMO_ADD:  new_st_val_64 = pack (i1 + i2);
-        f5_AMO_XOR:  new_st_val_64 = w1 ^ w2;
-        f5_AMO_AND:  new_st_val_64 = w1 & w2;
-        f5_AMO_OR:   new_st_val_64 = w1 | w2;
-        f5_AMO_MINU: new_st_val_64 = ((w1 < w2) ? w1 : w2);
-        f5_AMO_MAXU: new_st_val_64 = ((w1 > w2) ? w1 : w2);
-        f5_AMO_MIN:  new_st_val_64 = ((i1 < i2) ? w1 : w2);
-        f5_AMO_MAX:  new_st_val_64 = ((i1 > i2) ? w1 : w2);
-     endcase
-
-     if (funct3 == f3_AMO_W)
-       new_st_val_64 = zeroExtend (new_st_val_64 [31:0]);
-
-     new_st_val_128 = zeroExtend(new_st_val_64);
-   end
-
-   return tuple2 (tuple2(old_ld_tag, q1),
-                  tuple2(new_st_tag, zeroExtend(new_st_val_128)));
-endfunction: fn_amo_op
-`endif
-
-// ================================================================
 // Displays, for debugging
 
 function Action fa_display_state_and_ctag_cset (CSet_in_Cache        cset_in_cache,
@@ -584,7 +525,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Reg #(Bit #(3))   rg_width_code  <- mkRegU;    // specifies B/H/W/D/Q access size
    Reg #(Bool)       rg_is_unsigned    <- mkRegU;    // whether to sign extend returned val
 `ifdef ISA_A
-   Reg #(Bit #(7))   rg_amo_funct7  <- mkRegU;    // specifies which kind of AMO op
+   Reg #(Bit #(5))   rg_amo_funct5  <- mkRegU;    // specifies which kind of AMO op
 `endif
    Reg #(WordXL)     rg_addr        <- mkRegU;    // VA or PA
    Reg #(Tuple2#(Bool, Bit #(128))) rg_st_amo_val  <- mkRegU;    // Store-value for ST, SC, AMO
@@ -731,8 +672,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Abbreviations testing for LR and SC (avoids ifdef clutter later)
 `ifdef ISA_A
    Bool is_AMO    = (rg_op == CACHE_AMO);
-   Bool is_AMO_LR = ((rg_op == CACHE_AMO) && (rg_amo_funct7 [6:2] == f5_AMO_LR));
-   Bool is_AMO_SC = ((rg_op == CACHE_AMO) && (rg_amo_funct7 [6:2] == f5_AMO_SC));
+   Bool is_AMO_LR = ((rg_op == CACHE_AMO) && (rg_amo_funct5 == f5_AMO_LR));
+   Bool is_AMO_SC = ((rg_op == CACHE_AMO) && (rg_amo_funct5 == f5_AMO_SC));
 `else
    Bool is_AMO    = False;
    Bool is_AMO_LR = False;
@@ -791,9 +732,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 master_xactor.slave.ar.put(mem_req_rd_addr);
 
 	 // Debugging
-	 if (cfg_verbosity > 1) begin
-	    $display ("            To fabric: ", fshow (mem_req_rd_addr));
-	 end
+	 //if (cfg_verbosity > 1)
+	    $display ("%0t            To fabric: ", $time, fshow (mem_req_rd_addr));
       endaction
    endfunction
 
@@ -858,10 +798,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       ctr_wr_rsps_pending.incr;
 
       // Debugging
-      if (cfg_verbosity > 1) begin
+      //if (cfg_verbosity > 1) begin
 	 $display ("            To fabric: ", fshow (mem_req_wr_addr));
 	 $display ("                       ", fshow (mem_req_wr_data));
-      end
+      //end
    endrule
 
    // ================================================================
@@ -1203,15 +1143,15 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       end
 	       else begin
 		  if (cfg_verbosity > 1) begin
-		     $display ("        AMO: addr 0x%0h amo_f7 0x%0h width_code %0d is_unsigned %0d rs2_val 0x%0h",
-			       rg_addr, rg_amo_funct7, rg_width_code, rg_is_unsigned, rg_st_amo_val);
+		     $display ("        AMO: addr 0x%0h amo_f5 0x%0h width_code %0d is_unsigned %0d rs2_val 0x%0h",
+			       rg_addr, rg_amo_funct5, rg_width_code, rg_is_unsigned, rg_st_amo_val);
 		     $display ("          PA 0x%0h ", vm_xlate_result.pa);
 		     $display ("          Cache word128 0x%0h, load-result 0x%0h", word128, word128);
 		  end
 
 		  // Do the AMO op on the loaded value and the store value
 		  match {.new_ld_val,
-			 .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct7, rg_addr, word128, rg_st_amo_val);
+			 .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct5, rg_addr, word128, rg_st_amo_val);
 
 		  // Update cache line in cache
 		  let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, new_st_val);
@@ -1915,7 +1855,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	    // Do the AMO op on the loaded value and the store value
 	    match {.new_ld_val,
-	           .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct7, rg_addr, tuple2(0, tpl_2(ld_val)), rg_st_amo_val);
+	           .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct5, rg_addr, tuple2(0, tpl_2(ld_val)), rg_st_amo_val);
 
 	    // Write back new st_val to fabric
 	    fa_fabric_send_write_req (rg_width_code, rg_pa, new_st_val);
@@ -1996,7 +1936,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		       Bit #(3) width_code,
                Bool is_unsigned,
 `ifdef ISA_A
-		       Bit #(7) amo_funct7,
+		       Bit #(5) amo_funct5,
 `endif
 		       Addr addr,
 		       Tuple2#(Bool, Bit#(128)) st_value,
@@ -2013,7 +1953,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		   " sstatus_SUM:%0d mstatus_MXR:%0d satp:0x%0h",
 		   sstatus_SUM,    mstatus_MXR,    satp);
 `ifdef ISA_A
-	 $display ("    amo_funct7 = 0x%0h", amo_funct7);
+	 $display ("    amo_funct5 = 0x%0h", amo_funct5);
 `endif
       end
 
@@ -2021,7 +1961,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       rg_width_code  <= width_code;
       rg_is_unsigned <= is_unsigned;
 `ifdef ISA_A
-      rg_amo_funct7  <= amo_funct7;
+      rg_amo_funct5  <= amo_funct5;
 `endif
       rg_addr        <= addr;
       rg_st_amo_val  <= st_value;
