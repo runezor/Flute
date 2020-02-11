@@ -732,7 +732,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 master_xactor.slave.ar.put(mem_req_rd_addr);
 
 	 // Debugging
-	 //if (cfg_verbosity > 1)
+	 if (cfg_verbosity > 1)
 	    $display ("%0t            To fabric: ", $time, fshow (mem_req_rd_addr));
       endaction
    endfunction
@@ -798,10 +798,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       ctr_wr_rsps_pending.incr;
 
       // Debugging
-      //if (cfg_verbosity > 1) begin
+      if (cfg_verbosity > 1) begin
 	 $display ("            To fabric: ", fshow (mem_req_wr_addr));
 	 $display ("                       ", fshow (mem_req_wr_data));
-      //end
+      end
    endrule
 
    // ================================================================
