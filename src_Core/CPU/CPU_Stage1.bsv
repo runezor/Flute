@@ -236,7 +236,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `endif
                        pc_rdata:       getPC(rg_pcc),
                        pc_wdata:       getPC(next_pcc_local),
-                       mem_wdata:      truncate(cap_val2),
+                       mem_wdata:      alu_outputs.val2_flt_not_int ? alu_outputs.val2 : truncate(cap_val2),
                        rd_addr:        alu_outputs.rd,
                        rd_alu:         (alu_outputs.op_stage2 == OP_Stage2_ALU),
                        rd_wdata_alu:   alu_outputs.val1,
