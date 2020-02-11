@@ -240,7 +240,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                        rd_addr:        alu_outputs.rd,
                        rd_alu:         (alu_outputs.op_stage2 == OP_Stage2_ALU),
                        rd_wdata_alu:   alu_outputs.val1,
-                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)) ? alu_outputs.addr : 0
+                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST) || (alu_outputs.op_stage2 == OP_Stage2_AMO)) ? alu_outputs.addr : 0
                    };
 `endif
 
