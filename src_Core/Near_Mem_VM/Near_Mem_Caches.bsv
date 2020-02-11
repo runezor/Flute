@@ -149,11 +149,11 @@ module mkNear_Mem (Near_Mem_IFC);
             , Dii_Id seq_req
 `endif
                              );    // { VM_Mode, ASID, PPN_for_page_table }
-	 Bit #(7)  amo_funct7  = ?;
+	 Bit #(5)  amo_funct5  = ?;
 	 Bit #(128) store_value = ?;
 	 icache.req (CACHE_LD, width_code, True,
 `ifdef ISA_A
-		     amo_funct7,
+		     amo_funct5,
 `endif
          addr, tuple2(False, store_value),
                                 priv, sstatus_SUM, mstatus_MXR, satp);
@@ -192,7 +192,7 @@ module mkNear_Mem (Near_Mem_IFC);
 			  Bit #(3) width_code,
               Bool is_unsigned,
 `ifdef ISA_A
-			  Bit #(7) amo_funct7,
+			  Bit #(5) amo_funct5,
 `endif
 			  WordXL addr,
 			  Tuple2#(Bool, Bit #(128)) store_value,
@@ -203,7 +203,7 @@ module mkNear_Mem (Near_Mem_IFC);
 			  WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
 	 dcache.req (op, width_code, is_unsigned,
 `ifdef ISA_A
-		     amo_funct7,
+		     amo_funct5,
 `endif
 		     addr, store_value,
                                 priv, sstatus_SUM, mstatus_MXR, satp);
