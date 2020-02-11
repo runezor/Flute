@@ -482,7 +482,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    SoC_Map_IFC soc_map <- mkSoC_Map;
 
 `ifdef ISA_CHERI
-   Reg#(Bool) crg_commit[3] <- mkCReg(3,False);
+   Reg#(Bool) crg_commit[2] <- mkCReg(2,False);
    FIFO #(AXI4_WFlit#(Wd_Data, Wd_W_User)) f_fabric_second_write_reqs <- mkFIFO1;
 `endif
 
@@ -690,13 +690,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Functions to drive read-responses (outputs)
 
    // Memory-read responses
-   function Action fa_drive_mem_rsp (Bit #(3) width_code, Bool is_unsigned, Addr addr, Cache_Entry ld_val, Cache_Entry st_amo_val);
+   function Action fa_drive_mem_rsp (Bit #(3) width_code, Bool is_unsigned, Addr addr, Cache_Entry ld_val, Cache_Entry st_amo_val, Bool commit);
       action
-	 dw_valid             <= True;
+	 dw_valid             <= commit;
 	 // Value loaded into rd (LOAD, LR, AMO, SC success/fail result)
 	 dw_output_ld_val     <= fn_extract_and_extend_bytes (width_code, is_unsigned, addr, ld_val);
 	 // Value stored into mem (STORE, SC, AMO final value stored)
-	 dw_output_st_amo_val <= tuple2(tpl_1(st_amo_val)[(valueOf(CLEN) == 64 && addr[4:0] == 0) ? 1 : 0] == 1'b1, tpl_2(st_amo_val)); //TODO check for CHERI
+	 dw_output_st_amo_val <= tuple2(tpl_1(st_amo_val)[(valueOf(CLEN) == 64 && addr[4:0] == 0) ? 1 : 0] == 1'b1, tpl_2(st_amo_val));
 	 if (cfg_verbosity > 1)
 	    $display ("%0d: %s.drive_mem_rsp: addr 0x%0h ld_val 0x%0h st_amo_val 0x%0h",
 		      cur_cycle, d_or_i, addr, ld_val, st_amo_val);
@@ -931,6 +931,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    rule rl_probe_and_immed_rsp (!resetting && (rg_state == MODULE_RUNNING) && (! load_stall));
 
+      let new_state = rg_state;
+      let new_exc_code = rg_exc_code;
+
       // Print some initial information for debugging
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %s: rl_probe_and_immed_rsp; eaddr %0h", cur_cycle, d_or_i, rg_addr);
@@ -977,22 +980,15 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       if (cfg_verbosity > 1)
 	 $display ("    TLB result: ", fshow (vm_xlate_result));
 
-`ifdef ISA_CHERI
-      // ---- Cancelled by Cap exception
-      if (!crg_commit[1]) begin
-        rg_state <= MODULE_EXCEPTION_RSP;
-        rg_exc_code <= exc_code_CHERI;
-      end else
-`endif
       // ---- TLB miss
       if (vm_xlate_result.outcome == VM_XLATE_TLB_MISS) begin
-	 rg_state <= PTW_START;
+	 new_state = PTW_START;
       end
 
       // ---- TLB translation exception
       else if (vm_xlate_result.outcome == VM_XLATE_EXCEPTION) begin
-	 rg_state <= MODULE_EXCEPTION_RSP;
-	 rg_exc_code <= vm_xlate_result.exc_code;
+	 new_state = MODULE_EXCEPTION_RSP;
+	 new_exc_code = vm_xlate_result.exc_code;
       end
 
       // ---- vm_xlate_result.outcome == VM_XLATE_OK
@@ -1007,7 +1003,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 // Access to non-memory
 	 if (dmem_not_imem && (! is_mem_addr)) begin
 	    // IO requests
-	    rg_state <= IO_REQ;
+	    new_state = IO_REQ;
 
 	    if (cfg_verbosity > 1)
 	       $display ("    => IO_REQ");
@@ -1024,7 +1020,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    if ((rg_op == CACHE_LD) || is_AMO_LR) begin
 	       if (hit) begin
 		  // Cache hit; drive response
-		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0));
+		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0), crg_commit[1]);
 
 `ifdef ISA_A
 		  if (is_AMO_LR) begin
@@ -1040,7 +1036,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       end
 	       else begin
 		  // Cache miss; start cache-line refill
-		  rg_state <= CACHE_START_REFILL;
+		  new_state = CACHE_START_REFILL;
 		  if (cfg_verbosity > 1)
 		     $display ("        Read Miss: -> CACHE_START_REFILL.");
 `ifdef ISA_A
@@ -1092,40 +1088,42 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
 	       if (do_write) begin
 		  // ST, or successful SC
-		  if (hit) begin
-		     // Update cache line in cache
-		    let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
-		     ram_word128_set.a.put (bram_cmd_write, word128_set_in_cache, new_word128_set);
-		     fa_arm_the_load_stall (rg_width_code);
+                  if (crg_commit[1]) begin
+		    if (hit) begin
+		       // Update cache line in cache
+		      let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
+                      ram_word128_set.a.put (bram_cmd_write, word128_set_in_cache, new_word128_set);
+		      fa_arm_the_load_stall (rg_width_code);
 
-		     if (cfg_verbosity > 1) begin
-			$display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
-			$write   ("        New Word128_Set:");
-			fa_display_word128_set (cset_in_cache, word128_in_cline, new_word128_set);
-		     end
-		  end
-		  else begin
-		     if (cfg_verbosity > 1)
-			$display ("        Write-Cache-Miss: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
-		  end
+		      if (cfg_verbosity > 1) begin
+		         $display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
+		         $write   ("        New Word128_Set:");
+		         fa_display_word128_set (cset_in_cache, word128_in_cline, new_word128_set);
+		      end
+		    end
+		    else begin
+		       if (cfg_verbosity > 1)
+		          $display ("        Write-Cache-Miss: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
+		    end
 
-		  if (cfg_verbosity > 1)
-		     $display ("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h", rg_addr, rg_st_amo_val);
+		    if (cfg_verbosity > 1)
+		       $display ("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h", rg_addr, rg_st_amo_val);
 
-		  // For write-hits and write-misses, writeback data to memory (so cache remains clean)
-		   fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, rg_st_amo_val);
+		    // For write-hits and write-misses, writeback data to memory (so cache remains clean)
+		    fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, rg_st_amo_val);
 
-		  // Provide write-response after 1-cycle delay (thus locking the cset for 1 cycle),
-		  // in case the next incoming request tries to read from the same SRAM address.
-		  rg_state <= CACHE_ST_AMO_RSP;
+		    // Provide write-response after 1-cycle delay (thus locking the cset for 1 cycle),
+		    // in case the next incoming request tries to read from the same SRAM address.
+		    new_state = CACHE_ST_AMO_RSP;
 
-		  if (cfg_verbosity > 1)
-		     $display ("        => rl_write_response");
+		    if (cfg_verbosity > 1)
+		       $display ("        => rl_write_response");
+                  end
 	       end
 	       else begin // do_write == False
 		  // SC fail
 		     // Hard-code address to 0 to ensure fn_extract_and_extend_bytes takes the LSBs of our 1 value.
-		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, 0, tuple2(0,1), unpack(0));
+		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, 0, tuple2(0,1), unpack(0), crg_commit[1]);
 		  if (cfg_verbosity > 1)
 		     $display ("        AMO SC: Fail response for addr 0x%0h", rg_addr);
 	       end
@@ -1135,9 +1133,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    // ----------------
 	    // Remaining AMOs
 	    else begin
-	       if (! hit) begin
+	       if (! hit || !crg_commit[1]) begin
 		  // Cache miss; AMOs are only done in the cache, so first refill the cache-line
-		  rg_state <= CACHE_START_REFILL;
+		  new_state = CACHE_START_REFILL;
 		  if (cfg_verbosity > 1)
 		     $display ("        AMO Miss: -> CACHE_START_REFILL.");
 	       end
@@ -1181,12 +1179,21 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		  // in case the next incoming request tries to read from the same address.
 		  rg_ld_val     <= new_ld_val;
 		  rg_st_amo_val <= new_st_val;
-		  rg_state      <= CACHE_ST_AMO_RSP;
+		  new_state      = CACHE_ST_AMO_RSP;
 	       end
 	    end
 `endif
 	 end
       end
+`ifdef ISA_CHERI
+      // ---- Cancelled by Cap exception
+      if (!crg_commit[1]) begin
+        new_state = MODULE_EXCEPTION_RSP;
+        new_exc_code = exc_code_CHERI;
+      end
+`endif
+      rg_state <= new_state;
+      rg_exc_code <= new_exc_code;
    endrule: rl_probe_and_immed_rsp
 
 
@@ -1972,7 +1979,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       rg_satp        <= satp;
 
 `ifdef ISA_CHERI
-      crg_commit[2]  <= False;
+      crg_commit[1]  <= False;
 `endif
 
       // Initial default PA assumes no VM translation
