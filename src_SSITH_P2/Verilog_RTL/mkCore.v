@@ -2645,8 +2645,8 @@ module mkCore(CLK,
        MUX_activeSource_1$write_1__VAL_1,
        MUX_activeSource_1_1_0$write_1__SEL_1,
        MUX_activeSource_1_1_0$write_1__SEL_2,
-       MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
+       MUX_activeSource_1_1_1_1$write_1__SEL_3,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
        MUX_activeSource_1_1_2$write_1__VAL_1,
        MUX_flitToSink_0$wset_1__SEL_1,
@@ -6048,9 +6048,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
+	     debug_module$RDY_hart0_reset_client_request_get &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
-	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
@@ -6080,7 +6080,7 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_0$write_1__SEL_2 =
 	     WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
 	     !ifcs_1_1_rspBack$D_OUT[1] ;
-  assign MUX_activeSource_1_1_0$write_1__SEL_3 =
+  assign MUX_activeSource_1_1_1_1$write_1__SEL_3 =
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_flitToSink_0$wset_1__SEL_1 =
@@ -7015,14 +7015,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_0$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       default: activeSource_1_1_0$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7043,14 +7043,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_1_1$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       default: activeSource_1_1_1_1$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7067,14 +7067,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_2$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       default: activeSource_1_1_2$D_IN = 1'b0 /* unspecified value */ ;
     endcase

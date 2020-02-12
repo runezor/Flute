@@ -3445,7 +3445,7 @@ module mkMMU_DCache(CLK,
 	     cache_rg_priv_66_ULE_0b1_67_AND_cache_rg_satp__ETC___d225 ?
 	       cache_tlb$RDY_lookup :
 	       (NOT_cache_rg_priv_66_ULE_0b1_67_68_OR_NOT_cach_ETC___d240 ||
-		cache_tlb$RDY_lookup && cache_tlb$RDY_insert &&
+		cache_tlb$RDY_insert && cache_tlb$RDY_lookup &&
 		cache_f_pte_writebacks$FULL_N) &&
 	       (!cache_soc_map$m_is_mem_addr ||
 		IF_cache_rg_op_93_EQ_0_94_OR_cache_rg_op_93_EQ_ETC___d437) ;

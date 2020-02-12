@@ -12036,27 +12036,6 @@ module mkTagController(CLK,
 	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3619;
     endcase
   end
-  always@(idx__h295642 or
-	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3797 or
-	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3751 or
-	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3700 or
-	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3619)
-  begin
-    case (idx__h295642)
-      2'd0:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
-	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3797;
-      2'd1:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
-	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3751;
-      2'd2:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
-	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3700;
-      2'd3:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
-	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3619;
-    endcase
-  end
   always@(lookupRsp_nextValidKeyReg or
 	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3797 or
 	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3751 or
@@ -12075,6 +12054,27 @@ module mkTagController(CLK,
 	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3700;
       2'd3:
 	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3882 =
+	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3619;
+    endcase
+  end
+  always@(idx__h295642 or
+	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3797 or
+	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3751 or
+	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3700 or
+	  IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3619)
+  begin
+    case (idx__h295642)
+      2'd0:
+	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
+	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3797;
+      2'd1:
+	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
+	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3751;
+      2'd2:
+	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
+	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3700;
+      2'd3:
+	  SEL_ARR_IF_lookupRsp_insertItem_whas__558_AND__ETC___d3879 =
 	      IF_lookupRsp_insertItem_whas__558_AND_lookupRs_ETC___d3619;
     endcase
   end
