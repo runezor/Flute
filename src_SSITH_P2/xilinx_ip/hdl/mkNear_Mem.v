@@ -105,7 +105,7 @@
 // dmem_req_op                    I     2
 // dmem_req_width_code            I     3
 // dmem_req_is_unsigned           I     1 reg
-// dmem_req_amo_funct7            I     7 reg
+// dmem_req_amo_funct5            I     5 reg
 // dmem_req_addr                  I    64
 // dmem_req_store_value           I   129
 // dmem_req_priv                  I     2 reg
@@ -474,7 +474,7 @@ module mkNear_Mem(CLK,
 		  dmem_req_op,
 		  dmem_req_width_code,
 		  dmem_req_is_unsigned,
-		  dmem_req_amo_funct7,
+		  dmem_req_amo_funct5,
 		  dmem_req_addr,
 		  dmem_req_store_value,
 		  dmem_req_priv,
@@ -748,7 +748,7 @@ module mkNear_Mem(CLK,
   input  [1 : 0] dmem_req_op;
   input  [2 : 0] dmem_req_width_code;
   input  dmem_req_is_unsigned;
-  input  [6 : 0] dmem_req_amo_funct7;
+  input  [4 : 0] dmem_req_amo_funct5;
   input  [63 : 0] dmem_req_addr;
   input  [128 : 0] dmem_req_store_value;
   input  [1 : 0] dmem_req_priv;
@@ -1011,8 +1011,8 @@ module mkNear_Mem(CLK,
   wire [7 : 0] dcache$mem_master_arlen,
 	       dcache$mem_master_awlen,
 	       dcache$mem_master_wstrb;
-  wire [6 : 0] dcache$req_amo_funct7;
   wire [5 : 0] dcache$exc_code;
+  wire [4 : 0] dcache$req_amo_funct5;
   wire [3 : 0] dcache$mem_master_arcache,
 	       dcache$mem_master_arid,
 	       dcache$mem_master_arqos,
@@ -1091,12 +1091,12 @@ module mkNear_Mem(CLK,
   wire [7 : 0] icache$mem_master_arlen,
 	       icache$mem_master_awlen,
 	       icache$mem_master_wstrb;
-  wire [6 : 0] icache$req_amo_funct7;
   wire [5 : 0] icache$exc_code;
   wire [4 : 0] icache$mem_master_arid,
 	       icache$mem_master_awid,
 	       icache$mem_master_bid,
-	       icache$mem_master_rid;
+	       icache$mem_master_rid,
+	       icache$req_amo_funct5;
   wire [3 : 0] icache$mem_master_arcache,
 	       icache$mem_master_arqos,
 	       icache$mem_master_arregion,
@@ -1204,7 +1204,7 @@ module mkNear_Mem(CLK,
        WILL_FIRE_sfence_vma;
 
   // inputs to muxes for submodule ports
-  wire MUX_rg_state$write_1__SEL_2, MUX_rg_state$write_1__SEL_3;
+  wire MUX_rg_state$write_1__SEL_2;
 
   // declarations used by system tasks
   // synopsys translate_off
@@ -1548,7 +1548,7 @@ module mkNear_Mem(CLK,
 		      .mem_master_ruser(dcache$mem_master_ruser),
 		      .mem_master_wready(dcache$mem_master_wready),
 		      .req_addr(dcache$req_addr),
-		      .req_amo_funct7(dcache$req_amo_funct7),
+		      .req_amo_funct5(dcache$req_amo_funct5),
 		      .req_is_unsigned(dcache$req_is_unsigned),
 		      .req_mstatus_MXR(dcache$req_mstatus_MXR),
 		      .req_op(dcache$req_op),
@@ -1635,7 +1635,7 @@ module mkNear_Mem(CLK,
 		      .mem_master_ruser(icache$mem_master_ruser),
 		      .mem_master_wready(icache$mem_master_wready),
 		      .req_addr(icache$req_addr),
-		      .req_amo_funct7(icache$req_amo_funct7),
+		      .req_amo_funct5(icache$req_amo_funct5),
 		      .req_is_unsigned(icache$req_is_unsigned),
 		      .req_mstatus_MXR(icache$req_mstatus_MXR),
 		      .req_op(icache$req_op),
@@ -1739,17 +1739,16 @@ module mkNear_Mem(CLK,
   assign WILL_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
 
   // rule RL_rl_reset_complete
-  assign CAN_FIRE_RL_rl_reset_complete = MUX_rg_state$write_1__SEL_3 ;
-  assign WILL_FIRE_RL_rl_reset_complete = MUX_rg_state$write_1__SEL_3 ;
-
-  // inputs to muxes for submodule ports
-  assign MUX_rg_state$write_1__SEL_2 =
-	     CAN_FIRE_RL_rl_reset && !EN_server_fence_request_put ;
-  assign MUX_rg_state$write_1__SEL_3 =
+  assign CAN_FIRE_RL_rl_reset_complete =
 	     icache$RDY_server_reset_response_get &&
 	     dcache$RDY_server_reset_response_get &&
 	     f_reset_rsps$FULL_N &&
 	     rg_state == 2'd1 ;
+  assign WILL_FIRE_RL_rl_reset_complete = CAN_FIRE_RL_rl_reset_complete ;
+
+  // inputs to muxes for submodule ports
+  assign MUX_rg_state$write_1__SEL_2 =
+	     CAN_FIRE_RL_rl_reset && !EN_server_fence_request_put ;
 
   // register cfg_verbosity
   assign cfg_verbosity$D_IN = 4'h0 ;
@@ -1782,7 +1781,7 @@ module mkNear_Mem(CLK,
   assign dcache$mem_master_ruser = dmem_master_ruser ;
   assign dcache$mem_master_wready = dmem_master_wready ;
   assign dcache$req_addr = dmem_req_addr ;
-  assign dcache$req_amo_funct7 = dmem_req_amo_funct7 ;
+  assign dcache$req_amo_funct5 = dmem_req_amo_funct5 ;
   assign dcache$req_is_unsigned = dmem_req_is_unsigned ;
   assign dcache$req_mstatus_MXR = dmem_req_mstatus_MXR ;
   assign dcache$req_op = dmem_req_op ;
@@ -1794,7 +1793,7 @@ module mkNear_Mem(CLK,
   assign dcache$set_verbosity_verbosity = 4'h0 ;
   assign dcache$EN_set_verbosity = 1'b0 ;
   assign dcache$EN_server_reset_request_put = MUX_rg_state$write_1__SEL_2 ;
-  assign dcache$EN_server_reset_response_get = MUX_rg_state$write_1__SEL_3 ;
+  assign dcache$EN_server_reset_response_get = CAN_FIRE_RL_rl_reset_complete ;
   assign dcache$EN_req = EN_dmem_req ;
   assign dcache$EN_commit = EN_dmem_commit ;
   assign dcache$EN_server_flush_request_put =
@@ -1806,7 +1805,11 @@ module mkNear_Mem(CLK,
   assign dcache$mem_master_rvalid = dmem_master_rvalid ;
 
   // submodule f_reset_rsps
-  assign f_reset_rsps$ENQ = MUX_rg_state$write_1__SEL_3 ;
+  assign f_reset_rsps$ENQ =
+	     icache$RDY_server_reset_response_get &&
+	     dcache$RDY_server_reset_response_get &&
+	     f_reset_rsps$FULL_N &&
+	     rg_state == 2'd1 ;
   assign f_reset_rsps$DEQ = EN_server_reset_response_get ;
   assign f_reset_rsps$CLR = 1'b0 ;
 
@@ -1822,7 +1825,7 @@ module mkNear_Mem(CLK,
   assign icache$mem_master_ruser = imem_master_ruser ;
   assign icache$mem_master_wready = imem_master_wready ;
   assign icache$req_addr = imem_req_addr ;
-  assign icache$req_amo_funct7 = 7'b0101010 /* unspecified value */  ;
+  assign icache$req_amo_funct5 = 5'b01010 /* unspecified value */  ;
   assign icache$req_is_unsigned = 1'd1 ;
   assign icache$req_mstatus_MXR = imem_req_mstatus_MXR ;
   assign icache$req_op = 2'd0 ;
@@ -1834,7 +1837,7 @@ module mkNear_Mem(CLK,
   assign icache$set_verbosity_verbosity = 4'h0 ;
   assign icache$EN_set_verbosity = 1'b0 ;
   assign icache$EN_server_reset_request_put = MUX_rg_state$write_1__SEL_2 ;
-  assign icache$EN_server_reset_response_get = MUX_rg_state$write_1__SEL_3 ;
+  assign icache$EN_server_reset_response_get = CAN_FIRE_RL_rl_reset_complete ;
   assign icache$EN_req = EN_imem_req ;
   assign icache$EN_commit = EN_imem_commit ;
   assign icache$EN_server_flush_request_put = EN_server_fence_i_request_put ;
