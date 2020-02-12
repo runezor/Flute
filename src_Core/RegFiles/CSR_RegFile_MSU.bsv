@@ -21,7 +21,7 @@ package CSR_RegFile_MSU;
 // ================================================================
 // Exports
 
-export  CSR_RegFile_IFC (..),  mkCSR_RegFile;
+export  CSR_RegFile_IFC (..),  mkCSR_RegFile, AccessPerms (..);
 
 // ================================================================
 // BSV library imports
@@ -57,6 +57,11 @@ import CHERICC_Fat  :: *;
 `endif
 
 // ================================================================
+
+typedef struct {
+   Bool exists;
+   Bool requires_asr;
+}  AccessPerms deriving (Bits);
 
 interface CSR_RegFile_IFC;
    // Reset
@@ -168,12 +173,12 @@ interface CSR_RegFile_IFC;
 
    // Access permission
    (* always_ready *)
-   method Bool access_permitted_1 (Priv_Mode  priv, CSR_Addr  csr_addr, Bool  read_not_write, Bool access_sys_regs);
+   method AccessPerms access_permitted_1 (Priv_Mode  priv, CSR_Addr  csr_addr, Bool  read_not_write);
    (* always_ready *)
-   method Bool access_permitted_2 (Priv_Mode  priv, CSR_Addr  csr_addr, Bool  read_not_write, Bool access_sys_regs);
+   method AccessPerms access_permitted_2 (Priv_Mode  priv, CSR_Addr  csr_addr, Bool  read_not_write);
 `ifdef ISA_CHERI
    (* always_ready *)
-   method Bool access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr, Bool  read_not_write, Bool access_sys_regs);
+   method AccessPerms access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr, Bool  read_not_write);
 `endif
 
    // Fault on reading counters?
@@ -564,8 +569,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    // ----------------
    // Test if CSR is supported
 
-   function Bool fv_csr_exists (CSR_Addr csr_addr);
-      Bool result = (   ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
+   function AccessPerms fv_csr_exists_and_asr (CSR_Addr csr_addr, Bool read_not_write);
+      Bool exists = (   ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
 		     || ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
 `ifdef RV32
 		     || ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h))
@@ -684,12 +689,31 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_dscratch1)
 `endif
 	 );
-      return result;
-   endfunction: fv_csr_exists
+      Bool whitelisted =
+                       ((read_not_write && ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)))
+`ifdef RV32
+		     || (read_not_write && ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)))
+`endif
+`ifdef ISA_F
+		     || (csr_addr == csr_addr_fflags)
+		     || (csr_addr == csr_addr_frm)
+		     || (csr_addr == csr_addr_fcsr)
+`endif
+		     || (csr_addr == csr_addr_cycle && read_not_write)
+                  // || (csr_addr == csr_addr_time && read_not_write) //XXX should this be enabled?
+		     || (csr_addr == csr_addr_instret && read_not_write)
+`ifdef RV32
+		     || (csr_addr == csr_addr_cycleh && read_not_write)
+		     || (csr_addr == csr_addr_timeh && read_not_write)
+		     || (csr_addr == csr_addr_instreth && read_not_write)
+`endif
+         );
+      return AccessPerms {exists: exists, requires_asr: !whitelisted};
+   endfunction: fv_csr_exists_and_asr
 
 `ifdef ISA_CHERI
-   function Bool fv_scr_exists (SCR_Addr scr_addr);
-     let result =
+   function AccessPerms fv_scr_exists_and_asr (SCR_Addr scr_addr, Bool read_not_write);
+     Bool exists =
          scr_addr == scr_addr_PCC ||
          scr_addr == scr_addr_DDC ||
 `ifdef ISA_PRIV_S
@@ -703,7 +727,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
          scr_addr == scr_addr_MEPCC ||
          scr_addr == scr_addr_MScratchC;
 
-     return result;
+     Bool whitelisted = False ||
+         scr_addr == scr_addr_DDC;
+
+     return AccessPerms {exists: exists, requires_asr: !whitelisted};
    endfunction
 `endif
 
@@ -1245,8 +1272,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `endif
 
    // Access permission
-   function Bool fv_access_permitted (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write, Bool access_sys_regs);
-      Bool exists  = fv_csr_exists (csr_addr);    // Is this CSR implemented?
+   function AccessPerms fv_access_permitted (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write);
+      AccessPerms access = fv_csr_exists_and_asr (csr_addr, read_not_write);    // Is this CSR implemented?
 
       Bool priv_ok = priv >= csr_addr [9:8];      // Accessible at current privilege?
 
@@ -1259,19 +1286,19 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
       Bool rw_ok = (read_not_write || (csr_addr [11:10] != 2'b11));
 
-      return (exists && priv_ok && (! tvm_fault) && rw_ok && access_sys_regs);
+      return AccessPerms {exists: access.exists && priv_ok && (! tvm_fault) && rw_ok, requires_asr: access.requires_asr};
    endfunction: fv_access_permitted
 
 `ifdef ISA_CHERI
    // Access permission
-   function Bool fv_access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr,  Bool read_not_write, Bool access_sys_regs);
-      Bool exists  = fv_scr_exists (scr_addr);    // Is this SCR implemented?
+   function AccessPerms fv_access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr,  Bool read_not_write);
+      AccessPerms access  = fv_scr_exists_and_asr (scr_addr, read_not_write);    // Is this SCR implemented?
 
+      Bool exists = access.exists;
       Bool priv_ok = priv >= scr_addr[4:3];
-
       Bool access_PCC = scr_addr == scr_addr_PCC; //Accesses to PCC that reach this point must be writes, so are illegal
 
-      return (exists && access_sys_regs && priv_ok && !access_PCC);
+      return AccessPerms {exists: access.exists && priv_ok && !access_PCC, requires_asr: access.requires_asr};
    endfunction: fv_access_permitted_scr
 `endif
 
@@ -1586,18 +1613,18 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef ISA_CHERI
    // Access permission
-   method Bool access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr,  Bool read_not_write, Bool access_sys_regs);
-      return fv_access_permitted_scr (priv, scr_addr, read_not_write, access_sys_regs);
+   method AccessPerms access_permitted_scr (Priv_Mode  priv, SCR_Addr  scr_addr,  Bool read_not_write);
+      return fv_access_permitted_scr (priv, scr_addr, read_not_write);
    endmethod
 `endif
 
    // Access permission
-   method Bool access_permitted_1 (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write, Bool access_sys_regs);
-      return fv_access_permitted (priv, csr_addr, read_not_write, access_sys_regs);
+   method AccessPerms access_permitted_1 (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write);
+      return fv_access_permitted (priv, csr_addr, read_not_write);
    endmethod
 
-   method Bool access_permitted_2 (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write, Bool access_sys_regs);
-      return fv_access_permitted (priv, csr_addr, read_not_write, access_sys_regs);
+   method AccessPerms access_permitted_2 (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write);
+      return fv_access_permitted (priv, csr_addr, read_not_write);
    endmethod
 
    // Fault on reading counters?

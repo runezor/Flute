@@ -1147,10 +1147,19 @@ module mkCPU (CPU_IFC);
       let rs1_val  = extract_cap(stage2_val1);
 
       Bool read_not_write = rs1 == 0;
-      Bool permitted = csr_regfile.access_permitted_scr (rg_cur_priv, scr_addr, read_not_write, stage2_asr);
+      AccessPerms permitted = csr_regfile.access_permitted_scr (rg_cur_priv, scr_addr, read_not_write);
 
-      if (! permitted) begin
+      if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
 	 rg_state <= CPU_TRAP;
+
+         if (permitted.exists) begin // Failed because of ASR
+           let trap_info = rg_trap_info;
+           trap_info.exc_code = exc_code_CHERI;
+           trap_info.cheri_exc_code = exc_code_CHERI_SysRegsPerm;
+           trap_info.cheri_exc_reg = {1'b1, scr_addr_PCC};
+           rg_trap_info <= trap_info;
+         end
+
 
 	 // Debug
 	 fa_emit_instr_trace (minstret, stage1.out.data_to_stage2.pcc, instr, rg_cur_priv);
@@ -1285,10 +1294,19 @@ module mkCPU (CPU_IFC);
 		      : extend (rs1));                    // CSRRWI
 
       Bool read_not_write = False;    // CSRRW always writes the CSR
-      Bool permitted = csr_regfile.access_permitted_1 (rg_cur_priv, csr_addr, read_not_write, getHardPerms(rg_trap_info.epcc).accessSysRegs);
+      let stage2_asr = getHardPerms(rg_trap_info.epcc).accessSysRegs;
+      AccessPerms permitted = csr_regfile.access_permitted_1 (rg_cur_priv, csr_addr, read_not_write);
 
-      if (! permitted) begin
+      if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
 	 rg_state <= CPU_TRAP;
+
+         if (permitted.exists) begin // Failed because of ASR
+           let trap_info = rg_trap_info;
+           trap_info.exc_code = exc_code_CHERI;
+           trap_info.cheri_exc_code = exc_code_CHERI_SysRegsPerm;
+           trap_info.cheri_exc_reg = {1'b1, scr_addr_PCC};
+           rg_trap_info <= trap_info;
+         end
 
 	 // Debug
 	 if (cur_verbosity > 1) begin
@@ -1415,10 +1433,19 @@ module mkCPU (CPU_IFC);
 		      : extend (rs1));                   // CSRRSI, CSRRCI
 
       Bool read_not_write = (rs1_val == 0);    // CSRR_S_or_C only reads, does not write CSR, if rs1_val == 0
-      Bool permitted = csr_regfile.access_permitted_2 (rg_cur_priv, csr_addr, read_not_write, getHardPerms(rg_trap_info.epcc).accessSysRegs);
+      let stage2_asr = getHardPerms(rg_trap_info.epcc).accessSysRegs;
+      AccessPerms permitted = csr_regfile.access_permitted_2 (rg_cur_priv, csr_addr, read_not_write);
 
-      if (! permitted) begin
+      if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
 	 rg_state <= CPU_TRAP;
+
+         if (permitted.exists) begin // Failed because of ASR
+           let trap_info = rg_trap_info;
+           trap_info.exc_code = exc_code_CHERI;
+           trap_info.cheri_exc_code = exc_code_CHERI_SysRegsPerm;
+           trap_info.cheri_exc_reg = {1'b1, scr_addr_PCC};
+           rg_trap_info <= trap_info;
+         end
 
 	 // Debug
 	 if (cur_verbosity > 1) begin
