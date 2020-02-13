@@ -190,7 +190,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `endif
 						    rd_valid:  False,
 						    rd:        rg_stage2.rd,
-						    rd_val:    rg_stage2.val1};
+						    rd_val:    cast(rg_stage2.val1)};
 
    let  trap_info_dmem = Trap_Info_Pipe {
 				    exc_code: dcache.exc_code,
@@ -307,13 +307,12 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef ISA_CHERI
       else if (   (rg_stage2.op_stage2 == OP_Stage2_TestSubset)) begin
           let ostatus = OSTATUS_PIPE;
-          CapPipe result = nullWithAddr(zeroExtend(pack(check_success)));
+          CapReg result = nullWithAddr(zeroExtend(pack(check_success)));
           let data_to_stage3 = data_to_stage3_base;
           data_to_stage3.rd_valid = True;
           data_to_stage3.rd_val = embed_cap(result);
           let bypass = bypass_base;
-          bypass.bypass_state = BYPASS_RD_RDVAL;
-          bypass.rd_val       = result;
+          bypass.bypass_state = BYPASS_RD;
 `ifdef RVFI
           let info_RVFI_s2 = info_RVFI_s2_base;
           data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
@@ -340,13 +339,12 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 			      : OSTATUS_PIPE));
         match {.mem_tag, .mem_val} = dcache.word128;
 `ifdef ISA_CHERI
-        CapPipe result = ?; //TODO any reason for this to be CapPipe not CapReg/CapMem?
+        CapReg result = ?;
         if (rg_stage2.mem_width_code == w_SIZE_CAP) begin
-            CapMem capMem = {pack(rg_stage2.mem_allow_cap && mem_tag), truncate(mem_val)};
-            CapReg capReg = cast(capMem);
-            result = cast(capReg);
+          CapMem capMem = {pack(rg_stage2.mem_allow_cap && mem_tag), mem_val};
+          result = cast(capMem);
         end else begin
-            result = nullWithAddr(truncate(mem_val));
+          result = nullWithAddr(truncate(mem_val));
         end
 `else
         WordXL result = truncate(mem_val);
@@ -354,86 +352,69 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
         let funct3 = instr_funct3 (rg_stage2.instr);
 
-	    let data_to_stage3 = data_to_stage3_base;
-	    data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
+	let data_to_stage3 = data_to_stage3_base;
+	data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
 `ifdef ISA_F
-            // A FPR load
-            if (rg_stage2.rd_in_fpr) begin
-               // A FLW result
-               if (funct3 == f3_FLW)
+        // A FPR load
+        if (rg_stage2.rd_in_fpr) begin
+           // A FLW result
+           if (funct3 == f3_FLW)
 `ifdef ISA_D
-                  // needs nan-boxing when destined for a DP register file
-                  data_to_stage3.rd_val = embed_flt(fv_nanbox (truncate(tpl_2(dcache.word128))));
+              // needs nan-boxing when destined for a DP register file
+              data_to_stage3.rd_val = embed_flt(fv_nanbox (truncate(tpl_2(dcache.word128))));
 `else
-                  data_to_stage3.rd_val = embed_flt(truncate(tpl_2(dcache.word128)));
+              data_to_stage3.rd_val = embed_flt(truncate(tpl_2(dcache.word128)));
 `endif
-               // A FLD result
-               else
-                  data_to_stage3.rd_val = embed_flt(truncate(tpl_2(dcache.word128)));
-            end
+           // A FLD result
+           else
+              data_to_stage3.rd_val = embed_flt(truncate(tpl_2(dcache.word128)));
+        end
 
-            // A GPR load in a FD system
-            else
+        // A GPR load in a FD system
+        else
 `endif
-            // A GPR load in a non-FD system
-	    data_to_stage3.rd_val   = embed_cap(result);
+        // A GPR load in a non-FD system
+	data_to_stage3.rd_val   = embed_cap(result);
 
-            // Update the bypass channel, if not trapping (NONPIPE)
-	    let bypass = bypass_base;
+        // Update the bypass channel, if not trapping (NONPIPE)
+	let bypass = bypass_base;
 `ifdef ISA_F
-            // In a system with FD, the LD result may be meant for FPR or GPR
-            // Check before updating the appropriate bypass channel
-            let upd_fpr = rg_stage2.rd_in_fpr;
-	    let fbypass = fbypass_base;
+        // In a system with FD, the LD result may be meant for FPR or GPR
+        // Check before updating the appropriate bypass channel
+        let upd_fpr = rg_stage2.rd_in_fpr;
+	let fbypass = fbypass_base;
 `endif
 
-	    if (ostatus != OSTATUS_NONPIPE) begin
 `ifdef ISA_F
-               data_to_stage3.rd_in_fpr= upd_fpr;
+        data_to_stage3.rd_in_fpr= upd_fpr;
 
-               // Bypassing FPR value.
-               if (upd_fpr) begin
-		  // Choose one of the following two options
+        // Bypassing FPR value.
+        if (upd_fpr) begin
+	   // Choose one of the following two options
 
-		  // Option 1: longer critical path, since the data is bypassed back into previous stage.
-		  // We use data_to_stage3.rd_val since nanboxing has been done.
-		  // fbypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
-		  // fbypass.rd_val       = extract_flt(data_to_stage3.rd_val);
+	   // Option 1: longer critical path, since the data is bypassed back into previous stage.
+	   // We use data_to_stage3.rd_val since nanboxing has been done.
+	   // fbypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
+	   // fbypass.rd_val       = extract_flt(data_to_stage3.rd_val);
 
-		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
-		  // (the bypassing is effectively delayed until the next stage).
-		   fbypass.bypass_state = BYPASS_RD;
-               end
-
-               // Bypassing GPR value in a FD system
-               else if (rg_stage2.rd != 0) begin    // TODO: is this test necessary?
-		  // Choose one of the following two options
-
-		  // Option 1: longer critical path, since the data is bypassed back into previous stage.
-		  // We use data_to_stage3.rd_val since nanboxing has been done.
-		  // bypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
-		  // bypass.rd_val       = result;
-
-		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
-		  // (the bypassing is effectively delayed until the next stage).
-		   bypass.bypass_state = BYPASS_RD;
-	       end
-`else
-               // Bypassing GPR value in a non-FD system. LD result meant for GPR
-	       if (rg_stage2.rd != 0) begin    // TODO: is this test necessary?
-		  // Choose one of the following two options
-
-		  // Option 1: longer critical path, since the data is bypassed back into previous stage.
-		  // We use data_to_stage3.rd_val since nanboxing has been done.
-		  // bypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
-		  // bypass.rd_val       = result;
-
-		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
-		  // (the bypassing is effectively delayed until the next stage).
-		     bypass.bypass_state = BYPASS_RD;
-	       end
+	   // Option 2: shorter critical path, since the data is not bypassed into previous stage,
+	   // (the bypassing is effectively delayed until the next stage).
+	    fbypass.bypass_state = BYPASS_RD;
+        end else
 `endif
-	    end
+        // Bypassing GPR value in a non-FD system. LD result meant for GPR
+	if (rg_stage2.rd != 0) begin    // TODO: is this test necessary?
+	   // Choose one of the following two options
+
+	   // Option 1: longer critical path, since the data is bypassed back into previous stage.
+	   // We use data_to_stage3.rd_val since nanboxing has been done.
+	   // bypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
+	   // bypass.rd_val       = result;
+
+	   // Option 2: shorter critical path, since the data is not bypassed into previous stage,
+	   // (the bypassing is effectively delayed until the next stage).
+	      bypass.bypass_state = BYPASS_RD;
+	end
 
 	    let trace_data   = ?;
 `ifdef INCLUDE_TANDEM_VERIF

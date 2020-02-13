@@ -17,7 +17,7 @@
 // read_rs1_port2_rs1             I     5
 // read_rs2_rs2                   I     5
 // write_rd_rd                    I     5
-// write_rd_rd_val                I   163
+// write_rd_rd_val                I   153
 // EN_server_reset_request_put    I     1
 // EN_server_reset_response_get   I     1
 // EN_write_rd                    I     1
@@ -88,7 +88,7 @@ module mkGPR_RegFile(CLK,
 
   // action method write_rd
   input  [4 : 0] write_rd_rd;
-  input  [162 : 0] write_rd_rd_val;
+  input  [152 : 0] write_rd_rd_val;
   input  EN_write_rd;
 
   // signals for module outputs
@@ -346,7 +346,7 @@ module mkGPR_RegFile(CLK,
   assign regfile$ADDR_IN = MUX_regfile$upd_1__SEL_1 ? write_rd_rd : rg_j ;
   assign regfile$D_IN =
 	     MUX_regfile$upd_1__SEL_1 ?
-	       write_rd_rd_val[162:10] :
+	       write_rd_rd_val :
 	       153'h100000000000000000000FFFF1FFFFF44000000 ;
   assign regfile$WE =
 	     EN_write_rd && write_rd_rd != 5'd0 ||

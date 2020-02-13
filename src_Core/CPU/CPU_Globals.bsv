@@ -471,9 +471,9 @@ typedef struct {
 `endif
 `endif
 `ifdef FLOAT_BIGGER_THAN_INT
-    Either#(CapPipe, WordFL) val;
+    Either#(CapType, WordFL) val;
 `else
-    CapPipe val;
+    capType val;
 `endif
 `else
 `ifdef ISA_D
@@ -482,7 +482,24 @@ typedef struct {
     WordXL val;
 `endif
 `endif
-   } Pipeline_Val deriving (Bits, FShow);
+   } Pipeline_Val#(type capType) deriving (Bits, FShow);
+
+instance Cast#(Pipeline_Val#(a), Pipeline_Val#(b)) provisos (Cast#(a,b));
+   function Pipeline_Val#(b) cast (Pipeline_Val#(a) src);
+`ifdef ISA_CHERI
+`ifdef FLOAT_BIGGER_THAN_INT
+    case (src.val) matches
+      tagged Left .l: return Pipeline_Val{val:Left(cast(l))};
+      tagged Right .r: return Pipeline_Val{val:Right(r)};
+    endcase
+`else
+    return Pipeline_Val{val:cast(src.val)};
+`endif
+`else
+    return Pipeline_Val{val:src.val};
+`endif
+   endfunction
+endinstance
 
 `ifdef FLOAT_BIGGER_THAN_INT
    instance FShow#(Either#(a,b)) provisos (FShow#(a), FShow#(b));
@@ -495,35 +512,35 @@ typedef struct {
 
 `ifdef ISA_CHERI
 `ifdef FLOAT_BIGGER_THAN_INT
-    function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: Left(cap)};
-    function CapPipe extract_cap(Pipeline_Val val) =
+    function Pipeline_Val#(t) embed_cap(t cap) provisos(CHERICap#(t)) = Pipeline_Val{val: Left(cap)};
+    function t extract_cap(Pipeline_Val#(t) val) provisos(CHERICap#(t)) =
         case (val.val) matches
             tagged Left .cap: return cap;
             tagged Right .flt: return nullWithAddr(truncate(flt));
         endcase;
-    function Pipeline_Val embed_flt(WordFL flt) = Pipeline_Val{val: Right(flt)};
-    function WordFL extract_flt(Pipeline_Val val) = val.val.Right;
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: Left(nullWithAddr(num))};
-    function WordXL extract_int(Pipeline_Val val) = getAddr(val.val.Left);
+    function Pipeline_Val#(t) embed_flt(WordFL flt) = Pipeline_Val{val: Right(flt)};
+    function WordFL extract_flt(Pipeline_Val#(t) val) = val.val.Right;
+    function Pipeline_Val#(t) embed_int(WordXL num) = Pipeline_Val{val: Left(nullWithAddr(num))};
+    function WordXL extract_int(Pipeline_Val#(t) val) = getAddr(val.val.Left);
 `else
-    function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: cap};
-    function CapPipe extract_cap(Pipeline_Val val) = val.val;
+    function Pipeline_Val#(t) embed_cap(t cap) = Pipeline_Val{val: cap};
+    function t extract_cap(Pipeline_Val#(t) val) = val.val;
 `ifdef ISA_F
-    function Pipeline_Val embed_flt(WordFL flt) = Pipeline_Val{val: nullWithAddr(zeroExtend(pack(flt)))};
-    function WordFL extract_flt(Pipeline_Val val) = unpack(truncate(getAddr(val.val)));
+    function Pipeline_Val#(t) embed_flt(WordFL flt) provisos(CHERICap#(t,a,b,XLEN,d,e)) = Pipeline_Val{val: nullWithAddr(zeroExtend(pack(flt)))};
+    function WordFL extract_flt(Pipeline_Val#(t) val) provisos(CHERICap#(t,a,b,XLEN,d,e)) = unpack(truncate(getAddr(val.val)));
 `endif
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: nullWithAddr(num)};
-    function WordXL extract_int(Pipeline_Val val) = getAddr(val.val);
+    function Pipeline_Val#(t) embed_int(WordXL num) provisos(CHERICap#(t,a,b,XLEN,d,e)) = Pipeline_Val{val: nullWithAddr(num)};
+    function WordXL extract_int(Pipeline_Val#(t) val) provisos(CHERICap#(t,a,b,XLEN,d,e)) = getAddr(val.val);
 `endif
 `else
 `ifdef ISA_F
-    function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: cap};
-    function CapPipe extract_cap(Pipeline_Val val) = val.val;
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: num};
-    function WordXL extract_int(Pipeline_Val val) = val.val;
+    function Pipeline_Val#(t) embed_cap(t cap) = Pipeline_Val{val: cap};
+    function t extract_cap(Pipeline_Val#(t) val) = val.val;
+    function Pipeline_Val#(t) embed_int(WordXL num) = Pipeline_Val{val: num};
+    function WordXL extract_int(Pipeline_Val#(t) val) = val.val;
 `else
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: num};
-    function WordXL extract_int(Pipeline_Val val) = val.val;
+    function Pipeline_Val#(t) embed_int(WordXL num) = Pipeline_Val{val: num};
+    function WordXL extract_int(Pipeline_Val#(t) val) = val.val;
 `endif
 `endif
 
@@ -544,10 +561,10 @@ typedef struct {
    Addr       addr;     // Branch, jump: newPC
                         // Mem ops and AMOs: mem addr
 
-   Pipeline_Val val1;  // OP_Stage2_ALU: rd_val
+   Pipeline_Val#(CapPipe) val1;  // OP_Stage2_ALU: rd_val
                        // OP_Stage2_M and OP_Stage2_FD: arg1
 
-   Pipeline_Val val2;  // OP_Stage2_ST: store-val;
+   Pipeline_Val#(CapPipe) val2;  // OP_Stage2_ST: store-val;
                        // OP_Stage2_M and OP_Stage2_FD: arg2
 
 `ifdef ISA_CHERI
@@ -699,7 +716,7 @@ typedef struct {
    Bool      rd_in_fpr;
    Bit #(5)  fpr_flags;
 `endif
-   Pipeline_Val rd_val;
+   Pipeline_Val#(CapReg) rd_val;
    } Data_Stage2_to_Stage3
 deriving (Bits);
 
