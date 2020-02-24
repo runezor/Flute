@@ -661,7 +661,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 			 way, way_hit);
 
 	    hit     = hit || hit_at_way;
-	    way_hit = fromInteger (way);
+	    if (hit_at_way) way_hit = fromInteger (way);
 	    word128  = (word128 | (pack(word128_at_way) & pack (replicate (hit_at_way))));
 	 end
 
