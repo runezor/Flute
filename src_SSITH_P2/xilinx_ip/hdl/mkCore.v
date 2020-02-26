@@ -2645,8 +2645,8 @@ module mkCore(CLK,
        MUX_activeSource_1$write_1__VAL_1,
        MUX_activeSource_1_1_0$write_1__SEL_1,
        MUX_activeSource_1_1_0$write_1__SEL_2,
+       MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
-       MUX_activeSource_1_1_1_1$write_1__SEL_3,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
        MUX_activeSource_1_1_2$write_1__VAL_1,
        MUX_flitToSink_0$wset_1__SEL_1,
@@ -2710,32 +2710,32 @@ module mkCore(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [63 : 0] v__h47989;
-  reg [63 : 0] v__h47378;
-  reg [63 : 0] v__h51998;
-  reg [63 : 0] v__h51387;
-  reg [63 : 0] v__h81934;
-  reg [63 : 0] v__h81323;
-  reg [63 : 0] v__h84827;
-  reg [63 : 0] v__h84216;
-  reg [63 : 0] v__h62693;
-  reg [63 : 0] v__h62312;
-  reg [63 : 0] v__h64763;
-  reg [63 : 0] v__h64382;
-  reg [63 : 0] v__h66662;
-  reg [63 : 0] v__h66281;
-  reg [63 : 0] v__h94107;
-  reg [63 : 0] v__h93726;
-  reg [63 : 0] v__h96598;
-  reg [63 : 0] v__h96217;
-  reg [63 : 0] v__h98908;
-  reg [63 : 0] v__h98527;
-  reg [31 : 0] v__h19881;
-  reg [31 : 0] v__h20059;
-  reg [31 : 0] v__h20425;
-  reg [31 : 0] v__h19875;
-  reg [31 : 0] v__h20053;
-  reg [31 : 0] v__h20419;
+  reg [63 : 0] v__h47914;
+  reg [63 : 0] v__h47303;
+  reg [63 : 0] v__h51923;
+  reg [63 : 0] v__h51312;
+  reg [63 : 0] v__h81859;
+  reg [63 : 0] v__h81248;
+  reg [63 : 0] v__h84752;
+  reg [63 : 0] v__h84141;
+  reg [63 : 0] v__h62618;
+  reg [63 : 0] v__h62237;
+  reg [63 : 0] v__h64688;
+  reg [63 : 0] v__h64307;
+  reg [63 : 0] v__h66587;
+  reg [63 : 0] v__h66206;
+  reg [63 : 0] v__h94032;
+  reg [63 : 0] v__h93651;
+  reg [63 : 0] v__h96523;
+  reg [63 : 0] v__h96142;
+  reg [63 : 0] v__h98833;
+  reg [63 : 0] v__h98452;
+  reg [31 : 0] v__h19806;
+  reg [31 : 0] v__h19984;
+  reg [31 : 0] v__h20350;
+  reg [31 : 0] v__h19800;
+  reg [31 : 0] v__h19978;
+  reg [31 : 0] v__h20344;
   // synopsys translate_on
 
   // remaining internal signals
@@ -2743,58 +2743,58 @@ module mkCore(CLK,
 		tagController_tmp_shimMaster_awff_rvport1__re_ETC__q2;
   wire [72 : 0] tagController_tmp_shimMaster_wff_rvport1__rea_ETC__q3,
 		tagController_tmp_shimSlave_rff_rvport1__read_ETC__q1;
-  wire [63 : 0] araddr__h14095,
-		aw_awaddr__h9363,
+  wire [63 : 0] araddr__h14020,
+		aw_awaddr__h9288,
 		tmp__h6846,
-		tmp__h9146,
-		v_araddr__h14112,
-		x__h34779,
-		x__h34804,
-		x__h37587,
-		x__h37612,
+		tmp__h9071,
+		v_araddr__h14037,
+		x__h34704,
+		x__h34729,
+		x__h37512,
+		x__h37537,
 		x__h6687,
-		x__h69238,
-		x__h69263,
-		x__h71720,
-		x__h71745;
-  wire [39 : 0] x__h9395;
-  wire [8 : 0] x_port1__read__h70367, x_port1__read__h72831;
-  wire [7 : 0] arlen__h14096, v_arlen__h14113;
-  wire [5 : 0] v_arid__h14111;
-  wire [4 : 0] a_awid__h35939,
-	       a_awid__h38704,
-	       fatReq_arid__h69806,
-	       fatReq_arid__h72273,
+		x__h69163,
+		x__h69188,
+		x__h71645,
+		x__h71670;
+  wire [39 : 0] x__h9320;
+  wire [8 : 0] x_port1__read__h70292, x_port1__read__h72756;
+  wire [7 : 0] arlen__h14021, v_arlen__h14038;
+  wire [5 : 0] v_arid__h14036;
+  wire [4 : 0] a_awid__h35864,
+	       a_awid__h38629,
+	       fatReq_arid__h69731,
+	       fatReq_arid__h72198,
 	       tagController_tmp_ug_slave_u_b_peekWirewget_B_ETC__q26,
 	       tagController_tmp_ug_slave_u_r_peekWirewget_B_ETC__q25;
-  wire [3 : 0] _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d273,
-	       arcache__h14100,
-	       x__h11172,
-	       x__h11184,
-	       x__h11196,
-	       x__h11208,
-	       x__h11220,
-	       x__h11232,
-	       x__h11244,
-	       x__h12768,
-	       x__h14176,
-	       x__h9438,
-	       y__h11173,
-	       y__h11185,
-	       y__h11197,
-	       y__h11209,
-	       y__h11221,
-	       y__h11233,
-	       y__h11245;
-  wire [2 : 0] aw_awsize_val__h11102, v_arsize_val__h14158;
-  wire [1 : 0] IF_IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dm_ETC___d1139,
-	       IF_IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug__ETC___d1244,
-	       IF_cpu_dmem_master_ar_araddr__776_BITS_63_TO_4_ETC___d1802,
-	       IF_debug_module_master_ar_araddr__868_BITS_63__ETC___d1894,
-	       SEXT_SEXT_arbiter_1_1_firstHot_265_266_BIT_0_2_ETC__q22,
-	       SEXT_SEXT_arbiter_1_firstHot_1_080_081_BIT_0_0_ETC__q17,
-	       SEXT_SEXT_arbiter_1_firstHot_615_616_BIT_0_617_ETC__q12,
-	       SEXT_SEXT_arbiter_firstHot_420_421_BIT_0_422_A_ETC__q7,
+  wire [3 : 0] _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258,
+	       arcache__h14025,
+	       x__h11097,
+	       x__h11109,
+	       x__h11121,
+	       x__h11133,
+	       x__h11145,
+	       x__h11157,
+	       x__h11169,
+	       x__h12693,
+	       x__h14101,
+	       x__h9363,
+	       y__h11098,
+	       y__h11110,
+	       y__h11122,
+	       y__h11134,
+	       y__h11146,
+	       y__h11158,
+	       y__h11170;
+  wire [2 : 0] aw_awsize_val__h11027, v_arsize_val__h14083;
+  wire [1 : 0] IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124,
+	       IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229,
+	       IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787,
+	       IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879,
+	       SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22,
+	       SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17,
+	       SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12,
+	       SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7,
 	       SEXT_arbiter_1_1_firstHot__q19,
 	       SEXT_arbiter_1_1_lastSelect_1__q21,
 	       SEXT_arbiter_1_1_lastSelect__q20,
@@ -2805,155 +2805,155 @@ module mkCore(CLK,
 	       SEXT_arbiter_1_lastSelect__q10,
 	       SEXT_arbiter_firstHot__q5,
 	       SEXT_arbiter_lastSelect__q6,
-	       SEXT_x0459__q18,
-	       SEXT_x0994__q13,
-	       SEXT_x1028__q14,
-	       SEXT_x2404__q23,
-	       SEXT_x2438__q24,
-	       SEXT_x6508__q8;
-  wire IF_NOT_ifcs_0_1_innerRoute_first__026_BIT_1_03_ETC___d2048,
-       IF_NOT_ifcs_0_innerRoute_first__366_BIT_1_375__ETC___d1388,
-       IF_NOT_ifcs_1_1_innerRoute_first__055_BIT_1_05_ETC___d2064,
-       IF_NOT_ifcs_1_innerRoute_first__395_BIT_1_399__ETC___d1404,
-       IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2300,
-       IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2306,
-       IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2312,
-       IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2100,
-       IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2104,
-       IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1650,
-       IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1656,
-       IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1662,
-       IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1440,
-       IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1444,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1104,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1174,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1116,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1118,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1121,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1123,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1127,
-       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1137,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1209,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1279,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1221,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1223,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1226,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1228,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1232,
-       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1242,
-       IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358,
-       IF_split_1_flitLeft_047_EQ_0_048_THEN_ssNoSynt_ETC___d1359,
-       IF_split_2_flitLeft_076_EQ_0_077_THEN_ssNoSynt_ETC___d1360,
-       SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281,
-       SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275,
-       SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269,
-       SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088,
-       SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631,
-       SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625,
-       SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084,
-       SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619,
-       SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428,
-       SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424,
-       cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1790,
-       cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1800,
-       cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1781,
-       cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1786,
-       cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_n_ETC___d1779,
-       cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_p_ETC___d1784,
-       debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1882,
-       debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1892,
-       debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1873,
-       debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1878,
-       debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1871,
-       debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1876,
-       plic_RDY_server_reset_request_put__08_AND_cpu__ETC___d414,
-       reqWires_1_0_whas__592_AND_reqWires_1_0_wget___ETC___d1602,
-       reqWires_1_1_0_whas__242_AND_reqWires_1_1_0_wg_ETC___d2252,
-       split_0_doPut_whas__010_AND_split_0_doPut_wget_ETC___d1017,
-       split_1_doPut_whas__039_AND_split_1_doPut_wget_ETC___d1046,
-       split_2_doPut_whas__068_AND_split_2_doPut_wget_ETC___d1075,
-       state_1_1_073_AND_activeSource_1_0_1_140_141_A_ETC___d2143,
-       state_1_1_073_AND_activeSource_1_1_1_180_181_A_ETC___d2183,
-       state_1_1_1_253_AND_activeSource_1_1_0_347_348_ETC___d2350,
-       state_1_1_1_253_AND_activeSource_1_1_1_1_383_3_ETC___d2386,
-       state_1_1_1_253_AND_activeSource_1_1_2_419_420_ETC___d2422,
-       state_1_603_AND_activeSource_1_0_691_692_AND_i_ETC___d1694,
-       state_1_603_AND_activeSource_1_1_724_725_AND_i_ETC___d1727,
-       state_1_603_AND_activeSource_1_2_758_759_AND_i_ETC___d1761,
-       state_413_AND_activeSource_0_486_487_AND_ifcs__ETC___d1489,
-       state_413_AND_activeSource_1_530_531_AND_ifcs__ETC___d1533,
-       x__h45981,
-       x__h46084,
-       x__h46449,
-       x__h46508,
-       x__h46590,
-       x__h60173,
-       x__h60175,
-       x__h60324,
-       x__h60326,
-       x__h60460,
-       x__h60462,
-       x__h60932,
-       x__h60934,
-       x__h60994,
-       x__h61028,
-       x__h61120,
-       x__h61122,
-       x__h61301,
-       x__h61303,
-       x__h79932,
-       x__h80035,
-       x__h80400,
-       x__h80459,
-       x__h80541,
-       x__h91583,
-       x__h91585,
-       x__h91734,
-       x__h91736,
-       x__h91870,
-       x__h91872,
-       x__h92342,
-       x__h92344,
-       x__h92404,
-       x__h92438,
-       x__h92530,
-       x__h92532,
-       x__h92711,
-       x__h92713,
-       y__h45982,
-       y__h46085,
-       y__h46450,
-       y__h46591,
-       y__h60174,
-       y__h60176,
-       y__h60325,
-       y__h60327,
-       y__h60461,
-       y__h60463,
-       y__h60933,
-       y__h60935,
-       y__h61121,
-       y__h61123,
-       y__h61302,
-       y__h61304,
-       y__h79933,
-       y__h80036,
-       y__h80401,
-       y__h80542,
-       y__h91584,
-       y__h91586,
-       y__h91735,
-       y__h91737,
-       y__h91871,
-       y__h91873,
-       y__h92343,
-       y__h92345,
-       y__h92531,
-       y__h92533,
-       y__h92712,
-       y__h92714;
+	       SEXT_x0384__q18,
+	       SEXT_x0919__q13,
+	       SEXT_x0953__q14,
+	       SEXT_x2329__q23,
+	       SEXT_x2363__q24,
+	       SEXT_x6433__q8;
+  wire IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033,
+       IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373,
+       IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049,
+       IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389,
+       IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285,
+       IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291,
+       IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297,
+       IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085,
+       IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089,
+       IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635,
+       IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641,
+       IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647,
+       IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425,
+       IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1159,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112,
+       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1264,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217,
+       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227,
+       IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343,
+       IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344,
+       IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345,
+       SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266,
+       SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260,
+       SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254,
+       SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073,
+       SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616,
+       SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610,
+       SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069,
+       SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604,
+       SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413,
+       SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409,
+       cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775,
+       cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785,
+       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766,
+       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771,
+       cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764,
+       cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769,
+       debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867,
+       debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877,
+       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858,
+       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863,
+       debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856,
+       debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861,
+       plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399,
+       reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587,
+       reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237,
+       split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002,
+       split_1_doPut_whas__024_AND_split_1_doPut_wget_ETC___d1031,
+       split_2_doPut_whas__053_AND_split_2_doPut_wget_ETC___d1060,
+       state_1_1_058_AND_activeSource_1_0_1_125_126_A_ETC___d2128,
+       state_1_1_058_AND_activeSource_1_1_1_165_166_A_ETC___d2168,
+       state_1_1_1_238_AND_activeSource_1_1_0_332_333_ETC___d2335,
+       state_1_1_1_238_AND_activeSource_1_1_1_1_368_3_ETC___d2371,
+       state_1_1_1_238_AND_activeSource_1_1_2_404_405_ETC___d2407,
+       state_1_588_AND_activeSource_1_0_676_677_AND_i_ETC___d1679,
+       state_1_588_AND_activeSource_1_1_709_710_AND_i_ETC___d1712,
+       state_1_588_AND_activeSource_1_2_743_744_AND_i_ETC___d1746,
+       state_398_AND_activeSource_0_471_472_AND_ifcs__ETC___d1474,
+       state_398_AND_activeSource_1_515_516_AND_ifcs__ETC___d1518,
+       x__h45906,
+       x__h46009,
+       x__h46374,
+       x__h46433,
+       x__h46515,
+       x__h60098,
+       x__h60100,
+       x__h60249,
+       x__h60251,
+       x__h60385,
+       x__h60387,
+       x__h60857,
+       x__h60859,
+       x__h60919,
+       x__h60953,
+       x__h61045,
+       x__h61047,
+       x__h61226,
+       x__h61228,
+       x__h79857,
+       x__h79960,
+       x__h80325,
+       x__h80384,
+       x__h80466,
+       x__h91508,
+       x__h91510,
+       x__h91659,
+       x__h91661,
+       x__h91795,
+       x__h91797,
+       x__h92267,
+       x__h92269,
+       x__h92329,
+       x__h92363,
+       x__h92455,
+       x__h92457,
+       x__h92636,
+       x__h92638,
+       y__h45907,
+       y__h46010,
+       y__h46375,
+       y__h46516,
+       y__h60099,
+       y__h60101,
+       y__h60250,
+       y__h60252,
+       y__h60386,
+       y__h60388,
+       y__h60858,
+       y__h60860,
+       y__h61046,
+       y__h61048,
+       y__h61227,
+       y__h61229,
+       y__h79858,
+       y__h79961,
+       y__h80326,
+       y__h80467,
+       y__h91509,
+       y__h91511,
+       y__h91660,
+       y__h91662,
+       y__h91796,
+       y__h91798,
+       y__h92268,
+       y__h92270,
+       y__h92456,
+       y__h92458,
+       y__h92637,
+       y__h92639;
 
   // action method set_verbosity
   assign RDY_set_verbosity = 1'd1 ;
@@ -4421,7 +4421,7 @@ module mkCore(CLK,
   // rule RL_burst
   assign CAN_FIRE_RL_burst =
 	     ifcs_0_innerReq$EMPTY_N && ifcs_0_innerRoute$EMPTY_N &&
-	     state_413_AND_activeSource_0_486_487_AND_ifcs__ETC___d1489 ;
+	     state_398_AND_activeSource_0_471_472_AND_ifcs__ETC___d1474 ;
   assign WILL_FIRE_RL_burst = CAN_FIRE_RL_burst ;
 
   // rule RL_source_selected_1
@@ -4434,7 +4434,7 @@ module mkCore(CLK,
   // rule RL_burst_1
   assign CAN_FIRE_RL_burst_1 =
 	     ifcs_1_innerReq$EMPTY_N && ifcs_1_innerRoute$EMPTY_N &&
-	     state_413_AND_activeSource_1_530_531_AND_ifcs__ETC___d1533 ;
+	     state_398_AND_activeSource_1_515_516_AND_ifcs__ETC___d1518 ;
   assign WILL_FIRE_RL_burst_1 = CAN_FIRE_RL_burst_1 ;
 
   // rule __me_check_168
@@ -4447,19 +4447,19 @@ module mkCore(CLK,
 
   // rule RL_sink_selected
   assign CAN_FIRE_RL_sink_selected =
-	     IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358 &&
+	     IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343 &&
 	     flitToSink_0$whas ;
   assign WILL_FIRE_RL_sink_selected = CAN_FIRE_RL_sink_selected ;
 
   // rule RL_sink_selected_1
   assign CAN_FIRE_RL_sink_selected_1 =
-	     IF_split_1_flitLeft_047_EQ_0_048_THEN_ssNoSynt_ETC___d1359 &&
+	     IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344 &&
 	     flitToSink_1$whas ;
   assign WILL_FIRE_RL_sink_selected_1 = CAN_FIRE_RL_sink_selected_1 ;
 
   // rule RL_sink_selected_2
   assign CAN_FIRE_RL_sink_selected_2 =
-	     IF_split_2_flitLeft_076_EQ_0_077_THEN_ssNoSynt_ETC___d1360 &&
+	     IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 &&
 	     flitToSink_2$whas ;
   assign WILL_FIRE_RL_sink_selected_2 = CAN_FIRE_RL_sink_selected_2 ;
 
@@ -4506,7 +4506,7 @@ module mkCore(CLK,
   // rule RL_burst_5
   assign CAN_FIRE_RL_burst_5 =
 	     ifcs_0_1_innerReq$EMPTY_N && ifcs_0_1_innerRoute$EMPTY_N &&
-	     state_1_1_073_AND_activeSource_1_0_1_140_141_A_ETC___d2143 ;
+	     state_1_1_058_AND_activeSource_1_0_1_125_126_A_ETC___d2128 ;
   assign WILL_FIRE_RL_burst_5 = CAN_FIRE_RL_burst_5 ;
 
   // rule RL_source_selected_6
@@ -4519,7 +4519,7 @@ module mkCore(CLK,
   // rule RL_burst_6
   assign CAN_FIRE_RL_burst_6 =
 	     ifcs_1_1_innerReq$EMPTY_N && ifcs_1_1_innerRoute$EMPTY_N &&
-	     state_1_1_073_AND_activeSource_1_1_1_180_181_A_ETC___d2183 ;
+	     state_1_1_058_AND_activeSource_1_1_1_165_166_A_ETC___d2168 ;
   assign WILL_FIRE_RL_burst_6 = CAN_FIRE_RL_burst_6 ;
 
   // rule __me_check_215
@@ -4921,7 +4921,7 @@ module mkCore(CLK,
 
   // rule RL_split_0_putFirst
   assign CAN_FIRE_RL_split_0_putFirst =
-	     split_0_doPut_whas__010_AND_split_0_doPut_wget_ETC___d1017 &&
+	     split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002 &&
 	     split_0_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_0_putFirst = CAN_FIRE_RL_split_0_putFirst ;
 
@@ -5042,7 +5042,7 @@ module mkCore(CLK,
 
   // rule RL_split_1_putFirst
   assign CAN_FIRE_RL_split_1_putFirst =
-	     split_1_doPut_whas__039_AND_split_1_doPut_wget_ETC___d1046 &&
+	     split_1_doPut_whas__024_AND_split_1_doPut_wget_ETC___d1031 &&
 	     split_1_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_1_putFirst = CAN_FIRE_RL_split_1_putFirst ;
 
@@ -5117,7 +5117,7 @@ module mkCore(CLK,
 
   // rule RL_split_2_putFirst
   assign CAN_FIRE_RL_split_2_putFirst =
-	     split_2_doPut_whas__068_AND_split_2_doPut_wget_ETC___d1075 &&
+	     split_2_doPut_whas__053_AND_split_2_doPut_wget_ETC___d1060 &&
 	     split_2_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_2_putFirst = CAN_FIRE_RL_split_2_putFirst ;
 
@@ -5193,39 +5193,39 @@ module mkCore(CLK,
   // rule RL_ifcs_0_firstFlit
   assign CAN_FIRE_RL_ifcs_0_firstFlit =
 	     cpu$dmem_master_wvalid &&
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
 	     ifcs_0_innerReq$FULL_N &&
 	     ifcs_0_innerRoute$FULL_N &&
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1104 ||
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 ||
 	      cpu$dmem_master_awvalid) &&
 	     ifcs_0_state == 2'd0 &&
-	     IF_IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dm_ETC___d1139 ==
+	     IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_firstFlit = CAN_FIRE_RL_ifcs_0_firstFlit ;
 
   // rule RL_ifcs_0_followFlits
   assign CAN_FIRE_RL_ifcs_0_followFlits =
 	     cpu$dmem_master_wvalid &&
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
 	     ifcs_0_innerReq$FULL_N &&
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1104 ||
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 ||
 	      cpu$dmem_master_awvalid) &&
 	     ifcs_0_state == 2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_followFlits = CAN_FIRE_RL_ifcs_0_followFlits ;
 
   // rule RL_ifcs_0_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_0_nonRoutableFlit =
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097 &&
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1174 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1159 &&
 	     ifcs_0_state == 2'd0 &&
-	     IF_IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dm_ETC___d1139 !=
+	     IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_nonRoutableFlit ;
 
   // rule RL_ifcs_0_drainFlits
   assign CAN_FIRE_RL_ifcs_0_drainFlits =
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
 	     cpu$dmem_master_wvalid &&
 	     ifcs_0_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_0_drainFlits = CAN_FIRE_RL_ifcs_0_drainFlits ;
@@ -5271,7 +5271,7 @@ module mkCore(CLK,
 
   // rule RL_arbitrate_1
   assign CAN_FIRE_RL_arbitrate_1 =
-	     reqWires_1_0_whas__592_AND_reqWires_1_0_wget___ETC___d1602 &&
+	     reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587 &&
 	     !state_1 ;
   assign WILL_FIRE_RL_arbitrate_1 = CAN_FIRE_RL_arbitrate_1 ;
 
@@ -5285,7 +5285,7 @@ module mkCore(CLK,
   // rule RL_burst_2
   assign CAN_FIRE_RL_burst_2 =
 	     ifcs_0_rspBack$EMPTY_N && ifcs_0_routeBack$EMPTY_N &&
-	     state_1_603_AND_activeSource_1_0_691_692_AND_i_ETC___d1694 ;
+	     state_1_588_AND_activeSource_1_0_676_677_AND_i_ETC___d1679 ;
   assign WILL_FIRE_RL_burst_2 = CAN_FIRE_RL_burst_2 ;
 
   // rule RL_source_selected_3
@@ -5298,7 +5298,7 @@ module mkCore(CLK,
   // rule RL_burst_3
   assign CAN_FIRE_RL_burst_3 =
 	     ifcs_1_rspBack$EMPTY_N && ifcs_1_routeBack$EMPTY_N &&
-	     state_1_603_AND_activeSource_1_1_724_725_AND_i_ETC___d1727 ;
+	     state_1_588_AND_activeSource_1_1_709_710_AND_i_ETC___d1712 ;
   assign WILL_FIRE_RL_burst_3 = CAN_FIRE_RL_burst_3 ;
 
   // rule __me_check_183
@@ -5315,7 +5315,7 @@ module mkCore(CLK,
   // rule RL_burst_4
   assign CAN_FIRE_RL_burst_4 =
 	     ifcs_2_rspBack$EMPTY_N && ifcs_2_routeBack$EMPTY_N &&
-	     state_1_603_AND_activeSource_1_2_758_759_AND_i_ETC___d1761 ;
+	     state_1_588_AND_activeSource_1_2_743_744_AND_i_ETC___d1746 ;
   assign WILL_FIRE_RL_burst_4 = CAN_FIRE_RL_burst_4 ;
 
   // rule __me_check_181
@@ -5379,7 +5379,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_nonRoutableGenRsp =
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
 	     ifcs_0_noRoute_inner_pendingReq$port1__read &&
 	     ifcs_0_noRouteRsp$FULL_N &&
 	     cpu$dmem_master_wvalid ;
@@ -5573,7 +5573,7 @@ module mkCore(CLK,
 
   // rule RL_arbitrate_3
   assign CAN_FIRE_RL_arbitrate_3 =
-	     reqWires_1_1_0_whas__242_AND_reqWires_1_1_0_wg_ETC___d2252 &&
+	     reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237 &&
 	     !state_1_1_1 ;
   assign WILL_FIRE_RL_arbitrate_3 = CAN_FIRE_RL_arbitrate_3 ;
 
@@ -5587,7 +5587,7 @@ module mkCore(CLK,
   // rule RL_burst_7
   assign CAN_FIRE_RL_burst_7 =
 	     ifcs_0_1_rspBack$EMPTY_N && ifcs_0_1_routeBack$EMPTY_N &&
-	     state_1_1_1_253_AND_activeSource_1_1_0_347_348_ETC___d2350 ;
+	     state_1_1_1_238_AND_activeSource_1_1_0_332_333_ETC___d2335 ;
   assign WILL_FIRE_RL_burst_7 = CAN_FIRE_RL_burst_7 ;
 
   // rule RL_source_selected_8
@@ -5600,7 +5600,7 @@ module mkCore(CLK,
   // rule RL_burst_8
   assign CAN_FIRE_RL_burst_8 =
 	     ifcs_1_1_rspBack$EMPTY_N && ifcs_1_1_routeBack$EMPTY_N &&
-	     state_1_1_1_253_AND_activeSource_1_1_1_1_383_3_ETC___d2386 ;
+	     state_1_1_1_238_AND_activeSource_1_1_1_1_368_3_ETC___d2371 ;
   assign WILL_FIRE_RL_burst_8 = CAN_FIRE_RL_burst_8 ;
 
   // rule __me_check_230
@@ -5617,7 +5617,7 @@ module mkCore(CLK,
   // rule RL_burst_9
   assign CAN_FIRE_RL_burst_9 =
 	     ifcs_2_1_rspBack$EMPTY_N && ifcs_2_1_routeBack$EMPTY_N &&
-	     state_1_1_1_253_AND_activeSource_1_1_2_419_420_ETC___d2422 ;
+	     state_1_1_1_238_AND_activeSource_1_1_2_404_405_ETC___d2407 ;
   assign WILL_FIRE_RL_burst_9 = CAN_FIRE_RL_burst_9 ;
 
   // rule __me_check_228
@@ -5722,7 +5722,7 @@ module mkCore(CLK,
 	     cpu$dmem_master_arvalid && ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_innerRoute$FULL_N &&
 	     ifcs_0_1_state == 2'd0 &&
-	     IF_cpu_dmem_master_ar_araddr__776_BITS_63_TO_4_ETC___d1802 ==
+	     IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_firstFlit = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
 
@@ -5737,15 +5737,15 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     ifcs_0_1_noRoute_flitCount == 9'd0 && cpu$dmem_master_arvalid &&
 	     ifcs_0_1_state == 2'd0 &&
-	     IF_cpu_dmem_master_ar_araddr__776_BITS_63_TO_4_ETC___d1802 !=
+	     IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ;
 
   // rule RL_ifcs_0_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
-	     x_port1__read__h70367 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h70367 != 9'd1 || cpu$dmem_master_arvalid) ;
+	     x_port1__read__h70292 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h70292 != 9'd1 || cpu$dmem_master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
 
@@ -5814,39 +5814,39 @@ module mkCore(CLK,
   // rule RL_ifcs_1_firstFlit
   assign CAN_FIRE_RL_ifcs_1_firstFlit =
 	     debug_module$master_wvalid &&
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
 	     ifcs_1_innerReq$FULL_N &&
 	     ifcs_1_innerRoute$FULL_N &&
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1209 ||
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 ||
 	      debug_module$master_awvalid) &&
 	     ifcs_1_state == 2'd0 &&
-	     IF_IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug__ETC___d1244 ==
+	     IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_firstFlit = CAN_FIRE_RL_ifcs_1_firstFlit ;
 
   // rule RL_ifcs_1_followFlits
   assign CAN_FIRE_RL_ifcs_1_followFlits =
 	     debug_module$master_wvalid &&
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
 	     ifcs_1_innerReq$FULL_N &&
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1209 ||
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 ||
 	      debug_module$master_awvalid) &&
 	     ifcs_1_state == 2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_followFlits = CAN_FIRE_RL_ifcs_1_followFlits ;
 
   // rule RL_ifcs_1_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_1_nonRoutableFlit =
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202 &&
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1279 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1264 &&
 	     ifcs_1_state == 2'd0 &&
-	     IF_IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug__ETC___d1244 !=
+	     IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_1_nonRoutableFlit ;
 
   // rule RL_ifcs_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_nonRoutableGenRsp =
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
 	     ifcs_1_noRoute_inner_pendingReq$port1__read &&
 	     ifcs_1_noRouteRsp$FULL_N &&
 	     debug_module$master_wvalid ;
@@ -5855,7 +5855,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_drainFlits
   assign CAN_FIRE_RL_ifcs_1_drainFlits =
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
 	     debug_module$master_wvalid &&
 	     ifcs_1_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_1_drainFlits = CAN_FIRE_RL_ifcs_1_drainFlits ;
@@ -5902,7 +5902,7 @@ module mkCore(CLK,
 	     debug_module$master_arvalid && ifcs_1_1_innerReq$FULL_N &&
 	     ifcs_1_1_innerRoute$FULL_N &&
 	     ifcs_1_1_state == 2'd0 &&
-	     IF_debug_module_master_ar_araddr__868_BITS_63__ETC___d1894 ==
+	     IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_1_firstFlit = CAN_FIRE_RL_ifcs_1_1_firstFlit ;
 
@@ -5918,15 +5918,15 @@ module mkCore(CLK,
 	     ifcs_1_1_noRoute_flitCount == 9'd0 &&
 	     debug_module$master_arvalid &&
 	     ifcs_1_1_state == 2'd0 &&
-	     IF_debug_module_master_ar_araddr__868_BITS_63__ETC___d1894 !=
+	     IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ;
 
   // rule RL_ifcs_1_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
-	     x_port1__read__h72831 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h72831 != 9'd1 || debug_module$master_arvalid) ;
+	     x_port1__read__h72756 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h72756 != 9'd1 || debug_module$master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
 
@@ -6042,15 +6042,15 @@ module mkCore(CLK,
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put__08_AND_cpu__ETC___d414 ;
+	     plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399 ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
-	     debug_module$RDY_hart0_reset_client_request_get &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
+	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
@@ -6080,7 +6080,7 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_0$write_1__SEL_2 =
 	     WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
 	     !ifcs_1_1_rspBack$D_OUT[1] ;
-  assign MUX_activeSource_1_1_1_1$write_1__SEL_3 =
+  assign MUX_activeSource_1_1_0$write_1__SEL_3 =
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_flitToSink_0$wset_1__SEL_1 =
@@ -6224,19 +6224,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_burst_9 && ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_activeSource_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate &&
-	     IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1440 ;
+	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425 ;
   assign MUX_activeSource_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate &&
-	     IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1444 ;
+	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429 ;
   assign MUX_activeSource_1_1_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2300 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285 ;
   assign MUX_activeSource_1_1_1_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2306 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291 ;
   assign MUX_activeSource_1_1_2$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2312 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297 ;
   assign MUX_merged_0_flitLeft$write_1__VAL_1 = merged_0_flitLeft - 8'd1 ;
   assign MUX_merged_1_flitLeft$write_1__VAL_1 = merged_1_flitLeft - 8'd1 ;
   always@(MUX_flitToSink_1_0$wset_1__SEL_1 or
@@ -6455,7 +6455,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_0_forwardRsp ;
   assign msNoSynth_0_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp &&
-	     x_port1__read__h70367 == 9'd1 ||
+	     x_port1__read__h70292 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_0_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit ;
@@ -6478,7 +6478,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_forwardRsp ;
   assign msNoSynth_1_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp &&
-	     x_port1__read__h72831 == 9'd1 ||
+	     x_port1__read__h72756 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_1_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_firstFlit ;
@@ -6552,13 +6552,13 @@ module mkCore(CLK,
 	       ifcs_1_innerReq$D_OUT ;
   assign reqWires_0$wget =
 	     (!ifcs_0_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358) ?
-	       IF_NOT_ifcs_0_innerRoute_first__366_BIT_1_375__ETC___d1388 :
+	      !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
+	       IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373 :
 	       ifcs_0_innerRoute$D_OUT[0] ;
   assign reqWires_1$wget =
 	     (!ifcs_1_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358) ?
-	       IF_NOT_ifcs_1_innerRoute_first__395_BIT_1_399__ETC___d1404 :
+	      !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
+	       IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389 :
 	       ifcs_1_innerRoute$D_OUT[0] ;
   assign flitToSink_0$whas =
 	     WILL_FIRE_RL_burst && ifcs_0_innerRoute$D_OUT[0] ||
@@ -6622,12 +6622,12 @@ module mkCore(CLK,
   assign reqWires_1_0_1$wget =
 	     (!ifcs_0_1_innerRoute$D_OUT[0] ||
 	      !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-	       IF_NOT_ifcs_0_1_innerRoute_first__026_BIT_1_03_ETC___d2048 :
+	       IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033 :
 	       ifcs_0_1_innerRoute$D_OUT[0] ;
   assign reqWires_1_1_1$wget =
 	     (!ifcs_1_1_innerRoute$D_OUT[0] ||
 	      !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-	       IF_NOT_ifcs_1_1_innerRoute_first__055_BIT_1_05_ETC___d2064 :
+	       IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049 :
 	       ifcs_1_1_innerRoute$D_OUT[0] ;
   assign flitToSink_1_0_1$whas =
 	     WILL_FIRE_RL_burst_5 && ifcs_0_1_innerRoute$D_OUT[0] ||
@@ -6721,19 +6721,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_firstFlit ;
   assign sourceSelect_1_0$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1650 ;
+	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635 ;
   assign sourceSelect_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1656 ;
+	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641 ;
   assign sourceSelect_1_2$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1662 ;
+	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647 ;
   assign sourceSelect_1_0_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
-	     IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2100 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085 ;
   assign sourceSelect_1_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
-	     IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2104 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089 ;
   assign tagController_tmp_shimSlave_awff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_slave_u_aw_putWire$wget } ;
   assign tagController_tmp_shimSlave_awff_rv$port1__read =
@@ -6806,11 +6806,11 @@ module mkCore(CLK,
   assign tagController_tmp_shimMaster_awff_rv$port0__write_1 =
 	     { 1'd1,
 	       tagController_tmp_tagCon$memory_request_get[100:95],
-	       aw_awaddr__h9363,
+	       aw_awaddr__h9288,
 	       tagController_tmp_tagCon$memory_request_get[7:0],
-	       aw_awsize_val__h11102,
+	       aw_awsize_val__h11027,
 	       3'd2,
-	       x__h12768,
+	       x__h12693,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_awff_rv$port1__read =
 	     tagController_tmp_shimMaster_awff_rv$EN_port0__write ?
@@ -6851,12 +6851,12 @@ module mkCore(CLK,
 	     tagController_tmp_tagCon$memory_request_get[93:92] != 2'd1 ;
   assign tagController_tmp_shimMaster_arff_rv$port0__write_1 =
 	     { 1'd1,
-	       v_arid__h14111,
-	       v_araddr__h14112,
-	       v_arlen__h14113,
-	       v_arsize_val__h14158,
+	       v_arid__h14036,
+	       v_araddr__h14037,
+	       v_arlen__h14038,
+	       v_arsize_val__h14083,
 	       3'd2,
-	       x__h14176,
+	       x__h14101,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_arff_rv$port1__read =
 	     tagController_tmp_shimMaster_arff_rv$EN_port0__write ?
@@ -6948,11 +6948,11 @@ module mkCore(CLK,
   assign ifcs_0_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, cpu$dmem_master_arlen } + 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h70367 - 9'd1 ;
+	     x_port1__read__h70292 - 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ?
 	       ifcs_0_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h70367 ;
+	       x_port1__read__h70292 ;
   assign ifcs_1_1_noRoute_currentReq$port0__write_1 =
 	     { debug_module$master_arid,
 	       debug_module$master_araddr,
@@ -6971,11 +6971,11 @@ module mkCore(CLK,
   assign ifcs_1_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, debug_module$master_arlen } + 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h72831 - 9'd1 ;
+	     x_port1__read__h72756 - 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ?
 	       ifcs_1_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h72831 ;
+	       x_port1__read__h72756 ;
 
   // register activeSource_0
   assign activeSource_0$D_IN =
@@ -7015,14 +7015,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_0$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
+	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      MUX_activeSource_1_1_1_1$write_1__SEL_3:
+      MUX_activeSource_1_1_0$write_1__SEL_3:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       default: activeSource_1_1_0$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7043,14 +7043,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_1_1$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
+	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      MUX_activeSource_1_1_1_1$write_1__SEL_3:
+      MUX_activeSource_1_1_0$write_1__SEL_3:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       default: activeSource_1_1_1_1$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7067,14 +7067,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_2$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
+	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      MUX_activeSource_1_1_1_1$write_1__SEL_3:
+      MUX_activeSource_1_1_0$write_1__SEL_3:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       default: activeSource_1_1_2$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7093,52 +7093,52 @@ module mkCore(CLK,
 
   // register arbiter_1_1_firstHot
   assign arbiter_1_1_firstHot$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2312 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297 ;
   assign arbiter_1_1_firstHot$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_1_lastSelect
   assign arbiter_1_1_lastSelect$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2300 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285 ;
   assign arbiter_1_1_lastSelect$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_1_lastSelect_1
   assign arbiter_1_1_lastSelect_1$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2306 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291 ;
   assign arbiter_1_1_lastSelect_1$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_firstHot
   assign arbiter_1_firstHot$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1662 ;
+	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647 ;
   assign arbiter_1_firstHot$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_firstHot_1
   assign arbiter_1_firstHot_1$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2104 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089 ;
   assign arbiter_1_firstHot_1$EN = CAN_FIRE_RL_arbitrate_2 ;
 
   // register arbiter_1_lastSelect
   assign arbiter_1_lastSelect$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1650 ;
+	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635 ;
   assign arbiter_1_lastSelect$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_lastSelect_1
   assign arbiter_1_lastSelect_1$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1656 ;
+	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641 ;
   assign arbiter_1_lastSelect_1$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_lastSelect_2
   assign arbiter_1_lastSelect_2$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2100 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085 ;
   assign arbiter_1_lastSelect_2$EN = CAN_FIRE_RL_arbitrate_2 ;
 
   // register arbiter_firstHot
   assign arbiter_firstHot$D_IN =
-	     IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1444 ;
+	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429 ;
   assign arbiter_firstHot$EN = CAN_FIRE_RL_arbitrate ;
 
   // register arbiter_lastSelect
   assign arbiter_lastSelect$D_IN =
-	     IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1440 ;
+	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425 ;
   assign arbiter_lastSelect$EN = CAN_FIRE_RL_arbitrate ;
 
   // register ifcs_0_1_noRoute_currentReq
@@ -7619,7 +7619,7 @@ module mkCore(CLK,
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
   assign f_reset_reqs$DEQ =
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put__08_AND_cpu__ETC___d414 ;
+	     plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399 ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -7641,7 +7641,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerReq
   assign ifcs_0_1_innerReq$D_IN =
-	     { fatReq_arid__h69806,
+	     { fatReq_arid__h69731,
 	       cpu$dmem_master_araddr,
 	       cpu$dmem_master_arlen,
 	       cpu$dmem_master_arsize,
@@ -7661,11 +7661,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerRoute
   assign ifcs_0_1_innerRoute$D_IN =
-	     { cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1800,
+	     { cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785,
 	       cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	       !cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_n_ETC___d1779 &&
-	       cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1781,
-	       cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1790 } ;
+	       !cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 &&
+	       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766,
+	       cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775 } ;
   assign ifcs_0_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
   assign ifcs_0_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N ||
@@ -7676,7 +7676,7 @@ module mkCore(CLK,
   assign ifcs_0_1_noRouteRsp$D_IN =
 	     { ifcs_0_1_noRoute_currentReq$port1__read[96:93],
 	       66'h2AAAAAAAAAAAAAAAB,
-	       x_port1__read__h70367 == 9'd1,
+	       x_port1__read__h70292 == 9'd1,
 	       1'h0 } ;
   assign ifcs_0_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
   assign ifcs_0_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse ;
@@ -7706,7 +7706,7 @@ module mkCore(CLK,
   // submodule ifcs_0_innerReq
   assign ifcs_0_innerReq$D_IN =
 	     { merged_0_flitLeft != 8'd0,
-	       a_awid__h35939,
+	       a_awid__h35864,
 	       cpu$dmem_master_awaddr,
 	       cpu$dmem_master_awlen,
 	       cpu$dmem_master_awsize,
@@ -7730,11 +7730,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_innerRoute
   assign ifcs_0_innerRoute$D_IN =
-	     { IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1137,
+	     { IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122,
 	       cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1116 &&
-	       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1118,
-	       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1127 } ;
+	       !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 &&
+	       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103,
+	       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112 } ;
   assign ifcs_0_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_firstFlit ;
   assign ifcs_0_innerRoute$DEQ =
 	     WILL_FIRE_RL_burst && ifcs_0_innerReq$D_OUT[1] ||
@@ -7771,7 +7771,7 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerReq
   assign ifcs_1_1_innerReq$D_IN =
-	     { fatReq_arid__h72273,
+	     { fatReq_arid__h72198,
 	       debug_module$master_araddr,
 	       debug_module$master_arlen,
 	       debug_module$master_arsize,
@@ -7791,11 +7791,11 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerRoute
   assign ifcs_1_1_innerRoute$D_IN =
-	     { debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1892,
+	     { debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877,
 	       debug_module$master_araddr[63:40] == 24'd0 &&
-	       !debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1871 &&
-	       debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1873,
-	       debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1882 } ;
+	       !debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 &&
+	       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858,
+	       debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867 } ;
   assign ifcs_1_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_1_1_firstFlit ;
   assign ifcs_1_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N ||
@@ -7806,7 +7806,7 @@ module mkCore(CLK,
   assign ifcs_1_1_noRouteRsp$D_IN =
 	     { ifcs_1_1_noRoute_currentReq$port1__read[96:93],
 	       66'h2AAAAAAAAAAAAAAAB,
-	       x_port1__read__h72831 == 9'd1,
+	       x_port1__read__h72756 == 9'd1,
 	       1'h0 } ;
   assign ifcs_1_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
   assign ifcs_1_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse ;
@@ -7837,7 +7837,7 @@ module mkCore(CLK,
   // submodule ifcs_1_innerReq
   assign ifcs_1_innerReq$D_IN =
 	     { merged_1_flitLeft != 8'd0,
-	       a_awid__h38704,
+	       a_awid__h38629,
 	       debug_module$master_awaddr,
 	       debug_module$master_awlen,
 	       debug_module$master_awsize,
@@ -7861,11 +7861,11 @@ module mkCore(CLK,
 
   // submodule ifcs_1_innerRoute
   assign ifcs_1_innerRoute$D_IN =
-	     { IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1242,
+	     { IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227,
 	       debug_module$master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1221 &&
-	       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1223,
-	       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1232 } ;
+	       !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 &&
+	       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208,
+	       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217 } ;
   assign ifcs_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_1_firstFlit ;
   assign ifcs_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_burst_1 && ifcs_1_innerReq$D_OUT[1] ||
@@ -8415,370 +8415,370 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_tagController_tmp_passMemoryResponseRead ;
 
   // remaining internal signals
-  assign IF_IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dm_ETC___d1139 =
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1127 ?
+  assign IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124 =
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112 ?
 		2'd1 :
 		2'd0) +
 	     ((cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1116 &&
-	       IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1118) ?
+	       !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 &&
+	       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103) ?
 		2'd1 :
 		2'd0) +
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1137 ?
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug__ETC___d1244 =
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1232 ?
+  assign IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229 =
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217 ?
 		2'd1 :
 		2'd0) +
 	     ((debug_module$master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1221 &&
-	       IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1223) ?
+	       !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 &&
+	       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208) ?
 		2'd1 :
 		2'd0) +
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1242 ?
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_NOT_ifcs_0_1_innerRoute_first__026_BIT_1_03_ETC___d2048 =
+  assign IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033 =
 	     (!ifcs_0_1_innerRoute$D_OUT[1] ||
 	      !ssNoSynth_1_ar_buffer_ff$FULL_N) ?
 	       ifcs_0_1_innerRoute$D_OUT[2] &&
 	       ssNoSynth_2_ar_buffer_ff$FULL_N :
 	       ifcs_0_1_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_0_innerRoute_first__366_BIT_1_375__ETC___d1388 =
+  assign IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373 =
 	     (!ifcs_0_innerRoute$D_OUT[1] ||
-	      !IF_split_1_flitLeft_047_EQ_0_048_THEN_ssNoSynt_ETC___d1359) ?
+	      !IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344) ?
 	       ifcs_0_innerRoute$D_OUT[2] &&
-	       IF_split_2_flitLeft_076_EQ_0_077_THEN_ssNoSynt_ETC___d1360 :
+	       IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 :
 	       ifcs_0_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_1_1_innerRoute_first__055_BIT_1_05_ETC___d2064 =
+  assign IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049 =
 	     (!ifcs_1_1_innerRoute$D_OUT[1] ||
 	      !ssNoSynth_1_ar_buffer_ff$FULL_N) ?
 	       ifcs_1_1_innerRoute$D_OUT[2] &&
 	       ssNoSynth_2_ar_buffer_ff$FULL_N :
 	       ifcs_1_1_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_1_innerRoute_first__395_BIT_1_399__ETC___d1404 =
+  assign IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389 =
 	     (!ifcs_1_innerRoute$D_OUT[1] ||
-	      !IF_split_1_flitLeft_047_EQ_0_048_THEN_ssNoSynt_ETC___d1359) ?
+	      !IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344) ?
 	       ifcs_1_innerRoute$D_OUT[2] &&
-	       IF_split_2_flitLeft_076_EQ_0_077_THEN_ssNoSynt_ETC___d1360 :
+	       IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 :
 	       ifcs_1_innerRoute$D_OUT[1] ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2300 =
-	     (SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 ||
-	      SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 ||
-	      SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281) ?
-	       x__h92342 | y__h92343 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285 =
+	     (SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ||
+	      SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ||
+	      SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266) ?
+	       x__h92267 | y__h92268 :
 	       arbiter_1_1_lastSelect ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2306 =
-	     (SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 ||
-	      SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 ||
-	      SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281) ?
-	       x__h92530 | y__h92531 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291 =
+	     (SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ||
+	      SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ||
+	      SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266) ?
+	       x__h92455 | y__h92456 :
 	       arbiter_1_1_lastSelect_1 ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_2_ETC___d2312 =
-	     (SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 ||
-	      SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 ||
-	      SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281) ?
-	       x__h92711 | y__h92712 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297 =
+	     (SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ||
+	      SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ||
+	      SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266) ?
+	       x__h92636 | y__h92637 :
 	       arbiter_1_1_firstHot ;
-  assign IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2100 =
-	     (SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084 ||
-	      SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088) ?
-	       x__h80400 | y__h80401 :
+  assign IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085 =
+	     (SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 ||
+	      SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073) ?
+	       x__h80325 | y__h80326 :
 	       arbiter_1_lastSelect_2 ;
-  assign IF_SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_0_ETC___d2104 =
-	     (SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084 ||
-	      SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088) ?
-	       x__h80541 | y__h80542 :
+  assign IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089 =
+	     (SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 ||
+	      SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073) ?
+	       x__h80466 | y__h80467 :
 	       arbiter_1_firstHot_1 ;
-  assign IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1650 =
-	     (SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 ||
-	      SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 ||
-	      SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631) ?
-	       x__h60932 | y__h60933 :
+  assign IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635 =
+	     (SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ||
+	      SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ||
+	      SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616) ?
+	       x__h60857 | y__h60858 :
 	       arbiter_1_lastSelect ;
-  assign IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1656 =
-	     (SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 ||
-	      SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 ||
-	      SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631) ?
-	       x__h61120 | y__h61121 :
+  assign IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641 =
+	     (SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ||
+	      SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ||
+	      SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616) ?
+	       x__h61045 | y__h61046 :
 	       arbiter_1_lastSelect_1 ;
-  assign IF_SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_ETC___d1662 =
-	     (SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 ||
-	      SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 ||
-	      SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631) ?
-	       x__h61301 | y__h61302 :
+  assign IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647 =
+	     (SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ||
+	      SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ||
+	      SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616) ?
+	       x__h61226 | y__h61227 :
 	       arbiter_1_firstHot ;
-  assign IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1440 =
-	     (SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424 ||
-	      SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428) ?
-	       x__h46449 | y__h46450 :
+  assign IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425 =
+	     (SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 ||
+	      SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413) ?
+	       x__h46374 | y__h46375 :
 	       arbiter_lastSelect ;
-  assign IF_SEXT_arbiter_lastSelect_416_417_BIT_0_418_A_ETC___d1444 =
-	     (SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424 ||
-	      SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428) ?
-	       x__h46590 | y__h46591 :
+  assign IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429 =
+	     (SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 ||
+	      SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413) ?
+	       x__h46515 | y__h46516 :
 	       arbiter_firstHot ;
-  assign IF_cpu_dmem_master_ar_araddr__776_BITS_63_TO_4_ETC___d1802 =
-	     (cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1790 ?
+  assign IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787 =
+	     (cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775 ?
 		2'd1 :
 		2'd0) +
 	     ((cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	       !cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_n_ETC___d1779 &&
-	       cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1781) ?
+	       !cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 &&
+	       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766) ?
 		2'd1 :
 		2'd0) +
-	     (cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1800 ?
+	     (cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_debug_module_master_ar_araddr__868_BITS_63__ETC___d1894 =
-	     (debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1882 ?
+  assign IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879 =
+	     (debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867 ?
 		2'd1 :
 		2'd0) +
 	     ((debug_module$master_araddr[63:40] == 24'd0 &&
-	       !debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1871 &&
-	       debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1873) ?
+	       !debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 &&
+	       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858) ?
 		2'd1 :
 		2'd0) +
-	     (debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1892 ?
+	     (debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1104 =
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 =
 	     ((merged_0_flitLeft == 8'd0) ?
 		!cpu$dmem_master_awvalid || !cpu$dmem_master_wvalid :
 		!cpu$dmem_master_wvalid) ||
 	     merged_0_flitLeft != 8'd0 ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1174 =
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_NOT_cpu_d_ETC___d1104 ||
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1159 =
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 ||
 	      cpu$dmem_master_awvalid) &&
 	     (merged_0_flitLeft != 8'd0 ||
 	      !ifcs_0_noRoute_inner_pendingReq && cpu$dmem_master_awvalid) ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1097 =
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 =
 	     (merged_0_flitLeft == 8'd0) ?
 	       cpu$dmem_master_awvalid && cpu$dmem_master_wvalid :
 	       cpu$dmem_master_wvalid ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1116 =
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 =
 	     cpu$dmem_master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1118 =
-	     x__h34779 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1121 =
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103 =
+	     x__h34704 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106 =
 	     cpu$dmem_master_awaddr < soc_map$m_plic_addr_range[127:64] ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1123 =
-	     x__h34804 < soc_map$m_plic_addr_range[63:0] ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1127 =
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108 =
+	     x__h34729 < soc_map$m_plic_addr_range[63:0] ;
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112 =
 	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1116 ||
-	      !IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1118) &&
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1121 ||
-	      !IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1123) ;
-  assign IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1137 =
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 ||
+	      !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103) &&
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106 ||
+	      !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108) ;
+  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122 =
 	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1116 ||
-	      !IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1118) &&
-	     !IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1121 &&
-	     IF_merged_0_flitLeft_74_EQ_0_75_THEN_cpu_dmem__ETC___d1123 ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1209 =
+	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 ||
+	      !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103) &&
+	     !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106 &&
+	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108 ;
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 =
 	     ((merged_1_flitLeft == 8'd0) ?
 		!debug_module$master_awvalid || !debug_module$master_wvalid :
 		!debug_module$master_wvalid) ||
 	     merged_1_flitLeft != 8'd0 ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1279 =
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_NOT_debug_ETC___d1209 ||
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1264 =
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 ||
 	      debug_module$master_awvalid) &&
 	     (merged_1_flitLeft != 8'd0 ||
 	      !ifcs_1_noRoute_inner_pendingReq &&
 	      debug_module$master_awvalid) ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1202 =
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 =
 	     (merged_1_flitLeft == 8'd0) ?
 	       debug_module$master_awvalid && debug_module$master_wvalid :
 	       debug_module$master_wvalid ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1221 =
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 =
 	     debug_module$master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1223 =
-	     x__h37587 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1226 =
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208 =
+	     x__h37512 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211 =
 	     debug_module$master_awaddr < soc_map$m_plic_addr_range[127:64] ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1228 =
-	     x__h37612 < soc_map$m_plic_addr_range[63:0] ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1232 =
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213 =
+	     x__h37537 < soc_map$m_plic_addr_range[63:0] ;
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1221 ||
-	      !IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1223) &&
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1226 ||
-	      !IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1228) ;
-  assign IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1242 =
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 ||
+	      !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208) &&
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211 ||
+	      !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213) ;
+  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1221 ||
-	      !IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1223) &&
-	     !IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1226 &&
-	     IF_merged_1_flitLeft_94_EQ_0_95_THEN_debug_mod_ETC___d1228 ;
-  assign IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358 =
+	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 ||
+	      !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208) &&
+	     !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211 &&
+	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213 ;
+  assign IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343 =
 	     (split_0_flitLeft == 8'd0) ?
 	       ssNoSynth_0_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_0_w_buffer_ff$FULL_N :
 	       ssNoSynth_0_w_buffer_ff$FULL_N ;
-  assign IF_split_1_flitLeft_047_EQ_0_048_THEN_ssNoSynt_ETC___d1359 =
+  assign IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344 =
 	     (split_1_flitLeft == 8'd0) ?
 	       ssNoSynth_1_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_1_w_buffer_ff$FULL_N :
 	       ssNoSynth_1_w_buffer_ff$FULL_N ;
-  assign IF_split_2_flitLeft_076_EQ_0_077_THEN_ssNoSynt_ETC___d1360 =
+  assign IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 =
 	     (split_2_flitLeft == 8'd0) ?
 	       ssNoSynth_2_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_2_w_buffer_ff$FULL_N :
 	       ssNoSynth_2_w_buffer_ff$FULL_N ;
-  assign SEXT_SEXT_arbiter_1_1_firstHot_265_266_BIT_0_2_ETC__q22 =
-	     {2{SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281}} ;
-  assign SEXT_SEXT_arbiter_1_firstHot_1_080_081_BIT_0_0_ETC__q17 =
-	     {2{SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088}} ;
-  assign SEXT_SEXT_arbiter_1_firstHot_615_616_BIT_0_617_ETC__q12 =
-	     {2{SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631}} ;
-  assign SEXT_SEXT_arbiter_firstHot_420_421_BIT_0_422_A_ETC__q7 =
-	     {2{SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428}} ;
-  assign SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281 =
-	     x__h91870 | y__h91871 ;
+  assign SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22 =
+	     {2{SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266}} ;
+  assign SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17 =
+	     {2{SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073}} ;
+  assign SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12 =
+	     {2{SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616}} ;
+  assign SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7 =
+	     {2{SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413}} ;
+  assign SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266 =
+	     x__h91795 | y__h91796 ;
   assign SEXT_arbiter_1_1_firstHot__q19 = {2{arbiter_1_1_firstHot}} ;
-  assign SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 =
-	     x__h91734 | y__h91735 ;
+  assign SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 =
+	     x__h91659 | y__h91660 ;
   assign SEXT_arbiter_1_1_lastSelect_1__q21 = {2{arbiter_1_1_lastSelect_1}} ;
-  assign SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 =
-	     x__h91583 | y__h91584 ;
+  assign SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 =
+	     x__h91508 | y__h91509 ;
   assign SEXT_arbiter_1_1_lastSelect__q20 = {2{arbiter_1_1_lastSelect}} ;
-  assign SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088 =
-	     x__h80035 | y__h80036 ;
+  assign SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073 =
+	     x__h79960 | y__h79961 ;
   assign SEXT_arbiter_1_firstHot_1__q15 = {2{arbiter_1_firstHot_1}} ;
-  assign SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631 =
-	     x__h60460 | y__h60461 ;
+  assign SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616 =
+	     x__h60385 | y__h60386 ;
   assign SEXT_arbiter_1_firstHot__q9 = {2{arbiter_1_firstHot}} ;
-  assign SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 =
-	     x__h60324 | y__h60325 ;
+  assign SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 =
+	     x__h60249 | y__h60250 ;
   assign SEXT_arbiter_1_lastSelect_1__q11 = {2{arbiter_1_lastSelect_1}} ;
-  assign SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084 =
-	     x__h79932 | y__h79933 ;
+  assign SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 =
+	     x__h79857 | y__h79858 ;
   assign SEXT_arbiter_1_lastSelect_2__q16 = {2{arbiter_1_lastSelect_2}} ;
-  assign SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 =
-	     x__h60173 | y__h60174 ;
+  assign SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 =
+	     x__h60098 | y__h60099 ;
   assign SEXT_arbiter_1_lastSelect__q10 = {2{arbiter_1_lastSelect}} ;
-  assign SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428 =
-	     x__h46084 | y__h46085 ;
+  assign SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413 =
+	     x__h46009 | y__h46010 ;
   assign SEXT_arbiter_firstHot__q5 = {2{arbiter_firstHot}} ;
-  assign SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424 =
-	     x__h45981 | y__h45982 ;
+  assign SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 =
+	     x__h45906 | y__h45907 ;
   assign SEXT_arbiter_lastSelect__q6 = {2{arbiter_lastSelect}} ;
-  assign SEXT_x0459__q18 = {2{x__h80459}} ;
-  assign SEXT_x0994__q13 = {2{x__h60994}} ;
-  assign SEXT_x1028__q14 = {2{x__h61028}} ;
-  assign SEXT_x2404__q23 = {2{x__h92404}} ;
-  assign SEXT_x2438__q24 = {2{x__h92438}} ;
-  assign SEXT_x6508__q8 = {2{x__h46508}} ;
-  assign _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d273 =
-	     x__h11172 + y__h11173 ;
-  assign a_awid__h35939 = { 1'd0, cpu$dmem_master_awid } ;
-  assign a_awid__h38704 = { 1'd1, debug_module$master_awid } ;
-  assign araddr__h14095 =
+  assign SEXT_x0384__q18 = {2{x__h80384}} ;
+  assign SEXT_x0919__q13 = {2{x__h60919}} ;
+  assign SEXT_x0953__q14 = {2{x__h60953}} ;
+  assign SEXT_x2329__q23 = {2{x__h92329}} ;
+  assign SEXT_x2363__q24 = {2{x__h92363}} ;
+  assign SEXT_x6433__q8 = {2{x__h46433}} ;
+  assign _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258 =
+	     x__h11097 + y__h11098 ;
+  assign a_awid__h35864 = { 1'd0, cpu$dmem_master_awid } ;
+  assign a_awid__h38629 = { 1'd1, debug_module$master_awid } ;
+  assign araddr__h14020 =
 	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
-  assign arcache__h14100 =
+  assign arcache__h14025 =
 	     tagController_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
-  assign arlen__h14096 =
+  assign arlen__h14021 =
 	     { 5'd0, tagController_tmp_tagCon$memory_request_get[5:3] } ;
-  assign aw_awaddr__h9363 = tmp__h9146 + { 60'd0, x__h9438 } ;
-  assign aw_awsize_val__h11102 =
-	     _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d273[0] ?
+  assign aw_awaddr__h9288 = tmp__h9071 + { 60'd0, x__h9363 } ;
+  assign aw_awsize_val__h11027 =
+	     _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[0] ?
 	       3'd0 :
-	       (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d273[1] ?
+	       (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[1] ?
 		  3'd1 :
-		  (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d273[2] ?
+		  (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[2] ?
 		     3'd2 :
-		     (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d273[3] ?
+		     (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[3] ?
 			3'd3 :
 			3'd4))) ;
-  assign cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1790 =
+  assign cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775 =
 	     cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	     (cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_n_ETC___d1779 ||
-	      !cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1781) &&
-	     (cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_p_ETC___d1784 ||
-	      !cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1786) ;
-  assign cpu_dmem_master_ar_araddr__776_BITS_63_TO_40_7_ETC___d1800 =
+	     (cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 ||
+	      !cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766) &&
+	     (cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769 ||
+	      !cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771) ;
+  assign cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785 =
 	     cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	     (cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_n_ETC___d1779 ||
-	      !cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1781) &&
-	     !cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_p_ETC___d1784 &&
-	     cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1786 ;
-  assign cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1781 =
-	     x__h69238 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_araddr__776_MINUS_soc_map_m_ETC___d1786 =
-	     x__h69263 < soc_map$m_plic_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_n_ETC___d1779 =
+	     (cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 ||
+	      !cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766) &&
+	     !cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769 &&
+	     cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771 ;
+  assign cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766 =
+	     x__h69163 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771 =
+	     x__h69188 < soc_map$m_plic_addr_range[63:0] ;
+  assign cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 =
 	     cpu$dmem_master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign cpu_dmem_master_ar_araddr__776_ULT_soc_map_m_p_ETC___d1784 =
+  assign cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769 =
 	     cpu$dmem_master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1882 =
+  assign debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867 =
 	     debug_module$master_araddr[63:40] == 24'd0 &&
-	     (debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1871 ||
-	      !debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1873) &&
-	     (debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1876 ||
-	      !debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1878) ;
-  assign debug_module_master_ar_araddr__868_BITS_63_TO__ETC___d1892 =
+	     (debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 ||
+	      !debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858) &&
+	     (debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861 ||
+	      !debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863) ;
+  assign debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877 =
 	     debug_module$master_araddr[63:40] == 24'd0 &&
-	     (debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1871 ||
-	      !debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1873) &&
-	     !debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1876 &&
-	     debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1878 ;
-  assign debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1873 =
-	     x__h71720 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign debug_module_master_ar_araddr__868_MINUS_soc_m_ETC___d1878 =
-	     x__h71745 < soc_map$m_plic_addr_range[63:0] ;
-  assign debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1871 =
+	     (debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 ||
+	      !debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858) &&
+	     !debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861 &&
+	     debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863 ;
+  assign debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858 =
+	     x__h71645 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863 =
+	     x__h71670 < soc_map$m_plic_addr_range[63:0] ;
+  assign debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 =
 	     debug_module$master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign debug_module_master_ar_araddr__868_ULT_soc_map_ETC___d1876 =
+  assign debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861 =
 	     debug_module$master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign fatReq_arid__h69806 = { 1'd0, cpu$dmem_master_arid } ;
-  assign fatReq_arid__h72273 = { 1'd1, debug_module$master_arid } ;
-  assign plic_RDY_server_reset_request_put__08_AND_cpu__ETC___d414 =
+  assign fatReq_arid__h69731 = { 1'd0, cpu$dmem_master_arid } ;
+  assign fatReq_arid__h72198 = { 1'd1, debug_module$master_arid } ;
+  assign plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399 =
 	     plic$RDY_server_reset_request_put &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_reqs$EMPTY_N &&
 	     f_reset_requestor$FULL_N ;
-  assign reqWires_1_0_whas__592_AND_reqWires_1_0_wget___ETC___d1602 =
+  assign reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587 =
 	     CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget ||
 	     CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget ;
-  assign reqWires_1_1_0_whas__242_AND_reqWires_1_1_0_wg_ETC___d2252 =
+  assign reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237 =
 	     CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget ||
 	     CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget ;
-  assign split_0_doPut_whas__010_AND_split_0_doPut_wget_ETC___d1017 =
+  assign split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002 =
 	     CAN_FIRE_RL_sink_selected &&
 	     (split_0_doPut$wget[172] ||
 	      ssNoSynth_0_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_0_w_buffer_ff$FULL_N) ;
-  assign split_1_doPut_whas__039_AND_split_1_doPut_wget_ETC___d1046 =
+  assign split_1_doPut_whas__024_AND_split_1_doPut_wget_ETC___d1031 =
 	     CAN_FIRE_RL_sink_selected_1 &&
 	     (split_1_doPut$wget[172] ||
 	      ssNoSynth_1_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_1_w_buffer_ff$FULL_N) ;
-  assign split_2_doPut_whas__068_AND_split_2_doPut_wget_ETC___d1075 =
+  assign split_2_doPut_whas__053_AND_split_2_doPut_wget_ETC___d1060 =
 	     CAN_FIRE_RL_sink_selected_2 &&
 	     (split_2_doPut$wget[172] ||
 	      ssNoSynth_2_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_2_w_buffer_ff$FULL_N) ;
-  assign state_1_1_073_AND_activeSource_1_0_1_140_141_A_ETC___d2143 =
+  assign state_1_1_058_AND_activeSource_1_0_1_125_126_A_ETC___d2128 =
 	     state_1_1 && activeSource_1_0_1 && ifcs_0_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_1_innerRoute$D_OUT[0] ||
 	       !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-		IF_NOT_ifcs_0_1_innerRoute_first__026_BIT_1_03_ETC___d2048 :
+		IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033 :
 		ifcs_0_1_innerRoute$D_OUT[0]) ;
-  assign state_1_1_073_AND_activeSource_1_1_1_180_181_A_ETC___d2183 =
+  assign state_1_1_058_AND_activeSource_1_1_1_165_166_A_ETC___d2168 =
 	     state_1_1 && activeSource_1_1_1 && ifcs_1_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_1_innerRoute$D_OUT[0] ||
 	       !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-		IF_NOT_ifcs_1_1_innerRoute_first__055_BIT_1_05_ETC___d2064 :
+		IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049 :
 		ifcs_1_1_innerRoute$D_OUT[0]) ;
-  assign state_1_1_1_253_AND_activeSource_1_1_0_347_348_ETC___d2350 =
+  assign state_1_1_1_238_AND_activeSource_1_1_0_332_333_ETC___d2335 =
 	     state_1_1_1 && activeSource_1_1_0 &&
 	     ifcs_0_1_routeBack$EMPTY_N &&
 	     ((!ifcs_0_1_routeBack$D_OUT[0] ||
@@ -8786,7 +8786,7 @@ module mkCore(CLK,
 		ifcs_0_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_0_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_1_253_AND_activeSource_1_1_1_1_383_3_ETC___d2386 =
+  assign state_1_1_1_238_AND_activeSource_1_1_1_1_368_3_ETC___d2371 =
 	     state_1_1_1 && activeSource_1_1_1_1 &&
 	     ifcs_1_1_routeBack$EMPTY_N &&
 	     ((!ifcs_1_1_routeBack$D_OUT[0] ||
@@ -8794,7 +8794,7 @@ module mkCore(CLK,
 		ifcs_1_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_1_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_1_253_AND_activeSource_1_1_2_419_420_ETC___d2422 =
+  assign state_1_1_1_238_AND_activeSource_1_1_2_404_405_ETC___d2407 =
 	     state_1_1_1 && activeSource_1_1_2 &&
 	     ifcs_2_1_routeBack$EMPTY_N &&
 	     ((!ifcs_2_1_routeBack$D_OUT[0] ||
@@ -8802,38 +8802,38 @@ module mkCore(CLK,
 		ifcs_2_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_2_1_routeBack$D_OUT[0]) ;
-  assign state_1_603_AND_activeSource_1_0_691_692_AND_i_ETC___d1694 =
+  assign state_1_588_AND_activeSource_1_0_676_677_AND_i_ETC___d1679 =
 	     state_1 && activeSource_1_0 && ifcs_0_routeBack$EMPTY_N &&
 	     ((!ifcs_0_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_0_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_0_routeBack$D_OUT[0]) ;
-  assign state_1_603_AND_activeSource_1_1_724_725_AND_i_ETC___d1727 =
+  assign state_1_588_AND_activeSource_1_1_709_710_AND_i_ETC___d1712 =
 	     state_1 && activeSource_1_1 && ifcs_1_routeBack$EMPTY_N &&
 	     ((!ifcs_1_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_1_routeBack$D_OUT[0]) ;
-  assign state_1_603_AND_activeSource_1_2_758_759_AND_i_ETC___d1761 =
+  assign state_1_588_AND_activeSource_1_2_743_744_AND_i_ETC___d1746 =
 	     state_1 && activeSource_1_2 && ifcs_2_routeBack$EMPTY_N &&
 	     ((!ifcs_2_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_2_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_2_routeBack$D_OUT[0]) ;
-  assign state_413_AND_activeSource_0_486_487_AND_ifcs__ETC___d1489 =
+  assign state_398_AND_activeSource_0_471_472_AND_ifcs__ETC___d1474 =
 	     state && activeSource_0 && ifcs_0_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358) ?
-		IF_NOT_ifcs_0_innerRoute_first__366_BIT_1_375__ETC___d1388 :
+	       !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
+		IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373 :
 		ifcs_0_innerRoute$D_OUT[0]) ;
-  assign state_413_AND_activeSource_1_530_531_AND_ifcs__ETC___d1533 =
+  assign state_398_AND_activeSource_1_515_516_AND_ifcs__ETC___d1518 =
 	     state && activeSource_1 && ifcs_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_018_EQ_0_019_THEN_ssNoSynt_ETC___d1358) ?
-		IF_NOT_ifcs_1_innerRoute_first__395_BIT_1_399__ETC___d1404 :
+	       !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
+		IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389 :
 		ifcs_1_innerRoute$D_OUT[0]) ;
   assign tagController_tmp_shimMaster_arff_rvport1__re_ETC__q4 =
 	     tagController_tmp_shimMaster_arff_rv$port1__read[98:0] ;
@@ -8850,143 +8850,143 @@ module mkCore(CLK,
   assign tmp__h6846 =
 	     tagController_tmp_awreqff$D_OUT[92:29] +
 	     tagController_tmp_addrOffset ;
-  assign tmp__h9146 = { 24'd0, x__h9395 } ;
-  assign v_araddr__h14112 =
+  assign tmp__h9071 = { 24'd0, x__h9320 } ;
+  assign v_araddr__h14037 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       araddr__h14095 :
+	       araddr__h14020 :
 	       64'hAAAAAAAAAAAAAAAA ;
-  assign v_arid__h14111 =
+  assign v_arid__h14036 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[100:95] :
 	       6'd0 ;
-  assign v_arlen__h14113 =
+  assign v_arlen__h14038 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arlen__h14096 :
+	       arlen__h14021 :
 	       8'd0 ;
-  assign v_arsize_val__h14158 =
+  assign v_arsize_val__h14083 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[2:0] :
 	       3'b0 ;
-  assign x__h11172 = x__h11184 + y__h11185 ;
-  assign x__h11184 = x__h11196 + y__h11197 ;
-  assign x__h11196 = x__h11208 + y__h11209 ;
-  assign x__h11208 = x__h11220 + y__h11221 ;
-  assign x__h11220 = x__h11232 + y__h11233 ;
-  assign x__h11232 = x__h11244 + y__h11245 ;
-  assign x__h11244 =
+  assign x__h11097 = x__h11109 + y__h11110 ;
+  assign x__h11109 = x__h11121 + y__h11122 ;
+  assign x__h11121 = x__h11133 + y__h11134 ;
+  assign x__h11133 = x__h11145 + y__h11146 ;
+  assign x__h11145 = x__h11157 + y__h11158 ;
+  assign x__h11157 = x__h11169 + y__h11170 ;
+  assign x__h11169 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[88] } ;
-  assign x__h12768 =
+  assign x__h12693 =
 	     tagController_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
-  assign x__h14176 =
+  assign x__h14101 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arcache__h14100 :
+	       arcache__h14025 :
 	       4'd0 ;
-  assign x__h34779 =
+  assign x__h34704 =
 	     cpu$dmem_master_awaddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h34804 =
+  assign x__h34729 =
 	     cpu$dmem_master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h37587 =
+  assign x__h37512 =
 	     debug_module$master_awaddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h37612 =
+  assign x__h37537 =
 	     debug_module$master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h45981 =
+  assign x__h45906 =
 	     SEXT_arbiter_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h46084 =
+  assign x__h46009 =
 	     SEXT_arbiter_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h46449 =
-	     SEXT_SEXT_arbiter_firstHot_420_421_BIT_0_422_A_ETC__q7[0] &
+  assign x__h46374 =
+	     SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7[0] &
 	     arbiter_firstHot ;
-  assign x__h46508 =
-	     !SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428 &&
-	     SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424 ;
-  assign x__h46590 = SEXT_x6508__q8[0] & arbiter_firstHot ;
-  assign x__h60173 = x__h60175 | y__h60176 ;
-  assign x__h60175 =
+  assign x__h46433 =
+	     !SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413 &&
+	     SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 ;
+  assign x__h46515 = SEXT_x6433__q8[0] & arbiter_firstHot ;
+  assign x__h60098 = x__h60100 | y__h60101 ;
+  assign x__h60100 =
 	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h60324 = x__h60326 | y__h60327 ;
-  assign x__h60326 =
+  assign x__h60249 = x__h60251 | y__h60252 ;
+  assign x__h60251 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h60460 = x__h60462 | y__h60463 ;
-  assign x__h60462 =
+  assign x__h60385 = x__h60387 | y__h60388 ;
+  assign x__h60387 =
 	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h60932 = x__h60934 | y__h60935 ;
-  assign x__h60934 =
-	     SEXT_SEXT_arbiter_1_firstHot_615_616_BIT_0_617_ETC__q12[0] &
+  assign x__h60857 = x__h60859 | y__h60860 ;
+  assign x__h60859 =
+	     SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12[0] &
 	     arbiter_1_firstHot ;
-  assign x__h60994 =
-	     !SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631 &&
-	     SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 ;
-  assign x__h61028 =
-	     !SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 &&
-	     !SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631 &&
-	     SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 ;
-  assign x__h61120 = x__h61122 | y__h61123 ;
-  assign x__h61122 = SEXT_x0994__q13[0] & arbiter_1_firstHot ;
-  assign x__h61301 = x__h61303 | y__h61304 ;
-  assign x__h61303 = SEXT_x1028__q14[0] & arbiter_1_firstHot ;
+  assign x__h60919 =
+	     !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616 &&
+	     SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ;
+  assign x__h60953 =
+	     !SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 &&
+	     !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616 &&
+	     SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ;
+  assign x__h61045 = x__h61047 | y__h61048 ;
+  assign x__h61047 = SEXT_x0919__q13[0] & arbiter_1_firstHot ;
+  assign x__h61226 = x__h61228 | y__h61229 ;
+  assign x__h61228 = SEXT_x0953__q14[0] & arbiter_1_firstHot ;
   assign x__h6687 =
 	     tagController_tmp_addrOffset +
 	     (64'd1 << tagController_tmp_awreqff$D_OUT[20:18]) ;
-  assign x__h69238 =
+  assign x__h69163 =
 	     cpu$dmem_master_araddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h69263 =
+  assign x__h69188 =
 	     cpu$dmem_master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h71720 =
+  assign x__h71645 =
 	     debug_module$master_araddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h71745 =
+  assign x__h71670 =
 	     debug_module$master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h79932 =
+  assign x__h79857 =
 	     SEXT_arbiter_1_lastSelect_2__q16[0] &
 	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h80035 =
+  assign x__h79960 =
 	     SEXT_arbiter_1_firstHot_1__q15[0] &
 	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h80400 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_080_081_BIT_0_0_ETC__q17[0] &
+  assign x__h80325 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17[0] &
 	     arbiter_1_firstHot_1 ;
-  assign x__h80459 =
-	     !SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088 &&
-	     SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084 ;
-  assign x__h80541 = SEXT_x0459__q18[0] & arbiter_1_firstHot_1 ;
-  assign x__h91583 = x__h91585 | y__h91586 ;
-  assign x__h91585 =
+  assign x__h80384 =
+	     !SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073 &&
+	     SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 ;
+  assign x__h80466 = SEXT_x0384__q18[0] & arbiter_1_firstHot_1 ;
+  assign x__h91508 = x__h91510 | y__h91511 ;
+  assign x__h91510 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h91734 = x__h91736 | y__h91737 ;
-  assign x__h91736 =
+  assign x__h91659 = x__h91661 | y__h91662 ;
+  assign x__h91661 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h91870 = x__h91872 | y__h91873 ;
-  assign x__h91872 =
+  assign x__h91795 = x__h91797 | y__h91798 ;
+  assign x__h91797 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h92342 = x__h92344 | y__h92345 ;
-  assign x__h92344 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_265_266_BIT_0_2_ETC__q22[0] &
+  assign x__h92267 = x__h92269 | y__h92270 ;
+  assign x__h92269 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_firstHot ;
-  assign x__h92404 =
-	     !SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281 &&
-	     SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 ;
-  assign x__h92438 =
-	     !SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 &&
-	     !SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281 &&
-	     SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 ;
-  assign x__h92530 = x__h92532 | y__h92533 ;
-  assign x__h92532 = SEXT_x2404__q23[0] & arbiter_1_1_firstHot ;
-  assign x__h92711 = x__h92713 | y__h92714 ;
-  assign x__h92713 = SEXT_x2438__q24[0] & arbiter_1_1_firstHot ;
-  assign x__h9395 =
+  assign x__h92329 =
+	     !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266 &&
+	     SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ;
+  assign x__h92363 =
+	     !SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 &&
+	     !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266 &&
+	     SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ;
+  assign x__h92455 = x__h92457 | y__h92458 ;
+  assign x__h92457 = SEXT_x2329__q23[0] & arbiter_1_1_firstHot ;
+  assign x__h92636 = x__h92638 | y__h92639 ;
+  assign x__h92638 = SEXT_x2363__q24[0] & arbiter_1_1_firstHot ;
+  assign x__h9320 =
 	     { tagController_tmp_tagCon$memory_request_get[140:104], 3'd0 } ;
-  assign x__h9438 =
+  assign x__h9363 =
 	     tagController_tmp_tagCon$memory_request_get[81] ?
 	       4'd0 :
 	       (tagController_tmp_tagCon$memory_request_get[82] ?
@@ -9004,103 +9004,103 @@ module mkCore(CLK,
 				 (tagController_tmp_tagCon$memory_request_get[88] ?
 				    4'd7 :
 				    4'd8))))))) ;
-  assign x_port1__read__h70367 =
+  assign x_port1__read__h70292 =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ?
 	       ifcs_0_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_0_1_noRoute_flitCount ;
-  assign x_port1__read__h72831 =
+  assign x_port1__read__h72756 =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ?
 	       ifcs_1_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_1_1_noRoute_flitCount ;
-  assign y__h11173 =
+  assign y__h11098 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[81] } ;
-  assign y__h11185 =
+  assign y__h11110 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[82] } ;
-  assign y__h11197 =
+  assign y__h11122 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[83] } ;
-  assign y__h11209 =
+  assign y__h11134 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[84] } ;
-  assign y__h11221 =
+  assign y__h11146 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[85] } ;
-  assign y__h11233 =
+  assign y__h11158 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[86] } ;
-  assign y__h11245 =
+  assign y__h11170 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[87] } ;
-  assign y__h45982 =
+  assign y__h45907 =
 	     SEXT_arbiter_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h46085 =
+  assign y__h46010 =
 	     SEXT_arbiter_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h46450 = SEXT_x6508__q8[0] & arbiter_lastSelect ;
-  assign y__h46591 =
-	     SEXT_SEXT_arbiter_firstHot_420_421_BIT_0_422_A_ETC__q7[0] &
+  assign y__h46375 = SEXT_x6433__q8[0] & arbiter_lastSelect ;
+  assign y__h46516 =
+	     SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7[0] &
 	     arbiter_lastSelect ;
-  assign y__h60174 =
+  assign y__h60099 =
 	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h60176 =
+  assign y__h60101 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h60325 =
+  assign y__h60250 =
 	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h60327 =
+  assign y__h60252 =
 	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h60461 =
+  assign y__h60386 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h60463 =
+  assign y__h60388 =
 	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h60933 = SEXT_x1028__q14[0] & arbiter_1_lastSelect ;
-  assign y__h60935 = SEXT_x0994__q13[0] & arbiter_1_lastSelect_1 ;
-  assign y__h61121 =
-	     SEXT_SEXT_arbiter_1_firstHot_615_616_BIT_0_617_ETC__q12[0] &
+  assign y__h60858 = SEXT_x0953__q14[0] & arbiter_1_lastSelect ;
+  assign y__h60860 = SEXT_x0919__q13[0] & arbiter_1_lastSelect_1 ;
+  assign y__h61046 =
+	     SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12[0] &
 	     arbiter_1_lastSelect ;
-  assign y__h61123 = SEXT_x1028__q14[0] & arbiter_1_lastSelect_1 ;
-  assign y__h61302 = SEXT_x0994__q13[0] & arbiter_1_lastSelect ;
-  assign y__h61304 =
-	     SEXT_SEXT_arbiter_1_firstHot_615_616_BIT_0_617_ETC__q12[0] &
+  assign y__h61048 = SEXT_x0953__q14[0] & arbiter_1_lastSelect_1 ;
+  assign y__h61227 = SEXT_x0919__q13[0] & arbiter_1_lastSelect ;
+  assign y__h61229 =
+	     SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12[0] &
 	     arbiter_1_lastSelect_1 ;
-  assign y__h79933 =
+  assign y__h79858 =
 	     SEXT_arbiter_1_firstHot_1__q15[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h80036 =
+  assign y__h79961 =
 	     SEXT_arbiter_1_lastSelect_2__q16[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h80401 = SEXT_x0459__q18[0] & arbiter_1_lastSelect_2 ;
-  assign y__h80542 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_080_081_BIT_0_0_ETC__q17[0] &
+  assign y__h80326 = SEXT_x0384__q18[0] & arbiter_1_lastSelect_2 ;
+  assign y__h80467 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17[0] &
 	     arbiter_1_lastSelect_2 ;
-  assign y__h91584 =
+  assign y__h91509 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h91586 =
+  assign y__h91511 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h91735 =
+  assign y__h91660 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h91737 =
+  assign y__h91662 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h91871 =
+  assign y__h91796 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h91873 =
+  assign y__h91798 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h92343 = SEXT_x2438__q24[0] & arbiter_1_1_lastSelect ;
-  assign y__h92345 = SEXT_x2404__q23[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h92531 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_265_266_BIT_0_2_ETC__q22[0] &
+  assign y__h92268 = SEXT_x2363__q24[0] & arbiter_1_1_lastSelect ;
+  assign y__h92270 = SEXT_x2329__q23[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h92456 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_lastSelect ;
-  assign y__h92533 = SEXT_x2438__q24[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h92712 = SEXT_x2404__q23[0] & arbiter_1_1_lastSelect ;
-  assign y__h92714 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_265_266_BIT_0_2_ETC__q22[0] &
+  assign y__h92458 = SEXT_x2363__q24[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h92637 = SEXT_x2329__q23[0] & arbiter_1_1_lastSelect ;
+  assign y__h92639 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_lastSelect_1 ;
 
   // handling of inlined registers
@@ -9405,13 +9405,13 @@ module mkCore(CLK,
     #0;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate &&
-	  !SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424 &&
-	  !SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428)
+	  !SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 &&
+	  !SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate &&
-	  !SEXT_arbiter_lastSelect_416_417_BIT_0_418_AND__ETC___d1424 &&
-	  !SEXT_arbiter_firstHot_420_421_BIT_0_422_AND_re_ETC___d1428)
+	  !SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 &&
+	  !SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9420,7 +9420,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h47989 = $time;
+	  v__h47914 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9430,7 +9430,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h47989,
+	       v__h47914,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9539,13 +9539,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	begin
-	  v__h47378 = $time;
+	  v__h47303 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h47378,
+		 v__h47303,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
@@ -9557,7 +9557,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h51998 = $time;
+	  v__h51923 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9567,7 +9567,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h51998,
+	       v__h51923,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && ifcs_1_innerRoute$EMPTY_N &&
@@ -9676,13 +9676,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	begin
-	  v__h51387 = $time;
+	  v__h51312 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h51387,
+		 v__h51312,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
@@ -9706,13 +9706,13 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected,\n  RL_sink_selected_1] and [RL_sink_selected_2] ) fired in the same clock\n  cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_2 &&
-	  !SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084 &&
-	  !SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088)
+	  !SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 &&
+	  !SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_2 &&
-	  !SEXT_arbiter_1_lastSelect_2_076_077_BIT_0_078__ETC___d2084 &&
-	  !SEXT_arbiter_1_firstHot_1_080_081_BIT_0_082_AN_ETC___d2088)
+	  !SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 &&
+	  !SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9721,7 +9721,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h81934 = $time;
+	  v__h81859 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9731,7 +9731,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h81934,
+	       v__h81859,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9840,13 +9840,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	begin
-	  v__h81323 = $time;
+	  v__h81248 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h81323,
+		 v__h81248,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
@@ -9858,7 +9858,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h84827 = $time;
+	  v__h84752 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9868,7 +9868,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h84827,
+	       v__h84752,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N &&
@@ -9977,13 +9977,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	begin
-	  v__h84216 = $time;
+	  v__h84141 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h84216,
+		 v__h84141,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
@@ -10074,173 +10074,6 @@ module mkCore(CLK,
       if (WILL_FIRE_RL_tagController_tmp_ug_slave_u_w_warnDoPut)
 	$display("WARNING: putting into a Sink that can't be put into");
     if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("TagController write request ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("AXI4_AWFlit { ", "awid: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[97:93]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awaddr: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tmp__h6846);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awlen: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[28:21]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awsize: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("AXI4_Size { ", "val: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[20:18], " }");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awburst: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    tagController_tmp_awreqff$D_OUT[17:16] == 2'd0)
-	  $write("FIXED");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    tagController_tmp_awreqff$D_OUT[17:16] == 2'd1)
-	  $write("INCR");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    tagController_tmp_awreqff$D_OUT[17:16] == 2'd2)
-	  $write("WRAP");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    tagController_tmp_awreqff$D_OUT[17:16] != 2'd0 &&
-	    tagController_tmp_awreqff$D_OUT[17:16] != 2'd1 &&
-	    tagController_tmp_awreqff$D_OUT[17:16] != 2'd2)
-	  $write("Res");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awlock: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    tagController_tmp_awreqff$D_OUT[15])
-	  $write("EXCLUSIVE");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    !tagController_tmp_awreqff$D_OUT[15])
-	  $write("NORMAL");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awcache: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[14:11]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awprot: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[10:8]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awqos: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[7:4]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awregion: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_awreqff$D_OUT[3:0]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "awuser: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", 1'd0, " }");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite) $write(" - ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("AXI4_WFlit { ", "wdata: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h",
-		 tagController_tmp_shimSlave_wff_rv$port1__read[73:10]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "wstrb: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h", tagController_tmp_shimSlave_wff_rv$port1__read[9:2]);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "wlast: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    tagController_tmp_shimSlave_wff_rv$port1__read[1])
-	  $write("True");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite &&
-	    !tagController_tmp_shimSlave_wff_rv$port1__read[1])
-	  $write("False");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write(", ", "wuser: ");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite)
-	  $write("'h%h",
-		 tagController_tmp_shimSlave_wff_rv$port1__read[0],
-		 " }");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (tagController_tmp_newRst$OUT_RST != `BSV_RESET_VALUE)
-	if (WILL_FIRE_RL_tagController_tmp_passCacheWrite) $write("\n");
-    if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_split_1_putFirst && split_1_doPut$wget[172])
 	$display("Expecting FirstFlit of merged write");
     if (RST_N != `BSV_RESET_VALUE)
@@ -10310,15 +10143,15 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_nonRoutableFlit] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_1 &&
-	  !SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 &&
-	  !SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 &&
-	  !SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631)
+	  !SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 &&
+	  !SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 &&
+	  !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_1 &&
-	  !SEXT_arbiter_1_lastSelect_606_607_BIT_0_608_AN_ETC___d1619 &&
-	  !SEXT_arbiter_1_lastSelect_1_610_611_BIT_0_612__ETC___d1625 &&
-	  !SEXT_arbiter_1_firstHot_615_616_BIT_0_617_AND__ETC___d1631)
+	  !SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 &&
+	  !SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 &&
+	  !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -10326,7 +10159,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h62693 = $time;
+	  v__h62618 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10335,7 +10168,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h62693,
+	       v__h62618,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -10410,13 +10243,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	begin
-	  v__h62312 = $time;
+	  v__h62237 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h62312,
+		 v__h62237,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
@@ -10427,7 +10260,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h64763 = $time;
+	  v__h64688 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10436,7 +10269,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h64763,
+	       v__h64688,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && ifcs_1_routeBack$EMPTY_N &&
@@ -10511,13 +10344,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	begin
-	  v__h64382 = $time;
+	  v__h64307 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h64382,
+		 v__h64307,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
@@ -10531,7 +10364,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h66662 = $time;
+	  v__h66587 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10540,7 +10373,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h66662,
+	       v__h66587,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && ifcs_2_routeBack$EMPTY_N &&
@@ -10615,13 +10448,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	begin
-	  v__h66281 = $time;
+	  v__h66206 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h66281,
+		 v__h66206,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
@@ -10706,15 +10539,15 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_firstFlit] and\n  [RL_ifcs_2_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_3 &&
-	  !SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 &&
-	  !SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 &&
-	  !SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281)
+	  !SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 &&
+	  !SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 &&
+	  !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_3 &&
-	  !SEXT_arbiter_1_1_lastSelect_256_257_BIT_0_258__ETC___d2269 &&
-	  !SEXT_arbiter_1_1_lastSelect_1_260_261_BIT_0_26_ETC___d2275 &&
-	  !SEXT_arbiter_1_1_firstHot_265_266_BIT_0_267_AN_ETC___d2281)
+	  !SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 &&
+	  !SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 &&
+	  !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10722,7 +10555,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h94107 = $time;
+	  v__h94032 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10731,7 +10564,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h94107,
+	       v__h94032,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10806,13 +10639,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	begin
-	  v__h93726 = $time;
+	  v__h93651 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h93726,
+		 v__h93651,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
@@ -10823,7 +10656,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h96598 = $time;
+	  v__h96523 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10832,7 +10665,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h96598,
+	       v__h96523,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
@@ -10907,13 +10740,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	begin
-	  v__h96217 = $time;
+	  v__h96142 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h96217,
+		 v__h96142,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
@@ -10927,7 +10760,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h98908 = $time;
+	  v__h98833 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10936,7 +10769,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h98908,
+	       v__h98833,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
@@ -11011,13 +10844,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	begin
-	  v__h98527 = $time;
+	  v__h98452 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h98527,
+		 v__h98452,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
@@ -11181,33 +11014,33 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
 	begin
-	  v__h19881 = $stime;
+	  v__h19806 = $stime;
 	  #0;
 	end
-    v__h19875 = v__h19881 / 32'd10;
+    v__h19800 = v__h19806 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h19875);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h19800);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
 	begin
-	  v__h20059 = $stime;
+	  v__h19984 = $stime;
 	  #0;
 	end
-    v__h20053 = v__h20059 / 32'd10;
+    v__h19978 = v__h19984 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h20053);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h19978);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
 	begin
-	  v__h20425 = $stime;
+	  v__h20350 = $stime;
 	  #0;
 	end
-    v__h20419 = v__h20425 / 32'd10;
+    v__h20344 = v__h20350 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
-	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h20419);
+	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h20344);
   end
   // synopsys translate_on
 endmodule  // mkCore
