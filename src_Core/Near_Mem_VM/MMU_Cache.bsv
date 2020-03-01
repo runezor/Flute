@@ -857,11 +857,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       $display ("%0d: %s: cache size %0d KB, associativity %0d, line size %0d bytes (= %0d XLEN words)",
 		cur_cycle, d_or_i, kb_per_cache, ways_per_cset,
-		(word64s_per_cline * 8),
+		(word128s_per_cline * 16),
 `ifdef RV32
-		(word64s_per_cline * 2)
+		(word128s_per_cline * 4)
 `else
-		(word64s_per_cline * 1)
+		(word128s_per_cline * 2)
 `endif
 		);
    endrule
