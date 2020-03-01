@@ -16598,20 +16598,6 @@ module mkCPU(CLK,
     endcase
   end
   always@(stage2_rg_stage2 or
-	  _theResult_____2_rd_val_val_capFat_otype__h16450)
-  begin
-    case (stage2_rg_stage2[772:770])
-      3'd0:
-	  _theResult___data_to_stage3_rd_val_val_capFat_otype__h16517 =
-	      stage2_rg_stage2[600:583];
-      3'd1, 3'd4:
-	  _theResult___data_to_stage3_rd_val_val_capFat_otype__h16517 =
-	      _theResult_____2_rd_val_val_capFat_otype__h16450;
-      default: _theResult___data_to_stage3_rd_val_val_capFat_otype__h16517 =
-		   18'd262143;
-    endcase
-  end
-  always@(stage2_rg_stage2 or
 	  _theResult___fst_rd_val_capFat_address__h19623 or
 	  res_address__h16465)
   begin
@@ -16624,6 +16610,20 @@ module mkCPU(CLK,
 	      res_address__h16465;
       default: _theResult___bypass_rd_val_capFat_address__h19638 =
 		   _theResult___fst_rd_val_capFat_address__h19623;
+    endcase
+  end
+  always@(stage2_rg_stage2 or
+	  _theResult_____2_rd_val_val_capFat_otype__h16450)
+  begin
+    case (stage2_rg_stage2[772:770])
+      3'd0:
+	  _theResult___data_to_stage3_rd_val_val_capFat_otype__h16517 =
+	      stage2_rg_stage2[600:583];
+      3'd1, 3'd4:
+	  _theResult___data_to_stage3_rd_val_val_capFat_otype__h16517 =
+	      _theResult_____2_rd_val_val_capFat_otype__h16450;
+      default: _theResult___data_to_stage3_rd_val_val_capFat_otype__h16517 =
+		   18'd262143;
     endcase
   end
   always@(stage2_rg_stage2 or
@@ -17254,14 +17254,14 @@ module mkCPU(CLK,
       default: x__h29487 = val_capFat_perms_soft__h23269;
     endcase
   end
-  always@(stage1_rg_stage_input or val_capFat_reserved__h23158 or rg_ddc)
+  always@(stage1_rg_stage_input or val_capFat_addrBits__h23155 or rg_ddc)
   begin
     case (stage1_rg_stage_input[149:145])
       5'd0:
-	  _theResult___fst_internal_op1_capFat_reserved__h61744 =
-	      rg_ddc[64:63];
-      default: _theResult___fst_internal_op1_capFat_reserved__h61744 =
-		   val_capFat_reserved__h23158;
+	  _theResult___fst_internal_op1_capFat_addrBits__h61741 =
+	      rg_ddc[95:82];
+      default: _theResult___fst_internal_op1_capFat_addrBits__h61741 =
+		   val_capFat_addrBits__h23155;
     endcase
   end
   always@(stage1_rg_stage_input or val_capFat_address__h23154 or rg_ddc)
@@ -17274,14 +17274,14 @@ module mkCPU(CLK,
 		   val_capFat_address__h23154;
     endcase
   end
-  always@(stage1_rg_stage_input or val_capFat_addrBits__h23155 or rg_ddc)
+  always@(stage1_rg_stage_input or val_capFat_reserved__h23158 or rg_ddc)
   begin
     case (stage1_rg_stage_input[149:145])
       5'd0:
-	  _theResult___fst_internal_op1_capFat_addrBits__h61741 =
-	      rg_ddc[95:82];
-      default: _theResult___fst_internal_op1_capFat_addrBits__h61741 =
-		   val_capFat_addrBits__h23155;
+	  _theResult___fst_internal_op1_capFat_reserved__h61744 =
+	      rg_ddc[64:63];
+      default: _theResult___fst_internal_op1_capFat_reserved__h61744 =
+		   val_capFat_reserved__h23158;
     endcase
   end
   always@(stage1_rg_stage_input or val_capFat_otype__h23159 or rg_ddc)
@@ -17291,6 +17291,17 @@ module mkCPU(CLK,
 	  _theResult___fst_internal_op1_capFat_otype__h61745 = rg_ddc[62:45];
       default: _theResult___fst_internal_op1_capFat_otype__h61745 =
 		   val_capFat_otype__h23159;
+    endcase
+  end
+  always@(stage1_rg_stage_input or
+	  val_capFat_bounds_baseBits__h32212 or rg_ddc)
+  begin
+    case (stage1_rg_stage_input[149:145])
+      5'd0:
+	  _theResult___fst_internal_op1_capFat_bounds_baseBits__h61819 =
+	      rg_ddc[23:10];
+      default: _theResult___fst_internal_op1_capFat_bounds_baseBits__h61819 =
+		   val_capFat_bounds_baseBits__h32212;
     endcase
   end
   always@(stage1_rg_stage_input or
@@ -17313,17 +17324,6 @@ module mkCPU(CLK,
 	      rg_ddc[9:7];
       default: _theResult___fst_internal_op1_tempFields_repBoundTopBits__h62007 =
 		   val_tempFields_repBoundTopBits__h32271;
-    endcase
-  end
-  always@(stage1_rg_stage_input or
-	  val_capFat_bounds_baseBits__h32212 or rg_ddc)
-  begin
-    case (stage1_rg_stage_input[149:145])
-      5'd0:
-	  _theResult___fst_internal_op1_capFat_bounds_baseBits__h61819 =
-	      rg_ddc[23:10];
-      default: _theResult___fst_internal_op1_capFat_bounds_baseBits__h61819 =
-		   val_capFat_bounds_baseBits__h32212;
     endcase
   end
   always@(stage1_rg_stage_input or
@@ -17376,22 +17376,6 @@ module mkCPU(CLK,
   end
   always@(stage1_rg_stage_input or
 	  stage1_rg_pcc or
-	  rs1_val_bypassed_capFat_bounds_topBits__h32214 or
-	  _theResult___fst_internal_op1_capFat_bounds_topBits__h61818)
-  begin
-    case (stage1_rg_stage_input[114:108])
-      7'h0F, 7'h11:
-	  _theResult___fst_internal_op1_capFat_bounds_topBits__h61832 =
-	      rs1_val_bypassed_capFat_bounds_topBits__h32214;
-      7'h13:
-	  _theResult___fst_internal_op1_capFat_bounds_topBits__h61832 =
-	      _theResult___fst_internal_op1_capFat_bounds_topBits__h61818;
-      default: _theResult___fst_internal_op1_capFat_bounds_topBits__h61832 =
-		   stage1_rg_pcc[37:24];
-    endcase
-  end
-  always@(stage1_rg_stage_input or
-	  stage1_rg_pcc or
 	  rs1_val_bypassed_capFat_otype__h23168 or
 	  _theResult___fst_internal_op1_capFat_otype__h61745)
   begin
@@ -17404,6 +17388,22 @@ module mkCPU(CLK,
 	      _theResult___fst_internal_op1_capFat_otype__h61745;
       default: _theResult___fst_internal_op1_capFat_otype__h61779 =
 		   stage1_rg_pcc[62:45];
+    endcase
+  end
+  always@(stage1_rg_stage_input or
+	  stage1_rg_pcc or
+	  rs1_val_bypassed_capFat_bounds_topBits__h32214 or
+	  _theResult___fst_internal_op1_capFat_bounds_topBits__h61818)
+  begin
+    case (stage1_rg_stage_input[114:108])
+      7'h0F, 7'h11:
+	  _theResult___fst_internal_op1_capFat_bounds_topBits__h61832 =
+	      rs1_val_bypassed_capFat_bounds_topBits__h32214;
+      7'h13:
+	  _theResult___fst_internal_op1_capFat_bounds_topBits__h61832 =
+	      _theResult___fst_internal_op1_capFat_bounds_topBits__h61818;
+      default: _theResult___fst_internal_op1_capFat_bounds_topBits__h61832 =
+		   stage1_rg_pcc[37:24];
     endcase
   end
   always@(stage1_rg_stage_input or
@@ -17592,42 +17592,6 @@ module mkCPU(CLK,
     endcase
   end
   always@(stage1_rg_stage_input or
-	  _theResult___fst_check_authority_capFat_perms_soft__h94856 or
-	  rs1_val_bypassed_capFat_perms_soft__h23271 or
-	  rs2_val_bypassed_capFat_perms_soft__h27868 or
-	  x__h29487 or
-	  _theResult___fst_check_authority_capFat_perms_soft__h94851 or
-	  authority_capFat_perms_soft__h35890 or
-	  authority_capFat_perms_soft__h30014 or
-	  _theResult___fst_check_authority_capFat_perms_soft__h94848)
-  begin
-    case (stage1_rg_stage_input[114:108])
-      7'h08, 7'b0001001:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      rs1_val_bypassed_capFat_perms_soft__h23271;
-      7'h0B, 7'h0C, 7'h1F:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      rs2_val_bypassed_capFat_perms_soft__h27868;
-      7'h1D, 7'h20:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      x__h29487;
-      7'h1E:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      _theResult___fst_check_authority_capFat_perms_soft__h94851;
-      7'h7C:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      authority_capFat_perms_soft__h35890;
-      7'h7D:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      authority_capFat_perms_soft__h30014;
-      7'h7E:
-	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-	      _theResult___fst_check_authority_capFat_perms_soft__h94848;
-      default: _theResult___fst_check_authority_capFat_perms_soft__h94870 =
-		   _theResult___fst_check_authority_capFat_perms_soft__h94856;
-    endcase
-  end
-  always@(stage1_rg_stage_input or
 	  _theResult___fst_check_authority_capFat_otype__h94545 or
 	  rs1_val_bypassed_capFat_otype__h23168 or
 	  rs2_val_bypassed_capFat_otype__h26564 or
@@ -17661,6 +17625,42 @@ module mkCPU(CLK,
 	      _theResult___fst_check_authority_capFat_otype__h94507;
       default: _theResult___fst_check_authority_capFat_otype__h94566 =
 		   _theResult___fst_check_authority_capFat_otype__h94545;
+    endcase
+  end
+  always@(stage1_rg_stage_input or
+	  _theResult___fst_check_authority_capFat_perms_soft__h94856 or
+	  rs1_val_bypassed_capFat_perms_soft__h23271 or
+	  rs2_val_bypassed_capFat_perms_soft__h27868 or
+	  x__h29487 or
+	  _theResult___fst_check_authority_capFat_perms_soft__h94851 or
+	  authority_capFat_perms_soft__h35890 or
+	  authority_capFat_perms_soft__h30014 or
+	  _theResult___fst_check_authority_capFat_perms_soft__h94848)
+  begin
+    case (stage1_rg_stage_input[114:108])
+      7'h08, 7'b0001001:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      rs1_val_bypassed_capFat_perms_soft__h23271;
+      7'h0B, 7'h0C, 7'h1F:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      rs2_val_bypassed_capFat_perms_soft__h27868;
+      7'h1D, 7'h20:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      x__h29487;
+      7'h1E:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      _theResult___fst_check_authority_capFat_perms_soft__h94851;
+      7'h7C:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      authority_capFat_perms_soft__h35890;
+      7'h7D:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      authority_capFat_perms_soft__h30014;
+      7'h7E:
+	  _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+	      _theResult___fst_check_authority_capFat_perms_soft__h94848;
+      default: _theResult___fst_check_authority_capFat_perms_soft__h94870 =
+		   _theResult___fst_check_authority_capFat_perms_soft__h94856;
     endcase
   end
   always@(stage1_rg_stage_input or
@@ -17746,6 +17746,18 @@ module mkCPU(CLK,
     endcase
   end
   always@(stage1_rg_stage_input or
+	  _theResult___fst_cap_val2_capFat_bounds_topBits__h79166 or
+	  rs2_val_bypassed_capFat_bounds_topBits__h33458)
+  begin
+    case (stage1_rg_stage_input[161:155])
+      7'b0100011, 7'b0100111, 7'b0101111:
+	  alu_outputs_cap_val2_capFat_bounds_topBits__h79176 =
+	      rs2_val_bypassed_capFat_bounds_topBits__h33458;
+      default: alu_outputs_cap_val2_capFat_bounds_topBits__h79176 =
+		   _theResult___fst_cap_val2_capFat_bounds_topBits__h79166;
+    endcase
+  end
+  always@(stage1_rg_stage_input or
 	  _theResult___fst_cap_val2_capFat_perms_soft__h77754 or
 	  rs2_val_bypassed_capFat_perms_soft__h27868)
   begin
@@ -17767,18 +17779,6 @@ module mkCPU(CLK,
 	      rs2_val_bypassed_capFat_bounds_baseBits__h33459;
       default: alu_outputs_cap_val2_capFat_bounds_baseBits__h79177 =
 		   _theResult___fst_cap_val2_capFat_bounds_baseBits__h79167;
-    endcase
-  end
-  always@(stage1_rg_stage_input or
-	  _theResult___fst_cap_val2_capFat_bounds_topBits__h79166 or
-	  rs2_val_bypassed_capFat_bounds_topBits__h33458)
-  begin
-    case (stage1_rg_stage_input[161:155])
-      7'b0100011, 7'b0100111, 7'b0101111:
-	  alu_outputs_cap_val2_capFat_bounds_topBits__h79176 =
-	      rs2_val_bypassed_capFat_bounds_topBits__h33458;
-      default: alu_outputs_cap_val2_capFat_bounds_topBits__h79176 =
-		   _theResult___fst_cap_val2_capFat_bounds_topBits__h79166;
     endcase
   end
   always@(stage1_rg_stage_input or
@@ -18278,41 +18278,6 @@ module mkCPU(CLK,
     endcase
   end
   always@(IF_stage1_rg_stage_input_208_BITS_161_TO_155_3_ETC___d2375 or
-	  _theResult___fst_check_authority_tempFields_repBoundTopBits__h97572 or
-	  rs1_val_bypassed_tempFields_repBoundTopBits__h32277)
-  begin
-    case (IF_stage1_rg_stage_input_208_BITS_161_TO_155_3_ETC___d2375)
-      3'd1:
-	  _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 =
-	      _theResult___fst_check_authority_tempFields_repBoundTopBits__h97572;
-      3'd2:
-	  _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 =
-	      rs1_val_bypassed_tempFields_repBoundTopBits__h32277;
-      default: _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 =
-		   _theResult___fst_check_authority_tempFields_repBoundTopBits__h97572;
-    endcase
-  end
-  always@(stage1_rg_stage_input or
-	  _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 or
-	  authority_tempFields_repBoundTopBits__h97447 or
-	  alu_outputs___1_check_authority_tempFields_repBoundTopBits__h97465 or
-	  stage1_rg_pcc)
-  begin
-    case (stage1_rg_stage_input[161:155])
-      7'b0000011, 7'b0000111, 7'b0100011, 7'b0100111, 7'b0101111:
-	  alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
-	      authority_tempFields_repBoundTopBits__h97447;
-      7'b0001111:
-	  alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
-	      alu_outputs___1_check_authority_tempFields_repBoundTopBits__h97465;
-      7'b1100011, 7'b1100111, 7'b1101111:
-	  alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
-	      stage1_rg_pcc[9:7];
-      default: alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
-		   _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579;
-    endcase
-  end
-  always@(IF_stage1_rg_stage_input_208_BITS_161_TO_155_3_ETC___d2375 or
 	  _theResult___fst_check_authority_capFat_perms_soft__h94876 or
 	  rs1_val_bypassed_capFat_perms_soft__h23271)
   begin
@@ -18345,6 +18310,41 @@ module mkCPU(CLK,
 	      stage1_rg_pcc[81:78];
       default: alu_outputs_check_authority_capFat_perms_soft__h94891 =
 		   _theResult_____1_check_authority_capFat_perms_soft__h94879;
+    endcase
+  end
+  always@(IF_stage1_rg_stage_input_208_BITS_161_TO_155_3_ETC___d2375 or
+	  _theResult___fst_check_authority_tempFields_repBoundTopBits__h97572 or
+	  rs1_val_bypassed_tempFields_repBoundTopBits__h32277)
+  begin
+    case (IF_stage1_rg_stage_input_208_BITS_161_TO_155_3_ETC___d2375)
+      3'd1:
+	  _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 =
+	      _theResult___fst_check_authority_tempFields_repBoundTopBits__h97572;
+      3'd2:
+	  _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 =
+	      rs1_val_bypassed_tempFields_repBoundTopBits__h32277;
+      default: _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 =
+		   _theResult___fst_check_authority_tempFields_repBoundTopBits__h97572;
+    endcase
+  end
+  always@(stage1_rg_stage_input or
+	  _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579 or
+	  authority_tempFields_repBoundTopBits__h97447 or
+	  alu_outputs___1_check_authority_tempFields_repBoundTopBits__h97465 or
+	  stage1_rg_pcc)
+  begin
+    case (stage1_rg_stage_input[161:155])
+      7'b0000011, 7'b0000111, 7'b0100011, 7'b0100111, 7'b0101111:
+	  alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
+	      authority_tempFields_repBoundTopBits__h97447;
+      7'b0001111:
+	  alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
+	      alu_outputs___1_check_authority_tempFields_repBoundTopBits__h97465;
+      7'b1100011, 7'b1100111, 7'b1101111:
+	  alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
+	      stage1_rg_pcc[9:7];
+      default: alu_outputs_check_authority_tempFields_repBoundTopBits__h97595 =
+		   _theResult_____1_check_authority_tempFields_repBoundTopBits__h97579;
     endcase
   end
   always@(IF_stage1_rg_stage_input_208_BITS_144_TO_140_2_ETC___d2393 or
