@@ -236,12 +236,19 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `endif
                        pc_rdata:       getPC(rg_pcc),
                        pc_wdata:       getPC(next_pcc_local),
+`ifdef ISA_F
                        mem_wdata:      alu_outputs.val2_flt_not_int ? alu_outputs.val2 : truncate(cap_val2),
+`else
+                       mem_wdata:      truncate(cap_val2),
+`endif
                        rd_addr:        alu_outputs.rd,
                        rd_alu:         (alu_outputs.op_stage2 == OP_Stage2_ALU),
                        rd_wdata_alu:   alu_outputs.val1,
-                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST) || (alu_outputs.op_stage2 == OP_Stage2_AMO)) ? alu_outputs.addr : 0
-                   };
+                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)
+`ifdef ISA_A
+                                     || (alu_outputs.op_stage2 == OP_Stage2_AMO)
+`endif
+                                       ) ? alu_outputs.addr : 0};
 `endif
 
    let data_to_stage2 = Data_Stage1_to_Stage2 {
