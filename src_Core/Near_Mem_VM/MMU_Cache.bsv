@@ -600,8 +600,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    // These regs are used in the cache refill loop for ram_State_and_CTag_CSet
    // and ram_Word128_Set
-   // DELETE: Reg #(Bool)                rg_requesting_cline    <- mkReg (False);
-   // DELETE: Reg #(Fabric_Addr)         rg_req_byte_in_cline   <- mkRegU;
    Reg #(Word128_Set_in_Cache) rg_word128_set_in_cache <- mkRegU;
    Reg #(Bool)                 rg_error_during_refill <- mkRegU;
    // In 64b (or lower) fabrics, these hold the lower word64 while we're fetching the upper word64 of a word128
@@ -839,7 +837,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    rule rl_start_reset (resetting && (rg_state != MODULE_RESETTING));
       rg_state             <= MODULE_RESETTING;
       rg_cset_in_cache     <= 0;
-      // rg_requesting_cline  <= False;    TODO: DELETE after testing bursts
       rg_lower_word64_full <= False;
 
       // Flush the TLB
@@ -1488,10 +1485,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       Fabric_Addr    cline_fabric_addr = fn_PA_to_Fabric_Addr (cline_addr);
       fa_fabric_send_read_req (cline_fabric_addr, ((bytes_per_fabric_data == 8) ? 8 : 16), fromInteger ((bytes_per_cline / bytes_per_fabric_data) - 1));
 
-      // TODO: DELETE after testing bursts
-      // DELETE rg_requesting_cline  <= True;
-      // DELETE rg_req_byte_in_cline <= ((valueOf (Wd_Data) == 64) ? 8 : 16);
-
       // Pick a victim 'way'
       // TODO: prioritize picking an EMPTY slot over a CLEAN slot
       // Currently just uses rg_victim_way and increments it
@@ -1503,10 +1496,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       Way_in_CSet new_victim_way = truncate (tmp);
       rg_victim_way <= new_victim_way;
 
-      // Request read of State_and_CTag_CSet and first Word128_Set in CLine
-      // (BRAM port B) for set read-modify-write (not relevant for
-      // direct-mapped)
-      ram_state_and_ctag_cset.b.put (bram_cmd_write, cset_in_cache, ?);
+      // State_and_CTag_CSet are updated in rl_cache_refill_rsps_loop
+      // only after observing the first read-response, to assure that
+      // the read is successfule and not an access error.
+
+      // Request read of first Word128_Set in CLine (BRAM port B)
+      // for set read-modify-write (not relevant for direct-mapped)
       let word128_in_cline      = 0;
       let word128_set_in_cache  = { cset_in_cache, word128_in_cline };
       rg_word128_set_in_cache  <= word128_set_in_cache;
@@ -1602,15 +1597,15 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
          $display ("        64b fabric: concat with rg_lower_word64: new_word128 0x%0x", new_word128);
 
 	 Word128_in_CLine word128_in_cline = truncate (rg_word128_set_in_cache);
-	 CSet_in_Cache cset_in_cache = truncateLSB (rg_word128_set_in_cache);
 
 	 // Update the State_and_CTag_CSet (BRAM port A) (if this is the first
 	 // response and not an error)
-	 let new_state_and_ctag_cset = state_and_ctag_cset;
-	 new_state_and_ctag_cset [rg_victim_way] = State_and_CTag {state: CTAG_CLEAN,
-								   ctag : fn_PA_to_CTag (rg_pa)};
-	 if ((word128_in_cline == 0) && (! err_rsp))
+	 if ((word128_in_cline == 0) && (! err_rsp)) begin
+	    let new_state_and_ctag_cset = state_and_ctag_cset;
+	    new_state_and_ctag_cset [rg_victim_way] = State_and_CTag {state: CTAG_CLEAN,
+								      ctag : fn_PA_to_CTag (rg_pa)};
 	    ram_state_and_ctag_cset.a.put (bram_cmd_write, cset_in_cache, new_state_and_ctag_cset);
+	 end
 
 	 // Update the Word128_Set (BRAM port A) (if this response was not an error)
 	 let new_word128_set = word128_set;
