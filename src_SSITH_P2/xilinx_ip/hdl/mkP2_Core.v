@@ -7,32 +7,32 @@
 // Ports:
 // Name                         I/O  size props
 // master0_awid                   O     6
-// master0_awaddr                 O    64
-// master0_awlen                  O     8
-// master0_awsize                 O     3
-// master0_awburst                O     2
-// master0_awlock                 O     1
-// master0_awcache                O     4
-// master0_awprot                 O     3
-// master0_awqos                  O     4
-// master0_awregion               O     4
-// master0_awvalid                O     1
-// master0_wdata                  O    64
-// master0_wstrb                  O     8
-// master0_wlast                  O     1
-// master0_wvalid                 O     1
+// master0_awaddr                 O    64 reg
+// master0_awlen                  O     8 reg
+// master0_awsize                 O     3 reg
+// master0_awburst                O     2 reg
+// master0_awlock                 O     1 reg
+// master0_awcache                O     4 reg
+// master0_awprot                 O     3 reg
+// master0_awqos                  O     4 reg
+// master0_awregion               O     4 reg
+// master0_awvalid                O     1 reg
+// master0_wdata                  O    64 reg
+// master0_wstrb                  O     8 reg
+// master0_wlast                  O     1 reg
+// master0_wvalid                 O     1 reg
 // master0_bready                 O     1 reg
 // master0_arid                   O     6
-// master0_araddr                 O    64
-// master0_arlen                  O     8
-// master0_arsize                 O     3
-// master0_arburst                O     2
-// master0_arlock                 O     1
-// master0_arcache                O     4
-// master0_arprot                 O     3
-// master0_arqos                  O     4
-// master0_arregion               O     4
-// master0_arvalid                O     1
+// master0_araddr                 O    64 reg
+// master0_arlen                  O     8 reg
+// master0_arsize                 O     3 reg
+// master0_arburst                O     2 reg
+// master0_arlock                 O     1 reg
+// master0_arcache                O     4 reg
+// master0_arprot                 O     3 reg
+// master0_arqos                  O     4 reg
+// master0_arregion               O     4 reg
+// master0_arvalid                O     1 reg
 // master0_rready                 O     1 reg
 // master1_awid                   O     6
 // master1_awaddr                 O    64
@@ -69,13 +69,13 @@
 // RST_N                          I     1 reset
 // master0_awready                I     1
 // master0_wready                 I     1
-// master0_bid                    I     6
-// master0_bresp                  I     2
+// master0_bid                    I     6 reg
+// master0_bresp                  I     2 reg
 // master0_arready                I     1
-// master0_rid                    I     6
-// master0_rdata                  I    64
-// master0_rresp                  I     2
-// master0_rlast                  I     1
+// master0_rid                    I     6 reg
+// master0_rdata                  I    64 reg
+// master0_rresp                  I     2 reg
+// master0_rlast                  I     1 reg
 // master1_awready                I     1
 // master1_wready                 I     1
 // master1_bid                    I     6
@@ -94,62 +94,7 @@
 // master1_bvalid                 I     1
 // master1_rvalid                 I     1
 //
-// Combinational paths from inputs to outputs:
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arid
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_araddr
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arlen
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arsize
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arburst
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arlock
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arcache
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arprot
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arqos
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arregion
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arvalid
+// No combinational paths from inputs to outputs
 //
 //
 
