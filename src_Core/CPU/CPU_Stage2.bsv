@@ -272,16 +272,6 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       end
       // This stage is just relaying ALU results from previous stage to next stage
       else
-`ifdef ISA_CHERI
-     if (rg_stage2.check_enable && !check_success) begin
-         output_stage2 = Output_Stage2 {ostatus: OSTATUS_NONPIPE,
-                                        trap_info: trap_info_capbounds,
-                                        data_to_stage3: ?,
-                                        bypass: no_bypass,
-                                        trace_data: ? //TODO
-                                    };
-     end else
-`endif
       if (rg_stage2.op_stage2 == OP_Stage2_ALU) begin
 	 let data_to_stage3 = data_to_stage3_base;
 	 data_to_stage3.rd_valid = True;
@@ -651,6 +641,10 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `endif
 `ifdef ISA_CHERI
       output_stage2.check_success = rg_stage2.check_enable && check_success;
+      if (rg_stage2.check_enable && !check_success) begin
+         output_stage2.ostatus = OSTATUS_NONPIPE;
+         output_stage2.trap_info = trap_info_capbounds;
+      end
 `endif
       return output_stage2;
    endfunction
