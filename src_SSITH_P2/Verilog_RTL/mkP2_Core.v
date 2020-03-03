@@ -34,34 +34,34 @@
 // master0_arregion               O     4
 // master0_arvalid                O     1
 // master0_rready                 O     1 reg
-// master1_awid                   O     6 reg
-// master1_awaddr                 O    64 reg
-// master1_awlen                  O     8 reg
-// master1_awsize                 O     3 reg
-// master1_awburst                O     2 reg
-// master1_awlock                 O     1 reg
-// master1_awcache                O     4 reg
-// master1_awprot                 O     3 reg
-// master1_awqos                  O     4 reg
-// master1_awregion               O     4 reg
-// master1_awvalid                O     1 reg
-// master1_wdata                  O    64 reg
-// master1_wstrb                  O     8 reg
-// master1_wlast                  O     1 reg
-// master1_wvalid                 O     1 reg
-// master1_bready                 O     1 reg
-// master1_arid                   O     6 reg
-// master1_araddr                 O    64 reg
-// master1_arlen                  O     8 reg
-// master1_arsize                 O     3 reg
-// master1_arburst                O     2 reg
-// master1_arlock                 O     1 reg
-// master1_arcache                O     4 reg
-// master1_arprot                 O     3 reg
-// master1_arqos                  O     4 reg
-// master1_arregion               O     4 reg
-// master1_arvalid                O     1 reg
-// master1_rready                 O     1 reg
+// master1_awid                   O     6
+// master1_awaddr                 O    64
+// master1_awlen                  O     8
+// master1_awsize                 O     3
+// master1_awburst                O     2
+// master1_awlock                 O     1
+// master1_awcache                O     4
+// master1_awprot                 O     3
+// master1_awqos                  O     4
+// master1_awregion               O     4
+// master1_awvalid                O     1
+// master1_wdata                  O    64
+// master1_wstrb                  O     8
+// master1_wlast                  O     1
+// master1_wvalid                 O     1
+// master1_bready                 O     1
+// master1_arid                   O     6
+// master1_araddr                 O    64
+// master1_arlen                  O     8
+// master1_arsize                 O     3
+// master1_arburst                O     2
+// master1_arlock                 O     1
+// master1_arcache                O     4
+// master1_arprot                 O     3
+// master1_arqos                  O     4
+// master1_arregion               O     4
+// master1_arvalid                O     1
+// master1_rready                 O     1
 // jtag_tdo                       O     1
 // CLK_jtag_tclk_out              O     1 clock
 // CLK_GATE_jtag_tclk_out         O     1 const
@@ -78,13 +78,13 @@
 // master0_rlast                  I     1
 // master1_awready                I     1
 // master1_wready                 I     1
-// master1_bid                    I     6 reg
-// master1_bresp                  I     2 reg
+// master1_bid                    I     6
+// master1_bresp                  I     2
 // master1_arready                I     1
-// master1_rid                    I     6 reg
-// master1_rdata                  I    64 reg
-// master1_rresp                  I     2 reg
-// master1_rlast                  I     1 reg
+// master1_rid                    I     6
+// master1_rdata                  I    64
+// master1_rresp                  I     2
+// master1_rlast                  I     1
 // cpu_external_interrupt_req     I    16
 // jtag_tdi                       I     1
 // jtag_tms                       I     1
