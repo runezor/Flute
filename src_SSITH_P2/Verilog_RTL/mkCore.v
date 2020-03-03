@@ -2860,6 +2860,7 @@ module mkCore(CLK,
        debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901,
        debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894,
        debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899,
+       plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437,
        reqWires_1_0_whas__615_AND_reqWires_1_0_wget___ETC___d1625,
        reqWires_1_1_0_whas__265_AND_reqWires_1_1_0_wg_ETC___d2275,
        split_0_doPut_whas__033_AND_split_0_doPut_wget_ETC___d1040,
@@ -6117,20 +6118,17 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
-	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic$RDY_server_reset_request_put &&
-	     f_reset_reqs$EMPTY_N &&
-	     f_reset_requestor$FULL_N ;
+	     plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
 	     debug_module$RDY_hart0_reset_client_request_get &&
-	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
+	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
@@ -6139,9 +6137,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_complete
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_complete =
-	     cpu$RDY_hart0_server_reset_response_get &&
 	     near_mem_io$RDY_server_reset_response_get &&
 	     plic$RDY_server_reset_response_get &&
+	     cpu$RDY_hart0_server_reset_response_get &&
 	     f_reset_requestor$EMPTY_N &&
 	     (f_reset_requestor$D_OUT ||
 	      debug_module$RDY_hart0_reset_client_response_put) &&
@@ -7723,7 +7721,9 @@ module mkCore(CLK,
   // submodule f_reset_reqs
   assign f_reset_reqs$D_IN = cpu_reset_server_request_put ;
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
-  assign f_reset_reqs$DEQ = CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign f_reset_reqs$DEQ =
+	     near_mem_io$RDY_server_reset_request_put &&
+	     plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -8842,6 +8842,11 @@ module mkCore(CLK,
 	     debug_module$master_araddr < soc_map$m_plic_addr_range[127:64] ;
   assign fatReq_arid__h71008 = { 1'd0, cpu$dmem_master_arid } ;
   assign fatReq_arid__h73475 = { 1'd1, debug_module$master_arid } ;
+  assign plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 =
+	     plic$RDY_server_reset_request_put &&
+	     cpu$RDY_hart0_server_reset_request_put &&
+	     f_reset_reqs$EMPTY_N &&
+	     f_reset_requestor$FULL_N ;
   assign reqWires_1_0_whas__615_AND_reqWires_1_0_wget___ETC___d1625 =
 	     CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget ||
