@@ -1821,8 +1821,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
     SET_OFFSET: begin
         let result = modifyOffset(alu_outputs.internal_op1, alu_outputs.internal_op2, alu_outputs.internal_op_flag);
         alu_outputs.cap_val1 = result.value;
-        alu_outputs.val1 = zeroExtend(getAddr(result.value));
-        alu_outputs.val1_cap_not_int = result.exact;
+        alu_outputs.val1_cap_not_int = True;
     end
     SET_BOUNDS: begin
         let result = setBounds(cs1_val, alu_outputs.internal_op2);
@@ -1849,8 +1848,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
     SET_ADDR: begin
         let result = setAddr(cs1_val, alu_outputs.internal_op2);
         alu_outputs.cap_val1 = result.value;
-        alu_outputs.val1 = zeroExtend(getAddr(result.value));
-        alu_outputs.val1_cap_not_int = result.exact;
+        alu_outputs.val1_cap_not_int = True;
     end
     endcase
 
