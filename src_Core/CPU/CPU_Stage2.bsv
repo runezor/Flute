@@ -101,7 +101,7 @@ interface CPU_Stage2_IFC;
 
    // ---- Input
    (* always_ready *)
-   method Action enq (Data_Stage1_to_Stage2 x);
+   method Action enq (Data_Stage1_to_Stage2 x, Bool valid);
 
    (* always_ready *)
    method Action set_full (Bool full);
@@ -652,9 +652,9 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    // ----------------
    // Initiate DM, Shifter box, MBox or FBox op
 
-   function Action fa_enq (Data_Stage1_to_Stage2 x);
+   function Action fa_enq (Data_Stage1_to_Stage2 x, Bool valid);
       action
-	 rg_stage2  <= x;
+	 if (valid) rg_stage2  <= x;
 
 	 let funct3 = instr_funct3 (x.instr);
 
@@ -666,7 +666,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `else
 	 Bit #(5) amo_funct5 = pack(x.val1) [6:2];
 `endif
-     rg_f5 <= amo_funct5;
+         if (valid) rg_f5 <= amo_funct5;
 `else
 	 Bool op_stage2_amo = False;
 	 Bit #(5) amo_funct5 = 0;
@@ -721,7 +721,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef SHIFT_SERIAL
 	 // If Shifter box op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_SH)
+	 else if (x.op_stage2 == OP_Stage2_SH && valid)
 	    shifter_box.req (unpack (funct3 [2]),
 `ifdef ISA_D
 `ifdef RV32
@@ -740,7 +740,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef ISA_M
 	 // If MBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_M) begin
+	 else if (x.op_stage2 == OP_Stage2_M && valid) begin
             // Instr fields required for decode for F/D opcodes
 	    Bool is_OP_not_OP_32 = (x.instr [3] == 1'b0);
             mbox.req (is_OP_not_OP_32,
@@ -753,7 +753,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef ISA_F
 	 // If FBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_FD) begin
+	 else if (x.op_stage2 == OP_Stage2_FD && valid) begin
 	    // Instr fields required for decode for F/D opcodes
             let opcode = instr_opcode (x.instr);
 	    let funct7 = instr_funct7 (x.instr);
@@ -796,10 +796,10 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    endmethod
 
    // ---- Input
-   method Action enq (Data_Stage1_to_Stage2 x);
-      fa_enq (x);
+   method Action enq (Data_Stage1_to_Stage2 x, Bool valid);
+      fa_enq (x, valid);
 
-      if (verbosity > 1)
+      if (verbosity > 1 && valid)
 	 $display ("%0t    CPU_Stage2.enq (Data_Stage1_to_Stage2)", $time);
    endmethod
 

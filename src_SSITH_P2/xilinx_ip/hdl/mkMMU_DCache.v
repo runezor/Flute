@@ -3207,7 +3207,7 @@ module mkMMU_DCache(CLK,
   assign cache_f_reset_rsps$D_IN = cache_f_reset_reqs$D_OUT ;
   assign cache_f_reset_rsps$ENQ = MUX_cache_rg_state$write_1__SEL_18 ;
   assign cache_f_reset_rsps$DEQ =
-	     EN_server_flush_response_get || EN_server_reset_response_get ;
+	     EN_server_reset_response_get || EN_server_flush_response_get ;
   assign cache_f_reset_rsps$CLR = 1'b0 ;
 
   // submodule cache_ram_state_and_ctag_cset
@@ -4123,7 +4123,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_priv_64_ULE_0b1_65_AND_cache_rg_satp__ETC___d456 =
 	     cache_rg_priv_64_ULE_0b1_65_AND_cache_rg_satp__ETC___d241 ||
 	     (NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d254 ||
-	      cache_tlb$RDY_insert && cache_tlb$RDY_lookup &&
+	      cache_tlb$RDY_lookup && cache_tlb$RDY_insert &&
 	      cache_f_pte_writebacks$FULL_N) &&
 	     (!cache_soc_map$m_is_mem_addr ||
 	      IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d453) ;

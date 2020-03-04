@@ -824,14 +824,17 @@ module mkCPU (CPU_IFC);
 	       if (cur_verbosity > 1)
 		  $display ("    rl_pipe: Discarding stage1 due to redirection");
 	    end
-	    else if ((! stage1.out.redirect) || (stageF.out.ostatus != OSTATUS_BUSY)) begin
-	       stage2.enq (stage1.out.data_to_stage2);  stage2_full = True;
-	       stage1.deq;                              stage1_full = False;
-
-	       if (stage1.out.redirect) begin
-		  let epoch <- fav_update_epoch;
-                  let old_fetch_addr = getAddr(stage1.out.data_to_stage2.pcc);
-                  redirect_F = Valid(tuple3(epoch, getAddr(stage1.out.next_pcc), old_fetch_addr));
+	    else begin
+               let enq_s2 = (! stage1.out.redirect) || (stageF.out.ostatus != OSTATUS_BUSY);
+	       stage2.enq (stage1.out.data_to_stage2, enq_s2);
+               if (enq_s2) begin
+	          stage1.deq;                              stage1_full = False;
+                  stage2_full = True;
+	          if (stage1.out.redirect) begin
+		     let epoch <- fav_update_epoch;
+                     let old_fetch_addr = getAddr(stage1.out.data_to_stage2.pcc);
+                     redirect_F = Valid(tuple3(epoch, getAddr(stage1.out.next_pcc), old_fetch_addr));
+                  end
                end
 	    end
 	 end
