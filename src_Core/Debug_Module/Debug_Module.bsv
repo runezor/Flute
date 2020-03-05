@@ -65,7 +65,7 @@ package Debug_Module;
 // BSV library imports
 
 import Memory       :: *;
-import FIFOF        :: *;
+import FIFO         :: *;
 import GetPut       :: *;
 import ClientServer :: *;
 import SpecialFIFOs :: *;
@@ -150,7 +150,7 @@ module mkDebug_Module (Debug_Module_IFC);
    DM_Abstract_Commands_IFC  dm_abstract_commands <- mkDM_Abstract_Commands;
    DM_System_Bus_IFC         dm_system_bus        <- mkDM_System_Bus;
 
-   FIFOF#(DM_Addr) f_read_addr <- mkBypassFIFOF;
+   FIFO#(DM_Addr) f_read_addr <- mkFIFO1;
 
    // ================================================================
    // Reset all three parts when dm_run_control.dmactive is low
