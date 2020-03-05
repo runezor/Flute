@@ -218,7 +218,9 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
      ? alu_outputs.pcc
      : setPC(rg_pcc, next_pc_local).value); //TODO unrepresentable?
 
-   let redirect = getAddr(toCapPipe(next_pcc_local)) != rg_stage_input.pred_fetch_addr;
+   let redirect = (alu_outputs.control == CONTROL_CAPBRANCH)
+     ? (getAddr(toCapPipe(alu_outputs.pcc)) != rg_stage_input.pred_fetch_addr)
+     : (next_pc_local == rg_stage_input.pred_fetch_addr - getPCCBase(rg_pcc));
 
 `ifdef RVFI
    CapReg tmp_val2 = cast(alu_outputs.cap_val2);
