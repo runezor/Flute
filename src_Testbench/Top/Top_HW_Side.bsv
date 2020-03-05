@@ -86,15 +86,16 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
    // BEHAVIOR
 
 
-`ifndef RVFI_DII
    Reg #(Bool) rg_banner_printed <- mkReg (False);
 
    // Display a banner
    rule rl_step0 (! rg_banner_printed);
+`ifndef RVFI_DII
       $display ("================================================================");
       $display ("Bluespec RISC-V standalone system simulation v1.2");
       $display ("Copyright (c) 2017-2019 Bluespec, Inc. All Rights Reserved.");
       $display ("================================================================");
+`endif
 
       rg_banner_printed <= True;
 
@@ -108,37 +109,37 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
       // ----------------
       // Load tohost addr from symbol-table file
 `ifndef IVERILOG
-      // Note: see 'CAVEAT FOR IVERILOG USERS' above
-      Bool watch_tohost <- $test$plusargs ("tohost");
-      let tha <- c_get_symbol_val ("tohost");
-      Fabric_Addr tohost_addr = truncate (tha);
-      $display ("INFO: watch_tohost = %0d, tohost_addr = 0x%0h",
-		pack (watch_tohost), tohost_addr);
-      soc_top.set_watch_tohost (watch_tohost, tohost_addr);
+    // Note: see 'CAVEAT FOR IVERILOG USERS' above
+    Bool watch_tohost <- $test$plusargs ("tohost");
+    let tha <- c_get_symbol_val ("tohost");
+    Fabric_Addr tohost_addr = truncate (tha);
+    $display ("INFO: watch_tohost = %0d, tohost_addr = 0x%0h",
+                pack (watch_tohost), tohost_addr);
+    soc_top.set_watch_tohost (watch_tohost, tohost_addr);
 `endif
 
-      // ----------------
-      // Start timing the simulation
+    // ----------------
+    // Start timing the simulation
 `ifndef IVERILOG
-      Bit #(32) cycle_num <- cur_cycle;
-      c_start_timing (zeroExtend (cycle_num));
+    Bit #(32) cycle_num <- cur_cycle;
+    c_start_timing (zeroExtend (cycle_num));
 `endif
 
-      // ----------------
-      // Open file for Tandem Verification trace output
+    // ----------------
+    // Open file for Tandem Verification trace output
 `ifdef INCLUDE_TANDEM_VERIF
 `ifndef IVERILOG
-      // Note: see 'CAVEAT FOR IVERILOG USERS' above
-      let success <- c_trace_file_open ('h_AA);
-      if (success == 0) begin
-	 $display ("ERROR: Top_HW_Side.rl_step0: error opening trace file.");
-	 $display ("    Aborting.");
-	 $finish (1);
-      end
-      else
-	 $display ("Top_HW_Side.rl_step0: opened trace file.");
+    // Note: see 'CAVEAT FOR IVERILOG USERS' above
+    let success <- c_trace_file_open ('h_AA);
+    if (success == 0) begin
+        $display ("ERROR: Top_HW_Side.rl_step0: error opening trace file.");
+        $display ("    Aborting.");
+        $finish (1);
+    end
+    else
+        $display ("Top_HW_Side.rl_step0: opened trace file.");
 `else
-      $display ("Warning: tandem verification output logs not available in IVerilog");
+    $display ("Warning: tandem verification output logs not available in IVerilog");
 `endif
 `endif
 
@@ -178,7 +179,6 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
 
       $finish (0);
    endrule
-`endif
 
    // ================================================================
    // Tandem verifier: drain and output vectors of bytes

@@ -185,6 +185,22 @@ module mkSoC_Map (SoC_Map_IFC);
       size: fromInteger (bytes_per_TCM)
    };
 
+`ifdef RVFI_DII
+  let rvfi_cached = Range {
+      base: 'h_8000_0000,
+      size: 'h_0040_0000
+   };
+   function Bool fn_is_mem_addr (Fabric_Addr addr);
+       return (inRange(rvfi_cached, addr));
+   endfunction
+   let rvfi_uncached = Range {
+      base: 'h_8040_0000,
+      size: 'h_0040_0000
+   };
+   function Bool fn_is_IO_addr (Fabric_Addr addr);
+       return (inRange(rvfi_uncached, addr));
+   endfunction
+`else
    // ----------------------------------------------------------------
    // Memory address predicate
    // Identifies memory addresses in the Fabric.
@@ -207,7 +223,7 @@ module mkSoC_Map (SoC_Map_IFC);
               || inRange(plic_addr_range, addr)
               || inRange(uart0_addr_range, addr));
    endfunction
-
+`endif
    // ----------------------------------------------------------------
    // PC, MTVEC and NMIVEC reset values
 
