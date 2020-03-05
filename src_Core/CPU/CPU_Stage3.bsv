@@ -159,15 +159,15 @@ module mkCPU_Stage3 #(Bit #(4)         verbosity,
             // Write to GPR in a non-FD system
             gpr_regfile.write_rd (rg_stage3.rd, extract_cap(rg_stage3.rd_val));
 
-	    if (verbosity > 1)
+	    if (verbosity > 0)
 `ifdef ISA_F
                if (rg_stage3.rd_in_fpr)
                   $display ("    S3.fa_deq: write FRd 0x%0h, rd_val 0x%0h",
                             rg_stage3.rd, rg_stage3.rd_val);
                else
 `endif
-                  $display ("    S3.fa_deq: write GRd 0x%0h, rd_val 0x%0h",
-                            rg_stage3.rd, rg_stage3.rd_val);
+                  $display ("    S3.fa_deq: write GRd 0x%0h, rd_val ",
+                            rg_stage3.rd, fshow(rg_stage3.rd_val));
 
 `ifdef ISA_F
             // Update FCSR.fflags
