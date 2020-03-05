@@ -4737,6 +4737,17 @@ module mkCore(CLK,
 	     cpu$imem_master_rready ;
   assign WILL_FIRE_RL_cpu_imem_r_dropFlit = CAN_FIRE_RL_cpu_imem_r_dropFlit ;
 
+  // rule RL_mkConnectionGetPut_3
+  assign CAN_FIRE_RL_mkConnectionGetPut_3 =
+	     cpu$imem_master_arvalid && delay_shim_arff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut_3 =
+	     CAN_FIRE_RL_mkConnectionGetPut_3 &&
+	     !WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
+
+  // rule RL_cpu_imem_ar_forwardReady
+  assign CAN_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
+  assign WILL_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
+
   // rule RL_cpu_imem_r_buffer_enqueue
   assign CAN_FIRE_RL_cpu_imem_r_buffer_enqueue =
 	     CAN_FIRE_RL_mkConnectionGetPut_4 &&
@@ -5752,13 +5763,6 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_msNoSynth_0_r_dropFlit =
 	     CAN_FIRE_RL_msNoSynth_0_r_dropFlit ;
 
-  // rule RL_mkConnectionGetPut_3
-  assign CAN_FIRE_RL_mkConnectionGetPut_3 =
-	     cpu$imem_master_arvalid && delay_shim_arff$FULL_N ;
-  assign WILL_FIRE_RL_mkConnectionGetPut_3 =
-	     CAN_FIRE_RL_mkConnectionGetPut_3 &&
-	     !WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
-
   // rule RL_rl_relay_sw_interrupts
   assign CAN_FIRE_RL_rl_relay_sw_interrupts =
 	     near_mem_io$RDY_get_sw_interrupt_req_get ;
@@ -5774,10 +5778,6 @@ module mkCore(CLK,
   // rule RL_rl_relay_external_interrupts
   assign CAN_FIRE_RL_rl_relay_external_interrupts = 1'd1 ;
   assign WILL_FIRE_RL_rl_relay_external_interrupts = 1'd1 ;
-
-  // rule RL_cpu_imem_ar_forwardReady
-  assign CAN_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
-  assign WILL_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
 
   // rule RL_msNoSynth_0_r_buffer_enqueue
   assign CAN_FIRE_RL_msNoSynth_0_r_buffer_enqueue =

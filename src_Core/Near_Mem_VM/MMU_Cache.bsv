@@ -482,7 +482,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    SoC_Map_IFC soc_map <- mkSoC_Map;
 
 `ifdef ISA_CHERI
-   Reg#(Bool) crg_commit[2] <- mkCReg(2,False);
+   Wire#(Bool) dw_commit <- mkDWire(False);
    FIFO #(AXI4_WFlit#(Wd_Data, Wd_W_User)) f_fabric_second_write_reqs <- mkFIFO1;
 `endif
 
@@ -491,7 +491,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Bool resetting = f_reset_reqs.notEmpty;
    FIFOF #(Requestor) f_reset_rsps <- mkFIFOF;
 
-   PulseWire req_called <- mkPulseWire();
+   PulseWire flush_called <- mkPulseWire();
 
    // Fabric request/response
    AXI4_Master_Xactor#(mID, Wd_Addr, Wd_Data,
@@ -1020,7 +1020,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    if ((rg_op == CACHE_LD) || is_AMO_LR) begin
 	       if (hit) begin
 		  // Cache hit; drive response
-		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0), crg_commit[1]);
+		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0), dw_commit);
 
 `ifdef ISA_A
 		  if (is_AMO_LR) begin
@@ -1088,7 +1088,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
 	       if (do_write) begin
 		  // ST, or successful SC
-                  if (crg_commit[1]) begin
+                  if (dw_commit) begin
 		    if (hit) begin
 		       // Update cache line in cache
 		      let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
@@ -1123,7 +1123,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       else begin // do_write == False
 		  // SC fail
 		     // Hard-code address to 0 to ensure fn_extract_and_extend_bytes takes the LSBs of our 1 value.
-		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, 0, tuple2(0,1), unpack(0), crg_commit[1]);
+		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, 0, tuple2(0,1), unpack(0), dw_commit);
 		  if (cfg_verbosity > 1)
 		     $display ("        AMO SC: Fail response for addr 0x%0h", rg_addr);
 	       end
@@ -1133,7 +1133,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    // ----------------
 	    // Remaining AMOs
 	    else begin
-	       if (! hit || !crg_commit[1]) begin
+	       if (! hit || !dw_commit) begin
 		  // Cache miss; AMOs are only done in the cache, so first refill the cache-line
 		  new_state = CACHE_START_REFILL;
 		  if (cfg_verbosity > 1)
@@ -1187,7 +1187,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       end
 `ifdef ISA_CHERI
       // ---- Cancelled by Cap exception
-      if (!crg_commit[1]) begin
+      if (!dw_commit) begin
         new_state = MODULE_EXCEPTION_RSP;
         new_exc_code = exc_code_CHERI;
       end
@@ -1483,7 +1483,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Pick victim way, update ctag.
    // Initiate read of word64_set in cache for read-modify-write of word64
 
-   rule rl_start_cache_refill (!req_called && !resetting && (rg_state == CACHE_START_REFILL) && (ctr_wr_rsps_pending.value == 0));
+   rule rl_start_cache_refill (!resetting && (rg_state == CACHE_START_REFILL) && (ctr_wr_rsps_pending.value == 0));
       if (cfg_verbosity > 1)
 	 $display ("%0d: %s.rl_start_cache_refill: ", cur_cycle, d_or_i);
 
@@ -1574,7 +1574,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    //     initiate read of next word64_set from ram
    //         (for set read-modify-write; not relevant for direct-mapped)
 
-   rule rl_cache_refill_rsps_loop (!req_called && !resetting && rg_state == CACHE_REFILL);
+   rule rl_cache_refill_rsps_loop (!resetting && rg_state == CACHE_REFILL);
       let mem_rsp <- get(master_xactor.slave.r);
       if (cfg_verbosity > 2) begin
 	 $display ("%0d: %s.rl_cache_refill_rsps_loop:", cur_cycle, d_or_i);
@@ -1654,7 +1654,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // After tlb and cache refills, redo the missing request,
    // i.e., probe the TLB and cache (BRAM port B) again
 
-   rule rl_rereq (!req_called && !resetting && rg_state == CACHE_REREQ);
+   rule rl_rereq (!resetting && rg_state == CACHE_REREQ);
       rg_state <= MODULE_RUNNING;
       fa_req_ram_B (rg_addr);
    endrule
@@ -1915,43 +1915,32 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       dw_exc_code <= rg_exc_code;
    endrule
 
-   // ================================================================
-   // INTERFACE
-
-   method Action set_verbosity (Bit #(4) v);
-      cfg_verbosity <= v;
-   endmethod
-
-   interface Server server_reset;
-      interface Put request;
-	 method Action put (Token t);
-	    f_reset_reqs.enq (REQUESTOR_RESET_IFC);
-	 endmethod
-      endinterface
-      interface Get response;
-	 method ActionValue #(Token) get () if (f_reset_rsps.first == REQUESTOR_RESET_IFC);
-	    f_reset_rsps.deq;
-	    return ?;
-	 endmethod
-      endinterface
-   endinterface
-
-   // CPU interface: request
-   // NOTE: this has no flow control: CPU should only invoke it when consuming prev output.
-   // As soon as this method is called, the module starts working on this new request.
-   method Action  req (CacheOp op,
-		       Bit #(3) width_code,
-               Bool is_unsigned,
+      Wire#(CacheOp) w_req_op <- mkWire;
+      Wire#(Bit#(3)) w_req_width_code <- mkWire;
+      Wire#(Bool) w_req_is_unsigned <- mkWire;
 `ifdef ISA_A
-		       Bit #(5) amo_funct5,
+      Wire#(Bit#(5)) w_req_amo_funct5 <- mkWire;
 `endif
-		       Addr addr,
-		       Tuple2#(Bool, Bit#(128)) st_value,
-		       // The following  args for VM
-		       Priv_Mode  priv,
-		       Bit #(1)   sstatus_SUM,
-		       Bit #(1)   mstatus_MXR,
-		       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+      Wire#(Addr) w_req_addr <- mkWire;
+      Wire#(Tuple2#(Bool,Bit#(128))) w_req_st_value <- mkWire;
+      Wire#(Priv_Mode) w_req_priv <- mkWire;
+      Wire#(Bit#(1)) w_req_sstatus_SUM <- mkWire;
+      Wire#(Bit#(1)) w_req_mstatus_MXR <- mkWire;
+      Wire#(WordXL) w_req_satp <- mkWire;
+
+   rule do_req (rg_state == MODULE_READY || rg_state == MODULE_EXCEPTION_RSP && !flush_called);
+      let op = w_req_op;
+      let width_code = w_req_width_code;
+      let is_unsigned = w_req_is_unsigned;
+`ifdef ISA_A
+      let amo_funct5 = w_req_amo_funct5;
+`endif
+      let addr = w_req_addr;
+      let st_value = w_req_st_value;
+      let priv = w_req_priv;
+      let sstatus_SUM = w_req_sstatus_SUM;
+      let mstatus_MXR = w_req_mstatus_MXR;
+      let satp = w_req_satp;
 
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %m.req: op:", cur_cycle, fshow (op),
@@ -1978,10 +1967,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       rg_mstatus_MXR <= mstatus_MXR;
       rg_satp        <= satp;
 
-`ifdef ISA_CHERI
-      crg_commit[1]  <= False;
-`endif
-
       // Initial default PA assumes no VM translation
       rg_pa <= fn_WordXL_to_PA (addr);
 
@@ -2001,12 +1986,61 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 rg_state <= MODULE_RUNNING;
 	 fa_req_ram_B (addr);
       end
-      req_called.send();
+   endrule
+
+   // ================================================================
+   // INTERFACE
+
+   method Action set_verbosity (Bit #(4) v);
+      cfg_verbosity <= v;
+   endmethod
+
+   interface Server server_reset;
+      interface Put request;
+	 method Action put (Token t);
+	    f_reset_reqs.enq (REQUESTOR_RESET_IFC);
+	 endmethod
+      endinterface
+      interface Get response;
+	 method ActionValue #(Token) get () if (f_reset_rsps.first == REQUESTOR_RESET_IFC);
+	    f_reset_rsps.deq;
+	    return ?;
+	 endmethod
+      endinterface
+   endinterface
+
+   // CPU interface: request
+   // NOTE: this has no flow control: CPU should only invoke it when consuming prev output.
+   // As soon as this method is called, the module starts working on this new request.
+   method Action  req (CacheOp op,
+               Bit #(3) width_code,
+               Bool is_unsigned,
+`ifdef ISA_A
+               Bit #(5) amo_funct5,
+`endif
+               Addr addr,
+               Tuple2#(Bool, Bit#(128)) st_value,
+               // The following  args for VM
+               Priv_Mode  priv,
+               Bit #(1)   sstatus_SUM,
+               Bit #(1)   mstatus_MXR,
+               WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+      w_req_op <= op;
+      w_req_width_code <= width_code;
+`ifdef ISA_A
+      w_req_amo_funct5 <= amo_funct5;
+`endif
+      w_req_addr <= addr;
+      w_req_st_value <= st_value;
+      w_req_priv <= priv;
+      w_req_sstatus_SUM <= sstatus_SUM;
+      w_req_mstatus_MXR <= mstatus_MXR;
+      w_req_satp <= satp;
    endmethod
 
 `ifdef ISA_CHERI
    method Action commit;
-      crg_commit[0] <= True;
+      dw_commit <= True;
    endmethod
 `endif
 
@@ -2037,8 +2071,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Flush request/response
    interface Server  server_flush;
       interface Put  request;
-	 method Action  put (Token t) if (!req_called);
+	 method Action  put (Token t);
 	    f_reset_reqs.enq (REQUESTOR_FLUSH_IFC);
+            flush_called.send;
 	 endmethod
       endinterface
       interface Get  response;
@@ -2050,10 +2085,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    endinterface
 
    // TLB flush
-   method Action tlb_flush if (!req_called);
+   method Action tlb_flush;
 `ifdef ISA_PRIV_S
       tlb.flush;
       rg_state <= MODULE_READY;
+      flush_called.send;
       if (cfg_verbosity > 1)
 	 $display ("%0d: %s.tlb_flush", cur_cycle, d_or_i);
 `else
