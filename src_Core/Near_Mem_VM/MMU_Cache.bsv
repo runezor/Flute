@@ -1928,7 +1928,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       Wire#(Bit#(1)) w_req_mstatus_MXR <- mkWire;
       Wire#(WordXL) w_req_satp <- mkWire;
 
-   rule do_req (rg_state == MODULE_READY || rg_state == MODULE_EXCEPTION_RSP && !flush_called);
+   rule do_req ((rg_state == MODULE_READY || rg_state == MODULE_EXCEPTION_RSP) && !flush_called);
       let op = w_req_op;
       let width_code = w_req_width_code;
       let is_unsigned = w_req_is_unsigned;
