@@ -224,7 +224,7 @@ module mkCPU (CPU_IFC);
 
    // Save CSR info in CSRRx istrs to handle in separate rules
 `ifdef ISA_CHERI
-   Reg #(CapPipe) rg_scr_pcc <- mkRegU;
+   Reg #(PCC_T) rg_scr_pcc <- mkRegU;
 `else
    Reg #(WordXL) rg_csr_pc   <- mkRegU;
 `endif
@@ -252,7 +252,7 @@ module mkCPU (CPU_IFC);
 					   stage2.out.bypass,
 					   stage3.out.bypass,
 `ifdef ISA_CHERI
-                                           rg_next_pcc,
+                                           fromCapPipe(rg_next_pcc),
                                            rg_ddc,
 `endif
 `ifdef ISA_F
@@ -832,8 +832,8 @@ module mkCPU (CPU_IFC);
                   stage2_full = True;
 	          if (stage1.out.redirect) begin
 		     let epoch <- fav_update_epoch;
-                     let old_fetch_addr = getAddr(stage1.out.data_to_stage2.pcc);
-                     redirect_F = Valid(tuple3(epoch, getAddr(stage1.out.next_pcc), old_fetch_addr));
+                     let old_fetch_addr = getAddr(toCapPipe(stage1.out.data_to_stage2.pcc));
+                     redirect_F = Valid(tuple3(epoch, getAddr(toCapPipe(stage1.out.next_pcc)), old_fetch_addr));
                   end
                end
 	    end
@@ -870,7 +870,7 @@ module mkCPU (CPU_IFC);
 `endif
             case (redirect_F) matches
             tagged Valid {.e, .nfa, .ofa}: begin
-                rg_next_pcc <= stage1.out.next_pcc;
+                rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
                 epoch = e;
                 new_fetch_addr = nfa;
                 m_old_fetch_addr = Valid(ofa);
@@ -999,7 +999,7 @@ module mkCPU (CPU_IFC);
       // Take trap, save trap information for next phase
       let trap_info <- csr_regfile.csr_trap_actions (rg_cur_priv,    // from priv
 `ifdef ISA_CHERI
-                 epcc,
+                 cast(toCapPipe(epcc)),
 `else
 						     epc,
 `endif
@@ -1013,8 +1013,8 @@ module mkCPU (CPU_IFC);
 						     tval);
 
 `ifdef ISA_CHERI
-      PCC_T next_pcc = fromCapReg(trap_info.pcc);
-      let next_pc    = getPC(next_pcc);
+      CapPipe next_pcc = cast(trap_info.pcc);
+      let next_pc    = getOffset(next_pcc);
 `else
       let next_pc    = trap_info.pc;
 `endif
@@ -1112,7 +1112,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1) $display ("%0d: CPU.rl_stage1_SCR_W", mcycle);
 
       rg_scr_pcc <= stage1.out.data_to_stage2.pcc;
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
       rg_csr_val1 <= stage1.out.data_to_stage2.val1;
 `ifdef RVFI_DII
       rg_next_seq <= stage1.out.data_to_stage2.instr_seq + 1;
@@ -1144,7 +1144,7 @@ module mkCPU (CPU_IFC);
       let rs1      = instr_rs1    (instr);
       let rd       = instr_rd     (instr);
 
-      let stage2_asr = getHardPerms(rg_trap_info.epcc).accessSysRegs;
+      let stage2_asr = getHardPerms(toCapPipe(rg_trap_info.epcc)).accessSysRegs;
       let stage2_val1= extract_cap(rg_csr_val1);
 
       Bool read_not_write = rs1 == 0;
@@ -1242,7 +1242,7 @@ module mkCPU (CPU_IFC);
 `ifdef ISA_CHERI
       // Register required info and handle in next clock
       rg_scr_pcc  <= stage1.out.data_to_stage2.pcc;
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
       rg_csr_pc  <= stage1.out.data_to_stage2.pc;
       rg_next_pc <= stage1.out.next_pc;
@@ -1292,7 +1292,7 @@ module mkCPU (CPU_IFC);
 		      : extend (rs1));                    // CSRRWI
 
       Bool read_not_write = False;    // CSRRW always writes the CSR
-      let stage2_asr = getHardPerms(rg_trap_info.epcc).accessSysRegs;
+      let stage2_asr = getHardPerms(toCapPipe(rg_trap_info.epcc)).accessSysRegs;
       AccessPerms permitted = csr_regfile.access_permitted_1 (rg_cur_priv, csr_addr, read_not_write);
 
       if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
@@ -1385,7 +1385,7 @@ module mkCPU (CPU_IFC);
 
       // Register required info and handle in next clock
       rg_scr_pcc  <= stage1.out.data_to_stage2.pcc;
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 
 `ifdef RVFI_DII
       rg_next_seq <= stage1.out.data_to_stage2.instr_seq + 1;
@@ -1431,7 +1431,7 @@ module mkCPU (CPU_IFC);
 		      : extend (rs1));                   // CSRRSI, CSRRCI
 
       Bool read_not_write = (rs1_val == 0);    // CSRR_S_or_C only reads, does not write CSR, if rs1_val == 0
-      let stage2_asr = getHardPerms(rg_trap_info.epcc).accessSysRegs;
+      let stage2_asr = getHardPerms(toCapPipe(rg_trap_info.epcc)).accessSysRegs;
       AccessPerms permitted = csr_regfile.access_permitted_2 (rg_cur_priv, csr_addr, read_not_write);
 
       if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
@@ -1537,7 +1537,7 @@ module mkCPU (CPU_IFC);
 
       fa_start_ifetch (new_epoch,
 		       m_old_fetch_addr,
-		       getAddr(next_pcc),
+		       getAddr(toCapPipe(next_pcc)),
 `ifdef ISA_CHERI
                        True,
 `endif
@@ -1645,7 +1645,7 @@ module mkCPU (CPU_IFC);
 
       // Save stage1.out.next_pc since it will be destroyed by FENCE.I op
 `ifdef ISA_CHERI
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
       rg_next_pc <= stage1.out.next_pc;
 `endif
@@ -1727,7 +1727,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_stage1_FENCE", mcycle);
 
 `ifdef ISA_CHERI
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
       rg_next_pc <= stage1.out.next_pc;
 `endif
@@ -1819,7 +1819,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_stage1_SFENCE_VMA", mcycle);
 
 `ifdef ISA_CHERI
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
       rg_next_pc <= stage1.out.next_pc;
 `endif
@@ -1900,7 +1900,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_stage1_WFI", mcycle);
 
 `ifdef ISA_CHERI
-      rg_next_pcc <= stage1.out.next_pcc;
+      rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
       rg_next_pc <= stage1.out.next_pc;
 `endif
@@ -2032,8 +2032,8 @@ module mkCPU (CPU_IFC);
 
       csr_regfile.write_dcsr_cause_priv (DCSR_CAUSE_EBREAK, rg_cur_priv);
 `ifdef ISA_CHERI
-      rg_next_pcc <= stage1.out.data_to_stage2.pcc;
-      csr_regfile.write_dpcc (pcc);  // Where we'll resume on 'continue'
+      rg_next_pcc <= toCapPipe(stage1.out.data_to_stage2.pcc);
+      csr_regfile.write_dpcc (toCapPipe(pcc));  // Where we'll resume on 'continue'
 `else
       csr_regfile.write_dpc (pc);    // Where we'll resume on 'continue'
 `endif
@@ -2142,8 +2142,8 @@ module mkCPU (CPU_IFC);
       DCSR_Cause cause= (rg_stop_req ? DCSR_CAUSE_HALTREQ : DCSR_CAUSE_STEP);
       csr_regfile.write_dcsr_cause_priv (cause, rg_cur_priv);
 `ifdef ISA_CHERI
-      rg_next_pcc <= stage1.out.data_to_stage2.pcc;
-      csr_regfile.write_dpcc (pcc);    // We'll retry this instruction on 'continue'
+      rg_next_pcc <= toCapPipe(stage1.out.data_to_stage2.pcc);
+      csr_regfile.write_dpcc (toCapPipe(pcc));    // We'll retry this instruction on 'continue'
 `endif
       rg_state      <= CPU_GDB_PAUSING;
       rg_stop_req   <= False;

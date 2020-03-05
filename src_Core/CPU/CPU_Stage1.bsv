@@ -80,7 +80,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 		      Bypass           bypass_from_stage2,
 		      Bypass           bypass_from_stage3,
 `ifdef ISA_CHERI
-                      CapPipe          fresh_pcc,
+                      PCC_T            fresh_pcc,
                       CapPipe          ddc,
 `endif
 `ifdef ISA_F
@@ -218,7 +218,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
      ? alu_outputs.pcc
      : setPC(rg_pcc, next_pc_local).value); //TODO unrepresentable?
 
-   let redirect = getAddr(next_pcc_local) != rg_stage_input.pred_fetch_addr;
+   let redirect = getAddr(toCapPipe(next_pcc_local)) != rg_stage_input.pred_fetch_addr;
 
 `ifdef RVFI
    CapReg tmp_val2 = cast(alu_outputs.cap_val2);
@@ -299,7 +299,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 					       priv          : cur_priv };
 
 `ifdef ISA_CHERI
-   let fetch_exc = checkValid(rg_pcc, getTop(rg_pcc), rg_stage_input.is_i32_not_i16);
+   let fetch_exc = checkValid(rg_pcc, getTop(toCapPipe(rg_pcc)), rg_stage_input.is_i32_not_i16);
 `endif
 
    // ----------------

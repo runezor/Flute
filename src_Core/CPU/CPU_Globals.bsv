@@ -158,50 +158,55 @@ endfunction
 typeclass PCC#(type t);
     function Exact#(t) setPC (t oldPCC, Addr newPC);
     function Addr getPC (t pcc);
+    function Addr getPCCBase (t pcc);
     function Bool checkPreValid (t pcc);
     function Maybe#(CHERI_Exc_Code) checkValid (t pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
-    function t fromCapReg(CapReg pcc);
-    function CapReg toCapReg(t pcc);
+    function t fromCapPipe(CapPipe pcc);
+    function CapPipe toCapPipe(t pcc);
 endtypeclass
 
-instance PCC#(CapPipe);
-    function Exact#(CapPipe) setPC (CapPipe oldPCC, Addr newPC);
-        return setOffset(oldPCC, newPC);
+typedef Tuple2#(CapPipe,Bit#(XLEN)) PCC_T;
+
+instance PCC#(PCC_T);
+    function Exact#(PCC_T) setPC (PCC_T oldPCC, Addr newPC);
+        let setOffsetResult = setOffset(tpl_1(oldPCC), newPC);
+        return Exact {exact: setOffsetResult.exact, value: tuple2(setOffsetResult.value, tpl_2(oldPCC))};
     endfunction
-    function Addr getPC (CapPipe pcc);
-        return getOffset(pcc);
+    function Addr getPC (PCC_T pcc);
+        return getOffset(tpl_1(pcc));
+    endfunction
+    function Addr getPCCBase (PCC_T pcc);
+        return tpl_2(pcc);
     endfunction
     // Check if a PCC dereference is valid before the instruction len is known
-    function Bool checkPreValid (CapPipe pcc);
+    function Bool checkPreValid (PCC_T pcc);
         //TODO alignment checks?
-        return  isValidCap(pcc)
-             && !isSealed(pcc)
-             && getHardPerms(pcc).permitExecute
-             && isInBounds(pcc, False);
+        return  isValidCap(tpl_1(pcc))
+             && !isSealed(tpl_1(pcc))
+             && getHardPerms(tpl_1(pcc)).permitExecute
+             && isInBounds(tpl_1(pcc), False);
     endfunction
-    function Maybe#(CHERI_Exc_Code) checkValid (CapPipe pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
+    function Maybe#(CHERI_Exc_Code) checkValid (PCC_T pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
         let toRet = Invalid;
         //TODO alignment checks?
         CapPipe ac = almightyCap;
-        if (!isValidCap(pcc))
+        if (!isValidCap(tpl_1(pcc)))
             toRet = Valid(exc_code_CHERI_Tag);
-        else if (isSealed(pcc))
+        else if (isSealed(tpl_1(pcc)))
             toRet = Valid(exc_code_CHERI_Seal);
-        else if (!getHardPerms(pcc).permitExecute)
+        else if (!getHardPerms(tpl_1(pcc)).permitExecute)
             toRet = Valid(exc_code_CHERI_XPerm);
-        else if (!isInBounds(pcc, False) || !isInBounds(setAddrUnsafe(pcc, getAddr(pcc) + (is_i32_not_i16 ? 4 : 2)), True))
+        else if (!isInBounds(tpl_1(pcc), False) || !isInBounds(setAddrUnsafe(tpl_1(pcc), getAddr(tpl_1(pcc)) + (is_i32_not_i16 ? 4 : 2)), True))
             toRet = Valid(exc_code_CHERI_Length);
         return toRet;
     endfunction
-    function CapPipe fromCapReg(CapReg pcc);
-        return cast(pcc);
+    function PCC_T fromCapPipe(CapPipe pcc);
+        return tuple2(pcc, getBase(pcc));
     endfunction
-    function CapReg toCapReg(CapPipe pcc);
-        return cast(pcc);
+    function CapPipe toCapPipe(PCC_T pcc);
+        return tpl_1(pcc);
     endfunction
 endinstance
-
-typedef CapPipe PCC_T;
 
 `endif
 
@@ -391,7 +396,7 @@ typedef struct {
    // feedback
    Bool                   redirect;
 `ifdef ISA_CHERI
-   CapPipe                next_pcc;
+   PCC_T                  next_pcc;
 `else
    WordXL                 next_pc;
 `endif
@@ -697,7 +702,7 @@ endinstance
 // Data communicated from stage 2 to stage 3
 
 typedef struct {
-   CapPipe     pcc;            // For debugging only
+   PCC_T     pcc;            // For debugging only
    Instr     instr;         // For debugging only
 `ifdef RVFI_DII
    Dii_Id instr_seq;
