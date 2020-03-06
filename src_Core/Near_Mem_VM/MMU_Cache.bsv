@@ -1928,7 +1928,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       Wire#(Bit#(1)) w_req_mstatus_MXR <- mkWire;
       Wire#(WordXL) w_req_satp <- mkWire;
 
-   rule do_req ((rg_state == MODULE_READY || rg_state == MODULE_EXCEPTION_RSP) && !flush_called);
+   rule do_req (   (! resetting)
+		&& (   (rg_state == MODULE_READY)
+		    || (rg_state == MODULE_EXCEPTION_RSP))
+		&& (! flush_called));
       let op = w_req_op;
       let width_code = w_req_width_code;
       let is_unsigned = w_req_is_unsigned;
@@ -2027,6 +2030,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
                WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
       w_req_op <= op;
       w_req_width_code <= width_code;
+      w_req_is_unsigned <= is_unsigned;
 `ifdef ISA_A
       w_req_amo_funct5 <= amo_funct5;
 `endif
