@@ -254,7 +254,8 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       Output_Stage2 output_stage2 = ?;
 
 `ifdef ISA_CHERI
-     let check_success =  rg_stage2.check_address_low >= getBase(rg_stage2.check_authority) &&
+     let check_success =  (!rg_stage2.check_exact_enable || rg_stage2.check_exact_success) &&
+                          rg_stage2.check_address_low >= getBase(rg_stage2.check_authority) &&
                          (rg_stage2.check_inclusive ? (rg_stage2.check_address_high <= getTop(rg_stage2.check_authority)) : (rg_stage2.check_address_high < getTop(rg_stage2.check_authority)));
 `endif
 

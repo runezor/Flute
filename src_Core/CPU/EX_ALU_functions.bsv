@@ -183,6 +183,8 @@ typedef struct {
    Bit#(XLEN)          check_address_low;
    Bit#(TAdd#(XLEN,1)) check_address_high;
    Bool                check_inclusive;
+   Bool                check_exact_enable;
+   Bool                check_exact_success;
 `endif
 
    Trace_Data trace_data;
@@ -231,6 +233,8 @@ ALU_Outputs alu_outputs_base
          check_address_low  : ?,
          check_address_high : ?,
          check_inclusive    : ?,
+         check_exact_enable : False,
+         check_exact_success : ?,
 
          mem_allow_cap      : False,
 `endif
@@ -1852,6 +1856,8 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         alu_outputs.check_inclusive = True;
         alu_outputs.check_address_low = getAddr(cs1_val);
         alu_outputs.check_address_high = zeroExtend(getAddr(cs1_val)) + zeroExtend(alu_outputs.internal_op2);
+        alu_outputs.check_exact_enable = alu_outputs.internal_op_flag;
+        alu_outputs.check_exact_success = result.exact;
     end
     GET_PRECISION: begin
         CapReg nullCapReg = nullCap;

@@ -584,6 +584,8 @@ typedef struct {
    Bit#(TAdd#(XLEN,1))     check_address_high;
    Bool       check_enable;
    Bool check_inclusive;
+   Bool check_exact_enable;
+   Bool check_exact_success;
 
    Bool       mem_allow_cap;
 `endif

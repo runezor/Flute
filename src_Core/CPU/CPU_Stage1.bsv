@@ -293,6 +293,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                check_authority_idx: alu_outputs.check_authority_idx,
                                                check_address_low  : alu_outputs.check_address_low,
                                                check_address_high : alu_outputs.check_address_high,
+                                               check_exact_enable : alu_outputs.check_exact_enable,
+                                               check_exact_success: alu_outputs.check_exact_success,
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
 					       trace_data    : alu_outputs.trace_data,
