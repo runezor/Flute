@@ -325,7 +325,7 @@ module mkGPR_RegFile(CLK,
     EN_server_reset_request_put: rg_state$D_IN = 2'd0;
     MUX_rg_state$write_1__SEL_2: rg_state$D_IN = 2'd2;
     WILL_FIRE_RL_rl_reset_start: rg_state$D_IN = 2'd1;
-    default: rg_state$D_IN = 2'b10 /* unspecified value */ ;
+    default: rg_state$D_IN = 2'bxx /* unspecified value */ ;
   endcase
   assign rg_state$EN =
 	     WILL_FIRE_RL_rl_reset_loop && rg_j == 5'd31 ||

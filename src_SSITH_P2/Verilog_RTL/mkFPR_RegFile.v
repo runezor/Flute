@@ -210,7 +210,7 @@ module mkFPR_RegFile(CLK,
     EN_server_reset_request_put: rg_state$D_IN = 2'd0;
     WILL_FIRE_RL_rl_reset_loop: rg_state$D_IN = 2'd2;
     WILL_FIRE_RL_rl_reset_start: rg_state$D_IN = 2'd1;
-    default: rg_state$D_IN = 2'b10 /* unspecified value */ ;
+    default: rg_state$D_IN = 2'bxx /* unspecified value */ ;
   endcase
   assign rg_state$EN =
 	     EN_server_reset_request_put || WILL_FIRE_RL_rl_reset_start ||

@@ -756,12 +756,14 @@ module mkCore(CLK,
   wire [172 : 0] split_0_doPut$wget, split_1_doPut$wget, split_2_doPut$wget;
   wire [99 : 0] tagController_tmp_shimMaster_arff_rv$port0__write_1,
 		tagController_tmp_shimMaster_arff_rv$port1__read,
+		tagController_tmp_shimMaster_arff_rv$port1__write_1,
 		tagController_tmp_shimMaster_arff_rv$port2__read,
 		tagController_tmp_shimMaster_awff_rv$port0__write_1,
 		tagController_tmp_shimMaster_awff_rv$port1__read,
 		tagController_tmp_shimMaster_awff_rv$port2__read;
   wire [98 : 0] tagController_tmp_shimSlave_arff_rv$port0__write_1,
 		tagController_tmp_shimSlave_arff_rv$port1__read,
+		tagController_tmp_shimSlave_arff_rv$port1__write_1,
 		tagController_tmp_shimSlave_arff_rv$port2__read,
 		tagController_tmp_shimSlave_awff_rv$port0__write_1,
 		tagController_tmp_shimSlave_awff_rv$port1__read,
@@ -783,11 +785,13 @@ module mkCore(CLK,
 		ifcs_1_noRoute_inner_currentReq$port1__read;
   wire [74 : 0] tagController_tmp_shimSlave_wff_rv$port0__write_1,
 		tagController_tmp_shimSlave_wff_rv$port1__read,
+		tagController_tmp_shimSlave_wff_rv$port1__write_1,
 		tagController_tmp_shimSlave_wff_rv$port2__read;
   wire [73 : 0] ssNoSynth_1_w_buffer_enqw$wget,
 		ssNoSynth_2_w_buffer_enqw$wget,
 		tagController_tmp_shimMaster_rff_rv$port0__write_1,
 		tagController_tmp_shimMaster_rff_rv$port1__read,
+		tagController_tmp_shimMaster_rff_rv$port1__write_1,
 		tagController_tmp_shimMaster_rff_rv$port2__read,
 		tagController_tmp_shimMaster_wff_rv$port0__write_1,
 		tagController_tmp_shimMaster_wff_rv$port1__read,
@@ -809,9 +813,11 @@ module mkCore(CLK,
 	       ifcs_1_1_noRoute_flitCount$port2__read,
 	       tagController_tmp_shimMaster_bff_rv$port0__write_1,
 	       tagController_tmp_shimMaster_bff_rv$port1__read,
+	       tagController_tmp_shimMaster_bff_rv$port1__write_1,
 	       tagController_tmp_shimMaster_bff_rv$port2__read;
   wire [7 : 0] tagController_tmp_shimSlave_bff_rv$port0__write_1,
 	       tagController_tmp_shimSlave_bff_rv$port1__read,
+	       tagController_tmp_shimSlave_bff_rv$port1__write_1,
 	       tagController_tmp_shimSlave_bff_rv$port2__read,
 	       tagController_tmp_ug_master_u_b_putWire$wget;
   wire [6 : 0] cpu_imem_ug_u_b_putWire$wget,
@@ -2634,11 +2640,11 @@ module mkCore(CLK,
 	       MUX_split_2_flitLeft$write_1__VAL_1;
   wire MUX_activeSource_0$write_1__SEL_1,
        MUX_activeSource_0$write_1__VAL_1,
-       MUX_activeSource_1$write_1__VAL_1,
+       MUX_activeSource_1$write_1__VAL_2,
        MUX_activeSource_1_1_0$write_1__SEL_1,
        MUX_activeSource_1_1_0$write_1__SEL_2,
-       MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
+       MUX_activeSource_1_1_1_1$write_1__SEL_3,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
        MUX_activeSource_1_1_2$write_1__VAL_1,
        MUX_flitToSink_0$wset_1__SEL_1,
@@ -2735,8 +2741,7 @@ module mkCore(CLK,
 		tagController_tmp_shimMaster_awff_rvport1__re_ETC__q2;
   wire [72 : 0] tagController_tmp_shimMaster_wff_rvport1__rea_ETC__q3,
 		tagController_tmp_shimSlave_rff_rvport1__read_ETC__q1;
-  wire [63 : 0] araddr__h15297,
-		aw_awaddr__h10565,
+  wire [63 : 0] aw_awaddr__h10565,
 		tmp__h10348,
 		tmp__h8123,
 		v_araddr__h15314,
@@ -4467,7 +4472,7 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_source_selected_1 =
 	     (!ifcs_1_innerRoute$EMPTY_N || ifcs_1_innerReq$EMPTY_N) &&
 	     !state &&
-	     MUX_activeSource_1$write_1__VAL_1 ;
+	     MUX_activeSource_1$write_1__VAL_2 ;
   assign WILL_FIRE_RL_source_selected_1 = CAN_FIRE_RL_source_selected_1 ;
 
   // rule RL_burst_1
@@ -6125,9 +6130,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
+	     debug_module$RDY_hart0_reset_client_request_get &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
-	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
@@ -6157,7 +6162,7 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_0$write_1__SEL_2 =
 	     WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
 	     !ifcs_1_1_rspBack$D_OUT[1] ;
-  assign MUX_activeSource_1_1_0$write_1__SEL_3 =
+  assign MUX_activeSource_1_1_1_1$write_1__SEL_3 =
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_flitToSink_0$wset_1__SEL_1 =
@@ -6302,7 +6307,7 @@ module mkCore(CLK,
   assign MUX_activeSource_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate &&
 	     IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1463 ;
-  assign MUX_activeSource_1$write_1__VAL_1 =
+  assign MUX_activeSource_1$write_1__VAL_2 =
 	     WILL_FIRE_RL_arbitrate &&
 	     IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1467 ;
   assign MUX_activeSource_1_1_0$write_1__VAL_1 =
@@ -6333,7 +6338,7 @@ module mkCore(CLK,
       MUX_flitToSink_1_0$wset_1__SEL_3 || MUX_flitToSink_1_0$wset_1__SEL_6:
 	  MUX_msNoSynth_0_b_buffer_enqw$wset_1__VAL_2 = ifcs_2_rspBack$D_OUT;
       default: MUX_msNoSynth_0_b_buffer_enqw$wset_1__VAL_2 =
-		   6'b101010 /* unspecified value */ ;
+		   6'bxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(MUX_flitToSink_1_1_0$wset_1__SEL_1 or
@@ -6359,7 +6364,7 @@ module mkCore(CLK,
 	  MUX_msNoSynth_0_r_buffer_enqw$wset_1__VAL_2 =
 	      ifcs_2_1_rspBack$D_OUT;
       default: MUX_msNoSynth_0_r_buffer_enqw$wset_1__VAL_2 =
-		   72'hAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(MUX_flitToSink_1_1$wset_1__SEL_1 or
@@ -6379,7 +6384,7 @@ module mkCore(CLK,
       MUX_flitToSink_1_1$wset_1__SEL_3 || MUX_flitToSink_1_1$wset_1__SEL_6:
 	  MUX_msNoSynth_1_b_buffer_enqw$wset_1__VAL_2 = ifcs_2_rspBack$D_OUT;
       default: MUX_msNoSynth_1_b_buffer_enqw$wset_1__VAL_2 =
-		   6'b101010 /* unspecified value */ ;
+		   6'bxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(MUX_flitToSink_1_1_1_1$wset_1__SEL_1 or
@@ -6405,7 +6410,7 @@ module mkCore(CLK,
 	  MUX_msNoSynth_1_r_buffer_enqw$wset_1__VAL_2 =
 	      ifcs_2_1_rspBack$D_OUT;
       default: MUX_msNoSynth_1_r_buffer_enqw$wset_1__VAL_2 =
-		   72'hAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign MUX_split_0_flitLeft$write_1__VAL_1 = split_0_flitLeft - 8'd1 ;
@@ -6428,13 +6433,16 @@ module mkCore(CLK,
 	     { tagController_tmp_shimSlave_arff_rv$port1__read[68:29],
 	       1'b0,
 	       tagController_tmp_shimSlave_arff_rv$port1__read[97:93],
-	       86'h02AAAAAAAAAAAAAAAAAAAA,
+	       3'd0,
+	       83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       tagController_tmp_shimSlave_arff_rv$port1__read[14:11] < 4'd4,
 	       2'd0,
 	       tagController_tmp_shimSlave_arff_rv$port1__read[23:18] } ;
   assign MUX_tagController_tmp_tagCon$memory_response_put_1__VAL_1 =
 	     { tagController_tmp_shimMaster_bff_rv$port1__read[7:2],
-	       71'h0CAAAAAAAAAAAAAAAA } ;
+	       4'd1,
+	       2'bxx /* unspecified value */ ,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign MUX_tagController_tmp_tagCon$memory_response_put_1__VAL_2 =
 	     { tagController_tmp_shimMaster_rff_rv$port1__read[72:67],
 	       4'd0,
@@ -6792,7 +6800,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimSlave_awff_rv ;
   assign tagController_tmp_shimSlave_awff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_getCacheAW ?
-	       99'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimSlave_arff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_awff_rv$port1__read ;
   assign tagController_tmp_shimSlave_wff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_slave_u_w_putWire$wget } ;
@@ -6800,9 +6808,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_w_doPut ?
 	       tagController_tmp_shimSlave_wff_rv$port0__write_1 :
 	       tagController_tmp_shimSlave_wff_rv ;
+  assign tagController_tmp_shimSlave_wff_rv$port1__write_1 =
+	     { 1'd0,
+	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimSlave_wff_rv$port2__read =
 	     WILL_FIRE_RL_tagController_tmp_passCacheWrite ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimSlave_wff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_wff_rv$port1__read ;
   assign tagController_tmp_shimSlave_bff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passCacheResponse &&
@@ -6817,9 +6828,11 @@ module mkCore(CLK,
 	     tagController_tmp_shimSlave_bff_rv$EN_port0__write ?
 	       tagController_tmp_shimSlave_bff_rv$port0__write_1 :
 	       tagController_tmp_shimSlave_bff_rv ;
+  assign tagController_tmp_shimSlave_bff_rv$port1__write_1 =
+	     { 1'd0, 7'bxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimSlave_bff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_b_doDrop ?
-	       8'd42 :
+	       tagController_tmp_shimSlave_bff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_bff_rv$port1__read ;
   assign tagController_tmp_shimSlave_arff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_slave_u_ar_putWire$wget } ;
@@ -6827,9 +6840,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_ar_doPut ?
 	       tagController_tmp_shimSlave_arff_rv$port0__write_1 :
 	       tagController_tmp_shimSlave_arff_rv ;
+  assign tagController_tmp_shimSlave_arff_rv$port1__write_1 =
+	     { 1'd0,
+	       98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimSlave_arff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_passCacheRead ?
-	       99'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimSlave_arff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_arff_rv$port1__read ;
   assign tagController_tmp_shimSlave_rff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passCacheResponse &&
@@ -6847,7 +6863,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimSlave_rff_rv ;
   assign tagController_tmp_shimSlave_rff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_r_doDrop ?
-	       74'h0AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_rff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_rff_rv$port1__read ;
   assign tagController_tmp_shimMaster_awff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryRequest &&
@@ -6868,7 +6884,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimMaster_awff_rv ;
   assign tagController_tmp_shimMaster_awff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_aw_doDrop ?
-	       100'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_arff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_awff_rv$port1__read ;
   assign tagController_tmp_shimMaster_wff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryRequest &&
@@ -6884,7 +6900,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimMaster_wff_rv ;
   assign tagController_tmp_shimMaster_wff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_w_doDrop ?
-	       74'h0AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_rff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_wff_rv$port1__read ;
   assign tagController_tmp_shimMaster_bff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_master_u_b_putWire$wget } ;
@@ -6892,9 +6908,11 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_b_doPut ?
 	       tagController_tmp_shimMaster_bff_rv$port0__write_1 :
 	       tagController_tmp_shimMaster_bff_rv ;
+  assign tagController_tmp_shimMaster_bff_rv$port1__write_1 =
+	     { 1'd0, 8'bxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimMaster_bff_rv$port2__read =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryResponseWrite ?
-	       9'd170 :
+	       tagController_tmp_shimMaster_bff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_bff_rv$port1__read ;
   assign tagController_tmp_shimMaster_arff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryRequest &&
@@ -6912,9 +6930,12 @@ module mkCore(CLK,
 	     tagController_tmp_shimMaster_arff_rv$EN_port0__write ?
 	       tagController_tmp_shimMaster_arff_rv$port0__write_1 :
 	       tagController_tmp_shimMaster_arff_rv ;
+  assign tagController_tmp_shimMaster_arff_rv$port1__write_1 =
+	     { 1'd0,
+	       99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimMaster_arff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_ar_doDrop ?
-	       100'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_arff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_arff_rv$port1__read ;
   assign tagController_tmp_shimMaster_rff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_master_u_r_putWire$wget } ;
@@ -6922,9 +6943,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_r_doPut ?
 	       tagController_tmp_shimMaster_rff_rv$port0__write_1 :
 	       tagController_tmp_shimMaster_rff_rv ;
+  assign tagController_tmp_shimMaster_rff_rv$port1__write_1 =
+	     { 1'd0,
+	       73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimMaster_rff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_passMemoryResponseRead ?
-	       74'h0AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_rff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_rff_rv$port1__read ;
   assign ifcs_0_noRoute_inner_currentReq$EN_port0__write =
 	     WILL_FIRE_RL_ifcs_0_nonRoutableFlit &&
@@ -7041,8 +7065,8 @@ module mkCore(CLK,
   // register activeSource_1
   assign activeSource_1$D_IN =
 	     MUX_activeSource_0$write_1__SEL_1 ?
-	       MUX_activeSource_1$write_1__VAL_1 :
-	       MUX_activeSource_1$write_1__VAL_1 ;
+	       MUX_activeSource_1$write_1__VAL_2 :
+	       MUX_activeSource_1$write_1__VAL_2 ;
   assign activeSource_1$EN =
 	     WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
 	     !ifcs_0_innerReq$D_OUT[1] ||
@@ -7065,16 +7089,16 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_0$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      default: activeSource_1_1_0$D_IN = 1'b0 /* unspecified value */ ;
+      default: activeSource_1_1_0$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
   assign activeSource_1_1_0$EN =
@@ -7093,16 +7117,16 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_1_1$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      default: activeSource_1_1_1_1$D_IN = 1'b0 /* unspecified value */ ;
+      default: activeSource_1_1_1_1$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
   assign activeSource_1_1_1_1$EN =
@@ -7117,16 +7141,16 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_2$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      default: activeSource_1_1_2$D_IN = 1'b0 /* unspecified value */ ;
+      default: activeSource_1_1_2$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
   assign activeSource_1_1_2$EN =
@@ -7233,7 +7257,7 @@ module mkCore(CLK,
       MUX_ifcs_0_state$write_1__SEL_1: ifcs_0_state$D_IN = 2'd0;
       MUX_ifcs_0_state$write_1__SEL_2: ifcs_0_state$D_IN = 2'd1;
       MUX_ifcs_0_state$write_1__SEL_3: ifcs_0_state$D_IN = 2'd2;
-      default: ifcs_0_state$D_IN = 2'b10 /* unspecified value */ ;
+      default: ifcs_0_state$D_IN = 2'bxx /* unspecified value */ ;
     endcase
   end
   assign ifcs_0_state$EN =
@@ -7289,7 +7313,7 @@ module mkCore(CLK,
       MUX_ifcs_1_state$write_1__SEL_1: ifcs_1_state$D_IN = 2'd0;
       MUX_ifcs_1_state$write_1__SEL_2: ifcs_1_state$D_IN = 2'd1;
       MUX_ifcs_1_state$write_1__SEL_3: ifcs_1_state$D_IN = 2'd2;
-      default: ifcs_1_state$D_IN = 2'b10 /* unspecified value */ ;
+      default: ifcs_1_state$D_IN = 2'bxx /* unspecified value */ ;
     endcase
   end
   assign ifcs_1_state$EN =
@@ -7779,9 +7803,10 @@ module mkCore(CLK,
   // submodule ifcs_0_1_noRouteRsp
   assign ifcs_0_1_noRouteRsp$D_IN =
 	     { ifcs_0_1_noRoute_currentReq$port1__read[96:93],
-	       66'h2AAAAAAAAAAAAAAAB,
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       2'd3,
 	       x_port1__read__h71569 == 9'd1,
-	       1'h0 } ;
+	       1'bx /* unspecified value */  } ;
   assign ifcs_0_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
   assign ifcs_0_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse ;
   assign ifcs_0_1_noRouteRsp$CLR = 1'b0 ;
@@ -7909,9 +7934,10 @@ module mkCore(CLK,
   // submodule ifcs_1_1_noRouteRsp
   assign ifcs_1_1_noRouteRsp$D_IN =
 	     { ifcs_1_1_noRoute_currentReq$port1__read[96:93],
-	       66'h2AAAAAAAAAAAAAAAB,
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       2'd3,
 	       x_port1__read__h74033 == 9'd1,
-	       1'h0 } ;
+	       1'bx /* unspecified value */  } ;
   assign ifcs_1_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
   assign ifcs_1_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse ;
   assign ifcs_1_1_noRouteRsp$CLR = 1'b0 ;
@@ -8781,8 +8807,6 @@ module mkCore(CLK,
 	     x__h12374 + y__h12375 ;
   assign a_awid__h37141 = { 1'd0, cpu$dmem_master_awid } ;
   assign a_awid__h39906 = { 1'd1, debug_module$master_awid } ;
-  assign araddr__h15297 =
-	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
   assign arcache__h15302 =
 	     tagController_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
   assign arlen__h15298 =
@@ -8956,9 +8980,7 @@ module mkCore(CLK,
 	     tagController_tmp_awreqff$D_OUT[92:29] +
 	     tagController_tmp_addrOffset ;
   assign v_araddr__h15314 =
-	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       araddr__h15297 :
-	       64'hAAAAAAAAAAAAAAAA ;
+	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
   assign v_arid__h15313 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[100:95] :
@@ -9234,22 +9256,22 @@ module mkCore(CLK,
 	arbiter_firstHot <= `BSV_ASSIGNMENT_DELAY 1'd1;
 	arbiter_lastSelect <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_0_1_noRoute_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_0_1_noRoute_flitCount <= `BSV_ASSIGNMENT_DELAY 9'd0;
 	ifcs_0_1_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_0_1_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_0_noRoute_inner_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_0_noRoute_inner_pendingReq <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_0_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_0_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_1_1_noRoute_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_1_1_noRoute_flitCount <= `BSV_ASSIGNMENT_DELAY 9'd0;
 	ifcs_1_1_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_1_1_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_1_noRoute_inner_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_1_noRoute_inner_pendingReq <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_1_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_1_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
@@ -9267,23 +9289,33 @@ module mkCore(CLK,
 	tagController_tmp_addrOffset <= `BSV_ASSIGNMENT_DELAY 64'd0;
 	tagController_tmp_doneSendingAW <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	tagController_tmp_shimMaster_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    100'h2AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimMaster_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    100'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-	tagController_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY 9'd170;
+	    { 1'd0,
+	      99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	tagController_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 8'bxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimMaster_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    74'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimMaster_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    74'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-	tagController_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY 8'd42;
+	    { 1'd0,
+	      98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	tagController_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 7'bxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    74'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    75'h2AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
       end
     else
       begin

@@ -458,7 +458,7 @@ module mkFPU(CLK,
        WILL_FIRE_server_reset_response_get;
 
   // inputs to muxes for submodule ports
-  wire [116 : 0] MUX_rg_res$write_1__VAL_2;
+  wire [116 : 0] MUX_rg_res$write_1__VAL_1, MUX_rg_res$write_1__VAL_2;
   wire [115 : 0] MUX_rg_b$write_1__VAL_1,
 		 MUX_rg_b$write_1__VAL_2,
 		 MUX_rg_r$write_1__VAL_1,
@@ -2047,6 +2047,9 @@ module mkFPU(CLK,
 	     rg_index_1_4_PLUS_1_6_ULE_58___d37 ?
 	       _theResult___snd_snd_snd__h1481 :
 	       IF_rg_index_1_4_ULE_58_8_THEN_IF_rg_res_1_BIT__ETC___d69 ;
+  assign MUX_rg_res$write_1__VAL_1 =
+	     { 1'd0,
+	       116'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign MUX_rg_res$write_1__VAL_2 =
 	     { rg_index_1_4_PLUS_1_6_ULE_58___d37 ?
 		 IF_rg_index_1_4_ULE_58_8_THEN_rg_b_9_EQ_0_0_OR_ETC___d44 ||
@@ -2074,7 +2077,8 @@ module mkFPU(CLK,
       fpu_div64_fResult_S5$EMPTY_N: resWire$wget = fpu_div64_fResult_S5$D_OUT;
       fpu_sqr64_fResult_S5$EMPTY_N: resWire$wget = fpu_sqr64_fResult_S5$D_OUT;
       fpu_madd_fResult_S9$EMPTY_N: resWire$wget = fpu_madd_fResult_S9$D_OUT;
-      default: resWire$wget = 69'h0AAAAAAAAAAAAAAAAA /* unspecified value */ ;
+      default: resWire$wget =
+		   69'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign resWire$whas =
@@ -2196,7 +2200,7 @@ module mkFPU(CLK,
   // register rg_res
   assign rg_res$D_IN =
 	     MUX_crg_done_1$port1__write_1__SEL_2 ?
-	       117'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAA :
+	       MUX_rg_res$write_1__VAL_1 :
 	       MUX_rg_res$write_1__VAL_2 ;
   assign rg_res$EN =
 	     WILL_FIRE_RL_fpu_sqr64_s2_stage &&
@@ -2531,7 +2535,8 @@ module mkFPU(CLK,
 	       { 1'd1,
 		 fpu_sqr64_fOperand_S0$D_OUT[66:55],
 		 sfd__h45004,
-		 130'h20AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA } :
+		 5'd16,
+		 125'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } :
 	       IF_fpu_sqr64_fOperand_S0_first__059_BITS_65_TO_ETC___d1212 ;
   assign fpu_sqr64_fState_S1$ENQ = CAN_FIRE_RL_fpu_sqr64_s1_stage ;
   assign fpu_sqr64_fState_S1$DEQ = WILL_FIRE_RL_fpu_sqr64_s2_stage ;
@@ -4620,10 +4625,14 @@ module mkFPU(CLK,
 	      !fpu_sqr64_fOperand_S0$D_OUT[66]) ?
 	       { 1'd1,
 		 fpu_sqr64_fOperand_S0$D_OUT[66:3],
-		 130'h00AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA } :
+		 5'd0,
+		 125'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } :
 	       (fpu_sqr64_fOperand_S0$D_OUT[66] ?
-		  195'h5FFE00000000000020AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :
-		  { 70'h155555555555555540,
+		  { 70'h2FFF00000000000010,
+		    125'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } :
+		  { 1'd0,
+		    64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		    5'd0,
 		    fpu_sqr64_fOperand_S0$D_OUT[2:0],
 		    fpu_sqr64_fOperand_S0$D_OUT[66],
 		    x__h52551[10:0],
@@ -5177,7 +5186,7 @@ module mkFPU(CLK,
   assign IF_isDoubleFifo_first__407_THEN_IF_isNegateFif_ETC___d6657 =
 	     isDoubleFifo$D_OUT ?
 	       { isNegateFifo$D_OUT ^ resWire$wget[68], resWire$wget[67:5] } :
-	       { 32'hAAAAAAAA,
+	       { 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 		 IF_isNegateFifo_first__409_THEN_IF_resWire_wge_ETC___d6424,
 		 exp__h304706,
 		 sfd__h304707 } ;

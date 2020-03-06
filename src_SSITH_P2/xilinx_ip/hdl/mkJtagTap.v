@@ -251,6 +251,7 @@ module mkJtagTap(CLK,
   wire [39 : 0] IF_r_dmistat_busy_port0__read__37_OR_NOT_r_dmi_ETC___d140,
 		v__h2233,
 		v__h2601,
+		x__h2370,
 		x__h2449,
 		x__h2658,
 		y__h2659;
@@ -362,16 +363,17 @@ module mkJtagTap(CLK,
 					 .OUT_RST(rst_tck$OUT_RST));
 
   // submodule tck_clock
-  MakeClock #(.initVal(1'h0), .initGate(1'd1)) tck_clock(.CLK(CLK),
-							 .RST(RST_N),
-							 .CLK_IN(tck_clock$CLK_IN),
-							 .COND_IN(tck_clock$COND_IN),
-							 .CLK_IN_EN(tck_clock$CLK_IN_EN),
-							 .COND_IN_EN(tck_clock$COND_IN_EN),
-							 .CLK_VAL_OUT(),
-							 .COND_OUT(),
-							 .CLK_GATE_OUT(),
-							 .CLK_OUT(tck_clock$CLK_OUT));
+  MakeClock #(.initVal(1'bx /* unspecified value */ ),
+	      .initGate(1'd1)) tck_clock(.CLK(CLK),
+					 .RST(RST_N),
+					 .CLK_IN(tck_clock$CLK_IN),
+					 .COND_IN(tck_clock$COND_IN),
+					 .CLK_IN_EN(tck_clock$CLK_IN_EN),
+					 .COND_IN_EN(tck_clock$COND_IN_EN),
+					 .CLK_VAL_OUT(),
+					 .COND_OUT(),
+					 .CLK_GATE_OUT(),
+					 .CLK_OUT(tck_clock$CLK_OUT));
 
   // rule RL_rl_tck
   assign CAN_FIRE_RL_rl_tck = 1'd1 ;
@@ -489,7 +491,10 @@ module mkJtagTap(CLK,
   assign f_dmi_req$dCLR = 1'b0 ;
 
   // submodule f_dmi_rsp
-  assign f_dmi_rsp$sD_IN = { 6'h2A, dmi_rsp_data, dmi_rsp_response } ;
+  assign f_dmi_rsp$sD_IN =
+	     { 6'bxxxxxx /* unspecified value */ ,
+	       dmi_rsp_data,
+	       dmi_rsp_response } ;
   assign f_dmi_rsp$sENQ = CAN_FIRE_RL_dmi_response ;
   assign f_dmi_rsp$dDEQ = CAN_FIRE_RL_dmi_response_tck ;
   assign f_dmi_rsp$sCLR = 1'b0 ;
@@ -506,7 +511,7 @@ module mkJtagTap(CLK,
 	     (r_dmistat_busy ||
 	      r_dmi[1:0] != 2'd2 && r_dmi[1:0] != 2'd3 &&
 	      f_dmi_busy$EMPTY_N) ?
-	       40'hAAAAAAAAAB :
+	       x__h2370 :
 	       r_dmi ;
   assign r_state_EQ_8_2_AND_r_ir_EQ_0b10001010010010010_ETC___d57 =
 	     r_state == 4'd8 && r_ir == 18'b100010100100100100 &&
@@ -524,6 +529,10 @@ module mkJtagTap(CLK,
   assign v__h2233 = { 22'd960, r_ir } ;
   assign v__h2601 = x__h2658 | y__h2659 ;
   assign v__h3299 = x__h3350 | y__h3351 ;
+  assign x__h2370 =
+	     { 6'bxxxxxx /* unspecified value */ ,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       2'd3 } ;
   assign x__h2449 = { 28'd0, r_dmi[1:0], 10'd97 } ;
   assign x__h2658 = { 1'd0, r_dr[39:1] } ;
   assign x__h3350 = { 1'd0, r_ir[17:1] } ;

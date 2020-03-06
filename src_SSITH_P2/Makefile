@@ -68,7 +68,8 @@ TOPMODULE = mkP2_Core
 BSC_COMPILATION_FLAGS += \
 	-keep-fires -aggressive-conditions -no-warn-action-shadowing -no-show-timestamps \
 	-suppress-warnings G0020    \
-	+RTS -K128M -RTS  -show-range-conflict
+	+RTS -K128M -RTS  -show-range-conflict \
+        -unspecified-to X -opt-undetermined-vals
 
 # ================================================================
 # Generate Bluespec CHERI tag controller source file

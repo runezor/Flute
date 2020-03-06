@@ -413,7 +413,7 @@ module mkRISCV_MBox(CLK,
       WILL_FIRE_RL_intDiv_rl_start_s:
 	  intDiv_rg_denom2$D_IN = MUX_intDiv_rg_denom2$write_1__VAL_3;
       default: intDiv_rg_denom2$D_IN =
-		   64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign intDiv_rg_denom2$EN =
@@ -440,7 +440,7 @@ module mkRISCV_MBox(CLK,
 	  intDiv_rg_n$D_IN = MUX_intDiv_rg_n$write_1__VAL_2;
       WILL_FIRE_RL_intDiv_rl_start_s: intDiv_rg_n$D_IN = 64'd1;
       default: intDiv_rg_n$D_IN =
-		   64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign intDiv_rg_n$EN =
@@ -470,7 +470,7 @@ module mkRISCV_MBox(CLK,
       WILL_FIRE_RL_intDiv_rl_start_div_by_zero:
 	  intDiv_rg_quo$D_IN = 64'hFFFFFFFFFFFFFFFF;
       default: intDiv_rg_quo$D_IN =
-		   64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign intDiv_rg_quo$EN =
@@ -508,7 +508,7 @@ module mkRISCV_MBox(CLK,
     WILL_FIRE_RL_intDiv_rl_start_overflow ||
     WILL_FIRE_RL_intDiv_rl_start_div_by_zero:
 	intDiv_rg_state$D_IN = 3'd4;
-    default: intDiv_rg_state$D_IN = 3'b010 /* unspecified value */ ;
+    default: intDiv_rg_state$D_IN = 3'bxxx /* unspecified value */ ;
   endcase
   assign intDiv_rg_state$EN =
 	     WILL_FIRE_RL_intDiv_rl_loop2 && rg_v1_ULT_rg_v2___d55 ||
@@ -549,7 +549,8 @@ module mkRISCV_MBox(CLK,
     MUX_rg_v1$write_1__SEL_2: rg_v1$D_IN = MUX_rg_v1$write_1__VAL_2;
     WILL_FIRE_RL_intDiv_rl_start_s: rg_v1$D_IN = MUX_rg_v1$write_1__VAL_3;
     WILL_FIRE_RL_intDiv_rl_start_overflow: rg_v1$D_IN = 64'd0;
-    default: rg_v1$D_IN = 64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+    default: rg_v1$D_IN =
+		 64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_v1$EN =
 	     MUX_rg_v1$write_1__SEL_2 || WILL_FIRE_RL_intDiv_rl_start_s ||

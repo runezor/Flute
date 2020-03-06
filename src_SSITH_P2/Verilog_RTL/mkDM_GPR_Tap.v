@@ -241,9 +241,12 @@ module mkDM_GPR_Tap(CLK,
 
   // submodule f_trace_data
   assign f_trace_data$D_IN =
-	     { 101'h035555555555555554AAAAAAAA,
+	     { 4'd1,
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       1'bx /* unspecified value */ ,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       f_req_in$D_OUT[68:0],
-	       192'hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA } ;
+	       192'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign f_trace_data$ENQ = WILL_FIRE_RL_request && f_req_in$D_OUT[69] ;
   assign f_trace_data$DEQ = EN_trace_data_out_get ;
   assign f_trace_data$CLR = 1'b0 ;

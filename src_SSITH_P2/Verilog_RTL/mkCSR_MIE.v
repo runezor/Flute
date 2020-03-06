@@ -158,7 +158,7 @@ module mkCSR_MIE(CLK,
     EN_fav_write: rg_mie$D_IN = mie__h92;
     EN_reset: rg_mie$D_IN = 12'd0;
     EN_fav_sie_write: rg_mie$D_IN = MUX_rg_mie$write_1__VAL_3;
-    default: rg_mie$D_IN = 12'b101010101010 /* unspecified value */ ;
+    default: rg_mie$D_IN = 12'bxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_mie$EN = EN_fav_write || EN_fav_sie_write || EN_reset ;
 

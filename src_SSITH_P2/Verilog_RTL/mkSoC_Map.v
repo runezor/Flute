@@ -30,7 +30,7 @@
 // m_mtcc_reset_value             O   153 const
 // m_mepcc_reset_value            O   153 const
 // m_mtvec_reset_value            O    64 const
-// m_nmivec_reset_value           O    64 const
+// m_nmivec_reset_value           O    64
 // CLK                            I     1 unused
 // RST_N                          I     1 unused
 // m_is_mem_addr_addr             I    64
@@ -321,7 +321,8 @@ module mkSoC_Map(CLK,
   assign m_mtvec_reset_value = 64'h0000000000001000 ;
 
   // value method m_nmivec_reset_value
-  assign m_nmivec_reset_value = 64'hAAAAAAAAAAAAAAAA ;
+  assign m_nmivec_reset_value =
+	     64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
 
   // remaining internal signals
   assign NOT_m_is_IO_addr_addr_ULT_0xC000000_AND_m_is_I_ETC___d21 =

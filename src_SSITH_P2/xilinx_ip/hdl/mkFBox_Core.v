@@ -280,7 +280,7 @@ module mkFBox_Core(CLK,
        WILL_FIRE_server_reset_response_get;
 
   // inputs to muxes for submodule ports
-  wire [214 : 0] MUX_requestR$write_1__VAL_2;
+  wire [214 : 0] MUX_requestR$write_1__VAL_1, MUX_requestR$write_1__VAL_2;
   wire [201 : 0] MUX_fpu$server_core_request_put_1__VAL_1,
 		 MUX_fpu$server_core_request_put_1__VAL_10,
 		 MUX_fpu$server_core_request_put_1__VAL_11,
@@ -299,7 +299,8 @@ module mkFBox_Core(CLK,
 		 MUX_fpu$server_core_request_put_1__VAL_7,
 		 MUX_fpu$server_core_request_put_1__VAL_8,
 		 MUX_fpu$server_core_request_put_1__VAL_9;
-  wire [69 : 0] MUX_resultR$write_1__VAL_10,
+  wire [69 : 0] MUX_resultR$write_1__VAL_1,
+		MUX_resultR$write_1__VAL_10,
 		MUX_resultR$write_1__VAL_11,
 		MUX_resultR$write_1__VAL_12,
 		MUX_resultR$write_1__VAL_13,
@@ -1981,82 +1982,100 @@ module mkFBox_Core(CLK,
   assign MUX_dw_result$wset_1__VAL_1 =
 	     { x__h204831, fpu$server_core_response_get[4:0] } ;
   assign MUX_fpu$server_core_request_put_1__VAL_1 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd0 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_2 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd1 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_3 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd2 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_4 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
 	       _1_CONCAT_DONTCARE_CONCAT_requestR_3_BITS_63_TO_ETC___d78,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd5 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_5 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
 	       _1_CONCAT_DONTCARE_CONCAT_requestR_3_BITS_63_TO_ETC___d78,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd6 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_6 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
 	       _1_CONCAT_DONTCARE_CONCAT_requestR_3_BITS_63_TO_ETC___d78,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd7 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_7 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
 	       _1_CONCAT_DONTCARE_CONCAT_requestR_3_BITS_63_TO_ETC___d78,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd8 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_8 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       33'h1AAAAAAAA,
+	       1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR_3_BITS_127_TO_96_2_EQ_0xFFFFFFFF_3_AN_ETC___d38,
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd3 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_9 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[191:160] == 32'hFFFFFFFF && requestR[159],
 	       IF_requestR_3_BITS_191_TO_160_4_EQ_0xFFFFFFFF__ETC___d29,
-	       130'h15555555555555554AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd4 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_10 =
@@ -2064,7 +2083,7 @@ module mkFBox_Core(CLK,
 	       requestR[191:128],
 	       1'd0,
 	       requestR[127:64],
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd0 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_11 =
@@ -2072,7 +2091,7 @@ module mkFBox_Core(CLK,
 	       requestR[191:128],
 	       1'd0,
 	       requestR[127:64],
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd1 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_12 =
@@ -2080,7 +2099,7 @@ module mkFBox_Core(CLK,
 	       requestR[191:128],
 	       1'd0,
 	       requestR[127:64],
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd2 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_13 =
@@ -2124,15 +2143,19 @@ module mkFBox_Core(CLK,
 	       requestR[191:128],
 	       1'd0,
 	       requestR[127:64],
-	       65'h0AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd3 } ;
   assign MUX_fpu$server_core_request_put_1__VAL_18 =
 	     { 1'd0,
 	       requestR[191:128],
-	       130'h15555555555555554AAAAAAAAAAAAAAAA,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x0_1_THEN__ETC___d50,
 	       4'd4 } ;
+  assign MUX_requestR$write_1__VAL_1 =
+	     { 1'd0,
+	       214'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign MUX_requestR$write_1__VAL_2 =
 	     { 1'd1,
 	       req_opcode,
@@ -2142,6 +2165,9 @@ module mkFBox_Core(CLK,
 	       req_v1,
 	       req_v2,
 	       req_v3 } ;
+  assign MUX_resultR$write_1__VAL_1 =
+	     { 1'd0,
+	       69'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign MUX_resultR$write_1__VAL_3 =
 	     { 1'd1, x__h204831, fpu$server_core_response_get[4:0] } ;
   assign MUX_resultR$write_1__VAL_4 = { 1'd1, x__h204207, 5'd0 } ;
@@ -2197,12 +2223,13 @@ module mkFBox_Core(CLK,
   // register requestR
   assign requestR$D_IN =
 	     WILL_FIRE_RL_rl_reset_begin ?
-	       215'h2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :
+	       MUX_requestR$write_1__VAL_1 :
 	       MUX_requestR$write_1__VAL_2 ;
   assign requestR$EN = WILL_FIRE_RL_rl_reset_begin || EN_req ;
 
   // register resultR
   always@(WILL_FIRE_RL_rl_reset_begin or
+	  MUX_resultR$write_1__VAL_1 or
 	  EN_req or
 	  WILL_FIRE_RL_rl_get_fpu_result or
 	  MUX_resultR$write_1__VAL_3 or
@@ -2285,8 +2312,8 @@ module mkFBox_Core(CLK,
 	  MUX_resultR$write_1__VAL_42 or
 	  WILL_FIRE_RL_doFSGNJ_S or MUX_resultR$write_1__VAL_43)
   case (1'b1)
-    WILL_FIRE_RL_rl_reset_begin || EN_req:
-	resultR$D_IN = 70'h0AAAAAAAAAAAAAAAAA;
+    WILL_FIRE_RL_rl_reset_begin: resultR$D_IN = MUX_resultR$write_1__VAL_1;
+    EN_req: resultR$D_IN = MUX_resultR$write_1__VAL_1;
     WILL_FIRE_RL_rl_get_fpu_result: resultR$D_IN = MUX_resultR$write_1__VAL_3;
     WILL_FIRE_RL_doFCLASS_D: resultR$D_IN = MUX_resultR$write_1__VAL_4;
     WILL_FIRE_RL_doFMV_X_D: resultR$D_IN = MUX_resultR$write_1__VAL_5;
@@ -2328,7 +2355,8 @@ module mkFBox_Core(CLK,
     WILL_FIRE_RL_doFSGNJX_S: resultR$D_IN = MUX_resultR$write_1__VAL_41;
     WILL_FIRE_RL_doFSGNJN_S: resultR$D_IN = MUX_resultR$write_1__VAL_42;
     WILL_FIRE_RL_doFSGNJ_S: resultR$D_IN = MUX_resultR$write_1__VAL_43;
-    default: resultR$D_IN = 70'h2AAAAAAAAAAAAAAAAA /* unspecified value */ ;
+    default: resultR$D_IN =
+		 70'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign resultR$EN =
 	     WILL_FIRE_RL_rl_reset_begin || EN_req ||
@@ -2498,7 +2526,7 @@ module mkFBox_Core(CLK,
     WILL_FIRE_RL_doFADD_S:
 	stateR$D_IN = 2'd2;
     WILL_FIRE_RL_rl_reset_end: stateR$D_IN = 2'd1;
-    default: stateR$D_IN = 2'b10 /* unspecified value */ ;
+    default: stateR$D_IN = 2'bxx /* unspecified value */ ;
   endcase
   assign stateR$EN =
 	     WILL_FIRE_RL_rl_reset_begin || WILL_FIRE_RL_rl_reset_end ||
@@ -2656,7 +2684,7 @@ module mkFBox_Core(CLK,
 	  fpu$server_core_request_put =
 	      MUX_fpu$server_core_request_put_1__VAL_18;
       default: fpu$server_core_request_put =
-		   202'h2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   202'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign fpu$EN_server_core_request_put =
@@ -6225,7 +6253,8 @@ module mkFBox_Core(CLK,
 	     sfd__h102814 >>
 	     _3970_MINUS_SEXT_requestR_3_BITS_190_TO_180_608_ETC___d3740 ;
   assign _1_CONCAT_DONTCARE_CONCAT_requestR_3_BITS_63_TO_ETC___d78 =
-	     { 33'h1AAAAAAAA,
+	     { 1'd1,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       requestR[63:32] == 32'hFFFFFFFF && requestR[31],
 	       (requestR[63:32] == 32'hFFFFFFFF) ?
 		 requestR[30:0] :

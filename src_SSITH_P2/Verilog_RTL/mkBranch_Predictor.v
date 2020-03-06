@@ -179,7 +179,7 @@ module mkBranch_Predictor(CLK,
 	       predict_req_m_old_pc[9:1] :
 	       rg_index ;
   assign bramcore2$DIA =
-	     118'h2AAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */  ;
+	     118'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
   assign bramcore2$DIB =
 	     MUX_bramcore2$b_put_1__SEL_1 ?
 	       MUX_bramcore2$b_put_3__VAL_1 :

@@ -2049,7 +2049,7 @@ module mkCSR_RegFile(CLK,
 	csr_mstatus_rg_mstatus$D_IN =
 	    MUX_csr_mstatus_rg_mstatus$write_1__VAL_5;
     default: csr_mstatus_rg_mstatus$D_IN =
-		 64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		 64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign csr_mstatus_rg_mstatus$EN =
 	     EN_mav_csr_write &&
@@ -2068,7 +2068,8 @@ module mkCSR_RegFile(CLK,
     WILL_FIRE_RL_rl_reset_start: rg_dcsr$D_IN = 32'd1073741843;
     MUX_rg_dcsr$write_1__SEL_2: rg_dcsr$D_IN = new_dcsr__h15111;
     EN_write_dcsr_cause_priv: rg_dcsr$D_IN = MUX_rg_dcsr$write_1__VAL_3;
-    default: rg_dcsr$D_IN = 32'hAAAAAAAA /* unspecified value */ ;
+    default: rg_dcsr$D_IN =
+		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_dcsr$EN =
 	     EN_mav_csr_write &&
@@ -2087,7 +2088,7 @@ module mkCSR_RegFile(CLK,
     EN_write_dpcc: rg_dpcc$D_IN = write_dpcc_pcc;
     MUX_rg_dpcc$write_1__SEL_3: rg_dpcc$D_IN = MUX_rg_dpcc$write_1__VAL_3;
     default: rg_dpcc$D_IN =
-		 163'h2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		 163'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_dpcc$EN =
 	     EN_mav_csr_write &&
@@ -2116,7 +2117,7 @@ module mkCSR_RegFile(CLK,
     WILL_FIRE_RL_rl_reset_start: rg_fflags$D_IN = 5'd0;
     MUX_rg_fflags$write_1__SEL_2: rg_fflags$D_IN = mav_csr_write_word[4:0];
     EN_ma_update_fcsr_fflags: rg_fflags$D_IN = MUX_rg_fflags$write_1__VAL_3;
-    default: rg_fflags$D_IN = 5'b01010 /* unspecified value */ ;
+    default: rg_fflags$D_IN = 5'bxxxxx /* unspecified value */ ;
   endcase
   assign rg_fflags$EN =
 	     EN_mav_csr_write &&
@@ -2143,7 +2144,7 @@ module mkCSR_RegFile(CLK,
 	rg_mcause$D_IN = MUX_rg_mcause$write_1__VAL_2;
     MUX_rg_mcause$write_1__SEL_3:
 	rg_mcause$D_IN = MUX_rg_mcause$write_1__VAL_3;
-    default: rg_mcause$D_IN = 7'b0101010 /* unspecified value */ ;
+    default: rg_mcause$D_IN = 7'bxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_mcause$EN =
 	     EN_csr_trap_actions &&
@@ -2202,7 +2203,7 @@ module mkCSR_RegFile(CLK,
 	rg_mepcc$D_IN = csr_trap_actions_pcc[162:10];
     MUX_rg_mepcc$write_1__SEL_4: rg_mepcc$D_IN = MUX_rg_mepcc$write_1__VAL_4;
     default: rg_mepcc$D_IN =
-		 153'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		 153'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_mepcc$EN =
 	     EN_mav_scr_write && mav_scr_write_scr_addr == 5'd31 ||
@@ -2253,7 +2254,7 @@ module mkCSR_RegFile(CLK,
     MUX_rg_mtcc$write_1__SEL_2: rg_mtcc$D_IN = MUX_rg_mtcc$write_1__VAL_2;
     MUX_rg_mtcc$write_1__SEL_3: rg_mtcc$D_IN = MUX_rg_mtcc$write_1__VAL_3;
     default: rg_mtcc$D_IN =
-		 153'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		 153'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_mtcc$EN =
 	     EN_mav_scr_write && mav_scr_write_scr_addr == 5'd28 ||
@@ -2303,7 +2304,7 @@ module mkCSR_RegFile(CLK,
 	rg_scause$D_IN = MUX_rg_mcause$write_1__VAL_2;
     MUX_rg_scause$write_1__SEL_3:
 	rg_scause$D_IN = MUX_rg_mcause$write_1__VAL_3;
-    default: rg_scause$D_IN = 7'b0101010 /* unspecified value */ ;
+    default: rg_scause$D_IN = 7'bxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_scause$EN =
 	     EN_mav_csr_write &&
@@ -2338,7 +2339,7 @@ module mkCSR_RegFile(CLK,
 	rg_sepcc$D_IN = csr_trap_actions_pcc[162:10];
     MUX_rg_sepcc$write_1__SEL_4: rg_sepcc$D_IN = MUX_rg_sepcc$write_1__VAL_4;
     default: rg_sepcc$D_IN =
-		 153'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		 153'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sepcc$EN =
 	     EN_mav_scr_write && mav_scr_write_scr_addr == 5'd15 ||
@@ -2375,7 +2376,7 @@ module mkCSR_RegFile(CLK,
     MUX_rg_stcc$write_1__SEL_2: rg_stcc$D_IN = MUX_rg_mtcc$write_1__VAL_2;
     MUX_rg_stcc$write_1__SEL_3: rg_stcc$D_IN = MUX_rg_stcc$write_1__VAL_3;
     default: rg_stcc$D_IN =
-		 153'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		 153'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_stcc$EN =
 	     EN_mav_scr_write && mav_scr_write_scr_addr == 5'd12 ||

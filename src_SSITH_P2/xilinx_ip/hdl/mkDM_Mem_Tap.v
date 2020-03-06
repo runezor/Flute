@@ -929,6 +929,7 @@ module mkDM_Mem_Tap(CLK,
   // inlined wires
   wire [97 : 0] master_xactor_shim_arff_rv$port0__write_1,
 		master_xactor_shim_arff_rv$port1__read,
+		master_xactor_shim_arff_rv$port1__write_1,
 		master_xactor_shim_arff_rv$port2__read,
 		master_xactor_shim_arff_rv$port3__read,
 		master_xactor_shim_awff_rv$port0__write_1,
@@ -947,6 +948,7 @@ module mkDM_Mem_Tap(CLK,
 		slave_xactor_ug_slave_u_aw_putWire$wget;
   wire [74 : 0] master_xactor_shim_wff_rv$port0__write_1,
 		master_xactor_shim_wff_rv$port1__read,
+		master_xactor_shim_wff_rv$port1__write_1,
 		master_xactor_shim_wff_rv$port2__read,
 		master_xactor_shim_wff_rv$port3__read,
 		slave_xactor_shim_wff_rv$port0__write_1,
@@ -956,6 +958,7 @@ module mkDM_Mem_Tap(CLK,
   wire [73 : 0] slave_xactor_ug_slave_u_w_putWire$wget;
   wire [72 : 0] master_xactor_shim_rff_rv$port0__write_1,
 		master_xactor_shim_rff_rv$port1__read,
+		master_xactor_shim_rff_rv$port1__write_1,
 		master_xactor_shim_rff_rv$port2__read,
 		master_xactor_shim_rff_rv$port3__read,
 		slave_xactor_shim_rff_rv$port0__write_1,
@@ -967,6 +970,7 @@ module mkDM_Mem_Tap(CLK,
   wire [6 : 0] master_xactor_shim_bff_rv$port0__write_1,
 	       master_xactor_shim_bff_rv$port1__read,
 	       master_xactor_shim_bff_rv$port2__read,
+	       master_xactor_shim_bff_rv$port2__write_1,
 	       master_xactor_shim_bff_rv$port3__read,
 	       slave_xactor_shim_bff_rv$port0__write_1,
 	       slave_xactor_shim_bff_rv$port1__read,
@@ -1623,11 +1627,11 @@ module mkDM_Mem_Tap(CLK,
 	       slave_xactor_shim_awff_rv ;
   assign slave_xactor_shim_awff_rv$port2__read =
 	     CAN_FIRE_RL_write_reqs ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       slave_xactor_shim_awff_rv$port1__read ;
   assign slave_xactor_shim_awff_rv$port3__read =
 	     slave_xactor_clearing ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       slave_xactor_shim_awff_rv$port2__read ;
   assign slave_xactor_shim_wff_rv$port0__write_1 =
 	     { 1'd1, slave_xactor_ug_slave_u_w_putWire$wget } ;
@@ -1637,11 +1641,11 @@ module mkDM_Mem_Tap(CLK,
 	       slave_xactor_shim_wff_rv ;
   assign slave_xactor_shim_wff_rv$port2__read =
 	     CAN_FIRE_RL_write_reqs ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_wff_rv$port1__write_1 :
 	       slave_xactor_shim_wff_rv$port1__read ;
   assign slave_xactor_shim_wff_rv$port3__read =
 	     slave_xactor_clearing ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_wff_rv$port1__write_1 :
 	       slave_xactor_shim_wff_rv$port2__read ;
   assign slave_xactor_shim_bff_rv$port0__write_1 =
 	     { 1'd1, master_xactor_shim_bff_rv$port1__read[5:0] } ;
@@ -1651,11 +1655,11 @@ module mkDM_Mem_Tap(CLK,
 	       slave_xactor_shim_bff_rv ;
   assign slave_xactor_shim_bff_rv$port2__read =
 	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop ?
-	       7'd42 :
+	       master_xactor_shim_bff_rv$port2__write_1 :
 	       slave_xactor_shim_bff_rv$port1__read ;
   assign slave_xactor_shim_bff_rv$port3__read =
 	     slave_xactor_clearing ?
-	       7'd42 :
+	       master_xactor_shim_bff_rv$port2__write_1 :
 	       slave_xactor_shim_bff_rv$port2__read ;
   assign slave_xactor_shim_arff_rv$port0__write_1 =
 	     { 1'd1, slave_xactor_ug_slave_u_ar_putWire$wget } ;
@@ -1665,11 +1669,11 @@ module mkDM_Mem_Tap(CLK,
 	       slave_xactor_shim_arff_rv ;
   assign slave_xactor_shim_arff_rv$port2__read =
 	     CAN_FIRE_RL_mkConnectionGetPut ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       slave_xactor_shim_arff_rv$port1__read ;
   assign slave_xactor_shim_arff_rv$port3__read =
 	     slave_xactor_clearing ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       slave_xactor_shim_arff_rv$port2__read ;
   assign slave_xactor_shim_rff_rv$port0__write_1 =
 	     { 1'd1, master_xactor_shim_rff_rv$port1__read[71:0] } ;
@@ -1679,11 +1683,11 @@ module mkDM_Mem_Tap(CLK,
 	       slave_xactor_shim_rff_rv ;
   assign slave_xactor_shim_rff_rv$port2__read =
 	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop ?
-	       73'h0AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_rff_rv$port1__write_1 :
 	       slave_xactor_shim_rff_rv$port1__read ;
   assign slave_xactor_shim_rff_rv$port3__read =
 	     slave_xactor_clearing ?
-	       73'h0AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_rff_rv$port1__write_1 :
 	       slave_xactor_shim_rff_rv$port2__read ;
   assign master_xactor_shim_awff_rv$port0__write_1 =
 	     { 1'd1, slave_xactor_shim_awff_rv$port1__read[96:0] } ;
@@ -1693,11 +1697,11 @@ module mkDM_Mem_Tap(CLK,
 	       master_xactor_shim_awff_rv ;
   assign master_xactor_shim_awff_rv$port2__read =
 	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_awff_rv$port1__read ;
   assign master_xactor_shim_awff_rv$port3__read =
 	     master_xactor_clearing ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_awff_rv$port2__read ;
   assign master_xactor_shim_wff_rv$port0__write_1 =
 	     { 1'd1, slave_xactor_shim_wff_rv$port1__read[73:0] } ;
@@ -1705,13 +1709,16 @@ module mkDM_Mem_Tap(CLK,
 	     CAN_FIRE_RL_write_reqs ?
 	       master_xactor_shim_wff_rv$port0__write_1 :
 	       master_xactor_shim_wff_rv ;
+  assign master_xactor_shim_wff_rv$port1__write_1 =
+	     { 1'd0,
+	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_wff_rv$port2__read =
 	     CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_wff_rv$port1__write_1 :
 	       master_xactor_shim_wff_rv$port1__read ;
   assign master_xactor_shim_wff_rv$port3__read =
 	     master_xactor_clearing ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_wff_rv$port1__write_1 :
 	       master_xactor_shim_wff_rv$port2__read ;
   assign master_xactor_shim_bff_rv$port0__write_1 =
 	     { 1'd1, master_xactor_ug_master_u_b_putWire$wget } ;
@@ -1721,11 +1728,13 @@ module mkDM_Mem_Tap(CLK,
 	       master_xactor_shim_bff_rv ;
   assign master_xactor_shim_bff_rv$port2__read =
 	     CAN_FIRE_RL_mkConnectionGetPut_1 ?
-	       7'd42 :
+	       master_xactor_shim_bff_rv$port2__write_1 :
 	       master_xactor_shim_bff_rv$port1__read ;
+  assign master_xactor_shim_bff_rv$port2__write_1 =
+	     { 1'd0, 6'bxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_bff_rv$port3__read =
 	     master_xactor_clearing ?
-	       7'd42 :
+	       master_xactor_shim_bff_rv$port2__write_1 :
 	       master_xactor_shim_bff_rv$port2__read ;
   assign master_xactor_shim_arff_rv$port0__write_1 =
 	     { 1'd1, slave_xactor_shim_arff_rv$port1__read[96:0] } ;
@@ -1733,13 +1742,16 @@ module mkDM_Mem_Tap(CLK,
 	     CAN_FIRE_RL_mkConnectionGetPut ?
 	       master_xactor_shim_arff_rv$port0__write_1 :
 	       master_xactor_shim_arff_rv ;
+  assign master_xactor_shim_arff_rv$port1__write_1 =
+	     { 1'd0,
+	       97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_arff_rv$port2__read =
 	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_arff_rv$port1__read ;
   assign master_xactor_shim_arff_rv$port3__read =
 	     master_xactor_clearing ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_arff_rv$port2__read ;
   assign master_xactor_shim_rff_rv$port0__write_1 =
 	     { 1'd1, master_xactor_ug_master_u_r_putWire$wget } ;
@@ -1747,13 +1759,16 @@ module mkDM_Mem_Tap(CLK,
 	     CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut ?
 	       master_xactor_shim_rff_rv$port0__write_1 :
 	       master_xactor_shim_rff_rv ;
+  assign master_xactor_shim_rff_rv$port1__write_1 =
+	     { 1'd0,
+	       72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_rff_rv$port2__read =
 	     CAN_FIRE_RL_mkConnectionGetPut_2 ?
-	       73'h0AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_rff_rv$port1__write_1 :
 	       master_xactor_shim_rff_rv$port1__read ;
   assign master_xactor_shim_rff_rv$port3__read =
 	     master_xactor_clearing ?
-	       73'h0AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_rff_rv$port1__write_1 :
 	       master_xactor_shim_rff_rv$port2__read ;
 
   // register master_xactor_clearing
@@ -1816,10 +1831,15 @@ module mkDM_Mem_Tap(CLK,
 
   // submodule f_trace_data
   assign f_trace_data$D_IN =
-	     { 170'h12AAAAAAAAAAAAAAA955555554A0000000000000002,
+	     { 4'd4,
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       1'bx /* unspecified value */ ,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       5'bxxxxx /* unspecified value */ ,
+	       64'd2,
 	       x__h6715,
 	       slave_xactor_shim_awff_rv$port1__read[92:29],
-	       64'hAAAAAAAAAAAAAAAA } ;
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign f_trace_data$ENQ = CAN_FIRE_RL_write_reqs ;
   assign f_trace_data$DEQ = EN_trace_data_out_get ;
   assign f_trace_data$CLR = 1'b0 ;
@@ -1848,24 +1868,34 @@ module mkDM_Mem_Tap(CLK,
       begin
         master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	master_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    98'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	master_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    98'h0AAAAAAAAAAAAAAAAAAAAAAAA;
-	master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY 7'd42;
+	    { 1'd0,
+	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 6'bxxxxxx /* unspecified value */  };
 	master_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    73'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	master_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    75'h2AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	slave_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	slave_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    98'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	slave_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    98'h0AAAAAAAAAAAAAAAAAAAAAAAA;
-	slave_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY 7'd42;
+	    { 1'd0,
+	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	slave_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 6'bxxxxxx /* unspecified value */  };
 	slave_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    73'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	slave_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    75'h2AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
       end
     else
       begin

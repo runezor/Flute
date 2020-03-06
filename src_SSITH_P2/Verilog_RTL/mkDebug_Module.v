@@ -792,6 +792,7 @@ module mkDebug_Module(CLK,
   // inlined wires
   wire [7 : 0] f_read_addr_rv$port0__write_1,
 	       f_read_addr_rv$port1__read,
+	       f_read_addr_rv$port1__write_1,
 	       f_read_addr_rv$port2__read;
 
   // register f_read_addr_rv
@@ -1395,8 +1396,12 @@ module mkDebug_Module(CLK,
 	     EN_dmi_read_addr ?
 	       f_read_addr_rv$port0__write_1 :
 	       f_read_addr_rv ;
+  assign f_read_addr_rv$port1__write_1 =
+	     { 1'd0, 7'bxxxxxxx /* unspecified value */  } ;
   assign f_read_addr_rv$port2__read =
-	     EN_dmi_read_data ? 8'd42 : f_read_addr_rv$port1__read ;
+	     EN_dmi_read_data ?
+	       f_read_addr_rv$port1__write_1 :
+	       f_read_addr_rv$port1__read ;
 
   // register f_read_addr_rv
   assign f_read_addr_rv$D_IN = f_read_addr_rv$port2__read ;
@@ -1554,7 +1559,8 @@ module mkDebug_Module(CLK,
   begin
     if (RST_N == `BSV_RESET_VALUE)
       begin
-        f_read_addr_rv <= `BSV_ASSIGNMENT_DELAY 8'd42;
+        f_read_addr_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 7'bxxxxxxx /* unspecified value */  };
       end
     else
       begin
