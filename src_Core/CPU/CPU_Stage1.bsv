@@ -277,6 +277,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                val1          : alu_outputs.val1,
                                                val2          : alu_outputs.val2,
 `endif
+                                               val1_fast     : alu_outputs.val1_fast,
+                                               val2_fast     : alu_outputs.val2_fast,
 `ifdef ISA_F
                                                val1_flt_not_int: alu_outputs.val1_flt_not_int,
                                                val2_flt_not_int: alu_outputs.val2_flt_not_int,
@@ -336,6 +338,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 						     addr:      ?,
 						     val1:      ?,
 						     val2:      ?,
+						     val1_fast: ?,
+						     val2_fast: ?,
 `ifdef ISA_F
 						     val3            : ?,
 						     rd_in_fpr       : ?,

@@ -148,6 +148,13 @@ typedef struct {
 		        // OP_Stage2_ST: store-val
                         // OP_Stage2_M, OP_Stage2_FD: arg2
 `endif
+`ifdef ISA_D
+   WordFL     val1_fast;
+   WordFL     val2_fast;
+`else
+   WordXL     val1_fast;
+   WordXL     val2_fast;
+`endif
 `ifdef ISA_F
    WordFL     val3;     // OP_Stage2_FD: arg3
    Bool       rd_in_fpr;// result to be written to fpr
@@ -194,6 +201,8 @@ ALU_Outputs alu_outputs_base
 	       addr      : ?,
 	       val1      : ?,
 	       val2      : ?,
+	       val1_fast : ?,
+	       val2_fast : ?,
 `ifdef ISA_F
          val1_flt_not_int : False,
          val2_flt_not_int : False,
@@ -539,6 +548,8 @@ function ALU_Outputs fv_OP_and_OP_IMM_shifts (ALU_Inputs inputs);
 `endif
    val2 = (val2 | { 0, instr_b30, 7'b0});
    alu_outputs.val2 = val2;
+   alu_outputs.val1_fast = alu_outputs.val1;
+   alu_outputs.val2_fast = alu_outputs.val2;
 `endif
 
    // Normal trace output (if no trap)
@@ -1183,6 +1194,7 @@ function ALU_Outputs fv_FP (ALU_Inputs inputs);
                                           : extend (inputs.frs1_val);
 `endif
 `endif
+   alu_outputs.val1_fast = alu_outputs.val1;
 
    // Second and third operands (when used) are always from the FPR
 `ifdef ISA_D
@@ -1194,6 +1206,7 @@ function ALU_Outputs fv_FP (ALU_Inputs inputs);
    alu_outputs.val2      = extend (inputs.frs2_val);
 `endif
 `endif
+   alu_outputs.val2_fast = alu_outputs.val2;
 
    alu_outputs.val3      = inputs.frs3_val;
 
@@ -1939,6 +1952,8 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 	 alu_outputs.val1      = inputs.rs1_val;
 	 alu_outputs.val2      = inputs.rs2_val;
 `endif
+         alu_outputs.val1_fast = alu_outputs.val1;
+         alu_outputs.val2_fast = alu_outputs.val2;
 
 	 // Normal trace output (if no trap)
 	 alu_outputs.trace_data = mkTrace_I_RD (fall_through_pc (inputs),
@@ -1958,6 +1973,8 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 	 alu_outputs.rd        = inputs.decoded_instr.rd;
 	 alu_outputs.val1      = inputs.rs1_val;
 	 alu_outputs.val2      = inputs.rs2_val;
+         alu_outputs.val1_fast = alu_outputs.val1;
+         alu_outputs.val2_fast = alu_outputs.val2;
 
 	 // Normal trace output (if no trap)
 	 alu_outputs.trace_data = mkTrace_I_RD (fall_through_pc (inputs),

@@ -725,15 +725,15 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	    shifter_box.req (unpack (funct3 [2]),
 `ifdef ISA_D
 `ifdef RV32
-			     truncate (x.val1),
-			     truncate (x.val2)
+			     truncate (x.val1_fast),
+			     truncate (x.val2_fast)
 `else
-			     x.val1,
-			     x.val2
+			     x.val1_fast,
+			     x.val2_fast
 `endif
 `else
-			     x.val1,
-			     x.val2
+			     x.val1_fast,
+			     x.val2_fast
 `endif
 			     );
 `endif
@@ -745,8 +745,8 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	    Bool is_OP_not_OP_32 = (x.instr [3] == 1'b0);
             mbox.req (is_OP_not_OP_32,
 		      funct3,
-		      extract_int(x.val1),
-		      extract_int(x.val2)
+		      x.val1_fast,
+		      x.val2_fast
 		      );
 	 end
 `endif
@@ -763,17 +763,9 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 		      funct7,
 		      x.rounding_mode, // rm
 		      rs2,
-`ifdef ISA_D
-		      x.val1_flt_not_int ? extract_flt(x.val1) :
-`endif
-                                         zeroExtend(extract_int(x.val1)),
-`ifdef ISA_D
-		      x.val2_flt_not_int ? extract_flt(x.val2) :
-`endif
-                                         zeroExtend(extract_int(x.val2))
-`ifdef ISA_F
-		      , extend (x.val3)
-`endif
+		      extend(x.val1_fast),
+		      extend(x.val2_fast),
+		      extend(x.val3)
 		      );
          end
 `endif

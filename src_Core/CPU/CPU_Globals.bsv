@@ -564,6 +564,14 @@ typedef struct {
    Pipeline_Val#(CapPipe) val2;  // OP_Stage2_ST: store-val;
                        // OP_Stage2_M and OP_Stage2_FD: arg2
 
+`ifdef ISA_D
+   WordFL     val1_fast; // Timing optimisation: vals for putting into the fbox/mbox where it is known the result doesn't depend on cap arithmetic
+   WordFL     val2_fast;
+`else
+   WordXL     val1_fast;
+   WordXL     val2_fast;
+`endif
+
 `ifdef ISA_CHERI
    // Bounds check: if check_enable, will test
    // address_low >= authority.base && address_high <? authority.top (?: strictness determined by check_inclusive value TODO)
