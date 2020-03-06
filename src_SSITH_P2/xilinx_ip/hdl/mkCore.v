@@ -4366,12 +4366,6 @@ module mkCore(CLK,
 					   .memory_response_canPut(),
 					   .RDY_memory_response_put(tagController_tmp_tagCon$RDY_memory_response_put));
 
-  // rule RL_ClientServerRequest
-  assign CAN_FIRE_RL_ClientServerRequest =
-	     debug_module$RDY_hart0_client_run_halt_request_get &&
-	     cpu$RDY_hart0_server_run_halt_request_put ;
-  assign WILL_FIRE_RL_ClientServerRequest = CAN_FIRE_RL_ClientServerRequest ;
-
   // rule RL_ClientServerResponse
   assign CAN_FIRE_RL_ClientServerResponse =
 	     debug_module$RDY_hart0_client_run_halt_response_put &&
@@ -5762,6 +5756,12 @@ module mkCore(CLK,
 	     cpu$dmem_master_rready ;
   assign WILL_FIRE_RL_msNoSynth_0_r_dropFlit =
 	     CAN_FIRE_RL_msNoSynth_0_r_dropFlit ;
+
+  // rule RL_ClientServerRequest
+  assign CAN_FIRE_RL_ClientServerRequest =
+	     debug_module$RDY_hart0_client_run_halt_request_get &&
+	     cpu$RDY_hart0_server_run_halt_request_put ;
+  assign WILL_FIRE_RL_ClientServerRequest = CAN_FIRE_RL_ClientServerRequest ;
 
   // rule RL_rl_relay_sw_interrupts
   assign CAN_FIRE_RL_rl_relay_sw_interrupts =
