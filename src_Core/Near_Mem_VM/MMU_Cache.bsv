@@ -1929,8 +1929,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       Wire#(WordXL) w_req_satp <- mkWire;
 
    rule do_req (   (! resetting)
-		&& (   (rg_state == MODULE_READY)
-		    || (rg_state == MODULE_EXCEPTION_RSP))
 		&& (! flush_called));
       let op = w_req_op;
       let width_code = w_req_width_code;
