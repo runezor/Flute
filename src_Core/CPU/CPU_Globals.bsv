@@ -267,10 +267,6 @@ typedef struct {
    Bool       is_i32_not_i16;     // True if a regular 32b instr, not a compressed (16b) instr
    Bool       exc;                // True if exc in icache access
    Exc_Code   exc_code;
-`ifdef ISA_CHERI
-   CHERI_Exc_Code exc_code_cheri;
-   Bit#(5)    cheri_exc_reg;
-`endif
    WordXL     tval;               // Trap value; can be different from PC, with 'C' extension
    Instr      instr;              // Valid if no exception
    WordXL     pred_fetch_addr;    // Predicted next pc
@@ -335,10 +331,6 @@ typedef struct {
    Bool           exc;                // True if exc in icache access
    Exc_Code       exc_code;
    WordXL         tval;               // Trap value; can be different from PC, with 'C' extension
-`ifdef ISA_CHERI
-   CHERI_Exc_Code exc_code_cheri;
-   Bit#(5)    cheri_exc_reg;
-`endif
 
    Instr          instr;              // Valid if no exception
    Instr_C        instr_C;            // Valid if no exception; original compressed instruction
