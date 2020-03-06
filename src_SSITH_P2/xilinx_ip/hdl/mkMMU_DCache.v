@@ -52,12 +52,12 @@
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
 // set_verbosity_verbosity        I     4 reg
-// req_op                         I     2 reg
-// req_width_code                 I     3 reg
-// req_is_unsigned                I     1 unused
+// req_op                         I     2
+// req_width_code                 I     3
+// req_is_unsigned                I     1 reg
 // req_amo_funct5                 I     5 reg
-// req_addr                       I    64 reg
-// req_st_value                   I   129 unused
+// req_addr                       I    64
+// req_st_value                   I   129
 // req_priv                       I     2 reg
 // req_sstatus_SUM                I     1 reg
 // req_mstatus_MXR                I     1 reg
@@ -75,7 +75,7 @@
 // EN_set_verbosity               I     1
 // EN_server_reset_request_put    I     1
 // EN_server_reset_response_get   I     1
-// EN_req                         I     1 unused
+// EN_req                         I     1
 // EN_commit                      I     1
 // EN_server_flush_request_put    I     1
 // EN_server_flush_response_get   I     1
@@ -570,6 +570,7 @@ module mkMMU_DCache(CLK,
   wire cache_crg_sb_to_load_delay$EN_port1__write,
        cache_dw_valid$wget,
        cache_dw_valid$whas,
+       cache_flush_called$whas,
        cache_master_xactor_shim_arff_rv$EN_port0__write,
        cache_master_xactor_shim_rff_rv$EN_port1__write,
        cache_master_xactor_shim_wff_rv$EN_port0__write,
@@ -950,9 +951,11 @@ module mkMMU_DCache(CLK,
 	       MUX_cache_ram_word128_set$b_put_2__VAL_4;
   wire [5 : 0] MUX_cache_rg_cset_in_cache$write_1__VAL_1,
 	       MUX_cache_rg_exc_code$write_1__VAL_1,
+	       MUX_cache_rg_exc_code$write_1__VAL_3,
 	       MUX_cache_rg_exc_code$write_1__VAL_4,
 	       MUX_cache_rg_exc_code$write_1__VAL_8;
-  wire [4 : 0] MUX_cache_rg_state$write_1__VAL_17,
+  wire [4 : 0] MUX_cache_rg_state$write_1__VAL_1,
+	       MUX_cache_rg_state$write_1__VAL_17,
 	       MUX_cache_rg_state$write_1__VAL_3,
 	       MUX_cache_rg_state$write_1__VAL_4,
 	       MUX_cache_rg_state$write_1__VAL_5,
@@ -968,10 +971,12 @@ module mkMMU_DCache(CLK,
        MUX_cache_master_xactor_shim_arff_rv$port0__write_1__SEL_1,
        MUX_cache_master_xactor_shim_arff_rv$port0__write_1__SEL_2,
        MUX_cache_master_xactor_shim_arff_rv$port0__write_1__SEL_3,
+       MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1,
        MUX_cache_ram_word128_set$a_put_1__SEL_1,
        MUX_cache_ram_word128_set$b_put_1__SEL_2,
        MUX_cache_rg_error_during_refill$write_1__SEL_1,
        MUX_cache_rg_exc_code$write_1__SEL_2,
+       MUX_cache_rg_exc_code$write_1__SEL_3,
        MUX_cache_rg_exc_code$write_1__SEL_4,
        MUX_cache_rg_exc_code$write_1__SEL_5,
        MUX_cache_rg_exc_code$write_1__SEL_6,
@@ -1046,7 +1051,8 @@ module mkMMU_DCache(CLK,
   reg [31 : 0] v__h43960;
   reg [31 : 0] v__h46271;
   reg [31 : 0] v__h43888;
-  reg [31 : 0] v__h49510;
+  reg [31 : 0] v__h49537;
+  reg [31 : 0] v__h47771;
   reg [31 : 0] v__h42404;
   reg [31 : 0] v__h6777;
   reg [31 : 0] v__h7209;
@@ -1088,7 +1094,8 @@ module mkMMU_DCache(CLK,
   reg [31 : 0] v__h46575;
   reg [31 : 0] v__h46783;
   reg [31 : 0] v__h46822;
-  reg [31 : 0] v__h49504;
+  reg [31 : 0] v__h47765;
+  reg [31 : 0] v__h49531;
   // synopsys translate_on
 
   // remaining internal signals
@@ -1327,7 +1334,7 @@ module mkMMU_DCache(CLK,
 		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q63,
 		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q67,
 		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q70,
-		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74,
+		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75,
 		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q77,
 		IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q81,
 		cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q10,
@@ -1353,7 +1360,7 @@ module mkMMU_DCache(CLK,
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q69,
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q72,
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q73,
-	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75,
+	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74,
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q76,
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q79,
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q80,
@@ -1442,6 +1449,7 @@ module mkMMU_DCache(CLK,
        NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d810,
        NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d823,
        NOT_cache_tlb_lookup_cache_rg_satp_67_BITS_59__ETC___d219,
+       NOT_cache_w_req_width_code_wget__815_EQ_0b0_83_ETC___d1856,
        _1_SL_IF_cache_rg_width_code_73_EQ_0_74_OR_cach_ETC___d1434,
        cache_cfg_verbosity_read__12_ULE_1___d113,
        cache_f_reset_reqs_i_notEmpty__25_AND_cache_f__ETC___d143,
@@ -1476,10 +1484,13 @@ module mkMMU_DCache(CLK,
        cache_rg_priv_64_ULE_0b1___d165,
        cache_rg_width_code_73_EQ_0b100_30_OR_cache_rg_ETC___d376,
        cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d1100,
+       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d1166,
        cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d827,
        cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d872,
        cache_tlb_lookup_cache_rg_satp_67_BITS_59_TO_4_ETC___d204,
        cache_tlb_lookup_cache_rg_satp_67_BITS_59_TO_4_ETC___d454,
+       cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1872,
+       cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1877,
        lrsc_result__h25109,
        mem_req_wr_second_data_wuser__h5677,
        y__h8962;
@@ -2096,8 +2107,13 @@ module mkMMU_DCache(CLK,
 	     CAN_FIRE_RL_cache_rl_io_AMO_read_rsp ;
 
   // rule RL_cache_do_req
-  assign CAN_FIRE_RL_cache_do_req = 1'b0 ;
-  assign WILL_FIRE_RL_cache_do_req = 1'b0 ;
+  assign CAN_FIRE_RL_cache_do_req =
+	     EN_req && !cache_f_reset_reqs$EMPTY_N &&
+	     (cache_rg_state == 5'd2 || cache_rg_state == 5'd4) &&
+	     !cache_flush_called$whas ;
+  assign WILL_FIRE_RL_cache_do_req =
+	     CAN_FIRE_RL_cache_do_req && !EN_tlb_flush &&
+	     !EN_server_flush_request_put ;
 
   // rule RL_cache_master_xactor_ug_master_u_ar_setPeek
   assign CAN_FIRE_RL_cache_master_xactor_ug_master_u_ar_setPeek =
@@ -2164,6 +2180,10 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__SEL_3 =
 	     WILL_FIRE_RL_cache_rl_io_AMO_op_req ||
 	     WILL_FIRE_RL_cache_rl_io_read_req ;
+  assign MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 =
+	     WILL_FIRE_RL_cache_do_req &&
+	     (cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1872 ||
+	      req_width_code == 3'b100 && req_addr[3:0] == 4'b0) ;
   assign MUX_cache_ram_word128_set$a_put_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d823 &&
@@ -2178,6 +2198,10 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_rg_exc_code$write_1__SEL_2 =
 	     WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ;
+  assign MUX_cache_rg_exc_code$write_1__SEL_3 =
+	     WILL_FIRE_RL_cache_do_req &&
+	     NOT_cache_w_req_width_code_wget__815_EQ_0b0_83_ETC___d1856 &&
+	     (req_width_code != 3'b100 || req_addr[3:0] != 4'b0) ;
   assign MUX_cache_rg_exc_code$write_1__SEL_4 =
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	     NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1235 ;
@@ -2237,10 +2261,7 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_rg_st_amo_val$write_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d823 &&
-	     cache_soc_map$m_is_mem_addr &&
-	     cache_rg_op != 2'd0 &&
-	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
-	     NOT_cache_rg_op_90_EQ_1_38_41_AND_NOT_cache_rg_ETC___d869 ;
+	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d1166 ;
   assign MUX_cache_rg_state$write_1__SEL_3 =
 	     WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	     (cache_rg_lower_word64_full ||
@@ -2354,6 +2375,8 @@ module mkMMU_DCache(CLK,
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) ?
 	       6'd5 :
 	       6'd7 ;
+  assign MUX_cache_rg_exc_code$write_1__VAL_3 =
+	     (req_op == 2'd0) ? 6'd4 : 6'd6 ;
   assign MUX_cache_rg_exc_code$write_1__VAL_4 =
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0) ?
 	       exc_code___1__h9054 :
@@ -2389,6 +2412,11 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_rg_st_amo_val$write_1__VAL_1 =
 	     { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
 	       IF_cache_rg_width_code_73_EQ_0b100_30_THEN_cac_ETC___d1013 } ;
+  assign MUX_cache_rg_state$write_1__VAL_1 =
+	     (NOT_cache_w_req_width_code_wget__815_EQ_0b0_83_ETC___d1856 &&
+	      (req_width_code != 3'b100 || req_addr[3:0] != 4'b0)) ?
+	       5'd4 :
+	       5'd3 ;
   assign MUX_cache_rg_state$write_1__VAL_3 =
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0) ?
 	       5'd15 :
@@ -2513,6 +2541,8 @@ module mkMMU_DCache(CLK,
 	     MUX_cache_dw_output_ld_val$wset_1__SEL_1 ?
 	       129'd0 :
 	       cache_rg_st_amo_val ;
+  assign cache_flush_called$whas =
+	     EN_server_flush_request_put || EN_tlb_flush ;
   assign cache_master_xactor_ug_master_u_aw_dropWire$whas =
 	     cache_master_xactor_shim_awff_rv$port1__read[97] &&
 	     mem_master_awready ;
@@ -2725,11 +2755,11 @@ module mkMMU_DCache(CLK,
 
   // register cache_rg_addr
   assign cache_rg_addr$D_IN = req_addr ;
-  assign cache_rg_addr$EN = 1'b0 ;
+  assign cache_rg_addr$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_amo_funct5
   assign cache_rg_amo_funct5$D_IN = req_amo_funct5 ;
-  assign cache_rg_amo_funct5$EN = 1'b0 ;
+  assign cache_rg_amo_funct5$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_cset_in_cache
   assign cache_rg_cset_in_cache$D_IN =
@@ -2752,6 +2782,8 @@ module mkMMU_DCache(CLK,
   always@(MUX_cache_rg_error_during_refill$write_1__SEL_1 or
 	  MUX_cache_rg_exc_code$write_1__VAL_1 or
 	  MUX_cache_rg_exc_code$write_1__SEL_2 or
+	  MUX_cache_rg_exc_code$write_1__SEL_3 or
+	  MUX_cache_rg_exc_code$write_1__VAL_3 or
 	  MUX_cache_rg_exc_code$write_1__SEL_4 or
 	  MUX_cache_rg_exc_code$write_1__VAL_4 or
 	  MUX_cache_rg_exc_code$write_1__SEL_5 or
@@ -2764,6 +2796,8 @@ module mkMMU_DCache(CLK,
       MUX_cache_rg_error_during_refill$write_1__SEL_1:
 	  cache_rg_exc_code$D_IN = MUX_cache_rg_exc_code$write_1__VAL_1;
       MUX_cache_rg_exc_code$write_1__SEL_2: cache_rg_exc_code$D_IN = 6'd7;
+      MUX_cache_rg_exc_code$write_1__SEL_3:
+	  cache_rg_exc_code$D_IN = MUX_cache_rg_exc_code$write_1__VAL_3;
       MUX_cache_rg_exc_code$write_1__SEL_4:
 	  cache_rg_exc_code$D_IN = MUX_cache_rg_exc_code$write_1__VAL_4;
       MUX_cache_rg_exc_code$write_1__SEL_5:
@@ -2781,6 +2815,9 @@ module mkMMU_DCache(CLK,
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
 	     WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
+	     WILL_FIRE_RL_cache_do_req &&
+	     NOT_cache_w_req_width_code_wget__815_EQ_0b0_83_ETC___d1856 &&
+	     (req_width_code != 3'b100 || req_addr[3:0] != 4'b0) ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	     NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1235 ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_1 &&
@@ -2804,8 +2841,8 @@ module mkMMU_DCache(CLK,
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp ;
 
   // register cache_rg_is_unsigned
-  assign cache_rg_is_unsigned$D_IN = 1'b0 ;
-  assign cache_rg_is_unsigned$EN = 1'b0 ;
+  assign cache_rg_is_unsigned$D_IN = req_is_unsigned ;
+  assign cache_rg_is_unsigned$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_ld_val
   always@(MUX_cache_rg_ld_val$write_1__SEL_1 or
@@ -2920,19 +2957,25 @@ module mkMMU_DCache(CLK,
 
   // register cache_rg_mstatus_MXR
   assign cache_rg_mstatus_MXR$D_IN = req_mstatus_MXR ;
-  assign cache_rg_mstatus_MXR$EN = 1'b0 ;
+  assign cache_rg_mstatus_MXR$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_op
   assign cache_rg_op$D_IN = req_op ;
-  assign cache_rg_op$EN = 1'b0 ;
+  assign cache_rg_op$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_pa
-  assign cache_rg_pa$D_IN = MUX_cache_rg_pa$write_1__VAL_1 ;
-  assign cache_rg_pa$EN = MUX_cache_rg_pa$write_1__SEL_1 ;
+  assign cache_rg_pa$D_IN =
+	     MUX_cache_rg_pa$write_1__SEL_1 ?
+	       MUX_cache_rg_pa$write_1__VAL_1 :
+	       req_addr ;
+  assign cache_rg_pa$EN =
+	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
+	     NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d488 ||
+	     WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_priv
   assign cache_rg_priv$D_IN = req_priv ;
-  assign cache_rg_priv$EN = 1'b0 ;
+  assign cache_rg_priv$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_pte_pa
   always@(MUX_cache_master_xactor_shim_arff_rv$port0__write_1__SEL_1 or
@@ -2970,18 +3013,27 @@ module mkMMU_DCache(CLK,
 
   // register cache_rg_satp
   assign cache_rg_satp$D_IN = req_satp ;
-  assign cache_rg_satp$EN = 1'b0 ;
+  assign cache_rg_satp$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_sstatus_SUM
   assign cache_rg_sstatus_SUM$D_IN = req_sstatus_SUM ;
-  assign cache_rg_sstatus_SUM$EN = 1'b0 ;
+  assign cache_rg_sstatus_SUM$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_st_amo_val
-  assign cache_rg_st_amo_val$D_IN = MUX_cache_rg_st_amo_val$write_1__VAL_1 ;
-  assign cache_rg_st_amo_val$EN = MUX_cache_rg_st_amo_val$write_1__SEL_1 ;
+  assign cache_rg_st_amo_val$D_IN =
+	     MUX_cache_rg_st_amo_val$write_1__SEL_1 ?
+	       MUX_cache_rg_st_amo_val$write_1__VAL_1 :
+	       req_st_value ;
+  assign cache_rg_st_amo_val$EN =
+	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
+	     NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d823 &&
+	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d1166 ||
+	     WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_state
-  always@(EN_tlb_flush or
+  always@(WILL_FIRE_RL_cache_do_req or
+	  MUX_cache_rg_state$write_1__VAL_1 or
+	  EN_tlb_flush or
 	  MUX_cache_rg_state$write_1__SEL_3 or
 	  MUX_cache_rg_state$write_1__VAL_3 or
 	  MUX_cache_rg_state$write_1__SEL_4 or
@@ -3006,6 +3058,8 @@ module mkMMU_DCache(CLK,
 	  MUX_cache_rg_state$write_1__VAL_17 or
 	  MUX_cache_rg_state$write_1__SEL_18)
   case (1'b1)
+    WILL_FIRE_RL_cache_do_req:
+	cache_rg_state$D_IN = MUX_cache_rg_state$write_1__VAL_1;
     EN_tlb_flush: cache_rg_state$D_IN = 5'd2;
     MUX_cache_rg_state$write_1__SEL_3:
 	cache_rg_state$D_IN = MUX_cache_rg_state$write_1__VAL_3;
@@ -3050,6 +3104,7 @@ module mkMMU_DCache(CLK,
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_1 ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_0 ||
+	     WILL_FIRE_RL_cache_do_req ||
 	     WILL_FIRE_RL_cache_rl_start_reset ||
 	     EN_tlb_flush ||
 	     WILL_FIRE_RL_cache_rl_rereq ||
@@ -3062,7 +3117,7 @@ module mkMMU_DCache(CLK,
 
   // register cache_rg_width_code
   assign cache_rg_width_code$D_IN = req_width_code ;
-  assign cache_rg_width_code$EN = 1'b0 ;
+  assign cache_rg_width_code$EN = WILL_FIRE_RL_cache_do_req ;
 
   // register cache_rg_word128_set_in_cache
   assign cache_rg_word128_set_in_cache$D_IN =
@@ -3156,26 +3211,35 @@ module mkMMU_DCache(CLK,
 	     WILL_FIRE_RL_cache_rl_start_cache_refill ?
 	       cache_rg_addr[11:6] :
 	       cache_rg_cset_in_cache ;
-  assign cache_ram_state_and_ctag_cset$ADDRB = cache_rg_addr[11:6] ;
+  assign cache_ram_state_and_ctag_cset$ADDRB =
+	     MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 ?
+	       req_addr[11:6] :
+	       cache_rg_addr[11:6] ;
   assign cache_ram_state_and_ctag_cset$DIA =
 	     WILL_FIRE_RL_cache_rl_start_cache_refill ?
 	       MUX_cache_ram_state_and_ctag_cset$a_put_3__VAL_1 :
 	       53'h0AAAAAAAAAAAAA ;
   assign cache_ram_state_and_ctag_cset$DIB =
-	     53'h0AAAAAAAAAAAAA /* unspecified value */  ;
+	     MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 ?
+	       53'h0AAAAAAAAAAAAA /* unspecified value */  :
+	       53'h0AAAAAAAAAAAAA /* unspecified value */  ;
   assign cache_ram_state_and_ctag_cset$WEA = 1'd1 ;
   assign cache_ram_state_and_ctag_cset$WEB = 1'd0 ;
   assign cache_ram_state_and_ctag_cset$ENA =
 	     WILL_FIRE_RL_cache_rl_start_cache_refill ||
 	     WILL_FIRE_RL_cache_rl_reset ;
-  assign cache_ram_state_and_ctag_cset$ENB = WILL_FIRE_RL_cache_rl_rereq ;
+  assign cache_ram_state_and_ctag_cset$ENB =
+	     MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 ||
+	     WILL_FIRE_RL_cache_rl_rereq ;
 
   // submodule cache_ram_word128_set
   assign cache_ram_word128_set$ADDRA =
 	     MUX_cache_ram_word128_set$a_put_1__SEL_1 ?
 	       cache_rg_addr[11:4] :
 	       cache_rg_word128_set_in_cache ;
-  always@(MUX_cache_ram_word128_set$b_put_1__SEL_2 or
+  always@(MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 or
+	  req_addr or
+	  MUX_cache_ram_word128_set$b_put_1__SEL_2 or
 	  MUX_cache_ram_word128_set$b_put_2__VAL_2 or
 	  WILL_FIRE_RL_cache_rl_rereq or
 	  cache_rg_addr or
@@ -3183,6 +3247,8 @@ module mkMMU_DCache(CLK,
 	  MUX_cache_ram_word128_set$b_put_2__VAL_4)
   begin
     case (1'b1) // synopsys parallel_case
+      MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1:
+	  cache_ram_word128_set$ADDRB = req_addr[11:4];
       MUX_cache_ram_word128_set$b_put_1__SEL_2:
 	  cache_ram_word128_set$ADDRB =
 	      MUX_cache_ram_word128_set$b_put_2__VAL_2;
@@ -3199,11 +3265,15 @@ module mkMMU_DCache(CLK,
 	     MUX_cache_ram_word128_set$a_put_1__SEL_1 ?
 	       MUX_cache_ram_word128_set$a_put_3__VAL_1 :
 	       MUX_cache_ram_word128_set$a_put_3__VAL_2 ;
-  always@(MUX_cache_ram_word128_set$b_put_1__SEL_2 or
+  always@(MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 or
+	  MUX_cache_ram_word128_set$b_put_1__SEL_2 or
 	  WILL_FIRE_RL_cache_rl_rereq or
 	  WILL_FIRE_RL_cache_rl_start_cache_refill)
   begin
     case (1'b1) // synopsys parallel_case
+      MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1:
+	  cache_ram_word128_set$DIB =
+	      129'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
       MUX_cache_ram_word128_set$b_put_1__SEL_2:
 	  cache_ram_word128_set$DIB =
 	      129'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
@@ -3227,6 +3297,7 @@ module mkMMU_DCache(CLK,
 	     cache_rg_lower_word64_full &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 ;
   assign cache_ram_word128_set$ENB =
+	     MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 ||
 	     WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	     cache_rg_lower_word64_full &&
 	     cache_rg_word128_set_in_cache[1:0] != 2'd3 ||
@@ -3342,9 +3413,9 @@ module mkMMU_DCache(CLK,
   assign IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q73 =
 	     IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC___d1615[87:80] ;
   assign IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74 =
-	     IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC___d1615[95:80] ;
-  assign IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75 =
 	     IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC___d1615[95:88] ;
+  assign IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75 =
+	     IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC___d1615[95:80] ;
   assign IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q76 =
 	     IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC___d1615[103:96] ;
   assign IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q77 =
@@ -3678,6 +3749,11 @@ module mkMMU_DCache(CLK,
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     !cache_tlb$lookup[73] ;
+  assign NOT_cache_w_req_width_code_wget__815_EQ_0b0_83_ETC___d1856 =
+	     req_width_code != 3'b0 &&
+	     (req_width_code != 3'b001 || req_addr[0]) &&
+	     (req_width_code != 3'b010 || req_addr[1:0] != 2'b0) &&
+	     (req_width_code != 3'b011 || req_addr[2:0] != 3'b0) ;
   assign SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d636 =
 	     { {56{cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q36[7]}},
 	       cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q36 } ;
@@ -3757,11 +3833,11 @@ module mkMMU_DCache(CLK,
 	     { {32{cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q39[31]}},
 	       cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q39 } ;
   assign SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d764 =
-	     { {32{cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q37[31]}},
-	       cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q37 } ;
-  assign SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d768 =
 	     { {32{cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q38[31]}},
 	       cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q38 } ;
+  assign SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d768 =
+	     { {32{cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q37[31]}},
+	       cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q37 } ;
   assign _1_SL_IF_cache_rg_width_code_73_EQ_0_74_OR_cach_ETC___d1434 =
 	     8'd1 << size_val__h43266 <= 8'd8 ;
   assign _theResult___fst__h8792 =
@@ -3848,9 +3924,9 @@ module mkMMU_DCache(CLK,
   assign cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q11 =
 	     cache_master_xactor_shim_rff_rv$port1__read[67:36] ;
   assign cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12 =
-	     cache_master_xactor_shim_rff_rv$port1__read[51:44] ;
-  assign cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13 =
 	     cache_master_xactor_shim_rff_rv$port1__read[59:52] ;
+  assign cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13 =
+	     cache_master_xactor_shim_rff_rv$port1__read[51:44] ;
   assign cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q14 =
 	     cache_master_xactor_shim_rff_rv$port1__read[67:52] ;
   assign cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q15 =
@@ -3923,9 +3999,9 @@ module mkMMU_DCache(CLK,
   assign cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q36 =
 	     cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[7:0] ;
   assign cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q37 =
-	     cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[95:64] ;
-  assign cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q38 =
 	     cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[127:96] ;
+  assign cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q38 =
+	     cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[95:64] ;
   assign cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q39 =
 	     cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[63:32] ;
   assign cache_ram_word128_set_b_read__86_AND_cache_ram_ETC__q40 =
@@ -4043,7 +4119,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_priv_64_ULE_0b1_65_AND_cache_rg_satp__ETC___d442 =
 	     cache_rg_priv_64_ULE_0b1_65_AND_cache_rg_satp__ETC___d222 ||
 	     (NOT_cache_rg_priv_64_ULE_0b1_65_66_OR_NOT_cach_ETC___d235 ||
-	      cache_tlb$RDY_insert && cache_tlb$RDY_lookup &&
+	      cache_tlb$RDY_lookup && cache_tlb$RDY_insert &&
 	      cache_f_pte_writebacks$FULL_N) &&
 	     (!cache_soc_map$m_is_mem_addr ||
 	      IF_cache_rg_op_90_EQ_0_91_OR_cache_rg_op_90_EQ_ETC___d439) ;
@@ -4080,6 +4156,10 @@ module mkMMU_DCache(CLK,
 	     cache_soc_map$m_is_mem_addr && cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     cache_rg_op_90_EQ_1_38_OR_cache_rg_op_90_EQ_2__ETC___d1098 ;
+  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d1166 =
+	     cache_soc_map$m_is_mem_addr && cache_rg_op != 2'd0 &&
+	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
+	     NOT_cache_rg_op_90_EQ_1_38_41_AND_NOT_cache_rg_ETC___d869 ;
   assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d827 =
 	     cache_soc_map$m_is_mem_addr && cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
@@ -4098,6 +4178,15 @@ module mkMMU_DCache(CLK,
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010 ||
 	      cache_tlb$lookup[73]) ;
+  assign cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1872 =
+	     req_width_code == 3'b0 ||
+	     req_width_code == 3'b001 && !req_addr[0] ||
+	     req_width_code == 3'b010 && req_addr[1:0] == 2'b0 ||
+	     req_width_code == 3'b011 && req_addr[2:0] == 3'b0 ;
+  assign cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1877 =
+	     (cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1872 ||
+	      req_width_code == 3'b100 && req_addr[3:0] == 4'b0) &&
+	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
   assign cline_fabric_addr__h37716 = { cache_rg_pa[63:6], 6'd0 } ;
   assign exc_code___1__h9054 = x1_avValue_exc_code__h8704 ;
   assign lev_0_pte_pa__h36499 = MUX_cache_rg_pte_pa$write_1__VAL_2 ;
@@ -4348,13 +4437,13 @@ module mkMMU_DCache(CLK,
   assign result_lo__h41638 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0, cache_master_xactor_shim_rff_rv$port1__read[51:44] } :
-	       { {56{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12[7]}},
-		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12 } ;
+	       { {56{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13[7]}},
+		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13 } ;
   assign result_lo__h41671 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0, cache_master_xactor_shim_rff_rv$port1__read[59:52] } :
-	       { {56{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13[7]}},
-		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13 } ;
+	       { {56{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12[7]}},
+		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12 } ;
   assign result_lo__h41704 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0, cache_master_xactor_shim_rff_rv$port1__read[67:60] } :
@@ -4424,8 +4513,8 @@ module mkMMU_DCache(CLK,
 	     { {56{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q73[7]}},
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q73 } ;
   assign result_lo__h45399 =
-	     { {56{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75[7]}},
-	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75 } ;
+	     { {56{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74[7]}},
+	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74 } ;
   assign result_lo__h45431 =
 	     { {56{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q76[7]}},
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q76 } ;
@@ -4454,8 +4543,8 @@ module mkMMU_DCache(CLK,
 	     { {48{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q70[15]}},
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q70 } ;
   assign result_lo__h45741 =
-	     { {48{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74[15]}},
-	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q74 } ;
+	     { {48{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75[15]}},
+	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q75 } ;
   assign result_lo__h45773 =
 	     { {48{IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q77[15]}},
 	       IF_cache_rg_lower_word64_full_396_THEN_cache_m_ETC__q77 } ;
@@ -4844,6 +4933,27 @@ module mkMMU_DCache(CLK,
     endcase
   end
   always@(cache_rg_addr or
+	  result_lo__h23921 or
+	  result_lo__h23954 or result_lo__h23987 or result_lo__h24020)
+  begin
+    case (cache_rg_addr[3:0])
+      4'h0:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
+	      result_lo__h23921;
+      4'h4:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
+	      result_lo__h23954;
+      4'h8:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
+	      result_lo__h23987;
+      4'hC:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
+	      result_lo__h24020;
+      default: IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
+		   64'd0;
+    endcase
+  end
+  always@(cache_rg_addr or
 	  SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d716 or
 	  SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d720 or
 	  SEXT_cache_ram_word128_set_b_read__86_AND_cach_ETC___d724 or
@@ -4883,27 +4993,6 @@ module mkMMU_DCache(CLK,
     endcase
   end
   always@(cache_rg_addr or
-	  result_lo__h23921 or
-	  result_lo__h23954 or result_lo__h23987 or result_lo__h24020)
-  begin
-    case (cache_rg_addr[3:0])
-      4'h0:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
-	      result_lo__h23921;
-      4'h4:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
-	      result_lo__h23954;
-      4'h8:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
-	      result_lo__h23987;
-      4'hC:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
-	      result_lo__h24020;
-      default: IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 =
-		   64'd0;
-    endcase
-  end
-  always@(cache_rg_addr or
 	  result_lo__h23643 or
 	  result_lo__h23676 or
 	  result_lo__h23709 or
@@ -4938,6 +5027,97 @@ module mkMMU_DCache(CLK,
 	      result_lo__h23874;
       default: IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d753 =
 		   64'd0;
+    endcase
+  end
+  always@(cache_rg_addr or
+	  result_lo__h23091 or
+	  result_lo__h23126 or
+	  result_lo__h23159 or
+	  result_lo__h23192 or
+	  result_lo__h23225 or
+	  result_lo__h23258 or
+	  result_lo__h23291 or
+	  result_lo__h23324 or
+	  result_lo__h23357 or
+	  result_lo__h23390 or
+	  result_lo__h23423 or
+	  result_lo__h23456 or
+	  result_lo__h23489 or
+	  result_lo__h23522 or result_lo__h23555 or result_lo__h23588)
+  begin
+    case (cache_rg_addr[3:0])
+      4'h0:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23091;
+      4'h1:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23126;
+      4'h2:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23159;
+      4'h3:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23192;
+      4'h4:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23225;
+      4'h5:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23258;
+      4'h6:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23291;
+      4'h7:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23324;
+      4'h8:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23357;
+      4'h9:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23390;
+      4'hA:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23423;
+      4'hB:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23456;
+      4'hC:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23489;
+      4'hD:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23522;
+      4'hE:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23555;
+      4'hF:
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
+	      result_lo__h23588;
+    endcase
+  end
+  always@(cache_rg_width_code or
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 or
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d753 or
+	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 or
+	  _theResult___snd__h10292 or
+	  cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624)
+  begin
+    case (cache_rg_width_code)
+      3'd0:
+	  _theResult___snd_fst__h23053 =
+	      IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713;
+      3'd1:
+	  _theResult___snd_fst__h23053 =
+	      IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d753;
+      3'b010:
+	  _theResult___snd_fst__h23053 =
+	      IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773;
+      3'd3: _theResult___snd_fst__h23053 = _theResult___snd__h10292;
+      3'b100:
+	  _theResult___snd_fst__h23053 =
+	      cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[63:0];
+      default: _theResult___snd_fst__h23053 = 64'd0;
     endcase
   end
   always@(cache_rg_addr or
@@ -5053,97 +5233,6 @@ module mkMMU_DCache(CLK,
 	  w1__h29543 =
 	      cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[63:0];
       default: w1__h29543 = 64'd0;
-    endcase
-  end
-  always@(cache_rg_addr or
-	  result_lo__h23091 or
-	  result_lo__h23126 or
-	  result_lo__h23159 or
-	  result_lo__h23192 or
-	  result_lo__h23225 or
-	  result_lo__h23258 or
-	  result_lo__h23291 or
-	  result_lo__h23324 or
-	  result_lo__h23357 or
-	  result_lo__h23390 or
-	  result_lo__h23423 or
-	  result_lo__h23456 or
-	  result_lo__h23489 or
-	  result_lo__h23522 or result_lo__h23555 or result_lo__h23588)
-  begin
-    case (cache_rg_addr[3:0])
-      4'h0:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23091;
-      4'h1:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23126;
-      4'h2:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23159;
-      4'h3:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23192;
-      4'h4:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23225;
-      4'h5:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23258;
-      4'h6:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23291;
-      4'h7:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23324;
-      4'h8:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23357;
-      4'h9:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23390;
-      4'hA:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23423;
-      4'hB:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23456;
-      4'hC:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23489;
-      4'hD:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23522;
-      4'hE:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23555;
-      4'hF:
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 =
-	      result_lo__h23588;
-    endcase
-  end
-  always@(cache_rg_width_code or
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713 or
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d753 or
-	  IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773 or
-	  _theResult___snd__h10292 or
-	  cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624)
-  begin
-    case (cache_rg_width_code)
-      3'd0:
-	  _theResult___snd_fst__h23053 =
-	      IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d713;
-      3'd1:
-	  _theResult___snd_fst__h23053 =
-	      IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d753;
-      3'b010:
-	  _theResult___snd_fst__h23053 =
-	      IF_cache_rg_addr_75_BITS_3_TO_0_75_EQ_0x0_76_T_ETC___d773;
-      3'd3: _theResult___snd_fst__h23053 = _theResult___snd__h10292;
-      3'b100:
-	  _theResult___snd_fst__h23053 =
-	      cache_ram_word128_set_b_read__86_AND_cache_ram_ETC___d624[63:0];
-      default: _theResult___snd_fst__h23053 = 64'd0;
     endcase
   end
   always@(cache_rg_width_code or
@@ -9216,13 +9305,93 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_tlb_flush && !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h49510 = $stime;
+	  v__h49537 = $stime;
 	  #0;
 	end
-    v__h49504 = v__h49510 / 32'd10;
+    v__h49531 = v__h49537 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_tlb_flush && !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$display("%0d: %s.tlb_flush", v__h49504, "D_MMU_Cache");
+	$display("%0d: %s.tlb_flush", v__h49531, "D_MMU_Cache");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113)
+	begin
+	  v__h47771 = $stime;
+	  #0;
+	end
+    v__h47765 = v__h47771 / 32'd10;
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113)
+	$write("%0d: %m.req: op:", v__h47765);
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_op == 2'd0)
+	$write("CACHE_LD");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_op == 2'd1)
+	$write("CACHE_ST");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_op != 2'd0 &&
+	  req_op != 2'd1)
+	$write("CACHE_AMO");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113)
+	$write(" f3:%0d addr:0x%0h st_value:0x%0h",
+	       req_width_code,
+	       req_addr,
+	       req_st_value,
+	       "\n");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113)
+	$write("    priv:");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_priv == 2'b0)
+	$write("U");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_priv == 2'b01)
+	$write("S");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_priv == 2'b11)
+	$write("M");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
+	  req_priv != 2'b0 &&
+	  req_priv != 2'b01 &&
+	  req_priv != 2'b11)
+	$write("RESERVED");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113)
+	$write(" sstatus_SUM:%0d mstatus_MXR:%0d satp:0x%0h",
+	       req_sstatus_SUM,
+	       req_mstatus_MXR,
+	       req_satp,
+	       "\n");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  !cache_cfg_verbosity_read__12_ULE_1___d113)
+	$display("    amo_funct5 = 0x%0h", req_amo_funct5);
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cache_do_req &&
+	  cache_w_req_width_code_wget__815_EQ_0b0_836_OR_ETC___d1877)
+	$display("    fa_req_ram_B tagCSet [0x%0x] word128_set [0x%0d]",
+		 req_addr[11:6],
+		 req_addr[11:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_master_xactor_ug_master_u_ar_warnDoDrop)
 	$display("WARNING: dropping from Source that can't be dropped from");
