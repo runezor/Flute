@@ -763,7 +763,7 @@ module mkCPU (CPU_IFC);
    // imem_rl_fetch_next_32b is in CPU_Fetch_C.bsv, and calls imem32.req (near_mem.imem_req).
    // fa_restart calls stageF.enq which also calls imem.req which calls imem32.req.
    // But cond_i32_odd_fetch_next should make these rules mutually exclusive; why doesn't bsc realize this?
-   (* mutually_exclusive = "imem_rl_fetch_next_32b, rl_pipe" *)
+   (* conflict_free = "imem_rl_fetch_next_32b, rl_pipe" *)
 `endif
 `endif
 
