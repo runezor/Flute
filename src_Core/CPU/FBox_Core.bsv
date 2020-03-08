@@ -1111,7 +1111,6 @@ module mkFBox_Core (FBox_Core_IFC);
          res = 0;  // note: just ain't possible
 
       let fcsr    = exception_to_fcsr( e );
-      fa_driveResponse (res, fcsr);
       resultR     <= tagged Valid (tuple2 (res, fcsr));
       stateR      <= FBOX_RSP;
    endrule
