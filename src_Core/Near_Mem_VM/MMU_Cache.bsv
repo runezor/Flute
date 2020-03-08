@@ -1928,6 +1928,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       Wire#(Bit#(1)) w_req_mstatus_MXR <- mkWire;
       Wire#(WordXL) w_req_satp <- mkWire;
 
+   (* mutually_exclusive = "do_req, rl_cache_refill_rsps_loop" *)
+   (* mutually_exclusive = "do_req, rl_rereq" *)
+   (* mutually_exclusive = "do_req, rl_start_cache_refill" *)
    rule do_req (   (! resetting)
 		&& (! flush_called));
       let op = w_req_op;
