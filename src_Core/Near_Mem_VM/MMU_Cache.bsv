@@ -491,7 +491,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Bool resetting = f_reset_reqs.notEmpty;
    FIFOF #(Requestor) f_reset_rsps <- mkFIFOF;
 
-   PulseWire flush_called <- mkPulseWire();
+   RWire #(Requestor) rw_reset_req <- mkRWire;
+   PulseWire pw_tlb_flush_req <- mkPulseWire;
 
    // Fabric request/response
    AXI4_Master_Xactor#(mID, Wd_Addr, Wd_Data,
@@ -1931,8 +1932,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    (* mutually_exclusive = "do_req, rl_cache_refill_rsps_loop" *)
    (* mutually_exclusive = "do_req, rl_rereq" *)
    (* mutually_exclusive = "do_req, rl_start_cache_refill" *)
-   rule do_req (   (! resetting)
-		&& (! flush_called));
+   (* mutually_exclusive = "do_req, do_reset_req" *)
+   (* mutually_exclusive = "do_req, do_tlb_flush" *)
+   rule do_req (! resetting);
       let op = w_req_op;
       let width_code = w_req_width_code;
       let is_unsigned = w_req_is_unsigned;
@@ -1992,6 +1994,23 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       end
    endrule
 
+   (* fire_when_enabled *)
+   rule do_reset_req (rw_reset_req.wget matches tagged Valid .req);
+      f_reset_reqs.enq (req);
+   endrule
+
+   (* no_implicit_conditions, fire_when_enabled *)
+   rule do_tlb_flush if (pw_tlb_flush_req);
+`ifdef ISA_PRIV_S
+      tlb.flush;
+      rg_state <= MODULE_READY;
+      if (cfg_verbosity > 1)
+	 $display ("%0d: %s.tlb_flush", cur_cycle, d_or_i);
+`else
+      noAction;
+`endif
+   endrule
+
    // ================================================================
    // INTERFACE
 
@@ -2001,8 +2020,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    interface Server server_reset;
       interface Put request;
-	 method Action put (Token t);
-	    f_reset_reqs.enq (REQUESTOR_RESET_IFC);
+	 method Action put (Token t) if (f_reset_reqs.notFull);
+	    rw_reset_req.wset (REQUESTOR_RESET_IFC);
 	 endmethod
       endinterface
       interface Get response;
@@ -2076,9 +2095,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Flush request/response
    interface Server  server_flush;
       interface Put  request;
-	 method Action  put (Token t);
-	    f_reset_reqs.enq (REQUESTOR_FLUSH_IFC);
-            flush_called.send;
+	 method Action  put (Token t) if (f_reset_reqs.notFull);
+	    rw_reset_req.wset (REQUESTOR_FLUSH_IFC);
 	 endmethod
       endinterface
       interface Get  response;
@@ -2091,15 +2109,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    // TLB flush
    method Action tlb_flush;
-`ifdef ISA_PRIV_S
-      tlb.flush;
-      rg_state <= MODULE_READY;
-      flush_called.send;
-      if (cfg_verbosity > 1)
-	 $display ("%0d: %s.tlb_flush", cur_cycle, d_or_i);
-`else
-      noAction;
-`endif
+      pw_tlb_flush_req.send;
    endmethod
 
    // Fabric interface
