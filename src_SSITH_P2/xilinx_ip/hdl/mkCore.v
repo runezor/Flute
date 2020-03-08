@@ -2643,8 +2643,8 @@ module mkCore(CLK,
        MUX_activeSource_1$write_1__VAL_2,
        MUX_activeSource_1_1_0$write_1__SEL_1,
        MUX_activeSource_1_1_0$write_1__SEL_2,
+       MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
-       MUX_activeSource_1_1_1_1$write_1__SEL_3,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
        MUX_activeSource_1_1_2$write_1__VAL_1,
        MUX_flitToSink_0$wset_1__SEL_1,
@@ -2708,32 +2708,32 @@ module mkCore(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [63 : 0] v__h49191;
-  reg [63 : 0] v__h48580;
-  reg [63 : 0] v__h53200;
-  reg [63 : 0] v__h52589;
-  reg [63 : 0] v__h83136;
-  reg [63 : 0] v__h82525;
-  reg [63 : 0] v__h86029;
-  reg [63 : 0] v__h85418;
-  reg [63 : 0] v__h63895;
-  reg [63 : 0] v__h63514;
-  reg [63 : 0] v__h65965;
-  reg [63 : 0] v__h65584;
-  reg [63 : 0] v__h67864;
-  reg [63 : 0] v__h67483;
-  reg [63 : 0] v__h95309;
-  reg [63 : 0] v__h94928;
-  reg [63 : 0] v__h97800;
-  reg [63 : 0] v__h97419;
-  reg [63 : 0] v__h100110;
-  reg [63 : 0] v__h99729;
-  reg [31 : 0] v__h21083;
-  reg [31 : 0] v__h21261;
-  reg [31 : 0] v__h21627;
-  reg [31 : 0] v__h21077;
-  reg [31 : 0] v__h21255;
-  reg [31 : 0] v__h21621;
+  reg [63 : 0] v__h49196;
+  reg [63 : 0] v__h48585;
+  reg [63 : 0] v__h53205;
+  reg [63 : 0] v__h52594;
+  reg [63 : 0] v__h83141;
+  reg [63 : 0] v__h82530;
+  reg [63 : 0] v__h86034;
+  reg [63 : 0] v__h85423;
+  reg [63 : 0] v__h63900;
+  reg [63 : 0] v__h63519;
+  reg [63 : 0] v__h65970;
+  reg [63 : 0] v__h65589;
+  reg [63 : 0] v__h67869;
+  reg [63 : 0] v__h67488;
+  reg [63 : 0] v__h95314;
+  reg [63 : 0] v__h94933;
+  reg [63 : 0] v__h97805;
+  reg [63 : 0] v__h97424;
+  reg [63 : 0] v__h100115;
+  reg [63 : 0] v__h99734;
+  reg [31 : 0] v__h21088;
+  reg [31 : 0] v__h21266;
+  reg [31 : 0] v__h21632;
+  reg [31 : 0] v__h21082;
+  reg [31 : 0] v__h21260;
+  reg [31 : 0] v__h21626;
   // synopsys translate_on
 
   // remaining internal signals
@@ -2741,49 +2741,49 @@ module mkCore(CLK,
 		tagController_tmp_shimMaster_awff_rvport1__re_ETC__q2;
   wire [72 : 0] tagController_tmp_shimMaster_wff_rvport1__rea_ETC__q3,
 		tagController_tmp_shimSlave_rff_rvport1__read_ETC__q1;
-  wire [63 : 0] aw_awaddr__h10565,
-		tmp__h10348,
-		tmp__h8123,
-		v_araddr__h15314,
-		x__h35981,
-		x__h36006,
-		x__h38789,
-		x__h38814,
-		x__h70440,
-		x__h70465,
-		x__h72922,
-		x__h72947,
-		x__h7964;
-  wire [39 : 0] x__h10597;
-  wire [8 : 0] x_port1__read__h71569, x_port1__read__h74033;
-  wire [7 : 0] arlen__h15298, v_arlen__h15315;
-  wire [5 : 0] v_arid__h15313;
-  wire [4 : 0] a_awid__h37141,
-	       a_awid__h39906,
-	       fatReq_arid__h71008,
-	       fatReq_arid__h73475,
+  wire [63 : 0] aw_awaddr__h10570,
+		tmp__h10353,
+		tmp__h8128,
+		v_araddr__h15319,
+		x__h35986,
+		x__h36011,
+		x__h38794,
+		x__h38819,
+		x__h70445,
+		x__h70470,
+		x__h72927,
+		x__h72952,
+		x__h7969;
+  wire [39 : 0] x__h10602;
+  wire [8 : 0] x_port1__read__h71574, x_port1__read__h74038;
+  wire [7 : 0] arlen__h15303, v_arlen__h15320;
+  wire [5 : 0] v_arid__h15318;
+  wire [4 : 0] a_awid__h37146,
+	       a_awid__h39911,
+	       fatReq_arid__h71013,
+	       fatReq_arid__h73480,
 	       tagController_tmp_ug_slave_u_b_peekWirewget_B_ETC__q26,
 	       tagController_tmp_ug_slave_u_r_peekWirewget_B_ETC__q25;
   wire [3 : 0] _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296,
-	       arcache__h15302,
-	       x__h10640,
-	       x__h12374,
-	       x__h12386,
-	       x__h12398,
-	       x__h12410,
-	       x__h12422,
-	       x__h12434,
-	       x__h12446,
-	       x__h13970,
-	       x__h15378,
-	       y__h12375,
-	       y__h12387,
-	       y__h12399,
-	       y__h12411,
-	       y__h12423,
-	       y__h12435,
-	       y__h12447;
-  wire [2 : 0] aw_awsize_val__h12304, v_arsize_val__h15360;
+	       arcache__h15307,
+	       x__h10645,
+	       x__h12379,
+	       x__h12391,
+	       x__h12403,
+	       x__h12415,
+	       x__h12427,
+	       x__h12439,
+	       x__h12451,
+	       x__h13975,
+	       x__h15383,
+	       y__h12380,
+	       y__h12392,
+	       y__h12404,
+	       y__h12416,
+	       y__h12428,
+	       y__h12440,
+	       y__h12452;
+  wire [2 : 0] aw_awsize_val__h12309, v_arsize_val__h15365;
   wire [1 : 0] IF_IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dm_ETC___d1162,
 	       IF_IF_merged_1_flitLeft_017_EQ_0_018_THEN_debu_ETC___d1267,
 	       IF_cpu_dmem_master_ar_araddr__799_BITS_63_TO_4_ETC___d1825,
@@ -2802,12 +2802,12 @@ module mkCore(CLK,
 	       SEXT_arbiter_1_lastSelect__q10,
 	       SEXT_arbiter_firstHot__q5,
 	       SEXT_arbiter_lastSelect__q6,
-	       SEXT_x1661__q18,
-	       SEXT_x2196__q13,
-	       SEXT_x2230__q14,
-	       SEXT_x3606__q23,
-	       SEXT_x3640__q24,
-	       SEXT_x7710__q8;
+	       SEXT_x1666__q18,
+	       SEXT_x2201__q13,
+	       SEXT_x2235__q14,
+	       SEXT_x3611__q23,
+	       SEXT_x3645__q24,
+	       SEXT_x7715__q8;
   wire IF_NOT_ifcs_0_1_innerRoute_first__049_BIT_1_05_ETC___d2071,
        IF_NOT_ifcs_0_innerRoute_first__389_BIT_1_398__ETC___d1411,
        IF_NOT_ifcs_1_1_innerRoute_first__078_BIT_1_08_ETC___d2087,
@@ -2881,76 +2881,76 @@ module mkCore(CLK,
        state_1_626_AND_activeSource_1_2_781_782_AND_i_ETC___d1784,
        state_436_AND_activeSource_0_509_510_AND_ifcs__ETC___d1512,
        state_436_AND_activeSource_1_553_554_AND_ifcs__ETC___d1556,
-       x__h47183,
-       x__h47286,
-       x__h47651,
-       x__h47710,
-       x__h47792,
-       x__h61375,
-       x__h61377,
-       x__h61526,
-       x__h61528,
-       x__h61662,
-       x__h61664,
-       x__h62134,
-       x__h62136,
-       x__h62196,
-       x__h62230,
-       x__h62322,
-       x__h62324,
-       x__h62503,
-       x__h62505,
-       x__h81134,
-       x__h81237,
-       x__h81602,
-       x__h81661,
-       x__h81743,
-       x__h92785,
-       x__h92787,
-       x__h92936,
-       x__h92938,
-       x__h93072,
-       x__h93074,
-       x__h93544,
-       x__h93546,
-       x__h93606,
-       x__h93640,
-       x__h93732,
-       x__h93734,
-       x__h93913,
-       x__h93915,
-       y__h47184,
-       y__h47287,
-       y__h47652,
-       y__h47793,
-       y__h61376,
-       y__h61378,
-       y__h61527,
-       y__h61529,
-       y__h61663,
-       y__h61665,
-       y__h62135,
-       y__h62137,
-       y__h62323,
-       y__h62325,
-       y__h62504,
-       y__h62506,
-       y__h81135,
-       y__h81238,
-       y__h81603,
-       y__h81744,
-       y__h92786,
-       y__h92788,
-       y__h92937,
-       y__h92939,
-       y__h93073,
-       y__h93075,
-       y__h93545,
-       y__h93547,
-       y__h93733,
-       y__h93735,
-       y__h93914,
-       y__h93916;
+       x__h47188,
+       x__h47291,
+       x__h47656,
+       x__h47715,
+       x__h47797,
+       x__h61380,
+       x__h61382,
+       x__h61531,
+       x__h61533,
+       x__h61667,
+       x__h61669,
+       x__h62139,
+       x__h62141,
+       x__h62201,
+       x__h62235,
+       x__h62327,
+       x__h62329,
+       x__h62508,
+       x__h62510,
+       x__h81139,
+       x__h81242,
+       x__h81607,
+       x__h81666,
+       x__h81748,
+       x__h92790,
+       x__h92792,
+       x__h92941,
+       x__h92943,
+       x__h93077,
+       x__h93079,
+       x__h93549,
+       x__h93551,
+       x__h93611,
+       x__h93645,
+       x__h93737,
+       x__h93739,
+       x__h93918,
+       x__h93920,
+       y__h47189,
+       y__h47292,
+       y__h47657,
+       y__h47798,
+       y__h61381,
+       y__h61383,
+       y__h61532,
+       y__h61534,
+       y__h61668,
+       y__h61670,
+       y__h62140,
+       y__h62142,
+       y__h62328,
+       y__h62330,
+       y__h62509,
+       y__h62511,
+       y__h81140,
+       y__h81243,
+       y__h81608,
+       y__h81749,
+       y__h92791,
+       y__h92793,
+       y__h92942,
+       y__h92944,
+       y__h93078,
+       y__h93080,
+       y__h93550,
+       y__h93552,
+       y__h93738,
+       y__h93740,
+       y__h93919,
+       y__h93921;
 
   // action method set_verbosity
   assign RDY_set_verbosity = 1'd1 ;
@@ -3565,59 +3565,74 @@ module mkCore(CLK,
 			      .master_rready(debug_module$master_rready));
 
   // submodule delay_shim_arff
-  FIFO1 #(.width(32'd98), .guarded(32'd1)) delay_shim_arff(.RST(RST_N),
-							   .CLK(CLK),
-							   .D_IN(delay_shim_arff$D_IN),
-							   .ENQ(delay_shim_arff$ENQ),
-							   .DEQ(delay_shim_arff$DEQ),
-							   .CLR(delay_shim_arff$CLR),
-							   .D_OUT(delay_shim_arff$D_OUT),
-							   .FULL_N(delay_shim_arff$FULL_N),
-							   .EMPTY_N(delay_shim_arff$EMPTY_N));
+  SizedFIFO #(.p1width(32'd98),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_arff(.RST(RST_N),
+					       .CLK(CLK),
+					       .D_IN(delay_shim_arff$D_IN),
+					       .ENQ(delay_shim_arff$ENQ),
+					       .DEQ(delay_shim_arff$DEQ),
+					       .CLR(delay_shim_arff$CLR),
+					       .D_OUT(delay_shim_arff$D_OUT),
+					       .FULL_N(delay_shim_arff$FULL_N),
+					       .EMPTY_N(delay_shim_arff$EMPTY_N));
 
   // submodule delay_shim_awff
-  FIFO1 #(.width(32'd98), .guarded(32'd1)) delay_shim_awff(.RST(RST_N),
-							   .CLK(CLK),
-							   .D_IN(delay_shim_awff$D_IN),
-							   .ENQ(delay_shim_awff$ENQ),
-							   .DEQ(delay_shim_awff$DEQ),
-							   .CLR(delay_shim_awff$CLR),
-							   .D_OUT(delay_shim_awff$D_OUT),
-							   .FULL_N(delay_shim_awff$FULL_N),
-							   .EMPTY_N(delay_shim_awff$EMPTY_N));
+  SizedFIFO #(.p1width(32'd98),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_awff(.RST(RST_N),
+					       .CLK(CLK),
+					       .D_IN(delay_shim_awff$D_IN),
+					       .ENQ(delay_shim_awff$ENQ),
+					       .DEQ(delay_shim_awff$DEQ),
+					       .CLR(delay_shim_awff$CLR),
+					       .D_OUT(delay_shim_awff$D_OUT),
+					       .FULL_N(delay_shim_awff$FULL_N),
+					       .EMPTY_N(delay_shim_awff$EMPTY_N));
 
   // submodule delay_shim_bff
-  FIFO1 #(.width(32'd7), .guarded(32'd1)) delay_shim_bff(.RST(RST_N),
-							 .CLK(CLK),
-							 .D_IN(delay_shim_bff$D_IN),
-							 .ENQ(delay_shim_bff$ENQ),
-							 .DEQ(delay_shim_bff$DEQ),
-							 .CLR(delay_shim_bff$CLR),
-							 .D_OUT(delay_shim_bff$D_OUT),
-							 .FULL_N(delay_shim_bff$FULL_N),
-							 .EMPTY_N(delay_shim_bff$EMPTY_N));
+  SizedFIFO #(.p1width(32'd7),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_bff(.RST(RST_N),
+					      .CLK(CLK),
+					      .D_IN(delay_shim_bff$D_IN),
+					      .ENQ(delay_shim_bff$ENQ),
+					      .DEQ(delay_shim_bff$DEQ),
+					      .CLR(delay_shim_bff$CLR),
+					      .D_OUT(delay_shim_bff$D_OUT),
+					      .FULL_N(delay_shim_bff$FULL_N),
+					      .EMPTY_N(delay_shim_bff$EMPTY_N));
 
   // submodule delay_shim_rff
-  FIFO1 #(.width(32'd73), .guarded(32'd1)) delay_shim_rff(.RST(RST_N),
-							  .CLK(CLK),
-							  .D_IN(delay_shim_rff$D_IN),
-							  .ENQ(delay_shim_rff$ENQ),
-							  .DEQ(delay_shim_rff$DEQ),
-							  .CLR(delay_shim_rff$CLR),
-							  .D_OUT(delay_shim_rff$D_OUT),
-							  .FULL_N(delay_shim_rff$FULL_N),
-							  .EMPTY_N(delay_shim_rff$EMPTY_N));
+  SizedFIFO #(.p1width(32'd73),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_rff(.RST(RST_N),
+					      .CLK(CLK),
+					      .D_IN(delay_shim_rff$D_IN),
+					      .ENQ(delay_shim_rff$ENQ),
+					      .DEQ(delay_shim_rff$DEQ),
+					      .CLR(delay_shim_rff$CLR),
+					      .D_OUT(delay_shim_rff$D_OUT),
+					      .FULL_N(delay_shim_rff$FULL_N),
+					      .EMPTY_N(delay_shim_rff$EMPTY_N));
 
   // submodule delay_shim_wff
-  FIFO1 #(.width(32'd74), .guarded(32'd1)) delay_shim_wff(.RST(RST_N),
-							  .CLK(CLK),
-							  .D_IN(delay_shim_wff$D_IN),
-							  .ENQ(delay_shim_wff$ENQ),
-							  .DEQ(delay_shim_wff$DEQ),
-							  .CLR(delay_shim_wff$CLR),
-							  .D_OUT(delay_shim_wff$D_OUT),
-							  .FULL_N(delay_shim_wff$FULL_N),
-							  .EMPTY_N(delay_shim_wff$EMPTY_N));
+  SizedFIFO #(.p1width(32'd74),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_wff(.RST(RST_N),
+					      .CLK(CLK),
+					      .D_IN(delay_shim_wff$D_IN),
+					      .ENQ(delay_shim_wff$ENQ),
+					      .DEQ(delay_shim_wff$DEQ),
+					      .CLR(delay_shim_wff$CLR),
+					      .D_OUT(delay_shim_wff$D_OUT),
+					      .FULL_N(delay_shim_wff$FULL_N),
+					      .EMPTY_N(delay_shim_wff$EMPTY_N));
 
   // submodule f_reset_reqs
   FIFO2 #(.width(32'd1), .guarded(32'd1)) f_reset_reqs(.RST(RST_N),
@@ -4736,17 +4751,6 @@ module mkCore(CLK,
 	     cpu$imem_master_rready ;
   assign WILL_FIRE_RL_cpu_imem_r_dropFlit = CAN_FIRE_RL_cpu_imem_r_dropFlit ;
 
-  // rule RL_mkConnectionGetPut_3
-  assign CAN_FIRE_RL_mkConnectionGetPut_3 =
-	     cpu$imem_master_arvalid && delay_shim_arff$FULL_N ;
-  assign WILL_FIRE_RL_mkConnectionGetPut_3 =
-	     CAN_FIRE_RL_mkConnectionGetPut_3 &&
-	     !WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
-
-  // rule RL_cpu_imem_ar_forwardReady
-  assign CAN_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
-  assign WILL_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
-
   // rule RL_cpu_imem_r_buffer_enqueue
   assign CAN_FIRE_RL_cpu_imem_r_buffer_enqueue =
 	     CAN_FIRE_RL_mkConnectionGetPut_4 &&
@@ -5762,6 +5766,13 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_msNoSynth_0_r_dropFlit =
 	     CAN_FIRE_RL_msNoSynth_0_r_dropFlit ;
 
+  // rule RL_mkConnectionGetPut_3
+  assign CAN_FIRE_RL_mkConnectionGetPut_3 =
+	     cpu$imem_master_arvalid && delay_shim_arff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut_3 =
+	     CAN_FIRE_RL_mkConnectionGetPut_3 &&
+	     !WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
+
   // rule RL_ClientServerRequest
   assign CAN_FIRE_RL_ClientServerRequest =
 	     debug_module$RDY_hart0_client_run_halt_request_get &&
@@ -5783,6 +5794,10 @@ module mkCore(CLK,
   // rule RL_rl_relay_external_interrupts
   assign CAN_FIRE_RL_rl_relay_external_interrupts = 1'd1 ;
   assign WILL_FIRE_RL_rl_relay_external_interrupts = 1'd1 ;
+
+  // rule RL_cpu_imem_ar_forwardReady
+  assign CAN_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
+  assign WILL_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
 
   // rule RL_msNoSynth_0_r_buffer_enqueue
   assign CAN_FIRE_RL_msNoSynth_0_r_buffer_enqueue =
@@ -5826,8 +5841,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
-	     x_port1__read__h71569 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h71569 != 9'd1 || cpu$dmem_master_arvalid) ;
+	     x_port1__read__h71574 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h71574 != 9'd1 || cpu$dmem_master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
 
@@ -6007,8 +6022,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
-	     x_port1__read__h74033 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h74033 != 9'd1 || debug_module$master_arvalid) ;
+	     x_port1__read__h74038 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h74038 != 9'd1 || debug_module$master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
 
@@ -6130,9 +6145,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
-	     debug_module$RDY_hart0_reset_client_request_get &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
+	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
@@ -6162,7 +6177,7 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_0$write_1__SEL_2 =
 	     WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
 	     !ifcs_1_1_rspBack$D_OUT[1] ;
-  assign MUX_activeSource_1_1_1_1$write_1__SEL_3 =
+  assign MUX_activeSource_1_1_0$write_1__SEL_3 =
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_flitToSink_0$wset_1__SEL_1 =
@@ -6417,7 +6432,7 @@ module mkCore(CLK,
   assign MUX_split_1_flitLeft$write_1__VAL_1 = split_1_flitLeft - 8'd1 ;
   assign MUX_split_2_flitLeft$write_1__VAL_1 = split_2_flitLeft - 8'd1 ;
   assign MUX_tagController_tmp_tagCon$cache_request_put_1__VAL_1 =
-	     { tmp__h8123[39:3],
+	     { tmp__h8128[39:3],
 	       4'd0,
 	       tagController_tmp_awreqff$D_OUT[97:93],
 	       3'd1,
@@ -6513,7 +6528,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_0_forwardRsp ;
   assign msNoSynth_0_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp &&
-	     x_port1__read__h71569 == 9'd1 ||
+	     x_port1__read__h71574 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_0_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit ;
@@ -6536,7 +6551,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_forwardRsp ;
   assign msNoSynth_1_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp &&
-	     x_port1__read__h74033 == 9'd1 ||
+	     x_port1__read__h74038 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_1_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_firstFlit ;
@@ -6872,11 +6887,11 @@ module mkCore(CLK,
   assign tagController_tmp_shimMaster_awff_rv$port0__write_1 =
 	     { 1'd1,
 	       tagController_tmp_tagCon$memory_request_get[100:95],
-	       aw_awaddr__h10565,
+	       aw_awaddr__h10570,
 	       tagController_tmp_tagCon$memory_request_get[7:0],
-	       aw_awsize_val__h12304,
+	       aw_awsize_val__h12309,
 	       3'd2,
-	       x__h13970,
+	       x__h13975,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_awff_rv$port1__read =
 	     tagController_tmp_shimMaster_awff_rv$EN_port0__write ?
@@ -6919,12 +6934,12 @@ module mkCore(CLK,
 	     tagController_tmp_tagCon$memory_request_get[93:92] != 2'd1 ;
   assign tagController_tmp_shimMaster_arff_rv$port0__write_1 =
 	     { 1'd1,
-	       v_arid__h15313,
-	       v_araddr__h15314,
-	       v_arlen__h15315,
-	       v_arsize_val__h15360,
+	       v_arid__h15318,
+	       v_araddr__h15319,
+	       v_arlen__h15320,
+	       v_arsize_val__h15365,
 	       3'd2,
-	       x__h15378,
+	       x__h15383,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_arff_rv$port1__read =
 	     tagController_tmp_shimMaster_arff_rv$EN_port0__write ?
@@ -7022,11 +7037,11 @@ module mkCore(CLK,
   assign ifcs_0_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, cpu$dmem_master_arlen } + 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h71569 - 9'd1 ;
+	     x_port1__read__h71574 - 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ?
 	       ifcs_0_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h71569 ;
+	       x_port1__read__h71574 ;
   assign ifcs_1_1_noRoute_currentReq$port0__write_1 =
 	     { debug_module$master_arid,
 	       debug_module$master_araddr,
@@ -7045,11 +7060,11 @@ module mkCore(CLK,
   assign ifcs_1_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, debug_module$master_arlen } + 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h74033 - 9'd1 ;
+	     x_port1__read__h74038 - 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ?
 	       ifcs_1_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h74033 ;
+	       x_port1__read__h74038 ;
 
   // register activeSource_0
   assign activeSource_0$D_IN =
@@ -7089,14 +7104,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_0$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
+	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      MUX_activeSource_1_1_1_1$write_1__SEL_3:
+      MUX_activeSource_1_1_0$write_1__SEL_3:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       default: activeSource_1_1_0$D_IN = 1'bx /* unspecified value */ ;
     endcase
@@ -7117,14 +7132,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_1_1$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
+	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      MUX_activeSource_1_1_1_1$write_1__SEL_3:
+      MUX_activeSource_1_1_0$write_1__SEL_3:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       default: activeSource_1_1_1_1$D_IN = 1'bx /* unspecified value */ ;
     endcase
@@ -7141,14 +7156,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_2$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
+	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      MUX_activeSource_1_1_1_1$write_1__SEL_3:
+      MUX_activeSource_1_1_0$write_1__SEL_3:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       default: activeSource_1_1_2$D_IN = 1'bx /* unspecified value */ ;
     endcase
@@ -7413,7 +7428,7 @@ module mkCore(CLK,
   assign tagController_tmp_addrOffset$D_IN =
 	     tagController_tmp_shimSlave_wff_rv$port1__read[1] ?
 	       64'd0 :
-	       x__h7964 ;
+	       x__h7969 ;
   assign tagController_tmp_addrOffset$EN =
 	     WILL_FIRE_RL_tagController_tmp_passCacheWrite ;
 
@@ -7769,7 +7784,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerReq
   assign ifcs_0_1_innerReq$D_IN =
-	     { fatReq_arid__h71008,
+	     { fatReq_arid__h71013,
 	       cpu$dmem_master_araddr,
 	       cpu$dmem_master_arlen,
 	       cpu$dmem_master_arsize,
@@ -7805,7 +7820,7 @@ module mkCore(CLK,
 	     { ifcs_0_1_noRoute_currentReq$port1__read[96:93],
 	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       2'd3,
-	       x_port1__read__h71569 == 9'd1,
+	       x_port1__read__h71574 == 9'd1,
 	       1'bx /* unspecified value */  } ;
   assign ifcs_0_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
   assign ifcs_0_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse ;
@@ -7835,7 +7850,7 @@ module mkCore(CLK,
   // submodule ifcs_0_innerReq
   assign ifcs_0_innerReq$D_IN =
 	     { merged_0_flitLeft != 8'd0,
-	       a_awid__h37141,
+	       a_awid__h37146,
 	       cpu$dmem_master_awaddr,
 	       cpu$dmem_master_awlen,
 	       cpu$dmem_master_awsize,
@@ -7900,7 +7915,7 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerReq
   assign ifcs_1_1_innerReq$D_IN =
-	     { fatReq_arid__h73475,
+	     { fatReq_arid__h73480,
 	       debug_module$master_araddr,
 	       debug_module$master_arlen,
 	       debug_module$master_arsize,
@@ -7936,7 +7951,7 @@ module mkCore(CLK,
 	     { ifcs_1_1_noRoute_currentReq$port1__read[96:93],
 	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       2'd3,
-	       x_port1__read__h74033 == 9'd1,
+	       x_port1__read__h74038 == 9'd1,
 	       1'bx /* unspecified value */  } ;
   assign ifcs_1_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
   assign ifcs_1_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse ;
@@ -7967,7 +7982,7 @@ module mkCore(CLK,
   // submodule ifcs_1_innerReq
   assign ifcs_1_innerReq$D_IN =
 	     { merged_1_flitLeft != 8'd0,
-	       a_awid__h39906,
+	       a_awid__h39911,
 	       debug_module$master_awaddr,
 	       debug_module$master_awlen,
 	       debug_module$master_awsize,
@@ -8597,57 +8612,57 @@ module mkCore(CLK,
 	     (SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ||
 	      SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ||
 	      SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304) ?
-	       x__h93544 | y__h93545 :
+	       x__h93549 | y__h93550 :
 	       arbiter_1_1_lastSelect ;
   assign IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2329 =
 	     (SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ||
 	      SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ||
 	      SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304) ?
-	       x__h93732 | y__h93733 :
+	       x__h93737 | y__h93738 :
 	       arbiter_1_1_lastSelect_1 ;
   assign IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2335 =
 	     (SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ||
 	      SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ||
 	      SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304) ?
-	       x__h93913 | y__h93914 :
+	       x__h93918 | y__h93919 :
 	       arbiter_1_1_firstHot ;
   assign IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2123 =
 	     (SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 ||
 	      SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111) ?
-	       x__h81602 | y__h81603 :
+	       x__h81607 | y__h81608 :
 	       arbiter_1_lastSelect_2 ;
   assign IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2127 =
 	     (SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 ||
 	      SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111) ?
-	       x__h81743 | y__h81744 :
+	       x__h81748 | y__h81749 :
 	       arbiter_1_firstHot_1 ;
   assign IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1673 =
 	     (SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ||
 	      SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ||
 	      SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654) ?
-	       x__h62134 | y__h62135 :
+	       x__h62139 | y__h62140 :
 	       arbiter_1_lastSelect ;
   assign IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1679 =
 	     (SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ||
 	      SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ||
 	      SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654) ?
-	       x__h62322 | y__h62323 :
+	       x__h62327 | y__h62328 :
 	       arbiter_1_lastSelect_1 ;
   assign IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1685 =
 	     (SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ||
 	      SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ||
 	      SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654) ?
-	       x__h62503 | y__h62504 :
+	       x__h62508 | y__h62509 :
 	       arbiter_1_firstHot ;
   assign IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1463 =
 	     (SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 ||
 	      SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451) ?
-	       x__h47651 | y__h47652 :
+	       x__h47656 | y__h47657 :
 	       arbiter_lastSelect ;
   assign IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1467 =
 	     (SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 ||
 	      SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451) ?
-	       x__h47792 | y__h47793 :
+	       x__h47797 | y__h47798 :
 	       arbiter_firstHot ;
   assign IF_cpu_dmem_master_ar_araddr__799_BITS_63_TO_4_ETC___d1825 =
 	     (cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1813 ?
@@ -8691,11 +8706,11 @@ module mkCore(CLK,
 	     cpu$dmem_master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
   assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141 =
-	     x__h35981 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h35986 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1144 =
 	     cpu$dmem_master_awaddr < soc_map$m_plic_addr_range[127:64] ;
   assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1146 =
-	     x__h36006 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h36011 < soc_map$m_plic_addr_range[63:0] ;
   assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1150 =
 	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
 	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139 ||
@@ -8727,11 +8742,11 @@ module mkCore(CLK,
 	     debug_module$master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
   assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246 =
-	     x__h38789 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h38794 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1249 =
 	     debug_module$master_awaddr < soc_map$m_plic_addr_range[127:64] ;
   assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1251 =
-	     x__h38814 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h38819 < soc_map$m_plic_addr_range[63:0] ;
   assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1255 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
 	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244 ||
@@ -8768,51 +8783,51 @@ module mkCore(CLK,
   assign SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7 =
 	     {2{SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451}} ;
   assign SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304 =
-	     x__h93072 | y__h93073 ;
+	     x__h93077 | y__h93078 ;
   assign SEXT_arbiter_1_1_firstHot__q19 = {2{arbiter_1_1_firstHot}} ;
   assign SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 =
-	     x__h92936 | y__h92937 ;
+	     x__h92941 | y__h92942 ;
   assign SEXT_arbiter_1_1_lastSelect_1__q21 = {2{arbiter_1_1_lastSelect_1}} ;
   assign SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 =
-	     x__h92785 | y__h92786 ;
+	     x__h92790 | y__h92791 ;
   assign SEXT_arbiter_1_1_lastSelect__q20 = {2{arbiter_1_1_lastSelect}} ;
   assign SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111 =
-	     x__h81237 | y__h81238 ;
+	     x__h81242 | y__h81243 ;
   assign SEXT_arbiter_1_firstHot_1__q15 = {2{arbiter_1_firstHot_1}} ;
   assign SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 =
-	     x__h61662 | y__h61663 ;
+	     x__h61667 | y__h61668 ;
   assign SEXT_arbiter_1_firstHot__q9 = {2{arbiter_1_firstHot}} ;
   assign SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 =
-	     x__h61526 | y__h61527 ;
+	     x__h61531 | y__h61532 ;
   assign SEXT_arbiter_1_lastSelect_1__q11 = {2{arbiter_1_lastSelect_1}} ;
   assign SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 =
-	     x__h81134 | y__h81135 ;
+	     x__h81139 | y__h81140 ;
   assign SEXT_arbiter_1_lastSelect_2__q16 = {2{arbiter_1_lastSelect_2}} ;
   assign SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 =
-	     x__h61375 | y__h61376 ;
+	     x__h61380 | y__h61381 ;
   assign SEXT_arbiter_1_lastSelect__q10 = {2{arbiter_1_lastSelect}} ;
   assign SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451 =
-	     x__h47286 | y__h47287 ;
+	     x__h47291 | y__h47292 ;
   assign SEXT_arbiter_firstHot__q5 = {2{arbiter_firstHot}} ;
   assign SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 =
-	     x__h47183 | y__h47184 ;
+	     x__h47188 | y__h47189 ;
   assign SEXT_arbiter_lastSelect__q6 = {2{arbiter_lastSelect}} ;
-  assign SEXT_x1661__q18 = {2{x__h81661}} ;
-  assign SEXT_x2196__q13 = {2{x__h62196}} ;
-  assign SEXT_x2230__q14 = {2{x__h62230}} ;
-  assign SEXT_x3606__q23 = {2{x__h93606}} ;
-  assign SEXT_x3640__q24 = {2{x__h93640}} ;
-  assign SEXT_x7710__q8 = {2{x__h47710}} ;
+  assign SEXT_x1666__q18 = {2{x__h81666}} ;
+  assign SEXT_x2201__q13 = {2{x__h62201}} ;
+  assign SEXT_x2235__q14 = {2{x__h62235}} ;
+  assign SEXT_x3611__q23 = {2{x__h93611}} ;
+  assign SEXT_x3645__q24 = {2{x__h93645}} ;
+  assign SEXT_x7715__q8 = {2{x__h47715}} ;
   assign _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296 =
-	     x__h12374 + y__h12375 ;
-  assign a_awid__h37141 = { 1'd0, cpu$dmem_master_awid } ;
-  assign a_awid__h39906 = { 1'd1, debug_module$master_awid } ;
-  assign arcache__h15302 =
+	     x__h12379 + y__h12380 ;
+  assign a_awid__h37146 = { 1'd0, cpu$dmem_master_awid } ;
+  assign a_awid__h39911 = { 1'd1, debug_module$master_awid } ;
+  assign arcache__h15307 =
 	     tagController_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
-  assign arlen__h15298 =
+  assign arlen__h15303 =
 	     { 5'd0, tagController_tmp_tagCon$memory_request_get[5:3] } ;
-  assign aw_awaddr__h10565 = tmp__h10348 + { 60'd0, x__h10640 } ;
-  assign aw_awsize_val__h12304 =
+  assign aw_awaddr__h10570 = tmp__h10353 + { 60'd0, x__h10645 } ;
+  assign aw_awsize_val__h12309 =
 	     _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296[0] ?
 	       3'd0 :
 	       (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296[1] ?
@@ -8835,9 +8850,9 @@ module mkCore(CLK,
 	     !cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_p_ETC___d1807 &&
 	     cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1809 ;
   assign cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804 =
-	     x__h70440 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h70445 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1809 =
-	     x__h70465 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h70470 < soc_map$m_plic_addr_range[63:0] ;
   assign cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802 =
 	     cpu$dmem_master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
@@ -8856,16 +8871,16 @@ module mkCore(CLK,
 	     !debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899 &&
 	     debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901 ;
   assign debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896 =
-	     x__h72922 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h72927 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901 =
-	     x__h72947 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h72952 < soc_map$m_plic_addr_range[63:0] ;
   assign debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894 =
 	     debug_module$master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
   assign debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899 =
 	     debug_module$master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign fatReq_arid__h71008 = { 1'd0, cpu$dmem_master_arid } ;
-  assign fatReq_arid__h73475 = { 1'd1, debug_module$master_arid } ;
+  assign fatReq_arid__h71013 = { 1'd0, cpu$dmem_master_arid } ;
+  assign fatReq_arid__h73480 = { 1'd1, debug_module$master_arid } ;
   assign plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 =
 	     plic$RDY_server_reset_request_put &&
 	     cpu$RDY_hart0_server_reset_request_put &&
@@ -8975,27 +8990,27 @@ module mkCore(CLK,
 	     tagController_tmp_ug_slave_u_b_peekWire$wget[6:2] ;
   assign tagController_tmp_ug_slave_u_r_peekWirewget_B_ETC__q25 =
 	     tagController_tmp_ug_slave_u_r_peekWire$wget[72:68] ;
-  assign tmp__h10348 = { 24'd0, x__h10597 } ;
-  assign tmp__h8123 =
+  assign tmp__h10353 = { 24'd0, x__h10602 } ;
+  assign tmp__h8128 =
 	     tagController_tmp_awreqff$D_OUT[92:29] +
 	     tagController_tmp_addrOffset ;
-  assign v_araddr__h15314 =
+  assign v_araddr__h15319 =
 	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
-  assign v_arid__h15313 =
+  assign v_arid__h15318 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[100:95] :
 	       6'd0 ;
-  assign v_arlen__h15315 =
+  assign v_arlen__h15320 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arlen__h15298 :
+	       arlen__h15303 :
 	       8'd0 ;
-  assign v_arsize_val__h15360 =
+  assign v_arsize_val__h15365 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[2:0] :
 	       3'b0 ;
-  assign x__h10597 =
+  assign x__h10602 =
 	     { tagController_tmp_tagCon$memory_request_get[140:104], 3'd0 } ;
-  assign x__h10640 =
+  assign x__h10645 =
 	     tagController_tmp_tagCon$memory_request_get[81] ?
 	       4'd0 :
 	       (tagController_tmp_tagCon$memory_request_get[82] ?
@@ -9013,219 +9028,219 @@ module mkCore(CLK,
 				 (tagController_tmp_tagCon$memory_request_get[88] ?
 				    4'd7 :
 				    4'd8))))))) ;
-  assign x__h12374 = x__h12386 + y__h12387 ;
-  assign x__h12386 = x__h12398 + y__h12399 ;
-  assign x__h12398 = x__h12410 + y__h12411 ;
-  assign x__h12410 = x__h12422 + y__h12423 ;
-  assign x__h12422 = x__h12434 + y__h12435 ;
-  assign x__h12434 = x__h12446 + y__h12447 ;
-  assign x__h12446 =
+  assign x__h12379 = x__h12391 + y__h12392 ;
+  assign x__h12391 = x__h12403 + y__h12404 ;
+  assign x__h12403 = x__h12415 + y__h12416 ;
+  assign x__h12415 = x__h12427 + y__h12428 ;
+  assign x__h12427 = x__h12439 + y__h12440 ;
+  assign x__h12439 = x__h12451 + y__h12452 ;
+  assign x__h12451 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[88] } ;
-  assign x__h13970 =
+  assign x__h13975 =
 	     tagController_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
-  assign x__h15378 =
+  assign x__h15383 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arcache__h15302 :
+	       arcache__h15307 :
 	       4'd0 ;
-  assign x__h35981 =
+  assign x__h35986 =
 	     cpu$dmem_master_awaddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h36006 =
+  assign x__h36011 =
 	     cpu$dmem_master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h38789 =
+  assign x__h38794 =
 	     debug_module$master_awaddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h38814 =
+  assign x__h38819 =
 	     debug_module$master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h47183 =
+  assign x__h47188 =
 	     SEXT_arbiter_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h47286 =
+  assign x__h47291 =
 	     SEXT_arbiter_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h47651 =
+  assign x__h47656 =
 	     SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7[0] &
 	     arbiter_firstHot ;
-  assign x__h47710 =
+  assign x__h47715 =
 	     !SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451 &&
 	     SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 ;
-  assign x__h47792 = SEXT_x7710__q8[0] & arbiter_firstHot ;
-  assign x__h61375 = x__h61377 | y__h61378 ;
-  assign x__h61377 =
+  assign x__h47797 = SEXT_x7715__q8[0] & arbiter_firstHot ;
+  assign x__h61380 = x__h61382 | y__h61383 ;
+  assign x__h61382 =
 	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h61526 = x__h61528 | y__h61529 ;
-  assign x__h61528 =
+  assign x__h61531 = x__h61533 | y__h61534 ;
+  assign x__h61533 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h61662 = x__h61664 | y__h61665 ;
-  assign x__h61664 =
+  assign x__h61667 = x__h61669 | y__h61670 ;
+  assign x__h61669 =
 	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h62134 = x__h62136 | y__h62137 ;
-  assign x__h62136 =
+  assign x__h62139 = x__h62141 | y__h62142 ;
+  assign x__h62141 =
 	     SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12[0] &
 	     arbiter_1_firstHot ;
-  assign x__h62196 =
+  assign x__h62201 =
 	     !SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 &&
 	     SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ;
-  assign x__h62230 =
+  assign x__h62235 =
 	     !SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 &&
 	     !SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 &&
 	     SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ;
-  assign x__h62322 = x__h62324 | y__h62325 ;
-  assign x__h62324 = SEXT_x2196__q13[0] & arbiter_1_firstHot ;
-  assign x__h62503 = x__h62505 | y__h62506 ;
-  assign x__h62505 = SEXT_x2230__q14[0] & arbiter_1_firstHot ;
-  assign x__h70440 =
+  assign x__h62327 = x__h62329 | y__h62330 ;
+  assign x__h62329 = SEXT_x2201__q13[0] & arbiter_1_firstHot ;
+  assign x__h62508 = x__h62510 | y__h62511 ;
+  assign x__h62510 = SEXT_x2235__q14[0] & arbiter_1_firstHot ;
+  assign x__h70445 =
 	     cpu$dmem_master_araddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h70465 =
+  assign x__h70470 =
 	     cpu$dmem_master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h72922 =
+  assign x__h72927 =
 	     debug_module$master_araddr -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h72947 =
+  assign x__h72952 =
 	     debug_module$master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h7964 =
+  assign x__h7969 =
 	     tagController_tmp_addrOffset +
 	     (64'd1 << tagController_tmp_awreqff$D_OUT[20:18]) ;
-  assign x__h81134 =
+  assign x__h81139 =
 	     SEXT_arbiter_1_lastSelect_2__q16[0] &
 	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h81237 =
+  assign x__h81242 =
 	     SEXT_arbiter_1_firstHot_1__q15[0] &
 	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h81602 =
+  assign x__h81607 =
 	     SEXT_SEXT_arbiter_1_firstHot_1_103_104_BIT_0_1_ETC__q17[0] &
 	     arbiter_1_firstHot_1 ;
-  assign x__h81661 =
+  assign x__h81666 =
 	     !SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111 &&
 	     SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 ;
-  assign x__h81743 = SEXT_x1661__q18[0] & arbiter_1_firstHot_1 ;
-  assign x__h92785 = x__h92787 | y__h92788 ;
-  assign x__h92787 =
+  assign x__h81748 = SEXT_x1666__q18[0] & arbiter_1_firstHot_1 ;
+  assign x__h92790 = x__h92792 | y__h92793 ;
+  assign x__h92792 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h92936 = x__h92938 | y__h92939 ;
-  assign x__h92938 =
+  assign x__h92941 = x__h92943 | y__h92944 ;
+  assign x__h92943 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h93072 = x__h93074 | y__h93075 ;
-  assign x__h93074 =
+  assign x__h93077 = x__h93079 | y__h93080 ;
+  assign x__h93079 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h93544 = x__h93546 | y__h93547 ;
-  assign x__h93546 =
+  assign x__h93549 = x__h93551 | y__h93552 ;
+  assign x__h93551 =
 	     SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_firstHot ;
-  assign x__h93606 =
+  assign x__h93611 =
 	     !SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304 &&
 	     SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ;
-  assign x__h93640 =
+  assign x__h93645 =
 	     !SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 &&
 	     !SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304 &&
 	     SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ;
-  assign x__h93732 = x__h93734 | y__h93735 ;
-  assign x__h93734 = SEXT_x3606__q23[0] & arbiter_1_1_firstHot ;
-  assign x__h93913 = x__h93915 | y__h93916 ;
-  assign x__h93915 = SEXT_x3640__q24[0] & arbiter_1_1_firstHot ;
-  assign x_port1__read__h71569 =
+  assign x__h93737 = x__h93739 | y__h93740 ;
+  assign x__h93739 = SEXT_x3611__q23[0] & arbiter_1_1_firstHot ;
+  assign x__h93918 = x__h93920 | y__h93921 ;
+  assign x__h93920 = SEXT_x3645__q24[0] & arbiter_1_1_firstHot ;
+  assign x_port1__read__h71574 =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ?
 	       ifcs_0_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_0_1_noRoute_flitCount ;
-  assign x_port1__read__h74033 =
+  assign x_port1__read__h74038 =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ?
 	       ifcs_1_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_1_1_noRoute_flitCount ;
-  assign y__h12375 =
+  assign y__h12380 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[81] } ;
-  assign y__h12387 =
+  assign y__h12392 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[82] } ;
-  assign y__h12399 =
+  assign y__h12404 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[83] } ;
-  assign y__h12411 =
+  assign y__h12416 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[84] } ;
-  assign y__h12423 =
+  assign y__h12428 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[85] } ;
-  assign y__h12435 =
+  assign y__h12440 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[86] } ;
-  assign y__h12447 =
+  assign y__h12452 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[87] } ;
-  assign y__h47184 =
+  assign y__h47189 =
 	     SEXT_arbiter_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h47287 =
+  assign y__h47292 =
 	     SEXT_arbiter_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h47652 = SEXT_x7710__q8[0] & arbiter_lastSelect ;
-  assign y__h47793 =
+  assign y__h47657 = SEXT_x7715__q8[0] & arbiter_lastSelect ;
+  assign y__h47798 =
 	     SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7[0] &
 	     arbiter_lastSelect ;
-  assign y__h61376 =
+  assign y__h61381 =
 	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h61378 =
+  assign y__h61383 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h61527 =
+  assign y__h61532 =
 	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h61529 =
+  assign y__h61534 =
 	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h61663 =
+  assign y__h61668 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h61665 =
+  assign y__h61670 =
 	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h62135 = SEXT_x2230__q14[0] & arbiter_1_lastSelect ;
-  assign y__h62137 = SEXT_x2196__q13[0] & arbiter_1_lastSelect_1 ;
-  assign y__h62323 =
+  assign y__h62140 = SEXT_x2235__q14[0] & arbiter_1_lastSelect ;
+  assign y__h62142 = SEXT_x2201__q13[0] & arbiter_1_lastSelect_1 ;
+  assign y__h62328 =
 	     SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12[0] &
 	     arbiter_1_lastSelect ;
-  assign y__h62325 = SEXT_x2230__q14[0] & arbiter_1_lastSelect_1 ;
-  assign y__h62504 = SEXT_x2196__q13[0] & arbiter_1_lastSelect ;
-  assign y__h62506 =
+  assign y__h62330 = SEXT_x2235__q14[0] & arbiter_1_lastSelect_1 ;
+  assign y__h62509 = SEXT_x2201__q13[0] & arbiter_1_lastSelect ;
+  assign y__h62511 =
 	     SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12[0] &
 	     arbiter_1_lastSelect_1 ;
-  assign y__h81135 =
+  assign y__h81140 =
 	     SEXT_arbiter_1_firstHot_1__q15[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h81238 =
+  assign y__h81243 =
 	     SEXT_arbiter_1_lastSelect_2__q16[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h81603 = SEXT_x1661__q18[0] & arbiter_1_lastSelect_2 ;
-  assign y__h81744 =
+  assign y__h81608 = SEXT_x1666__q18[0] & arbiter_1_lastSelect_2 ;
+  assign y__h81749 =
 	     SEXT_SEXT_arbiter_1_firstHot_1_103_104_BIT_0_1_ETC__q17[0] &
 	     arbiter_1_lastSelect_2 ;
-  assign y__h92786 =
+  assign y__h92791 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h92788 =
+  assign y__h92793 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h92937 =
+  assign y__h92942 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h92939 =
+  assign y__h92944 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h93073 =
+  assign y__h93078 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h93075 =
+  assign y__h93080 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h93545 = SEXT_x3640__q24[0] & arbiter_1_1_lastSelect ;
-  assign y__h93547 = SEXT_x3606__q23[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h93733 =
+  assign y__h93550 = SEXT_x3645__q24[0] & arbiter_1_1_lastSelect ;
+  assign y__h93552 = SEXT_x3611__q23[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h93738 =
 	     SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_lastSelect ;
-  assign y__h93735 = SEXT_x3640__q24[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h93914 = SEXT_x3606__q23[0] & arbiter_1_1_lastSelect ;
-  assign y__h93916 =
+  assign y__h93740 = SEXT_x3645__q24[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h93919 = SEXT_x3611__q23[0] & arbiter_1_1_lastSelect ;
+  assign y__h93921 =
 	     SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_lastSelect_1 ;
 
@@ -9556,7 +9571,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h49191 = $time;
+	  v__h49196 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9566,7 +9581,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h49191,
+	       v__h49196,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9675,13 +9690,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	begin
-	  v__h48580 = $time;
+	  v__h48585 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h48580,
+		 v__h48585,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
@@ -9693,7 +9708,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h53200 = $time;
+	  v__h53205 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9703,7 +9718,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h53200,
+	       v__h53205,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && ifcs_1_innerRoute$EMPTY_N &&
@@ -9812,13 +9827,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	begin
-	  v__h52589 = $time;
+	  v__h52594 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h52589,
+		 v__h52594,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
@@ -9857,7 +9872,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h83136 = $time;
+	  v__h83141 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9867,7 +9882,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h83136,
+	       v__h83141,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9976,13 +9991,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	begin
-	  v__h82525 = $time;
+	  v__h82530 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h82525,
+		 v__h82530,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
@@ -9994,7 +10009,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h86029 = $time;
+	  v__h86034 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10004,7 +10019,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h86029,
+	       v__h86034,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N &&
@@ -10113,13 +10128,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	begin
-	  v__h85418 = $time;
+	  v__h85423 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h85418,
+		 v__h85423,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
@@ -10298,7 +10313,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h63895 = $time;
+	  v__h63900 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10307,7 +10322,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h63895,
+	       v__h63900,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -10382,13 +10397,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	begin
-	  v__h63514 = $time;
+	  v__h63519 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h63514,
+		 v__h63519,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
@@ -10399,7 +10414,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h65965 = $time;
+	  v__h65970 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10408,7 +10423,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h65965,
+	       v__h65970,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && ifcs_1_routeBack$EMPTY_N &&
@@ -10483,13 +10498,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	begin
-	  v__h65584 = $time;
+	  v__h65589 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h65584,
+		 v__h65589,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
@@ -10503,7 +10518,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h67864 = $time;
+	  v__h67869 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10512,7 +10527,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h67864,
+	       v__h67869,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && ifcs_2_routeBack$EMPTY_N &&
@@ -10587,13 +10602,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	begin
-	  v__h67483 = $time;
+	  v__h67488 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h67483,
+		 v__h67488,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
@@ -10694,7 +10709,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h95309 = $time;
+	  v__h95314 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10703,7 +10718,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h95309,
+	       v__h95314,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10778,13 +10793,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	begin
-	  v__h94928 = $time;
+	  v__h94933 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h94928,
+		 v__h94933,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
@@ -10795,7 +10810,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h97800 = $time;
+	  v__h97805 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10804,7 +10819,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h97800,
+	       v__h97805,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
@@ -10879,13 +10894,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	begin
-	  v__h97419 = $time;
+	  v__h97424 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h97419,
+		 v__h97424,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
@@ -10899,7 +10914,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h100110 = $time;
+	  v__h100115 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10908,7 +10923,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h100110,
+	       v__h100115,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
@@ -10983,13 +10998,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	begin
-	  v__h99729 = $time;
+	  v__h99734 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h99729,
+		 v__h99734,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
@@ -11150,33 +11165,33 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
 	begin
-	  v__h21083 = $stime;
+	  v__h21088 = $stime;
 	  #0;
 	end
-    v__h21077 = v__h21083 / 32'd10;
+    v__h21082 = v__h21088 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h21077);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h21082);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
 	begin
-	  v__h21261 = $stime;
+	  v__h21266 = $stime;
 	  #0;
 	end
-    v__h21255 = v__h21261 / 32'd10;
+    v__h21260 = v__h21266 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h21255);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h21260);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
 	begin
-	  v__h21627 = $stime;
+	  v__h21632 = $stime;
 	  #0;
 	end
-    v__h21621 = v__h21627 / 32'd10;
+    v__h21626 = v__h21632 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
-	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h21621);
+	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h21626);
   end
   // synopsys translate_on
 endmodule  // mkCore

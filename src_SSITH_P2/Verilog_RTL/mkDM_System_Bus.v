@@ -623,8 +623,8 @@ module mkDM_System_Bus(CLK,
   wire [71 : 0] master_xactor_ug_master_u_r_putWire$wget;
   wire [6 : 0] master_xactor_shim_bff_rv$port0__write_1,
 	       master_xactor_shim_bff_rv$port1__read,
-	       master_xactor_shim_bff_rv$port1__write_1,
 	       master_xactor_shim_bff_rv$port2__read,
+	       master_xactor_shim_bff_rv$port2__write_1,
 	       master_xactor_shim_bff_rv$port3__read;
   wire [5 : 0] master_xactor_ug_master_u_b_putWire$wget;
   wire master_xactor_shim_arff_rv$EN_port0__write,
@@ -1259,15 +1259,15 @@ module mkDM_System_Bus(CLK,
   assign master_xactor_shim_bff_rv$EN_port1__write =
 	     !master_xactor_clearing &&
 	     master_xactor_shim_bff_rv$port1__read[6] ;
-  assign master_xactor_shim_bff_rv$port1__write_1 =
-	     { 1'd0, 6'bxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_bff_rv$port2__read =
 	     master_xactor_shim_bff_rv$EN_port1__write ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
+	       master_xactor_shim_bff_rv$port2__write_1 :
 	       master_xactor_shim_bff_rv$port1__read ;
+  assign master_xactor_shim_bff_rv$port2__write_1 =
+	     { 1'd0, 6'bxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_bff_rv$port3__read =
 	     master_xactor_clearing ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
+	       master_xactor_shim_bff_rv$port2__write_1 :
 	       master_xactor_shim_bff_rv$port2__read ;
   assign master_xactor_shim_arff_rv$EN_port0__write =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
