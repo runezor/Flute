@@ -1192,7 +1192,10 @@ module mkCPU (CPU_IFC);
 	    scr_val   = fromMaybe (?, m_scr_val);
 	 end
 
-	 gpr_regfile.write_rd (rd, scr_val);
+	 // Writeback to GPR file
+	 let new_rd_val = scr_val;
+
+	 gpr_regfile.write_rd (rd, new_rd_val);
 
    CapPipe new_scr_val_unpacked = cast(scr_val);
 
