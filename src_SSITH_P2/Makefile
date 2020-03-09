@@ -100,6 +100,8 @@ compile:  build_dir tagsparams Verilog_RTL
 	@echo  "INFO: Generated RTL into Verilog_RTL"
 	cp  Verilog_RTL/*  xilinx_ip/hdl/
 	@echo  "INFO: Copied RTL from  Verilog_RTL/  to  xilinx_ip/hdl/"
+	cp  Verilog_RTL/*  altera_ip/hdl/
+	@echo  "INFO: Copied RTL from  Verilog_RTL/  to  altera_ip/hdl/"
 
 # ================================================================
 
