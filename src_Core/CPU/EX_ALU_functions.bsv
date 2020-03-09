@@ -1923,7 +1923,6 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 	 alu_outputs.rd        = inputs.decoded_instr.rd;
 	 alu_outputs.val1      = inputs.rs1_val;
 	 alu_outputs.val2      = inputs.rs2_val;
-`endif
          alu_outputs.val1_fast = alu_outputs.val1;
          alu_outputs.val2_fast = alu_outputs.val2;
 
@@ -1959,6 +1958,7 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 						?);
 `endif
       end
+`endif
 `endif
 
    // OP_IMM and OP (shifts)
