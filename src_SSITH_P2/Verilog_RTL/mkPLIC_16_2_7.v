@@ -16986,7 +16986,7 @@ module mkPLIC_16_2_7(CLK,
       10'd14: x__h14848 = m_vrg_source_prio_14;
       10'd15: x__h14848 = m_vrg_source_prio_15;
       10'd16: x__h14848 = m_vrg_source_prio_16;
-      default: x__h14848 = 3'b010 /* unspecified value */ ;
+      default: x__h14848 = 3'bxxx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -16995,7 +16995,7 @@ module mkPLIC_16_2_7(CLK,
     case (addr_offset__h14540[16:12])
       5'd0: x__h25190 = m_vrg_target_threshold_0;
       5'd1: x__h25190 = m_vrg_target_threshold_1;
-      default: x__h25190 = 3'b010 /* unspecified value */ ;
+      default: x__h25190 = 3'bxxx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -17004,7 +17004,7 @@ module mkPLIC_16_2_7(CLK,
     case (addr_offset__h14540[16:12])
       5'd0: x__h25371 = m_vrg_servicing_source_0;
       5'd1: x__h25371 = m_vrg_servicing_source_1;
-      default: x__h25371 = 5'b01010 /* unspecified value */ ;
+      default: x__h25371 = 5'bxxxxx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h28408 or
@@ -17013,7 +17013,7 @@ module mkPLIC_16_2_7(CLK,
     case (addr_offset__h28408[16:12])
       5'd0: x__h69004 = m_vrg_servicing_source_0;
       5'd1: x__h69004 = m_vrg_servicing_source_1;
-      default: x__h69004 = 5'b01010 /* unspecified value */ ;
+      default: x__h69004 = 5'bxxxxx /* unspecified value */ ;
     endcase
   end
   always@(source_id_base__h14985 or
@@ -17086,7 +17086,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d301 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d301 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21670 or
@@ -17159,7 +17159,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d362 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d362 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21494 or
@@ -17232,7 +17232,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d337 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d337 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21494 or
@@ -17305,7 +17305,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d356 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d356 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21670 or
@@ -17378,7 +17378,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d363 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d363 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17021 or
@@ -17451,7 +17451,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d164 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d164 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21778 or
@@ -17524,7 +17524,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d370 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d370 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21778 or
@@ -17597,7 +17597,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d371 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d371 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21886 or
@@ -17670,7 +17670,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d377 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d377 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17128 or
@@ -17743,7 +17743,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d168 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d168 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21886 or
@@ -17816,7 +17816,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d378 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d378 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21994 or
@@ -17889,7 +17889,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d385 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d385 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h21994 or
@@ -17962,7 +17962,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d386 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d386 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22102 or
@@ -18035,7 +18035,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d392 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d392 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22102 or
@@ -18108,7 +18108,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d393 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d393 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17274 or
@@ -18181,7 +18181,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d177 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d177 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17201 or
@@ -18254,7 +18254,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d173 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d173 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22210 or
@@ -18327,7 +18327,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d400 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d400 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22210 or
@@ -18400,7 +18400,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d401 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d401 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22318 or
@@ -18473,7 +18473,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d407 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d407 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22318 or
@@ -18546,7 +18546,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d408 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d408 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17420 or
@@ -18619,7 +18619,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d186 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d186 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17347 or
@@ -18692,7 +18692,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d182 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d182 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22426 or
@@ -18765,7 +18765,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d415 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d415 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22534 or
@@ -18838,7 +18838,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d422 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d422 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22426 or
@@ -18911,7 +18911,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d416 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d416 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22534 or
@@ -18984,7 +18984,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d423 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d423 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17566 or
@@ -19057,7 +19057,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d195 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d195 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17493 or
@@ -19130,7 +19130,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d191 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d191 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22642 or
@@ -19203,7 +19203,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d430 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d430 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22642 or
@@ -19276,7 +19276,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d431 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d431 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22750 or
@@ -19349,7 +19349,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d437 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d437 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22750 or
@@ -19422,7 +19422,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d438 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d438 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17712 or
@@ -19495,7 +19495,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d204 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d204 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17639 or
@@ -19568,7 +19568,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d200 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d200 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22858 or
@@ -19641,7 +19641,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d445 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d445 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22858 or
@@ -19714,7 +19714,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d446 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d446 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22966 or
@@ -19787,7 +19787,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d452 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d452 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h22966 or
@@ -19860,7 +19860,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d453 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d453 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17785 or
@@ -19933,7 +19933,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d209 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d209 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23074 or
@@ -20006,7 +20006,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d460 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d460 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17858 or
@@ -20079,7 +20079,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d213 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d213 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23074 or
@@ -20152,7 +20152,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d461 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d461 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23182 or
@@ -20225,7 +20225,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d467 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d467 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23182 or
@@ -20298,7 +20298,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d468 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d468 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h17931 or
@@ -20371,7 +20371,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d218 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d218 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23290 or
@@ -20444,7 +20444,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d475 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d475 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18004 or
@@ -20517,7 +20517,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d222 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d222 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23290 or
@@ -20590,7 +20590,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d476 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d476 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23398 or
@@ -20663,7 +20663,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d483 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d483 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23398 or
@@ -20736,7 +20736,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d482 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d482 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18077 or
@@ -20809,7 +20809,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d227 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d227 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23506 or
@@ -20882,7 +20882,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d490 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d490 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18150 or
@@ -20955,7 +20955,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d231 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d231 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23506 or
@@ -21028,7 +21028,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d491 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d491 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23614 or
@@ -21101,7 +21101,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d497 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d497 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23614 or
@@ -21174,7 +21174,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d498 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d498 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18223 or
@@ -21247,7 +21247,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d236 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d236 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23722 or
@@ -21320,7 +21320,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d505 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d505 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18296 or
@@ -21393,7 +21393,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d240 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d240 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23722 or
@@ -21466,7 +21466,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d506 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d506 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23830 or
@@ -21539,7 +21539,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d512 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d512 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23830 or
@@ -21612,7 +21612,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d513 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d513 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18369 or
@@ -21685,7 +21685,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d245 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d245 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18442 or
@@ -21758,7 +21758,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d249 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d249 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23938 or
@@ -21831,7 +21831,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d520 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d520 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h23938 or
@@ -21904,7 +21904,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d521 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d521 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24046 or
@@ -21977,7 +21977,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d527 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d527 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24046 or
@@ -22050,7 +22050,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d528 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d528 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18515 or
@@ -22123,7 +22123,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d254 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d254 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24154 or
@@ -22196,7 +22196,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d535 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d535 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18588 or
@@ -22269,7 +22269,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d258 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d258 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24154 or
@@ -22342,7 +22342,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d536 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d536 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24262 or
@@ -22415,7 +22415,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d542 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d542 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24262 or
@@ -22488,7 +22488,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d543 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d543 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18661 or
@@ -22561,7 +22561,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d263 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d263 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24370 or
@@ -22634,7 +22634,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d550 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d550 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18734 or
@@ -22707,7 +22707,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d267 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d267 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24370 or
@@ -22780,7 +22780,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d551 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d551 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24478 or
@@ -22853,7 +22853,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d557 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d557 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24478 or
@@ -22926,7 +22926,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d558 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d558 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18807 or
@@ -22999,7 +22999,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d272 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d272 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18880 or
@@ -23072,7 +23072,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d276 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d276 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24586 or
@@ -23145,7 +23145,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d565 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d565 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24586 or
@@ -23218,7 +23218,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d566 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d566 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24694 or
@@ -23291,7 +23291,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d572 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d572 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24694 or
@@ -23364,7 +23364,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d573 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d573 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h18953 or
@@ -23437,7 +23437,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d281 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d281 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24802 or
@@ -23510,7 +23510,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d580 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d580 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h19026 or
@@ -23583,7 +23583,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d285 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d285 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h24802 or
@@ -23656,7 +23656,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d581 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d581 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id_base__h14985 or
@@ -23729,7 +23729,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d585 =
 	      m_vvrg_ie_0_16;
       default: SEL_ARR_m_vvrg_ie_0_0_19_m_vvrg_ie_0_1_20_m_vv_ETC___d585 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id_base__h14985 or
@@ -23802,7 +23802,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d586 =
 	      m_vvrg_ie_1_16;
       default: SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d586 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23817,7 +23817,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q1 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d356;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q1 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23832,7 +23832,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q2 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d363;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q2 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23847,7 +23847,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q3 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d371;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q3 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23862,7 +23862,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q4 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d378;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q4 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23877,7 +23877,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q5 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d386;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q5 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23892,7 +23892,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q6 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d393;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q6 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23907,7 +23907,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q7 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d401;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q7 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23922,7 +23922,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q8 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d408;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q8 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23937,7 +23937,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q9 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d416;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q9 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23952,7 +23952,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q10 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d423;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q10 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23967,7 +23967,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q11 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d431;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q11 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23982,7 +23982,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q12 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d438;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q12 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -23997,7 +23997,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q13 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d446;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q13 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24012,7 +24012,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q14 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d453;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q14 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24027,7 +24027,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q15 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d461;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q15 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24042,7 +24042,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q16 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d468;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q16 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24057,7 +24057,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q17 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d476;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q17 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24072,7 +24072,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q18 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d483;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q18 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24087,7 +24087,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q19 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d491;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q19 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24102,7 +24102,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q20 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d498;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q20 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24117,7 +24117,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q21 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d506;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q21 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24132,7 +24132,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q22 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d513;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q22 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24147,7 +24147,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q23 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d521;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q23 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24162,7 +24162,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q24 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d528;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q24 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24177,7 +24177,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q25 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d536;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q25 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24192,7 +24192,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q26 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d543;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q26 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24207,7 +24207,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q27 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d551;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q27 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24222,7 +24222,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q28 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d558;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q28 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24237,7 +24237,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q29 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d566;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q29 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24252,7 +24252,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q30 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d573;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q30 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24267,7 +24267,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q31 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d581;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q31 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or
@@ -24282,7 +24282,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q32 =
 	      SEL_ARR_m_vvrg_ie_1_0_38_m_vvrg_ie_1_1_39_m_vv_ETC___d586;
       default: CASE_addr_offset4540_BITS_11_TO_7_0_SEL_ARR_m__ETC__q32 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h19099 or
@@ -24355,7 +24355,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d290 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d290 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h19245 or
@@ -24428,7 +24428,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d299 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d299 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(source_id__h19172 or
@@ -24501,7 +24501,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d294 =
 	      m_vrg_source_ip_16;
       default: SEL_ARR_m_vrg_source_ip_0_read__46_m_vrg_sourc_ETC___d294 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_1 or m_vvrg_ie_1_1)
@@ -24514,7 +24514,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q33 =
 	      m_vvrg_ie_1_1;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q33 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_2 or m_vvrg_ie_1_2)
@@ -24527,7 +24527,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q34 =
 	      m_vvrg_ie_1_2;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q34 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_3 or m_vvrg_ie_1_3)
@@ -24540,7 +24540,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q35 =
 	      m_vvrg_ie_1_3;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q35 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_4 or m_vvrg_ie_1_4)
@@ -24553,7 +24553,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q36 =
 	      m_vvrg_ie_1_4;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q36 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_5 or m_vvrg_ie_1_5)
@@ -24566,7 +24566,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q37 =
 	      m_vvrg_ie_1_5;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q37 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_6 or m_vvrg_ie_1_6)
@@ -24579,7 +24579,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q38 =
 	      m_vvrg_ie_1_6;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q38 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_7 or m_vvrg_ie_1_7)
@@ -24592,7 +24592,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q39 =
 	      m_vvrg_ie_1_7;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q39 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_8 or m_vvrg_ie_1_8)
@@ -24605,7 +24605,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q40 =
 	      m_vvrg_ie_1_8;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q40 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_9 or m_vvrg_ie_1_9)
@@ -24618,7 +24618,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q41 =
 	      m_vvrg_ie_1_9;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q41 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_10 or m_vvrg_ie_1_10)
@@ -24631,7 +24631,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q42 =
 	      m_vvrg_ie_1_10;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q42 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_11 or m_vvrg_ie_1_11)
@@ -24644,7 +24644,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q43 =
 	      m_vvrg_ie_1_11;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q43 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_12 or m_vvrg_ie_1_12)
@@ -24657,7 +24657,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q44 =
 	      m_vvrg_ie_1_12;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q44 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_13 or m_vvrg_ie_1_13)
@@ -24670,7 +24670,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q45 =
 	      m_vvrg_ie_1_13;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q45 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_14 or m_vvrg_ie_1_14)
@@ -24683,7 +24683,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q46 =
 	      m_vvrg_ie_1_14;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q46 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_15 or m_vvrg_ie_1_15)
@@ -24696,7 +24696,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q47 =
 	      m_vvrg_ie_1_15;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q47 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(addr_offset__h14540 or m_vvrg_ie_0_16 or m_vvrg_ie_1_16)
@@ -24709,7 +24709,7 @@ module mkPLIC_16_2_7(CLK,
 	  CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q48 =
 	      m_vvrg_ie_1_16;
       default: CASE_addr_offset4540_BITS_16_TO_12_0_m_vvrg_ie_ETC__q48 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(x__h25030 or y_avValue_fst__h27488 or y_avValue_fst__h27476)
@@ -24791,7 +24791,7 @@ module mkPLIC_16_2_7(CLK,
 	  SEL_ARR_m_vrg_source_busy_0_011_m_vrg_source_b_ETC___d3029 =
 	      m_vrg_source_busy_16;
       default: SEL_ARR_m_vrg_source_busy_0_011_m_vrg_source_b_ETC___d3029 =
-		   1'b0 /* unspecified value */ ;
+		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(x__h25030 or

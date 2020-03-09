@@ -61,7 +61,7 @@
 // master_rready                  O     1
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
-// dmi_read_addr_dm_addr          I     7
+// dmi_read_addr_dm_addr          I     7 reg
 // dmi_write_dm_addr              I     7
 // dmi_write_dm_word              I    32
 // hart0_reset_client_response_put  I     1 reg
@@ -100,152 +100,6 @@
 // EN_ndm_reset_client_request_get  I     1
 //
 // Combinational paths from inputs to outputs:
-//   (dmi_read_addr_dm_addr, EN_dmi_read_addr) -> RDY_dmi_read_data
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arid
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_araddr
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arlen
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arsize
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arburst
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arlock
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arcache
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arprot
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arqos
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arregion
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_aruser
-//   (dmi_read_addr_dm_addr,
-//    dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_read_addr,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arvalid
-//   (dmi_read_addr_dm_addr, EN_dmi_read_addr, EN_dmi_read_data) -> dmi_read_data
 //   (dmi_write_dm_addr,
 //    master_rid,
 //    master_rdata,
@@ -387,6 +241,127 @@
 //    master_ruser,
 //    EN_dmi_write,
 //    master_rvalid) -> master_wvalid
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arid
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_araddr
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arlen
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arsize
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arburst
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arlock
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arcache
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arprot
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arqos
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arregion
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_aruser
+//   (dmi_write_dm_addr,
+//    dmi_write_dm_word,
+//    master_rid,
+//    master_rdata,
+//    master_rresp,
+//    master_rlast,
+//    master_ruser,
+//    EN_dmi_write,
+//    master_rvalid,
+//    EN_dmi_read_data) -> master_arvalid
+//   EN_dmi_read_data -> dmi_read_data
 //
 //
 
@@ -789,16 +764,6 @@ module mkDebug_Module(CLK,
        master_wvalid,
        ndm_reset_client_request_get;
 
-  // inlined wires
-  wire [7 : 0] f_read_addr_rv$port0__write_1,
-	       f_read_addr_rv$port1__read,
-	       f_read_addr_rv$port2__read;
-
-  // register f_read_addr_rv
-  reg [7 : 0] f_read_addr_rv;
-  wire [7 : 0] f_read_addr_rv$D_IN;
-  wire f_read_addr_rv$EN;
-
   // ports of submodule dm_abstract_commands
   wire [76 : 0] dm_abstract_commands$hart0_csr_mem_client_request_get;
   wire [69 : 0] dm_abstract_commands$hart0_fpr_mem_client_request_get,
@@ -907,6 +872,14 @@ module mkDebug_Module(CLK,
        dm_system_bus$master_wuser,
        dm_system_bus$master_wvalid;
 
+  // ports of submodule f_read_addr
+  wire [6 : 0] f_read_addr$D_IN, f_read_addr$D_OUT;
+  wire f_read_addr$CLR,
+       f_read_addr$DEQ,
+       f_read_addr$EMPTY_N,
+       f_read_addr$ENQ,
+       f_read_addr$FULL_N;
+
   // rule scheduling signals
   wire CAN_FIRE_RL_rl_reset,
        CAN_FIRE_dmi_read_addr,
@@ -955,22 +928,22 @@ module mkDebug_Module(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [31 : 0] v__h895;
-  reg [31 : 0] v__h889;
+  reg [31 : 0] v__h756;
+  reg [31 : 0] v__h750;
   // synopsys translate_on
 
   // action method dmi_read_addr
-  assign RDY_dmi_read_addr = dm_run_control$dmactive && !f_read_addr_rv[7] ;
+  assign RDY_dmi_read_addr = dm_run_control$dmactive && f_read_addr$FULL_N ;
   assign CAN_FIRE_dmi_read_addr =
-	     dm_run_control$dmactive && !f_read_addr_rv[7] ;
+	     dm_run_control$dmactive && f_read_addr$FULL_N ;
   assign WILL_FIRE_dmi_read_addr = EN_dmi_read_addr ;
 
   // actionvalue method dmi_read_data
-  always@(f_read_addr_rv$port1__read or
+  always@(f_read_addr$D_OUT or
 	  dm_abstract_commands$av_read or
 	  dm_run_control$av_read or dm_system_bus$av_read)
   begin
-    case (f_read_addr_rv$port1__read[6:0])
+    case (f_read_addr$D_OUT)
       7'h04,
       7'h05,
       7'h06,
@@ -1005,27 +978,16 @@ module mkDebug_Module(CLK,
     endcase
   end
   assign RDY_dmi_read_data =
-	     f_read_addr_rv$port1__read[7] &&
-	     (f_read_addr_rv$port1__read[6:0] != 7'h38 &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h39 &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3A &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3B &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3C &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3D &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3E &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3F ||
+	     f_read_addr$EMPTY_N &&
+	     (f_read_addr$D_OUT != 7'h38 && f_read_addr$D_OUT != 7'h39 &&
+	      f_read_addr$D_OUT != 7'h3A &&
+	      f_read_addr$D_OUT != 7'h3B &&
+	      f_read_addr$D_OUT != 7'h3C &&
+	      f_read_addr$D_OUT != 7'h3D &&
+	      f_read_addr$D_OUT != 7'h3E &&
+	      f_read_addr$D_OUT != 7'h3F ||
 	      dm_system_bus$RDY_av_read) ;
-  assign CAN_FIRE_dmi_read_data =
-	     f_read_addr_rv$port1__read[7] &&
-	     (f_read_addr_rv$port1__read[6:0] != 7'h38 &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h39 &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3A &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3B &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3C &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3D &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3E &&
-	      f_read_addr_rv$port1__read[6:0] != 7'h3F ||
-	      dm_system_bus$RDY_av_read) ;
+  assign CAN_FIRE_dmi_read_data = RDY_dmi_read_data ;
   assign WILL_FIRE_dmi_read_data = EN_dmi_read_data ;
 
   // action method dmi_write
@@ -1384,27 +1346,24 @@ module mkDebug_Module(CLK,
 				.master_arvalid(dm_system_bus$master_arvalid),
 				.master_rready(dm_system_bus$master_rready));
 
+  // submodule f_read_addr
+  FIFO1 #(.width(32'd7), .guarded(32'd1)) f_read_addr(.RST(RST_N),
+						      .CLK(CLK),
+						      .D_IN(f_read_addr$D_IN),
+						      .ENQ(f_read_addr$ENQ),
+						      .DEQ(f_read_addr$DEQ),
+						      .CLR(f_read_addr$CLR),
+						      .D_OUT(f_read_addr$D_OUT),
+						      .FULL_N(f_read_addr$FULL_N),
+						      .EMPTY_N(f_read_addr$EMPTY_N));
+
   // rule RL_rl_reset
   assign CAN_FIRE_RL_rl_reset =
 	     dm_system_bus$RDY_reset && !dm_run_control$dmactive ;
   assign WILL_FIRE_RL_rl_reset = CAN_FIRE_RL_rl_reset ;
 
-  // inlined wires
-  assign f_read_addr_rv$port0__write_1 = { 1'd1, dmi_read_addr_dm_addr } ;
-  assign f_read_addr_rv$port1__read =
-	     EN_dmi_read_addr ?
-	       f_read_addr_rv$port0__write_1 :
-	       f_read_addr_rv ;
-  assign f_read_addr_rv$port2__read =
-	     EN_dmi_read_data ? 8'd42 : f_read_addr_rv$port1__read ;
-
-  // register f_read_addr_rv
-  assign f_read_addr_rv$D_IN = f_read_addr_rv$port2__read ;
-  assign f_read_addr_rv$EN = 1'b1 ;
-
   // submodule dm_abstract_commands
-  assign dm_abstract_commands$av_read_dm_addr =
-	     f_read_addr_rv$port1__read[6:0] ;
+  assign dm_abstract_commands$av_read_dm_addr = f_read_addr$D_OUT ;
   assign dm_abstract_commands$hart0_csr_mem_client_response_put =
 	     hart0_csr_mem_client_response_put ;
   assign dm_abstract_commands$hart0_fpr_mem_client_response_put =
@@ -1416,21 +1375,20 @@ module mkDebug_Module(CLK,
   assign dm_abstract_commands$EN_reset = CAN_FIRE_RL_rl_reset ;
   assign dm_abstract_commands$EN_av_read =
 	     EN_dmi_read_data &&
-	     (f_read_addr_rv$port1__read[6:0] == 7'h16 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h17 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h04 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h05 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h06 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h07 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h08 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h09 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h0A ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h0B ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h0C ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h0D ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h0F ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h18 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h20) ;
+	     (f_read_addr$D_OUT == 7'h16 || f_read_addr$D_OUT == 7'h17 ||
+	      f_read_addr$D_OUT == 7'h04 ||
+	      f_read_addr$D_OUT == 7'h05 ||
+	      f_read_addr$D_OUT == 7'h06 ||
+	      f_read_addr$D_OUT == 7'h07 ||
+	      f_read_addr$D_OUT == 7'h08 ||
+	      f_read_addr$D_OUT == 7'h09 ||
+	      f_read_addr$D_OUT == 7'h0A ||
+	      f_read_addr$D_OUT == 7'h0B ||
+	      f_read_addr$D_OUT == 7'h0C ||
+	      f_read_addr$D_OUT == 7'h0D ||
+	      f_read_addr$D_OUT == 7'h0F ||
+	      f_read_addr$D_OUT == 7'h18 ||
+	      f_read_addr$D_OUT == 7'h20) ;
   assign dm_abstract_commands$EN_write =
 	     EN_dmi_write &&
 	     (dmi_write_dm_addr == 7'h16 || dmi_write_dm_addr == 7'h17 ||
@@ -1461,7 +1419,7 @@ module mkDebug_Module(CLK,
 	     EN_hart0_csr_mem_client_response_put ;
 
   // submodule dm_run_control
-  assign dm_run_control$av_read_dm_addr = f_read_addr_rv$port1__read[6:0] ;
+  assign dm_run_control$av_read_dm_addr = f_read_addr$D_OUT ;
   assign dm_run_control$hart0_client_run_halt_response_put =
 	     hart0_client_run_halt_response_put ;
   assign dm_run_control$hart0_reset_client_response_put =
@@ -1473,17 +1431,16 @@ module mkDebug_Module(CLK,
   assign dm_run_control$EN_reset = CAN_FIRE_RL_rl_reset ;
   assign dm_run_control$EN_av_read =
 	     EN_dmi_read_data &&
-	     (f_read_addr_rv$port1__read[6:0] == 7'h10 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h11 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h12 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h13 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h14 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h15 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h19 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h30 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h40 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h5F ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h60) ;
+	     (f_read_addr$D_OUT == 7'h10 || f_read_addr$D_OUT == 7'h11 ||
+	      f_read_addr$D_OUT == 7'h12 ||
+	      f_read_addr$D_OUT == 7'h13 ||
+	      f_read_addr$D_OUT == 7'h14 ||
+	      f_read_addr$D_OUT == 7'h15 ||
+	      f_read_addr$D_OUT == 7'h19 ||
+	      f_read_addr$D_OUT == 7'h30 ||
+	      f_read_addr$D_OUT == 7'h40 ||
+	      f_read_addr$D_OUT == 7'h5F ||
+	      f_read_addr$D_OUT == 7'h60) ;
   assign dm_run_control$EN_write =
 	     EN_dmi_write &&
 	     (dmi_write_dm_addr == 7'h10 || dmi_write_dm_addr == 7'h11 ||
@@ -1512,7 +1469,7 @@ module mkDebug_Module(CLK,
 	     EN_ndm_reset_client_response_put ;
 
   // submodule dm_system_bus
-  assign dm_system_bus$av_read_dm_addr = f_read_addr_rv$port1__read[6:0] ;
+  assign dm_system_bus$av_read_dm_addr = f_read_addr$D_OUT ;
   assign dm_system_bus$master_arready = master_arready ;
   assign dm_system_bus$master_awready = master_awready ;
   assign dm_system_bus$master_bid = master_bid ;
@@ -1528,14 +1485,13 @@ module mkDebug_Module(CLK,
   assign dm_system_bus$EN_reset = CAN_FIRE_RL_rl_reset ;
   assign dm_system_bus$EN_av_read =
 	     EN_dmi_read_data &&
-	     (f_read_addr_rv$port1__read[6:0] == 7'h38 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h39 ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h3A ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h3B ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h3C ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h3D ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h3E ||
-	      f_read_addr_rv$port1__read[6:0] == 7'h3F) ;
+	     (f_read_addr$D_OUT == 7'h38 || f_read_addr$D_OUT == 7'h39 ||
+	      f_read_addr$D_OUT == 7'h3A ||
+	      f_read_addr$D_OUT == 7'h3B ||
+	      f_read_addr$D_OUT == 7'h3C ||
+	      f_read_addr$D_OUT == 7'h3D ||
+	      f_read_addr$D_OUT == 7'h3E ||
+	      f_read_addr$D_OUT == 7'h3F) ;
   assign dm_system_bus$EN_write =
 	     EN_dmi_write &&
 	     (dmi_write_dm_addr == 7'h38 || dmi_write_dm_addr == 7'h39 ||
@@ -1548,30 +1504,11 @@ module mkDebug_Module(CLK,
   assign dm_system_bus$master_bvalid = master_bvalid ;
   assign dm_system_bus$master_rvalid = master_rvalid ;
 
-  // handling of inlined registers
-
-  always@(posedge CLK)
-  begin
-    if (RST_N == `BSV_RESET_VALUE)
-      begin
-        f_read_addr_rv <= `BSV_ASSIGNMENT_DELAY 8'd42;
-      end
-    else
-      begin
-        if (f_read_addr_rv$EN)
-	  f_read_addr_rv <= `BSV_ASSIGNMENT_DELAY f_read_addr_rv$D_IN;
-      end
-  end
-
-  // synopsys translate_off
-  `ifdef BSV_NO_INITIAL_BLOCKS
-  `else // not BSV_NO_INITIAL_BLOCKS
-  initial
-  begin
-    f_read_addr_rv = 8'hAA;
-  end
-  `endif // BSV_NO_INITIAL_BLOCKS
-  // synopsys translate_on
+  // submodule f_read_addr
+  assign f_read_addr$D_IN = dmi_read_addr_dm_addr ;
+  assign f_read_addr$ENQ = EN_dmi_read_addr ;
+  assign f_read_addr$DEQ = EN_dmi_read_data ;
+  assign f_read_addr$CLR = 1'b0 ;
 
   // handling of system tasks
 
@@ -1582,12 +1519,12 @@ module mkDebug_Module(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset)
 	begin
-	  v__h895 = $stime;
+	  v__h756 = $stime;
 	  #0;
 	end
-    v__h889 = v__h895 / 32'd10;
+    v__h750 = v__h756 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_rl_reset) $display("%0d: Debug_Module reset", v__h889);
+      if (WILL_FIRE_RL_rl_reset) $display("%0d: Debug_Module reset", v__h750);
   end
   // synopsys translate_on
 endmodule  // mkDebug_Module

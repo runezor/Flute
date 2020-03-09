@@ -11,32 +11,32 @@
 // cpu_reset_server_response_get  O     1 reg
 // RDY_cpu_reset_server_response_get  O     1 reg
 // cpu_imem_master_awid           O     6
-// cpu_imem_master_awaddr         O    64
-// cpu_imem_master_awlen          O     8
-// cpu_imem_master_awsize         O     3
-// cpu_imem_master_awburst        O     2
-// cpu_imem_master_awlock         O     1
-// cpu_imem_master_awcache        O     4
-// cpu_imem_master_awprot         O     3
-// cpu_imem_master_awqos          O     4
-// cpu_imem_master_awregion       O     4
-// cpu_imem_master_awvalid        O     1
-// cpu_imem_master_wdata          O    64
-// cpu_imem_master_wstrb          O     8
-// cpu_imem_master_wlast          O     1
-// cpu_imem_master_wvalid         O     1
+// cpu_imem_master_awaddr         O    64 reg
+// cpu_imem_master_awlen          O     8 reg
+// cpu_imem_master_awsize         O     3 reg
+// cpu_imem_master_awburst        O     2 reg
+// cpu_imem_master_awlock         O     1 reg
+// cpu_imem_master_awcache        O     4 reg
+// cpu_imem_master_awprot         O     3 reg
+// cpu_imem_master_awqos          O     4 reg
+// cpu_imem_master_awregion       O     4 reg
+// cpu_imem_master_awvalid        O     1 reg
+// cpu_imem_master_wdata          O    64 reg
+// cpu_imem_master_wstrb          O     8 reg
+// cpu_imem_master_wlast          O     1 reg
+// cpu_imem_master_wvalid         O     1 reg
 // cpu_imem_master_bready         O     1 reg
 // cpu_imem_master_arid           O     6
-// cpu_imem_master_araddr         O    64
-// cpu_imem_master_arlen          O     8
-// cpu_imem_master_arsize         O     3
-// cpu_imem_master_arburst        O     2
-// cpu_imem_master_arlock         O     1
-// cpu_imem_master_arcache        O     4
-// cpu_imem_master_arprot         O     3
-// cpu_imem_master_arqos          O     4
-// cpu_imem_master_arregion       O     4
-// cpu_imem_master_arvalid        O     1
+// cpu_imem_master_araddr         O    64 reg
+// cpu_imem_master_arlen          O     8 reg
+// cpu_imem_master_arsize         O     3 reg
+// cpu_imem_master_arburst        O     2 reg
+// cpu_imem_master_arlock         O     1 reg
+// cpu_imem_master_arcache        O     4 reg
+// cpu_imem_master_arprot         O     3 reg
+// cpu_imem_master_arqos          O     4 reg
+// cpu_imem_master_arregion       O     4 reg
+// cpu_imem_master_arvalid        O     1 reg
 // cpu_imem_master_rready         O     1 reg
 // cpu_dmem_master_awid           O     6
 // cpu_dmem_master_awaddr         O    64
@@ -80,13 +80,13 @@
 // cpu_reset_server_request_put   I     1 reg
 // cpu_imem_master_awready        I     1
 // cpu_imem_master_wready         I     1
-// cpu_imem_master_bid            I     6
-// cpu_imem_master_bresp          I     2
+// cpu_imem_master_bid            I     6 reg
+// cpu_imem_master_bresp          I     2 reg
 // cpu_imem_master_arready        I     1
-// cpu_imem_master_rid            I     6
-// cpu_imem_master_rdata          I    64
-// cpu_imem_master_rresp          I     2
-// cpu_imem_master_rlast          I     1
+// cpu_imem_master_rid            I     6 reg
+// cpu_imem_master_rdata          I    64 reg
+// cpu_imem_master_rresp          I     2 reg
+// cpu_imem_master_rlast          I     1 reg
 // cpu_dmem_master_awready        I     1
 // cpu_dmem_master_wready         I     1
 // cpu_dmem_master_bid            I     6
@@ -113,7 +113,7 @@
 // core_external_interrupt_sources_14_m_interrupt_req_set_not_clear  I     1
 // core_external_interrupt_sources_15_m_interrupt_req_set_not_clear  I     1
 // nmi_req_set_not_clear          I     1
-// dm_dmi_read_addr_dm_addr       I     7
+// dm_dmi_read_addr_dm_addr       I     7 reg
 // dm_dmi_write_dm_addr           I     7
 // dm_dmi_write_dm_word           I    32
 // ndm_reset_client_response_put  I     1 reg
@@ -131,65 +131,7 @@
 // EN_ndm_reset_client_request_get  I     1
 //
 // Combinational paths from inputs to outputs:
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arid
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_araddr
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arlen
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arsize
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arburst
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arlock
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arcache
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arprot
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arqos
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arregion
-//   (cpu_imem_master_rid,
-//    cpu_imem_master_rdata,
-//    cpu_imem_master_rresp,
-//    cpu_imem_master_rlast,
-//    cpu_imem_master_rvalid) -> cpu_imem_master_arvalid
-//   (dm_dmi_read_addr_dm_addr, EN_dm_dmi_read_addr) -> RDY_dm_dmi_read_data
-//   (dm_dmi_read_addr_dm_addr,
-//    EN_dm_dmi_read_addr,
-//    EN_dm_dmi_read_data) -> dm_dmi_read_data
+//   EN_dm_dmi_read_data -> dm_dmi_read_data
 //
 //
 
@@ -811,19 +753,19 @@ module mkCore(CLK,
   wire [172 : 0] split_0_doPut$wget, split_1_doPut$wget, split_2_doPut$wget;
   wire [99 : 0] tagController_tmp_shimMaster_arff_rv$port0__write_1,
 		tagController_tmp_shimMaster_arff_rv$port1__read,
+		tagController_tmp_shimMaster_arff_rv$port1__write_1,
 		tagController_tmp_shimMaster_arff_rv$port2__read,
 		tagController_tmp_shimMaster_awff_rv$port0__write_1,
 		tagController_tmp_shimMaster_awff_rv$port1__read,
 		tagController_tmp_shimMaster_awff_rv$port2__read;
   wire [98 : 0] tagController_tmp_shimSlave_arff_rv$port0__write_1,
 		tagController_tmp_shimSlave_arff_rv$port1__read,
+		tagController_tmp_shimSlave_arff_rv$port1__write_1,
 		tagController_tmp_shimSlave_arff_rv$port2__read,
 		tagController_tmp_shimSlave_awff_rv$port0__write_1,
 		tagController_tmp_shimSlave_awff_rv$port1__read,
 		tagController_tmp_shimSlave_awff_rv$port2__read;
-  wire [97 : 0] cpu_imem_ug_u_ar_peekWire$wget,
-		cpu_imem_ug_u_aw_peekWire$wget,
-		ssNoSynth_0_ar_buffer_enqw$wget,
+  wire [97 : 0] ssNoSynth_0_ar_buffer_enqw$wget,
 		ssNoSynth_1_ar_buffer_enqw$wget,
 		ssNoSynth_1_aw_buffer_enqw$wget,
 		ssNoSynth_2_ar_buffer_enqw$wget,
@@ -840,12 +782,13 @@ module mkCore(CLK,
 		ifcs_1_noRoute_inner_currentReq$port1__read;
   wire [74 : 0] tagController_tmp_shimSlave_wff_rv$port0__write_1,
 		tagController_tmp_shimSlave_wff_rv$port1__read,
+		tagController_tmp_shimSlave_wff_rv$port1__write_1,
 		tagController_tmp_shimSlave_wff_rv$port2__read;
-  wire [73 : 0] cpu_imem_ug_u_w_peekWire$wget,
-		ssNoSynth_1_w_buffer_enqw$wget,
+  wire [73 : 0] ssNoSynth_1_w_buffer_enqw$wget,
 		ssNoSynth_2_w_buffer_enqw$wget,
 		tagController_tmp_shimMaster_rff_rv$port0__write_1,
 		tagController_tmp_shimMaster_rff_rv$port1__read,
+		tagController_tmp_shimMaster_rff_rv$port1__write_1,
 		tagController_tmp_shimMaster_rff_rv$port2__read,
 		tagController_tmp_shimMaster_wff_rv$port0__write_1,
 		tagController_tmp_shimMaster_wff_rv$port1__read,
@@ -854,7 +797,7 @@ module mkCore(CLK,
 		tagController_tmp_shimSlave_rff_rv$port1__read,
 		tagController_tmp_shimSlave_rff_rv$port2__read,
 		tagController_tmp_ug_slave_u_w_putWire$wget;
-  wire [72 : 0] cpu_imem_r_buffer_enqw$wget,
+  wire [72 : 0] cpu_imem_ug_u_r_putWire$wget,
 		tagController_tmp_ug_master_u_r_putWire$wget,
 		tagController_tmp_ug_slave_u_r_peekWire$wget;
   wire [71 : 0] msNoSynth_0_r_buffer_enqw$wget,
@@ -867,12 +810,14 @@ module mkCore(CLK,
 	       ifcs_1_1_noRoute_flitCount$port2__read,
 	       tagController_tmp_shimMaster_bff_rv$port0__write_1,
 	       tagController_tmp_shimMaster_bff_rv$port1__read,
+	       tagController_tmp_shimMaster_bff_rv$port1__write_1,
 	       tagController_tmp_shimMaster_bff_rv$port2__read;
   wire [7 : 0] tagController_tmp_shimSlave_bff_rv$port0__write_1,
 	       tagController_tmp_shimSlave_bff_rv$port1__read,
+	       tagController_tmp_shimSlave_bff_rv$port1__write_1,
 	       tagController_tmp_shimSlave_bff_rv$port2__read,
 	       tagController_tmp_ug_master_u_b_putWire$wget;
-  wire [6 : 0] cpu_imem_b_buffer_enqw$wget,
+  wire [6 : 0] cpu_imem_ug_u_b_putWire$wget,
 	       tagController_tmp_ug_slave_u_b_peekWire$wget;
   wire [5 : 0] msNoSynth_0_b_buffer_enqw$wget, msNoSynth_1_b_buffer_enqw$wget;
   wire cpu_imem_ug_u_ar_dropWire$whas,
@@ -1456,6 +1401,46 @@ module mkCore(CLK,
        debug_module$master_wvalid,
        debug_module$ndm_reset_client_request_get,
        debug_module$ndm_reset_client_response_put;
+
+  // ports of submodule delay_shim_arff
+  wire [97 : 0] delay_shim_arff$D_IN, delay_shim_arff$D_OUT;
+  wire delay_shim_arff$CLR,
+       delay_shim_arff$DEQ,
+       delay_shim_arff$EMPTY_N,
+       delay_shim_arff$ENQ,
+       delay_shim_arff$FULL_N;
+
+  // ports of submodule delay_shim_awff
+  wire [97 : 0] delay_shim_awff$D_IN, delay_shim_awff$D_OUT;
+  wire delay_shim_awff$CLR,
+       delay_shim_awff$DEQ,
+       delay_shim_awff$EMPTY_N,
+       delay_shim_awff$ENQ,
+       delay_shim_awff$FULL_N;
+
+  // ports of submodule delay_shim_bff
+  wire [6 : 0] delay_shim_bff$D_IN, delay_shim_bff$D_OUT;
+  wire delay_shim_bff$CLR,
+       delay_shim_bff$DEQ,
+       delay_shim_bff$EMPTY_N,
+       delay_shim_bff$ENQ,
+       delay_shim_bff$FULL_N;
+
+  // ports of submodule delay_shim_rff
+  wire [72 : 0] delay_shim_rff$D_IN, delay_shim_rff$D_OUT;
+  wire delay_shim_rff$CLR,
+       delay_shim_rff$DEQ,
+       delay_shim_rff$EMPTY_N,
+       delay_shim_rff$ENQ,
+       delay_shim_rff$FULL_N;
+
+  // ports of submodule delay_shim_wff
+  wire [73 : 0] delay_shim_wff$D_IN, delay_shim_wff$D_OUT;
+  wire delay_shim_wff$CLR,
+       delay_shim_wff$DEQ,
+       delay_shim_wff$EMPTY_N,
+       delay_shim_wff$ENQ,
+       delay_shim_wff$FULL_N;
 
   // ports of submodule f_reset_reqs
   wire f_reset_reqs$CLR,
@@ -2116,6 +2101,11 @@ module mkCore(CLK,
        CAN_FIRE_RL_merged_1_genFirst,
        CAN_FIRE_RL_merged_1_genOther,
        CAN_FIRE_RL_mkConnectionGetPut,
+       CAN_FIRE_RL_mkConnectionGetPut_1,
+       CAN_FIRE_RL_mkConnectionGetPut_2,
+       CAN_FIRE_RL_mkConnectionGetPut_3,
+       CAN_FIRE_RL_mkConnectionGetPut_4,
+       CAN_FIRE_RL_mkConnectionGetPut_5,
        CAN_FIRE_RL_msNoSynth_0_ar_forwardReady,
        CAN_FIRE_RL_msNoSynth_0_aw_forwardReady,
        CAN_FIRE_RL_msNoSynth_0_b_buffer_dequeue,
@@ -2244,42 +2234,42 @@ module mkCore(CLK,
        CAN_FIRE_RL_tagController_tmp_ug_slave_u_r_warnDoDrop,
        CAN_FIRE_RL_tagController_tmp_ug_slave_u_w_doPut,
        CAN_FIRE_RL_tagController_tmp_ug_slave_u_w_warnDoPut,
-       CAN_FIRE___me_check_142,
-       CAN_FIRE___me_check_143,
-       CAN_FIRE___me_check_144,
-       CAN_FIRE___me_check_146,
+       CAN_FIRE___me_check_147,
+       CAN_FIRE___me_check_148,
        CAN_FIRE___me_check_149,
-       CAN_FIRE___me_check_150,
        CAN_FIRE___me_check_151,
-       CAN_FIRE___me_check_153,
+       CAN_FIRE___me_check_154,
+       CAN_FIRE___me_check_155,
        CAN_FIRE___me_check_156,
        CAN_FIRE___me_check_158,
-       CAN_FIRE___me_check_160,
-       CAN_FIRE___me_check_168,
-       CAN_FIRE___me_check_170,
-       CAN_FIRE___me_check_172,
-       CAN_FIRE___me_check_181,
-       CAN_FIRE___me_check_183,
-       CAN_FIRE___me_check_185,
-       CAN_FIRE___me_check_187,
-       CAN_FIRE___me_check_189,
+       CAN_FIRE___me_check_161,
+       CAN_FIRE___me_check_163,
+       CAN_FIRE___me_check_165,
+       CAN_FIRE___me_check_173,
+       CAN_FIRE___me_check_175,
+       CAN_FIRE___me_check_177,
+       CAN_FIRE___me_check_186,
+       CAN_FIRE___me_check_188,
        CAN_FIRE___me_check_190,
-       CAN_FIRE___me_check_191,
-       CAN_FIRE___me_check_193,
+       CAN_FIRE___me_check_192,
+       CAN_FIRE___me_check_194,
+       CAN_FIRE___me_check_195,
        CAN_FIRE___me_check_196,
-       CAN_FIRE___me_check_197,
        CAN_FIRE___me_check_198,
-       CAN_FIRE___me_check_200,
+       CAN_FIRE___me_check_201,
+       CAN_FIRE___me_check_202,
        CAN_FIRE___me_check_203,
        CAN_FIRE___me_check_205,
-       CAN_FIRE___me_check_207,
-       CAN_FIRE___me_check_215,
-       CAN_FIRE___me_check_217,
-       CAN_FIRE___me_check_219,
-       CAN_FIRE___me_check_228,
-       CAN_FIRE___me_check_230,
-       CAN_FIRE___me_check_232,
-       CAN_FIRE___me_check_234,
+       CAN_FIRE___me_check_208,
+       CAN_FIRE___me_check_210,
+       CAN_FIRE___me_check_212,
+       CAN_FIRE___me_check_220,
+       CAN_FIRE___me_check_222,
+       CAN_FIRE___me_check_224,
+       CAN_FIRE___me_check_233,
+       CAN_FIRE___me_check_235,
+       CAN_FIRE___me_check_237,
+       CAN_FIRE___me_check_239,
        CAN_FIRE_core_external_interrupt_sources_0_m_interrupt_req,
        CAN_FIRE_core_external_interrupt_sources_10_m_interrupt_req,
        CAN_FIRE_core_external_interrupt_sources_11_m_interrupt_req,
@@ -2426,6 +2416,11 @@ module mkCore(CLK,
        WILL_FIRE_RL_merged_1_genFirst,
        WILL_FIRE_RL_merged_1_genOther,
        WILL_FIRE_RL_mkConnectionGetPut,
+       WILL_FIRE_RL_mkConnectionGetPut_1,
+       WILL_FIRE_RL_mkConnectionGetPut_2,
+       WILL_FIRE_RL_mkConnectionGetPut_3,
+       WILL_FIRE_RL_mkConnectionGetPut_4,
+       WILL_FIRE_RL_mkConnectionGetPut_5,
        WILL_FIRE_RL_msNoSynth_0_ar_forwardReady,
        WILL_FIRE_RL_msNoSynth_0_aw_forwardReady,
        WILL_FIRE_RL_msNoSynth_0_b_buffer_dequeue,
@@ -2554,42 +2549,42 @@ module mkCore(CLK,
        WILL_FIRE_RL_tagController_tmp_ug_slave_u_r_warnDoDrop,
        WILL_FIRE_RL_tagController_tmp_ug_slave_u_w_doPut,
        WILL_FIRE_RL_tagController_tmp_ug_slave_u_w_warnDoPut,
-       WILL_FIRE___me_check_142,
-       WILL_FIRE___me_check_143,
-       WILL_FIRE___me_check_144,
-       WILL_FIRE___me_check_146,
+       WILL_FIRE___me_check_147,
+       WILL_FIRE___me_check_148,
        WILL_FIRE___me_check_149,
-       WILL_FIRE___me_check_150,
        WILL_FIRE___me_check_151,
-       WILL_FIRE___me_check_153,
+       WILL_FIRE___me_check_154,
+       WILL_FIRE___me_check_155,
        WILL_FIRE___me_check_156,
        WILL_FIRE___me_check_158,
-       WILL_FIRE___me_check_160,
-       WILL_FIRE___me_check_168,
-       WILL_FIRE___me_check_170,
-       WILL_FIRE___me_check_172,
-       WILL_FIRE___me_check_181,
-       WILL_FIRE___me_check_183,
-       WILL_FIRE___me_check_185,
-       WILL_FIRE___me_check_187,
-       WILL_FIRE___me_check_189,
+       WILL_FIRE___me_check_161,
+       WILL_FIRE___me_check_163,
+       WILL_FIRE___me_check_165,
+       WILL_FIRE___me_check_173,
+       WILL_FIRE___me_check_175,
+       WILL_FIRE___me_check_177,
+       WILL_FIRE___me_check_186,
+       WILL_FIRE___me_check_188,
        WILL_FIRE___me_check_190,
-       WILL_FIRE___me_check_191,
-       WILL_FIRE___me_check_193,
+       WILL_FIRE___me_check_192,
+       WILL_FIRE___me_check_194,
+       WILL_FIRE___me_check_195,
        WILL_FIRE___me_check_196,
-       WILL_FIRE___me_check_197,
        WILL_FIRE___me_check_198,
-       WILL_FIRE___me_check_200,
+       WILL_FIRE___me_check_201,
+       WILL_FIRE___me_check_202,
        WILL_FIRE___me_check_203,
        WILL_FIRE___me_check_205,
-       WILL_FIRE___me_check_207,
-       WILL_FIRE___me_check_215,
-       WILL_FIRE___me_check_217,
-       WILL_FIRE___me_check_219,
-       WILL_FIRE___me_check_228,
-       WILL_FIRE___me_check_230,
-       WILL_FIRE___me_check_232,
-       WILL_FIRE___me_check_234,
+       WILL_FIRE___me_check_208,
+       WILL_FIRE___me_check_210,
+       WILL_FIRE___me_check_212,
+       WILL_FIRE___me_check_220,
+       WILL_FIRE___me_check_222,
+       WILL_FIRE___me_check_224,
+       WILL_FIRE___me_check_233,
+       WILL_FIRE___me_check_235,
+       WILL_FIRE___me_check_237,
+       WILL_FIRE___me_check_239,
        WILL_FIRE_core_external_interrupt_sources_0_m_interrupt_req,
        WILL_FIRE_core_external_interrupt_sources_10_m_interrupt_req,
        WILL_FIRE_core_external_interrupt_sources_11_m_interrupt_req,
@@ -2642,7 +2637,7 @@ module mkCore(CLK,
 	       MUX_split_2_flitLeft$write_1__VAL_1;
   wire MUX_activeSource_0$write_1__SEL_1,
        MUX_activeSource_0$write_1__VAL_1,
-       MUX_activeSource_1$write_1__VAL_1,
+       MUX_activeSource_1$write_1__VAL_2,
        MUX_activeSource_1_1_0$write_1__SEL_1,
        MUX_activeSource_1_1_0$write_1__SEL_2,
        MUX_activeSource_1_1_0$write_1__VAL_1,
@@ -2710,32 +2705,32 @@ module mkCore(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [63 : 0] v__h47914;
-  reg [63 : 0] v__h47303;
-  reg [63 : 0] v__h51923;
-  reg [63 : 0] v__h51312;
-  reg [63 : 0] v__h81859;
-  reg [63 : 0] v__h81248;
-  reg [63 : 0] v__h84752;
-  reg [63 : 0] v__h84141;
-  reg [63 : 0] v__h62618;
-  reg [63 : 0] v__h62237;
-  reg [63 : 0] v__h64688;
-  reg [63 : 0] v__h64307;
-  reg [63 : 0] v__h66587;
-  reg [63 : 0] v__h66206;
-  reg [63 : 0] v__h94032;
-  reg [63 : 0] v__h93651;
-  reg [63 : 0] v__h96523;
-  reg [63 : 0] v__h96142;
-  reg [63 : 0] v__h98833;
-  reg [63 : 0] v__h98452;
-  reg [31 : 0] v__h19806;
-  reg [31 : 0] v__h19984;
-  reg [31 : 0] v__h20350;
-  reg [31 : 0] v__h19800;
-  reg [31 : 0] v__h19978;
-  reg [31 : 0] v__h20344;
+  reg [63 : 0] v__h49196;
+  reg [63 : 0] v__h48585;
+  reg [63 : 0] v__h53205;
+  reg [63 : 0] v__h52594;
+  reg [63 : 0] v__h83141;
+  reg [63 : 0] v__h82530;
+  reg [63 : 0] v__h86034;
+  reg [63 : 0] v__h85423;
+  reg [63 : 0] v__h63900;
+  reg [63 : 0] v__h63519;
+  reg [63 : 0] v__h65970;
+  reg [63 : 0] v__h65589;
+  reg [63 : 0] v__h67869;
+  reg [63 : 0] v__h67488;
+  reg [63 : 0] v__h95314;
+  reg [63 : 0] v__h94933;
+  reg [63 : 0] v__h97805;
+  reg [63 : 0] v__h97424;
+  reg [63 : 0] v__h100115;
+  reg [63 : 0] v__h99734;
+  reg [31 : 0] v__h21088;
+  reg [31 : 0] v__h21266;
+  reg [31 : 0] v__h21632;
+  reg [31 : 0] v__h21082;
+  reg [31 : 0] v__h21260;
+  reg [31 : 0] v__h21626;
   // synopsys translate_on
 
   // remaining internal signals
@@ -2743,216 +2738,216 @@ module mkCore(CLK,
 		tagController_tmp_shimMaster_awff_rvport1__re_ETC__q2;
   wire [72 : 0] tagController_tmp_shimMaster_wff_rvport1__rea_ETC__q3,
 		tagController_tmp_shimSlave_rff_rvport1__read_ETC__q1;
-  wire [63 : 0] araddr__h14020,
-		aw_awaddr__h9288,
-		tmp__h6846,
-		tmp__h9071,
-		v_araddr__h14037,
-		x__h34704,
-		x__h34729,
-		x__h37512,
-		x__h37537,
-		x__h6687,
-		x__h69163,
-		x__h69188,
-		x__h71645,
-		x__h71670;
-  wire [39 : 0] x__h9320;
-  wire [8 : 0] x_port1__read__h70292, x_port1__read__h72756;
-  wire [7 : 0] arlen__h14021, v_arlen__h14038;
-  wire [5 : 0] v_arid__h14036;
-  wire [4 : 0] a_awid__h35864,
-	       a_awid__h38629,
-	       fatReq_arid__h69731,
-	       fatReq_arid__h72198,
+  wire [63 : 0] aw_awaddr__h10570,
+		tmp__h10353,
+		tmp__h8128,
+		v_araddr__h15319,
+		x__h35986,
+		x__h36011,
+		x__h38794,
+		x__h38819,
+		x__h70445,
+		x__h70470,
+		x__h72927,
+		x__h72952,
+		x__h7969;
+  wire [39 : 0] x__h10602;
+  wire [8 : 0] x_port1__read__h71574, x_port1__read__h74038;
+  wire [7 : 0] arlen__h15303, v_arlen__h15320;
+  wire [5 : 0] v_arid__h15318;
+  wire [4 : 0] a_awid__h37146,
+	       a_awid__h39911,
+	       fatReq_arid__h71013,
+	       fatReq_arid__h73480,
 	       tagController_tmp_ug_slave_u_b_peekWirewget_B_ETC__q26,
 	       tagController_tmp_ug_slave_u_r_peekWirewget_B_ETC__q25;
-  wire [3 : 0] _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258,
-	       arcache__h14025,
-	       x__h11097,
-	       x__h11109,
-	       x__h11121,
-	       x__h11133,
-	       x__h11145,
-	       x__h11157,
-	       x__h11169,
-	       x__h12693,
-	       x__h14101,
-	       x__h9363,
-	       y__h11098,
-	       y__h11110,
-	       y__h11122,
-	       y__h11134,
-	       y__h11146,
-	       y__h11158,
-	       y__h11170;
-  wire [2 : 0] aw_awsize_val__h11027, v_arsize_val__h14083;
-  wire [1 : 0] IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124,
-	       IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229,
-	       IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787,
-	       IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879,
-	       SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22,
-	       SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17,
-	       SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12,
-	       SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7,
+  wire [3 : 0] _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296,
+	       arcache__h15307,
+	       x__h10645,
+	       x__h12379,
+	       x__h12391,
+	       x__h12403,
+	       x__h12415,
+	       x__h12427,
+	       x__h12439,
+	       x__h12451,
+	       x__h13975,
+	       x__h15383,
+	       y__h12380,
+	       y__h12392,
+	       y__h12404,
+	       y__h12416,
+	       y__h12428,
+	       y__h12440,
+	       y__h12452;
+  wire [2 : 0] aw_awsize_val__h12309, v_arsize_val__h15365;
+  wire [1 : 0] IF_IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dm_ETC___d1162,
+	       IF_IF_merged_1_flitLeft_017_EQ_0_018_THEN_debu_ETC___d1267,
+	       IF_cpu_dmem_master_ar_araddr__799_BITS_63_TO_4_ETC___d1825,
+	       IF_debug_module_master_ar_araddr__891_BITS_63__ETC___d1917,
+	       SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22,
+	       SEXT_SEXT_arbiter_1_firstHot_1_103_104_BIT_0_1_ETC__q17,
+	       SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12,
+	       SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7,
 	       SEXT_arbiter_1_1_firstHot__q19,
 	       SEXT_arbiter_1_1_lastSelect_1__q21,
 	       SEXT_arbiter_1_1_lastSelect__q20,
 	       SEXT_arbiter_1_firstHot_1__q15,
-	       SEXT_arbiter_1_firstHot__q9,
+	       SEXT_arbiter_1_firstHot__q10,
 	       SEXT_arbiter_1_lastSelect_1__q11,
 	       SEXT_arbiter_1_lastSelect_2__q16,
-	       SEXT_arbiter_1_lastSelect__q10,
+	       SEXT_arbiter_1_lastSelect__q9,
 	       SEXT_arbiter_firstHot__q5,
 	       SEXT_arbiter_lastSelect__q6,
-	       SEXT_x0384__q18,
-	       SEXT_x0919__q13,
-	       SEXT_x0953__q14,
-	       SEXT_x2329__q23,
-	       SEXT_x2363__q24,
-	       SEXT_x6433__q8;
-  wire IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033,
-       IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373,
-       IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049,
-       IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389,
-       IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285,
-       IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291,
-       IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297,
-       IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085,
-       IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089,
-       IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635,
-       IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641,
-       IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647,
-       IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425,
-       IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1159,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112,
-       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1264,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217,
-       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227,
-       IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343,
-       IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344,
-       IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345,
-       SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266,
-       SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260,
-       SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254,
-       SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073,
-       SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616,
-       SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610,
-       SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069,
-       SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604,
-       SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413,
-       SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409,
-       cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775,
-       cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785,
-       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766,
-       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771,
-       cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764,
-       cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769,
-       debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867,
-       debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877,
-       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858,
-       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863,
-       debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856,
-       debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861,
-       reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587,
-       reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237,
-       split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002,
-       split_1_doPut_whas__024_AND_split_1_doPut_wget_ETC___d1031,
-       split_2_doPut_whas__053_AND_split_2_doPut_wget_ETC___d1060,
-       state_1_1_058_AND_activeSource_1_0_1_125_126_A_ETC___d2128,
-       state_1_1_058_AND_activeSource_1_1_1_165_166_A_ETC___d2168,
-       state_1_1_1_238_AND_activeSource_1_1_0_332_333_ETC___d2335,
-       state_1_1_1_238_AND_activeSource_1_1_1_1_368_3_ETC___d2371,
-       state_1_1_1_238_AND_activeSource_1_1_2_404_405_ETC___d2407,
-       state_1_588_AND_activeSource_1_0_676_677_AND_i_ETC___d1679,
-       state_1_588_AND_activeSource_1_1_709_710_AND_i_ETC___d1712,
-       state_1_588_AND_activeSource_1_2_743_744_AND_i_ETC___d1746,
-       state_398_AND_activeSource_0_471_472_AND_ifcs__ETC___d1474,
-       state_398_AND_activeSource_1_515_516_AND_ifcs__ETC___d1518,
-       x__h45906,
-       x__h46009,
-       x__h46374,
-       x__h46433,
-       x__h46515,
-       x__h60098,
-       x__h60100,
-       x__h60249,
-       x__h60251,
-       x__h60385,
-       x__h60387,
-       x__h60857,
-       x__h60859,
-       x__h60919,
-       x__h60953,
-       x__h61045,
-       x__h61047,
-       x__h61226,
-       x__h61228,
-       x__h79857,
-       x__h79960,
-       x__h80325,
-       x__h80384,
-       x__h80466,
-       x__h91508,
-       x__h91510,
-       x__h91659,
-       x__h91661,
-       x__h91795,
-       x__h91797,
-       x__h92267,
-       x__h92269,
-       x__h92329,
-       x__h92363,
-       x__h92455,
-       x__h92457,
-       x__h92636,
-       x__h92638,
-       y__h45907,
-       y__h46010,
-       y__h46375,
-       y__h46516,
-       y__h60099,
-       y__h60101,
-       y__h60250,
-       y__h60252,
-       y__h60386,
-       y__h60388,
-       y__h60858,
-       y__h60860,
-       y__h61046,
-       y__h61048,
-       y__h61227,
-       y__h61229,
-       y__h79858,
-       y__h79961,
-       y__h80326,
-       y__h80467,
-       y__h91509,
-       y__h91511,
-       y__h91660,
-       y__h91662,
-       y__h91796,
-       y__h91798,
-       y__h92268,
-       y__h92270,
-       y__h92456,
-       y__h92458,
-       y__h92637,
-       y__h92639;
+	       SEXT_x1666__q18,
+	       SEXT_x2201__q13,
+	       SEXT_x2235__q14,
+	       SEXT_x3611__q23,
+	       SEXT_x3645__q24,
+	       SEXT_x7715__q8;
+  wire IF_NOT_ifcs_0_1_innerRoute_first__049_BIT_1_05_ETC___d2071,
+       IF_NOT_ifcs_0_innerRoute_first__389_BIT_1_398__ETC___d1411,
+       IF_NOT_ifcs_1_1_innerRoute_first__078_BIT_1_08_ETC___d2087,
+       IF_NOT_ifcs_1_innerRoute_first__418_BIT_1_422__ETC___d1427,
+       IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2323,
+       IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2329,
+       IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2335,
+       IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2123,
+       IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2127,
+       IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1673,
+       IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1679,
+       IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1685,
+       IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1463,
+       IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1467,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1127,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1197,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1144,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1146,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1150,
+       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1160,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1232,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1302,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1249,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1251,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1255,
+       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1265,
+       IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381,
+       IF_split_1_flitLeft_070_EQ_0_071_THEN_ssNoSynt_ETC___d1382,
+       IF_split_2_flitLeft_099_EQ_0_100_THEN_ssNoSynt_ETC___d1383,
+       SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304,
+       SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298,
+       SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292,
+       SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111,
+       SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654,
+       SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648,
+       SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107,
+       SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642,
+       SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451,
+       SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447,
+       cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1813,
+       cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1823,
+       cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804,
+       cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1809,
+       cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802,
+       cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_p_ETC___d1807,
+       debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1905,
+       debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1915,
+       debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896,
+       debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901,
+       debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894,
+       debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899,
+       plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437,
+       reqWires_1_0_whas__615_AND_reqWires_1_0_wget___ETC___d1625,
+       reqWires_1_1_0_whas__265_AND_reqWires_1_1_0_wg_ETC___d2275,
+       split_0_doPut_whas__033_AND_split_0_doPut_wget_ETC___d1040,
+       split_1_doPut_whas__062_AND_split_1_doPut_wget_ETC___d1069,
+       split_2_doPut_whas__091_AND_split_2_doPut_wget_ETC___d1098,
+       state_1_1_096_AND_activeSource_1_0_1_163_164_A_ETC___d2166,
+       state_1_1_096_AND_activeSource_1_1_1_203_204_A_ETC___d2206,
+       state_1_1_1_276_AND_activeSource_1_1_0_370_371_ETC___d2373,
+       state_1_1_1_276_AND_activeSource_1_1_1_1_406_4_ETC___d2409,
+       state_1_1_1_276_AND_activeSource_1_1_2_442_443_ETC___d2445,
+       state_1_626_AND_activeSource_1_0_714_715_AND_i_ETC___d1717,
+       state_1_626_AND_activeSource_1_1_747_748_AND_i_ETC___d1750,
+       state_1_626_AND_activeSource_1_2_781_782_AND_i_ETC___d1784,
+       state_436_AND_activeSource_0_509_510_AND_ifcs__ETC___d1512,
+       state_436_AND_activeSource_1_553_554_AND_ifcs__ETC___d1556,
+       x__h47188,
+       x__h47291,
+       x__h47656,
+       x__h47715,
+       x__h47797,
+       x__h61380,
+       x__h61382,
+       x__h61531,
+       x__h61533,
+       x__h61667,
+       x__h61669,
+       x__h62139,
+       x__h62141,
+       x__h62201,
+       x__h62235,
+       x__h62327,
+       x__h62329,
+       x__h62508,
+       x__h62510,
+       x__h81139,
+       x__h81242,
+       x__h81607,
+       x__h81666,
+       x__h81748,
+       x__h92790,
+       x__h92792,
+       x__h92941,
+       x__h92943,
+       x__h93077,
+       x__h93079,
+       x__h93549,
+       x__h93551,
+       x__h93611,
+       x__h93645,
+       x__h93737,
+       x__h93739,
+       x__h93918,
+       x__h93920,
+       y__h47189,
+       y__h47292,
+       y__h47657,
+       y__h47798,
+       y__h61381,
+       y__h61383,
+       y__h61532,
+       y__h61534,
+       y__h61668,
+       y__h61670,
+       y__h62140,
+       y__h62142,
+       y__h62328,
+       y__h62330,
+       y__h62509,
+       y__h62511,
+       y__h81140,
+       y__h81243,
+       y__h81608,
+       y__h81749,
+       y__h92791,
+       y__h92793,
+       y__h92942,
+       y__h92944,
+       y__h93078,
+       y__h93080,
+       y__h93550,
+       y__h93552,
+       y__h93738,
+       y__h93740,
+       y__h93919,
+       y__h93921;
 
   // action method set_verbosity
   assign RDY_set_verbosity = 1'd1 ;
@@ -2973,54 +2968,53 @@ module mkCore(CLK,
 	     EN_cpu_reset_server_response_get ;
 
   // value method cpu_imem_master_aw_awid
-  assign cpu_imem_master_awid =
-	     { 1'd0, cpu_imem_ug_u_aw_peekWire$wget[97:93] } ;
+  assign cpu_imem_master_awid = { 1'd0, delay_shim_awff$D_OUT[97:93] } ;
 
   // value method cpu_imem_master_aw_awaddr
-  assign cpu_imem_master_awaddr = cpu_imem_ug_u_aw_peekWire$wget[92:29] ;
+  assign cpu_imem_master_awaddr = delay_shim_awff$D_OUT[92:29] ;
 
   // value method cpu_imem_master_aw_awlen
-  assign cpu_imem_master_awlen = cpu_imem_ug_u_aw_peekWire$wget[28:21] ;
+  assign cpu_imem_master_awlen = delay_shim_awff$D_OUT[28:21] ;
 
   // value method cpu_imem_master_aw_awsize
-  assign cpu_imem_master_awsize = cpu_imem_ug_u_aw_peekWire$wget[20:18] ;
+  assign cpu_imem_master_awsize = delay_shim_awff$D_OUT[20:18] ;
 
   // value method cpu_imem_master_aw_awburst
-  assign cpu_imem_master_awburst = cpu_imem_ug_u_aw_peekWire$wget[17:16] ;
+  assign cpu_imem_master_awburst = delay_shim_awff$D_OUT[17:16] ;
 
   // value method cpu_imem_master_aw_awlock
-  assign cpu_imem_master_awlock = cpu_imem_ug_u_aw_peekWire$wget[15] ;
+  assign cpu_imem_master_awlock = delay_shim_awff$D_OUT[15] ;
 
   // value method cpu_imem_master_aw_awcache
-  assign cpu_imem_master_awcache = cpu_imem_ug_u_aw_peekWire$wget[14:11] ;
+  assign cpu_imem_master_awcache = delay_shim_awff$D_OUT[14:11] ;
 
   // value method cpu_imem_master_aw_awprot
-  assign cpu_imem_master_awprot = cpu_imem_ug_u_aw_peekWire$wget[10:8] ;
+  assign cpu_imem_master_awprot = delay_shim_awff$D_OUT[10:8] ;
 
   // value method cpu_imem_master_aw_awqos
-  assign cpu_imem_master_awqos = cpu_imem_ug_u_aw_peekWire$wget[7:4] ;
+  assign cpu_imem_master_awqos = delay_shim_awff$D_OUT[7:4] ;
 
   // value method cpu_imem_master_aw_awregion
-  assign cpu_imem_master_awregion = cpu_imem_ug_u_aw_peekWire$wget[3:0] ;
+  assign cpu_imem_master_awregion = delay_shim_awff$D_OUT[3:0] ;
 
   // value method cpu_imem_master_aw_awvalid
-  assign cpu_imem_master_awvalid = cpu$imem_master_awvalid ;
+  assign cpu_imem_master_awvalid = delay_shim_awff$EMPTY_N ;
 
   // action method cpu_imem_master_aw_awready
   assign CAN_FIRE_cpu_imem_master_aw_awready = 1'd1 ;
   assign WILL_FIRE_cpu_imem_master_aw_awready = 1'd1 ;
 
   // value method cpu_imem_master_w_wdata
-  assign cpu_imem_master_wdata = cpu_imem_ug_u_w_peekWire$wget[73:10] ;
+  assign cpu_imem_master_wdata = delay_shim_wff$D_OUT[73:10] ;
 
   // value method cpu_imem_master_w_wstrb
-  assign cpu_imem_master_wstrb = cpu_imem_ug_u_w_peekWire$wget[9:2] ;
+  assign cpu_imem_master_wstrb = delay_shim_wff$D_OUT[9:2] ;
 
   // value method cpu_imem_master_w_wlast
-  assign cpu_imem_master_wlast = cpu_imem_ug_u_w_peekWire$wget[1] ;
+  assign cpu_imem_master_wlast = delay_shim_wff$D_OUT[1] ;
 
   // value method cpu_imem_master_w_wvalid
-  assign cpu_imem_master_wvalid = cpu$imem_master_wvalid ;
+  assign cpu_imem_master_wvalid = delay_shim_wff$EMPTY_N ;
 
   // action method cpu_imem_master_w_wready
   assign CAN_FIRE_cpu_imem_master_w_wready = 1'd1 ;
@@ -3031,41 +3025,40 @@ module mkCore(CLK,
   assign WILL_FIRE_cpu_imem_master_b_bflit = cpu_imem_master_bvalid ;
 
   // value method cpu_imem_master_b_bready
-  assign cpu_imem_master_bready = cpu_imem_b_buffer_ff$FULL_N ;
+  assign cpu_imem_master_bready = delay_shim_bff$FULL_N ;
 
   // value method cpu_imem_master_ar_arid
-  assign cpu_imem_master_arid =
-	     { 1'd0, cpu_imem_ug_u_ar_peekWire$wget[97:93] } ;
+  assign cpu_imem_master_arid = { 1'd0, delay_shim_arff$D_OUT[97:93] } ;
 
   // value method cpu_imem_master_ar_araddr
-  assign cpu_imem_master_araddr = cpu_imem_ug_u_ar_peekWire$wget[92:29] ;
+  assign cpu_imem_master_araddr = delay_shim_arff$D_OUT[92:29] ;
 
   // value method cpu_imem_master_ar_arlen
-  assign cpu_imem_master_arlen = cpu_imem_ug_u_ar_peekWire$wget[28:21] ;
+  assign cpu_imem_master_arlen = delay_shim_arff$D_OUT[28:21] ;
 
   // value method cpu_imem_master_ar_arsize
-  assign cpu_imem_master_arsize = cpu_imem_ug_u_ar_peekWire$wget[20:18] ;
+  assign cpu_imem_master_arsize = delay_shim_arff$D_OUT[20:18] ;
 
   // value method cpu_imem_master_ar_arburst
-  assign cpu_imem_master_arburst = cpu_imem_ug_u_ar_peekWire$wget[17:16] ;
+  assign cpu_imem_master_arburst = delay_shim_arff$D_OUT[17:16] ;
 
   // value method cpu_imem_master_ar_arlock
-  assign cpu_imem_master_arlock = cpu_imem_ug_u_ar_peekWire$wget[15] ;
+  assign cpu_imem_master_arlock = delay_shim_arff$D_OUT[15] ;
 
   // value method cpu_imem_master_ar_arcache
-  assign cpu_imem_master_arcache = cpu_imem_ug_u_ar_peekWire$wget[14:11] ;
+  assign cpu_imem_master_arcache = delay_shim_arff$D_OUT[14:11] ;
 
   // value method cpu_imem_master_ar_arprot
-  assign cpu_imem_master_arprot = cpu_imem_ug_u_ar_peekWire$wget[10:8] ;
+  assign cpu_imem_master_arprot = delay_shim_arff$D_OUT[10:8] ;
 
   // value method cpu_imem_master_ar_arqos
-  assign cpu_imem_master_arqos = cpu_imem_ug_u_ar_peekWire$wget[7:4] ;
+  assign cpu_imem_master_arqos = delay_shim_arff$D_OUT[7:4] ;
 
   // value method cpu_imem_master_ar_arregion
-  assign cpu_imem_master_arregion = cpu_imem_ug_u_ar_peekWire$wget[3:0] ;
+  assign cpu_imem_master_arregion = delay_shim_arff$D_OUT[3:0] ;
 
   // value method cpu_imem_master_ar_arvalid
-  assign cpu_imem_master_arvalid = cpu$imem_master_arvalid ;
+  assign cpu_imem_master_arvalid = delay_shim_arff$EMPTY_N ;
 
   // action method cpu_imem_master_ar_arready
   assign CAN_FIRE_cpu_imem_master_ar_arready = 1'd1 ;
@@ -3076,7 +3069,7 @@ module mkCore(CLK,
   assign WILL_FIRE_cpu_imem_master_r_rflit = cpu_imem_master_rvalid ;
 
   // value method cpu_imem_master_r_rready
-  assign cpu_imem_master_rready = cpu_imem_r_buffer_ff$FULL_N ;
+  assign cpu_imem_master_rready = delay_shim_rff$FULL_N ;
 
   // value method cpu_dmem_master_aw_awid
   assign cpu_dmem_master_awid =
@@ -3567,6 +3560,76 @@ module mkCore(CLK,
 			      .master_arregion(debug_module$master_arregion),
 			      .master_arvalid(debug_module$master_arvalid),
 			      .master_rready(debug_module$master_rready));
+
+  // submodule delay_shim_arff
+  SizedFIFO #(.p1width(32'd98),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_arff(.RST(RST_N),
+					       .CLK(CLK),
+					       .D_IN(delay_shim_arff$D_IN),
+					       .ENQ(delay_shim_arff$ENQ),
+					       .DEQ(delay_shim_arff$DEQ),
+					       .CLR(delay_shim_arff$CLR),
+					       .D_OUT(delay_shim_arff$D_OUT),
+					       .FULL_N(delay_shim_arff$FULL_N),
+					       .EMPTY_N(delay_shim_arff$EMPTY_N));
+
+  // submodule delay_shim_awff
+  SizedFIFO #(.p1width(32'd98),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_awff(.RST(RST_N),
+					       .CLK(CLK),
+					       .D_IN(delay_shim_awff$D_IN),
+					       .ENQ(delay_shim_awff$ENQ),
+					       .DEQ(delay_shim_awff$DEQ),
+					       .CLR(delay_shim_awff$CLR),
+					       .D_OUT(delay_shim_awff$D_OUT),
+					       .FULL_N(delay_shim_awff$FULL_N),
+					       .EMPTY_N(delay_shim_awff$EMPTY_N));
+
+  // submodule delay_shim_bff
+  SizedFIFO #(.p1width(32'd7),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_bff(.RST(RST_N),
+					      .CLK(CLK),
+					      .D_IN(delay_shim_bff$D_IN),
+					      .ENQ(delay_shim_bff$ENQ),
+					      .DEQ(delay_shim_bff$DEQ),
+					      .CLR(delay_shim_bff$CLR),
+					      .D_OUT(delay_shim_bff$D_OUT),
+					      .FULL_N(delay_shim_bff$FULL_N),
+					      .EMPTY_N(delay_shim_bff$EMPTY_N));
+
+  // submodule delay_shim_rff
+  SizedFIFO #(.p1width(32'd73),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_rff(.RST(RST_N),
+					      .CLK(CLK),
+					      .D_IN(delay_shim_rff$D_IN),
+					      .ENQ(delay_shim_rff$ENQ),
+					      .DEQ(delay_shim_rff$DEQ),
+					      .CLR(delay_shim_rff$CLR),
+					      .D_OUT(delay_shim_rff$D_OUT),
+					      .FULL_N(delay_shim_rff$FULL_N),
+					      .EMPTY_N(delay_shim_rff$EMPTY_N));
+
+  // submodule delay_shim_wff
+  SizedFIFO #(.p1width(32'd74),
+	      .p2depth(32'd4),
+	      .p3cntr_width(32'd2),
+	      .guarded(32'd1)) delay_shim_wff(.RST(RST_N),
+					      .CLK(CLK),
+					      .D_IN(delay_shim_wff$D_IN),
+					      .ENQ(delay_shim_wff$ENQ),
+					      .DEQ(delay_shim_wff$DEQ),
+					      .CLR(delay_shim_wff$CLR),
+					      .D_OUT(delay_shim_wff$D_OUT),
+					      .FULL_N(delay_shim_wff$FULL_N),
+					      .EMPTY_N(delay_shim_wff$EMPTY_N));
 
   // submodule f_reset_reqs
   FIFO2 #(.width(32'd1), .guarded(32'd1)) f_reset_reqs(.RST(RST_N),
@@ -4320,12 +4383,6 @@ module mkCore(CLK,
 					   .memory_response_canPut(),
 					   .RDY_memory_response_put(tagController_tmp_tagCon$RDY_memory_response_put));
 
-  // rule RL_ClientServerRequest
-  assign CAN_FIRE_RL_ClientServerRequest =
-	     debug_module$RDY_hart0_client_run_halt_request_get &&
-	     cpu$RDY_hart0_server_run_halt_request_put ;
-  assign WILL_FIRE_RL_ClientServerRequest = CAN_FIRE_RL_ClientServerRequest ;
-
   // rule RL_ClientServerResponse
   assign CAN_FIRE_RL_ClientServerResponse =
 	     debug_module$RDY_hart0_client_run_halt_response_put &&
@@ -4333,10 +4390,10 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_ClientServerResponse =
 	     CAN_FIRE_RL_ClientServerResponse ;
 
-  // rule RL_mkConnectionGetPut
-  assign CAN_FIRE_RL_mkConnectionGetPut =
+  // rule RL_mkConnectionGetPut_5
+  assign CAN_FIRE_RL_mkConnectionGetPut_5 =
 	     debug_module$RDY_hart0_get_other_req_get ;
-  assign WILL_FIRE_RL_mkConnectionGetPut =
+  assign WILL_FIRE_RL_mkConnectionGetPut_5 =
 	     debug_module$RDY_hart0_get_other_req_get ;
 
   // rule RL_ClientServerRequest_1
@@ -4420,51 +4477,51 @@ module mkCore(CLK,
   // rule RL_burst
   assign CAN_FIRE_RL_burst =
 	     ifcs_0_innerReq$EMPTY_N && ifcs_0_innerRoute$EMPTY_N &&
-	     state_398_AND_activeSource_0_471_472_AND_ifcs__ETC___d1474 ;
+	     state_436_AND_activeSource_0_509_510_AND_ifcs__ETC___d1512 ;
   assign WILL_FIRE_RL_burst = CAN_FIRE_RL_burst ;
 
   // rule RL_source_selected_1
   assign CAN_FIRE_RL_source_selected_1 =
 	     (!ifcs_1_innerRoute$EMPTY_N || ifcs_1_innerReq$EMPTY_N) &&
 	     !state &&
-	     MUX_activeSource_1$write_1__VAL_1 ;
+	     MUX_activeSource_1$write_1__VAL_2 ;
   assign WILL_FIRE_RL_source_selected_1 = CAN_FIRE_RL_source_selected_1 ;
 
   // rule RL_burst_1
   assign CAN_FIRE_RL_burst_1 =
 	     ifcs_1_innerReq$EMPTY_N && ifcs_1_innerRoute$EMPTY_N &&
-	     state_398_AND_activeSource_1_515_516_AND_ifcs__ETC___d1518 ;
+	     state_436_AND_activeSource_1_553_554_AND_ifcs__ETC___d1556 ;
   assign WILL_FIRE_RL_burst_1 = CAN_FIRE_RL_burst_1 ;
 
-  // rule __me_check_168
-  assign CAN_FIRE___me_check_168 = 1'b1 ;
-  assign WILL_FIRE___me_check_168 = 1'b1 ;
+  // rule __me_check_173
+  assign CAN_FIRE___me_check_173 = 1'b1 ;
+  assign WILL_FIRE___me_check_173 = 1'b1 ;
 
-  // rule __me_check_170
-  assign CAN_FIRE___me_check_170 = 1'b1 ;
-  assign WILL_FIRE___me_check_170 = 1'b1 ;
+  // rule __me_check_175
+  assign CAN_FIRE___me_check_175 = 1'b1 ;
+  assign WILL_FIRE___me_check_175 = 1'b1 ;
 
   // rule RL_sink_selected
   assign CAN_FIRE_RL_sink_selected =
-	     IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343 &&
+	     IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381 &&
 	     flitToSink_0$whas ;
   assign WILL_FIRE_RL_sink_selected = CAN_FIRE_RL_sink_selected ;
 
   // rule RL_sink_selected_1
   assign CAN_FIRE_RL_sink_selected_1 =
-	     IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344 &&
+	     IF_split_1_flitLeft_070_EQ_0_071_THEN_ssNoSynt_ETC___d1382 &&
 	     flitToSink_1$whas ;
   assign WILL_FIRE_RL_sink_selected_1 = CAN_FIRE_RL_sink_selected_1 ;
 
   // rule RL_sink_selected_2
   assign CAN_FIRE_RL_sink_selected_2 =
-	     IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 &&
+	     IF_split_2_flitLeft_099_EQ_0_100_THEN_ssNoSynt_ETC___d1383 &&
 	     flitToSink_2$whas ;
   assign WILL_FIRE_RL_sink_selected_2 = CAN_FIRE_RL_sink_selected_2 ;
 
-  // rule __me_check_172
-  assign CAN_FIRE___me_check_172 = 1'b1 ;
-  assign WILL_FIRE___me_check_172 = 1'b1 ;
+  // rule __me_check_177
+  assign CAN_FIRE___me_check_177 = 1'b1 ;
+  assign WILL_FIRE___me_check_177 = 1'b1 ;
 
   // rule RL_checkSinkReady_5
   assign CAN_FIRE_RL_checkSinkReady_5 = 1'd1 ;
@@ -4505,7 +4562,7 @@ module mkCore(CLK,
   // rule RL_burst_5
   assign CAN_FIRE_RL_burst_5 =
 	     ifcs_0_1_innerReq$EMPTY_N && ifcs_0_1_innerRoute$EMPTY_N &&
-	     state_1_1_058_AND_activeSource_1_0_1_125_126_A_ETC___d2128 ;
+	     state_1_1_096_AND_activeSource_1_0_1_163_164_A_ETC___d2166 ;
   assign WILL_FIRE_RL_burst_5 = CAN_FIRE_RL_burst_5 ;
 
   // rule RL_source_selected_6
@@ -4518,16 +4575,16 @@ module mkCore(CLK,
   // rule RL_burst_6
   assign CAN_FIRE_RL_burst_6 =
 	     ifcs_1_1_innerReq$EMPTY_N && ifcs_1_1_innerRoute$EMPTY_N &&
-	     state_1_1_058_AND_activeSource_1_1_1_165_166_A_ETC___d2168 ;
+	     state_1_1_096_AND_activeSource_1_1_1_203_204_A_ETC___d2206 ;
   assign WILL_FIRE_RL_burst_6 = CAN_FIRE_RL_burst_6 ;
 
-  // rule __me_check_215
-  assign CAN_FIRE___me_check_215 = 1'b1 ;
-  assign WILL_FIRE___me_check_215 = 1'b1 ;
+  // rule __me_check_220
+  assign CAN_FIRE___me_check_220 = 1'b1 ;
+  assign WILL_FIRE___me_check_220 = 1'b1 ;
 
-  // rule __me_check_217
-  assign CAN_FIRE___me_check_217 = 1'b1 ;
-  assign WILL_FIRE___me_check_217 = 1'b1 ;
+  // rule __me_check_222
+  assign CAN_FIRE___me_check_222 = 1'b1 ;
+  assign WILL_FIRE___me_check_222 = 1'b1 ;
 
   // rule RL_sink_selected_5
   assign CAN_FIRE_RL_sink_selected_5 =
@@ -4544,80 +4601,93 @@ module mkCore(CLK,
 	     ssNoSynth_2_ar_buffer_ff$FULL_N && flitToSink_1_2$whas ;
   assign WILL_FIRE_RL_sink_selected_7 = CAN_FIRE_RL_sink_selected_7 ;
 
-  // rule __me_check_219
-  assign CAN_FIRE___me_check_219 = 1'b1 ;
-  assign WILL_FIRE___me_check_219 = 1'b1 ;
+  // rule __me_check_224
+  assign CAN_FIRE___me_check_224 = 1'b1 ;
+  assign WILL_FIRE___me_check_224 = 1'b1 ;
 
   // rule RL_cpu_imem_ug_u_aw_setPeek
-  assign CAN_FIRE_RL_cpu_imem_ug_u_aw_setPeek = cpu$imem_master_awvalid ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_aw_setPeek = cpu$imem_master_awvalid ;
+  assign CAN_FIRE_RL_cpu_imem_ug_u_aw_setPeek = delay_shim_awff$EMPTY_N ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_aw_setPeek = delay_shim_awff$EMPTY_N ;
 
   // rule RL_cpu_imem_ug_u_aw_warnDoDrop
   assign CAN_FIRE_RL_cpu_imem_ug_u_aw_warnDoDrop =
-	     cpu_imem_ug_u_aw_dropWire$whas && !cpu$imem_master_awvalid ;
+	     cpu_imem_ug_u_aw_dropWire$whas && !delay_shim_awff$EMPTY_N ;
   assign WILL_FIRE_RL_cpu_imem_ug_u_aw_warnDoDrop =
 	     CAN_FIRE_RL_cpu_imem_ug_u_aw_warnDoDrop ;
 
-  // rule RL_cpu_imem_ug_u_aw_doDrop
-  assign CAN_FIRE_RL_cpu_imem_ug_u_aw_doDrop =
-	     cpu$imem_master_awvalid && cpu_imem_ug_u_aw_dropWire$whas ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_aw_doDrop =
-	     CAN_FIRE_RL_cpu_imem_ug_u_aw_doDrop ;
+  // rule RL_mkConnectionGetPut
+  assign CAN_FIRE_RL_mkConnectionGetPut =
+	     cpu$imem_master_awvalid && delay_shim_awff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut = CAN_FIRE_RL_mkConnectionGetPut ;
 
   // rule RL_cpu_imem_aw_forwardReady
   assign CAN_FIRE_RL_cpu_imem_aw_forwardReady = 1'd1 ;
   assign WILL_FIRE_RL_cpu_imem_aw_forwardReady = 1'd1 ;
 
+  // rule RL_cpu_imem_ug_u_aw_doDrop
+  assign CAN_FIRE_RL_cpu_imem_ug_u_aw_doDrop =
+	     delay_shim_awff$EMPTY_N && cpu_imem_ug_u_aw_dropWire$whas ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_aw_doDrop =
+	     CAN_FIRE_RL_cpu_imem_ug_u_aw_doDrop &&
+	     !WILL_FIRE_RL_mkConnectionGetPut ;
+
   // rule RL_cpu_imem_ug_u_w_setPeek
-  assign CAN_FIRE_RL_cpu_imem_ug_u_w_setPeek = cpu$imem_master_wvalid ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_w_setPeek = cpu$imem_master_wvalid ;
+  assign CAN_FIRE_RL_cpu_imem_ug_u_w_setPeek = delay_shim_wff$EMPTY_N ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_w_setPeek = delay_shim_wff$EMPTY_N ;
 
   // rule RL_cpu_imem_ug_u_w_warnDoDrop
   assign CAN_FIRE_RL_cpu_imem_ug_u_w_warnDoDrop =
-	     cpu_imem_ug_u_w_dropWire$whas && !cpu$imem_master_wvalid ;
+	     cpu_imem_ug_u_w_dropWire$whas && !delay_shim_wff$EMPTY_N ;
   assign WILL_FIRE_RL_cpu_imem_ug_u_w_warnDoDrop =
 	     CAN_FIRE_RL_cpu_imem_ug_u_w_warnDoDrop ;
 
-  // rule RL_cpu_imem_ug_u_w_doDrop
-  assign CAN_FIRE_RL_cpu_imem_ug_u_w_doDrop =
-	     cpu$imem_master_wvalid && cpu_imem_ug_u_w_dropWire$whas ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_w_doDrop =
-	     CAN_FIRE_RL_cpu_imem_ug_u_w_doDrop ;
+  // rule RL_mkConnectionGetPut_1
+  assign CAN_FIRE_RL_mkConnectionGetPut_1 =
+	     cpu$imem_master_wvalid && delay_shim_wff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut_1 =
+	     CAN_FIRE_RL_mkConnectionGetPut_1 ;
 
   // rule RL_cpu_imem_w_forwardReady
   assign CAN_FIRE_RL_cpu_imem_w_forwardReady = 1'd1 ;
   assign WILL_FIRE_RL_cpu_imem_w_forwardReady = 1'd1 ;
 
+  // rule RL_cpu_imem_ug_u_w_doDrop
+  assign CAN_FIRE_RL_cpu_imem_ug_u_w_doDrop =
+	     delay_shim_wff$EMPTY_N && cpu_imem_ug_u_w_dropWire$whas ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_w_doDrop =
+	     CAN_FIRE_RL_cpu_imem_ug_u_w_doDrop &&
+	     !WILL_FIRE_RL_mkConnectionGetPut_1 ;
+
   // rule RL_cpu_imem_ug_u_b_warnDoPut
   assign CAN_FIRE_RL_cpu_imem_ug_u_b_warnDoPut =
-	     cpu_imem_ug_u_b_putWire$whas && !cpu_imem_b_buffer_ff$FULL_N ;
+	     cpu_imem_ug_u_b_putWire$whas && !delay_shim_bff$FULL_N ;
   assign WILL_FIRE_RL_cpu_imem_ug_u_b_warnDoPut =
 	     CAN_FIRE_RL_cpu_imem_ug_u_b_warnDoPut ;
 
-  // rule RL_cpu_imem_ug_u_b_doPut
-  assign CAN_FIRE_RL_cpu_imem_ug_u_b_doPut =
-	     cpu_imem_b_buffer_ff$FULL_N && cpu_imem_ug_u_b_putWire$whas ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_b_doPut =
-	     CAN_FIRE_RL_cpu_imem_ug_u_b_doPut ;
+  // rule RL_mkConnectionGetPut_2
+  assign CAN_FIRE_RL_mkConnectionGetPut_2 =
+	     delay_shim_bff$EMPTY_N && cpu_imem_b_buffer_ff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut_2 =
+	     CAN_FIRE_RL_mkConnectionGetPut_2 ;
 
   // rule RL_cpu_imem_b_forwardFlit
   assign CAN_FIRE_RL_cpu_imem_b_forwardFlit =
 	     cpu_imem_b_buffer_firstValid$Q_OUT &&
 	     (cpu_imem_b_buffer_ff$EMPTY_N ||
-	      CAN_FIRE_RL_cpu_imem_ug_u_b_doPut) ;
+	      CAN_FIRE_RL_mkConnectionGetPut_2) ;
   assign WILL_FIRE_RL_cpu_imem_b_forwardFlit =
 	     CAN_FIRE_RL_cpu_imem_b_forwardFlit ;
 
   // rule RL_cpu_imem_b_dropFlit
   assign CAN_FIRE_RL_cpu_imem_b_dropFlit =
 	     (cpu_imem_b_buffer_ff$EMPTY_N ||
-	      CAN_FIRE_RL_cpu_imem_ug_u_b_doPut) &&
+	      CAN_FIRE_RL_mkConnectionGetPut_2) &&
 	     cpu$imem_master_bready ;
   assign WILL_FIRE_RL_cpu_imem_b_dropFlit = CAN_FIRE_RL_cpu_imem_b_dropFlit ;
 
   // rule RL_cpu_imem_b_buffer_enqueue
   assign CAN_FIRE_RL_cpu_imem_b_buffer_enqueue =
-	     CAN_FIRE_RL_cpu_imem_ug_u_b_doPut &&
+	     CAN_FIRE_RL_mkConnectionGetPut_2 &&
 	     (!CAN_FIRE_RL_cpu_imem_b_dropFlit ||
 	      cpu_imem_b_buffer_ff$EMPTY_N) ;
   assign WILL_FIRE_RL_cpu_imem_b_buffer_enqueue =
@@ -4629,36 +4699,58 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_cpu_imem_b_buffer_dequeue =
 	     CAN_FIRE_RL_cpu_imem_b_buffer_dequeue ;
 
+  // rule RL_cpu_imem_ug_u_b_doPut
+  assign CAN_FIRE_RL_cpu_imem_ug_u_b_doPut =
+	     delay_shim_bff$FULL_N && cpu_imem_ug_u_b_putWire$whas ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_b_doPut =
+	     CAN_FIRE_RL_cpu_imem_ug_u_b_doPut ;
+
+  // rule RL_cpu_imem_ug_u_ar_setPeek
+  assign CAN_FIRE_RL_cpu_imem_ug_u_ar_setPeek = delay_shim_arff$EMPTY_N ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_ar_setPeek = delay_shim_arff$EMPTY_N ;
+
+  // rule RL_cpu_imem_ug_u_ar_warnDoDrop
+  assign CAN_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop =
+	     cpu_imem_ug_u_ar_dropWire$whas && !delay_shim_arff$EMPTY_N ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop =
+	     CAN_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop ;
+
+  // rule RL_cpu_imem_ug_u_ar_doDrop
+  assign CAN_FIRE_RL_cpu_imem_ug_u_ar_doDrop =
+	     delay_shim_arff$EMPTY_N && cpu_imem_ug_u_ar_dropWire$whas ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop =
+	     CAN_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
+
   // rule RL_cpu_imem_ug_u_r_warnDoPut
   assign CAN_FIRE_RL_cpu_imem_ug_u_r_warnDoPut =
-	     cpu_imem_ug_u_r_putWire$whas && !cpu_imem_r_buffer_ff$FULL_N ;
+	     cpu_imem_ug_u_r_putWire$whas && !delay_shim_rff$FULL_N ;
   assign WILL_FIRE_RL_cpu_imem_ug_u_r_warnDoPut =
 	     CAN_FIRE_RL_cpu_imem_ug_u_r_warnDoPut ;
 
-  // rule RL_cpu_imem_ug_u_r_doPut
-  assign CAN_FIRE_RL_cpu_imem_ug_u_r_doPut =
-	     cpu_imem_r_buffer_ff$FULL_N && cpu_imem_ug_u_r_putWire$whas ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_r_doPut =
-	     CAN_FIRE_RL_cpu_imem_ug_u_r_doPut ;
+  // rule RL_mkConnectionGetPut_4
+  assign CAN_FIRE_RL_mkConnectionGetPut_4 =
+	     delay_shim_rff$EMPTY_N && cpu_imem_r_buffer_ff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut_4 =
+	     CAN_FIRE_RL_mkConnectionGetPut_4 ;
 
   // rule RL_cpu_imem_r_forwardFlit
   assign CAN_FIRE_RL_cpu_imem_r_forwardFlit =
 	     cpu_imem_r_buffer_firstValid$Q_OUT &&
 	     (cpu_imem_r_buffer_ff$EMPTY_N ||
-	      CAN_FIRE_RL_cpu_imem_ug_u_r_doPut) ;
+	      CAN_FIRE_RL_mkConnectionGetPut_4) ;
   assign WILL_FIRE_RL_cpu_imem_r_forwardFlit =
 	     CAN_FIRE_RL_cpu_imem_r_forwardFlit ;
 
   // rule RL_cpu_imem_r_dropFlit
   assign CAN_FIRE_RL_cpu_imem_r_dropFlit =
 	     (cpu_imem_r_buffer_ff$EMPTY_N ||
-	      CAN_FIRE_RL_cpu_imem_ug_u_r_doPut) &&
+	      CAN_FIRE_RL_mkConnectionGetPut_4) &&
 	     cpu$imem_master_rready ;
   assign WILL_FIRE_RL_cpu_imem_r_dropFlit = CAN_FIRE_RL_cpu_imem_r_dropFlit ;
 
   // rule RL_cpu_imem_r_buffer_enqueue
   assign CAN_FIRE_RL_cpu_imem_r_buffer_enqueue =
-	     CAN_FIRE_RL_cpu_imem_ug_u_r_doPut &&
+	     CAN_FIRE_RL_mkConnectionGetPut_4 &&
 	     (!CAN_FIRE_RL_cpu_imem_r_dropFlit ||
 	      cpu_imem_r_buffer_ff$EMPTY_N) ;
   assign WILL_FIRE_RL_cpu_imem_r_buffer_enqueue =
@@ -4669,6 +4761,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_cpu_imem_r_dropFlit && cpu_imem_r_buffer_ff$EMPTY_N ;
   assign WILL_FIRE_RL_cpu_imem_r_buffer_dequeue =
 	     CAN_FIRE_RL_cpu_imem_r_buffer_dequeue ;
+
+  // rule RL_cpu_imem_ug_u_r_doPut
+  assign CAN_FIRE_RL_cpu_imem_ug_u_r_doPut =
+	     delay_shim_rff$FULL_N && cpu_imem_ug_u_r_putWire$whas ;
+  assign WILL_FIRE_RL_cpu_imem_ug_u_r_doPut =
+	     CAN_FIRE_RL_cpu_imem_ug_u_r_doPut ;
 
   // rule RL_tagController_tmp_passCacheResponse
   assign CAN_FIRE_RL_tagController_tmp_passCacheResponse =
@@ -4920,7 +5018,7 @@ module mkCore(CLK,
 
   // rule RL_split_0_putFirst
   assign CAN_FIRE_RL_split_0_putFirst =
-	     split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002 &&
+	     split_0_doPut_whas__033_AND_split_0_doPut_wget_ETC___d1040 &&
 	     split_0_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_0_putFirst = CAN_FIRE_RL_split_0_putFirst ;
 
@@ -5041,7 +5139,7 @@ module mkCore(CLK,
 
   // rule RL_split_1_putFirst
   assign CAN_FIRE_RL_split_1_putFirst =
-	     split_1_doPut_whas__024_AND_split_1_doPut_wget_ETC___d1031 &&
+	     split_1_doPut_whas__062_AND_split_1_doPut_wget_ETC___d1069 &&
 	     split_1_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_1_putFirst = CAN_FIRE_RL_split_1_putFirst ;
 
@@ -5116,7 +5214,7 @@ module mkCore(CLK,
 
   // rule RL_split_2_putFirst
   assign CAN_FIRE_RL_split_2_putFirst =
-	     split_2_doPut_whas__053_AND_split_2_doPut_wget_ETC___d1060 &&
+	     split_2_doPut_whas__091_AND_split_2_doPut_wget_ETC___d1098 &&
 	     split_2_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_2_putFirst = CAN_FIRE_RL_split_2_putFirst ;
 
@@ -5192,46 +5290,46 @@ module mkCore(CLK,
   // rule RL_ifcs_0_firstFlit
   assign CAN_FIRE_RL_ifcs_0_firstFlit =
 	     cpu$dmem_master_wvalid &&
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120 &&
 	     ifcs_0_innerReq$FULL_N &&
 	     ifcs_0_innerRoute$FULL_N &&
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 ||
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1127 ||
 	      cpu$dmem_master_awvalid) &&
 	     ifcs_0_state == 2'd0 &&
-	     IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124 ==
+	     IF_IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dm_ETC___d1162 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_firstFlit = CAN_FIRE_RL_ifcs_0_firstFlit ;
 
   // rule RL_ifcs_0_followFlits
   assign CAN_FIRE_RL_ifcs_0_followFlits =
 	     cpu$dmem_master_wvalid &&
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120 &&
 	     ifcs_0_innerReq$FULL_N &&
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 ||
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1127 ||
 	      cpu$dmem_master_awvalid) &&
 	     ifcs_0_state == 2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_followFlits = CAN_FIRE_RL_ifcs_0_followFlits ;
 
   // rule RL_ifcs_0_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_0_nonRoutableFlit =
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1159 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1197 &&
 	     ifcs_0_state == 2'd0 &&
-	     IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124 !=
+	     IF_IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dm_ETC___d1162 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_nonRoutableFlit ;
 
   // rule RL_ifcs_0_drainFlits
   assign CAN_FIRE_RL_ifcs_0_drainFlits =
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120 &&
 	     cpu$dmem_master_wvalid &&
 	     ifcs_0_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_0_drainFlits = CAN_FIRE_RL_ifcs_0_drainFlits ;
 
-  // rule __me_check_144
-  assign CAN_FIRE___me_check_144 = 1'b1 ;
-  assign WILL_FIRE___me_check_144 = 1'b1 ;
+  // rule __me_check_149
+  assign CAN_FIRE___me_check_149 = 1'b1 ;
+  assign WILL_FIRE___me_check_149 = 1'b1 ;
 
   // rule RL_ifcs_0_drainNoRouteResponse
   assign CAN_FIRE_RL_ifcs_0_drainNoRouteResponse =
@@ -5270,7 +5368,7 @@ module mkCore(CLK,
 
   // rule RL_arbitrate_1
   assign CAN_FIRE_RL_arbitrate_1 =
-	     reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587 &&
+	     reqWires_1_0_whas__615_AND_reqWires_1_0_wget___ETC___d1625 &&
 	     !state_1 ;
   assign WILL_FIRE_RL_arbitrate_1 = CAN_FIRE_RL_arbitrate_1 ;
 
@@ -5284,7 +5382,7 @@ module mkCore(CLK,
   // rule RL_burst_2
   assign CAN_FIRE_RL_burst_2 =
 	     ifcs_0_rspBack$EMPTY_N && ifcs_0_routeBack$EMPTY_N &&
-	     state_1_588_AND_activeSource_1_0_676_677_AND_i_ETC___d1679 ;
+	     state_1_626_AND_activeSource_1_0_714_715_AND_i_ETC___d1717 ;
   assign WILL_FIRE_RL_burst_2 = CAN_FIRE_RL_burst_2 ;
 
   // rule RL_source_selected_3
@@ -5297,12 +5395,12 @@ module mkCore(CLK,
   // rule RL_burst_3
   assign CAN_FIRE_RL_burst_3 =
 	     ifcs_1_rspBack$EMPTY_N && ifcs_1_routeBack$EMPTY_N &&
-	     state_1_588_AND_activeSource_1_1_709_710_AND_i_ETC___d1712 ;
+	     state_1_626_AND_activeSource_1_1_747_748_AND_i_ETC___d1750 ;
   assign WILL_FIRE_RL_burst_3 = CAN_FIRE_RL_burst_3 ;
 
-  // rule __me_check_183
-  assign CAN_FIRE___me_check_183 = 1'b1 ;
-  assign WILL_FIRE___me_check_183 = 1'b1 ;
+  // rule __me_check_188
+  assign CAN_FIRE___me_check_188 = 1'b1 ;
+  assign WILL_FIRE___me_check_188 = 1'b1 ;
 
   // rule RL_source_selected_4
   assign CAN_FIRE_RL_source_selected_4 =
@@ -5314,16 +5412,16 @@ module mkCore(CLK,
   // rule RL_burst_4
   assign CAN_FIRE_RL_burst_4 =
 	     ifcs_2_rspBack$EMPTY_N && ifcs_2_routeBack$EMPTY_N &&
-	     state_1_588_AND_activeSource_1_2_743_744_AND_i_ETC___d1746 ;
+	     state_1_626_AND_activeSource_1_2_781_782_AND_i_ETC___d1784 ;
   assign WILL_FIRE_RL_burst_4 = CAN_FIRE_RL_burst_4 ;
 
-  // rule __me_check_181
-  assign CAN_FIRE___me_check_181 = 1'b1 ;
-  assign WILL_FIRE___me_check_181 = 1'b1 ;
+  // rule __me_check_186
+  assign CAN_FIRE___me_check_186 = 1'b1 ;
+  assign WILL_FIRE___me_check_186 = 1'b1 ;
 
-  // rule __me_check_185
-  assign CAN_FIRE___me_check_185 = 1'b1 ;
-  assign WILL_FIRE___me_check_185 = 1'b1 ;
+  // rule __me_check_190
+  assign CAN_FIRE___me_check_190 = 1'b1 ;
+  assign WILL_FIRE___me_check_190 = 1'b1 ;
 
   // rule RL_sink_selected_3
   assign CAN_FIRE_RL_sink_selected_3 =
@@ -5335,9 +5433,9 @@ module mkCore(CLK,
 	     !CAN_FIRE_RL_ifcs_1_drainNoRouteResponse && flitToSink_1_1$whas ;
   assign WILL_FIRE_RL_sink_selected_4 = CAN_FIRE_RL_sink_selected_4 ;
 
-  // rule __me_check_187
-  assign CAN_FIRE___me_check_187 = 1'b1 ;
-  assign WILL_FIRE___me_check_187 = 1'b1 ;
+  // rule __me_check_192
+  assign CAN_FIRE___me_check_192 = 1'b1 ;
+  assign WILL_FIRE___me_check_192 = 1'b1 ;
 
   // rule RL_ifcs_0_forwardRsp
   assign CAN_FIRE_RL_ifcs_0_forwardRsp =
@@ -5378,24 +5476,24 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_nonRoutableGenRsp =
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120 &&
 	     ifcs_0_noRoute_inner_pendingReq$port1__read &&
 	     ifcs_0_noRouteRsp$FULL_N &&
 	     cpu$dmem_master_wvalid ;
   assign WILL_FIRE_RL_ifcs_0_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_0_nonRoutableGenRsp ;
 
-  // rule __me_check_142
-  assign CAN_FIRE___me_check_142 = 1'b1 ;
-  assign WILL_FIRE___me_check_142 = 1'b1 ;
+  // rule __me_check_147
+  assign CAN_FIRE___me_check_147 = 1'b1 ;
+  assign WILL_FIRE___me_check_147 = 1'b1 ;
 
-  // rule __me_check_143
-  assign CAN_FIRE___me_check_143 = 1'b1 ;
-  assign WILL_FIRE___me_check_143 = 1'b1 ;
+  // rule __me_check_148
+  assign CAN_FIRE___me_check_148 = 1'b1 ;
+  assign WILL_FIRE___me_check_148 = 1'b1 ;
 
-  // rule __me_check_146
-  assign CAN_FIRE___me_check_146 = 1'b1 ;
-  assign WILL_FIRE___me_check_146 = 1'b1 ;
+  // rule __me_check_151
+  assign CAN_FIRE___me_check_151 = 1'b1 ;
+  assign WILL_FIRE___me_check_151 = 1'b1 ;
 
   // rule RL_merged_0_genFirst
   assign CAN_FIRE_RL_merged_0_genFirst =
@@ -5471,9 +5569,9 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_ifcs_0_followFlits_1 =
 	     CAN_FIRE_RL_ifcs_0_followFlits_1 ;
 
-  // rule __me_check_156
-  assign CAN_FIRE___me_check_156 = 1'b1 ;
-  assign WILL_FIRE___me_check_156 = 1'b1 ;
+  // rule __me_check_161
+  assign CAN_FIRE___me_check_161 = 1'b1 ;
+  assign WILL_FIRE___me_check_161 = 1'b1 ;
 
   // rule RL_ssNoSynth_0_b_forwardReady
   assign CAN_FIRE_RL_ssNoSynth_0_b_forwardReady = 1'd1 ;
@@ -5507,9 +5605,9 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_ifcs_1_followFlits_1 =
 	     CAN_FIRE_RL_ifcs_1_followFlits_1 ;
 
-  // rule __me_check_158
-  assign CAN_FIRE___me_check_158 = 1'b1 ;
-  assign WILL_FIRE___me_check_158 = 1'b1 ;
+  // rule __me_check_163
+  assign CAN_FIRE___me_check_163 = 1'b1 ;
+  assign WILL_FIRE___me_check_163 = 1'b1 ;
 
   // rule RL_ssNoSynth_1_b_forwardReady
   assign CAN_FIRE_RL_ssNoSynth_1_b_forwardReady = 1'd1 ;
@@ -5527,9 +5625,9 @@ module mkCore(CLK,
 	     plic$axi4_slave_bvalid && ifcs_2_rspBack$FULL_N && ifcs_2_state ;
   assign WILL_FIRE_RL_ifcs_2_followFlits = CAN_FIRE_RL_ifcs_2_followFlits ;
 
-  // rule __me_check_160
-  assign CAN_FIRE___me_check_160 = 1'b1 ;
-  assign WILL_FIRE___me_check_160 = 1'b1 ;
+  // rule __me_check_165
+  assign CAN_FIRE___me_check_165 = 1'b1 ;
+  assign WILL_FIRE___me_check_165 = 1'b1 ;
 
   // rule RL_ssNoSynth_2_b_forwardReady
   assign CAN_FIRE_RL_ssNoSynth_2_b_forwardReady = 1'd1 ;
@@ -5572,7 +5670,7 @@ module mkCore(CLK,
 
   // rule RL_arbitrate_3
   assign CAN_FIRE_RL_arbitrate_3 =
-	     reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237 &&
+	     reqWires_1_1_0_whas__265_AND_reqWires_1_1_0_wg_ETC___d2275 &&
 	     !state_1_1_1 ;
   assign WILL_FIRE_RL_arbitrate_3 = CAN_FIRE_RL_arbitrate_3 ;
 
@@ -5586,7 +5684,7 @@ module mkCore(CLK,
   // rule RL_burst_7
   assign CAN_FIRE_RL_burst_7 =
 	     ifcs_0_1_rspBack$EMPTY_N && ifcs_0_1_routeBack$EMPTY_N &&
-	     state_1_1_1_238_AND_activeSource_1_1_0_332_333_ETC___d2335 ;
+	     state_1_1_1_276_AND_activeSource_1_1_0_370_371_ETC___d2373 ;
   assign WILL_FIRE_RL_burst_7 = CAN_FIRE_RL_burst_7 ;
 
   // rule RL_source_selected_8
@@ -5599,12 +5697,12 @@ module mkCore(CLK,
   // rule RL_burst_8
   assign CAN_FIRE_RL_burst_8 =
 	     ifcs_1_1_rspBack$EMPTY_N && ifcs_1_1_routeBack$EMPTY_N &&
-	     state_1_1_1_238_AND_activeSource_1_1_1_1_368_3_ETC___d2371 ;
+	     state_1_1_1_276_AND_activeSource_1_1_1_1_406_4_ETC___d2409 ;
   assign WILL_FIRE_RL_burst_8 = CAN_FIRE_RL_burst_8 ;
 
-  // rule __me_check_230
-  assign CAN_FIRE___me_check_230 = 1'b1 ;
-  assign WILL_FIRE___me_check_230 = 1'b1 ;
+  // rule __me_check_235
+  assign CAN_FIRE___me_check_235 = 1'b1 ;
+  assign WILL_FIRE___me_check_235 = 1'b1 ;
 
   // rule RL_source_selected_9
   assign CAN_FIRE_RL_source_selected_9 =
@@ -5616,16 +5714,16 @@ module mkCore(CLK,
   // rule RL_burst_9
   assign CAN_FIRE_RL_burst_9 =
 	     ifcs_2_1_rspBack$EMPTY_N && ifcs_2_1_routeBack$EMPTY_N &&
-	     state_1_1_1_238_AND_activeSource_1_1_2_404_405_ETC___d2407 ;
+	     state_1_1_1_276_AND_activeSource_1_1_2_442_443_ETC___d2445 ;
   assign WILL_FIRE_RL_burst_9 = CAN_FIRE_RL_burst_9 ;
 
-  // rule __me_check_228
-  assign CAN_FIRE___me_check_228 = 1'b1 ;
-  assign WILL_FIRE___me_check_228 = 1'b1 ;
+  // rule __me_check_233
+  assign CAN_FIRE___me_check_233 = 1'b1 ;
+  assign WILL_FIRE___me_check_233 = 1'b1 ;
 
-  // rule __me_check_232
-  assign CAN_FIRE___me_check_232 = 1'b1 ;
-  assign WILL_FIRE___me_check_232 = 1'b1 ;
+  // rule __me_check_237
+  assign CAN_FIRE___me_check_237 = 1'b1 ;
+  assign WILL_FIRE___me_check_237 = 1'b1 ;
 
   // rule RL_sink_selected_8
   assign CAN_FIRE_RL_sink_selected_8 =
@@ -5639,9 +5737,9 @@ module mkCore(CLK,
 	     flitToSink_1_1_1_1$whas ;
   assign WILL_FIRE_RL_sink_selected_9 = CAN_FIRE_RL_sink_selected_9 ;
 
-  // rule __me_check_234
-  assign CAN_FIRE___me_check_234 = 1'b1 ;
-  assign WILL_FIRE___me_check_234 = 1'b1 ;
+  // rule __me_check_239
+  assign CAN_FIRE___me_check_239 = 1'b1 ;
+  assign WILL_FIRE___me_check_239 = 1'b1 ;
 
   // rule RL_ifcs_0_1_forwardRsp
   assign CAN_FIRE_RL_ifcs_0_1_forwardRsp =
@@ -5665,6 +5763,19 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_msNoSynth_0_r_dropFlit =
 	     CAN_FIRE_RL_msNoSynth_0_r_dropFlit ;
 
+  // rule RL_mkConnectionGetPut_3
+  assign CAN_FIRE_RL_mkConnectionGetPut_3 =
+	     cpu$imem_master_arvalid && delay_shim_arff$FULL_N ;
+  assign WILL_FIRE_RL_mkConnectionGetPut_3 =
+	     CAN_FIRE_RL_mkConnectionGetPut_3 &&
+	     !WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
+
+  // rule RL_ClientServerRequest
+  assign CAN_FIRE_RL_ClientServerRequest =
+	     debug_module$RDY_hart0_client_run_halt_request_get &&
+	     cpu$RDY_hart0_server_run_halt_request_put ;
+  assign WILL_FIRE_RL_ClientServerRequest = CAN_FIRE_RL_ClientServerRequest ;
+
   // rule RL_rl_relay_sw_interrupts
   assign CAN_FIRE_RL_rl_relay_sw_interrupts =
 	     near_mem_io$RDY_get_sw_interrupt_req_get ;
@@ -5680,22 +5791,6 @@ module mkCore(CLK,
   // rule RL_rl_relay_external_interrupts
   assign CAN_FIRE_RL_rl_relay_external_interrupts = 1'd1 ;
   assign WILL_FIRE_RL_rl_relay_external_interrupts = 1'd1 ;
-
-  // rule RL_cpu_imem_ug_u_ar_setPeek
-  assign CAN_FIRE_RL_cpu_imem_ug_u_ar_setPeek = cpu$imem_master_arvalid ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_ar_setPeek = cpu$imem_master_arvalid ;
-
-  // rule RL_cpu_imem_ug_u_ar_warnDoDrop
-  assign CAN_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop =
-	     cpu_imem_ug_u_ar_dropWire$whas && !cpu$imem_master_arvalid ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop =
-	     CAN_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop ;
-
-  // rule RL_cpu_imem_ug_u_ar_doDrop
-  assign CAN_FIRE_RL_cpu_imem_ug_u_ar_doDrop =
-	     cpu$imem_master_arvalid && cpu_imem_ug_u_ar_dropWire$whas ;
-  assign WILL_FIRE_RL_cpu_imem_ug_u_ar_doDrop =
-	     CAN_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
 
   // rule RL_cpu_imem_ar_forwardReady
   assign CAN_FIRE_RL_cpu_imem_ar_forwardReady = 1'd1 ;
@@ -5721,7 +5816,7 @@ module mkCore(CLK,
 	     cpu$dmem_master_arvalid && ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_innerRoute$FULL_N &&
 	     ifcs_0_1_state == 2'd0 &&
-	     IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787 ==
+	     IF_cpu_dmem_master_ar_araddr__799_BITS_63_TO_4_ETC___d1825 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_firstFlit = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
 
@@ -5736,15 +5831,15 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     ifcs_0_1_noRoute_flitCount == 9'd0 && cpu$dmem_master_arvalid &&
 	     ifcs_0_1_state == 2'd0 &&
-	     IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787 !=
+	     IF_cpu_dmem_master_ar_araddr__799_BITS_63_TO_4_ETC___d1825 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ;
 
   // rule RL_ifcs_0_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
-	     x_port1__read__h70292 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h70292 != 9'd1 || cpu$dmem_master_arvalid) ;
+	     x_port1__read__h71574 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h71574 != 9'd1 || cpu$dmem_master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
 
@@ -5753,21 +5848,21 @@ module mkCore(CLK,
 	     cpu$dmem_master_arvalid && ifcs_0_1_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_0_1_drainFlits = CAN_FIRE_RL_ifcs_0_1_drainFlits ;
 
-  // rule __me_check_189
-  assign CAN_FIRE___me_check_189 = 1'b1 ;
-  assign WILL_FIRE___me_check_189 = 1'b1 ;
+  // rule __me_check_194
+  assign CAN_FIRE___me_check_194 = 1'b1 ;
+  assign WILL_FIRE___me_check_194 = 1'b1 ;
 
-  // rule __me_check_190
-  assign CAN_FIRE___me_check_190 = 1'b1 ;
-  assign WILL_FIRE___me_check_190 = 1'b1 ;
+  // rule __me_check_195
+  assign CAN_FIRE___me_check_195 = 1'b1 ;
+  assign WILL_FIRE___me_check_195 = 1'b1 ;
 
-  // rule __me_check_191
-  assign CAN_FIRE___me_check_191 = 1'b1 ;
-  assign WILL_FIRE___me_check_191 = 1'b1 ;
+  // rule __me_check_196
+  assign CAN_FIRE___me_check_196 = 1'b1 ;
+  assign WILL_FIRE___me_check_196 = 1'b1 ;
 
-  // rule __me_check_193
-  assign CAN_FIRE___me_check_193 = 1'b1 ;
-  assign WILL_FIRE___me_check_193 = 1'b1 ;
+  // rule __me_check_198
+  assign CAN_FIRE___me_check_198 = 1'b1 ;
+  assign WILL_FIRE___me_check_198 = 1'b1 ;
 
   // rule RL_msNoSynth_0_ar_forwardReady
   assign CAN_FIRE_RL_msNoSynth_0_ar_forwardReady = 1'd1 ;
@@ -5813,39 +5908,39 @@ module mkCore(CLK,
   // rule RL_ifcs_1_firstFlit
   assign CAN_FIRE_RL_ifcs_1_firstFlit =
 	     debug_module$master_wvalid &&
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225 &&
 	     ifcs_1_innerReq$FULL_N &&
 	     ifcs_1_innerRoute$FULL_N &&
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 ||
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1232 ||
 	      debug_module$master_awvalid) &&
 	     ifcs_1_state == 2'd0 &&
-	     IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229 ==
+	     IF_IF_merged_1_flitLeft_017_EQ_0_018_THEN_debu_ETC___d1267 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_firstFlit = CAN_FIRE_RL_ifcs_1_firstFlit ;
 
   // rule RL_ifcs_1_followFlits
   assign CAN_FIRE_RL_ifcs_1_followFlits =
 	     debug_module$master_wvalid &&
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225 &&
 	     ifcs_1_innerReq$FULL_N &&
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 ||
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1232 ||
 	      debug_module$master_awvalid) &&
 	     ifcs_1_state == 2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_followFlits = CAN_FIRE_RL_ifcs_1_followFlits ;
 
   // rule RL_ifcs_1_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_1_nonRoutableFlit =
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1264 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1302 &&
 	     ifcs_1_state == 2'd0 &&
-	     IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229 !=
+	     IF_IF_merged_1_flitLeft_017_EQ_0_018_THEN_debu_ETC___d1267 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_1_nonRoutableFlit ;
 
   // rule RL_ifcs_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_nonRoutableGenRsp =
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225 &&
 	     ifcs_1_noRoute_inner_pendingReq$port1__read &&
 	     ifcs_1_noRouteRsp$FULL_N &&
 	     debug_module$master_wvalid ;
@@ -5854,26 +5949,26 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_drainFlits
   assign CAN_FIRE_RL_ifcs_1_drainFlits =
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225 &&
 	     debug_module$master_wvalid &&
 	     ifcs_1_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_1_drainFlits = CAN_FIRE_RL_ifcs_1_drainFlits ;
 
-  // rule __me_check_149
-  assign CAN_FIRE___me_check_149 = 1'b1 ;
-  assign WILL_FIRE___me_check_149 = 1'b1 ;
+  // rule __me_check_154
+  assign CAN_FIRE___me_check_154 = 1'b1 ;
+  assign WILL_FIRE___me_check_154 = 1'b1 ;
 
-  // rule __me_check_150
-  assign CAN_FIRE___me_check_150 = 1'b1 ;
-  assign WILL_FIRE___me_check_150 = 1'b1 ;
+  // rule __me_check_155
+  assign CAN_FIRE___me_check_155 = 1'b1 ;
+  assign WILL_FIRE___me_check_155 = 1'b1 ;
 
-  // rule __me_check_151
-  assign CAN_FIRE___me_check_151 = 1'b1 ;
-  assign WILL_FIRE___me_check_151 = 1'b1 ;
+  // rule __me_check_156
+  assign CAN_FIRE___me_check_156 = 1'b1 ;
+  assign WILL_FIRE___me_check_156 = 1'b1 ;
 
-  // rule __me_check_153
-  assign CAN_FIRE___me_check_153 = 1'b1 ;
-  assign WILL_FIRE___me_check_153 = 1'b1 ;
+  // rule __me_check_158
+  assign CAN_FIRE___me_check_158 = 1'b1 ;
+  assign WILL_FIRE___me_check_158 = 1'b1 ;
 
   // rule RL_merged_1_genFirst
   assign CAN_FIRE_RL_merged_1_genFirst =
@@ -5901,7 +5996,7 @@ module mkCore(CLK,
 	     debug_module$master_arvalid && ifcs_1_1_innerReq$FULL_N &&
 	     ifcs_1_1_innerRoute$FULL_N &&
 	     ifcs_1_1_state == 2'd0 &&
-	     IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879 ==
+	     IF_debug_module_master_ar_araddr__891_BITS_63__ETC___d1917 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_1_firstFlit = CAN_FIRE_RL_ifcs_1_1_firstFlit ;
 
@@ -5917,15 +6012,15 @@ module mkCore(CLK,
 	     ifcs_1_1_noRoute_flitCount == 9'd0 &&
 	     debug_module$master_arvalid &&
 	     ifcs_1_1_state == 2'd0 &&
-	     IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879 !=
+	     IF_debug_module_master_ar_araddr__891_BITS_63__ETC___d1917 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ;
 
   // rule RL_ifcs_1_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
-	     x_port1__read__h72756 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h72756 != 9'd1 || debug_module$master_arvalid) ;
+	     x_port1__read__h74038 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
+	     (x_port1__read__h74038 != 9'd1 || debug_module$master_arvalid) ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
 
@@ -5934,21 +6029,21 @@ module mkCore(CLK,
 	     debug_module$master_arvalid && ifcs_1_1_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_1_1_drainFlits = CAN_FIRE_RL_ifcs_1_1_drainFlits ;
 
-  // rule __me_check_196
-  assign CAN_FIRE___me_check_196 = 1'b1 ;
-  assign WILL_FIRE___me_check_196 = 1'b1 ;
+  // rule __me_check_201
+  assign CAN_FIRE___me_check_201 = 1'b1 ;
+  assign WILL_FIRE___me_check_201 = 1'b1 ;
 
-  // rule __me_check_197
-  assign CAN_FIRE___me_check_197 = 1'b1 ;
-  assign WILL_FIRE___me_check_197 = 1'b1 ;
+  // rule __me_check_202
+  assign CAN_FIRE___me_check_202 = 1'b1 ;
+  assign WILL_FIRE___me_check_202 = 1'b1 ;
 
-  // rule __me_check_198
-  assign CAN_FIRE___me_check_198 = 1'b1 ;
-  assign WILL_FIRE___me_check_198 = 1'b1 ;
+  // rule __me_check_203
+  assign CAN_FIRE___me_check_203 = 1'b1 ;
+  assign WILL_FIRE___me_check_203 = 1'b1 ;
 
-  // rule __me_check_200
-  assign CAN_FIRE___me_check_200 = 1'b1 ;
-  assign WILL_FIRE___me_check_200 = 1'b1 ;
+  // rule __me_check_205
+  assign CAN_FIRE___me_check_205 = 1'b1 ;
+  assign WILL_FIRE___me_check_205 = 1'b1 ;
 
   // rule RL_msNoSynth_1_ar_forwardReady
   assign CAN_FIRE_RL_msNoSynth_1_ar_forwardReady = 1'd1 ;
@@ -5971,9 +6066,9 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_ifcs_0_1_followFlits_1 =
 	     CAN_FIRE_RL_ifcs_0_1_followFlits_1 ;
 
-  // rule __me_check_203
-  assign CAN_FIRE___me_check_203 = 1'b1 ;
-  assign WILL_FIRE___me_check_203 = 1'b1 ;
+  // rule __me_check_208
+  assign CAN_FIRE___me_check_208 = 1'b1 ;
+  assign WILL_FIRE___me_check_208 = 1'b1 ;
 
   // rule RL_ssNoSynth_0_r_forwardReady
   assign CAN_FIRE_RL_ssNoSynth_0_r_forwardReady = 1'd1 ;
@@ -6008,9 +6103,9 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_ifcs_1_1_followFlits_1 =
 	     CAN_FIRE_RL_ifcs_1_1_followFlits_1 ;
 
-  // rule __me_check_205
-  assign CAN_FIRE___me_check_205 = 1'b1 ;
-  assign WILL_FIRE___me_check_205 = 1'b1 ;
+  // rule __me_check_210
+  assign CAN_FIRE___me_check_210 = 1'b1 ;
+  assign WILL_FIRE___me_check_210 = 1'b1 ;
 
   // rule RL_ssNoSynth_1_r_forwardReady
   assign CAN_FIRE_RL_ssNoSynth_1_r_forwardReady = 1'd1 ;
@@ -6030,9 +6125,9 @@ module mkCore(CLK,
   assign WILL_FIRE_RL_ifcs_2_1_followFlits =
 	     CAN_FIRE_RL_ifcs_2_1_followFlits ;
 
-  // rule __me_check_207
-  assign CAN_FIRE___me_check_207 = 1'b1 ;
-  assign WILL_FIRE___me_check_207 = 1'b1 ;
+  // rule __me_check_212
+  assign CAN_FIRE___me_check_212 = 1'b1 ;
+  assign WILL_FIRE___me_check_212 = 1'b1 ;
 
   // rule RL_ssNoSynth_2_r_forwardReady
   assign CAN_FIRE_RL_ssNoSynth_2_r_forwardReady = 1'd1 ;
@@ -6040,20 +6135,17 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
-	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic$RDY_server_reset_request_put &&
-	     f_reset_reqs$EMPTY_N &&
-	     f_reset_requestor$FULL_N ;
+	     plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
 	     debug_module$RDY_hart0_reset_client_request_get &&
-	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
+	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
@@ -6062,9 +6154,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_complete
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_complete =
-	     cpu$RDY_hart0_server_reset_response_get &&
 	     near_mem_io$RDY_server_reset_response_get &&
 	     plic$RDY_server_reset_response_get &&
+	     cpu$RDY_hart0_server_reset_response_get &&
 	     f_reset_requestor$EMPTY_N &&
 	     (f_reset_requestor$D_OUT ||
 	      debug_module$RDY_hart0_reset_client_response_put) &&
@@ -6226,19 +6318,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_burst_9 && ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_activeSource_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate &&
-	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425 ;
-  assign MUX_activeSource_1$write_1__VAL_1 =
+	     IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1463 ;
+  assign MUX_activeSource_1$write_1__VAL_2 =
 	     WILL_FIRE_RL_arbitrate &&
-	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429 ;
+	     IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1467 ;
   assign MUX_activeSource_1_1_0$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2323 ;
   assign MUX_activeSource_1_1_1_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2329 ;
   assign MUX_activeSource_1_1_2$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
-	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2335 ;
   assign MUX_merged_0_flitLeft$write_1__VAL_1 = merged_0_flitLeft - 8'd1 ;
   assign MUX_merged_1_flitLeft$write_1__VAL_1 = merged_1_flitLeft - 8'd1 ;
   always@(MUX_flitToSink_1_0$wset_1__SEL_1 or
@@ -6258,7 +6350,7 @@ module mkCore(CLK,
       MUX_flitToSink_1_0$wset_1__SEL_3 || MUX_flitToSink_1_0$wset_1__SEL_6:
 	  MUX_msNoSynth_0_b_buffer_enqw$wset_1__VAL_2 = ifcs_2_rspBack$D_OUT;
       default: MUX_msNoSynth_0_b_buffer_enqw$wset_1__VAL_2 =
-		   6'b101010 /* unspecified value */ ;
+		   6'bxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(MUX_flitToSink_1_1_0$wset_1__SEL_1 or
@@ -6284,7 +6376,7 @@ module mkCore(CLK,
 	  MUX_msNoSynth_0_r_buffer_enqw$wset_1__VAL_2 =
 	      ifcs_2_1_rspBack$D_OUT;
       default: MUX_msNoSynth_0_r_buffer_enqw$wset_1__VAL_2 =
-		   72'hAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(MUX_flitToSink_1_1$wset_1__SEL_1 or
@@ -6304,7 +6396,7 @@ module mkCore(CLK,
       MUX_flitToSink_1_1$wset_1__SEL_3 || MUX_flitToSink_1_1$wset_1__SEL_6:
 	  MUX_msNoSynth_1_b_buffer_enqw$wset_1__VAL_2 = ifcs_2_rspBack$D_OUT;
       default: MUX_msNoSynth_1_b_buffer_enqw$wset_1__VAL_2 =
-		   6'b101010 /* unspecified value */ ;
+		   6'bxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(MUX_flitToSink_1_1_1_1$wset_1__SEL_1 or
@@ -6330,14 +6422,14 @@ module mkCore(CLK,
 	  MUX_msNoSynth_1_r_buffer_enqw$wset_1__VAL_2 =
 	      ifcs_2_1_rspBack$D_OUT;
       default: MUX_msNoSynth_1_r_buffer_enqw$wset_1__VAL_2 =
-		   72'hAAAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign MUX_split_0_flitLeft$write_1__VAL_1 = split_0_flitLeft - 8'd1 ;
   assign MUX_split_1_flitLeft$write_1__VAL_1 = split_1_flitLeft - 8'd1 ;
   assign MUX_split_2_flitLeft$write_1__VAL_1 = split_2_flitLeft - 8'd1 ;
   assign MUX_tagController_tmp_tagCon$cache_request_put_1__VAL_1 =
-	     { tmp__h6846[39:3],
+	     { tmp__h8128[39:3],
 	       4'd0,
 	       tagController_tmp_awreqff$D_OUT[97:93],
 	       3'd1,
@@ -6353,13 +6445,16 @@ module mkCore(CLK,
 	     { tagController_tmp_shimSlave_arff_rv$port1__read[68:29],
 	       1'b0,
 	       tagController_tmp_shimSlave_arff_rv$port1__read[97:93],
-	       86'h02AAAAAAAAAAAAAAAAAAAA,
+	       3'd0,
+	       83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       tagController_tmp_shimSlave_arff_rv$port1__read[14:11] < 4'd4,
 	       2'd0,
 	       tagController_tmp_shimSlave_arff_rv$port1__read[23:18] } ;
   assign MUX_tagController_tmp_tagCon$memory_response_put_1__VAL_1 =
 	     { tagController_tmp_shimMaster_bff_rv$port1__read[7:2],
-	       71'h0CAAAAAAAAAAAAAAAA } ;
+	       4'd1,
+	       2'bxx /* unspecified value */ ,
+	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign MUX_tagController_tmp_tagCon$memory_response_put_1__VAL_2 =
 	     { tagController_tmp_shimMaster_rff_rv$port1__read[72:67],
 	       4'd0,
@@ -6368,45 +6463,18 @@ module mkCore(CLK,
 	       tagController_tmp_shimMaster_rff_rv$port1__read[67:3] } ;
 
   // inlined wires
-  assign cpu_imem_b_buffer_enqw$wget =
+  assign cpu_imem_ug_u_b_putWire$wget =
 	     { cpu_imem_master_bid[4:0], cpu_imem_master_bresp } ;
-  assign cpu_imem_r_buffer_enqw$wget =
+  assign cpu_imem_ug_u_b_putWire$whas =
+	     cpu_imem_master_bvalid && delay_shim_bff$FULL_N ;
+  assign cpu_imem_ug_u_r_putWire$wget =
 	     { cpu_imem_master_rid[4:0],
 	       cpu_imem_master_rdata,
 	       cpu_imem_master_rresp,
 	       cpu_imem_master_rlast,
 	       1'd0 } ;
-  assign cpu_imem_ug_u_aw_peekWire$wget =
-	     { cpu$imem_master_awid,
-	       cpu$imem_master_awaddr,
-	       cpu$imem_master_awlen,
-	       cpu$imem_master_awsize,
-	       cpu$imem_master_awburst,
-	       cpu$imem_master_awlock,
-	       cpu$imem_master_awcache,
-	       cpu$imem_master_awprot,
-	       cpu$imem_master_awqos,
-	       cpu$imem_master_awregion } ;
-  assign cpu_imem_ug_u_w_peekWire$wget =
-	     { cpu$imem_master_wdata,
-	       cpu$imem_master_wstrb,
-	       cpu$imem_master_wlast,
-	       cpu$imem_master_wuser } ;
-  assign cpu_imem_ug_u_b_putWire$whas =
-	     cpu_imem_master_bvalid && cpu_imem_b_buffer_ff$FULL_N ;
-  assign cpu_imem_ug_u_ar_peekWire$wget =
-	     { cpu$imem_master_arid,
-	       cpu$imem_master_araddr,
-	       cpu$imem_master_arlen,
-	       cpu$imem_master_arsize,
-	       cpu$imem_master_arburst,
-	       cpu$imem_master_arlock,
-	       cpu$imem_master_arcache,
-	       cpu$imem_master_arprot,
-	       cpu$imem_master_arqos,
-	       cpu$imem_master_arregion } ;
   assign cpu_imem_ug_u_r_putWire$whas =
-	     cpu_imem_master_rvalid && cpu_imem_r_buffer_ff$FULL_N ;
+	     cpu_imem_master_rvalid && delay_shim_rff$FULL_N ;
   assign tagController_tmp_ug_slave_u_aw_putWire$wget =
 	     ssNoSynth_0_aw_buffer_ff$EMPTY_N ?
 	       ssNoSynth_0_aw_buffer_ff$D_OUT :
@@ -6457,7 +6525,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_0_forwardRsp ;
   assign msNoSynth_0_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp &&
-	     x_port1__read__h70292 == 9'd1 ||
+	     x_port1__read__h71574 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_0_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit ;
@@ -6480,7 +6548,7 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_forwardRsp ;
   assign msNoSynth_1_ar_dwReady$whas =
 	     WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp &&
-	     x_port1__read__h72756 == 9'd1 ||
+	     x_port1__read__h74038 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_1_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_firstFlit ;
@@ -6554,13 +6622,13 @@ module mkCore(CLK,
 	       ifcs_1_innerReq$D_OUT ;
   assign reqWires_0$wget =
 	     (!ifcs_0_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
-	       IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373 :
+	      !IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381) ?
+	       IF_NOT_ifcs_0_innerRoute_first__389_BIT_1_398__ETC___d1411 :
 	       ifcs_0_innerRoute$D_OUT[0] ;
   assign reqWires_1$wget =
 	     (!ifcs_1_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
-	       IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389 :
+	      !IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381) ?
+	       IF_NOT_ifcs_1_innerRoute_first__418_BIT_1_422__ETC___d1427 :
 	       ifcs_1_innerRoute$D_OUT[0] ;
   assign flitToSink_0$whas =
 	     WILL_FIRE_RL_burst && ifcs_0_innerRoute$D_OUT[0] ||
@@ -6624,12 +6692,12 @@ module mkCore(CLK,
   assign reqWires_1_0_1$wget =
 	     (!ifcs_0_1_innerRoute$D_OUT[0] ||
 	      !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-	       IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033 :
+	       IF_NOT_ifcs_0_1_innerRoute_first__049_BIT_1_05_ETC___d2071 :
 	       ifcs_0_1_innerRoute$D_OUT[0] ;
   assign reqWires_1_1_1$wget =
 	     (!ifcs_1_1_innerRoute$D_OUT[0] ||
 	      !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-	       IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049 :
+	       IF_NOT_ifcs_1_1_innerRoute_first__078_BIT_1_08_ETC___d2087 :
 	       ifcs_1_1_innerRoute$D_OUT[0] ;
   assign flitToSink_1_0_1$whas =
 	     WILL_FIRE_RL_burst_5 && ifcs_0_1_innerRoute$D_OUT[0] ||
@@ -6691,11 +6759,11 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     ifcs_2_1_routeBack$D_OUT[1] ;
   assign cpu_imem_ug_u_aw_dropWire$whas =
-	     cpu$imem_master_awvalid && cpu_imem_master_awready ;
+	     delay_shim_awff$EMPTY_N && cpu_imem_master_awready ;
   assign cpu_imem_ug_u_w_dropWire$whas =
-	     cpu$imem_master_wvalid && cpu_imem_master_wready ;
+	     delay_shim_wff$EMPTY_N && cpu_imem_master_wready ;
   assign cpu_imem_ug_u_ar_dropWire$whas =
-	     cpu$imem_master_arvalid && cpu_imem_master_arready ;
+	     delay_shim_arff$EMPTY_N && cpu_imem_master_arready ;
   assign tagController_tmp_ug_slave_u_b_dropWire$whas =
 	     tagController_tmp_shimSlave_bff_rv$port1__read[7] &&
 	     ssNoSynth_0_b_dwReady$whas ;
@@ -6723,19 +6791,19 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_firstFlit ;
   assign sourceSelect_1_0$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635 ;
+	     IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1673 ;
   assign sourceSelect_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641 ;
+	     IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1679 ;
   assign sourceSelect_1_2$whas =
 	     WILL_FIRE_RL_arbitrate_1 &&
-	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647 ;
+	     IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1685 ;
   assign sourceSelect_1_0_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
-	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2123 ;
   assign sourceSelect_1_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
-	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2127 ;
   assign tagController_tmp_shimSlave_awff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_slave_u_aw_putWire$wget } ;
   assign tagController_tmp_shimSlave_awff_rv$port1__read =
@@ -6744,7 +6812,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimSlave_awff_rv ;
   assign tagController_tmp_shimSlave_awff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_getCacheAW ?
-	       99'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimSlave_arff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_awff_rv$port1__read ;
   assign tagController_tmp_shimSlave_wff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_slave_u_w_putWire$wget } ;
@@ -6752,9 +6820,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_w_doPut ?
 	       tagController_tmp_shimSlave_wff_rv$port0__write_1 :
 	       tagController_tmp_shimSlave_wff_rv ;
+  assign tagController_tmp_shimSlave_wff_rv$port1__write_1 =
+	     { 1'd0,
+	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimSlave_wff_rv$port2__read =
 	     WILL_FIRE_RL_tagController_tmp_passCacheWrite ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimSlave_wff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_wff_rv$port1__read ;
   assign tagController_tmp_shimSlave_bff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passCacheResponse &&
@@ -6769,9 +6840,11 @@ module mkCore(CLK,
 	     tagController_tmp_shimSlave_bff_rv$EN_port0__write ?
 	       tagController_tmp_shimSlave_bff_rv$port0__write_1 :
 	       tagController_tmp_shimSlave_bff_rv ;
+  assign tagController_tmp_shimSlave_bff_rv$port1__write_1 =
+	     { 1'd0, 7'bxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimSlave_bff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_b_doDrop ?
-	       8'd42 :
+	       tagController_tmp_shimSlave_bff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_bff_rv$port1__read ;
   assign tagController_tmp_shimSlave_arff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_slave_u_ar_putWire$wget } ;
@@ -6779,9 +6852,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_ar_doPut ?
 	       tagController_tmp_shimSlave_arff_rv$port0__write_1 :
 	       tagController_tmp_shimSlave_arff_rv ;
+  assign tagController_tmp_shimSlave_arff_rv$port1__write_1 =
+	     { 1'd0,
+	       98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimSlave_arff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_passCacheRead ?
-	       99'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimSlave_arff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_arff_rv$port1__read ;
   assign tagController_tmp_shimSlave_rff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passCacheResponse &&
@@ -6799,7 +6875,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimSlave_rff_rv ;
   assign tagController_tmp_shimSlave_rff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_slave_u_r_doDrop ?
-	       74'h0AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_rff_rv$port1__write_1 :
 	       tagController_tmp_shimSlave_rff_rv$port1__read ;
   assign tagController_tmp_shimMaster_awff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryRequest &&
@@ -6808,11 +6884,11 @@ module mkCore(CLK,
   assign tagController_tmp_shimMaster_awff_rv$port0__write_1 =
 	     { 1'd1,
 	       tagController_tmp_tagCon$memory_request_get[100:95],
-	       aw_awaddr__h9288,
+	       aw_awaddr__h10570,
 	       tagController_tmp_tagCon$memory_request_get[7:0],
-	       aw_awsize_val__h11027,
+	       aw_awsize_val__h12309,
 	       3'd2,
-	       x__h12693,
+	       x__h13975,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_awff_rv$port1__read =
 	     tagController_tmp_shimMaster_awff_rv$EN_port0__write ?
@@ -6820,7 +6896,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimMaster_awff_rv ;
   assign tagController_tmp_shimMaster_awff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_aw_doDrop ?
-	       100'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_arff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_awff_rv$port1__read ;
   assign tagController_tmp_shimMaster_wff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryRequest &&
@@ -6836,7 +6912,7 @@ module mkCore(CLK,
 	       tagController_tmp_shimMaster_wff_rv ;
   assign tagController_tmp_shimMaster_wff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_w_doDrop ?
-	       74'h0AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_rff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_wff_rv$port1__read ;
   assign tagController_tmp_shimMaster_bff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_master_u_b_putWire$wget } ;
@@ -6844,29 +6920,34 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_b_doPut ?
 	       tagController_tmp_shimMaster_bff_rv$port0__write_1 :
 	       tagController_tmp_shimMaster_bff_rv ;
+  assign tagController_tmp_shimMaster_bff_rv$port1__write_1 =
+	     { 1'd0, 8'bxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimMaster_bff_rv$port2__read =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryResponseWrite ?
-	       9'd170 :
+	       tagController_tmp_shimMaster_bff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_bff_rv$port1__read ;
   assign tagController_tmp_shimMaster_arff_rv$EN_port0__write =
 	     WILL_FIRE_RL_tagController_tmp_passMemoryRequest &&
 	     tagController_tmp_tagCon$memory_request_get[93:92] != 2'd1 ;
   assign tagController_tmp_shimMaster_arff_rv$port0__write_1 =
 	     { 1'd1,
-	       v_arid__h14036,
-	       v_araddr__h14037,
-	       v_arlen__h14038,
-	       v_arsize_val__h14083,
+	       v_arid__h15318,
+	       v_araddr__h15319,
+	       v_arlen__h15320,
+	       v_arsize_val__h15365,
 	       3'd2,
-	       x__h14101,
+	       x__h15383,
 	       11'd0 } ;
   assign tagController_tmp_shimMaster_arff_rv$port1__read =
 	     tagController_tmp_shimMaster_arff_rv$EN_port0__write ?
 	       tagController_tmp_shimMaster_arff_rv$port0__write_1 :
 	       tagController_tmp_shimMaster_arff_rv ;
+  assign tagController_tmp_shimMaster_arff_rv$port1__write_1 =
+	     { 1'd0,
+	       99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimMaster_arff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_ar_doDrop ?
-	       100'h2AAAAAAAAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_arff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_arff_rv$port1__read ;
   assign tagController_tmp_shimMaster_rff_rv$port0__write_1 =
 	     { 1'd1, tagController_tmp_ug_master_u_r_putWire$wget } ;
@@ -6874,9 +6955,12 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_tagController_tmp_ug_master_u_r_doPut ?
 	       tagController_tmp_shimMaster_rff_rv$port0__write_1 :
 	       tagController_tmp_shimMaster_rff_rv ;
+  assign tagController_tmp_shimMaster_rff_rv$port1__write_1 =
+	     { 1'd0,
+	       73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign tagController_tmp_shimMaster_rff_rv$port2__read =
 	     CAN_FIRE_RL_tagController_tmp_passMemoryResponseRead ?
-	       74'h0AAAAAAAAAAAAAAAAAA :
+	       tagController_tmp_shimMaster_rff_rv$port1__write_1 :
 	       tagController_tmp_shimMaster_rff_rv$port1__read ;
   assign ifcs_0_noRoute_inner_currentReq$EN_port0__write =
 	     WILL_FIRE_RL_ifcs_0_nonRoutableFlit &&
@@ -6950,11 +7034,11 @@ module mkCore(CLK,
   assign ifcs_0_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, cpu$dmem_master_arlen } + 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h70292 - 9'd1 ;
+	     x_port1__read__h71574 - 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ?
 	       ifcs_0_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h70292 ;
+	       x_port1__read__h71574 ;
   assign ifcs_1_1_noRoute_currentReq$port0__write_1 =
 	     { debug_module$master_arid,
 	       debug_module$master_araddr,
@@ -6973,11 +7057,11 @@ module mkCore(CLK,
   assign ifcs_1_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, debug_module$master_arlen } + 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h72756 - 9'd1 ;
+	     x_port1__read__h74038 - 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ?
 	       ifcs_1_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h72756 ;
+	       x_port1__read__h74038 ;
 
   // register activeSource_0
   assign activeSource_0$D_IN =
@@ -6993,8 +7077,8 @@ module mkCore(CLK,
   // register activeSource_1
   assign activeSource_1$D_IN =
 	     MUX_activeSource_0$write_1__SEL_1 ?
-	       MUX_activeSource_1$write_1__VAL_1 :
-	       MUX_activeSource_1$write_1__VAL_1 ;
+	       MUX_activeSource_1$write_1__VAL_2 :
+	       MUX_activeSource_1$write_1__VAL_2 ;
   assign activeSource_1$EN =
 	     WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
 	     !ifcs_0_innerReq$D_OUT[1] ||
@@ -7026,7 +7110,7 @@ module mkCore(CLK,
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      default: activeSource_1_1_0$D_IN = 1'b0 /* unspecified value */ ;
+      default: activeSource_1_1_0$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
   assign activeSource_1_1_0$EN =
@@ -7054,7 +7138,7 @@ module mkCore(CLK,
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      default: activeSource_1_1_1_1$D_IN = 1'b0 /* unspecified value */ ;
+      default: activeSource_1_1_1_1$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
   assign activeSource_1_1_1_1$EN =
@@ -7078,7 +7162,7 @@ module mkCore(CLK,
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      default: activeSource_1_1_2$D_IN = 1'b0 /* unspecified value */ ;
+      default: activeSource_1_1_2$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
   assign activeSource_1_1_2$EN =
@@ -7095,52 +7179,52 @@ module mkCore(CLK,
 
   // register arbiter_1_1_firstHot
   assign arbiter_1_1_firstHot$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2335 ;
   assign arbiter_1_1_firstHot$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_1_lastSelect
   assign arbiter_1_1_lastSelect$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2323 ;
   assign arbiter_1_1_lastSelect$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_1_lastSelect_1
   assign arbiter_1_1_lastSelect_1$D_IN =
-	     IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291 ;
+	     IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2329 ;
   assign arbiter_1_1_lastSelect_1$EN = CAN_FIRE_RL_arbitrate_3 ;
 
   // register arbiter_1_firstHot
   assign arbiter_1_firstHot$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647 ;
+	     IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1685 ;
   assign arbiter_1_firstHot$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_firstHot_1
   assign arbiter_1_firstHot_1$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2127 ;
   assign arbiter_1_firstHot_1$EN = CAN_FIRE_RL_arbitrate_2 ;
 
   // register arbiter_1_lastSelect
   assign arbiter_1_lastSelect$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635 ;
+	     IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1673 ;
   assign arbiter_1_lastSelect$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_lastSelect_1
   assign arbiter_1_lastSelect_1$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641 ;
+	     IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1679 ;
   assign arbiter_1_lastSelect_1$EN = CAN_FIRE_RL_arbitrate_1 ;
 
   // register arbiter_1_lastSelect_2
   assign arbiter_1_lastSelect_2$D_IN =
-	     IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085 ;
+	     IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2123 ;
   assign arbiter_1_lastSelect_2$EN = CAN_FIRE_RL_arbitrate_2 ;
 
   // register arbiter_firstHot
   assign arbiter_firstHot$D_IN =
-	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429 ;
+	     IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1467 ;
   assign arbiter_firstHot$EN = CAN_FIRE_RL_arbitrate ;
 
   // register arbiter_lastSelect
   assign arbiter_lastSelect$D_IN =
-	     IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425 ;
+	     IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1463 ;
   assign arbiter_lastSelect$EN = CAN_FIRE_RL_arbitrate ;
 
   // register ifcs_0_1_noRoute_currentReq
@@ -7185,7 +7269,7 @@ module mkCore(CLK,
       MUX_ifcs_0_state$write_1__SEL_1: ifcs_0_state$D_IN = 2'd0;
       MUX_ifcs_0_state$write_1__SEL_2: ifcs_0_state$D_IN = 2'd1;
       MUX_ifcs_0_state$write_1__SEL_3: ifcs_0_state$D_IN = 2'd2;
-      default: ifcs_0_state$D_IN = 2'b10 /* unspecified value */ ;
+      default: ifcs_0_state$D_IN = 2'bxx /* unspecified value */ ;
     endcase
   end
   assign ifcs_0_state$EN =
@@ -7241,7 +7325,7 @@ module mkCore(CLK,
       MUX_ifcs_1_state$write_1__SEL_1: ifcs_1_state$D_IN = 2'd0;
       MUX_ifcs_1_state$write_1__SEL_2: ifcs_1_state$D_IN = 2'd1;
       MUX_ifcs_1_state$write_1__SEL_3: ifcs_1_state$D_IN = 2'd2;
-      default: ifcs_1_state$D_IN = 2'b10 /* unspecified value */ ;
+      default: ifcs_1_state$D_IN = 2'bxx /* unspecified value */ ;
     endcase
   end
   assign ifcs_1_state$EN =
@@ -7341,7 +7425,7 @@ module mkCore(CLK,
   assign tagController_tmp_addrOffset$D_IN =
 	     tagController_tmp_shimSlave_wff_rv$port1__read[1] ?
 	       64'd0 :
-	       x__h6687 ;
+	       x__h7969 ;
   assign tagController_tmp_addrOffset$EN =
 	     WILL_FIRE_RL_tagController_tmp_passCacheWrite ;
 
@@ -7447,37 +7531,37 @@ module mkCore(CLK,
 	       debug_module$hart0_reset_client_request_get ;
   assign cpu$hart0_server_run_halt_request_put =
 	     debug_module$hart0_client_run_halt_request_get ;
-  assign cpu$imem_master_arready = CAN_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
-  assign cpu$imem_master_awready = CAN_FIRE_RL_cpu_imem_ug_u_aw_doDrop ;
+  assign cpu$imem_master_arready = WILL_FIRE_RL_mkConnectionGetPut_3 ;
+  assign cpu$imem_master_awready = CAN_FIRE_RL_mkConnectionGetPut ;
   assign cpu$imem_master_bid =
 	     cpu_imem_b_buffer_ff$EMPTY_N ?
 	       cpu_imem_b_buffer_ff$D_OUT[6:2] :
-	       cpu_imem_b_buffer_enqw$wget[6:2] ;
+	       delay_shim_bff$D_OUT[6:2] ;
   assign cpu$imem_master_bresp =
 	     cpu_imem_b_buffer_ff$EMPTY_N ?
 	       cpu_imem_b_buffer_ff$D_OUT[1:0] :
-	       cpu_imem_b_buffer_enqw$wget[1:0] ;
+	       delay_shim_bff$D_OUT[1:0] ;
   assign cpu$imem_master_rdata =
 	     cpu_imem_r_buffer_ff$EMPTY_N ?
 	       cpu_imem_r_buffer_ff$D_OUT[67:4] :
-	       cpu_imem_r_buffer_enqw$wget[67:4] ;
+	       delay_shim_rff$D_OUT[67:4] ;
   assign cpu$imem_master_rid =
 	     cpu_imem_r_buffer_ff$EMPTY_N ?
 	       cpu_imem_r_buffer_ff$D_OUT[72:68] :
-	       cpu_imem_r_buffer_enqw$wget[72:68] ;
+	       delay_shim_rff$D_OUT[72:68] ;
   assign cpu$imem_master_rlast =
 	     cpu_imem_r_buffer_ff$EMPTY_N ?
 	       cpu_imem_r_buffer_ff$D_OUT[1] :
-	       cpu_imem_r_buffer_enqw$wget[1] ;
+	       delay_shim_rff$D_OUT[1] ;
   assign cpu$imem_master_rresp =
 	     cpu_imem_r_buffer_ff$EMPTY_N ?
 	       cpu_imem_r_buffer_ff$D_OUT[3:2] :
-	       cpu_imem_r_buffer_enqw$wget[3:2] ;
+	       delay_shim_rff$D_OUT[3:2] ;
   assign cpu$imem_master_ruser =
 	     cpu_imem_r_buffer_ff$EMPTY_N ?
 	       cpu_imem_r_buffer_ff$D_OUT[0] :
-	       cpu_imem_r_buffer_enqw$wget[0] ;
-  assign cpu$imem_master_wready = CAN_FIRE_RL_cpu_imem_ug_u_w_doDrop ;
+	       delay_shim_rff$D_OUT[0] ;
+  assign cpu$imem_master_wready = CAN_FIRE_RL_mkConnectionGetPut_1 ;
   assign cpu$m_external_interrupt_req_set_not_clear = plic$v_targets_0_m_eip ;
   assign cpu$nmi_req_set_not_clear = nmi_req_set_not_clear ;
   assign cpu$s_external_interrupt_req_set_not_clear = plic$v_targets_1_m_eip ;
@@ -7517,7 +7601,7 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_ClientServerResponse_3 ;
 
   // submodule cpu_imem_b_buffer_ff
-  assign cpu_imem_b_buffer_ff$D_IN = cpu_imem_b_buffer_enqw$wget ;
+  assign cpu_imem_b_buffer_ff$D_IN = delay_shim_bff$D_OUT ;
   assign cpu_imem_b_buffer_ff$ENQ = CAN_FIRE_RL_cpu_imem_b_buffer_enqueue ;
   assign cpu_imem_b_buffer_ff$DEQ = CAN_FIRE_RL_cpu_imem_b_buffer_dequeue ;
   assign cpu_imem_b_buffer_ff$CLR = 1'b0 ;
@@ -7527,7 +7611,7 @@ module mkCore(CLK,
   assign cpu_imem_b_buffer_firstValid$EN = CAN_FIRE_RL_cpu_imem_b_dropFlit ;
 
   // submodule cpu_imem_r_buffer_ff
-  assign cpu_imem_r_buffer_ff$D_IN = cpu_imem_r_buffer_enqw$wget ;
+  assign cpu_imem_r_buffer_ff$D_IN = delay_shim_rff$D_OUT ;
   assign cpu_imem_r_buffer_ff$ENQ = CAN_FIRE_RL_cpu_imem_r_buffer_enqueue ;
   assign cpu_imem_r_buffer_ff$DEQ = CAN_FIRE_RL_cpu_imem_r_buffer_dequeue ;
   assign cpu_imem_r_buffer_ff$CLR = 1'b0 ;
@@ -7616,10 +7700,66 @@ module mkCore(CLK,
   assign debug_module$master_bvalid = CAN_FIRE_RL_msNoSynth_1_b_forwardFlit ;
   assign debug_module$master_rvalid = CAN_FIRE_RL_msNoSynth_1_r_forwardFlit ;
 
+  // submodule delay_shim_arff
+  assign delay_shim_arff$D_IN =
+	     { cpu$imem_master_arid,
+	       cpu$imem_master_araddr,
+	       cpu$imem_master_arlen,
+	       cpu$imem_master_arsize,
+	       cpu$imem_master_arburst,
+	       cpu$imem_master_arlock,
+	       cpu$imem_master_arcache,
+	       cpu$imem_master_arprot,
+	       cpu$imem_master_arqos,
+	       cpu$imem_master_arregion } ;
+  assign delay_shim_arff$ENQ = WILL_FIRE_RL_mkConnectionGetPut_3 ;
+  assign delay_shim_arff$DEQ = CAN_FIRE_RL_cpu_imem_ug_u_ar_doDrop ;
+  assign delay_shim_arff$CLR = 1'b0 ;
+
+  // submodule delay_shim_awff
+  assign delay_shim_awff$D_IN =
+	     { cpu$imem_master_awid,
+	       cpu$imem_master_awaddr,
+	       cpu$imem_master_awlen,
+	       cpu$imem_master_awsize,
+	       cpu$imem_master_awburst,
+	       cpu$imem_master_awlock,
+	       cpu$imem_master_awcache,
+	       cpu$imem_master_awprot,
+	       cpu$imem_master_awqos,
+	       cpu$imem_master_awregion } ;
+  assign delay_shim_awff$ENQ = CAN_FIRE_RL_mkConnectionGetPut ;
+  assign delay_shim_awff$DEQ = WILL_FIRE_RL_cpu_imem_ug_u_aw_doDrop ;
+  assign delay_shim_awff$CLR = 1'b0 ;
+
+  // submodule delay_shim_bff
+  assign delay_shim_bff$D_IN = cpu_imem_ug_u_b_putWire$wget ;
+  assign delay_shim_bff$ENQ = CAN_FIRE_RL_cpu_imem_ug_u_b_doPut ;
+  assign delay_shim_bff$DEQ = CAN_FIRE_RL_mkConnectionGetPut_2 ;
+  assign delay_shim_bff$CLR = 1'b0 ;
+
+  // submodule delay_shim_rff
+  assign delay_shim_rff$D_IN = cpu_imem_ug_u_r_putWire$wget ;
+  assign delay_shim_rff$ENQ = CAN_FIRE_RL_cpu_imem_ug_u_r_doPut ;
+  assign delay_shim_rff$DEQ = CAN_FIRE_RL_mkConnectionGetPut_4 ;
+  assign delay_shim_rff$CLR = 1'b0 ;
+
+  // submodule delay_shim_wff
+  assign delay_shim_wff$D_IN =
+	     { cpu$imem_master_wdata,
+	       cpu$imem_master_wstrb,
+	       cpu$imem_master_wlast,
+	       cpu$imem_master_wuser } ;
+  assign delay_shim_wff$ENQ = CAN_FIRE_RL_mkConnectionGetPut_1 ;
+  assign delay_shim_wff$DEQ = WILL_FIRE_RL_cpu_imem_ug_u_w_doDrop ;
+  assign delay_shim_wff$CLR = 1'b0 ;
+
   // submodule f_reset_reqs
   assign f_reset_reqs$D_IN = cpu_reset_server_request_put ;
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
-  assign f_reset_reqs$DEQ = CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign f_reset_reqs$DEQ =
+	     near_mem_io$RDY_server_reset_request_put &&
+	     plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -7641,7 +7781,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerReq
   assign ifcs_0_1_innerReq$D_IN =
-	     { fatReq_arid__h69731,
+	     { fatReq_arid__h71013,
 	       cpu$dmem_master_araddr,
 	       cpu$dmem_master_arlen,
 	       cpu$dmem_master_arsize,
@@ -7661,11 +7801,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerRoute
   assign ifcs_0_1_innerRoute$D_IN =
-	     { cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785,
+	     { cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1823,
 	       cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	       !cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 &&
-	       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766,
-	       cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775 } ;
+	       !cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802 &&
+	       cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804,
+	       cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1813 } ;
   assign ifcs_0_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
   assign ifcs_0_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N ||
@@ -7675,9 +7815,10 @@ module mkCore(CLK,
   // submodule ifcs_0_1_noRouteRsp
   assign ifcs_0_1_noRouteRsp$D_IN =
 	     { ifcs_0_1_noRoute_currentReq$port1__read[96:93],
-	       66'h2AAAAAAAAAAAAAAAB,
-	       x_port1__read__h70292 == 9'd1,
-	       1'h0 } ;
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       2'd3,
+	       x_port1__read__h71574 == 9'd1,
+	       1'bx /* unspecified value */  } ;
   assign ifcs_0_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
   assign ifcs_0_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse ;
   assign ifcs_0_1_noRouteRsp$CLR = 1'b0 ;
@@ -7706,7 +7847,7 @@ module mkCore(CLK,
   // submodule ifcs_0_innerReq
   assign ifcs_0_innerReq$D_IN =
 	     { merged_0_flitLeft != 8'd0,
-	       a_awid__h35864,
+	       a_awid__h37146,
 	       cpu$dmem_master_awaddr,
 	       cpu$dmem_master_awlen,
 	       cpu$dmem_master_awsize,
@@ -7730,11 +7871,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_innerRoute
   assign ifcs_0_innerRoute$D_IN =
-	     { IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122,
+	     { IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1160,
 	       cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 &&
-	       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103,
-	       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112 } ;
+	       !IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139 &&
+	       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141,
+	       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1150 } ;
   assign ifcs_0_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_firstFlit ;
   assign ifcs_0_innerRoute$DEQ =
 	     WILL_FIRE_RL_burst && ifcs_0_innerReq$D_OUT[1] ||
@@ -7771,7 +7912,7 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerReq
   assign ifcs_1_1_innerReq$D_IN =
-	     { fatReq_arid__h72198,
+	     { fatReq_arid__h73480,
 	       debug_module$master_araddr,
 	       debug_module$master_arlen,
 	       debug_module$master_arsize,
@@ -7791,11 +7932,11 @@ module mkCore(CLK,
 
   // submodule ifcs_1_1_innerRoute
   assign ifcs_1_1_innerRoute$D_IN =
-	     { debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877,
+	     { debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1915,
 	       debug_module$master_araddr[63:40] == 24'd0 &&
-	       !debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 &&
-	       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858,
-	       debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867 } ;
+	       !debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894 &&
+	       debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896,
+	       debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1905 } ;
   assign ifcs_1_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_1_1_firstFlit ;
   assign ifcs_1_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N ||
@@ -7805,9 +7946,10 @@ module mkCore(CLK,
   // submodule ifcs_1_1_noRouteRsp
   assign ifcs_1_1_noRouteRsp$D_IN =
 	     { ifcs_1_1_noRoute_currentReq$port1__read[96:93],
-	       66'h2AAAAAAAAAAAAAAAB,
-	       x_port1__read__h72756 == 9'd1,
-	       1'h0 } ;
+	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       2'd3,
+	       x_port1__read__h74038 == 9'd1,
+	       1'bx /* unspecified value */  } ;
   assign ifcs_1_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
   assign ifcs_1_1_noRouteRsp$DEQ = CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse ;
   assign ifcs_1_1_noRouteRsp$CLR = 1'b0 ;
@@ -7837,7 +7979,7 @@ module mkCore(CLK,
   // submodule ifcs_1_innerReq
   assign ifcs_1_innerReq$D_IN =
 	     { merged_1_flitLeft != 8'd0,
-	       a_awid__h38629,
+	       a_awid__h39911,
 	       debug_module$master_awaddr,
 	       debug_module$master_awlen,
 	       debug_module$master_awsize,
@@ -7861,11 +8003,11 @@ module mkCore(CLK,
 
   // submodule ifcs_1_innerRoute
   assign ifcs_1_innerRoute$D_IN =
-	     { IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227,
+	     { IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1265,
 	       debug_module$master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 &&
-	       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208,
-	       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217 } ;
+	       !IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244 &&
+	       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246,
+	       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1255 } ;
   assign ifcs_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_1_firstFlit ;
   assign ifcs_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_burst_1 && ifcs_1_innerReq$D_OUT[1] ||
@@ -8415,365 +8557,368 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_tagController_tmp_passMemoryResponseRead ;
 
   // remaining internal signals
-  assign IF_IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dm_ETC___d1124 =
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112 ?
+  assign IF_IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dm_ETC___d1162 =
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1150 ?
 		2'd1 :
 		2'd0) +
 	     ((cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 &&
-	       IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103) ?
+	       !IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139 &&
+	       IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141) ?
 		2'd1 :
 		2'd0) +
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122 ?
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1160 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug__ETC___d1229 =
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217 ?
+  assign IF_IF_merged_1_flitLeft_017_EQ_0_018_THEN_debu_ETC___d1267 =
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1255 ?
 		2'd1 :
 		2'd0) +
 	     ((debug_module$master_awaddr[63:40] == 24'd0 &&
-	       !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 &&
-	       IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208) ?
+	       !IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244 &&
+	       IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246) ?
 		2'd1 :
 		2'd0) +
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227 ?
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1265 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033 =
+  assign IF_NOT_ifcs_0_1_innerRoute_first__049_BIT_1_05_ETC___d2071 =
 	     (!ifcs_0_1_innerRoute$D_OUT[1] ||
 	      !ssNoSynth_1_ar_buffer_ff$FULL_N) ?
 	       ifcs_0_1_innerRoute$D_OUT[2] &&
 	       ssNoSynth_2_ar_buffer_ff$FULL_N :
 	       ifcs_0_1_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373 =
+  assign IF_NOT_ifcs_0_innerRoute_first__389_BIT_1_398__ETC___d1411 =
 	     (!ifcs_0_innerRoute$D_OUT[1] ||
-	      !IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344) ?
+	      !IF_split_1_flitLeft_070_EQ_0_071_THEN_ssNoSynt_ETC___d1382) ?
 	       ifcs_0_innerRoute$D_OUT[2] &&
-	       IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 :
+	       IF_split_2_flitLeft_099_EQ_0_100_THEN_ssNoSynt_ETC___d1383 :
 	       ifcs_0_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049 =
+  assign IF_NOT_ifcs_1_1_innerRoute_first__078_BIT_1_08_ETC___d2087 =
 	     (!ifcs_1_1_innerRoute$D_OUT[1] ||
 	      !ssNoSynth_1_ar_buffer_ff$FULL_N) ?
 	       ifcs_1_1_innerRoute$D_OUT[2] &&
 	       ssNoSynth_2_ar_buffer_ff$FULL_N :
 	       ifcs_1_1_innerRoute$D_OUT[1] ;
-  assign IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389 =
+  assign IF_NOT_ifcs_1_innerRoute_first__418_BIT_1_422__ETC___d1427 =
 	     (!ifcs_1_innerRoute$D_OUT[1] ||
-	      !IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344) ?
+	      !IF_split_1_flitLeft_070_EQ_0_071_THEN_ssNoSynt_ETC___d1382) ?
 	       ifcs_1_innerRoute$D_OUT[2] &&
-	       IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 :
+	       IF_split_2_flitLeft_099_EQ_0_100_THEN_ssNoSynt_ETC___d1383 :
 	       ifcs_1_innerRoute$D_OUT[1] ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2285 =
-	     (SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ||
-	      SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ||
-	      SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266) ?
-	       x__h92267 | y__h92268 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2323 =
+	     (SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ||
+	      SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ||
+	      SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304) ?
+	       x__h93549 | y__h93550 :
 	       arbiter_1_1_lastSelect ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2291 =
-	     (SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ||
-	      SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ||
-	      SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266) ?
-	       x__h92455 | y__h92456 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2329 =
+	     (SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ||
+	      SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ||
+	      SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304) ?
+	       x__h93737 | y__h93738 :
 	       arbiter_1_1_lastSelect_1 ;
-  assign IF_SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_2_ETC___d2297 =
-	     (SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ||
-	      SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ||
-	      SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266) ?
-	       x__h92636 | y__h92637 :
+  assign IF_SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_2_ETC___d2335 =
+	     (SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ||
+	      SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ||
+	      SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304) ?
+	       x__h93918 | y__h93919 :
 	       arbiter_1_1_firstHot ;
-  assign IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2085 =
-	     (SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 ||
-	      SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073) ?
-	       x__h80325 | y__h80326 :
+  assign IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2123 =
+	     (SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 ||
+	      SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111) ?
+	       x__h81607 | y__h81608 :
 	       arbiter_1_lastSelect_2 ;
-  assign IF_SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_0_ETC___d2089 =
-	     (SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 ||
-	      SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073) ?
-	       x__h80466 | y__h80467 :
+  assign IF_SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_1_ETC___d2127 =
+	     (SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 ||
+	      SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111) ?
+	       x__h81748 | y__h81749 :
 	       arbiter_1_firstHot_1 ;
-  assign IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1635 =
-	     (SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ||
-	      SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ||
-	      SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616) ?
-	       x__h60857 | y__h60858 :
+  assign IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1673 =
+	     (SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ||
+	      SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ||
+	      SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654) ?
+	       x__h62139 | y__h62140 :
 	       arbiter_1_lastSelect ;
-  assign IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1641 =
-	     (SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ||
-	      SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ||
-	      SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616) ?
-	       x__h61045 | y__h61046 :
+  assign IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1679 =
+	     (SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ||
+	      SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ||
+	      SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654) ?
+	       x__h62327 | y__h62328 :
 	       arbiter_1_lastSelect_1 ;
-  assign IF_SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_ETC___d1647 =
-	     (SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ||
-	      SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ||
-	      SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616) ?
-	       x__h61226 | y__h61227 :
+  assign IF_SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_ETC___d1685 =
+	     (SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ||
+	      SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ||
+	      SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654) ?
+	       x__h62508 | y__h62509 :
 	       arbiter_1_firstHot ;
-  assign IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1425 =
-	     (SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 ||
-	      SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413) ?
-	       x__h46374 | y__h46375 :
+  assign IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1463 =
+	     (SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 ||
+	      SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451) ?
+	       x__h47656 | y__h47657 :
 	       arbiter_lastSelect ;
-  assign IF_SEXT_arbiter_lastSelect_401_402_BIT_0_403_A_ETC___d1429 =
-	     (SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 ||
-	      SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413) ?
-	       x__h46515 | y__h46516 :
+  assign IF_SEXT_arbiter_lastSelect_439_440_BIT_0_441_A_ETC___d1467 =
+	     (SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 ||
+	      SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451) ?
+	       x__h47797 | y__h47798 :
 	       arbiter_firstHot ;
-  assign IF_cpu_dmem_master_ar_araddr__761_BITS_63_TO_4_ETC___d1787 =
-	     (cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775 ?
+  assign IF_cpu_dmem_master_ar_araddr__799_BITS_63_TO_4_ETC___d1825 =
+	     (cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1813 ?
 		2'd1 :
 		2'd0) +
 	     ((cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	       !cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 &&
-	       cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766) ?
+	       !cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802 &&
+	       cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804) ?
 		2'd1 :
 		2'd0) +
-	     (cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785 ?
+	     (cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1823 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_debug_module_master_ar_araddr__853_BITS_63__ETC___d1879 =
-	     (debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867 ?
+  assign IF_debug_module_master_ar_araddr__891_BITS_63__ETC___d1917 =
+	     (debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1905 ?
 		2'd1 :
 		2'd0) +
 	     ((debug_module$master_araddr[63:40] == 24'd0 &&
-	       !debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 &&
-	       debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858) ?
+	       !debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894 &&
+	       debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896) ?
 		2'd1 :
 		2'd0) +
-	     (debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877 ?
+	     (debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1915 ?
 		2'd1 :
 		2'd0) ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 =
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1127 =
 	     ((merged_0_flitLeft == 8'd0) ?
 		!cpu$dmem_master_awvalid || !cpu$dmem_master_wvalid :
 		!cpu$dmem_master_wvalid) ||
 	     merged_0_flitLeft != 8'd0 ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1159 =
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_NOT_cpu_d_ETC___d1089 ||
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1197 =
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_NOT_cpu_d_ETC___d1127 ||
 	      cpu$dmem_master_awvalid) &&
 	     (merged_0_flitLeft != 8'd0 ||
 	      !ifcs_0_noRoute_inner_pendingReq && cpu$dmem_master_awvalid) ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1082 =
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1120 =
 	     (merged_0_flitLeft == 8'd0) ?
 	       cpu$dmem_master_awvalid && cpu$dmem_master_wvalid :
 	       cpu$dmem_master_wvalid ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 =
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139 =
 	     cpu$dmem_master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103 =
-	     x__h34704 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106 =
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141 =
+	     x__h35986 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1144 =
 	     cpu$dmem_master_awaddr < soc_map$m_plic_addr_range[127:64] ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108 =
-	     x__h34729 < soc_map$m_plic_addr_range[63:0] ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1112 =
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1146 =
+	     x__h36011 < soc_map$m_plic_addr_range[63:0] ;
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1150 =
 	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 ||
-	      !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103) &&
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106 ||
-	      !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108) ;
-  assign IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1122 =
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139 ||
+	      !IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141) &&
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1144 ||
+	      !IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1146) ;
+  assign IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1160 =
 	     cpu$dmem_master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1101 ||
-	      !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1103) &&
-	     !IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1106 &&
-	     IF_merged_0_flitLeft_59_EQ_0_60_THEN_cpu_dmem__ETC___d1108 ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 =
+	     (IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1139 ||
+	      !IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1141) &&
+	     !IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1144 &&
+	     IF_merged_0_flitLeft_97_EQ_0_98_THEN_cpu_dmem__ETC___d1146 ;
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1232 =
 	     ((merged_1_flitLeft == 8'd0) ?
 		!debug_module$master_awvalid || !debug_module$master_wvalid :
 		!debug_module$master_wvalid) ||
 	     merged_1_flitLeft != 8'd0 ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1264 =
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_NOT_debug_ETC___d1194 ||
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1302 =
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_NOT_deb_ETC___d1232 ||
 	      debug_module$master_awvalid) &&
 	     (merged_1_flitLeft != 8'd0 ||
 	      !ifcs_1_noRoute_inner_pendingReq &&
 	      debug_module$master_awvalid) ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1187 =
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1225 =
 	     (merged_1_flitLeft == 8'd0) ?
 	       debug_module$master_awvalid && debug_module$master_wvalid :
 	       debug_module$master_wvalid ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 =
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244 =
 	     debug_module$master_awaddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208 =
-	     x__h37512 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211 =
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246 =
+	     x__h38794 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1249 =
 	     debug_module$master_awaddr < soc_map$m_plic_addr_range[127:64] ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213 =
-	     x__h37537 < soc_map$m_plic_addr_range[63:0] ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1217 =
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1251 =
+	     x__h38819 < soc_map$m_plic_addr_range[63:0] ;
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1255 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 ||
-	      !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208) &&
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211 ||
-	      !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213) ;
-  assign IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1227 =
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244 ||
+	      !IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246) &&
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1249 ||
+	      !IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1251) ;
+  assign IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1265 =
 	     debug_module$master_awaddr[63:40] == 24'd0 &&
-	     (IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1206 ||
-	      !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1208) &&
-	     !IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1211 &&
-	     IF_merged_1_flitLeft_79_EQ_0_80_THEN_debug_mod_ETC___d1213 ;
-  assign IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343 =
+	     (IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1244 ||
+	      !IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1246) &&
+	     !IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1249 &&
+	     IF_merged_1_flitLeft_017_EQ_0_018_THEN_debug_m_ETC___d1251 ;
+  assign IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381 =
 	     (split_0_flitLeft == 8'd0) ?
 	       ssNoSynth_0_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_0_w_buffer_ff$FULL_N :
 	       ssNoSynth_0_w_buffer_ff$FULL_N ;
-  assign IF_split_1_flitLeft_032_EQ_0_033_THEN_ssNoSynt_ETC___d1344 =
+  assign IF_split_1_flitLeft_070_EQ_0_071_THEN_ssNoSynt_ETC___d1382 =
 	     (split_1_flitLeft == 8'd0) ?
 	       ssNoSynth_1_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_1_w_buffer_ff$FULL_N :
 	       ssNoSynth_1_w_buffer_ff$FULL_N ;
-  assign IF_split_2_flitLeft_061_EQ_0_062_THEN_ssNoSynt_ETC___d1345 =
+  assign IF_split_2_flitLeft_099_EQ_0_100_THEN_ssNoSynt_ETC___d1383 =
 	     (split_2_flitLeft == 8'd0) ?
 	       ssNoSynth_2_aw_buffer_ff$FULL_N &&
 	       ssNoSynth_2_w_buffer_ff$FULL_N :
 	       ssNoSynth_2_w_buffer_ff$FULL_N ;
-  assign SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22 =
-	     {2{SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266}} ;
-  assign SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17 =
-	     {2{SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073}} ;
-  assign SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12 =
-	     {2{SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616}} ;
-  assign SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7 =
-	     {2{SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413}} ;
-  assign SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266 =
-	     x__h91795 | y__h91796 ;
+  assign SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22 =
+	     {2{SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304}} ;
+  assign SEXT_SEXT_arbiter_1_firstHot_1_103_104_BIT_0_1_ETC__q17 =
+	     {2{SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111}} ;
+  assign SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12 =
+	     {2{SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654}} ;
+  assign SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7 =
+	     {2{SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451}} ;
+  assign SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304 =
+	     x__h93077 | y__h93078 ;
   assign SEXT_arbiter_1_1_firstHot__q19 = {2{arbiter_1_1_firstHot}} ;
-  assign SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 =
-	     x__h91659 | y__h91660 ;
+  assign SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 =
+	     x__h92941 | y__h92942 ;
   assign SEXT_arbiter_1_1_lastSelect_1__q21 = {2{arbiter_1_1_lastSelect_1}} ;
-  assign SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 =
-	     x__h91508 | y__h91509 ;
+  assign SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 =
+	     x__h92790 | y__h92791 ;
   assign SEXT_arbiter_1_1_lastSelect__q20 = {2{arbiter_1_1_lastSelect}} ;
-  assign SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073 =
-	     x__h79960 | y__h79961 ;
+  assign SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111 =
+	     x__h81242 | y__h81243 ;
   assign SEXT_arbiter_1_firstHot_1__q15 = {2{arbiter_1_firstHot_1}} ;
-  assign SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616 =
-	     x__h60385 | y__h60386 ;
-  assign SEXT_arbiter_1_firstHot__q9 = {2{arbiter_1_firstHot}} ;
-  assign SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 =
-	     x__h60249 | y__h60250 ;
+  assign SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 =
+	     x__h61667 | y__h61668 ;
+  assign SEXT_arbiter_1_firstHot__q10 = {2{arbiter_1_firstHot}} ;
+  assign SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 =
+	     x__h61531 | y__h61532 ;
   assign SEXT_arbiter_1_lastSelect_1__q11 = {2{arbiter_1_lastSelect_1}} ;
-  assign SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 =
-	     x__h79857 | y__h79858 ;
+  assign SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 =
+	     x__h81139 | y__h81140 ;
   assign SEXT_arbiter_1_lastSelect_2__q16 = {2{arbiter_1_lastSelect_2}} ;
-  assign SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 =
-	     x__h60098 | y__h60099 ;
-  assign SEXT_arbiter_1_lastSelect__q10 = {2{arbiter_1_lastSelect}} ;
-  assign SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413 =
-	     x__h46009 | y__h46010 ;
+  assign SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 =
+	     x__h61380 | y__h61381 ;
+  assign SEXT_arbiter_1_lastSelect__q9 = {2{arbiter_1_lastSelect}} ;
+  assign SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451 =
+	     x__h47291 | y__h47292 ;
   assign SEXT_arbiter_firstHot__q5 = {2{arbiter_firstHot}} ;
-  assign SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 =
-	     x__h45906 | y__h45907 ;
+  assign SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 =
+	     x__h47188 | y__h47189 ;
   assign SEXT_arbiter_lastSelect__q6 = {2{arbiter_lastSelect}} ;
-  assign SEXT_x0384__q18 = {2{x__h80384}} ;
-  assign SEXT_x0919__q13 = {2{x__h60919}} ;
-  assign SEXT_x0953__q14 = {2{x__h60953}} ;
-  assign SEXT_x2329__q23 = {2{x__h92329}} ;
-  assign SEXT_x2363__q24 = {2{x__h92363}} ;
-  assign SEXT_x6433__q8 = {2{x__h46433}} ;
-  assign _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258 =
-	     x__h11097 + y__h11098 ;
-  assign a_awid__h35864 = { 1'd0, cpu$dmem_master_awid } ;
-  assign a_awid__h38629 = { 1'd1, debug_module$master_awid } ;
-  assign araddr__h14020 =
-	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
-  assign arcache__h14025 =
+  assign SEXT_x1666__q18 = {2{x__h81666}} ;
+  assign SEXT_x2201__q13 = {2{x__h62201}} ;
+  assign SEXT_x2235__q14 = {2{x__h62235}} ;
+  assign SEXT_x3611__q23 = {2{x__h93611}} ;
+  assign SEXT_x3645__q24 = {2{x__h93645}} ;
+  assign SEXT_x7715__q8 = {2{x__h47715}} ;
+  assign _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296 =
+	     x__h12379 + y__h12380 ;
+  assign a_awid__h37146 = { 1'd0, cpu$dmem_master_awid } ;
+  assign a_awid__h39911 = { 1'd1, debug_module$master_awid } ;
+  assign arcache__h15307 =
 	     tagController_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
-  assign arlen__h14021 =
+  assign arlen__h15303 =
 	     { 5'd0, tagController_tmp_tagCon$memory_request_get[5:3] } ;
-  assign aw_awaddr__h9288 = tmp__h9071 + { 60'd0, x__h9363 } ;
-  assign aw_awsize_val__h11027 =
-	     _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[0] ?
+  assign aw_awaddr__h10570 = tmp__h10353 + { 60'd0, x__h10645 } ;
+  assign aw_awsize_val__h12309 =
+	     _0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296[0] ?
 	       3'd0 :
-	       (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[1] ?
+	       (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296[1] ?
 		  3'd1 :
-		  (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[2] ?
+		  (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296[2] ?
 		     3'd2 :
-		     (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d258[3] ?
+		     (_0_CONCAT_tagController_tmp_tagCon_memory_reque_ETC___d296[3] ?
 			3'd3 :
 			3'd4))) ;
-  assign cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1775 =
+  assign cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1813 =
 	     cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	     (cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 ||
-	      !cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766) &&
-	     (cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769 ||
-	      !cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771) ;
-  assign cpu_dmem_master_ar_araddr__761_BITS_63_TO_40_7_ETC___d1785 =
+	     (cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802 ||
+	      !cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804) &&
+	     (cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_p_ETC___d1807 ||
+	      !cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1809) ;
+  assign cpu_dmem_master_ar_araddr__799_BITS_63_TO_40_8_ETC___d1823 =
 	     cpu$dmem_master_araddr[63:40] == 24'd0 &&
-	     (cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 ||
-	      !cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766) &&
-	     !cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769 &&
-	     cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771 ;
-  assign cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1766 =
-	     x__h69163 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_araddr__761_MINUS_soc_map_m_ETC___d1771 =
-	     x__h69188 < soc_map$m_plic_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_n_ETC___d1764 =
+	     (cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802 ||
+	      !cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804) &&
+	     !cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_p_ETC___d1807 &&
+	     cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1809 ;
+  assign cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1804 =
+	     x__h70445 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign cpu_dmem_master_ar_araddr__799_MINUS_soc_map_m_ETC___d1809 =
+	     x__h70470 < soc_map$m_plic_addr_range[63:0] ;
+  assign cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_n_ETC___d1802 =
 	     cpu$dmem_master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign cpu_dmem_master_ar_araddr__761_ULT_soc_map_m_p_ETC___d1769 =
+  assign cpu_dmem_master_ar_araddr__799_ULT_soc_map_m_p_ETC___d1807 =
 	     cpu$dmem_master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1867 =
+  assign debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1905 =
 	     debug_module$master_araddr[63:40] == 24'd0 &&
-	     (debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 ||
-	      !debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858) &&
-	     (debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861 ||
-	      !debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863) ;
-  assign debug_module_master_ar_araddr__853_BITS_63_TO__ETC___d1877 =
+	     (debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894 ||
+	      !debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896) &&
+	     (debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899 ||
+	      !debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901) ;
+  assign debug_module_master_ar_araddr__891_BITS_63_TO__ETC___d1915 =
 	     debug_module$master_araddr[63:40] == 24'd0 &&
-	     (debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 ||
-	      !debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858) &&
-	     !debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861 &&
-	     debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863 ;
-  assign debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1858 =
-	     x__h71645 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863 =
-	     x__h71670 < soc_map$m_plic_addr_range[63:0] ;
-  assign debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856 =
+	     (debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894 ||
+	      !debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896) &&
+	     !debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899 &&
+	     debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901 ;
+  assign debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1896 =
+	     x__h72927 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign debug_module_master_ar_araddr__891_MINUS_soc_m_ETC___d1901 =
+	     x__h72952 < soc_map$m_plic_addr_range[63:0] ;
+  assign debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1894 =
 	     debug_module$master_araddr <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861 =
+  assign debug_module_master_ar_araddr__891_ULT_soc_map_ETC___d1899 =
 	     debug_module$master_araddr < soc_map$m_plic_addr_range[127:64] ;
-  assign fatReq_arid__h69731 = { 1'd0, cpu$dmem_master_arid } ;
-  assign fatReq_arid__h72198 = { 1'd1, debug_module$master_arid } ;
-  assign reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587 =
+  assign fatReq_arid__h71013 = { 1'd0, cpu$dmem_master_arid } ;
+  assign fatReq_arid__h73480 = { 1'd1, debug_module$master_arid } ;
+  assign plic_RDY_server_reset_request_put__31_AND_cpu__ETC___d437 =
+	     plic$RDY_server_reset_request_put &&
+	     cpu$RDY_hart0_server_reset_request_put &&
+	     f_reset_reqs$EMPTY_N &&
+	     f_reset_requestor$FULL_N ;
+  assign reqWires_1_0_whas__615_AND_reqWires_1_0_wget___ETC___d1625 =
 	     CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget ||
 	     CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget ;
-  assign reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237 =
+  assign reqWires_1_1_0_whas__265_AND_reqWires_1_1_0_wg_ETC___d2275 =
 	     CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget ||
 	     CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget ;
-  assign split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002 =
+  assign split_0_doPut_whas__033_AND_split_0_doPut_wget_ETC___d1040 =
 	     CAN_FIRE_RL_sink_selected &&
 	     (split_0_doPut$wget[172] ||
 	      ssNoSynth_0_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_0_w_buffer_ff$FULL_N) ;
-  assign split_1_doPut_whas__024_AND_split_1_doPut_wget_ETC___d1031 =
+  assign split_1_doPut_whas__062_AND_split_1_doPut_wget_ETC___d1069 =
 	     CAN_FIRE_RL_sink_selected_1 &&
 	     (split_1_doPut$wget[172] ||
 	      ssNoSynth_1_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_1_w_buffer_ff$FULL_N) ;
-  assign split_2_doPut_whas__053_AND_split_2_doPut_wget_ETC___d1060 =
+  assign split_2_doPut_whas__091_AND_split_2_doPut_wget_ETC___d1098 =
 	     CAN_FIRE_RL_sink_selected_2 &&
 	     (split_2_doPut$wget[172] ||
 	      ssNoSynth_2_aw_buffer_ff$FULL_N &&
 	      ssNoSynth_2_w_buffer_ff$FULL_N) ;
-  assign state_1_1_058_AND_activeSource_1_0_1_125_126_A_ETC___d2128 =
+  assign state_1_1_096_AND_activeSource_1_0_1_163_164_A_ETC___d2166 =
 	     state_1_1 && activeSource_1_0_1 && ifcs_0_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_1_innerRoute$D_OUT[0] ||
 	       !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-		IF_NOT_ifcs_0_1_innerRoute_first__011_BIT_1_02_ETC___d2033 :
+		IF_NOT_ifcs_0_1_innerRoute_first__049_BIT_1_05_ETC___d2071 :
 		ifcs_0_1_innerRoute$D_OUT[0]) ;
-  assign state_1_1_058_AND_activeSource_1_1_1_165_166_A_ETC___d2168 =
+  assign state_1_1_096_AND_activeSource_1_1_1_203_204_A_ETC___d2206 =
 	     state_1_1 && activeSource_1_1_1 && ifcs_1_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_1_innerRoute$D_OUT[0] ||
 	       !ssNoSynth_0_ar_buffer_ff$FULL_N) ?
-		IF_NOT_ifcs_1_1_innerRoute_first__040_BIT_1_04_ETC___d2049 :
+		IF_NOT_ifcs_1_1_innerRoute_first__078_BIT_1_08_ETC___d2087 :
 		ifcs_1_1_innerRoute$D_OUT[0]) ;
-  assign state_1_1_1_238_AND_activeSource_1_1_0_332_333_ETC___d2335 =
+  assign state_1_1_1_276_AND_activeSource_1_1_0_370_371_ETC___d2373 =
 	     state_1_1_1 && activeSource_1_1_0 &&
 	     ifcs_0_1_routeBack$EMPTY_N &&
 	     ((!ifcs_0_1_routeBack$D_OUT[0] ||
@@ -8781,7 +8926,7 @@ module mkCore(CLK,
 		ifcs_0_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_0_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_1_238_AND_activeSource_1_1_1_1_368_3_ETC___d2371 =
+  assign state_1_1_1_276_AND_activeSource_1_1_1_1_406_4_ETC___d2409 =
 	     state_1_1_1 && activeSource_1_1_1_1 &&
 	     ifcs_1_1_routeBack$EMPTY_N &&
 	     ((!ifcs_1_1_routeBack$D_OUT[0] ||
@@ -8789,7 +8934,7 @@ module mkCore(CLK,
 		ifcs_1_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_1_1_routeBack$D_OUT[0]) ;
-  assign state_1_1_1_238_AND_activeSource_1_1_2_404_405_ETC___d2407 =
+  assign state_1_1_1_276_AND_activeSource_1_1_2_442_443_ETC___d2445 =
 	     state_1_1_1 && activeSource_1_1_2 &&
 	     ifcs_2_1_routeBack$EMPTY_N &&
 	     ((!ifcs_2_1_routeBack$D_OUT[0] ||
@@ -8797,38 +8942,38 @@ module mkCore(CLK,
 		ifcs_2_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_1_drainNoRouteResponse :
 		ifcs_2_1_routeBack$D_OUT[0]) ;
-  assign state_1_588_AND_activeSource_1_0_676_677_AND_i_ETC___d1679 =
+  assign state_1_626_AND_activeSource_1_0_714_715_AND_i_ETC___d1717 =
 	     state_1 && activeSource_1_0 && ifcs_0_routeBack$EMPTY_N &&
 	     ((!ifcs_0_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_0_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_0_routeBack$D_OUT[0]) ;
-  assign state_1_588_AND_activeSource_1_1_709_710_AND_i_ETC___d1712 =
+  assign state_1_626_AND_activeSource_1_1_747_748_AND_i_ETC___d1750 =
 	     state_1 && activeSource_1_1 && ifcs_1_routeBack$EMPTY_N &&
 	     ((!ifcs_1_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_1_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_1_routeBack$D_OUT[0]) ;
-  assign state_1_588_AND_activeSource_1_2_743_744_AND_i_ETC___d1746 =
+  assign state_1_626_AND_activeSource_1_2_781_782_AND_i_ETC___d1784 =
 	     state_1 && activeSource_1_2 && ifcs_2_routeBack$EMPTY_N &&
 	     ((!ifcs_2_routeBack$D_OUT[0] ||
 	       !(!CAN_FIRE_RL_ifcs_0_drainNoRouteResponse)) ?
 		ifcs_2_routeBack$D_OUT[1] &&
 		!CAN_FIRE_RL_ifcs_1_drainNoRouteResponse :
 		ifcs_2_routeBack$D_OUT[0]) ;
-  assign state_398_AND_activeSource_0_471_472_AND_ifcs__ETC___d1474 =
+  assign state_436_AND_activeSource_0_509_510_AND_ifcs__ETC___d1512 =
 	     state && activeSource_0 && ifcs_0_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
-		IF_NOT_ifcs_0_innerRoute_first__351_BIT_1_360__ETC___d1373 :
+	       !IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381) ?
+		IF_NOT_ifcs_0_innerRoute_first__389_BIT_1_398__ETC___d1411 :
 		ifcs_0_innerRoute$D_OUT[0]) ;
-  assign state_398_AND_activeSource_1_515_516_AND_ifcs__ETC___d1518 =
+  assign state_436_AND_activeSource_1_553_554_AND_ifcs__ETC___d1556 =
 	     state && activeSource_1 && ifcs_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_003_EQ_0_004_THEN_ssNoSynt_ETC___d1343) ?
-		IF_NOT_ifcs_1_innerRoute_first__380_BIT_1_384__ETC___d1389 :
+	       !IF_split_0_flitLeft_041_EQ_0_042_THEN_ssNoSynt_ETC___d1381) ?
+		IF_NOT_ifcs_1_innerRoute_first__418_BIT_1_422__ETC___d1427 :
 		ifcs_1_innerRoute$D_OUT[0]) ;
   assign tagController_tmp_shimMaster_arff_rvport1__re_ETC__q4 =
 	     tagController_tmp_shimMaster_arff_rv$port1__read[98:0] ;
@@ -8842,146 +8987,27 @@ module mkCore(CLK,
 	     tagController_tmp_ug_slave_u_b_peekWire$wget[6:2] ;
   assign tagController_tmp_ug_slave_u_r_peekWirewget_B_ETC__q25 =
 	     tagController_tmp_ug_slave_u_r_peekWire$wget[72:68] ;
-  assign tmp__h6846 =
+  assign tmp__h10353 = { 24'd0, x__h10602 } ;
+  assign tmp__h8128 =
 	     tagController_tmp_awreqff$D_OUT[92:29] +
 	     tagController_tmp_addrOffset ;
-  assign tmp__h9071 = { 24'd0, x__h9320 } ;
-  assign v_araddr__h14037 =
-	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       araddr__h14020 :
-	       64'hAAAAAAAAAAAAAAAA ;
-  assign v_arid__h14036 =
+  assign v_araddr__h15319 =
+	     { 24'd0, tagController_tmp_tagCon$memory_request_get[140:101] } ;
+  assign v_arid__h15318 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[100:95] :
 	       6'd0 ;
-  assign v_arlen__h14038 =
+  assign v_arlen__h15320 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arlen__h14021 :
+	       arlen__h15303 :
 	       8'd0 ;
-  assign v_arsize_val__h14083 =
+  assign v_arsize_val__h15365 =
 	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
 	       tagController_tmp_tagCon$memory_request_get[2:0] :
 	       3'b0 ;
-  assign x__h11097 = x__h11109 + y__h11110 ;
-  assign x__h11109 = x__h11121 + y__h11122 ;
-  assign x__h11121 = x__h11133 + y__h11134 ;
-  assign x__h11133 = x__h11145 + y__h11146 ;
-  assign x__h11145 = x__h11157 + y__h11158 ;
-  assign x__h11157 = x__h11169 + y__h11170 ;
-  assign x__h11169 =
-	     { 3'd0, tagController_tmp_tagCon$memory_request_get[88] } ;
-  assign x__h12693 =
-	     tagController_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
-  assign x__h14101 =
-	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arcache__h14025 :
-	       4'd0 ;
-  assign x__h34704 =
-	     cpu$dmem_master_awaddr -
-	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h34729 =
-	     cpu$dmem_master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h37512 =
-	     debug_module$master_awaddr -
-	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h37537 =
-	     debug_module$master_awaddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h45906 =
-	     SEXT_arbiter_lastSelect__q6[0] &
-	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h46009 =
-	     SEXT_arbiter_firstHot__q5[0] &
-	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h46374 =
-	     SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7[0] &
-	     arbiter_firstHot ;
-  assign x__h46433 =
-	     !SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413 &&
-	     SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 ;
-  assign x__h46515 = SEXT_x6433__q8[0] & arbiter_firstHot ;
-  assign x__h60098 = x__h60100 | y__h60101 ;
-  assign x__h60100 =
-	     SEXT_arbiter_1_lastSelect__q10[0] &
-	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h60249 = x__h60251 | y__h60252 ;
-  assign x__h60251 =
-	     SEXT_arbiter_1_lastSelect_1__q11[0] &
-	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h60385 = x__h60387 | y__h60388 ;
-  assign x__h60387 =
-	     SEXT_arbiter_1_firstHot__q9[0] &
-	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h60857 = x__h60859 | y__h60860 ;
-  assign x__h60859 =
-	     SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12[0] &
-	     arbiter_1_firstHot ;
-  assign x__h60919 =
-	     !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616 &&
-	     SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 ;
-  assign x__h60953 =
-	     !SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 &&
-	     !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616 &&
-	     SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 ;
-  assign x__h61045 = x__h61047 | y__h61048 ;
-  assign x__h61047 = SEXT_x0919__q13[0] & arbiter_1_firstHot ;
-  assign x__h61226 = x__h61228 | y__h61229 ;
-  assign x__h61228 = SEXT_x0953__q14[0] & arbiter_1_firstHot ;
-  assign x__h6687 =
-	     tagController_tmp_addrOffset +
-	     (64'd1 << tagController_tmp_awreqff$D_OUT[20:18]) ;
-  assign x__h69163 =
-	     cpu$dmem_master_araddr -
-	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h69188 =
-	     cpu$dmem_master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h71645 =
-	     debug_module$master_araddr -
-	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h71670 =
-	     debug_module$master_araddr - soc_map$m_plic_addr_range[127:64] ;
-  assign x__h79857 =
-	     SEXT_arbiter_1_lastSelect_2__q16[0] &
-	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h79960 =
-	     SEXT_arbiter_1_firstHot_1__q15[0] &
-	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h80325 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17[0] &
-	     arbiter_1_firstHot_1 ;
-  assign x__h80384 =
-	     !SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073 &&
-	     SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 ;
-  assign x__h80466 = SEXT_x0384__q18[0] & arbiter_1_firstHot_1 ;
-  assign x__h91508 = x__h91510 | y__h91511 ;
-  assign x__h91510 =
-	     SEXT_arbiter_1_1_lastSelect__q20[0] &
-	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h91659 = x__h91661 | y__h91662 ;
-  assign x__h91661 =
-	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
-	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h91795 = x__h91797 | y__h91798 ;
-  assign x__h91797 =
-	     SEXT_arbiter_1_1_firstHot__q19[0] &
-	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h92267 = x__h92269 | y__h92270 ;
-  assign x__h92269 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22[0] &
-	     arbiter_1_1_firstHot ;
-  assign x__h92329 =
-	     !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266 &&
-	     SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 ;
-  assign x__h92363 =
-	     !SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 &&
-	     !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266 &&
-	     SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 ;
-  assign x__h92455 = x__h92457 | y__h92458 ;
-  assign x__h92457 = SEXT_x2329__q23[0] & arbiter_1_1_firstHot ;
-  assign x__h92636 = x__h92638 | y__h92639 ;
-  assign x__h92638 = SEXT_x2363__q24[0] & arbiter_1_1_firstHot ;
-  assign x__h9320 =
+  assign x__h10602 =
 	     { tagController_tmp_tagCon$memory_request_get[140:104], 3'd0 } ;
-  assign x__h9363 =
+  assign x__h10645 =
 	     tagController_tmp_tagCon$memory_request_get[81] ?
 	       4'd0 :
 	       (tagController_tmp_tagCon$memory_request_get[82] ?
@@ -8999,103 +9025,220 @@ module mkCore(CLK,
 				 (tagController_tmp_tagCon$memory_request_get[88] ?
 				    4'd7 :
 				    4'd8))))))) ;
-  assign x_port1__read__h70292 =
+  assign x__h12379 = x__h12391 + y__h12392 ;
+  assign x__h12391 = x__h12403 + y__h12404 ;
+  assign x__h12403 = x__h12415 + y__h12416 ;
+  assign x__h12415 = x__h12427 + y__h12428 ;
+  assign x__h12427 = x__h12439 + y__h12440 ;
+  assign x__h12439 = x__h12451 + y__h12452 ;
+  assign x__h12451 =
+	     { 3'd0, tagController_tmp_tagCon$memory_request_get[88] } ;
+  assign x__h13975 =
+	     tagController_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
+  assign x__h15383 =
+	     (tagController_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
+	       arcache__h15307 :
+	       4'd0 ;
+  assign x__h35986 =
+	     cpu$dmem_master_awaddr -
+	     soc_map$m_near_mem_io_addr_range[127:64] ;
+  assign x__h36011 =
+	     cpu$dmem_master_awaddr - soc_map$m_plic_addr_range[127:64] ;
+  assign x__h38794 =
+	     debug_module$master_awaddr -
+	     soc_map$m_near_mem_io_addr_range[127:64] ;
+  assign x__h38819 =
+	     debug_module$master_awaddr - soc_map$m_plic_addr_range[127:64] ;
+  assign x__h47188 =
+	     SEXT_arbiter_lastSelect__q6[0] &
+	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
+  assign x__h47291 =
+	     SEXT_arbiter_firstHot__q5[0] &
+	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
+  assign x__h47656 =
+	     SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7[0] &
+	     arbiter_firstHot ;
+  assign x__h47715 =
+	     !SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451 &&
+	     SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 ;
+  assign x__h47797 = SEXT_x7715__q8[0] & arbiter_firstHot ;
+  assign x__h61380 = x__h61382 | y__h61383 ;
+  assign x__h61382 =
+	     SEXT_arbiter_1_lastSelect__q9[0] &
+	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
+  assign x__h61531 = x__h61533 | y__h61534 ;
+  assign x__h61533 =
+	     SEXT_arbiter_1_lastSelect_1__q11[0] &
+	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
+  assign x__h61667 = x__h61669 | y__h61670 ;
+  assign x__h61669 =
+	     SEXT_arbiter_1_firstHot__q10[0] &
+	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
+  assign x__h62139 = x__h62141 | y__h62142 ;
+  assign x__h62141 =
+	     SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12[0] &
+	     arbiter_1_firstHot ;
+  assign x__h62201 =
+	     !SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 &&
+	     SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 ;
+  assign x__h62235 =
+	     !SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 &&
+	     !SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 &&
+	     SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 ;
+  assign x__h62327 = x__h62329 | y__h62330 ;
+  assign x__h62329 = SEXT_x2201__q13[0] & arbiter_1_firstHot ;
+  assign x__h62508 = x__h62510 | y__h62511 ;
+  assign x__h62510 = SEXT_x2235__q14[0] & arbiter_1_firstHot ;
+  assign x__h70445 =
+	     cpu$dmem_master_araddr -
+	     soc_map$m_near_mem_io_addr_range[127:64] ;
+  assign x__h70470 =
+	     cpu$dmem_master_araddr - soc_map$m_plic_addr_range[127:64] ;
+  assign x__h72927 =
+	     debug_module$master_araddr -
+	     soc_map$m_near_mem_io_addr_range[127:64] ;
+  assign x__h72952 =
+	     debug_module$master_araddr - soc_map$m_plic_addr_range[127:64] ;
+  assign x__h7969 =
+	     tagController_tmp_addrOffset +
+	     (64'd1 << tagController_tmp_awreqff$D_OUT[20:18]) ;
+  assign x__h81139 =
+	     SEXT_arbiter_1_lastSelect_2__q16[0] &
+	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
+  assign x__h81242 =
+	     SEXT_arbiter_1_firstHot_1__q15[0] &
+	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
+  assign x__h81607 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_103_104_BIT_0_1_ETC__q17[0] &
+	     arbiter_1_firstHot_1 ;
+  assign x__h81666 =
+	     !SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111 &&
+	     SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 ;
+  assign x__h81748 = SEXT_x1666__q18[0] & arbiter_1_firstHot_1 ;
+  assign x__h92790 = x__h92792 | y__h92793 ;
+  assign x__h92792 =
+	     SEXT_arbiter_1_1_lastSelect__q20[0] &
+	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
+  assign x__h92941 = x__h92943 | y__h92944 ;
+  assign x__h92943 =
+	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
+	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
+  assign x__h93077 = x__h93079 | y__h93080 ;
+  assign x__h93079 =
+	     SEXT_arbiter_1_1_firstHot__q19[0] &
+	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
+  assign x__h93549 = x__h93551 | y__h93552 ;
+  assign x__h93551 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22[0] &
+	     arbiter_1_1_firstHot ;
+  assign x__h93611 =
+	     !SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304 &&
+	     SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 ;
+  assign x__h93645 =
+	     !SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 &&
+	     !SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304 &&
+	     SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 ;
+  assign x__h93737 = x__h93739 | y__h93740 ;
+  assign x__h93739 = SEXT_x3611__q23[0] & arbiter_1_1_firstHot ;
+  assign x__h93918 = x__h93920 | y__h93921 ;
+  assign x__h93920 = SEXT_x3645__q24[0] & arbiter_1_1_firstHot ;
+  assign x_port1__read__h71574 =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ?
 	       ifcs_0_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_0_1_noRoute_flitCount ;
-  assign x_port1__read__h72756 =
+  assign x_port1__read__h74038 =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ?
 	       ifcs_1_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_1_1_noRoute_flitCount ;
-  assign y__h11098 =
+  assign y__h12380 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[81] } ;
-  assign y__h11110 =
+  assign y__h12392 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[82] } ;
-  assign y__h11122 =
+  assign y__h12404 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[83] } ;
-  assign y__h11134 =
+  assign y__h12416 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[84] } ;
-  assign y__h11146 =
+  assign y__h12428 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[85] } ;
-  assign y__h11158 =
+  assign y__h12440 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[86] } ;
-  assign y__h11170 =
+  assign y__h12452 =
 	     { 3'd0, tagController_tmp_tagCon$memory_request_get[87] } ;
-  assign y__h45907 =
+  assign y__h47189 =
 	     SEXT_arbiter_firstHot__q5[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h46010 =
+  assign y__h47292 =
 	     SEXT_arbiter_lastSelect__q6[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h46375 = SEXT_x6433__q8[0] & arbiter_lastSelect ;
-  assign y__h46516 =
-	     SEXT_SEXT_arbiter_firstHot_405_406_BIT_0_407_A_ETC__q7[0] &
+  assign y__h47657 = SEXT_x7715__q8[0] & arbiter_lastSelect ;
+  assign y__h47798 =
+	     SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7[0] &
 	     arbiter_lastSelect ;
-  assign y__h60099 =
-	     SEXT_arbiter_1_firstHot__q9[0] &
+  assign y__h61381 =
+	     SEXT_arbiter_1_firstHot__q10[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h60101 =
+  assign y__h61383 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h60250 =
-	     SEXT_arbiter_1_lastSelect__q10[0] &
+  assign y__h61532 =
+	     SEXT_arbiter_1_lastSelect__q9[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h60252 =
-	     SEXT_arbiter_1_firstHot__q9[0] &
+  assign y__h61534 =
+	     SEXT_arbiter_1_firstHot__q10[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h60386 =
+  assign y__h61668 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h60388 =
-	     SEXT_arbiter_1_lastSelect__q10[0] &
+  assign y__h61670 =
+	     SEXT_arbiter_1_lastSelect__q9[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h60858 = SEXT_x0953__q14[0] & arbiter_1_lastSelect ;
-  assign y__h60860 = SEXT_x0919__q13[0] & arbiter_1_lastSelect_1 ;
-  assign y__h61046 =
-	     SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12[0] &
+  assign y__h62140 = SEXT_x2235__q14[0] & arbiter_1_lastSelect ;
+  assign y__h62142 = SEXT_x2201__q13[0] & arbiter_1_lastSelect_1 ;
+  assign y__h62328 =
+	     SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12[0] &
 	     arbiter_1_lastSelect ;
-  assign y__h61048 = SEXT_x0953__q14[0] & arbiter_1_lastSelect_1 ;
-  assign y__h61227 = SEXT_x0919__q13[0] & arbiter_1_lastSelect ;
-  assign y__h61229 =
-	     SEXT_SEXT_arbiter_1_firstHot_600_601_BIT_0_602_ETC__q12[0] &
+  assign y__h62330 = SEXT_x2235__q14[0] & arbiter_1_lastSelect_1 ;
+  assign y__h62509 = SEXT_x2201__q13[0] & arbiter_1_lastSelect ;
+  assign y__h62511 =
+	     SEXT_SEXT_arbiter_1_firstHot_638_639_BIT_0_640_ETC__q12[0] &
 	     arbiter_1_lastSelect_1 ;
-  assign y__h79858 =
+  assign y__h81140 =
 	     SEXT_arbiter_1_firstHot_1__q15[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h79961 =
+  assign y__h81243 =
 	     SEXT_arbiter_1_lastSelect_2__q16[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h80326 = SEXT_x0384__q18[0] & arbiter_1_lastSelect_2 ;
-  assign y__h80467 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_065_066_BIT_0_0_ETC__q17[0] &
+  assign y__h81608 = SEXT_x1666__q18[0] & arbiter_1_lastSelect_2 ;
+  assign y__h81749 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_103_104_BIT_0_1_ETC__q17[0] &
 	     arbiter_1_lastSelect_2 ;
-  assign y__h91509 =
+  assign y__h92791 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h91511 =
+  assign y__h92793 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h91660 =
+  assign y__h92942 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h91662 =
+  assign y__h92944 =
 	     SEXT_arbiter_1_1_firstHot__q19[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h91796 =
+  assign y__h93078 =
 	     SEXT_arbiter_1_1_lastSelect_1__q21[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h91798 =
+  assign y__h93080 =
 	     SEXT_arbiter_1_1_lastSelect__q20[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h92268 = SEXT_x2363__q24[0] & arbiter_1_1_lastSelect ;
-  assign y__h92270 = SEXT_x2329__q23[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h92456 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22[0] &
+  assign y__h93550 = SEXT_x3645__q24[0] & arbiter_1_1_lastSelect ;
+  assign y__h93552 = SEXT_x3611__q23[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h93738 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_lastSelect ;
-  assign y__h92458 = SEXT_x2363__q24[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h92637 = SEXT_x2329__q23[0] & arbiter_1_1_lastSelect ;
-  assign y__h92639 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_250_251_BIT_0_2_ETC__q22[0] &
+  assign y__h93740 = SEXT_x3645__q24[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h93919 = SEXT_x3611__q23[0] & arbiter_1_1_lastSelect ;
+  assign y__h93921 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_288_289_BIT_0_2_ETC__q22[0] &
 	     arbiter_1_1_lastSelect_1 ;
 
   // handling of inlined registers
@@ -9125,22 +9268,22 @@ module mkCore(CLK,
 	arbiter_firstHot <= `BSV_ASSIGNMENT_DELAY 1'd1;
 	arbiter_lastSelect <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_0_1_noRoute_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_0_1_noRoute_flitCount <= `BSV_ASSIGNMENT_DELAY 9'd0;
 	ifcs_0_1_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_0_1_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_0_noRoute_inner_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_0_noRoute_inner_pendingReq <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_0_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_0_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_1_1_noRoute_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_1_1_noRoute_flitCount <= `BSV_ASSIGNMENT_DELAY 9'd0;
 	ifcs_1_1_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_1_1_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_1_noRoute_inner_currentReq <= `BSV_ASSIGNMENT_DELAY
-	    97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
 	ifcs_1_noRoute_inner_pendingReq <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	ifcs_1_state <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	ifcs_1_state_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
@@ -9158,23 +9301,33 @@ module mkCore(CLK,
 	tagController_tmp_addrOffset <= `BSV_ASSIGNMENT_DELAY 64'd0;
 	tagController_tmp_doneSendingAW <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	tagController_tmp_shimMaster_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    100'h2AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimMaster_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    100'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-	tagController_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY 9'd170;
+	    { 1'd0,
+	      99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	tagController_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 8'bxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimMaster_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    74'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimMaster_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    74'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-	tagController_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY 8'd42;
+	    { 1'd0,
+	      98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	tagController_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 7'bxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    74'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	tagController_tmp_shimSlave_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    75'h2AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
       end
     else
       begin
@@ -9400,13 +9553,13 @@ module mkCore(CLK,
     #0;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate &&
-	  !SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 &&
-	  !SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413)
+	  !SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 &&
+	  !SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate &&
-	  !SEXT_arbiter_lastSelect_401_402_BIT_0_403_AND__ETC___d1409 &&
-	  !SEXT_arbiter_firstHot_405_406_BIT_0_407_AND_re_ETC___d1413)
+	  !SEXT_arbiter_lastSelect_439_440_BIT_0_441_AND__ETC___d1447 &&
+	  !SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9415,7 +9568,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h47914 = $time;
+	  v__h49196 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9425,7 +9578,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h47914,
+	       v__h49196,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -9534,13 +9687,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	begin
-	  v__h47303 = $time;
+	  v__h48585 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h47303,
+		 v__h48585,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
@@ -9552,7 +9705,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h51923 = $time;
+	  v__h53205 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9562,7 +9715,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h51923,
+	       v__h53205,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && ifcs_1_innerRoute$EMPTY_N &&
@@ -9671,13 +9824,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	begin
-	  v__h51312 = $time;
+	  v__h52594 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h51312,
+		 v__h52594,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
@@ -9701,13 +9854,13 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected,\n  RL_sink_selected_1] and [RL_sink_selected_2] ) fired in the same clock\n  cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_2 &&
-	  !SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 &&
-	  !SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073)
+	  !SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 &&
+	  !SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_2 &&
-	  !SEXT_arbiter_1_lastSelect_2_061_062_BIT_0_063__ETC___d2069 &&
-	  !SEXT_arbiter_1_firstHot_1_065_066_BIT_0_067_AN_ETC___d2073)
+	  !SEXT_arbiter_1_lastSelect_2_099_100_BIT_0_101__ETC___d2107 &&
+	  !SEXT_arbiter_1_firstHot_1_103_104_BIT_0_105_AN_ETC___d2111)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9716,7 +9869,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h81859 = $time;
+	  v__h83141 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9726,7 +9879,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h81859,
+	       v__h83141,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -9835,13 +9988,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	begin
-	  v__h81248 = $time;
+	  v__h82530 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h81248,
+		 v__h82530,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
@@ -9853,7 +10006,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h84752 = $time;
+	  v__h86034 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -9863,7 +10016,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h84752,
+	       v__h86034,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N &&
@@ -9972,13 +10125,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	begin
-	  v__h84141 = $time;
+	  v__h85423 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h84141,
+		 v__h85423,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
@@ -10009,6 +10162,9 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cpu_imem_ug_u_b_warnDoPut)
 	$display("WARNING: putting into a Sink that can't be put into");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop)
+	$display("WARNING: dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cpu_imem_ug_u_r_warnDoPut)
 	$display("WARNING: putting into a Sink that can't be put into");
@@ -10138,15 +10294,15 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 215, column 54: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_nonRoutableFlit] and\n  [RL_ifcs_0_drainFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_1 &&
-	  !SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 &&
-	  !SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 &&
-	  !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616)
+	  !SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 &&
+	  !SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 &&
+	  !SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_1 &&
-	  !SEXT_arbiter_1_lastSelect_591_592_BIT_0_593_AN_ETC___d1604 &&
-	  !SEXT_arbiter_1_lastSelect_1_595_596_BIT_0_597__ETC___d1610 &&
-	  !SEXT_arbiter_1_firstHot_600_601_BIT_0_602_AND__ETC___d1616)
+	  !SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 &&
+	  !SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 &&
+	  !SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -10154,7 +10310,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h62618 = $time;
+	  v__h63900 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10163,7 +10319,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h62618,
+	       v__h63900,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -10238,13 +10394,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	begin
-	  v__h62237 = $time;
+	  v__h63519 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h62237,
+		 v__h63519,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
@@ -10255,7 +10411,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h64688 = $time;
+	  v__h65970 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10264,7 +10420,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h64688,
+	       v__h65970,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && ifcs_1_routeBack$EMPTY_N &&
@@ -10339,13 +10495,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	begin
-	  v__h64307 = $time;
+	  v__h65589 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h64307,
+		 v__h65589,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
@@ -10359,7 +10515,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h66587 = $time;
+	  v__h67869 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10368,7 +10524,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h66587,
+	       v__h67869,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && ifcs_2_routeBack$EMPTY_N &&
@@ -10443,13 +10599,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	begin
-	  v__h66206 = $time;
+	  v__h67488 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h66206,
+		 v__h67488,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
@@ -10534,15 +10690,15 @@ module mkCore(CLK,
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_firstFlit] and\n  [RL_ifcs_2_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_3 &&
-	  !SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 &&
-	  !SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 &&
-	  !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266)
+	  !SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 &&
+	  !SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 &&
+	  !SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304)
 	$display("mkOneHotArbiter: next method should not be run with no pending request");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_arbitrate_3 &&
-	  !SEXT_arbiter_1_1_lastSelect_241_242_BIT_0_243__ETC___d2254 &&
-	  !SEXT_arbiter_1_1_lastSelect_1_245_246_BIT_0_24_ETC___d2260 &&
-	  !SEXT_arbiter_1_1_firstHot_250_251_BIT_0_252_AN_ETC___d2266)
+	  !SEXT_arbiter_1_1_lastSelect_279_280_BIT_0_281__ETC___d2292 &&
+	  !SEXT_arbiter_1_1_lastSelect_1_283_284_BIT_0_28_ETC___d2298 &&
+	  !SEXT_arbiter_1_1_firstHot_288_289_BIT_0_290_AN_ETC___d2304)
 	$finish(32'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10550,7 +10706,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h94032 = $time;
+	  v__h95314 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10559,7 +10715,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h94032,
+	       v__h95314,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -10634,13 +10790,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	begin
-	  v__h93651 = $time;
+	  v__h94933 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h93651,
+		 v__h94933,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
@@ -10651,7 +10807,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h96523 = $time;
+	  v__h97805 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10660,7 +10816,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h96523,
+	       v__h97805,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
@@ -10735,13 +10891,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	begin
-	  v__h96142 = $time;
+	  v__h97424 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h96142,
+		 v__h97424,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
@@ -10755,7 +10911,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h98833 = $time;
+	  v__h100115 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -10764,7 +10920,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h98833,
+	       v__h100115,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
@@ -10839,13 +10995,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	begin
-	  v__h98452 = $time;
+	  v__h99734 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h98452,
+		 v__h99734,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
@@ -10869,9 +11025,6 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sink_selected_8 && WILL_FIRE_RL_sink_selected_9)
 	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 154, column 12: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_sink_selected_8] and\n  [RL_sink_selected_9] ) fired in the same clock cycle.\n");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_cpu_imem_ug_u_ar_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp)
@@ -11009,33 +11162,33 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
 	begin
-	  v__h19806 = $stime;
+	  v__h21088 = $stime;
 	  #0;
 	end
-    v__h19800 = v__h19806 / 32'd10;
+    v__h21082 = v__h21088 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h19800);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h21082);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
 	begin
-	  v__h19984 = $stime;
+	  v__h21266 = $stime;
 	  #0;
 	end
-    v__h19978 = v__h19984 / 32'd10;
+    v__h21260 = v__h21266 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h19978);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h21260);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
 	begin
-	  v__h20350 = $stime;
+	  v__h21632 = $stime;
 	  #0;
 	end
-    v__h20344 = v__h20350 / 32'd10;
+    v__h21626 = v__h21632 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
-	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h20344);
+	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h21626);
   end
   // synopsys translate_on
 endmodule  // mkCore

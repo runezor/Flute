@@ -294,7 +294,7 @@ module mkBranch_Predictor(CLK,
 	       bp_train_cf_info[138:130] :
 	       rg_index ;
   assign btb_bramcore2$DIA =
-	     118'h2AAAAAAAAAAAAAAAAAAAAAAAAAAAAA /* unspecified value */  ;
+	     118'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
   assign btb_bramcore2$DIB =
 	     MUX_btb_bramcore2$b_put_1__SEL_1 ?
 	       MUX_btb_bramcore2$b_put_3__VAL_1 :

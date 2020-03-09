@@ -252,7 +252,7 @@ module mkCSR_MIP(CLK,
     EN_reset: rg_ssip$D_IN = 1'd0;
     EN_fav_write: rg_ssip$D_IN = ssip__h564;
     EN_fav_sip_write: rg_ssip$D_IN = ssip__h984;
-    default: rg_ssip$D_IN = 1'b0 /* unspecified value */ ;
+    default: rg_ssip$D_IN = 1'bx /* unspecified value */ ;
   endcase
   assign rg_ssip$EN = EN_fav_write || EN_fav_sip_write || EN_reset ;
 
@@ -267,7 +267,7 @@ module mkCSR_MIP(CLK,
     EN_reset: rg_ueip$D_IN = 1'd0;
     EN_fav_write: rg_ueip$D_IN = ueip__h561;
     EN_fav_sip_write: rg_ueip$D_IN = ueip__h983;
-    default: rg_ueip$D_IN = 1'b0 /* unspecified value */ ;
+    default: rg_ueip$D_IN = 1'bx /* unspecified value */ ;
   endcase
   assign rg_ueip$EN = EN_fav_write || EN_fav_sip_write || EN_reset ;
 
@@ -278,7 +278,7 @@ module mkCSR_MIP(CLK,
     EN_reset: rg_usip$D_IN = 1'd0;
     EN_fav_write: rg_usip$D_IN = usip__h565;
     EN_fav_sip_write: rg_usip$D_IN = usip__h985;
-    default: rg_usip$D_IN = 1'b0 /* unspecified value */ ;
+    default: rg_usip$D_IN = 1'bx /* unspecified value */ ;
   endcase
   assign rg_usip$EN = EN_fav_write || EN_fav_sip_write || EN_reset ;
 

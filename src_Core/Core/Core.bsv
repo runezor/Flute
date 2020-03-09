@@ -92,7 +92,9 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // The CPU
    CPU_IFC  cpu <- mkCPU;
    let cpu_imem <- fromAXI4_Master_Synth(cpu.imem_master);
-   let cpu_imem_ug <- toUnguarded_AXI4_Master(cpu_imem);
+   AXI4_Shim#(5,64,64,0,1,0,0,1) delay_shim <- mkAXI4ShimSizedFIFOF4; // Prevent a combinatorial path after the icache
+   mkConnection(delay_shim.slave, cpu_imem);
+   let cpu_imem_ug <- toUnguarded_AXI4_Master(delay_shim.master);
 
 `ifdef ISA_CHERI
    // AXI4 tagController

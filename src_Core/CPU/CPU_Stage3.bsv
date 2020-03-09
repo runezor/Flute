@@ -49,6 +49,11 @@ import FPR_RegFile :: *;
 import CSR_RegFile :: *;
 import CPU_Globals :: *;
 
+`ifdef ISA_CHERI
+import CHERICap :: *;
+import CHERICC_Fat :: *;
+`endif
+
 // ================================================================
 // Interface
 
@@ -96,7 +101,7 @@ module mkCPU_Stage3 #(Bit #(4)         verbosity,
 
    let bypass_base = Bypass {bypass_state: BYPASS_RD_NONE,
 			     rd:           rg_stage3.rd,
-			     rd_val:       extract_cap(rg_stage3.rd_val)
+			     rd_val:       cast(extract_cap(rg_stage3.rd_val))
 			     };
 
 `ifdef ISA_F

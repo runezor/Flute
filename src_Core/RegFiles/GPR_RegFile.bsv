@@ -48,12 +48,14 @@ import CHERICC_Fat :: *;
 
 `ifdef ISA_CHERI
 `define INTERNAL_REG_TYPE CapReg
-`define EXTERNAL_REG_TYPE CapPipe
+`define EXTERNAL_REG_TYPE_OUT CapPipe
+`define EXTERNAL_REG_TYPE_IN CapReg
 `define ZERO_REG_CONTENTS nullCap
 `define INITIAL_CONTENTS almightyCap
 `else
 `define INTERNAL_REG_TYPE Word
-`define EXTERNAL_REG_TYPE Word
+`define EXTERNAL_REG_TYPE_OUT Word
+`define EXTERNAL_REG_TYPE_IN Word
 `define ZERO_REG_CONTENTS 0
 `ifdef RVFI
 `define INITIAL_CONTENTS 0
@@ -77,15 +79,15 @@ interface GPR_RegFile_IFC;
 
    // GPR read
    (* always_ready *)
-   method `EXTERNAL_REG_TYPE read_rs1 (RegName rs1);
+   method `EXTERNAL_REG_TYPE_OUT read_rs1 (RegName rs1);
    (* always_ready *)
-   method `EXTERNAL_REG_TYPE read_rs1_port2 (RegName rs1);    // For debugger access only
+   method `EXTERNAL_REG_TYPE_OUT read_rs1_port2 (RegName rs1);    // For debugger access only
    (* always_ready *)
-   method `EXTERNAL_REG_TYPE read_rs2 (RegName rs2);
+   method `EXTERNAL_REG_TYPE_OUT read_rs2 (RegName rs2);
 
    // GPR write
    (* always_ready *)
-   method Action write_rd (RegName rd, `EXTERNAL_REG_TYPE rd_val
+   method Action write_rd (RegName rd, `EXTERNAL_REG_TYPE_IN rd_val
 `ifdef ISA_CHERI_MERGED
        , Bool is_cap_not_int   // Specifies whether the register is written back
                                // by a capability or integer operation. This is
@@ -167,21 +169,21 @@ module mkGPR_RegFile (GPR_RegFile_IFC);
    endinterface
 
    // GPR read
-   method `EXTERNAL_REG_TYPE read_rs1 (RegName rs1);
+   method `EXTERNAL_REG_TYPE_OUT read_rs1 (RegName rs1);
       return `CAST ((rs1 == 0) ? `ZERO_REG_CONTENTS : regfile.sub (rs1));
    endmethod
 
    // GPR read
-   method `EXTERNAL_REG_TYPE read_rs1_port2 (RegName rs1);        // For debugger access only
+   method `EXTERNAL_REG_TYPE_OUT read_rs1_port2 (RegName rs1);        // For debugger access only
       return `CAST ((rs1 == 0) ? `ZERO_REG_CONTENTS : regfile.sub (rs1));
    endmethod
 
-   method `EXTERNAL_REG_TYPE read_rs2 (RegName rs2);
+   method `EXTERNAL_REG_TYPE_OUT read_rs2 (RegName rs2);
       return `CAST ((rs2 == 0) ? `ZERO_REG_CONTENTS : regfile.sub (rs2));
    endmethod
 
    // GPR write
-   method Action write_rd (RegName rd, `EXTERNAL_REG_TYPE rd_val);
+   method Action write_rd (RegName rd, `EXTERNAL_REG_TYPE_IN rd_val);
      if (rd != 0) regfile.upd (rd, `CAST (rd_val));
    endmethod
 

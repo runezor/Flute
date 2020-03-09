@@ -2,6 +2,7 @@
 package FPU;
 
 import FIFOF :: *;
+import SpecialFIFOs :: *;
 import RegFile :: *;
 import GetPut :: *;
 import ClientServer :: *;
@@ -50,7 +51,7 @@ module mkFPU ( FPU_IFC );
    FIFOF #(Token)          resetRspsF           <- mkFIFOF;
 
    FIFOF#( Fpu_Req )  iFifo        <- mkFIFOF; // TODO: bypass fifos?
-   FIFOF#( Fpu_Rsp )  oFifo        <- mkFIFOF; // TODO: bypass fifos?
+   FIFOF#( Fpu_Rsp )  oFifo        <- mkBypassFIFOF;
    FIFOF#( RoundMode ) rmdFifo     <- mkFIFOF; // TODO: bypass fifos?
    FIFOF#( Bool )     isDoubleFifo <- mkFIFOF; // TODO: bypass fifos?
    FIFOF#( Bool )     isNegateFifo <- mkFIFOF; // TODO: bypass fifos?

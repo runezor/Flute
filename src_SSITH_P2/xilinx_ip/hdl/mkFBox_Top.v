@@ -9,8 +9,8 @@
 // RDY_server_reset_request_put   O     1 reg
 // RDY_server_reset_response_get  O     1 reg
 // valid                          O     1
-// word_fst                       O    64
-// word_snd                       O     5
+// word_fst                       O    64 reg
+// word_snd                       O     5 reg
 // verbosity                      I     4
 // CLK                            I     1 clock
 // RST_N                          I     1 reset

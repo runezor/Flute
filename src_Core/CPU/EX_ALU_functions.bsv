@@ -54,7 +54,7 @@ import CHERICC_Fat :: *;
 typedef struct {
    Priv_Mode      cur_priv;
 `ifdef ISA_CHERI
-   CapPipe        pcc;
+   PCC_T          pcc;
    CapPipe        ddc;
    Bit#(5)        rs1_idx;
    Bit#(5)        rs2_idx;
@@ -136,6 +136,8 @@ typedef struct {
    WordXL     val2;           // Branch: branch target (for Tandem Verification)
 		              // OP_Stage2_ST: store-val
                               // OP_Stage2_M: arg2
+   WordXL     val1_fast;
+   WordXL     val2_fast;
 
 `ifdef ISA_F
    WordFL     fval1;          // OP_Stage2_FD: arg1
@@ -153,9 +155,8 @@ typedef struct {
 `ifdef ISA_CHERI
    Bool    mem_allow_cap; //Whether load/store is allowed to preserve cap tag
 
-   CapPipe pcc;
+   PCC_T   pcc;
 `endif
-
 
 `ifdef ISA_CHERI
    CapPipe    cap_val1;
@@ -174,6 +175,8 @@ typedef struct {
    Bit#(XLEN)          check_address_low;
    Bit#(TAdd#(XLEN,1)) check_address_high;
    Bool                check_inclusive;
+   Bool                check_exact_enable;
+   Bool                check_exact_success;
 `endif
 
    CF_Info    cf_info;        // For redirection and branch predictor
@@ -202,6 +205,8 @@ ALU_Outputs alu_outputs_base
                addr      : ?,
                val1      : ?,
                val2      : ?,
+	       val1_fast : ?,
+	       val2_fast : ?,
 `ifdef ISA_F
                fval1       : ?,
                fval2       : ?,
@@ -230,6 +235,8 @@ ALU_Outputs alu_outputs_base
                check_address_low  : ?,
                check_address_high : ?,
                check_inclusive    : ?,
+               check_exact_enable : False,
+               check_exact_success : ?,
 
                mem_allow_cap      : False,
 `endif
@@ -330,7 +337,7 @@ endfunction
 // ================================================================
 // BRANCH
 
-function ALU_Outputs fv_BRANCH (ALU_Inputs inputs, WordXL pcc_base);
+function ALU_Outputs fv_BRANCH (ALU_Inputs inputs);
    let rs1_val = inputs.rs1_val;
    let rs2_val = inputs.rs2_val;
 
@@ -383,7 +390,7 @@ function ALU_Outputs fv_BRANCH (ALU_Inputs inputs, WordXL pcc_base);
    alu_outputs.val2      = extend (branch_target);    // For tandem verifier only
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidJump(alu_outputs, branch_taken, inputs.pcc, pcc_base, {1,scr_addr_PCC}, pcc_base + next_pc);
+   alu_outputs = checkValidJump(alu_outputs, branch_taken, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
 `endif
 
    alu_outputs.cf_info   = cf_info;
@@ -399,7 +406,7 @@ endfunction
 // ----------------------------------------------------------------
 // JAL
 
-function ALU_Outputs fv_JAL (ALU_Inputs inputs, WordXL pcc_base);
+function ALU_Outputs fv_JAL (ALU_Inputs inputs);
    IntXL offset  = extend (unpack (inputs.decoded_instr.imm21_UJ));
    Addr  next_pc = pack (unpack (inputs.pc) + offset);
    Addr  ret_pc  = fall_through_pc (inputs);
@@ -425,7 +432,7 @@ function ALU_Outputs fv_JAL (ALU_Inputs inputs, WordXL pcc_base);
    alu_outputs.cf_info   = cf_info;
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidJump(alu_outputs, True, inputs.pcc, pcc_base, {1,scr_addr_PCC}, pcc_base + next_pc);
+   alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -442,7 +449,7 @@ endfunction
 // ----------------------------------------------------------------
 // JALR
 
-function ALU_Outputs fv_JALR (ALU_Inputs inputs, WordXL pcc_base);
+function ALU_Outputs fv_JALR (ALU_Inputs inputs);
    let rs1_val = inputs.rs1_val;
    let rs2_val = inputs.rs2_val;
 
@@ -477,7 +484,7 @@ function ALU_Outputs fv_JALR (ALU_Inputs inputs, WordXL pcc_base);
    alu_outputs.cf_info   = cf_info;
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidJump(alu_outputs, True, inputs.pcc, pcc_base, {1,scr_addr_PCC}, pcc_base + next_pc);
+   alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -558,6 +565,8 @@ function ALU_Outputs fv_OP_and_OP_IMM_shifts (ALU_Inputs inputs);
    WordXL val2 = extend (shamt);
    val2 = (val2 | { 0, instr_b30, 7'b0});
    alu_outputs.val2 = val2;
+   alu_outputs.val1_fast = alu_outputs.val1;
+   alu_outputs.val2_fast = alu_outputs.val2;
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -766,9 +775,9 @@ function ALU_Outputs fv_AUIPC (ALU_Inputs inputs);
    alu_outputs.op_stage2 = OP_Stage2_ALU;
    alu_outputs.rd        = inputs.decoded_instr.rd;
 `ifdef ISA_CHERI
-   if (getFlags(inputs.pcc)[0] == 1'b1) begin
+   if (getFlags(toCapPipe(inputs.pcc))[0] == 1'b1) begin
        alu_outputs.val1_source = SET_OFFSET;
-       alu_outputs.internal_op1 = inputs.pcc;
+       alu_outputs.internal_op1 = toCapPipe(inputs.pcc);
        alu_outputs.internal_op2 = pack(iv);
        alu_outputs.internal_op_flag = True;
    end else
@@ -801,9 +810,9 @@ function ALU_Outputs fv_LD (ALU_Inputs inputs, Maybe#(Bit#(3)) size);
 `ifdef ISA_CHERI
    if (valueOf(XLEN) == 32 && inputs.decoded_instr.funct3 == f3_LD) size = Valid(w_SIZE_D);
 
-   let authority = getFlags(inputs.pcc)[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(inputs.pcc)[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
-   WordXL eaddr = getFlags(inputs.pcc)[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
+   let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
+   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
+   WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
 `endif
@@ -885,9 +894,9 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
    IntXL  s_rs1_val = unpack (inputs.rs1_val);
    IntXL  imm_s     = extend (unpack (inputs.decoded_instr.imm12_S));
 `ifdef ISA_CHERI
-   let authority = getFlags(inputs.pcc)[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(inputs.pcc)[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
-   WordXL eaddr = getFlags(inputs.pcc)[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
+   let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
+   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
+   WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
 `endif
@@ -1047,7 +1056,7 @@ function ALU_Outputs fv_SYSTEM (ALU_Inputs inputs);
 	    else if (   (inputs.cur_priv >= m_Priv_Mode)
 		     && (inputs.decoded_instr.imm12_I == f12_MRET))
 	       begin
-                  if (getHardPerms(inputs.pcc).accessSysRegs) begin
+                  if (getHardPerms(toCapPipe(inputs.pcc)).accessSysRegs) begin
                      alu_outputs.control = CONTROL_MRET;
                   end else begin
                      alu_outputs.control = CONTROL_TRAP;
@@ -1063,7 +1072,7 @@ function ALU_Outputs fv_SYSTEM (ALU_Inputs inputs);
 			     && (inputs.mstatus [mstatus_tsr_bitpos] == 0)))
 		     && (inputs.decoded_instr.imm12_I == f12_SRET))
 	       begin
-                  if (getHardPerms(inputs.pcc).accessSysRegs) begin
+                  if (getHardPerms(toCapPipe(inputs.pcc)).accessSysRegs) begin
                      alu_outputs.control = CONTROL_SRET;
                   end else begin
                      alu_outputs.control = CONTROL_TRAP;
@@ -1170,6 +1179,7 @@ function ALU_Outputs fv_FP (ALU_Inputs inputs);
    // Just copy the rs1_val values from inputs to outputs this covers cases
    // whenever val1 is from GPR
    alu_outputs.val1     = inputs.rs1_val;
+   alu_outputs.val1_fast = alu_outputs.val1;
 
    // Just copy the frs*_val values from inputs to outputs
    alu_outputs.fval1     = inputs.frs1_val;
@@ -1209,9 +1219,9 @@ endfunction
 function ALU_Outputs fv_AMO (ALU_Inputs inputs);
    IntXL  s_rs1_val = unpack (inputs.rs1_val);
 `ifdef ISA_CHERI
-   let authority = getFlags(inputs.pcc)[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(inputs.pcc)[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
-   WordXL eaddr = getFlags(inputs.pcc)[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val : getAddr(inputs.cap_rs1_val);
+   let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
+   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
+   WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val : getAddr(inputs.cap_rs1_val);
 `else
    WordXL eaddr = pack (s_rs1_val);
 `endif
@@ -1358,7 +1368,7 @@ function ALU_Outputs memCommon(ALU_Outputs alu_outputs, Bool isStoreNotLoad, Boo
    return alu_outputs;
 endfunction
 
-function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_base);
+function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
     let funct3  = inputs.decoded_instr.funct3;
     let funct5rs2 = inputs.decoded_instr.funct5rs2;
     let funct5rd = inputs.decoded_instr.funct5rd;
@@ -1433,7 +1443,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
             case (funct7)
             f7_cap_CSpecialRW: begin
                 if (inputs.decoded_instr.rs2 == scr_addr_PCC && inputs.decoded_instr.rs1 == 0) begin
-                    alu_outputs.cap_val1 = inputs.pcc;
+                    alu_outputs.cap_val1 = toCapPipe(inputs.pcc);
                     alu_outputs.val1_cap_not_int = True;
                 end else if (inputs.decoded_instr.rs2 == scr_addr_DDC && inputs.decoded_instr.rs1 == 0) begin
                     alu_outputs.cap_val1 = inputs.ddc;
@@ -1555,7 +1565,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                         alu_outputs.val1_cap_not_int = True;
                         alu_outputs.cap_val1 = setType(cs2_val, -1);
                         alu_outputs.rd = cCallRD;
-                        alu_outputs.pcc = setType(cs1_val, -1);
+                        alu_outputs.pcc = fromCapPipe(setType(cs1_val, -1));
                         alu_outputs.control = CONTROL_CAPBRANCH;
                         let target = {truncateLSB(getAddr(cs1_val)), 1'b0};
                         alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, zeroExtend(inputs.rs1_idx), target);
@@ -1771,17 +1781,19 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                     Addr  next_pc   = cs1_offset;
                     Addr  ret_pc    = fall_through_pc (inputs);
 
-                    next_pc [0] = 1'b0;
+                    let maskedTarget = maskAddr(cs1_val, signExtend(2'b10));
+
+                    next_pc[0] = 1'b0;
 
                     alu_outputs.control   = CONTROL_CAPBRANCH;
 
                     alu_outputs.addr      = next_pc;
-                    alu_outputs.pcc       = maskAddr(cs1_val, signExtend(2'b10));
+                    alu_outputs.pcc       = fromCapPipe(maskedTarget);
                     alu_outputs.val1_source = SET_OFFSET;
-                    alu_outputs.internal_op1 = inputs.pcc;
+                    alu_outputs.internal_op1 = toCapPipe(inputs.pcc);
                     alu_outputs.internal_op2 = fall_through_pc_inc(inputs);
                     alu_outputs.internal_op_flag = True;
-                    alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, {0,inputs.rs1_idx}, cs1_base + next_pc);
+                    alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, {0,inputs.rs1_idx}, getAddr(maskedTarget));
                 end
                 f5rs2_cap_CGetType: begin
                     alu_outputs.val1 = isSealed(cs1_val) ? zeroExtend(getType(cs1_val)) : -1;
@@ -1815,6 +1827,8 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
         alu_outputs.check_inclusive = True;
         alu_outputs.check_address_low = getAddr(cs1_val);
         alu_outputs.check_address_high = zeroExtend(getAddr(cs1_val)) + zeroExtend(alu_outputs.internal_op2);
+        alu_outputs.check_exact_enable = alu_outputs.internal_op_flag;
+        alu_outputs.check_exact_success = result.exact;
     end
     GET_PRECISION: begin
         CapReg nullCapReg = nullCap;
@@ -1888,17 +1902,16 @@ endfunction
 function ALU_Outputs fv_ALU (ALU_Inputs inputs);
    let alu_outputs = alu_outputs_base;
 
-   let pcc_base = getBase(inputs.pcc);
    let ddc_base = getBase(inputs.ddc);
 
    if (inputs.decoded_instr.opcode == op_BRANCH)
-      alu_outputs = fv_BRANCH (inputs, pcc_base);
+      alu_outputs = fv_BRANCH (inputs);
 
    else if (inputs.decoded_instr.opcode == op_JAL)
-      alu_outputs = fv_JAL (inputs, pcc_base);
+      alu_outputs = fv_JAL (inputs);
 
    else if (inputs.decoded_instr.opcode == op_JALR)
-      alu_outputs = fv_JALR (inputs, pcc_base);
+      alu_outputs = fv_JALR (inputs);
 
 `ifdef ISA_M
    // OP 'M' ops MUL/ MULH/ MULHSU/ MULHU/ DIV/ DIVU/ REM/ REMU
@@ -1910,6 +1923,9 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 	 alu_outputs.rd        = inputs.decoded_instr.rd;
 	 alu_outputs.val1      = inputs.rs1_val;
 	 alu_outputs.val2      = inputs.rs2_val;
+`endif
+         alu_outputs.val1_fast = alu_outputs.val1;
+         alu_outputs.val2_fast = alu_outputs.val2;
 
 `ifdef INCLUDE_TANDEM_VERIF
 	 // Normal trace output (if no trap)
@@ -1931,6 +1947,8 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 	 alu_outputs.rd        = inputs.decoded_instr.rd;
 	 alu_outputs.val1      = inputs.rs1_val;
 	 alu_outputs.val2      = inputs.rs2_val;
+         alu_outputs.val1_fast = alu_outputs.val1;
+         alu_outputs.val2_fast = alu_outputs.val2;
 
 `ifdef INCLUDE_TANDEM_VERIF
 	 // Normal trace output (if no trap)
@@ -1941,7 +1959,6 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 						?);
 `endif
       end
-`endif
 `endif
 
    // OP_IMM and OP (shifts)
@@ -2009,7 +2026,7 @@ function ALU_Outputs fv_ALU (ALU_Inputs inputs);
 
 `ifdef ISA_CHERI
    else if (   (inputs.decoded_instr.opcode == op_cap_Manip) || inputs.decoded_instr.opcode == op_AUIPC)
-      alu_outputs = fv_CHERI (inputs, pcc_base, ddc_base);
+      alu_outputs = fv_CHERI (inputs, ddc_base);
 `endif
 
    else begin

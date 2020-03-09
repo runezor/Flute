@@ -222,8 +222,8 @@ module mkRISCV_MBox(CLK,
   // synopsys translate_on
 
   // remaining internal signals
-  wire [127 : 0] IF_rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0_6_THEN_pro_ETC__q9,
-		 IF_rg_v1_BIT_63_THEN_prod___1257_ELSE_prod189__q7,
+  wire [127 : 0] IF_rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0_6_THEN_pro_ETC__q8,
+		 IF_rg_v1_BIT_63_THEN_prod___1257_ELSE_prod189__q6,
 		 SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC___d189,
 		 _0x0_CONCAT_IF_rg_v1_BIT_63_5_THEN_INV_rg_v1_08_ETC___d118,
 		 _0x0_CONCAT_IF_rg_v1_BIT_63_5_THEN_INV_rg_v1_08_ETC___d123,
@@ -242,7 +242,7 @@ module mkRISCV_MBox(CLK,
 		 prod__h4469,
 		 prod__h5189,
 		 rg_v1_MUL_rg_v2___d105,
-		 x955_PLUS_y956__q8,
+		 x955_PLUS_y956__q7,
 		 x__h4581,
 		 x__h4611,
 		 x__h4613,
@@ -299,12 +299,12 @@ module mkRISCV_MBox(CLK,
 		y__h4787,
 		y__h5382,
 		y__h5484;
-  wire [31 : 0] IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q3,
-		SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q6,
+  wire [31 : 0] IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q9,
+		SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q5,
 		req_v1_BITS_31_TO_0__q1,
 		req_v2_BITS_31_TO_0__q2,
-		rg_v1_BITS_31_TO_0__q4,
-		rg_v2_BITS_31_TO_0__q5;
+		rg_v1_BITS_31_TO_0__q3,
+		rg_v2_BITS_31_TO_0__q4;
   wire IF_intDiv_rg_numer_is_signed_THEN_rg_v1_BIT_63_ETC___d39,
        intDiv_rg_denom2_4_ULE_0_CONCAT_rg_v1_BITS_63__ETC___d47,
        rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0___d36,
@@ -339,7 +339,7 @@ module mkRISCV_MBox(CLK,
 
   // rule RL_rl_mul
   assign CAN_FIRE_RL_rl_mul = rg_state == 2'd0 ;
-  assign WILL_FIRE_RL_rl_mul = CAN_FIRE_RL_rl_mul ;
+  assign WILL_FIRE_RL_rl_mul = rg_state == 2'd0 ;
 
   // rule RL_rl_mul2
   assign CAN_FIRE_RL_rl_mul2 = rg_state == 2'd1 ;
@@ -451,7 +451,7 @@ module mkRISCV_MBox(CLK,
       WILL_FIRE_RL_intDiv_rl_start_s:
 	  intDiv_rg_denom2$D_IN = MUX_intDiv_rg_denom2$write_1__VAL_3;
       default: intDiv_rg_denom2$D_IN =
-		   64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign intDiv_rg_denom2$EN =
@@ -478,7 +478,7 @@ module mkRISCV_MBox(CLK,
 	  intDiv_rg_n$D_IN = MUX_intDiv_rg_n$write_1__VAL_2;
       WILL_FIRE_RL_intDiv_rl_start_s: intDiv_rg_n$D_IN = 64'd1;
       default: intDiv_rg_n$D_IN =
-		   64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign intDiv_rg_n$EN =
@@ -508,7 +508,7 @@ module mkRISCV_MBox(CLK,
       WILL_FIRE_RL_intDiv_rl_start_div_by_zero:
 	  intDiv_rg_quo$D_IN = 64'hFFFFFFFFFFFFFFFF;
       default: intDiv_rg_quo$D_IN =
-		   64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign intDiv_rg_quo$EN =
@@ -546,7 +546,7 @@ module mkRISCV_MBox(CLK,
     WILL_FIRE_RL_intDiv_rl_start_overflow ||
     WILL_FIRE_RL_intDiv_rl_start_div_by_zero:
 	intDiv_rg_state$D_IN = 3'd4;
-    default: intDiv_rg_state$D_IN = 3'b010 /* unspecified value */ ;
+    default: intDiv_rg_state$D_IN = 3'bxxx /* unspecified value */ ;
   endcase
   assign intDiv_rg_state$EN =
 	     WILL_FIRE_RL_intDiv_rl_loop2 && rg_v1_ULT_rg_v2___d55 ||
@@ -570,7 +570,7 @@ module mkRISCV_MBox(CLK,
 	     (rg_is_OP_not_OP_32 && rg_f3 == 3'b0) ?
 	       rg_v1_MUL_rg_v2___d105[63:0] :
 	       v__h4449 ;
-  assign rg_result$EN = CAN_FIRE_RL_rl_mul ;
+  assign rg_result$EN = rg_state == 2'd0 ;
 
   // register rg_state
   assign rg_state$D_IN = EN_req ? MUX_rg_state$write_1__VAL_1 : 2'd1 ;
@@ -588,7 +588,8 @@ module mkRISCV_MBox(CLK,
     MUX_rg_v1$write_1__SEL_2: rg_v1$D_IN = MUX_rg_v1$write_1__VAL_2;
     WILL_FIRE_RL_intDiv_rl_start_s: rg_v1$D_IN = MUX_rg_v1$write_1__VAL_3;
     WILL_FIRE_RL_intDiv_rl_start_overflow: rg_v1$D_IN = 64'd0;
-    default: rg_v1$D_IN = 64'hAAAAAAAAAAAAAAAA /* unspecified value */ ;
+    default: rg_v1$D_IN =
+		 64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_v1$EN =
 	     MUX_rg_v1$write_1__SEL_2 || EN_req ||
@@ -609,22 +610,22 @@ module mkRISCV_MBox(CLK,
 	       intDiv_rg_denom_is_signed && rg_v2[63] ;
   assign IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC___d203 =
 	     rg_f3[1] ? rg_v1 : intDiv_rg_quo ;
-  assign IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q3 =
+  assign IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q9 =
 	     IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC___d203[31:0] ;
-  assign IF_rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0_6_THEN_pro_ETC__q9 =
+  assign IF_rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0_6_THEN_pro_ETC__q8 =
 	     rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0___d36 ?
 	       prod__h4469 :
 	       prod___1__h4579 ;
   assign IF_rg_v1_BIT_63_5_THEN_INV_rg_v1_08_PLUS_1_09__ETC___d110 =
 	     rg_v1[63] ? b__h5247 : rg_v1 ;
-  assign IF_rg_v1_BIT_63_THEN_prod___1257_ELSE_prod189__q7 =
+  assign IF_rg_v1_BIT_63_THEN_prod___1257_ELSE_prod189__q6 =
 	     rg_v1[63] ? prod___1__h5257 : prod__h5189 ;
   assign IF_rg_v2_BIT_63_0_THEN_INV_rg_v2_13_PLUS_1_14__ETC___d115 =
 	     rg_v2[63] ? b__h4568 : rg_v2 ;
   assign SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC___d189 =
-	     { {32{rg_v1_BITS_31_TO_0__q4[31]}}, rg_v1_BITS_31_TO_0__q4 } *
-	     { {32{rg_v2_BITS_31_TO_0__q5[31]}}, rg_v2_BITS_31_TO_0__q5 } ;
-  assign SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q6 =
+	     { {32{rg_v1_BITS_31_TO_0__q3[31]}}, rg_v1_BITS_31_TO_0__q3 } *
+	     { {32{rg_v2_BITS_31_TO_0__q4[31]}}, rg_v2_BITS_31_TO_0__q4 } ;
+  assign SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q5 =
 	     SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC___d189[31:0] ;
   assign _0x0_CONCAT_IF_rg_v1_BIT_63_5_THEN_INV_rg_v1_08_ETC___d118 =
 	     x__h5297 * y__h4620 ;
@@ -677,34 +678,34 @@ module mkRISCV_MBox(CLK,
   assign req_v1_BITS_31_TO_0__q1 = req_v1[31:0] ;
   assign req_v2_BITS_31_TO_0__q2 = req_v2[31:0] ;
   assign result___1__h5911 =
-	     { {32{IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q3[31]}},
-	       IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q3 } ;
-  assign rg_v1_BITS_31_TO_0__q4 = rg_v1[31:0] ;
+	     { {32{IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q9[31]}},
+	       IF_rg_f3_4_BIT_1_02_THEN_rg_v1_ELSE_intDiv_rg__ETC__q9 } ;
+  assign rg_v1_BITS_31_TO_0__q3 = rg_v1[31:0] ;
   assign rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0___d36 = rg_v1[63] == rg_v2[63] ;
   assign rg_v1_MUL_rg_v2___d105 = rg_v1 * rg_v2 ;
   assign rg_v1_ULT_intDiv_rg_denom2_4___d59 = rg_v1 < intDiv_rg_denom2 ;
   assign rg_v1_ULT_rg_v2___d55 = rg_v1 < rg_v2 ;
-  assign rg_v2_BITS_31_TO_0__q5 = rg_v2[31:0] ;
+  assign rg_v2_BITS_31_TO_0__q4 = rg_v2[31:0] ;
   assign v__h4449 =
 	     (rg_is_OP_not_OP_32 && rg_f3 == 3'b001) ?
-	       IF_rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0_6_THEN_pro_ETC__q9[127:64] :
+	       IF_rg_v1_BIT_63_5_EQ_rg_v2_BIT_63_0_6_THEN_pro_ETC__q8[127:64] :
 	       v__h4890 ;
   assign v__h4890 =
 	     (rg_is_OP_not_OP_32 && rg_f3 == 3'b011) ?
-	       x955_PLUS_y956__q8[127:64] :
+	       x955_PLUS_y956__q7[127:64] :
 	       v__h5169 ;
   assign v__h5169 =
 	     (rg_is_OP_not_OP_32 && rg_f3 == 3'b010) ?
-	       IF_rg_v1_BIT_63_THEN_prod___1257_ELSE_prod189__q7[127:64] :
+	       IF_rg_v1_BIT_63_THEN_prod___1257_ELSE_prod189__q6[127:64] :
 	       v__h5536 ;
   assign v__h5536 =
 	     (!rg_is_OP_not_OP_32 && rg_f3 == 3'b0) ?
 	       v__h5553 :
 	       64'hFFFFFFFFFFFFFFFF ;
   assign v__h5553 =
-	     { {32{SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q6[31]}},
-	       SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q6 } ;
-  assign x955_PLUS_y956__q8 = x__h4955 + y__h4956 ;
+	     { {32{SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q5[31]}},
+	       SEXT_rg_v1_BITS_31_TO_0_49_87_MUL_SEXT_rg_v2_B_ETC__q5 } ;
+  assign x955_PLUS_y956__q7 = x__h4955 + y__h4956 ;
   assign x__h3986 = rg_v1 - intDiv_rg_denom2 ;
   assign x__h4072 = -intDiv_rg_quo ;
   assign x__h4142 = -rg_v1 ;

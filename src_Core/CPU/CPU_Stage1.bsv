@@ -80,7 +80,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 		      Bypass           bypass_from_stage2,
 		      Bypass           bypass_from_stage3,
 `ifdef ISA_CHERI
-                      CapPipe          fresh_pcc,
+                      PCC_T            fresh_pcc,
                       CapPipe          ddc,
 `endif
 `ifdef ISA_F
@@ -221,7 +221,9 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
      ? alu_outputs.pcc
      : setPC(rg_pcc, next_pc_local).value); //TODO unrepresentable?
 
-   let redirect = getAddr(next_pcc_local) != rg_stage_input.pred_fetch_addr;
+   let redirect = (alu_outputs.control == CONTROL_CAPBRANCH)
+     ? (getAddr(toCapPipe(alu_outputs.pcc)) != rg_stage_input.pred_fetch_addr)
+     : (next_pc_local != rg_stage_input.pred_fetch_addr - getPCCBase(rg_pcc));
 
 `ifdef RVFI
    CapReg tmp_val2 = cast(alu_outputs.cap_val2);
@@ -277,6 +279,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                val1          : alu_outputs.val1,
                                                val2          : alu_outputs.val2,
 `endif
+                                               val1_fast     : alu_outputs.val1_fast,
+                                               val2_fast     : alu_outputs.val2_fast,
 `ifdef ISA_F
 					       fval1         : alu_outputs.fval1,
 					       fval2         : alu_outputs.fval2,
@@ -293,6 +297,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                check_authority_idx: alu_outputs.check_authority_idx,
                                                check_address_low  : alu_outputs.check_address_low,
                                                check_address_high : alu_outputs.check_address_high,
+                                               check_exact_enable : alu_outputs.check_exact_enable,
+                                               check_exact_success: alu_outputs.check_exact_success,
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
 					       trace_data    : alu_outputs.trace_data,
@@ -303,7 +309,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 					       priv          : cur_priv };
 
 `ifdef ISA_CHERI
-   let fetch_exc = checkValid(rg_pcc, getTop(rg_pcc), rg_stage_input.is_i32_not_i16);
+   let fetch_exc = checkValid(rg_pcc, getTop(toCapPipe(rg_pcc)), rg_stage_input.is_i32_not_i16);
 `endif
 
    // ----------------
@@ -338,6 +344,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 						     addr:      ?,
 						     val1:      ?,
 						     val2:      ?,
+						     val1_fast: ?,
+						     val2_fast: ?,
 `ifdef ISA_F
 						     fval1           : ?,
 						     fval2           : ?,

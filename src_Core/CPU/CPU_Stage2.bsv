@@ -101,7 +101,7 @@ interface CPU_Stage2_IFC;
 
    // ---- Input
    (* always_ready *)
-   method Action enq (Data_Stage1_to_Stage2 x);
+   method Action enq (Data_Stage1_to_Stage2 x, Bool valid);
 
    (* always_ready *)
    method Action set_full (Bool full);
@@ -191,7 +191,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `endif
 						    rd_valid:  False,
 						    rd:        rg_stage2.rd,
-						    rd_val:    rg_stage2.val1};
+						    rd_val:    cast(rg_stage2.val1)};
 
    let  trap_info_dmem = Trap_Info_Pipe {
 				    exc_code: dcache.exc_code,
@@ -255,7 +255,9 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       Output_Stage2 output_stage2 = ?;
 
 `ifdef ISA_CHERI
-     let check_success =  rg_stage2.check_address_low >= getBase(rg_stage2.check_authority) &&
+     let check_enable = rg_full && rg_stage2.check_enable;
+     let check_success =  (!rg_stage2.check_exact_enable || rg_stage2.check_exact_success) &&
+                          rg_stage2.check_address_low >= getBase(rg_stage2.check_authority) &&
                          (rg_stage2.check_inclusive ? (rg_stage2.check_address_high <= getTop(rg_stage2.check_authority)) : (rg_stage2.check_address_high < getTop(rg_stage2.check_authority)));
 `endif
 
@@ -276,18 +278,6 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       end
       // This stage is just relaying ALU results from previous stage to next stage
       else
-`ifdef ISA_CHERI
-     if (rg_stage2.check_enable && !check_success) begin
-         output_stage2 = Output_Stage2 {ostatus: OSTATUS_NONPIPE,
-                                        trap_info: trap_info_capbounds,
-                                        data_to_stage3: ?,
-                                        bypass: no_bypass
-`ifdef INCLUDE_TANDEM_VERIF
-                                      , trace_data: ? //TODO
-`endif
-                                    };
-     end else
-`endif
       if (rg_stage2.op_stage2 == OP_Stage2_ALU) begin
 	 let data_to_stage3 = data_to_stage3_base;
 	 data_to_stage3.rd_valid = True;
@@ -316,13 +306,12 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef ISA_CHERI
       else if (   (rg_stage2.op_stage2 == OP_Stage2_TestSubset)) begin
           let ostatus = OSTATUS_PIPE;
-          CapPipe result = nullWithAddr(zeroExtend(pack(check_success)));
+          CapReg result = nullWithAddr(zeroExtend(pack(check_success)));
           let data_to_stage3 = data_to_stage3_base;
           data_to_stage3.rd_valid = True;
           data_to_stage3.rd_val = embed_cap(result);
           let bypass = bypass_base;
-          bypass.bypass_state = BYPASS_RD_RDVAL;
-          bypass.rd_val       = result;
+          bypass.bypass_state = BYPASS_RD;
 `ifdef RVFI
           let info_RVFI_s2 = info_RVFI_s2_base;
           data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
@@ -352,13 +341,12 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 			      : OSTATUS_PIPE));
         match {.mem_tag, .mem_val} = dcache.word128;
 `ifdef ISA_CHERI
-        CapPipe result = ?; //TODO any reason for this to be CapPipe not CapReg/CapMem?
+        CapReg result = ?;
         if (rg_stage2.mem_width_code == w_SIZE_CAP) begin
-            CapMem capMem = {pack(rg_stage2.mem_allow_cap && mem_tag), truncate(mem_val)};
-            CapReg capReg = cast(capMem);
-            result = cast(capReg);
+          CapMem capMem = {pack(rg_stage2.mem_allow_cap && mem_tag), mem_val};
+          result = cast(capMem);
         end else begin
-            result = nullWithAddr(truncate(mem_val));
+          result = nullWithAddr(truncate(mem_val));
         end
 `else
         WordXL result = truncate(mem_val);
@@ -366,68 +354,68 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
         let funct3 = instr_funct3 (rg_stage2.instr);
 
-	    let data_to_stage3 = data_to_stage3_base;
-	    data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
+	let data_to_stage3 = data_to_stage3_base;
+	data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
 
 `ifdef ISA_F
-            data_to_stage3.rd_in_fpr = rg_stage2.rd_in_fpr;
-            // A FPR load
-            if (rg_stage2.rd_in_fpr) begin
+        data_to_stage3.rd_in_fpr = rg_stage2.rd_in_fpr;
+        // A FPR load
+        if (rg_stage2.rd_in_fpr) begin
 `ifdef ISA_D
-               // Both FLW and FLD are legal instructions
-               // A FLW result
-               if (funct3 == f3_FLW)
-                  // needs nan-boxing when destined for a DP register file
-                  data_to_stage3.frd_val = fv_nanbox (truncate(tpl_2(dcache.word128)));
+           // Both FLW and FLD are legal instructions
+           // A FLW result
+           if (funct3 == f3_FLW)
+              // needs nan-boxing when destined for a DP register file
+              data_to_stage3.frd_val = fv_nanbox (truncate(tpl_2(dcache.word128)));
 
-               // A FLD result
-               else
-                  data_to_stage3.frd_val = truncate (tpl_2(dcache.word128));
+           // A FLD result
+           else
+              data_to_stage3.frd_val = truncate (tpl_2(dcache.word128));
 `else
-               // Only FLW is a legal instruction
-               data_to_stage3.frd_val = truncate (tpl_2(dcache.word128));
+           // Only FLW is a legal instruction
+           data_to_stage3.frd_val = truncate (tpl_2(dcache.word128));
 `endif
+        end
+`endif
+        // GPR loads
+	data_to_stage3.rd_val   = embed_cap(result);
+
+        // Update the bypass channel, if not trapping (NONPIPE)
+	let bypass = bypass_base;
+`ifdef ISA_F
+        // In a system with FD, the LD result may be meant for FPR or GPR
+        // Check before updating the appropriate bypass channel
+	let fbypass = fbypass_base;
+`endif
+
+`ifdef ISA_F
+            // Bypassing FPR value.
+            if (rg_stage2.rd_in_fpr) begin
+	       // Choose one of the following two options
+
+	       // Option 1: longer critical path, since the data is bypassed back into previous stage.
+	       // We use data_to_stage3.rd_val since nanboxing has been done.
+	       // fbypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
+	       // fbypass.rd_val       = data_to_stage3.frd_val;
+
+	       // Option 2: shorter critical path, since the data is not bypassed into previous stage,
+	       // (the bypassing is effectively delayed until the next stage).
+	        fbypass.bypass_state = BYPASS_RD;
             end
 `endif
-            // GPR loads
-	    data_to_stage3.rd_val   = embed_cap(result);
 
-            // Update the bypass channel, if not trapping (NONPIPE)
-	    let bypass = bypass_base;
-`ifdef ISA_F
-	    let fbypass = fbypass_base;
-`endif
+            // Bypassing GPR values
+            if (rg_stage2.rd != 0) begin    // TODO: is this test necessary?
+	       // Choose one of the following two options
 
-	    if (ostatus != OSTATUS_NONPIPE) begin
-`ifdef ISA_F
-               // Bypassing FPR value.
-               if (rg_stage2.rd_in_fpr) begin
-		  // Choose one of the following two options
+	       // Option 1: longer critical path, since the data is bypassed back into previous stage.
+	       // We use data_to_stage3.rd_val since nanboxing has been done.
+	       // bypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
+	       // bypass.rd_val       = result;
 
-		  // Option 1: longer critical path, since the data is bypassed back into previous stage.
-		  // We use data_to_stage3.rd_val since nanboxing has been done.
-		  // fbypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
-		  // fbypass.rd_val       = data_to_stage3.frd_val;
-
-		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
-		  // (the bypassing is effectively delayed until the next stage).
-		   fbypass.bypass_state = BYPASS_RD;
-               end
-`endif
-
-               // Bypassing GPR values
-               if (rg_stage2.rd != 0) begin    // TODO: is this test necessary?
-		  // Choose one of the following two options
-
-		  // Option 1: longer critical path, since the data is bypassed back into previous stage.
-		  // We use data_to_stage3.rd_val since nanboxing has been done.
-		  // bypass.bypass_state = ((ostatus == OSTATUS_PIPE) ? BYPASS_RD_RDVAL : BYPASS_RD);
-		  // bypass.rd_val       = result;
-
-		  // Option 2: shorter critical path, since the data is not bypassed into previous stage,
-		  // (the bypassing is effectively delayed until the next stage).
-		   bypass.bypass_state = BYPASS_RD;
-	       end
+	       // Option 2: shorter critical path, since the data is not bypassed into previous stage,
+	       // (the bypassing is effectively delayed until the next stage).
+	        bypass.bypass_state = BYPASS_RD;
 	    end
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -463,8 +451,8 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
             if (rg_f5 != f5_AMO_SC) begin
                 info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
                 match {.new_ld_val,
-                       .new_st_val} = fn_amo_op (rg_stage2.mem_width_code, 
-                                                 rg_f5, 
+                       .new_st_val} = fn_amo_op (rg_stage2.mem_width_code,
+                                                 rg_f5,
                                                  rg_stage2.addr,
                                                  unpack(pack(toMem(result))),
                                                  tuple2(False, zeroExtend(rg_stage2.info_RVFI_s1.mem_wdata))
@@ -683,7 +671,11 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       end
 `endif
 `ifdef ISA_CHERI
-      output_stage2.check_success = rg_stage2.check_enable && check_success;
+      output_stage2.check_success = check_enable && check_success;
+      if (check_enable && !check_success) begin
+         output_stage2.ostatus = OSTATUS_NONPIPE;
+         output_stage2.trap_info = trap_info_capbounds;
+      end
 `endif
       return output_stage2;
    endfunction
@@ -691,9 +683,9 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    // ----------------
    // Initiate DM, Shifter box, MBox or FBox op
 
-   function Action fa_enq (Data_Stage1_to_Stage2 x);
+   function Action fa_enq (Data_Stage1_to_Stage2 x, Bool valid);
       action
-	 rg_stage2  <= x;
+	 if (valid) rg_stage2  <= x;
 
 	 let funct3 = instr_funct3 (x.instr);
 
@@ -705,7 +697,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `else
 	 Bit #(5) amo_funct5 = pack(x.val1) [6:2];
 `endif
-     rg_f5 <= amo_funct5;
+         if (valid) rg_f5 <= amo_funct5;
 `else
 	 Bool op_stage2_amo = False;
 	 Bit #(5) amo_funct5 = 0;
@@ -761,26 +753,26 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef SHIFT_SERIAL
 	 // If Shifter box op, initiate it
 	 else if (x.op_stage2 == OP_Stage2_SH)
-	    shifter_box.req (unpack (funct3 [2]), x.val1, x.val2);
+	    shifter_box.req (unpack (funct3 [2]), x.val1_fast, x.val2_fast);
 `endif
 
 `ifdef ISA_M
 	 // If MBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_M) begin
+	 else if (x.op_stage2 == OP_Stage2_M && valid) begin
             // Instr fields required for decode for F/D opcodes
 	    Bool is_OP_not_OP_32 = (x.instr [3] == 1'b0);
-            mbox.req (is_OP_not_OP_32, funct3, extract_int(x.val1), extract_int(x.val2));
+            mbox.req (is_OP_not_OP_32, funct3, x.val1_fast, x.val2_fast);
 	 end
 `endif
 
 `ifdef ISA_F
 	 // If FBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_FD) begin
+	 else if (x.op_stage2 == OP_Stage2_FD && valid) begin
 	    // Instr fields required for decode for F/D opcodes
             let opcode = instr_opcode (x.instr);
 	    let funct7 = instr_funct7 (x.instr);
             let rs2    = instr_rs2    (x.instr);
-            Bit #(64) val1 = x.val1_frm_gpr ? extend(extract_int(x.val1))
+            Bit #(64) val1 = x.val1_frm_gpr ? extend(x.val1_fast)
                                             : extend (x.fval1);
 
 	    fbox.req (  opcode
@@ -812,10 +804,10 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    endmethod
 
    // ---- Input
-   method Action enq (Data_Stage1_to_Stage2 x);
-      fa_enq (x);
+   method Action enq (Data_Stage1_to_Stage2 x, Bool valid);
+      fa_enq (x, valid);
 
-      if (verbosity > 1)
+      if (verbosity > 1 && valid)
 	 $display ("%0t    CPU_Stage2.enq (Data_Stage1_to_Stage2) ", fshow(x), $time);
    endmethod
 

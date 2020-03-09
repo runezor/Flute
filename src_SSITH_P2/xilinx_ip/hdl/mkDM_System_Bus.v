@@ -603,6 +603,7 @@ module mkDM_System_Bus(CLK,
   // inlined wires
   wire [97 : 0] master_xactor_shim_arff_rv$port0__write_1,
 		master_xactor_shim_arff_rv$port1__read,
+		master_xactor_shim_arff_rv$port1__write_1,
 		master_xactor_shim_arff_rv$port2__read,
 		master_xactor_shim_arff_rv$port3__read,
 		master_xactor_shim_awff_rv$port0__write_1,
@@ -611,15 +612,18 @@ module mkDM_System_Bus(CLK,
 		master_xactor_shim_awff_rv$port3__read;
   wire [74 : 0] master_xactor_shim_wff_rv$port0__write_1,
 		master_xactor_shim_wff_rv$port1__read,
+		master_xactor_shim_wff_rv$port1__write_1,
 		master_xactor_shim_wff_rv$port2__read,
 		master_xactor_shim_wff_rv$port3__read;
   wire [72 : 0] master_xactor_shim_rff_rv$port0__write_1,
 		master_xactor_shim_rff_rv$port1__read,
+		master_xactor_shim_rff_rv$port1__write_1,
 		master_xactor_shim_rff_rv$port2__read,
 		master_xactor_shim_rff_rv$port3__read;
   wire [71 : 0] master_xactor_ug_master_u_r_putWire$wget;
   wire [6 : 0] master_xactor_shim_bff_rv$port0__write_1,
 	       master_xactor_shim_bff_rv$port1__read,
+	       master_xactor_shim_bff_rv$port1__write_1,
 	       master_xactor_shim_bff_rv$port2__read,
 	       master_xactor_shim_bff_rv$port3__read;
   wire [5 : 0] master_xactor_ug_master_u_b_putWire$wget;
@@ -1220,11 +1224,11 @@ module mkDM_System_Bus(CLK,
 	       master_xactor_shim_awff_rv ;
   assign master_xactor_shim_awff_rv$port2__read =
 	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_awff_rv$port1__read ;
   assign master_xactor_shim_awff_rv$port3__read =
 	     master_xactor_clearing ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_awff_rv$port2__read ;
   assign master_xactor_shim_wff_rv$EN_port0__write =
 	     EN_write &&
@@ -1235,13 +1239,16 @@ module mkDM_System_Bus(CLK,
 	     master_xactor_shim_wff_rv$EN_port0__write ?
 	       master_xactor_shim_wff_rv$port0__write_1 :
 	       master_xactor_shim_wff_rv ;
+  assign master_xactor_shim_wff_rv$port1__write_1 =
+	     { 1'd0,
+	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_wff_rv$port2__read =
 	     CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_wff_rv$port1__write_1 :
 	       master_xactor_shim_wff_rv$port1__read ;
   assign master_xactor_shim_wff_rv$port3__read =
 	     master_xactor_clearing ?
-	       75'h2AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_wff_rv$port1__write_1 :
 	       master_xactor_shim_wff_rv$port2__read ;
   assign master_xactor_shim_bff_rv$port0__write_1 =
 	     { 1'd1, master_xactor_ug_master_u_b_putWire$wget } ;
@@ -1252,13 +1259,15 @@ module mkDM_System_Bus(CLK,
   assign master_xactor_shim_bff_rv$EN_port1__write =
 	     !master_xactor_clearing &&
 	     master_xactor_shim_bff_rv$port1__read[6] ;
+  assign master_xactor_shim_bff_rv$port1__write_1 =
+	     { 1'd0, 6'bxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_bff_rv$port2__read =
 	     master_xactor_shim_bff_rv$EN_port1__write ?
-	       7'd42 :
+	       master_xactor_shim_bff_rv$port1__write_1 :
 	       master_xactor_shim_bff_rv$port1__read ;
   assign master_xactor_shim_bff_rv$port3__read =
 	     master_xactor_clearing ?
-	       7'd42 :
+	       master_xactor_shim_bff_rv$port1__write_1 :
 	       master_xactor_shim_bff_rv$port2__read ;
   assign master_xactor_shim_arff_rv$EN_port0__write =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
@@ -1273,13 +1282,16 @@ module mkDM_System_Bus(CLK,
 	     master_xactor_shim_arff_rv$EN_port0__write ?
 	       master_xactor_shim_arff_rv$port0__write_1 :
 	       master_xactor_shim_arff_rv ;
+  assign master_xactor_shim_arff_rv$port1__write_1 =
+	     { 1'd0,
+	       97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_arff_rv$port2__read =
 	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_arff_rv$port1__read ;
   assign master_xactor_shim_arff_rv$port3__read =
 	     master_xactor_clearing ?
-	       98'h0AAAAAAAAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_arff_rv$port1__write_1 :
 	       master_xactor_shim_arff_rv$port2__read ;
   assign master_xactor_shim_rff_rv$port0__write_1 =
 	     { 1'd1, master_xactor_ug_master_u_r_putWire$wget } ;
@@ -1292,13 +1304,16 @@ module mkDM_System_Bus(CLK,
 	     master_xactor_shim_rff_rv$port1__read[72] &&
 	     rg_sb_state == 2'd1 &&
 	     rg_sbcs_sberror == 3'd0 ;
+  assign master_xactor_shim_rff_rv$port1__write_1 =
+	     { 1'd0,
+	       72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign master_xactor_shim_rff_rv$port2__read =
 	     master_xactor_shim_rff_rv$EN_port1__write ?
-	       73'h0AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_rff_rv$port1__write_1 :
 	       master_xactor_shim_rff_rv$port1__read ;
   assign master_xactor_shim_rff_rv$port3__read =
 	     master_xactor_clearing ?
-	       73'h0AAAAAAAAAAAAAAAAAA :
+	       master_xactor_shim_rff_rv$port1__write_1 :
 	       master_xactor_shim_rff_rv$port2__read ;
 
   // register master_xactor_clearing
@@ -1354,7 +1369,8 @@ module mkDM_System_Bus(CLK,
     MUX_rg_sbaddress0$write_1__SEL_3:
 	rg_sbaddress0$D_IN =
 	    rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156[31:0];
-    default: rg_sbaddress0$D_IN = 32'hAAAAAAAA /* unspecified value */ ;
+    default: rg_sbaddress0$D_IN =
+		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sbaddress0$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
@@ -1375,7 +1391,8 @@ module mkDM_System_Bus(CLK,
     MUX_rg_sbaddress0$write_1__SEL_3:
 	rg_sbaddress1$D_IN =
 	    rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156[63:32];
-    default: rg_sbaddress1$D_IN = 32'hAAAAAAAA /* unspecified value */ ;
+    default: rg_sbaddress1$D_IN =
+		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sbaddress1$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
@@ -1417,7 +1434,7 @@ module mkDM_System_Bus(CLK,
     MUX_rg_sbcs_sbbusyerror$write_1__SEL_2:
 	rg_sbcs_sbbusyerror$D_IN = write_dm_addr != 7'h38;
     MUX_rg_sbcs_sbbusyerror$write_1__SEL_3: rg_sbcs_sbbusyerror$D_IN = 1'd1;
-    default: rg_sbcs_sbbusyerror$D_IN = 1'b0 /* unspecified value */ ;
+    default: rg_sbcs_sbbusyerror$D_IN = 1'bx /* unspecified value */ ;
   endcase
   assign rg_sbcs_sbbusyerror$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C && rg_sb_state != 2'd0 ||
@@ -1437,7 +1454,7 @@ module mkDM_System_Bus(CLK,
     MUX_rg_sbcs_sberror$write_1__SEL_3: rg_sbcs_sberror$D_IN = 3'd3;
     MUX_rg_sbcs_sberror$write_1__SEL_4:
 	rg_sbcs_sberror$D_IN = MUX_rg_sbcs_sberror$write_1__VAL_4;
-    default: rg_sbcs_sberror$D_IN = 3'b010 /* unspecified value */ ;
+    default: rg_sbcs_sberror$D_IN = 3'bxxx /* unspecified value */ ;
   endcase
   assign rg_sbcs_sberror$EN =
 	     WILL_FIRE_RL_rl_sb_read_finish &&
@@ -1473,7 +1490,8 @@ module mkDM_System_Bus(CLK,
 	rg_sbdata0$D_IN =
 	    IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130[31:0];
     MUX_rg_sbdata0$write_1__SEL_3: rg_sbdata0$D_IN = write_dm_word;
-    default: rg_sbdata0$D_IN = 32'hAAAAAAAA /* unspecified value */ ;
+    default: rg_sbdata0$D_IN =
+		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sbdata0$EN =
 	     EN_write &&
@@ -1744,14 +1762,19 @@ module mkDM_System_Bus(CLK,
       begin
         master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	master_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    98'h0AAAAAAAAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	master_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    98'h0AAAAAAAAAAAAAAAAAAAAAAAA;
-	master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY 7'd42;
+	    { 1'd0,
+	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
+	master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 6'bxxxxxx /* unspecified value */  };
 	master_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    73'h0AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	master_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    75'h2AAAAAAAAAAAAAAAAAA;
+	    { 1'd0,
+	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	rg_sbaddress0 <= `BSV_ASSIGNMENT_DELAY 32'd0;
 	rg_sbaddress1 <= `BSV_ASSIGNMENT_DELAY 32'd0;
       end

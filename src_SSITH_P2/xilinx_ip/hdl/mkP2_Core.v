@@ -7,32 +7,32 @@
 // Ports:
 // Name                         I/O  size props
 // master0_awid                   O     6
-// master0_awaddr                 O    64
-// master0_awlen                  O     8
-// master0_awsize                 O     3
-// master0_awburst                O     2
-// master0_awlock                 O     1
-// master0_awcache                O     4
-// master0_awprot                 O     3
-// master0_awqos                  O     4
-// master0_awregion               O     4
-// master0_awvalid                O     1
-// master0_wdata                  O    64
-// master0_wstrb                  O     8
-// master0_wlast                  O     1
-// master0_wvalid                 O     1
+// master0_awaddr                 O    64 reg
+// master0_awlen                  O     8 reg
+// master0_awsize                 O     3 reg
+// master0_awburst                O     2 reg
+// master0_awlock                 O     1 reg
+// master0_awcache                O     4 reg
+// master0_awprot                 O     3 reg
+// master0_awqos                  O     4 reg
+// master0_awregion               O     4 reg
+// master0_awvalid                O     1 reg
+// master0_wdata                  O    64 reg
+// master0_wstrb                  O     8 reg
+// master0_wlast                  O     1 reg
+// master0_wvalid                 O     1 reg
 // master0_bready                 O     1 reg
 // master0_arid                   O     6
-// master0_araddr                 O    64
-// master0_arlen                  O     8
-// master0_arsize                 O     3
-// master0_arburst                O     2
-// master0_arlock                 O     1
-// master0_arcache                O     4
-// master0_arprot                 O     3
-// master0_arqos                  O     4
-// master0_arregion               O     4
-// master0_arvalid                O     1
+// master0_araddr                 O    64 reg
+// master0_arlen                  O     8 reg
+// master0_arsize                 O     3 reg
+// master0_arburst                O     2 reg
+// master0_arlock                 O     1 reg
+// master0_arcache                O     4 reg
+// master0_arprot                 O     3 reg
+// master0_arqos                  O     4 reg
+// master0_arregion               O     4 reg
+// master0_arvalid                O     1 reg
 // master0_rready                 O     1 reg
 // master1_awid                   O     6
 // master1_awaddr                 O    64
@@ -69,13 +69,13 @@
 // RST_N                          I     1 reset
 // master0_awready                I     1
 // master0_wready                 I     1
-// master0_bid                    I     6
-// master0_bresp                  I     2
+// master0_bid                    I     6 reg
+// master0_bresp                  I     2 reg
 // master0_arready                I     1
-// master0_rid                    I     6
-// master0_rdata                  I    64
-// master0_rresp                  I     2
-// master0_rlast                  I     1
+// master0_rid                    I     6 reg
+// master0_rdata                  I    64 reg
+// master0_rresp                  I     2 reg
+// master0_rlast                  I     1 reg
 // master1_awready                I     1
 // master1_wready                 I     1
 // master1_bid                    I     6
@@ -94,62 +94,7 @@
 // master1_bvalid                 I     1
 // master1_rvalid                 I     1
 //
-// Combinational paths from inputs to outputs:
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arid
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_araddr
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arlen
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arsize
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arburst
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arlock
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arcache
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arprot
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arqos
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arregion
-//   (master0_rid,
-//    master0_rdata,
-//    master0_rresp,
-//    master0_rlast,
-//    master0_rvalid) -> master0_arvalid
+// No combinational paths from inputs to outputs
 //
 //
 
@@ -874,11 +819,12 @@ module mkP2_Core(CLK,
   // inputs to muxes for submodule ports
   wire [33 : 0] MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_1,
 		MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2,
-		MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_2,
+		MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_1,
 		MUX_bus_dmi_rsp_fifof_x_wire$wset_1__VAL_1,
 		MUX_bus_dmi_rsp_fifof_x_wire$wset_1__VAL_2;
   wire [1 : 0] MUX_bus_dmi_rsp_fifof_cntr_r$write_1__VAL_2,
-	       MUX_rg_ndm_reset$write_1__VAL_1;
+	       MUX_rg_ndm_reset$write_1__VAL_1,
+	       MUX_rg_ndm_reset$write_1__VAL_2;
   wire MUX_bus_dmi_rsp_fifof_q_0$write_1__SEL_1,
        MUX_bus_dmi_rsp_fifof_q_0$write_1__SEL_2,
        MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_1,
@@ -1330,17 +1276,17 @@ module mkP2_Core(CLK,
   assign CAN_FIRE_RL_mkConnectionVtoAf_8 = 1'd1 ;
   assign WILL_FIRE_RL_mkConnectionVtoAf_8 = 1'd1 ;
 
-  // rule RL_rl_dmi_req_cpu
-  assign CAN_FIRE_RL_rl_dmi_req_cpu =
-	     bus_dmi_req_fifof$EMPTY_N &&
-	     IF_bus_dmi_req_fifof_first__9_BITS_1_TO_0_0_EQ_ETC___d90 ;
-  assign WILL_FIRE_RL_rl_dmi_req_cpu = CAN_FIRE_RL_rl_dmi_req_cpu ;
-
   // rule RL_rl_dmi_rsp_cpu
   assign CAN_FIRE_RL_rl_dmi_rsp_cpu =
 	     bus_dmi_rsp_fifof_cntr_r != 2'd2 && core$RDY_dm_dmi_read_data ;
   assign WILL_FIRE_RL_rl_dmi_rsp_cpu =
 	     CAN_FIRE_RL_rl_dmi_rsp_cpu && !WILL_FIRE_RL_rl_dmi_req_cpu ;
+
+  // rule RL_rl_dmi_req_cpu
+  assign CAN_FIRE_RL_rl_dmi_req_cpu =
+	     bus_dmi_req_fifof$EMPTY_N &&
+	     IF_bus_dmi_req_fifof_first__9_BITS_1_TO_0_0_EQ_ETC___d90 ;
+  assign WILL_FIRE_RL_rl_dmi_req_cpu = CAN_FIRE_RL_rl_dmi_req_cpu ;
 
   // rule RL_rl_reset_response
   assign CAN_FIRE_RL_rl_reset_response =
@@ -1388,39 +1334,41 @@ module mkP2_Core(CLK,
 
   // inputs to muxes for submodule ports
   assign MUX_bus_dmi_rsp_fifof_q_0$write_1__SEL_1 =
+	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo3 ;
+  assign MUX_bus_dmi_rsp_fifof_q_0$write_1__SEL_2 =
 	     WILL_FIRE_RL_bus_dmi_rsp_fifof_incCtr &&
 	     bus_dmi_rsp_fifof_cntr_r == 2'd0 ;
-  assign MUX_bus_dmi_rsp_fifof_q_0$write_1__SEL_2 =
-	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo3 ;
   assign MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_1 =
+	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo1 ;
+  assign MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_2 =
 	     WILL_FIRE_RL_bus_dmi_rsp_fifof_incCtr &&
 	     bus_dmi_rsp_fifof_cntr_r == 2'd1 ;
-  assign MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_2 =
-	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo1 ;
   assign MUX_bus_dmi_rsp_fifof_x_wire$wset_1__SEL_1 =
 	     WILL_FIRE_RL_rl_dmi_req_cpu &&
 	     bus_dmi_req_fifof$D_OUT[1:0] != 2'd1 ;
   assign MUX_bus_dmi_rsp_fifof_cntr_r$write_1__VAL_2 =
 	     bus_dmi_rsp_fifof_cntr_r + 2'd1 ;
   assign MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_1 =
+	     (bus_dmi_rsp_fifof_cntr_r == 2'd1) ?
+	       MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2 :
+	       bus_dmi_rsp_fifof_q_1 ;
+  assign MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2 =
 	     MUX_bus_dmi_rsp_fifof_x_wire$wset_1__SEL_1 ?
 	       MUX_bus_dmi_rsp_fifof_x_wire$wset_1__VAL_1 :
 	       MUX_bus_dmi_rsp_fifof_x_wire$wset_1__VAL_2 ;
-  assign MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2 =
-	     (bus_dmi_rsp_fifof_cntr_r == 2'd1) ?
-	       MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_1 :
-	       bus_dmi_rsp_fifof_q_1 ;
-  assign MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_2 =
+  assign MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_1 =
 	     (bus_dmi_rsp_fifof_cntr_r == 2'd2) ?
-	       MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_1 :
+	       MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2 :
 	       34'd0 ;
   assign MUX_bus_dmi_rsp_fifof_x_wire$wset_1__VAL_1 =
-	     { 32'hAAAAAAAA,
+	     { 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       (bus_dmi_req_fifof$D_OUT[1:0] == 2'd2) ? 2'd0 : 2'd2 } ;
   assign MUX_bus_dmi_rsp_fifof_x_wire$wset_1__VAL_2 =
 	     { core$dm_dmi_read_data, 2'd0 } ;
   assign MUX_rg_ndm_reset$write_1__VAL_1 =
 	     { 1'd1, core$ndm_reset_client_request_get } ;
+  assign MUX_rg_ndm_reset$write_1__VAL_2 =
+	     { 1'd0, 1'bx /* unspecified value */  } ;
 
   // inlined wires
   assign bus_dmi_rsp_fifof_enqueueing$whas =
@@ -1458,46 +1406,46 @@ module mkP2_Core(CLK,
       WILL_FIRE_RL_bus_dmi_rsp_fifof_decCtr:
 	  bus_dmi_rsp_fifof_q_0$D_IN = bus_dmi_rsp_fifof_q_1;
       default: bus_dmi_rsp_fifof_q_0$D_IN =
-		   34'h2AAAAAAAA /* unspecified value */ ;
+		   34'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign bus_dmi_rsp_fifof_q_0$EN =
+	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo3 ||
 	     WILL_FIRE_RL_bus_dmi_rsp_fifof_incCtr &&
 	     bus_dmi_rsp_fifof_cntr_r == 2'd0 ||
-	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo3 ||
 	     WILL_FIRE_RL_bus_dmi_rsp_fifof_decCtr ;
 
   // register bus_dmi_rsp_fifof_q_1
   always@(MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_1 or
-	  MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_1 or
+	  MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_1 or
 	  MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_2 or
-	  MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_2 or
+	  MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2 or
 	  WILL_FIRE_RL_bus_dmi_rsp_fifof_decCtr)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_1:
 	  bus_dmi_rsp_fifof_q_1$D_IN =
-	      MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_1;
+	      MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_1;
       MUX_bus_dmi_rsp_fifof_q_1$write_1__SEL_2:
 	  bus_dmi_rsp_fifof_q_1$D_IN =
-	      MUX_bus_dmi_rsp_fifof_q_1$write_1__VAL_2;
+	      MUX_bus_dmi_rsp_fifof_q_0$write_1__VAL_2;
       WILL_FIRE_RL_bus_dmi_rsp_fifof_decCtr:
 	  bus_dmi_rsp_fifof_q_1$D_IN = 34'd0;
       default: bus_dmi_rsp_fifof_q_1$D_IN =
-		   34'h2AAAAAAAA /* unspecified value */ ;
+		   34'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign bus_dmi_rsp_fifof_q_1$EN =
+	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo1 ||
 	     WILL_FIRE_RL_bus_dmi_rsp_fifof_incCtr &&
 	     bus_dmi_rsp_fifof_cntr_r == 2'd1 ||
-	     WILL_FIRE_RL_bus_dmi_rsp_fifof_both && _dfoo1 ||
 	     WILL_FIRE_RL_bus_dmi_rsp_fifof_decCtr ;
 
   // register rg_ndm_reset
   assign rg_ndm_reset$D_IN =
 	     WILL_FIRE_RL_rl_ndmreset ?
 	       MUX_rg_ndm_reset$write_1__VAL_1 :
-	       2'd0 ;
+	       MUX_rg_ndm_reset$write_1__VAL_2 ;
   assign rg_ndm_reset$EN =
 	     WILL_FIRE_RL_rl_reset_response || WILL_FIRE_RL_rl_ndmreset ;
 
@@ -1626,7 +1574,8 @@ module mkP2_Core(CLK,
         bus_dmi_rsp_fifof_cntr_r <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	bus_dmi_rsp_fifof_q_0 <= `BSV_ASSIGNMENT_DELAY 34'd0;
 	bus_dmi_rsp_fifof_q_1 <= `BSV_ASSIGNMENT_DELAY 34'd0;
-	rg_ndm_reset <= `BSV_ASSIGNMENT_DELAY 2'd0;
+	rg_ndm_reset <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0, 1'bx /* unspecified value */  };
 	rg_once <= `BSV_ASSIGNMENT_DELAY 1'd0;
       end
     else

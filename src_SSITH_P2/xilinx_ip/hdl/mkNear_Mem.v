@@ -81,9 +81,9 @@
 // dmem_master_rready             O     1
 // RDY_server_fence_i_request_put  O     1
 // RDY_server_fence_i_response_get  O     1
-// RDY_server_fence_request_put   O     1
+// RDY_server_fence_request_put   O     1 reg
 // RDY_server_fence_response_get  O     1
-// RDY_sfence_vma                 O     1
+// RDY_sfence_vma                 O     1 const
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
 // imem_req_width_code            I     3
@@ -159,84 +159,72 @@
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arid
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_araddr
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arlen
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arsize
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arburst
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arlock
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arcache
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arprot
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arqos
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arregion
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_aruser
 //   (imem_master_rid,
 //    imem_master_rdata,
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_req,
 //    imem_master_rvalid) -> imem_master_arvalid
 //   (dmem_master_rid,
 //    dmem_master_rdata,
@@ -264,88 +252,73 @@
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arid
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_araddr
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arlen
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arsize
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arburst
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arlock
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arcache
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arprot
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arqos
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arregion
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_aruser
 //   (dmem_master_rid,
 //    dmem_master_rdata,
 //    dmem_master_rresp,
 //    dmem_master_rlast,
 //    dmem_master_ruser,
-//    EN_dmem_req,
 //    dmem_master_rvalid) -> dmem_master_arvalid
-//   (EN_imem_req, EN_dmem_req) -> RDY_server_fence_i_request_put
-//   (EN_imem_req, EN_dmem_req) -> RDY_sfence_vma
-//   EN_dmem_req -> RDY_server_fence_request_put
 //   EN_dmem_commit -> dmem_st_amo_val
 //
 //
@@ -1047,7 +1020,6 @@ module mkNear_Mem(CLK,
        dcache$RDY_server_flush_response_get,
        dcache$RDY_server_reset_request_put,
        dcache$RDY_server_reset_response_get,
-       dcache$RDY_tlb_flush,
        dcache$exc,
        dcache$mem_master_arlock,
        dcache$mem_master_arready,
@@ -1127,7 +1099,6 @@ module mkNear_Mem(CLK,
        icache$RDY_server_flush_response_get,
        icache$RDY_server_reset_request_put,
        icache$RDY_server_reset_response_get,
-       icache$RDY_tlb_flush,
        icache$exc,
        icache$mem_master_arlock,
        icache$mem_master_arready,
@@ -1202,6 +1173,9 @@ module mkNear_Mem(CLK,
        WILL_FIRE_server_reset_request_put,
        WILL_FIRE_server_reset_response_get,
        WILL_FIRE_sfence_vma;
+
+  // inputs to muxes for submodule ports
+  wire MUX_rg_state$write_1__SEL_2, MUX_rg_state$write_1__SEL_3;
 
   // declarations used by system tasks
   // synopsys translate_off
@@ -1527,8 +1501,8 @@ module mkNear_Mem(CLK,
   assign WILL_FIRE_server_fence_response_get = EN_server_fence_response_get ;
 
   // action method sfence_vma
-  assign RDY_sfence_vma = icache$RDY_tlb_flush && dcache$RDY_tlb_flush ;
-  assign CAN_FIRE_sfence_vma = icache$RDY_tlb_flush && dcache$RDY_tlb_flush ;
+  assign RDY_sfence_vma = 1'd1 ;
+  assign CAN_FIRE_sfence_vma = 1'd1 ;
   assign WILL_FIRE_sfence_vma = EN_sfence_vma ;
 
   // submodule dcache
@@ -1578,7 +1552,7 @@ module mkNear_Mem(CLK,
 		      .exc_code(dcache$exc_code),
 		      .RDY_server_flush_request_put(dcache$RDY_server_flush_request_put),
 		      .RDY_server_flush_response_get(dcache$RDY_server_flush_response_get),
-		      .RDY_tlb_flush(dcache$RDY_tlb_flush),
+		      .RDY_tlb_flush(),
 		      .mem_master_awid(dcache$mem_master_awid),
 		      .mem_master_awaddr(dcache$mem_master_awaddr),
 		      .mem_master_awlen(dcache$mem_master_awlen),
@@ -1665,7 +1639,7 @@ module mkNear_Mem(CLK,
 		      .exc_code(icache$exc_code),
 		      .RDY_server_flush_request_put(icache$RDY_server_flush_request_put),
 		      .RDY_server_flush_response_get(icache$RDY_server_flush_response_get),
-		      .RDY_tlb_flush(icache$RDY_tlb_flush),
+		      .RDY_tlb_flush(),
 		      .mem_master_awid(icache$mem_master_awid),
 		      .mem_master_awaddr(icache$mem_master_awaddr),
 		      .mem_master_awlen(icache$mem_master_awlen),
@@ -1733,16 +1707,20 @@ module mkNear_Mem(CLK,
 	     icache$RDY_server_reset_request_put &&
 	     dcache$RDY_server_reset_request_put &&
 	     rg_state == 2'd0 ;
-  assign WILL_FIRE_RL_rl_reset =
-	     CAN_FIRE_RL_rl_reset && !EN_server_fence_request_put ;
+  assign WILL_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
 
   // rule RL_rl_reset_complete
-  assign CAN_FIRE_RL_rl_reset_complete =
+  assign CAN_FIRE_RL_rl_reset_complete = MUX_rg_state$write_1__SEL_3 ;
+  assign WILL_FIRE_RL_rl_reset_complete = MUX_rg_state$write_1__SEL_3 ;
+
+  // inputs to muxes for submodule ports
+  assign MUX_rg_state$write_1__SEL_2 =
+	     CAN_FIRE_RL_rl_reset && !EN_server_fence_request_put ;
+  assign MUX_rg_state$write_1__SEL_3 =
 	     icache$RDY_server_reset_response_get &&
 	     dcache$RDY_server_reset_response_get &&
 	     f_reset_rsps$FULL_N &&
 	     rg_state == 2'd1 ;
-  assign WILL_FIRE_RL_rl_reset_complete = CAN_FIRE_RL_rl_reset_complete ;
 
   // register cfg_verbosity
   assign cfg_verbosity$D_IN = 4'h0 ;
@@ -1756,7 +1734,7 @@ module mkNear_Mem(CLK,
       EN_server_reset_request_put: rg_state$D_IN = 2'd0;
       WILL_FIRE_RL_rl_reset: rg_state$D_IN = 2'd1;
       WILL_FIRE_RL_rl_reset_complete: rg_state$D_IN = 2'd2;
-      default: rg_state$D_IN = 2'b10 /* unspecified value */ ;
+      default: rg_state$D_IN = 2'bxx /* unspecified value */ ;
     endcase
   end
   assign rg_state$EN =
@@ -1786,8 +1764,8 @@ module mkNear_Mem(CLK,
   assign dcache$req_width_code = dmem_req_width_code ;
   assign dcache$set_verbosity_verbosity = 4'h0 ;
   assign dcache$EN_set_verbosity = 1'b0 ;
-  assign dcache$EN_server_reset_request_put = WILL_FIRE_RL_rl_reset ;
-  assign dcache$EN_server_reset_response_get = CAN_FIRE_RL_rl_reset_complete ;
+  assign dcache$EN_server_reset_request_put = MUX_rg_state$write_1__SEL_2 ;
+  assign dcache$EN_server_reset_response_get = MUX_rg_state$write_1__SEL_3 ;
   assign dcache$EN_req = EN_dmem_req ;
   assign dcache$EN_commit = EN_dmem_commit ;
   assign dcache$EN_server_flush_request_put =
@@ -1799,7 +1777,7 @@ module mkNear_Mem(CLK,
   assign dcache$mem_master_rvalid = dmem_master_rvalid ;
 
   // submodule f_reset_rsps
-  assign f_reset_rsps$ENQ = CAN_FIRE_RL_rl_reset_complete ;
+  assign f_reset_rsps$ENQ = MUX_rg_state$write_1__SEL_3 ;
   assign f_reset_rsps$DEQ = EN_server_reset_response_get ;
   assign f_reset_rsps$CLR = 1'b0 ;
 
@@ -1815,19 +1793,21 @@ module mkNear_Mem(CLK,
   assign icache$mem_master_ruser = imem_master_ruser ;
   assign icache$mem_master_wready = imem_master_wready ;
   assign icache$req_addr = imem_req_addr ;
-  assign icache$req_amo_funct5 = 5'b01010 /* unspecified value */  ;
+  assign icache$req_amo_funct5 = 5'bxxxxx /* unspecified value */  ;
   assign icache$req_is_unsigned = 1'd1 ;
   assign icache$req_mstatus_MXR = imem_req_mstatus_MXR ;
   assign icache$req_op = 2'd0 ;
   assign icache$req_priv = imem_req_priv ;
   assign icache$req_satp = imem_req_satp ;
   assign icache$req_sstatus_SUM = imem_req_sstatus_SUM ;
-  assign icache$req_st_value = 129'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ;
+  assign icache$req_st_value =
+	     { 1'd0,
+	       128'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign icache$req_width_code = imem_req_width_code ;
   assign icache$set_verbosity_verbosity = 4'h0 ;
   assign icache$EN_set_verbosity = 1'b0 ;
-  assign icache$EN_server_reset_request_put = WILL_FIRE_RL_rl_reset ;
-  assign icache$EN_server_reset_response_get = CAN_FIRE_RL_rl_reset_complete ;
+  assign icache$EN_server_reset_request_put = MUX_rg_state$write_1__SEL_2 ;
+  assign icache$EN_server_reset_response_get = MUX_rg_state$write_1__SEL_3 ;
   assign icache$EN_req = EN_imem_req ;
   assign icache$EN_commit = EN_imem_commit ;
   assign icache$EN_server_flush_request_put = EN_server_fence_i_request_put ;

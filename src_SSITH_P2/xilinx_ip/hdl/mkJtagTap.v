@@ -250,6 +250,7 @@ module mkJtagTap(CLK,
   wire [39 : 0] IF_r_dmistat_busy_port0__read__35_OR_NOT_r_dmi_ETC___d138,
 		v__h2212,
 		v__h2580,
+		x__h2349,
 		x__h2428,
 		x__h2637,
 		y__h2638;
@@ -483,7 +484,10 @@ module mkJtagTap(CLK,
   assign f_dmi_req$dCLR = 1'b0 ;
 
   // submodule f_dmi_rsp
-  assign f_dmi_rsp$sD_IN = { 6'h2A, dmi_rsp_data, dmi_rsp_response } ;
+  assign f_dmi_rsp$sD_IN =
+	     { 6'bxxxxxx /* unspecified value */ ,
+	       dmi_rsp_data,
+	       dmi_rsp_response } ;
   assign f_dmi_rsp$sENQ = CAN_FIRE_RL_dmi_response ;
   assign f_dmi_rsp$dDEQ = CAN_FIRE_RL_dmi_response_tck ;
   assign f_dmi_rsp$sCLR = 1'b0 ;
@@ -497,7 +501,7 @@ module mkJtagTap(CLK,
 	     (r_dmistat_busy ||
 	      r_dmi[1:0] != 2'd2 && r_dmi[1:0] != 2'd3 &&
 	      f_dmi_busy$EMPTY_N) ?
-	       40'hAAAAAAAAAB :
+	       x__h2349 :
 	       r_dmi ;
   assign r_state_EQ_8_0_AND_r_ir_EQ_0b10001010010010010_ETC___d55 =
 	     r_state == 4'd8 && r_ir == 18'b100010100100100100 &&
@@ -515,6 +519,10 @@ module mkJtagTap(CLK,
   assign v__h2212 = { 22'd960, r_ir } ;
   assign v__h2580 = x__h2637 | y__h2638 ;
   assign v__h3278 = x__h3329 | y__h3330 ;
+  assign x__h2349 =
+	     { 6'bxxxxxx /* unspecified value */ ,
+	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+	       2'd3 } ;
   assign x__h2428 = { 28'd0, r_dmi[1:0], 10'd97 } ;
   assign x__h2637 = { 1'd0, r_dr[39:1] } ;
   assign x__h3329 = { 1'd0, r_ir[17:1] } ;

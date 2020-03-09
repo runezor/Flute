@@ -191,7 +191,8 @@ endinterface
 
 //TODO make generic
 function Tuple2#(Bool, Bit #(128)) fn_extract_and_extend_bytes (Bit #(3) width_code, Bool is_unsigned, WordXL byte_addr, Cache_Entry word128_tagged);
-   Bit #(128) result    = 0;
+   Bit #(64)  result_lo  = 0;
+   Bit #(64)  result_hi  = 0;
    Bit #(4)  addr_lsbs = byte_addr [3:0];
 
    Bool tag = False;
@@ -201,51 +202,51 @@ function Tuple2#(Bool, Bit #(128)) fn_extract_and_extend_bytes (Bit #(3) width_c
 
    case (width_code)
       0: case (addr_lsbs)
-		'h0: result = u_s_extend (word128 [ 7: 0]);
-		'h1: result = u_s_extend (word128 [15: 8]);
-		'h2: result = u_s_extend (word128 [23:16]);
-		'h3: result = u_s_extend (word128 [31:24]);
-		'h4: result = u_s_extend (word128 [39:32]);
-		'h5: result = u_s_extend (word128 [47:40]);
-		'h6: result = u_s_extend (word128 [55:48]);
-		'h7: result = u_s_extend (word128 [63:56]);
-		'h8: result = u_s_extend (word128 [71:64]);
-		'h9: result = u_s_extend (word128 [79:72]);
-		'ha: result = u_s_extend (word128 [87:80]);
-		'hb: result = u_s_extend (word128 [95:88]);
-		'hc: result = u_s_extend (word128 [103:96]);
-		'hd: result = u_s_extend (word128 [111:104]);
-		'he: result = u_s_extend (word128 [119:112]);
-		'hf: result = u_s_extend (word128 [127:120]);
+		'h0: result_lo = u_s_extend (word128 [ 7: 0]);
+		'h1: result_lo = u_s_extend (word128 [15: 8]);
+		'h2: result_lo = u_s_extend (word128 [23:16]);
+		'h3: result_lo = u_s_extend (word128 [31:24]);
+		'h4: result_lo = u_s_extend (word128 [39:32]);
+		'h5: result_lo = u_s_extend (word128 [47:40]);
+		'h6: result_lo = u_s_extend (word128 [55:48]);
+		'h7: result_lo = u_s_extend (word128 [63:56]);
+		'h8: result_lo = u_s_extend (word128 [71:64]);
+		'h9: result_lo = u_s_extend (word128 [79:72]);
+		'ha: result_lo = u_s_extend (word128 [87:80]);
+		'hb: result_lo = u_s_extend (word128 [95:88]);
+		'hc: result_lo = u_s_extend (word128 [103:96]);
+		'hd: result_lo = u_s_extend (word128 [111:104]);
+		'he: result_lo = u_s_extend (word128 [119:112]);
+		'hf: result_lo = u_s_extend (word128 [127:120]);
 	     endcase
 
       1: case (addr_lsbs)
-		'h0: result = u_s_extend (word128 [15: 0]);
-		'h2: result = u_s_extend (word128 [31:16]);
-		'h4: result = u_s_extend (word128 [47:32]);
-		'h6: result = u_s_extend (word128 [63:48]);
-		'h8: result = u_s_extend (word128 [79:64]);
-		'ha: result = u_s_extend (word128 [95:80]);
-		'hc: result = u_s_extend (word128 [111:96]);
-		'he: result = u_s_extend (word128 [127:112]);
+		'h0: result_lo = u_s_extend (word128 [15: 0]);
+		'h2: result_lo = u_s_extend (word128 [31:16]);
+		'h4: result_lo = u_s_extend (word128 [47:32]);
+		'h6: result_lo = u_s_extend (word128 [63:48]);
+		'h8: result_lo = u_s_extend (word128 [79:64]);
+		'ha: result_lo = u_s_extend (word128 [95:80]);
+		'hc: result_lo = u_s_extend (word128 [111:96]);
+		'he: result_lo = u_s_extend (word128 [127:112]);
 	     endcase
 
       2: case (addr_lsbs)
-		'h0: result = u_s_extend (word128 [31: 0]);
-		'h4: result = u_s_extend (word128 [63:32]);
-		'h8: result = u_s_extend (word128 [95:64]);
-		'hc: result = u_s_extend (word128 [127:96]);
+		'h0: result_lo = u_s_extend (word128 [31: 0]);
+		'h4: result_lo = u_s_extend (word128 [63:32]);
+		'h8: result_lo = u_s_extend (word128 [95:64]);
+		'hc: result_lo = u_s_extend (word128 [127:96]);
 	     endcase
 
       3: case (addr_lsbs)
 		'h0: begin
-           result = u_s_extend (word128 [63:0]);
+           result_lo = u_s_extend (word128 [63:0]);
 `ifdef ISA_CHERI
            if (valueOf(CLEN) == 64) tag = tpl_1(word128_tagged)[0] == 1'b1;
 `endif
          end
 		'h8: begin
-           result = u_s_extend (word128 [127:64]);
+           result_lo = u_s_extend (word128 [127:64]);
 `ifdef ISA_CHERI
            if (valueOf(CLEN) == 64) tag = tpl_1(word128_tagged)[1] == 1'b1;
 `endif
@@ -253,13 +254,14 @@ function Tuple2#(Bool, Bit #(128)) fn_extract_and_extend_bytes (Bit #(3) width_c
 	     endcase
 
       4: begin
-            result = word128;
+            result_lo = word128[63:0];
+            result_hi = word128[127:64];
 `ifdef ISA_CHERI
             tag = tpl_1(word128_tagged)[0] == 1'b1;
 `endif
          end
    endcase
-   return tuple2(tag, result);
+   return tuple2(tag, {result_hi, result_lo});
 endfunction
 
 // ================================================================

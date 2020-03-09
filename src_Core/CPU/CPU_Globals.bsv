@@ -215,50 +215,55 @@ endfunction
 typeclass PCC#(type t);
     function Exact#(t) setPC (t oldPCC, Addr newPC);
     function Addr getPC (t pcc);
+    function Addr getPCCBase (t pcc);
     function Bool checkPreValid (t pcc);
     function Maybe#(CHERI_Exc_Code) checkValid (t pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
-    function t fromCapReg(CapReg pcc);
-    function CapReg toCapReg(t pcc);
+    function t fromCapPipe(CapPipe pcc);
+    function CapPipe toCapPipe(t pcc);
 endtypeclass
 
-instance PCC#(CapPipe);
-    function Exact#(CapPipe) setPC (CapPipe oldPCC, Addr newPC);
-        return setOffset(oldPCC, newPC);
+typedef Tuple2#(CapPipe,Bit#(XLEN)) PCC_T;
+
+instance PCC#(PCC_T);
+    function Exact#(PCC_T) setPC (PCC_T oldPCC, Addr newPC);
+        let setOffsetResult = setOffset(tpl_1(oldPCC), newPC);
+        return Exact {exact: setOffsetResult.exact, value: tuple2(setOffsetResult.value, tpl_2(oldPCC))};
     endfunction
-    function Addr getPC (CapPipe pcc);
-        return getOffset(pcc);
+    function Addr getPC (PCC_T pcc);
+        return getOffset(tpl_1(pcc));
+    endfunction
+    function Addr getPCCBase (PCC_T pcc);
+        return tpl_2(pcc);
     endfunction
     // Check if a PCC dereference is valid before the instruction len is known
-    function Bool checkPreValid (CapPipe pcc);
+    function Bool checkPreValid (PCC_T pcc);
         //TODO alignment checks?
-        return  isValidCap(pcc)
-             && !isSealed(pcc)
-             && getHardPerms(pcc).permitExecute
-             && isInBounds(pcc, False);
+        return  isValidCap(tpl_1(pcc))
+             && !isSealed(tpl_1(pcc))
+             && getHardPerms(tpl_1(pcc)).permitExecute
+             && isInBounds(tpl_1(pcc), False);
     endfunction
-    function Maybe#(CHERI_Exc_Code) checkValid (CapPipe pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
+    function Maybe#(CHERI_Exc_Code) checkValid (PCC_T pcc, Bit#(TAdd#(XLEN,1)) top, Bool is_i32_not_i16);
         let toRet = Invalid;
         //TODO alignment checks?
         CapPipe ac = almightyCap;
-        if (!isValidCap(pcc))
+        if (!isValidCap(tpl_1(pcc)))
             toRet = Valid(exc_code_CHERI_Tag);
-        else if (isSealed(pcc))
+        else if (isSealed(tpl_1(pcc)))
             toRet = Valid(exc_code_CHERI_Seal);
-        else if (!getHardPerms(pcc).permitExecute)
+        else if (!getHardPerms(tpl_1(pcc)).permitExecute)
             toRet = Valid(exc_code_CHERI_XPerm);
-        else if (!isInBounds(pcc, False) || !isInBounds(setAddrUnsafe(pcc, getAddr(pcc) + (is_i32_not_i16 ? 4 : 2)), True))
+        else if (!isInBounds(tpl_1(pcc), False) || !isInBounds(setAddrUnsafe(tpl_1(pcc), getAddr(tpl_1(pcc)) + (is_i32_not_i16 ? 4 : 2)), True))
             toRet = Valid(exc_code_CHERI_Length);
         return toRet;
     endfunction
-    function CapPipe fromCapReg(CapReg pcc);
-        return cast(pcc);
+    function PCC_T fromCapPipe(CapPipe pcc);
+        return tuple2(pcc, getBase(pcc));
     endfunction
-    function CapReg toCapReg(CapPipe pcc);
-        return cast(pcc);
+    function CapPipe toCapPipe(PCC_T pcc);
+        return tpl_1(pcc);
     endfunction
 endinstance
-
-typedef CapPipe PCC_T;
 
 `endif
 
@@ -319,10 +324,6 @@ typedef struct {
    Bool       is_i32_not_i16;     // True if a regular 32b instr, not a compressed (16b) instr
    Bool       exc;                // True if exc in icache access
    Exc_Code   exc_code;
-`ifdef ISA_CHERI
-   CHERI_Exc_Code exc_code_cheri;
-   Bit#(5)    cheri_exc_reg;
-`endif
    WordXL     tval;               // Trap value; can be different from PC, with 'C' extension
    Instr      instr;              // Valid if no exception
    WordXL     pred_fetch_addr;    // Predicted next pc
@@ -387,10 +388,6 @@ typedef struct {
    Bool           exc;                // True if exc in icache access
    Exc_Code       exc_code;
    WordXL         tval;               // Trap value; can be different from PC, with 'C' extension
-`ifdef ISA_CHERI
-   CHERI_Exc_Code exc_code_cheri;
-   Bit#(5)    cheri_exc_reg;
-`endif
 
    Instr          instr;              // Valid if no exception
    Instr_C        instr_C;            // Valid if no exception; original compressed instruction
@@ -448,7 +445,7 @@ typedef struct {
    // feedback
    Bool                   redirect;
 `ifdef ISA_CHERI
-   CapPipe                next_pcc;
+   PCC_T                  next_pcc;
 `else
    WordXL                 next_pc;
 `endif
@@ -524,20 +521,32 @@ deriving (Eq, Bits, FShow);
 
 typedef struct {
 `ifdef ISA_CHERI
-    CapPipe val;
+    capType val;
 `else
     WordXL val;
 `endif
-   } Pipeline_Val deriving (Bits, FShow);
+   } Pipeline_Val#(type capType) deriving (Bits, FShow);
+
+instance Cast#(Pipeline_Val#(a), Pipeline_Val#(b)) provisos (Cast#(a,b));
+   function Pipeline_Val#(b) cast (Pipeline_Val#(a) src);
+`ifdef ISA_CHERI
+    return Pipeline_Val{val:cast(src.val)};
+`else
+    return Pipeline_Val{val:src.val};
+`endif
+   endfunction
+endinstance
+
+
 
 `ifdef ISA_CHERI
-    function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: cap};
-    function CapPipe extract_cap(Pipeline_Val val) = val.val;
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: nullWithAddr(num)};
-    function WordXL extract_int(Pipeline_Val val) = getAddr(val.val);
+    function Pipeline_Val#(t) embed_cap(t cap) provisos(CHERICap#(t,a,b,XLEN,d,e)) = Pipeline_Val{val: cap};
+    function t extract_cap(Pipeline_Val#(t) val) = val.val;
+    function Pipeline_Val#(t) embed_int(WordXL num) provisos(CHERICap#(t,a,b,XLEN,d,e)) = Pipeline_Val{val: nullWithAddr(num)};
+    function WordXL extract_int(Pipeline_Val#(t) val)  provisos(CHERICap#(t,a,b,XLEN,d,e)) = getAddr(val.val);
 `else
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: num};
-    function WordXL extract_int(Pipeline_Val val) = val.val;
+    function Pipeline_Val#(t) embed_int(WordXL num) = Pipeline_Val{val: num};
+    function WordXL extract_int(Pipeline_Val#(t) val) = val.val;
 `endif
 
 typedef struct {
@@ -554,13 +563,22 @@ typedef struct {
 `endif
    Op_Stage2  op_stage2;
    RegName    rd;
-   Addr       addr;              // Branch, jump: newPC
-                                 // Mem ops and AMOs: mem addr
-   Pipeline_Val val1;  // OP_Stage2_ALU: rd_val
+   Addr       addr;     // Branch, jump: newPC
+                        // Mem ops and AMOs: mem addr
+
+   Pipeline_Val#(CapPipe) val1;  // OP_Stage2_ALU: rd_val
                        // OP_Stage2_M and OP_Stage2_FD: arg1
 
-   Pipeline_Val val2;  // OP_Stage2_ST: store-val;
+   Pipeline_Val#(CapPipe) val2;  // OP_Stage2_ST: store-val;
                        // OP_Stage2_M and OP_Stage2_FD: arg2
+
+`ifdef ISA_D
+   WordFL     val1_fast; // Timing optimisation: vals for putting into the fbox/mbox where it is known the result doesn't depend on cap arithmetic
+   WordFL     val2_fast;
+`else
+   WordXL     val1_fast;
+   WordXL     val2_fast;
+`endif
 
 `ifdef ISA_CHERI
    // Bounds check: if check_enable, will test
@@ -574,6 +592,8 @@ typedef struct {
    Bit#(TAdd#(XLEN,1))     check_address_high;
    Bool       check_enable;
    Bool check_inclusive;
+   Bool check_exact_enable;
+   Bool check_exact_success;
 
    Bool       mem_allow_cap;
 `endif
@@ -696,7 +716,7 @@ endinstance
 // Data communicated from stage 2 to stage 3
 
 typedef struct {
-   CapPipe     pcc;            // For debugging only
+   PCC_T     pcc;            // For debugging only
    Instr     instr;         // For debugging only
 `ifdef RVFI_DII
    Dii_Id instr_seq;
@@ -705,7 +725,7 @@ typedef struct {
 
    Bool      rd_valid;
    RegName   rd;
-   Pipeline_Val rd_val;
+   Pipeline_Val#(CapReg) rd_val;
 
 `ifdef RVFI
    Data_RVFI_Stage2 info_RVFI_s2;
@@ -716,6 +736,7 @@ typedef struct {
    Bool      rd_in_fpr;
    Bit #(5)  fpr_flags;
    WordFL    frd_val;
+`endif
    } Data_Stage2_to_Stage3
 deriving (Bits);
 

@@ -7,8 +7,8 @@
 // Ports:
 // Name                         I/O  size props
 // RDY_server_core_request_put    O     1 reg
-// server_core_response_get       O    70 reg
-// RDY_server_core_response_get   O     1 reg
+// server_core_response_get       O    70
+// RDY_server_core_response_get   O     1
 // RDY_server_reset_request_put   O     1 reg
 // RDY_server_reset_response_get  O     1 reg
 // CLK                            I     1 clock
@@ -82,6 +82,11 @@ module mkFPU(CLK,
 
   // inlined wires
   reg [68 : 0] resWire$wget;
+  wire [70 : 0] oFifo_rv$port0__write_1,
+		oFifo_rv$port1__read,
+		oFifo_rv$port1__write_1,
+		oFifo_rv$port2__read,
+		oFifo_rv$port3__read;
   wire crg_done$EN_port0__write,
        crg_done$EN_port1__write,
        crg_done$port1__read,
@@ -99,6 +104,11 @@ module mkFPU(CLK,
   // register crg_done_1
   reg crg_done_1;
   wire crg_done_1$D_IN, crg_done_1$EN;
+
+  // register oFifo_rv
+  reg [70 : 0] oFifo_rv;
+  wire [70 : 0] oFifo_rv$D_IN;
+  wire oFifo_rv$EN;
 
   // register rg_b
   reg [115 : 0] rg_b;
@@ -367,10 +377,6 @@ module mkFPU(CLK,
        isNegateFifo$ENQ,
        isNegateFifo$FULL_N;
 
-  // ports of submodule oFifo
-  wire [69 : 0] oFifo$D_IN, oFifo$D_OUT;
-  wire oFifo$CLR, oFifo$DEQ, oFifo$EMPTY_N, oFifo$ENQ, oFifo$FULL_N;
-
   // ports of submodule resetReqsF
   wire resetReqsF$CLR,
        resetReqsF$DEQ,
@@ -458,7 +464,7 @@ module mkFPU(CLK,
        WILL_FIRE_server_reset_response_get;
 
   // inputs to muxes for submodule ports
-  wire [116 : 0] MUX_rg_res$write_1__VAL_2;
+  wire [116 : 0] MUX_rg_res$write_1__VAL_1, MUX_rg_res$write_1__VAL_2;
   wire [115 : 0] MUX_rg_b$write_1__VAL_1,
 		 MUX_rg_b$write_1__VAL_2,
 		 MUX_rg_r$write_1__VAL_1,
@@ -469,9 +475,9 @@ module mkFPU(CLK,
   wire [57 : 0] MUX_rg_d$write_1__VAL_1, MUX_rg_q$write_1__VAL_2;
   wire [5 : 0] MUX_rg_index$write_1__VAL_2, MUX_rg_index_1$write_1__VAL_2;
   wire MUX_crg_done$port1__write_1__SEL_1,
-       MUX_crg_done$port1__write_1__SEL_2,
        MUX_crg_done_1$port1__write_1__SEL_1,
-       MUX_crg_done_1$port1__write_1__SEL_2;
+       MUX_crg_done_1$port1__write_1__SEL_2,
+       MUX_rg_index$write_1__SEL_1;
 
   // remaining internal signals
   reg [63 : 0] CASE_fpu_div64_fState_S4D_OUT_BITS_68_TO_66_0_ETC__q173,
@@ -495,107 +501,107 @@ module mkFPU(CLK,
 	       CASE_fpu_madd_fState_S8D_OUT_BITS_2_TO_1_0b0__ETC__q6,
 	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q3,
 	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q4,
-	       CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q110,
-	       CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q111,
-	       CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q112,
-	       CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q113,
-	       CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q75,
-	       CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q76,
-	       CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q77,
-	       CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q78,
-	       CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q79,
-	       CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q80,
-	       CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q48,
-	       CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q49,
-	       CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q50,
-	       CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q51,
-	       CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q52,
-	       CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q53,
-	       CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q108,
-	       CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q109,
+	       CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q110,
+	       CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q111,
+	       CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q112,
+	       CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q113,
+	       CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q75,
+	       CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q76,
+	       CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q77,
+	       CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q78,
+	       CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q81,
+	       CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q82,
+	       CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q48,
+	       CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q49,
+	       CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q50,
+	       CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q51,
+	       CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q52,
+	       CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q53,
+	       CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q108,
+	       CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q109,
 	       _theResult___fst_sfd__h142620,
-	       _theResult___fst_sfd__h148292,
-	       _theResult___fst_sfd__h164060,
-	       _theResult___fst_sfd__h173650,
-	       _theResult___fst_sfd__h182402,
-	       _theResult___fst_sfd__h186932,
+	       _theResult___fst_sfd__h148409,
+	       _theResult___fst_sfd__h164177,
+	       _theResult___fst_sfd__h173767,
+	       _theResult___fst_sfd__h182519,
+	       _theResult___fst_sfd__h187049,
 	       _theResult___fst_sfd__h19468,
 	       _theResult___fst_sfd__h19957,
-	       _theResult___fst_sfd__h202698,
-	       _theResult___fst_sfd__h212288,
-	       _theResult___fst_sfd__h221040,
-	       _theResult___fst_sfd__h225871,
-	       _theResult___fst_sfd__h241637,
-	       _theResult___fst_sfd__h251227,
-	       _theResult___fst_sfd__h259979,
+	       _theResult___fst_sfd__h202815,
+	       _theResult___fst_sfd__h212405,
+	       _theResult___fst_sfd__h221157,
+	       _theResult___fst_sfd__h225988,
+	       _theResult___fst_sfd__h241754,
+	       _theResult___fst_sfd__h251344,
+	       _theResult___fst_sfd__h260096,
 	       _theResult___fst_sfd__h43554,
 	       _theResult___fst_sfd__h95988;
-  reg [22 : 0] CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q162,
-	       CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q163,
-	       CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q160,
-	       CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q161,
-	       CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q164,
-	       CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q165,
-	       CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q166,
-	       CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q167,
-	       _theResult___fst_sfd__h269560,
-	       _theResult___fst_sfd__h278281,
-	       _theResult___fst_sfd__h286863,
-	       _theResult___fst_sfd__h296047,
-	       _theResult___fst_sfd__h304683;
+  reg [22 : 0] CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q162,
+	       CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q163,
+	       CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q160,
+	       CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q161,
+	       CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q164,
+	       CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q165,
+	       CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q166,
+	       CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q167,
+	       _theResult___fst_sfd__h269760,
+	       _theResult___fst_sfd__h278481,
+	       _theResult___fst_sfd__h287063,
+	       _theResult___fst_sfd__h296247,
+	       _theResult___fst_sfd__h304883;
   reg [10 : 0] CASE_fpu_div64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q14,
 	       CASE_fpu_div64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q15,
 	       CASE_fpu_madd_fState_S8D_OUT_BITS_2_TO_1_0b0__ETC__q31,
 	       CASE_fpu_madd_fState_S8D_OUT_BITS_2_TO_1_0b0__ETC__q32,
 	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21,
 	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q22,
-	       CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q104,
-	       CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q105,
-	       CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q106,
-	       CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q107,
-	       CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q69,
-	       CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q70,
-	       CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q71,
-	       CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q72,
-	       CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q73,
-	       CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q74,
-	       CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q42,
-	       CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q43,
-	       CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q44,
-	       CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q45,
-	       CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q46,
-	       CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q47,
-	       CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q102,
-	       CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q103,
+	       CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104,
+	       CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q105,
+	       CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106,
+	       CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q107,
+	       CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q69,
+	       CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q70,
+	       CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q71,
+	       CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q72,
+	       CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q73,
+	       CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q74,
+	       CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q42,
+	       CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q43,
+	       CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q44,
+	       CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q45,
+	       CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q46,
+	       CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q47,
+	       CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q102,
+	       CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q103,
 	       _theResult___fst_exp__h142619,
-	       _theResult___fst_exp__h148291,
-	       _theResult___fst_exp__h164059,
-	       _theResult___fst_exp__h173649,
-	       _theResult___fst_exp__h182401,
-	       _theResult___fst_exp__h186931,
+	       _theResult___fst_exp__h148408,
+	       _theResult___fst_exp__h164176,
+	       _theResult___fst_exp__h173766,
+	       _theResult___fst_exp__h182518,
+	       _theResult___fst_exp__h187048,
 	       _theResult___fst_exp__h19467,
-	       _theResult___fst_exp__h202697,
-	       _theResult___fst_exp__h212287,
-	       _theResult___fst_exp__h221039,
-	       _theResult___fst_exp__h225870,
-	       _theResult___fst_exp__h241636,
-	       _theResult___fst_exp__h251226,
-	       _theResult___fst_exp__h259978,
+	       _theResult___fst_exp__h202814,
+	       _theResult___fst_exp__h212404,
+	       _theResult___fst_exp__h221156,
+	       _theResult___fst_exp__h225987,
+	       _theResult___fst_exp__h241753,
+	       _theResult___fst_exp__h251343,
+	       _theResult___fst_exp__h260095,
 	       _theResult___fst_exp__h43553,
 	       _theResult___fst_exp__h95987;
-  reg [7 : 0] CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q154,
-	      CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q155,
-	      CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q152,
-	      CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q153,
-	      CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q156,
-	      CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q157,
-	      CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q158,
-	      CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q159,
-	      _theResult___fst_exp__h269559,
-	      _theResult___fst_exp__h278280,
-	      _theResult___fst_exp__h286862,
-	      _theResult___fst_exp__h296046,
-	      _theResult___fst_exp__h304682;
+  reg [7 : 0] CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154,
+	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155,
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152,
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153,
+	      CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156,
+	      CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q157,
+	      CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158,
+	      CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q159,
+	      _theResult___fst_exp__h269759,
+	      _theResult___fst_exp__h278480,
+	      _theResult___fst_exp__h287062,
+	      _theResult___fst_exp__h296246,
+	      _theResult___fst_exp__h304882;
   reg CASE_fpu_div64_fOperands_S0D_OUT_BITS_2_TO_0__ETC__q9,
       CASE_fpu_div64_fState_S3D_OUT_BITS_124_TO_122_ETC__q174,
       CASE_fpu_div64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q170,
@@ -604,60 +610,60 @@ module mkFPU(CLK,
       CASE_fpu_madd_fState_S8D_OUT_BITS_70_TO_68_0__ETC__q127,
       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q180,
       CASE_fpu_sqr64_fState_S4D_OUT_BITS_68_TO_66_2_ETC__q178,
-      CASE_guard03262_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122,
-      CASE_guard03262_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116,
-      CASE_guard12301_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124,
-      CASE_guard12301_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118,
-      CASE_guard32952_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87,
-      CASE_guard32952_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q81,
-      CASE_guard42201_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89,
-      CASE_guard42201_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83,
-      CASE_guard51240_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91,
-      CASE_guard51240_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85,
-      CASE_guard55375_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54,
-      CASE_guard64624_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56,
-      CASE_guard69587_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145,
-      CASE_guard69587_0b0_resWirewget_BIT_68_0b1_re_ETC__q144,
-      CASE_guard73663_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58,
-      CASE_guard78294_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147,
-      CASE_guard78294_0b0_resWirewget_BIT_68_0b1_re_ETC__q146,
-      CASE_guard87224_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149,
-      CASE_guard87224_0b0_resWirewget_BIT_68_0b1_re_ETC__q148,
-      CASE_guard94013_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120,
-      CASE_guard94013_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114,
-      CASE_guard96060_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151,
-      CASE_guard96060_0b0_resWirewget_BIT_68_0b1_re_ETC__q150,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q117,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q123,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q119,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q125,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q82,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q88,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q84,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q90,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q86,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q92,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55375_ETC__q55,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64624_ETC__q57,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73663_ETC__q59,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q115,
-      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q121,
+      CASE_guard03379_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122,
+      CASE_guard03379_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116,
+      CASE_guard12418_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124,
+      CASE_guard12418_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118,
+      CASE_guard33069_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87,
+      CASE_guard33069_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q79,
+      CASE_guard42318_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89,
+      CASE_guard42318_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83,
+      CASE_guard51357_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91,
+      CASE_guard51357_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85,
+      CASE_guard55492_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54,
+      CASE_guard64741_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56,
+      CASE_guard69787_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145,
+      CASE_guard69787_0b0_resWirewget_BIT_68_0b1_re_ETC__q144,
+      CASE_guard73780_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58,
+      CASE_guard78494_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147,
+      CASE_guard78494_0b0_resWirewget_BIT_68_0b1_re_ETC__q146,
+      CASE_guard87424_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149,
+      CASE_guard87424_0b0_resWirewget_BIT_68_0b1_re_ETC__q148,
+      CASE_guard94130_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120,
+      CASE_guard94130_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114,
+      CASE_guard96260_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151,
+      CASE_guard96260_0b0_resWirewget_BIT_68_0b1_re_ETC__q150,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q117,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q123,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q119,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q125,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q80,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q88,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q84,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q90,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q86,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55492_ETC__q55,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64741_ETC__q57,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73780_ETC__q59,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q115,
+      CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q121,
       IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110,
       IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d3320,
       IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4028,
       IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4582,
       IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4803,
       IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d5348,
-      IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6028,
-      IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6400,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d5823,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6324,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6388,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6409,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6023,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6373,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6397,
-      IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6418;
+      IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6030,
+      IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6402,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d5825,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6326,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6390,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6411,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6025,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6375,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6399,
+      IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6420;
   wire [194 : 0] IF_fpu_sqr64_fOperand_S0_first__059_BITS_65_TO_ETC___d1212;
   wire [139 : 0] IF_NOT_fpu_madd_fState_S4_first__547_BIT_130_5_ETC___d2595;
   wire [118 : 0] IF_fpu_madd_fOperand_S0_first__803_BITS_129_TO_ETC___d1959;
@@ -721,7 +727,7 @@ module mkFPU(CLK,
 		IF_iFifo_first__087_BIT_201_115_THEN_IF_iFifo__ETC___d3848,
 		IF_iFifo_first__087_BIT_71_849_THEN_IF_iFifo_f_ETC___d4555,
 		IF_iFifo_first__087_BIT_71_849_THEN_IF_iFifo_f_ETC___d4618,
-		IF_isDoubleFifo_first__407_THEN_IF_isNegateFif_ETC___d6657,
+		IF_isDoubleFifo_first__409_THEN_IF_isNegateFif_ETC___d6659,
 		NOT_fpu_div64_fOperands_S0_first__06_BITS_129__ETC___d452,
 		fpu_div64_fState_S3_first__86_BIT_121_07_CONCA_ETC___d936;
   wire [62 : 0] IF_0b0_CONCAT_NOT_fpu_div64_fState_S4_first__4_ETC___d980,
@@ -785,17 +791,17 @@ module mkFPU(CLK,
 		IF_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_16_ETC__q40,
 		IF_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30__ETC__q60,
 		IF_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30__ETC__q67,
-		IF_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_ETC__q135,
-		IF_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_ETC__q142,
+		IF_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_ETC__q135,
+		IF_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_ETC__q142,
 		_0b0_CONCAT_NOT_iFifo_first__087_BITS_102_TO_95_ETC___d4813,
 		_0b0_CONCAT_NOT_iFifo_first__087_BITS_167_TO_16_ETC___d3330,
 		_0b0_CONCAT_NOT_iFifo_first__087_BITS_37_TO_30__ETC___d4038,
-		_0b0_CONCAT_NOT_resWire_wget__410_BITS_67_TO_57_ETC___d6038,
-		_theResult____h164614,
-		_theResult____h203252,
-		_theResult____h242191,
-		_theResult____h269577,
-		_theResult____h287214,
+		_0b0_CONCAT_NOT_resWire_wget__412_BITS_67_TO_57_ETC___d6040,
+		_theResult____h164731,
+		_theResult____h203369,
+		_theResult____h242308,
+		_theResult____h269777,
+		_theResult____h287414,
 		_theResult___snd__h141392,
 		_theResult___snd__h141406,
 		_theResult___snd__h141408,
@@ -803,116 +809,116 @@ module mkFPU(CLK,
 		_theResult___snd__h141426,
 		_theResult___snd__h141444,
 		_theResult___snd__h141449,
-		_theResult___snd__h163287,
-		_theResult___snd__h163289,
-		_theResult___snd__h163296,
-		_theResult___snd__h163302,
-		_theResult___snd__h163325,
-		_theResult___snd__h172863,
-		_theResult___snd__h172874,
-		_theResult___snd__h172876,
-		_theResult___snd__h172886,
-		_theResult___snd__h172892,
-		_theResult___snd__h172915,
-		_theResult___snd__h181599,
-		_theResult___snd__h181613,
-		_theResult___snd__h181619,
-		_theResult___snd__h181637,
-		_theResult___snd__h201925,
-		_theResult___snd__h201927,
-		_theResult___snd__h201934,
-		_theResult___snd__h201940,
-		_theResult___snd__h201963,
-		_theResult___snd__h211501,
-		_theResult___snd__h211512,
-		_theResult___snd__h211514,
-		_theResult___snd__h211524,
-		_theResult___snd__h211530,
-		_theResult___snd__h211553,
-		_theResult___snd__h220237,
-		_theResult___snd__h220251,
-		_theResult___snd__h220257,
-		_theResult___snd__h220275,
-		_theResult___snd__h240864,
-		_theResult___snd__h240866,
-		_theResult___snd__h240873,
-		_theResult___snd__h240879,
-		_theResult___snd__h240902,
-		_theResult___snd__h250440,
-		_theResult___snd__h250451,
-		_theResult___snd__h250453,
-		_theResult___snd__h250463,
-		_theResult___snd__h250469,
-		_theResult___snd__h250492,
-		_theResult___snd__h259176,
-		_theResult___snd__h259190,
-		_theResult___snd__h259196,
-		_theResult___snd__h259214,
-		_theResult___snd__h277697,
-		_theResult___snd__h277708,
-		_theResult___snd__h277710,
-		_theResult___snd__h277720,
-		_theResult___snd__h277726,
-		_theResult___snd__h277749,
-		_theResult___snd__h286293,
-		_theResult___snd__h286295,
-		_theResult___snd__h286302,
-		_theResult___snd__h286308,
-		_theResult___snd__h286331,
-		_theResult___snd__h295463,
-		_theResult___snd__h295474,
-		_theResult___snd__h295476,
-		_theResult___snd__h295486,
-		_theResult___snd__h295492,
-		_theResult___snd__h295515,
-		_theResult___snd__h304083,
-		_theResult___snd__h304097,
-		_theResult___snd__h304103,
-		_theResult___snd__h304121,
+		_theResult___snd__h163404,
+		_theResult___snd__h163406,
+		_theResult___snd__h163413,
+		_theResult___snd__h163419,
+		_theResult___snd__h163442,
+		_theResult___snd__h172980,
+		_theResult___snd__h172991,
+		_theResult___snd__h172993,
+		_theResult___snd__h173003,
+		_theResult___snd__h173009,
+		_theResult___snd__h173032,
+		_theResult___snd__h181716,
+		_theResult___snd__h181730,
+		_theResult___snd__h181736,
+		_theResult___snd__h181754,
+		_theResult___snd__h202042,
+		_theResult___snd__h202044,
+		_theResult___snd__h202051,
+		_theResult___snd__h202057,
+		_theResult___snd__h202080,
+		_theResult___snd__h211618,
+		_theResult___snd__h211629,
+		_theResult___snd__h211631,
+		_theResult___snd__h211641,
+		_theResult___snd__h211647,
+		_theResult___snd__h211670,
+		_theResult___snd__h220354,
+		_theResult___snd__h220368,
+		_theResult___snd__h220374,
+		_theResult___snd__h220392,
+		_theResult___snd__h240981,
+		_theResult___snd__h240983,
+		_theResult___snd__h240990,
+		_theResult___snd__h240996,
+		_theResult___snd__h241019,
+		_theResult___snd__h250557,
+		_theResult___snd__h250568,
+		_theResult___snd__h250570,
+		_theResult___snd__h250580,
+		_theResult___snd__h250586,
+		_theResult___snd__h250609,
+		_theResult___snd__h259293,
+		_theResult___snd__h259307,
+		_theResult___snd__h259313,
+		_theResult___snd__h259331,
+		_theResult___snd__h277897,
+		_theResult___snd__h277908,
+		_theResult___snd__h277910,
+		_theResult___snd__h277920,
+		_theResult___snd__h277926,
+		_theResult___snd__h277949,
+		_theResult___snd__h286493,
+		_theResult___snd__h286495,
+		_theResult___snd__h286502,
+		_theResult___snd__h286508,
+		_theResult___snd__h286531,
+		_theResult___snd__h295663,
+		_theResult___snd__h295674,
+		_theResult___snd__h295676,
+		_theResult___snd__h295686,
+		_theResult___snd__h295692,
+		_theResult___snd__h295715,
+		_theResult___snd__h304283,
+		_theResult___snd__h304297,
+		_theResult___snd__h304303,
+		_theResult___snd__h304321,
 		fpu_madd_fState_S5_first__601_BITS_56_TO_0_610_ETC___d2615,
 		guard__h132367,
 		result__h132372,
-		result__h165227,
-		result__h203865,
-		result__h242804,
-		result__h287827,
+		result__h165344,
+		result__h203982,
+		result__h242921,
+		result__h288027,
 		sfdA__h131577,
 		sfdBC__h131578,
 		sfd__h133119,
-		sfd__h144536,
-		sfd__h183176,
-		sfd__h222115,
-		sfd__h261975,
+		sfd__h144653,
+		sfd__h183293,
+		sfd__h222232,
+		sfd__h262175,
 		sfdin__h141369,
-		sfdin__h172846,
-		sfdin__h211484,
-		sfdin__h250423,
-		sfdin__h277680,
-		sfdin__h295446,
+		sfdin__h172963,
+		sfdin__h211601,
+		sfdin__h250540,
+		sfdin__h277880,
+		sfdin__h295646,
 		value__h32661,
 		x__h131940,
 		x__h131944,
 		x__h132359,
 		x__h132871,
 		x__h132880,
-		x__h165324,
-		x__h203962,
-		x__h242901,
-		x__h287924,
+		x__h165441,
+		x__h204079,
+		x__h243018,
+		x__h288124,
 		x__h31487;
   wire [53 : 0] sfd__h142040,
-		sfd__h163354,
-		sfd__h172944,
-		sfd__h181672,
-		sfd__h201992,
-		sfd__h211582,
-		sfd__h220310,
-		sfd__h240931,
-		sfd__h250521,
-		sfd__h259249,
+		sfd__h163471,
+		sfd__h173061,
+		sfd__h181789,
+		sfd__h202109,
+		sfd__h211699,
+		sfd__h220427,
+		sfd__h241048,
+		sfd__h250638,
+		sfd__h259366,
 		sfd__h42982,
 		sfd__h95416,
-		value__h270197,
+		value__h270397,
 		value__h31429,
 		value__h53174;
   wire [52 : 0] sfdA__h2035,
@@ -940,59 +946,59 @@ module mkFPU(CLK,
 		IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4538,
 		IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4540,
 		IF_fpu_div64_fOperands_S0_first__06_BITS_65_TO_ETC___d450,
-		_theResult___fst_sfd__h164063,
-		_theResult___fst_sfd__h173653,
-		_theResult___fst_sfd__h182405,
-		_theResult___fst_sfd__h182414,
-		_theResult___fst_sfd__h182420,
-		_theResult___fst_sfd__h202701,
-		_theResult___fst_sfd__h212291,
-		_theResult___fst_sfd__h221043,
-		_theResult___fst_sfd__h221052,
-		_theResult___fst_sfd__h221058,
-		_theResult___fst_sfd__h241640,
-		_theResult___fst_sfd__h251230,
-		_theResult___fst_sfd__h259982,
-		_theResult___fst_sfd__h259991,
-		_theResult___fst_sfd__h259997,
+		_theResult___fst_sfd__h164180,
+		_theResult___fst_sfd__h173770,
+		_theResult___fst_sfd__h182522,
+		_theResult___fst_sfd__h182531,
+		_theResult___fst_sfd__h182537,
+		_theResult___fst_sfd__h202818,
+		_theResult___fst_sfd__h212408,
+		_theResult___fst_sfd__h221160,
+		_theResult___fst_sfd__h221169,
+		_theResult___fst_sfd__h221175,
+		_theResult___fst_sfd__h241757,
+		_theResult___fst_sfd__h251347,
+		_theResult___fst_sfd__h260099,
+		_theResult___fst_sfd__h260108,
+		_theResult___fst_sfd__h260114,
 		_theResult___fst_sfd__h43557,
 		_theResult___fst_sfd__h95991,
 		_theResult___fst_sfd__h96608,
 		_theResult___sfd__h142542,
-		_theResult___sfd__h163982,
-		_theResult___sfd__h173572,
-		_theResult___sfd__h182324,
-		_theResult___sfd__h202620,
-		_theResult___sfd__h212210,
-		_theResult___sfd__h220962,
-		_theResult___sfd__h241559,
-		_theResult___sfd__h251149,
-		_theResult___sfd__h259901,
+		_theResult___sfd__h164099,
+		_theResult___sfd__h173689,
+		_theResult___sfd__h182441,
+		_theResult___sfd__h202737,
+		_theResult___sfd__h212327,
+		_theResult___sfd__h221079,
+		_theResult___sfd__h241676,
+		_theResult___sfd__h251266,
+		_theResult___sfd__h260018,
 		_theResult___sfd__h43476,
 		_theResult___sfd__h95910,
-		_theResult___snd_fst_sfd__h144486,
-		_theResult___snd_fst_sfd__h164066,
-		_theResult___snd_fst_sfd__h182408,
-		_theResult___snd_fst_sfd__h183126,
-		_theResult___snd_fst_sfd__h202704,
-		_theResult___snd_fst_sfd__h221046,
-		_theResult___snd_fst_sfd__h222065,
-		_theResult___snd_fst_sfd__h241643,
-		_theResult___snd_fst_sfd__h259985,
+		_theResult___snd_fst_sfd__h144603,
+		_theResult___snd_fst_sfd__h164183,
+		_theResult___snd_fst_sfd__h182525,
+		_theResult___snd_fst_sfd__h183243,
+		_theResult___snd_fst_sfd__h202821,
+		_theResult___snd_fst_sfd__h221163,
+		_theResult___snd_fst_sfd__h222182,
+		_theResult___snd_fst_sfd__h241760,
+		_theResult___snd_fst_sfd__h260102,
 		_theResult___snd_fst_sfd__h31362,
-		out___1_sfd__h144235,
-		out___1_sfd__h182875,
-		out___1_sfd__h221814,
+		out___1_sfd__h144352,
+		out___1_sfd__h182992,
+		out___1_sfd__h221931,
 		out_sfd__h142545,
-		out_sfd__h163985,
-		out_sfd__h173575,
-		out_sfd__h182327,
-		out_sfd__h202623,
-		out_sfd__h212213,
-		out_sfd__h220965,
-		out_sfd__h241562,
-		out_sfd__h251152,
-		out_sfd__h259904,
+		out_sfd__h164102,
+		out_sfd__h173692,
+		out_sfd__h182444,
+		out_sfd__h202740,
+		out_sfd__h212330,
+		out_sfd__h221082,
+		out_sfd__h241679,
+		out_sfd__h251269,
+		out_sfd__h260021,
 		out_sfd__h43479,
 		out_sfd__h95913,
 		sfd__h18934,
@@ -1001,39 +1007,39 @@ module mkFPU(CLK,
 		sfd__h99402,
 		sfd__h99405,
 		sfd__h99408;
-  wire [24 : 0] sfd__h277778,
-		sfd__h286360,
-		sfd__h295544,
-		sfd__h304156,
-		value__h148923,
-		value__h187561,
-		value__h226500;
-  wire [22 : 0] IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6576,
-		IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6578,
-		IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6622,
-		IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6624,
-		IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6595,
-		IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6597,
-		IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6641,
-		IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6643,
-		_theResult___fst_sfd__h278284,
-		_theResult___fst_sfd__h286866,
-		_theResult___fst_sfd__h296050,
-		_theResult___fst_sfd__h304686,
-		_theResult___fst_sfd__h304695,
-		_theResult___fst_sfd__h304701,
-		_theResult___sfd__h278203,
-		_theResult___sfd__h286785,
-		_theResult___sfd__h295969,
-		_theResult___sfd__h304605,
-		_theResult___snd_fst_sfd__h261925,
-		_theResult___snd_fst_sfd__h286869,
-		_theResult___snd_fst_sfd__h304689,
-		out_sfd__h278206,
-		out_sfd__h286788,
-		out_sfd__h295972,
-		out_sfd__h304608,
-		sfd__h304707;
+  wire [24 : 0] sfd__h277978,
+		sfd__h286560,
+		sfd__h295744,
+		sfd__h304356,
+		value__h149040,
+		value__h187678,
+		value__h226617;
+  wire [22 : 0] IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6578,
+		IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6580,
+		IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6624,
+		IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6626,
+		IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6597,
+		IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6599,
+		IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6643,
+		IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6645,
+		_theResult___fst_sfd__h278484,
+		_theResult___fst_sfd__h287066,
+		_theResult___fst_sfd__h296250,
+		_theResult___fst_sfd__h304886,
+		_theResult___fst_sfd__h304895,
+		_theResult___fst_sfd__h304901,
+		_theResult___sfd__h278403,
+		_theResult___sfd__h286985,
+		_theResult___sfd__h296169,
+		_theResult___sfd__h304805,
+		_theResult___snd_fst_sfd__h262125,
+		_theResult___snd_fst_sfd__h287069,
+		_theResult___snd_fst_sfd__h304889,
+		out_sfd__h278406,
+		out_sfd__h286988,
+		out_sfd__h296172,
+		out_sfd__h304808,
+		sfd__h304907;
   wire [12 : 0] IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d352,
 		IF_fpu_madd_fState_S4_first__547_BITS_128_TO_1_ETC___d2568,
 		IF_fpu_madd_fState_S4_first__547_BITS_64_TO_54_ETC___d2563,
@@ -1065,20 +1071,20 @@ module mkFPU(CLK,
 		SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC__q36,
 		SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4031,
 		SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q63,
-		SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6031,
-		SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138,
-		_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5531,
+		SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6033,
+		SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138,
+		_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5533,
 		_3074_MINUS_SEXT_iFifo_first__087_BITS_102_TO_9_ETC___d4809,
 		_3074_MINUS_SEXT_iFifo_first__087_BITS_167_TO_1_ETC___d3326,
 		_3074_MINUS_SEXT_iFifo_first__087_BITS_37_TO_30_ETC___d4034,
 		_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3188,
 		_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3908,
 		_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4683,
-		_3970_MINUS_SEXT_resWire_wget__410_BITS_67_TO_5_ETC___d6034,
-		x__h165357,
-		x__h203995,
-		x__h242934,
-		x__h287957;
+		_3970_MINUS_SEXT_resWire_wget__412_BITS_67_TO_5_ETC___d6036,
+		x__h165474,
+		x__h204112,
+		x__h243051,
+		x__h288157;
   wire [10 : 0] IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3729,
 		IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3731,
 		IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4436,
@@ -1106,15 +1112,15 @@ module mkFPU(CLK,
 		SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC__q39,
 		SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q66,
 		_theResult___exp__h142541,
-		_theResult___exp__h163981,
-		_theResult___exp__h173571,
-		_theResult___exp__h182323,
-		_theResult___exp__h202619,
-		_theResult___exp__h212209,
-		_theResult___exp__h220961,
-		_theResult___exp__h241558,
-		_theResult___exp__h251148,
-		_theResult___exp__h259900,
+		_theResult___exp__h164098,
+		_theResult___exp__h173688,
+		_theResult___exp__h182440,
+		_theResult___exp__h202736,
+		_theResult___exp__h212326,
+		_theResult___exp__h221078,
+		_theResult___exp__h241675,
+		_theResult___exp__h251265,
+		_theResult___exp__h260017,
 		_theResult___exp__h43475,
 		_theResult___exp__h95909,
 		_theResult___fst__h31322,
@@ -1132,54 +1138,54 @@ module mkFPU(CLK,
 		_theResult___fst_exp__h141451,
 		_theResult___fst_exp__h141457,
 		_theResult___fst_exp__h141460,
-		_theResult___fst_exp__h163327,
-		_theResult___fst_exp__h163333,
-		_theResult___fst_exp__h163336,
-		_theResult___fst_exp__h164062,
-		_theResult___fst_exp__h172852,
-		_theResult___fst_exp__h172917,
-		_theResult___fst_exp__h172923,
-		_theResult___fst_exp__h172926,
-		_theResult___fst_exp__h173652,
-		_theResult___fst_exp__h181605,
-		_theResult___fst_exp__h181644,
-		_theResult___fst_exp__h181650,
-		_theResult___fst_exp__h181653,
-		_theResult___fst_exp__h182404,
-		_theResult___fst_exp__h182413,
-		_theResult___fst_exp__h182416,
-		_theResult___fst_exp__h201965,
-		_theResult___fst_exp__h201971,
-		_theResult___fst_exp__h201974,
-		_theResult___fst_exp__h202700,
-		_theResult___fst_exp__h211490,
-		_theResult___fst_exp__h211555,
-		_theResult___fst_exp__h211561,
-		_theResult___fst_exp__h211564,
-		_theResult___fst_exp__h212290,
-		_theResult___fst_exp__h220243,
-		_theResult___fst_exp__h220282,
-		_theResult___fst_exp__h220288,
-		_theResult___fst_exp__h220291,
-		_theResult___fst_exp__h221042,
-		_theResult___fst_exp__h221051,
-		_theResult___fst_exp__h221054,
-		_theResult___fst_exp__h240904,
-		_theResult___fst_exp__h240910,
-		_theResult___fst_exp__h240913,
-		_theResult___fst_exp__h241639,
-		_theResult___fst_exp__h250429,
-		_theResult___fst_exp__h250494,
-		_theResult___fst_exp__h250500,
-		_theResult___fst_exp__h250503,
-		_theResult___fst_exp__h251229,
-		_theResult___fst_exp__h259182,
-		_theResult___fst_exp__h259221,
-		_theResult___fst_exp__h259227,
-		_theResult___fst_exp__h259230,
-		_theResult___fst_exp__h259981,
-		_theResult___fst_exp__h259990,
-		_theResult___fst_exp__h259993,
+		_theResult___fst_exp__h163444,
+		_theResult___fst_exp__h163450,
+		_theResult___fst_exp__h163453,
+		_theResult___fst_exp__h164179,
+		_theResult___fst_exp__h172969,
+		_theResult___fst_exp__h173034,
+		_theResult___fst_exp__h173040,
+		_theResult___fst_exp__h173043,
+		_theResult___fst_exp__h173769,
+		_theResult___fst_exp__h181722,
+		_theResult___fst_exp__h181761,
+		_theResult___fst_exp__h181767,
+		_theResult___fst_exp__h181770,
+		_theResult___fst_exp__h182521,
+		_theResult___fst_exp__h182530,
+		_theResult___fst_exp__h182533,
+		_theResult___fst_exp__h202082,
+		_theResult___fst_exp__h202088,
+		_theResult___fst_exp__h202091,
+		_theResult___fst_exp__h202817,
+		_theResult___fst_exp__h211607,
+		_theResult___fst_exp__h211672,
+		_theResult___fst_exp__h211678,
+		_theResult___fst_exp__h211681,
+		_theResult___fst_exp__h212407,
+		_theResult___fst_exp__h220360,
+		_theResult___fst_exp__h220399,
+		_theResult___fst_exp__h220405,
+		_theResult___fst_exp__h220408,
+		_theResult___fst_exp__h221159,
+		_theResult___fst_exp__h221168,
+		_theResult___fst_exp__h221171,
+		_theResult___fst_exp__h241021,
+		_theResult___fst_exp__h241027,
+		_theResult___fst_exp__h241030,
+		_theResult___fst_exp__h241756,
+		_theResult___fst_exp__h250546,
+		_theResult___fst_exp__h250611,
+		_theResult___fst_exp__h250617,
+		_theResult___fst_exp__h250620,
+		_theResult___fst_exp__h251346,
+		_theResult___fst_exp__h259299,
+		_theResult___fst_exp__h259338,
+		_theResult___fst_exp__h259344,
+		_theResult___fst_exp__h259347,
+		_theResult___fst_exp__h260098,
+		_theResult___fst_exp__h260107,
+		_theResult___fst_exp__h260110,
 		_theResult___fst_exp__h42284,
 		_theResult___fst_exp__h42287,
 		_theResult___fst_exp__h42290,
@@ -1199,27 +1205,27 @@ module mkFPU(CLK,
 		_theResult___fst_exp__h94834,
 		_theResult___fst_exp__h94837,
 		_theResult___fst_exp__h95990,
-		_theResult___snd_fst_exp__h164065,
-		_theResult___snd_fst_exp__h182407,
-		_theResult___snd_fst_exp__h202703,
-		_theResult___snd_fst_exp__h221045,
-		_theResult___snd_fst_exp__h241642,
-		_theResult___snd_fst_exp__h259984,
+		_theResult___snd_fst_exp__h164182,
+		_theResult___snd_fst_exp__h182524,
+		_theResult___snd_fst_exp__h202820,
+		_theResult___snd_fst_exp__h221162,
+		_theResult___snd_fst_exp__h241759,
+		_theResult___snd_fst_exp__h260101,
 		_theResult___snd_fst_exp__h31334,
 		_theResult___snd_fst_exp__h31337,
 		_theResult___snd_fst_exp__h31361,
 		din_exp30866_MINUS_1023__q23,
 		din_exp__h130866,
 		din_inc___2_exp__h142626,
-		din_inc___2_exp__h182469,
-		din_inc___2_exp__h182504,
-		din_inc___2_exp__h182530,
-		din_inc___2_exp__h221107,
-		din_inc___2_exp__h221142,
-		din_inc___2_exp__h221168,
-		din_inc___2_exp__h260046,
-		din_inc___2_exp__h260081,
-		din_inc___2_exp__h260107,
+		din_inc___2_exp__h182586,
+		din_inc___2_exp__h182621,
+		din_inc___2_exp__h182647,
+		din_inc___2_exp__h221224,
+		din_inc___2_exp__h221259,
+		din_inc___2_exp__h221285,
+		din_inc___2_exp__h260163,
+		din_inc___2_exp__h260198,
+		din_inc___2_exp__h260224,
 		din_inc___2_exp__h43566,
 		din_inc___2_exp__h96000,
 		fpu_div64_fOperands_S0D_OUT_BITS_129_TO_119_M_ETC__q7,
@@ -1231,15 +1237,15 @@ module mkFPU(CLK,
 		fpu_sqr64_fOperand_S0D_OUT_BITS_65_TO_55_MINU_ETC__q16,
 		fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q18,
 		out_exp__h142544,
-		out_exp__h163984,
-		out_exp__h173574,
-		out_exp__h182326,
-		out_exp__h202622,
-		out_exp__h212212,
-		out_exp__h220964,
-		out_exp__h241561,
-		out_exp__h251151,
-		out_exp__h259903,
+		out_exp__h164101,
+		out_exp__h173691,
+		out_exp__h182443,
+		out_exp__h202739,
+		out_exp__h212329,
+		out_exp__h221081,
+		out_exp__h241678,
+		out_exp__h251268,
+		out_exp__h260020,
 		out_exp__h43478,
 		out_exp__h95912,
 		resWirewget_BITS_67_TO_57_MINUS_1023__q137,
@@ -1248,63 +1254,63 @@ module mkFPU(CLK,
 		x__h31541,
 		x__h32769,
 		x__h96539;
-  wire [8 : 0] IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6332;
-  wire [7 : 0] IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6448,
-	       IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6450,
-	       IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6518,
-	       IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6520,
-	       IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6479,
-	       IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6481,
-	       IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6549,
-	       IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6551,
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q141,
-	       _theResult___exp__h278202,
-	       _theResult___exp__h286784,
-	       _theResult___exp__h295968,
-	       _theResult___exp__h304604,
-	       _theResult___fst_exp__h277686,
-	       _theResult___fst_exp__h277751,
-	       _theResult___fst_exp__h277757,
-	       _theResult___fst_exp__h277760,
-	       _theResult___fst_exp__h278283,
-	       _theResult___fst_exp__h286333,
-	       _theResult___fst_exp__h286339,
-	       _theResult___fst_exp__h286342,
-	       _theResult___fst_exp__h286865,
-	       _theResult___fst_exp__h295452,
-	       _theResult___fst_exp__h295517,
-	       _theResult___fst_exp__h295523,
-	       _theResult___fst_exp__h295526,
-	       _theResult___fst_exp__h296049,
-	       _theResult___fst_exp__h304089,
-	       _theResult___fst_exp__h304128,
-	       _theResult___fst_exp__h304134,
-	       _theResult___fst_exp__h304137,
-	       _theResult___fst_exp__h304685,
-	       _theResult___fst_exp__h304694,
-	       _theResult___fst_exp__h304697,
-	       _theResult___snd_fst_exp__h286868,
-	       _theResult___snd_fst_exp__h304688,
-	       din_inc___2_exp__h304723,
-	       din_inc___2_exp__h304749,
-	       din_inc___2_exp__h304784,
-	       din_inc___2_exp__h304810,
-	       exp__h304706,
+  wire [8 : 0] IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6334;
+  wire [7 : 0] IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450,
+	       IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452,
+	       IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6520,
+	       IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6522,
+	       IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6481,
+	       IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6483,
+	       IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6551,
+	       IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6553,
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q141,
+	       _theResult___exp__h278402,
+	       _theResult___exp__h286984,
+	       _theResult___exp__h296168,
+	       _theResult___exp__h304804,
+	       _theResult___fst_exp__h277886,
+	       _theResult___fst_exp__h277951,
+	       _theResult___fst_exp__h277957,
+	       _theResult___fst_exp__h277960,
+	       _theResult___fst_exp__h278483,
+	       _theResult___fst_exp__h286533,
+	       _theResult___fst_exp__h286539,
+	       _theResult___fst_exp__h286542,
+	       _theResult___fst_exp__h287065,
+	       _theResult___fst_exp__h295652,
+	       _theResult___fst_exp__h295717,
+	       _theResult___fst_exp__h295723,
+	       _theResult___fst_exp__h295726,
+	       _theResult___fst_exp__h296249,
+	       _theResult___fst_exp__h304289,
+	       _theResult___fst_exp__h304328,
+	       _theResult___fst_exp__h304334,
+	       _theResult___fst_exp__h304337,
+	       _theResult___fst_exp__h304885,
+	       _theResult___fst_exp__h304894,
+	       _theResult___fst_exp__h304897,
+	       _theResult___snd_fst_exp__h287068,
+	       _theResult___snd_fst_exp__h304888,
+	       din_inc___2_exp__h304923,
+	       din_inc___2_exp__h304949,
+	       din_inc___2_exp__h304984,
+	       din_inc___2_exp__h305010,
+	       exp__h304906,
 	       iFifoD_OUT_BITS_102_TO_95_MINUS_127__q95,
 	       iFifoD_OUT_BITS_167_TO_160_MINUS_127__q35,
 	       iFifoD_OUT_BITS_37_TO_30_MINUS_127__q62,
-	       out_exp__h278205,
-	       out_exp__h286787,
-	       out_exp__h295971,
-	       out_exp__h304607;
+	       out_exp__h278405,
+	       out_exp__h286987,
+	       out_exp__h296171,
+	       out_exp__h304807;
   wire [6 : 0] IF_IF_7170_MINUS_fpu_madd_fState_S3_first__995_ETC___d2460,
 	       IF_fpu_sqr64_fState_S1_first__216_BIT_57_226_T_ETC___d1342,
 	       x__h85465;
-  wire [5 : 0] IF_IF_0b0_CONCAT_NOT_resWire_wget__410_BITS_67_ETC___d5767,
+  wire [5 : 0] IF_IF_0b0_CONCAT_NOT_resWire_wget__412_BITS_67_ETC___d5769,
 	       IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_10_ETC___d5055,
 	       IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_16_ETC___d3572,
 	       IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_37_ETC___d4280,
-	       IF_IF_3970_MINUS_SEXT_resWire_wget__410_BITS_6_ETC___d6278,
+	       IF_IF_3970_MINUS_SEXT_resWire_wget__412_BITS_6_ETC___d6280,
 	       IF_IF_fpu_div64_fState_S3_first__86_BITS_120_T_ETC___d880,
 	       IF_IF_fpu_madd_fState_S7_first__651_BIT_128_65_ETC___d2901,
 	       IF_fpu_sqr64_fOperand_S0_first__059_BITS_65_TO_ETC___d1193,
@@ -1312,39 +1318,39 @@ module mkFPU(CLK,
 	       IF_iFifo_first__087_BITS_102_TO_95_625_EQ_0_63_ETC___d4757,
 	       IF_iFifo_first__087_BITS_167_TO_160_130_EQ_0_1_ETC___d3271,
 	       IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d3982,
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982,
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984,
 	       b__h11457,
 	       b__h4039,
 	       x__h60732;
   wire [4 : 0] IF_IF_fpu_div64_fState_S3_first__86_BITS_120_T_ETC___d926,
 	       IF_fpu_div64_fState_S3_first__86_BITS_120_TO_1_ETC___d921,
 	       IF_fpu_madd_fState_S3_first__995_BIT_151_996_T_ETC___d2525,
-	       _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676,
-	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705,
-	       _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688,
+	       _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679,
+	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708,
+	       _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691,
 	       fpu_madd_fState_S3_first__995_BITS_86_TO_82_00_ETC___d2501,
 	       fpu_madd_fState_S7_first__651_BITS_137_TO_133__ETC___d2942,
 	       fpu_madd_fState_S8_first__960_BITS_75_TO_71_03_ETC___d3043,
-	       resWire_wget__410_BITS_4_TO_0_658_OR_NOT_resWi_ETC___d6768;
+	       resWire_wget__412_BITS_4_TO_0_661_OR_NOT_resWi_ETC___d6771;
   wire [2 : 0] IF_fpu_sqr64_fState_S3_first__375_BIT_195_376__ETC___d1671,
 	       NOT_fpu_madd_fState_S3_first__995_BITS_12_TO_0_ETC___d2523;
-  wire [1 : 0] IF_sfdin11484_BIT_4_THEN_2_ELSE_0__q98,
+  wire [1 : 0] IF_sfdin11601_BIT_4_THEN_2_ELSE_0__q98,
 	       IF_sfdin2327_BIT_5_THEN_2_ELSE_0__q13,
 	       IF_sfdin30943_BIT_53_THEN_2_ELSE_0__q25,
 	       IF_sfdin41369_BIT_4_THEN_2_ELSE_0__q30,
 	       IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q20,
-	       IF_sfdin50423_BIT_4_THEN_2_ELSE_0__q65,
-	       IF_sfdin72846_BIT_4_THEN_2_ELSE_0__q38,
-	       IF_sfdin77680_BIT_33_THEN_2_ELSE_0__q134,
-	       IF_sfdin95446_BIT_33_THEN_2_ELSE_0__q140,
-	       IF_theResult___snd01925_BIT_4_THEN_2_ELSE_0__q94,
-	       IF_theResult___snd04083_BIT_33_THEN_2_ELSE_0__q143,
-	       IF_theResult___snd20237_BIT_4_THEN_2_ELSE_0__q101,
-	       IF_theResult___snd40864_BIT_4_THEN_2_ELSE_0__q61,
-	       IF_theResult___snd59176_BIT_4_THEN_2_ELSE_0__q68,
-	       IF_theResult___snd63287_BIT_4_THEN_2_ELSE_0__q34,
-	       IF_theResult___snd81599_BIT_4_THEN_2_ELSE_0__q41,
-	       IF_theResult___snd86293_BIT_33_THEN_2_ELSE_0__q136,
+	       IF_sfdin50540_BIT_4_THEN_2_ELSE_0__q65,
+	       IF_sfdin72963_BIT_4_THEN_2_ELSE_0__q38,
+	       IF_sfdin77880_BIT_33_THEN_2_ELSE_0__q134,
+	       IF_sfdin95646_BIT_33_THEN_2_ELSE_0__q140,
+	       IF_theResult___snd02042_BIT_4_THEN_2_ELSE_0__q94,
+	       IF_theResult___snd04283_BIT_33_THEN_2_ELSE_0__q143,
+	       IF_theResult___snd20354_BIT_4_THEN_2_ELSE_0__q101,
+	       IF_theResult___snd40981_BIT_4_THEN_2_ELSE_0__q61,
+	       IF_theResult___snd59293_BIT_4_THEN_2_ELSE_0__q68,
+	       IF_theResult___snd63404_BIT_4_THEN_2_ELSE_0__q34,
+	       IF_theResult___snd81716_BIT_4_THEN_2_ELSE_0__q41,
+	       IF_theResult___snd86493_BIT_33_THEN_2_ELSE_0__q136,
 	       _theResult___snd_fst__h131051,
 	       _theResult___snd_fst__h141477,
 	       _theResult___snd_fst__h42439,
@@ -1353,27 +1359,27 @@ module mkFPU(CLK,
 	       _theResult___snd_snd_snd__h131369,
 	       guardBC__h115666,
 	       guard__h133123,
-	       guard__h155375,
-	       guard__h164624,
-	       guard__h173663,
-	       guard__h194013,
-	       guard__h203262,
-	       guard__h212301,
-	       guard__h232952,
-	       guard__h242201,
-	       guard__h251240,
-	       guard__h269587,
-	       guard__h278294,
-	       guard__h287224,
-	       guard__h296060,
+	       guard__h155492,
+	       guard__h164741,
+	       guard__h173780,
+	       guard__h194130,
+	       guard__h203379,
+	       guard__h212418,
+	       guard__h233069,
+	       guard__h242318,
+	       guard__h251357,
+	       guard__h269787,
+	       guard__h278494,
+	       guard__h287424,
+	       guard__h296260,
 	       guard__h33946,
 	       guard__h86435,
 	       x__h131406,
 	       x__h141760,
 	       x__h42705,
 	       x__h95138;
-  wire IF_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BI_ETC___d6025,
-       IF_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BI_ETC___d6399,
+  wire IF_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BI_ETC___d6027,
+       IF_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BI_ETC___d6401,
        IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d3317,
        IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d4027,
        IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d4581,
@@ -1387,11 +1393,11 @@ module mkFPU(CLK,
        IF_SEXT_iFifo_first__087_BITS_167_TO_160_130_M_ETC___d3663,
        IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4371,
        IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4608,
-       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6375,
-       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6420,
-       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6734,
-       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6747,
-       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6760,
+       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6377,
+       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6422,
+       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6737,
+       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6750,
+       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6763,
        IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d353,
        IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d355,
        IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d499,
@@ -1408,19 +1414,19 @@ module mkFPU(CLK,
        IF_iFifo_first__087_BITS_167_TO_160_130_EQ_0_1_ETC___d3665,
        IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d4373,
        IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d4610,
-       IF_isNegateFifo_first__409_THEN_IF_resWire_wge_ETC___d6424,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6377,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6422,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6709,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6720,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6736,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6749,
-       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6762,
+       IF_isNegateFifo_first__411_THEN_IF_resWire_wge_ETC___d6426,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6379,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6424,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6712,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6723,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6739,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6752,
+       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6765,
        IF_rg_index_1_4_ULE_58_8_THEN_IF_rg_res_1_BIT__ETC___d85,
        IF_rg_index_1_4_ULE_58_8_THEN_NOT_rg_b_9_EQ_0__ETC___d56,
        IF_rg_index_1_4_ULE_58_8_THEN_rg_b_9_EQ_0_0_OR_ETC___d44,
-       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__410_B_ETC___d6728,
-       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__410_B_ETC___d6756,
+       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__412_B_ETC___d6731,
+       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__412_B_ETC___d6759,
        NOT_IF_fpu_madd_fOperand_S0_first__803_BIT_195_ETC___d1946,
        NOT_fpu_div64_fOperands_S0_first__06_BITS_129__ETC___d400,
        NOT_fpu_div64_fOperands_S0_first__06_BITS_65_T_ETC___d481,
@@ -1432,20 +1438,20 @@ module mkFPU(CLK,
        NOT_iFifo_first__087_BIT_158_142_202_AND_NOT_i_ETC___d3244,
        NOT_iFifo_first__087_BIT_28_862_913_AND_NOT_iF_ETC___d3955,
        NOT_iFifo_first__087_BIT_93_637_688_AND_NOT_iF_ETC___d4730,
-       NOT_resWire_wget__410_BIT_56_426_825_AND_NOT_r_ETC___d5927,
+       NOT_resWire_wget__412_BIT_56_428_827_AND_NOT_r_ETC___d5929,
        SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4807,
        SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4808,
        SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3324,
        SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3325,
        SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4032,
        SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4033,
-       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032,
-       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033,
-       _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5769,
+       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034,
+       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035,
+       _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5771,
        _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d3574,
        _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d4282,
        _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d5057,
-       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6280,
+       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6282,
        _0_CONCAT_IF_IF_7170_MINUS_fpu_madd_fState_S3_f_ETC___d2463,
        _0_CONCAT_IF_IF_fpu_div64_fState_S3_first__86_B_ETC___d883,
        _0_CONCAT_IF_IF_fpu_madd_fState_S7_first__651_B_ETC___d2904,
@@ -1456,13 +1462,13 @@ module mkFPU(CLK,
        _0_CONCAT_IF_iFifo_first__087_BITS_167_TO_160_1_ETC___d3624,
        _0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30_850_ETC___d3984,
        _0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30_850_ETC___d4332,
-       _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d5984,
-       _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6333,
-       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532,
-       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533,
-       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6691,
-       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6716,
-       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6743,
+       _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d5986,
+       _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6335,
+       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534,
+       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535,
+       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6694,
+       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6719,
+       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6746,
        _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3189,
        _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3190,
        _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3909,
@@ -1481,10 +1487,10 @@ module mkFPU(CLK,
        fpu_madd_fOperand_S0_first__803_BIT_195_804_AN_ETC___d1855,
        fpu_madd_fState_S3_first__995_BITS_12_TO_0_001_ETC___d2002,
        fpu_madd_fState_S3_first__995_BITS_12_TO_0_001_ETC___d2004,
-       guard__h165222,
-       guard__h203860,
-       guard__h242799,
-       guard__h287822,
+       guard__h165339,
+       guard__h203977,
+       guard__h242916,
+       guard__h288022,
        rg_index_1_4_PLUS_1_6_ULE_58___d37,
        rg_index_1_4_ULE_58___d38,
        rg_index_PLUS_1_ULE_57___d6,
@@ -1500,9 +1506,9 @@ module mkFPU(CLK,
   assign WILL_FIRE_server_core_request_put = EN_server_core_request_put ;
 
   // actionvalue method server_core_response_get
-  assign server_core_response_get = oFifo$D_OUT ;
-  assign RDY_server_core_response_get = oFifo$EMPTY_N ;
-  assign CAN_FIRE_server_core_response_get = oFifo$EMPTY_N ;
+  assign server_core_response_get = oFifo_rv$port1__read[69:0] ;
+  assign RDY_server_core_response_get = oFifo_rv$port1__read[70] ;
+  assign CAN_FIRE_server_core_response_get = oFifo_rv$port1__read[70] ;
   assign WILL_FIRE_server_core_response_get = EN_server_core_response_get ;
 
   // action method server_reset_request_put
@@ -1812,17 +1818,6 @@ module mkFPU(CLK,
 						       .FULL_N(isNegateFifo$FULL_N),
 						       .EMPTY_N(isNegateFifo$EMPTY_N));
 
-  // submodule oFifo
-  FIFO2 #(.width(32'd70), .guarded(32'd1)) oFifo(.RST(RST_N),
-						 .CLK(CLK),
-						 .D_IN(oFifo$D_IN),
-						 .ENQ(oFifo$ENQ),
-						 .DEQ(oFifo$DEQ),
-						 .CLR(oFifo$CLR),
-						 .D_OUT(oFifo$D_OUT),
-						 .FULL_N(oFifo$FULL_N),
-						 .EMPTY_N(oFifo$EMPTY_N));
-
   // submodule resetReqsF
   FIFO20 #(.guarded(32'd1)) resetReqsF(.RST(RST_N),
 				       .CLK(CLK),
@@ -1876,7 +1871,7 @@ module mkFPU(CLK,
   assign CAN_FIRE_RL_passResult =
 	     isDoubleFifo$EMPTY_N && isNegateFifo$EMPTY_N &&
 	     rmdFifo$EMPTY_N &&
-	     oFifo$FULL_N &&
+	     !oFifo_rv[70] &&
 	     resWire$whas ;
   assign WILL_FIRE_RL_passResult = CAN_FIRE_RL_passResult ;
 
@@ -2006,14 +2001,14 @@ module mkFPU(CLK,
 
   // inputs to muxes for submodule ports
   assign MUX_crg_done$port1__write_1__SEL_1 = rg_busy && rg_index == 6'd28 ;
-  assign MUX_crg_done$port1__write_1__SEL_2 =
-	     WILL_FIRE_RL_fpu_div64_s2_stage &&
-	     !fpu_div64_fState_S1$D_OUT[318] ;
   assign MUX_crg_done_1$port1__write_1__SEL_1 =
 	     rg_busy_1 && rg_index_1 == 6'd29 ;
   assign MUX_crg_done_1$port1__write_1__SEL_2 =
 	     WILL_FIRE_RL_fpu_sqr64_s2_stage &&
 	     !fpu_sqr64_fState_S1$D_OUT[194] ;
+  assign MUX_rg_index$write_1__SEL_1 =
+	     WILL_FIRE_RL_fpu_div64_s2_stage &&
+	     !fpu_div64_fState_S1$D_OUT[318] ;
   assign MUX_rg_b$write_1__VAL_1 =
 	     fpu_sqr64_fState_S1$D_OUT[57] ?
 	       116'h40000000000000000000000000000 :
@@ -2047,6 +2042,9 @@ module mkFPU(CLK,
 	     rg_index_1_4_PLUS_1_6_ULE_58___d37 ?
 	       _theResult___snd_snd_snd__h1481 :
 	       IF_rg_index_1_4_ULE_58_8_THEN_IF_rg_res_1_BIT__ETC___d69 ;
+  assign MUX_rg_res$write_1__VAL_1 =
+	     { 1'd0,
+	       116'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign MUX_rg_res$write_1__VAL_2 =
 	     { rg_index_1_4_PLUS_1_6_ULE_58___d37 ?
 		 IF_rg_index_1_4_ULE_58_8_THEN_rg_b_9_EQ_0_0_OR_ETC___d44 ||
@@ -2074,7 +2072,8 @@ module mkFPU(CLK,
       fpu_div64_fResult_S5$EMPTY_N: resWire$wget = fpu_div64_fResult_S5$D_OUT;
       fpu_sqr64_fResult_S5$EMPTY_N: resWire$wget = fpu_sqr64_fResult_S5$D_OUT;
       fpu_madd_fResult_S9$EMPTY_N: resWire$wget = fpu_madd_fResult_S9$D_OUT;
-      default: resWire$wget = 69'h0AAAAAAAAAAAAAAAAA /* unspecified value */ ;
+      default: resWire$wget =
+		   69'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   assign resWire$whas =
@@ -2104,6 +2103,26 @@ module mkFPU(CLK,
 	     crg_done_1$EN_port1__write ?
 	       MUX_crg_done_1$port1__write_1__SEL_1 :
 	       crg_done_1$port1__read ;
+  assign oFifo_rv$port0__write_1 =
+	     { 1'd1,
+	       !isDoubleFifo$D_OUT,
+	       IF_isDoubleFifo_first__409_THEN_IF_isNegateFif_ETC___d6659,
+	       isDoubleFifo$D_OUT ?
+		 resWire$wget[4:0] :
+		 resWire_wget__412_BITS_4_TO_0_661_OR_NOT_resWi_ETC___d6771 } ;
+  assign oFifo_rv$port1__read =
+	     CAN_FIRE_RL_passResult ? oFifo_rv$port0__write_1 : oFifo_rv ;
+  assign oFifo_rv$port1__write_1 =
+	     { 1'd0,
+	       70'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
+  assign oFifo_rv$port2__read =
+	     EN_server_core_response_get ?
+	       oFifo_rv$port1__write_1 :
+	       oFifo_rv$port1__read ;
+  assign oFifo_rv$port3__read =
+	     CAN_FIRE_RL_rl_reset ?
+	       oFifo_rv$port1__write_1 :
+	       oFifo_rv$port2__read ;
 
   // register crg_done
   assign crg_done$D_IN = crg_done$port2__read ;
@@ -2112,6 +2131,10 @@ module mkFPU(CLK,
   // register crg_done_1
   assign crg_done_1$D_IN = crg_done_1$port2__read ;
   assign crg_done_1$EN = 1'b1 ;
+
+  // register oFifo_rv
+  assign oFifo_rv$D_IN = oFifo_rv$port3__read ;
+  assign oFifo_rv$EN = 1'b1 ;
 
   // register rg_b
   assign rg_b$D_IN =
@@ -2139,9 +2162,7 @@ module mkFPU(CLK,
 
   // register rg_d
   assign rg_d$D_IN =
-	     MUX_crg_done$port1__write_1__SEL_2 ?
-	       MUX_rg_d$write_1__VAL_1 :
-	       rg_d ;
+	     MUX_rg_index$write_1__SEL_1 ? MUX_rg_d$write_1__VAL_1 : rg_d ;
   assign rg_d$EN =
 	     WILL_FIRE_RL_fpu_div64_s2_stage &&
 	     !fpu_div64_fState_S1$D_OUT[318] ||
@@ -2149,7 +2170,7 @@ module mkFPU(CLK,
 
   // register rg_index
   assign rg_index$D_IN =
-	     MUX_crg_done$port1__write_1__SEL_2 ?
+	     MUX_rg_index$write_1__SEL_1 ?
 	       6'd0 :
 	       MUX_rg_index$write_1__VAL_2 ;
   assign rg_index$EN =
@@ -2169,9 +2190,7 @@ module mkFPU(CLK,
 
   // register rg_q
   assign rg_q$D_IN =
-	     MUX_crg_done$port1__write_1__SEL_2 ?
-	       58'd0 :
-	       MUX_rg_q$write_1__VAL_2 ;
+	     MUX_rg_index$write_1__SEL_1 ? 58'd0 : MUX_rg_q$write_1__VAL_2 ;
   assign rg_q$EN =
 	     WILL_FIRE_RL_fpu_div64_s2_stage &&
 	     !fpu_div64_fState_S1$D_OUT[318] ||
@@ -2179,7 +2198,7 @@ module mkFPU(CLK,
 
   // register rg_r
   assign rg_r$D_IN =
-	     MUX_crg_done$port1__write_1__SEL_2 ?
+	     MUX_rg_index$write_1__SEL_1 ?
 	       MUX_rg_r$write_1__VAL_1 :
 	       MUX_rg_r$write_1__VAL_2 ;
   assign rg_r$EN =
@@ -2200,7 +2219,7 @@ module mkFPU(CLK,
   // register rg_res
   assign rg_res$D_IN =
 	     MUX_crg_done_1$port1__write_1__SEL_2 ?
-	       117'h0AAAAAAAAAAAAAAAAAAAAAAAAAAAAA :
+	       MUX_rg_res$write_1__VAL_1 :
 	       MUX_rg_res$write_1__VAL_2 ;
   assign rg_res$EN =
 	     WILL_FIRE_RL_fpu_sqr64_s2_stage &&
@@ -2535,7 +2554,8 @@ module mkFPU(CLK,
 	       { 1'd1,
 		 fpu_sqr64_fOperand_S0$D_OUT[66:55],
 		 sfd__h45004,
-		 130'h20AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA } :
+		 5'd16,
+		 125'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } :
 	       IF_fpu_sqr64_fOperand_S0_first__059_BITS_65_TO_ETC___d1212 ;
   assign fpu_sqr64_fState_S1$ENQ = CAN_FIRE_RL_fpu_sqr64_s1_stage ;
   assign fpu_sqr64_fState_S1$DEQ = WILL_FIRE_RL_fpu_sqr64_s2_stage ;
@@ -2589,17 +2609,6 @@ module mkFPU(CLK,
   assign isNegateFifo$DEQ = CAN_FIRE_RL_passResult ;
   assign isNegateFifo$CLR = CAN_FIRE_RL_rl_reset ;
 
-  // submodule oFifo
-  assign oFifo$D_IN =
-	     { !isDoubleFifo$D_OUT,
-	       IF_isDoubleFifo_first__407_THEN_IF_isNegateFif_ETC___d6657,
-	       isDoubleFifo$D_OUT ?
-		 resWire$wget[4:0] :
-		 resWire_wget__410_BITS_4_TO_0_658_OR_NOT_resWi_ETC___d6768 } ;
-  assign oFifo$ENQ = CAN_FIRE_RL_passResult ;
-  assign oFifo$DEQ = EN_server_core_response_get ;
-  assign oFifo$CLR = CAN_FIRE_RL_rl_reset ;
-
   // submodule resetReqsF
   assign resetReqsF$ENQ = EN_server_reset_request_put ;
   assign resetReqsF$DEQ = CAN_FIRE_RL_rl_reset ;
@@ -2618,25 +2627,25 @@ module mkFPU(CLK,
 
   // remaining internal signals
   assign IF_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__ETC__q133 =
-	     _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5769 ?
-	       _theResult___snd__h277749 :
-	       _theResult____h269577 ;
+	     _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5771 ?
+	       _theResult___snd__h277949 :
+	       _theResult____h269777 ;
   assign IF_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__ETC__q37 =
 	     _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d3574 ?
-	       _theResult___snd__h172915 :
-	       _theResult____h164614 ;
+	       _theResult___snd__h173032 :
+	       _theResult____h164731 ;
   assign IF_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__ETC__q64 =
 	     _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d4282 ?
-	       _theResult___snd__h250492 :
-	       _theResult____h242191 ;
+	       _theResult___snd__h250609 :
+	       _theResult____h242308 ;
   assign IF_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__ETC__q97 =
 	     _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d5057 ?
-	       _theResult___snd__h211553 :
-	       _theResult____h203252 ;
+	       _theResult___snd__h211670 :
+	       _theResult____h203369 ;
   assign IF_0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget_ETC__q139 =
-	     _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6280 ?
-	       _theResult___snd__h295515 :
-	       _theResult____h287214 ;
+	     _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6282 ?
+	       _theResult___snd__h295715 :
+	       _theResult____h287414 ;
   assign IF_0_CONCAT_IF_IF_7170_MINUS_fpu_madd_fState_S_ETC__q24 =
 	     _0_CONCAT_IF_IF_7170_MINUS_fpu_madd_fState_S3_f_ETC___d2463 ?
 	       _theResult___snd__h131023 :
@@ -2655,36 +2664,36 @@ module mkFPU(CLK,
 	       _theResult___snd__h94821 ;
   assign IF_0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_ETC__q100 =
 	     _0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_62_ETC___d5107 ?
-	       _theResult___snd__h201963 :
-	       _theResult___snd__h220275 ;
+	       _theResult___snd__h202080 :
+	       _theResult___snd__h220392 ;
   assign IF_0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_ETC__q93 =
 	     _0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_62_ETC___d4759 ?
-	       _theResult___snd__h201963 :
+	       _theResult___snd__h202080 :
 	       57'd0 ;
   assign IF_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_16_ETC__q33 =
 	     _0_CONCAT_IF_iFifo_first__087_BITS_167_TO_160_1_ETC___d3273 ?
-	       _theResult___snd__h163325 :
+	       _theResult___snd__h163442 :
 	       57'd0 ;
   assign IF_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_16_ETC__q40 =
 	     _0_CONCAT_IF_iFifo_first__087_BITS_167_TO_160_1_ETC___d3624 ?
-	       _theResult___snd__h163325 :
-	       _theResult___snd__h181637 ;
+	       _theResult___snd__h163442 :
+	       _theResult___snd__h181754 ;
   assign IF_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30__ETC__q60 =
 	     _0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30_850_ETC___d3984 ?
-	       _theResult___snd__h240902 :
+	       _theResult___snd__h241019 :
 	       57'd0 ;
   assign IF_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30__ETC__q67 =
 	     _0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30_850_ETC___d4332 ?
-	       _theResult___snd__h240902 :
-	       _theResult___snd__h259214 ;
-  assign IF_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_ETC__q135 =
-	     _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d5984 ?
-	       _theResult___snd__h286331 :
+	       _theResult___snd__h241019 :
+	       _theResult___snd__h259331 ;
+  assign IF_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_ETC__q135 =
+	     _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d5986 ?
+	       _theResult___snd__h286531 :
 	       57'd0 ;
-  assign IF_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_ETC__q142 =
-	     _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6333 ?
-	       _theResult___snd__h286331 :
-	       _theResult___snd__h304121 ;
+  assign IF_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_ETC__q142 =
+	     _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6335 ?
+	       _theResult___snd__h286531 :
+	       _theResult___snd__h304321 ;
   assign IF_0b0_CONCAT_NOT_fpu_div64_fState_S4_first__4_ETC___d980 =
 	     sfd__h42982[53] ?
 	       ((fpu_div64_fState_S4$D_OUT[64:54] == 11'd2046) ?
@@ -2706,22 +2715,22 @@ module mkFPU(CLK,
 		  { din_inc___2_exp__h96000, sfd__h95416[52:1] }) :
 	       { IF_fpu_sqr64_fState_S4_first__687_BITS_64_TO_5_ETC___d1721,
 		 sfd__h95416[51:0] } ;
-  assign IF_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BI_ETC___d6025 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-	       ((_theResult___fst_exp__h277686 == 8'd255) ?
+  assign IF_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BI_ETC___d6027 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+	       ((_theResult___fst_exp__h277886 == 8'd255) ?
 		  !resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d5823) :
-	       ((_theResult___fst_exp__h286342 == 8'd255) ?
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d5825) :
+	       ((_theResult___fst_exp__h286542 == 8'd255) ?
 		  !resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6023) ;
-  assign IF_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BI_ETC___d6399 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-	       ((_theResult___fst_exp__h277686 == 8'd255) ?
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6025) ;
+  assign IF_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BI_ETC___d6401 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+	       ((_theResult___fst_exp__h277886 == 8'd255) ?
 		  resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6388) :
-	       ((_theResult___fst_exp__h286342 == 8'd255) ?
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6390) :
+	       ((_theResult___fst_exp__h286542 == 8'd255) ?
 		  resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6397) ;
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6399) ;
   assign IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d3317 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3190 ?
 	       (iFifo$D_OUT[6:4] == 3'd0 || iFifo$D_OUT[6:4] == 3'd1 ||
@@ -2729,9 +2738,9 @@ module mkFPU(CLK,
 		iFifo$D_OUT[6:4] == 3'd3 ||
 		iFifo$D_OUT[6:4] == 3'd4) &&
 	       iFifo$D_OUT[168] :
-	       ((_theResult___fst_exp__h163336 == 11'd2047) ?
+	       ((_theResult___fst_exp__h163453 == 11'd2047) ?
 		  iFifo$D_OUT[168] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55375_ETC__q55) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55492_ETC__q55) ;
   assign IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d4027 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3910 ?
 	       (iFifo$D_OUT[6:4] == 3'd0 || iFifo$D_OUT[6:4] == 3'd1 ||
@@ -2739,9 +2748,9 @@ module mkFPU(CLK,
 		iFifo$D_OUT[6:4] == 3'd3 ||
 		iFifo$D_OUT[6:4] == 3'd4) &&
 	       iFifo$D_OUT[38] :
-	       ((_theResult___fst_exp__h240913 == 11'd2047) ?
+	       ((_theResult___fst_exp__h241030 == 11'd2047) ?
 		  iFifo$D_OUT[38] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q82) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q80) ;
   assign IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d4581 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3910 ?
 	       iFifo$D_OUT[6:4] != 3'd0 && iFifo$D_OUT[6:4] != 3'd1 &&
@@ -2749,9 +2758,9 @@ module mkFPU(CLK,
 	       iFifo$D_OUT[6:4] != 3'd3 &&
 	       iFifo$D_OUT[6:4] != 3'd4 ||
 	       !iFifo$D_OUT[38] :
-	       ((_theResult___fst_exp__h240913 == 11'd2047) ?
+	       ((_theResult___fst_exp__h241030 == 11'd2047) ?
 		  !iFifo$D_OUT[38] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q88) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q88) ;
   assign IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d4802 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4685 ?
 	       (iFifo$D_OUT[6:4] == 3'd0 || iFifo$D_OUT[6:4] == 3'd1 ||
@@ -2759,9 +2768,9 @@ module mkFPU(CLK,
 		iFifo$D_OUT[6:4] == 3'd3 ||
 		iFifo$D_OUT[6:4] == 3'd4) &&
 	       iFifo$D_OUT[103] :
-	       ((_theResult___fst_exp__h201974 == 11'd2047) ?
+	       ((_theResult___fst_exp__h202091 == 11'd2047) ?
 		  iFifo$D_OUT[103] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q115) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q115) ;
   assign IF_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_ETC___d5347 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4685 ?
 	       iFifo$D_OUT[6:4] != 3'd0 && iFifo$D_OUT[6:4] != 3'd1 &&
@@ -2769,591 +2778,591 @@ module mkFPU(CLK,
 	       iFifo$D_OUT[6:4] != 3'd3 &&
 	       iFifo$D_OUT[6:4] != 3'd4 ||
 	       !iFifo$D_OUT[103] :
-	       ((_theResult___fst_exp__h201974 == 11'd2047) ?
+	       ((_theResult___fst_exp__h202091 == 11'd2047) ?
 		  !iFifo$D_OUT[103] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q121) ;
-  assign IF_IF_0b0_CONCAT_NOT_resWire_wget__410_BITS_67_ETC___d5767 =
-	     (_theResult____h269577[56] ?
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q121) ;
+  assign IF_IF_0b0_CONCAT_NOT_resWire_wget__412_BITS_67_ETC___d5769 =
+	     (_theResult____h269777[56] ?
 		6'd0 :
-		(_theResult____h269577[55] ?
+		(_theResult____h269777[55] ?
 		   6'd1 :
-		   (_theResult____h269577[54] ?
+		   (_theResult____h269777[54] ?
 		      6'd2 :
-		      (_theResult____h269577[53] ?
+		      (_theResult____h269777[53] ?
 			 6'd3 :
-			 (_theResult____h269577[52] ?
+			 (_theResult____h269777[52] ?
 			    6'd4 :
-			    (_theResult____h269577[51] ?
+			    (_theResult____h269777[51] ?
 			       6'd5 :
-			       (_theResult____h269577[50] ?
+			       (_theResult____h269777[50] ?
 				  6'd6 :
-				  (_theResult____h269577[49] ?
+				  (_theResult____h269777[49] ?
 				     6'd7 :
-				     (_theResult____h269577[48] ?
+				     (_theResult____h269777[48] ?
 					6'd8 :
-					(_theResult____h269577[47] ?
+					(_theResult____h269777[47] ?
 					   6'd9 :
-					   (_theResult____h269577[46] ?
+					   (_theResult____h269777[46] ?
 					      6'd10 :
-					      (_theResult____h269577[45] ?
+					      (_theResult____h269777[45] ?
 						 6'd11 :
-						 (_theResult____h269577[44] ?
+						 (_theResult____h269777[44] ?
 						    6'd12 :
-						    (_theResult____h269577[43] ?
+						    (_theResult____h269777[43] ?
 						       6'd13 :
-						       (_theResult____h269577[42] ?
+						       (_theResult____h269777[42] ?
 							  6'd14 :
-							  (_theResult____h269577[41] ?
+							  (_theResult____h269777[41] ?
 							     6'd15 :
-							     (_theResult____h269577[40] ?
+							     (_theResult____h269777[40] ?
 								6'd16 :
-								(_theResult____h269577[39] ?
+								(_theResult____h269777[39] ?
 								   6'd17 :
-								   (_theResult____h269577[38] ?
+								   (_theResult____h269777[38] ?
 								      6'd18 :
-								      (_theResult____h269577[37] ?
+								      (_theResult____h269777[37] ?
 									 6'd19 :
-									 (_theResult____h269577[36] ?
+									 (_theResult____h269777[36] ?
 									    6'd20 :
-									    (_theResult____h269577[35] ?
+									    (_theResult____h269777[35] ?
 									       6'd21 :
-									       (_theResult____h269577[34] ?
+									       (_theResult____h269777[34] ?
 										  6'd22 :
-										  (_theResult____h269577[33] ?
+										  (_theResult____h269777[33] ?
 										     6'd23 :
-										     (_theResult____h269577[32] ?
+										     (_theResult____h269777[32] ?
 											6'd24 :
-											(_theResult____h269577[31] ?
+											(_theResult____h269777[31] ?
 											   6'd25 :
-											   (_theResult____h269577[30] ?
+											   (_theResult____h269777[30] ?
 											      6'd26 :
-											      (_theResult____h269577[29] ?
+											      (_theResult____h269777[29] ?
 												 6'd27 :
-												 (_theResult____h269577[28] ?
+												 (_theResult____h269777[28] ?
 												    6'd28 :
-												    (_theResult____h269577[27] ?
+												    (_theResult____h269777[27] ?
 												       6'd29 :
-												       (_theResult____h269577[26] ?
+												       (_theResult____h269777[26] ?
 													  6'd30 :
-													  (_theResult____h269577[25] ?
+													  (_theResult____h269777[25] ?
 													     6'd31 :
-													     (_theResult____h269577[24] ?
+													     (_theResult____h269777[24] ?
 														6'd32 :
-														(_theResult____h269577[23] ?
+														(_theResult____h269777[23] ?
 														   6'd33 :
-														   (_theResult____h269577[22] ?
+														   (_theResult____h269777[22] ?
 														      6'd34 :
-														      (_theResult____h269577[21] ?
+														      (_theResult____h269777[21] ?
 															 6'd35 :
-															 (_theResult____h269577[20] ?
+															 (_theResult____h269777[20] ?
 															    6'd36 :
-															    (_theResult____h269577[19] ?
+															    (_theResult____h269777[19] ?
 															       6'd37 :
-															       (_theResult____h269577[18] ?
+															       (_theResult____h269777[18] ?
 																  6'd38 :
-																  (_theResult____h269577[17] ?
+																  (_theResult____h269777[17] ?
 																     6'd39 :
-																     (_theResult____h269577[16] ?
+																     (_theResult____h269777[16] ?
 																	6'd40 :
-																	(_theResult____h269577[15] ?
+																	(_theResult____h269777[15] ?
 																	   6'd41 :
-																	   (_theResult____h269577[14] ?
+																	   (_theResult____h269777[14] ?
 																	      6'd42 :
-																	      (_theResult____h269577[13] ?
+																	      (_theResult____h269777[13] ?
 																		 6'd43 :
-																		 (_theResult____h269577[12] ?
+																		 (_theResult____h269777[12] ?
 																		    6'd44 :
-																		    (_theResult____h269577[11] ?
+																		    (_theResult____h269777[11] ?
 																		       6'd45 :
-																		       (_theResult____h269577[10] ?
+																		       (_theResult____h269777[10] ?
 																			  6'd46 :
-																			  (_theResult____h269577[9] ?
+																			  (_theResult____h269777[9] ?
 																			     6'd47 :
-																			     (_theResult____h269577[8] ?
+																			     (_theResult____h269777[8] ?
 																				6'd48 :
-																				(_theResult____h269577[7] ?
+																				(_theResult____h269777[7] ?
 																				   6'd49 :
-																				   (_theResult____h269577[6] ?
+																				   (_theResult____h269777[6] ?
 																				      6'd50 :
-																				      (_theResult____h269577[5] ?
+																				      (_theResult____h269777[5] ?
 																					 6'd51 :
-																					 (_theResult____h269577[4] ?
+																					 (_theResult____h269777[4] ?
 																					    6'd52 :
-																					    (_theResult____h269577[3] ?
+																					    (_theResult____h269777[3] ?
 																					       6'd53 :
-																					       (_theResult____h269577[2] ?
+																					       (_theResult____h269777[2] ?
 																						  6'd54 :
-																						  (_theResult____h269577[1] ?
+																						  (_theResult____h269777[1] ?
 																						     6'd55 :
-																						     (_theResult____h269577[0] ?
+																						     (_theResult____h269777[0] ?
 																							6'd56 :
 																							6'd57))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -
 	     6'd1 ;
   assign IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_10_ETC___d5055 =
-	     (_theResult____h203252[56] ?
+	     (_theResult____h203369[56] ?
 		6'd0 :
-		(_theResult____h203252[55] ?
+		(_theResult____h203369[55] ?
 		   6'd1 :
-		   (_theResult____h203252[54] ?
+		   (_theResult____h203369[54] ?
 		      6'd2 :
-		      (_theResult____h203252[53] ?
+		      (_theResult____h203369[53] ?
 			 6'd3 :
-			 (_theResult____h203252[52] ?
+			 (_theResult____h203369[52] ?
 			    6'd4 :
-			    (_theResult____h203252[51] ?
+			    (_theResult____h203369[51] ?
 			       6'd5 :
-			       (_theResult____h203252[50] ?
+			       (_theResult____h203369[50] ?
 				  6'd6 :
-				  (_theResult____h203252[49] ?
+				  (_theResult____h203369[49] ?
 				     6'd7 :
-				     (_theResult____h203252[48] ?
+				     (_theResult____h203369[48] ?
 					6'd8 :
-					(_theResult____h203252[47] ?
+					(_theResult____h203369[47] ?
 					   6'd9 :
-					   (_theResult____h203252[46] ?
+					   (_theResult____h203369[46] ?
 					      6'd10 :
-					      (_theResult____h203252[45] ?
+					      (_theResult____h203369[45] ?
 						 6'd11 :
-						 (_theResult____h203252[44] ?
+						 (_theResult____h203369[44] ?
 						    6'd12 :
-						    (_theResult____h203252[43] ?
+						    (_theResult____h203369[43] ?
 						       6'd13 :
-						       (_theResult____h203252[42] ?
+						       (_theResult____h203369[42] ?
 							  6'd14 :
-							  (_theResult____h203252[41] ?
+							  (_theResult____h203369[41] ?
 							     6'd15 :
-							     (_theResult____h203252[40] ?
+							     (_theResult____h203369[40] ?
 								6'd16 :
-								(_theResult____h203252[39] ?
+								(_theResult____h203369[39] ?
 								   6'd17 :
-								   (_theResult____h203252[38] ?
+								   (_theResult____h203369[38] ?
 								      6'd18 :
-								      (_theResult____h203252[37] ?
+								      (_theResult____h203369[37] ?
 									 6'd19 :
-									 (_theResult____h203252[36] ?
+									 (_theResult____h203369[36] ?
 									    6'd20 :
-									    (_theResult____h203252[35] ?
+									    (_theResult____h203369[35] ?
 									       6'd21 :
-									       (_theResult____h203252[34] ?
+									       (_theResult____h203369[34] ?
 										  6'd22 :
-										  (_theResult____h203252[33] ?
+										  (_theResult____h203369[33] ?
 										     6'd23 :
-										     (_theResult____h203252[32] ?
+										     (_theResult____h203369[32] ?
 											6'd24 :
-											(_theResult____h203252[31] ?
+											(_theResult____h203369[31] ?
 											   6'd25 :
-											   (_theResult____h203252[30] ?
+											   (_theResult____h203369[30] ?
 											      6'd26 :
-											      (_theResult____h203252[29] ?
+											      (_theResult____h203369[29] ?
 												 6'd27 :
-												 (_theResult____h203252[28] ?
+												 (_theResult____h203369[28] ?
 												    6'd28 :
-												    (_theResult____h203252[27] ?
+												    (_theResult____h203369[27] ?
 												       6'd29 :
-												       (_theResult____h203252[26] ?
+												       (_theResult____h203369[26] ?
 													  6'd30 :
-													  (_theResult____h203252[25] ?
+													  (_theResult____h203369[25] ?
 													     6'd31 :
-													     (_theResult____h203252[24] ?
+													     (_theResult____h203369[24] ?
 														6'd32 :
-														(_theResult____h203252[23] ?
+														(_theResult____h203369[23] ?
 														   6'd33 :
-														   (_theResult____h203252[22] ?
+														   (_theResult____h203369[22] ?
 														      6'd34 :
-														      (_theResult____h203252[21] ?
+														      (_theResult____h203369[21] ?
 															 6'd35 :
-															 (_theResult____h203252[20] ?
+															 (_theResult____h203369[20] ?
 															    6'd36 :
-															    (_theResult____h203252[19] ?
+															    (_theResult____h203369[19] ?
 															       6'd37 :
-															       (_theResult____h203252[18] ?
+															       (_theResult____h203369[18] ?
 																  6'd38 :
-																  (_theResult____h203252[17] ?
+																  (_theResult____h203369[17] ?
 																     6'd39 :
-																     (_theResult____h203252[16] ?
+																     (_theResult____h203369[16] ?
 																	6'd40 :
-																	(_theResult____h203252[15] ?
+																	(_theResult____h203369[15] ?
 																	   6'd41 :
-																	   (_theResult____h203252[14] ?
+																	   (_theResult____h203369[14] ?
 																	      6'd42 :
-																	      (_theResult____h203252[13] ?
+																	      (_theResult____h203369[13] ?
 																		 6'd43 :
-																		 (_theResult____h203252[12] ?
+																		 (_theResult____h203369[12] ?
 																		    6'd44 :
-																		    (_theResult____h203252[11] ?
+																		    (_theResult____h203369[11] ?
 																		       6'd45 :
-																		       (_theResult____h203252[10] ?
+																		       (_theResult____h203369[10] ?
 																			  6'd46 :
-																			  (_theResult____h203252[9] ?
+																			  (_theResult____h203369[9] ?
 																			     6'd47 :
-																			     (_theResult____h203252[8] ?
+																			     (_theResult____h203369[8] ?
 																				6'd48 :
-																				(_theResult____h203252[7] ?
+																				(_theResult____h203369[7] ?
 																				   6'd49 :
-																				   (_theResult____h203252[6] ?
+																				   (_theResult____h203369[6] ?
 																				      6'd50 :
-																				      (_theResult____h203252[5] ?
+																				      (_theResult____h203369[5] ?
 																					 6'd51 :
-																					 (_theResult____h203252[4] ?
+																					 (_theResult____h203369[4] ?
 																					    6'd52 :
-																					    (_theResult____h203252[3] ?
+																					    (_theResult____h203369[3] ?
 																					       6'd53 :
-																					       (_theResult____h203252[2] ?
+																					       (_theResult____h203369[2] ?
 																						  6'd54 :
-																						  (_theResult____h203252[1] ?
+																						  (_theResult____h203369[1] ?
 																						     6'd55 :
-																						     (_theResult____h203252[0] ?
+																						     (_theResult____h203369[0] ?
 																							6'd56 :
 																							6'd57))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -
 	     6'd1 ;
   assign IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_16_ETC___d3572 =
-	     (_theResult____h164614[56] ?
+	     (_theResult____h164731[56] ?
 		6'd0 :
-		(_theResult____h164614[55] ?
+		(_theResult____h164731[55] ?
 		   6'd1 :
-		   (_theResult____h164614[54] ?
+		   (_theResult____h164731[54] ?
 		      6'd2 :
-		      (_theResult____h164614[53] ?
+		      (_theResult____h164731[53] ?
 			 6'd3 :
-			 (_theResult____h164614[52] ?
+			 (_theResult____h164731[52] ?
 			    6'd4 :
-			    (_theResult____h164614[51] ?
+			    (_theResult____h164731[51] ?
 			       6'd5 :
-			       (_theResult____h164614[50] ?
+			       (_theResult____h164731[50] ?
 				  6'd6 :
-				  (_theResult____h164614[49] ?
+				  (_theResult____h164731[49] ?
 				     6'd7 :
-				     (_theResult____h164614[48] ?
+				     (_theResult____h164731[48] ?
 					6'd8 :
-					(_theResult____h164614[47] ?
+					(_theResult____h164731[47] ?
 					   6'd9 :
-					   (_theResult____h164614[46] ?
+					   (_theResult____h164731[46] ?
 					      6'd10 :
-					      (_theResult____h164614[45] ?
+					      (_theResult____h164731[45] ?
 						 6'd11 :
-						 (_theResult____h164614[44] ?
+						 (_theResult____h164731[44] ?
 						    6'd12 :
-						    (_theResult____h164614[43] ?
+						    (_theResult____h164731[43] ?
 						       6'd13 :
-						       (_theResult____h164614[42] ?
+						       (_theResult____h164731[42] ?
 							  6'd14 :
-							  (_theResult____h164614[41] ?
+							  (_theResult____h164731[41] ?
 							     6'd15 :
-							     (_theResult____h164614[40] ?
+							     (_theResult____h164731[40] ?
 								6'd16 :
-								(_theResult____h164614[39] ?
+								(_theResult____h164731[39] ?
 								   6'd17 :
-								   (_theResult____h164614[38] ?
+								   (_theResult____h164731[38] ?
 								      6'd18 :
-								      (_theResult____h164614[37] ?
+								      (_theResult____h164731[37] ?
 									 6'd19 :
-									 (_theResult____h164614[36] ?
+									 (_theResult____h164731[36] ?
 									    6'd20 :
-									    (_theResult____h164614[35] ?
+									    (_theResult____h164731[35] ?
 									       6'd21 :
-									       (_theResult____h164614[34] ?
+									       (_theResult____h164731[34] ?
 										  6'd22 :
-										  (_theResult____h164614[33] ?
+										  (_theResult____h164731[33] ?
 										     6'd23 :
-										     (_theResult____h164614[32] ?
+										     (_theResult____h164731[32] ?
 											6'd24 :
-											(_theResult____h164614[31] ?
+											(_theResult____h164731[31] ?
 											   6'd25 :
-											   (_theResult____h164614[30] ?
+											   (_theResult____h164731[30] ?
 											      6'd26 :
-											      (_theResult____h164614[29] ?
+											      (_theResult____h164731[29] ?
 												 6'd27 :
-												 (_theResult____h164614[28] ?
+												 (_theResult____h164731[28] ?
 												    6'd28 :
-												    (_theResult____h164614[27] ?
+												    (_theResult____h164731[27] ?
 												       6'd29 :
-												       (_theResult____h164614[26] ?
+												       (_theResult____h164731[26] ?
 													  6'd30 :
-													  (_theResult____h164614[25] ?
+													  (_theResult____h164731[25] ?
 													     6'd31 :
-													     (_theResult____h164614[24] ?
+													     (_theResult____h164731[24] ?
 														6'd32 :
-														(_theResult____h164614[23] ?
+														(_theResult____h164731[23] ?
 														   6'd33 :
-														   (_theResult____h164614[22] ?
+														   (_theResult____h164731[22] ?
 														      6'd34 :
-														      (_theResult____h164614[21] ?
+														      (_theResult____h164731[21] ?
 															 6'd35 :
-															 (_theResult____h164614[20] ?
+															 (_theResult____h164731[20] ?
 															    6'd36 :
-															    (_theResult____h164614[19] ?
+															    (_theResult____h164731[19] ?
 															       6'd37 :
-															       (_theResult____h164614[18] ?
+															       (_theResult____h164731[18] ?
 																  6'd38 :
-																  (_theResult____h164614[17] ?
+																  (_theResult____h164731[17] ?
 																     6'd39 :
-																     (_theResult____h164614[16] ?
+																     (_theResult____h164731[16] ?
 																	6'd40 :
-																	(_theResult____h164614[15] ?
+																	(_theResult____h164731[15] ?
 																	   6'd41 :
-																	   (_theResult____h164614[14] ?
+																	   (_theResult____h164731[14] ?
 																	      6'd42 :
-																	      (_theResult____h164614[13] ?
+																	      (_theResult____h164731[13] ?
 																		 6'd43 :
-																		 (_theResult____h164614[12] ?
+																		 (_theResult____h164731[12] ?
 																		    6'd44 :
-																		    (_theResult____h164614[11] ?
+																		    (_theResult____h164731[11] ?
 																		       6'd45 :
-																		       (_theResult____h164614[10] ?
+																		       (_theResult____h164731[10] ?
 																			  6'd46 :
-																			  (_theResult____h164614[9] ?
+																			  (_theResult____h164731[9] ?
 																			     6'd47 :
-																			     (_theResult____h164614[8] ?
+																			     (_theResult____h164731[8] ?
 																				6'd48 :
-																				(_theResult____h164614[7] ?
+																				(_theResult____h164731[7] ?
 																				   6'd49 :
-																				   (_theResult____h164614[6] ?
+																				   (_theResult____h164731[6] ?
 																				      6'd50 :
-																				      (_theResult____h164614[5] ?
+																				      (_theResult____h164731[5] ?
 																					 6'd51 :
-																					 (_theResult____h164614[4] ?
+																					 (_theResult____h164731[4] ?
 																					    6'd52 :
-																					    (_theResult____h164614[3] ?
+																					    (_theResult____h164731[3] ?
 																					       6'd53 :
-																					       (_theResult____h164614[2] ?
+																					       (_theResult____h164731[2] ?
 																						  6'd54 :
-																						  (_theResult____h164614[1] ?
+																						  (_theResult____h164731[1] ?
 																						     6'd55 :
-																						     (_theResult____h164614[0] ?
+																						     (_theResult____h164731[0] ?
 																							6'd56 :
 																							6'd57))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -
 	     6'd1 ;
   assign IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_37_ETC___d4280 =
-	     (_theResult____h242191[56] ?
+	     (_theResult____h242308[56] ?
 		6'd0 :
-		(_theResult____h242191[55] ?
+		(_theResult____h242308[55] ?
 		   6'd1 :
-		   (_theResult____h242191[54] ?
+		   (_theResult____h242308[54] ?
 		      6'd2 :
-		      (_theResult____h242191[53] ?
+		      (_theResult____h242308[53] ?
 			 6'd3 :
-			 (_theResult____h242191[52] ?
+			 (_theResult____h242308[52] ?
 			    6'd4 :
-			    (_theResult____h242191[51] ?
+			    (_theResult____h242308[51] ?
 			       6'd5 :
-			       (_theResult____h242191[50] ?
+			       (_theResult____h242308[50] ?
 				  6'd6 :
-				  (_theResult____h242191[49] ?
+				  (_theResult____h242308[49] ?
 				     6'd7 :
-				     (_theResult____h242191[48] ?
+				     (_theResult____h242308[48] ?
 					6'd8 :
-					(_theResult____h242191[47] ?
+					(_theResult____h242308[47] ?
 					   6'd9 :
-					   (_theResult____h242191[46] ?
+					   (_theResult____h242308[46] ?
 					      6'd10 :
-					      (_theResult____h242191[45] ?
+					      (_theResult____h242308[45] ?
 						 6'd11 :
-						 (_theResult____h242191[44] ?
+						 (_theResult____h242308[44] ?
 						    6'd12 :
-						    (_theResult____h242191[43] ?
+						    (_theResult____h242308[43] ?
 						       6'd13 :
-						       (_theResult____h242191[42] ?
+						       (_theResult____h242308[42] ?
 							  6'd14 :
-							  (_theResult____h242191[41] ?
+							  (_theResult____h242308[41] ?
 							     6'd15 :
-							     (_theResult____h242191[40] ?
+							     (_theResult____h242308[40] ?
 								6'd16 :
-								(_theResult____h242191[39] ?
+								(_theResult____h242308[39] ?
 								   6'd17 :
-								   (_theResult____h242191[38] ?
+								   (_theResult____h242308[38] ?
 								      6'd18 :
-								      (_theResult____h242191[37] ?
+								      (_theResult____h242308[37] ?
 									 6'd19 :
-									 (_theResult____h242191[36] ?
+									 (_theResult____h242308[36] ?
 									    6'd20 :
-									    (_theResult____h242191[35] ?
+									    (_theResult____h242308[35] ?
 									       6'd21 :
-									       (_theResult____h242191[34] ?
+									       (_theResult____h242308[34] ?
 										  6'd22 :
-										  (_theResult____h242191[33] ?
+										  (_theResult____h242308[33] ?
 										     6'd23 :
-										     (_theResult____h242191[32] ?
+										     (_theResult____h242308[32] ?
 											6'd24 :
-											(_theResult____h242191[31] ?
+											(_theResult____h242308[31] ?
 											   6'd25 :
-											   (_theResult____h242191[30] ?
+											   (_theResult____h242308[30] ?
 											      6'd26 :
-											      (_theResult____h242191[29] ?
+											      (_theResult____h242308[29] ?
 												 6'd27 :
-												 (_theResult____h242191[28] ?
+												 (_theResult____h242308[28] ?
 												    6'd28 :
-												    (_theResult____h242191[27] ?
+												    (_theResult____h242308[27] ?
 												       6'd29 :
-												       (_theResult____h242191[26] ?
+												       (_theResult____h242308[26] ?
 													  6'd30 :
-													  (_theResult____h242191[25] ?
+													  (_theResult____h242308[25] ?
 													     6'd31 :
-													     (_theResult____h242191[24] ?
+													     (_theResult____h242308[24] ?
 														6'd32 :
-														(_theResult____h242191[23] ?
+														(_theResult____h242308[23] ?
 														   6'd33 :
-														   (_theResult____h242191[22] ?
+														   (_theResult____h242308[22] ?
 														      6'd34 :
-														      (_theResult____h242191[21] ?
+														      (_theResult____h242308[21] ?
 															 6'd35 :
-															 (_theResult____h242191[20] ?
+															 (_theResult____h242308[20] ?
 															    6'd36 :
-															    (_theResult____h242191[19] ?
+															    (_theResult____h242308[19] ?
 															       6'd37 :
-															       (_theResult____h242191[18] ?
+															       (_theResult____h242308[18] ?
 																  6'd38 :
-																  (_theResult____h242191[17] ?
+																  (_theResult____h242308[17] ?
 																     6'd39 :
-																     (_theResult____h242191[16] ?
+																     (_theResult____h242308[16] ?
 																	6'd40 :
-																	(_theResult____h242191[15] ?
+																	(_theResult____h242308[15] ?
 																	   6'd41 :
-																	   (_theResult____h242191[14] ?
+																	   (_theResult____h242308[14] ?
 																	      6'd42 :
-																	      (_theResult____h242191[13] ?
+																	      (_theResult____h242308[13] ?
 																		 6'd43 :
-																		 (_theResult____h242191[12] ?
+																		 (_theResult____h242308[12] ?
 																		    6'd44 :
-																		    (_theResult____h242191[11] ?
+																		    (_theResult____h242308[11] ?
 																		       6'd45 :
-																		       (_theResult____h242191[10] ?
+																		       (_theResult____h242308[10] ?
 																			  6'd46 :
-																			  (_theResult____h242191[9] ?
+																			  (_theResult____h242308[9] ?
 																			     6'd47 :
-																			     (_theResult____h242191[8] ?
+																			     (_theResult____h242308[8] ?
 																				6'd48 :
-																				(_theResult____h242191[7] ?
+																				(_theResult____h242308[7] ?
 																				   6'd49 :
-																				   (_theResult____h242191[6] ?
+																				   (_theResult____h242308[6] ?
 																				      6'd50 :
-																				      (_theResult____h242191[5] ?
+																				      (_theResult____h242308[5] ?
 																					 6'd51 :
-																					 (_theResult____h242191[4] ?
+																					 (_theResult____h242308[4] ?
 																					    6'd52 :
-																					    (_theResult____h242191[3] ?
+																					    (_theResult____h242308[3] ?
 																					       6'd53 :
-																					       (_theResult____h242191[2] ?
+																					       (_theResult____h242308[2] ?
 																						  6'd54 :
-																						  (_theResult____h242191[1] ?
+																						  (_theResult____h242308[1] ?
 																						     6'd55 :
-																						     (_theResult____h242191[0] ?
+																						     (_theResult____h242308[0] ?
 																							6'd56 :
 																							6'd57))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -
 	     6'd1 ;
-  assign IF_IF_3970_MINUS_SEXT_resWire_wget__410_BITS_6_ETC___d6278 =
-	     (_theResult____h287214[56] ?
+  assign IF_IF_3970_MINUS_SEXT_resWire_wget__412_BITS_6_ETC___d6280 =
+	     (_theResult____h287414[56] ?
 		6'd0 :
-		(_theResult____h287214[55] ?
+		(_theResult____h287414[55] ?
 		   6'd1 :
-		   (_theResult____h287214[54] ?
+		   (_theResult____h287414[54] ?
 		      6'd2 :
-		      (_theResult____h287214[53] ?
+		      (_theResult____h287414[53] ?
 			 6'd3 :
-			 (_theResult____h287214[52] ?
+			 (_theResult____h287414[52] ?
 			    6'd4 :
-			    (_theResult____h287214[51] ?
+			    (_theResult____h287414[51] ?
 			       6'd5 :
-			       (_theResult____h287214[50] ?
+			       (_theResult____h287414[50] ?
 				  6'd6 :
-				  (_theResult____h287214[49] ?
+				  (_theResult____h287414[49] ?
 				     6'd7 :
-				     (_theResult____h287214[48] ?
+				     (_theResult____h287414[48] ?
 					6'd8 :
-					(_theResult____h287214[47] ?
+					(_theResult____h287414[47] ?
 					   6'd9 :
-					   (_theResult____h287214[46] ?
+					   (_theResult____h287414[46] ?
 					      6'd10 :
-					      (_theResult____h287214[45] ?
+					      (_theResult____h287414[45] ?
 						 6'd11 :
-						 (_theResult____h287214[44] ?
+						 (_theResult____h287414[44] ?
 						    6'd12 :
-						    (_theResult____h287214[43] ?
+						    (_theResult____h287414[43] ?
 						       6'd13 :
-						       (_theResult____h287214[42] ?
+						       (_theResult____h287414[42] ?
 							  6'd14 :
-							  (_theResult____h287214[41] ?
+							  (_theResult____h287414[41] ?
 							     6'd15 :
-							     (_theResult____h287214[40] ?
+							     (_theResult____h287414[40] ?
 								6'd16 :
-								(_theResult____h287214[39] ?
+								(_theResult____h287414[39] ?
 								   6'd17 :
-								   (_theResult____h287214[38] ?
+								   (_theResult____h287414[38] ?
 								      6'd18 :
-								      (_theResult____h287214[37] ?
+								      (_theResult____h287414[37] ?
 									 6'd19 :
-									 (_theResult____h287214[36] ?
+									 (_theResult____h287414[36] ?
 									    6'd20 :
-									    (_theResult____h287214[35] ?
+									    (_theResult____h287414[35] ?
 									       6'd21 :
-									       (_theResult____h287214[34] ?
+									       (_theResult____h287414[34] ?
 										  6'd22 :
-										  (_theResult____h287214[33] ?
+										  (_theResult____h287414[33] ?
 										     6'd23 :
-										     (_theResult____h287214[32] ?
+										     (_theResult____h287414[32] ?
 											6'd24 :
-											(_theResult____h287214[31] ?
+											(_theResult____h287414[31] ?
 											   6'd25 :
-											   (_theResult____h287214[30] ?
+											   (_theResult____h287414[30] ?
 											      6'd26 :
-											      (_theResult____h287214[29] ?
+											      (_theResult____h287414[29] ?
 												 6'd27 :
-												 (_theResult____h287214[28] ?
+												 (_theResult____h287414[28] ?
 												    6'd28 :
-												    (_theResult____h287214[27] ?
+												    (_theResult____h287414[27] ?
 												       6'd29 :
-												       (_theResult____h287214[26] ?
+												       (_theResult____h287414[26] ?
 													  6'd30 :
-													  (_theResult____h287214[25] ?
+													  (_theResult____h287414[25] ?
 													     6'd31 :
-													     (_theResult____h287214[24] ?
+													     (_theResult____h287414[24] ?
 														6'd32 :
-														(_theResult____h287214[23] ?
+														(_theResult____h287414[23] ?
 														   6'd33 :
-														   (_theResult____h287214[22] ?
+														   (_theResult____h287414[22] ?
 														      6'd34 :
-														      (_theResult____h287214[21] ?
+														      (_theResult____h287414[21] ?
 															 6'd35 :
-															 (_theResult____h287214[20] ?
+															 (_theResult____h287414[20] ?
 															    6'd36 :
-															    (_theResult____h287214[19] ?
+															    (_theResult____h287414[19] ?
 															       6'd37 :
-															       (_theResult____h287214[18] ?
+															       (_theResult____h287414[18] ?
 																  6'd38 :
-																  (_theResult____h287214[17] ?
+																  (_theResult____h287414[17] ?
 																     6'd39 :
-																     (_theResult____h287214[16] ?
+																     (_theResult____h287414[16] ?
 																	6'd40 :
-																	(_theResult____h287214[15] ?
+																	(_theResult____h287414[15] ?
 																	   6'd41 :
-																	   (_theResult____h287214[14] ?
+																	   (_theResult____h287414[14] ?
 																	      6'd42 :
-																	      (_theResult____h287214[13] ?
+																	      (_theResult____h287414[13] ?
 																		 6'd43 :
-																		 (_theResult____h287214[12] ?
+																		 (_theResult____h287414[12] ?
 																		    6'd44 :
-																		    (_theResult____h287214[11] ?
+																		    (_theResult____h287414[11] ?
 																		       6'd45 :
-																		       (_theResult____h287214[10] ?
+																		       (_theResult____h287414[10] ?
 																			  6'd46 :
-																			  (_theResult____h287214[9] ?
+																			  (_theResult____h287414[9] ?
 																			     6'd47 :
-																			     (_theResult____h287214[8] ?
+																			     (_theResult____h287414[8] ?
 																				6'd48 :
-																				(_theResult____h287214[7] ?
+																				(_theResult____h287414[7] ?
 																				   6'd49 :
-																				   (_theResult____h287214[6] ?
+																				   (_theResult____h287414[6] ?
 																				      6'd50 :
-																				      (_theResult____h287214[5] ?
+																				      (_theResult____h287414[5] ?
 																					 6'd51 :
-																					 (_theResult____h287214[4] ?
+																					 (_theResult____h287414[4] ?
 																					    6'd52 :
-																					    (_theResult____h287214[3] ?
+																					    (_theResult____h287414[3] ?
 																					       6'd53 :
-																					       (_theResult____h287214[2] ?
+																					       (_theResult____h287414[2] ?
 																						  6'd54 :
-																						  (_theResult____h287214[1] ?
+																						  (_theResult____h287414[1] ?
 																						     6'd55 :
-																						     (_theResult____h287214[0] ?
+																						     (_theResult____h287414[0] ?
 																							6'd56 :
 																							6'd57))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -
 	     6'd1 ;
@@ -3586,266 +3595,266 @@ module mkFPU(CLK,
 	      12'd1023) ?
 	       63'h7FEFFFFFFFFFFFFF :
 	       { _theResult___fst_exp__h130949, sfdin__h130943[105:54] } ;
-  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6448 =
-	     (guard__h269587 == 2'b0 || resWire$wget[68]) ?
-	       _theResult___fst_exp__h277686 :
-	       _theResult___exp__h278202 ;
-  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6450 =
-	     (guard__h269587 == 2'b0) ?
-	       _theResult___fst_exp__h277686 :
+  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450 =
+	     (guard__h269787 == 2'b0 || resWire$wget[68]) ?
+	       _theResult___fst_exp__h277886 :
+	       _theResult___exp__h278402 ;
+  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452 =
+	     (guard__h269787 == 2'b0) ?
+	       _theResult___fst_exp__h277886 :
 	       (resWire$wget[68] ?
-		  _theResult___exp__h278202 :
-		  _theResult___fst_exp__h277686) ;
-  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6576 =
-	     (guard__h269587 == 2'b0 || resWire$wget[68]) ?
-	       sfdin__h277680[56:34] :
-	       _theResult___sfd__h278203 ;
-  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6578 =
-	     (guard__h269587 == 2'b0) ?
-	       sfdin__h277680[56:34] :
+		  _theResult___exp__h278402 :
+		  _theResult___fst_exp__h277886) ;
+  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6578 =
+	     (guard__h269787 == 2'b0 || resWire$wget[68]) ?
+	       sfdin__h277880[56:34] :
+	       _theResult___sfd__h278403 ;
+  assign IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6580 =
+	     (guard__h269787 == 2'b0) ?
+	       sfdin__h277880[56:34] :
 	       (resWire$wget[68] ?
-		  _theResult___sfd__h278203 :
-		  sfdin__h277680[56:34]) ;
+		  _theResult___sfd__h278403 :
+		  sfdin__h277880[56:34]) ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3729 =
-	     (guard__h164624 == 2'b0 || iFifo$D_OUT[168]) ?
-	       _theResult___fst_exp__h172852 :
-	       _theResult___exp__h173571 ;
+	     (guard__h164741 == 2'b0 || iFifo$D_OUT[168]) ?
+	       _theResult___fst_exp__h172969 :
+	       _theResult___exp__h173688 ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3731 =
-	     (guard__h164624 == 2'b0) ?
-	       _theResult___fst_exp__h172852 :
+	     (guard__h164741 == 2'b0) ?
+	       _theResult___fst_exp__h172969 :
 	       (iFifo$D_OUT[168] ?
-		  _theResult___exp__h173571 :
-		  _theResult___fst_exp__h172852) ;
+		  _theResult___exp__h173688 :
+		  _theResult___fst_exp__h172969) ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3813 =
-	     (guard__h164624 == 2'b0 || iFifo$D_OUT[168]) ?
-	       sfdin__h172846[56:5] :
-	       _theResult___sfd__h173572 ;
+	     (guard__h164741 == 2'b0 || iFifo$D_OUT[168]) ?
+	       sfdin__h172963[56:5] :
+	       _theResult___sfd__h173689 ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3815 =
-	     (guard__h164624 == 2'b0) ?
-	       sfdin__h172846[56:5] :
+	     (guard__h164741 == 2'b0) ?
+	       sfdin__h172963[56:5] :
 	       (iFifo$D_OUT[168] ?
-		  _theResult___sfd__h173572 :
-		  sfdin__h172846[56:5]) ;
+		  _theResult___sfd__h173689 :
+		  sfdin__h172963[56:5]) ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4436 =
-	     (guard__h242201 == 2'b0 || iFifo$D_OUT[38]) ?
-	       _theResult___fst_exp__h250429 :
-	       _theResult___exp__h251148 ;
+	     (guard__h242318 == 2'b0 || iFifo$D_OUT[38]) ?
+	       _theResult___fst_exp__h250546 :
+	       _theResult___exp__h251265 ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4438 =
-	     (guard__h242201 == 2'b0) ?
-	       _theResult___fst_exp__h250429 :
+	     (guard__h242318 == 2'b0) ?
+	       _theResult___fst_exp__h250546 :
 	       (iFifo$D_OUT[38] ?
-		  _theResult___exp__h251148 :
-		  _theResult___fst_exp__h250429) ;
+		  _theResult___exp__h251265 :
+		  _theResult___fst_exp__h250546) ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4519 =
-	     (guard__h242201 == 2'b0 || iFifo$D_OUT[38]) ?
-	       sfdin__h250423[56:5] :
-	       _theResult___sfd__h251149 ;
+	     (guard__h242318 == 2'b0 || iFifo$D_OUT[38]) ?
+	       sfdin__h250540[56:5] :
+	       _theResult___sfd__h251266 ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4521 =
-	     (guard__h242201 == 2'b0) ?
-	       sfdin__h250423[56:5] :
+	     (guard__h242318 == 2'b0) ?
+	       sfdin__h250540[56:5] :
 	       (iFifo$D_OUT[38] ?
-		  _theResult___sfd__h251149 :
-		  sfdin__h250423[56:5]) ;
+		  _theResult___sfd__h251266 :
+		  sfdin__h250540[56:5]) ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5211 =
-	     (guard__h203262 == 2'b0 || iFifo$D_OUT[103]) ?
-	       _theResult___fst_exp__h211490 :
-	       _theResult___exp__h212209 ;
+	     (guard__h203379 == 2'b0 || iFifo$D_OUT[103]) ?
+	       _theResult___fst_exp__h211607 :
+	       _theResult___exp__h212326 ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5213 =
-	     (guard__h203262 == 2'b0) ?
-	       _theResult___fst_exp__h211490 :
+	     (guard__h203379 == 2'b0) ?
+	       _theResult___fst_exp__h211607 :
 	       (iFifo$D_OUT[103] ?
-		  _theResult___exp__h212209 :
-		  _theResult___fst_exp__h211490) ;
+		  _theResult___exp__h212326 :
+		  _theResult___fst_exp__h211607) ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5294 =
-	     (guard__h203262 == 2'b0 || iFifo$D_OUT[103]) ?
-	       sfdin__h211484[56:5] :
-	       _theResult___sfd__h212210 ;
+	     (guard__h203379 == 2'b0 || iFifo$D_OUT[103]) ?
+	       sfdin__h211601[56:5] :
+	       _theResult___sfd__h212327 ;
   assign IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5296 =
-	     (guard__h203262 == 2'b0) ?
-	       sfdin__h211484[56:5] :
+	     (guard__h203379 == 2'b0) ?
+	       sfdin__h211601[56:5] :
 	       (iFifo$D_OUT[103] ?
-		  _theResult___sfd__h212210 :
-		  sfdin__h211484[56:5]) ;
-  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6518 =
-	     (guard__h287224 == 2'b0 || resWire$wget[68]) ?
-	       _theResult___fst_exp__h295452 :
-	       _theResult___exp__h295968 ;
-  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6520 =
-	     (guard__h287224 == 2'b0) ?
-	       _theResult___fst_exp__h295452 :
+		  _theResult___sfd__h212327 :
+		  sfdin__h211601[56:5]) ;
+  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6520 =
+	     (guard__h287424 == 2'b0 || resWire$wget[68]) ?
+	       _theResult___fst_exp__h295652 :
+	       _theResult___exp__h296168 ;
+  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6522 =
+	     (guard__h287424 == 2'b0) ?
+	       _theResult___fst_exp__h295652 :
 	       (resWire$wget[68] ?
-		  _theResult___exp__h295968 :
-		  _theResult___fst_exp__h295452) ;
-  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6622 =
-	     (guard__h287224 == 2'b0 || resWire$wget[68]) ?
-	       sfdin__h295446[56:34] :
-	       _theResult___sfd__h295969 ;
-  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6624 =
-	     (guard__h287224 == 2'b0) ?
-	       sfdin__h295446[56:34] :
+		  _theResult___exp__h296168 :
+		  _theResult___fst_exp__h295652) ;
+  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6624 =
+	     (guard__h287424 == 2'b0 || resWire$wget[68]) ?
+	       sfdin__h295646[56:34] :
+	       _theResult___sfd__h296169 ;
+  assign IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6626 =
+	     (guard__h287424 == 2'b0) ?
+	       sfdin__h295646[56:34] :
 	       (resWire$wget[68] ?
-		  _theResult___sfd__h295969 :
-		  sfdin__h295446[56:34]) ;
+		  _theResult___sfd__h296169 :
+		  sfdin__h295646[56:34]) ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5173 =
-	     (guard__h194013 == 2'b0 || iFifo$D_OUT[103]) ?
-	       _theResult___fst_exp__h201974 :
-	       _theResult___exp__h202619 ;
+	     (guard__h194130 == 2'b0 || iFifo$D_OUT[103]) ?
+	       _theResult___fst_exp__h202091 :
+	       _theResult___exp__h202736 ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5175 =
-	     (guard__h194013 == 2'b0) ?
-	       _theResult___fst_exp__h201974 :
+	     (guard__h194130 == 2'b0) ?
+	       _theResult___fst_exp__h202091 :
 	       (iFifo$D_OUT[103] ?
-		  _theResult___exp__h202619 :
-		  _theResult___fst_exp__h201974) ;
+		  _theResult___exp__h202736 :
+		  _theResult___fst_exp__h202091) ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5242 =
-	     (guard__h212301 == 2'b0 || iFifo$D_OUT[103]) ?
-	       _theResult___fst_exp__h220291 :
-	       _theResult___exp__h220961 ;
+	     (guard__h212418 == 2'b0 || iFifo$D_OUT[103]) ?
+	       _theResult___fst_exp__h220408 :
+	       _theResult___exp__h221078 ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5244 =
-	     (guard__h212301 == 2'b0) ?
-	       _theResult___fst_exp__h220291 :
+	     (guard__h212418 == 2'b0) ?
+	       _theResult___fst_exp__h220408 :
 	       (iFifo$D_OUT[103] ?
-		  _theResult___exp__h220961 :
-		  _theResult___fst_exp__h220291) ;
+		  _theResult___exp__h221078 :
+		  _theResult___fst_exp__h220408) ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5268 =
-	     (guard__h194013 == 2'b0 || iFifo$D_OUT[103]) ?
-	       _theResult___snd__h201925[56:5] :
-	       _theResult___sfd__h202620 ;
+	     (guard__h194130 == 2'b0 || iFifo$D_OUT[103]) ?
+	       _theResult___snd__h202042[56:5] :
+	       _theResult___sfd__h202737 ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5270 =
-	     (guard__h194013 == 2'b0) ?
-	       _theResult___snd__h201925[56:5] :
+	     (guard__h194130 == 2'b0) ?
+	       _theResult___snd__h202042[56:5] :
 	       (iFifo$D_OUT[103] ?
-		  _theResult___sfd__h202620 :
-		  _theResult___snd__h201925[56:5]) ;
+		  _theResult___sfd__h202737 :
+		  _theResult___snd__h202042[56:5]) ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5313 =
-	     (guard__h212301 == 2'b0 || iFifo$D_OUT[103]) ?
-	       _theResult___snd__h220237[56:5] :
-	       _theResult___sfd__h220962 ;
+	     (guard__h212418 == 2'b0 || iFifo$D_OUT[103]) ?
+	       _theResult___snd__h220354[56:5] :
+	       _theResult___sfd__h221079 ;
   assign IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5315 =
-	     (guard__h212301 == 2'b0) ?
-	       _theResult___snd__h220237[56:5] :
+	     (guard__h212418 == 2'b0) ?
+	       _theResult___snd__h220354[56:5] :
 	       (iFifo$D_OUT[103] ?
-		  _theResult___sfd__h220962 :
-		  _theResult___snd__h220237[56:5]) ;
+		  _theResult___sfd__h221079 :
+		  _theResult___snd__h220354[56:5]) ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3690 =
-	     (guard__h155375 == 2'b0 || iFifo$D_OUT[168]) ?
-	       _theResult___fst_exp__h163336 :
-	       _theResult___exp__h163981 ;
+	     (guard__h155492 == 2'b0 || iFifo$D_OUT[168]) ?
+	       _theResult___fst_exp__h163453 :
+	       _theResult___exp__h164098 ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3692 =
-	     (guard__h155375 == 2'b0) ?
-	       _theResult___fst_exp__h163336 :
+	     (guard__h155492 == 2'b0) ?
+	       _theResult___fst_exp__h163453 :
 	       (iFifo$D_OUT[168] ?
-		  _theResult___exp__h163981 :
-		  _theResult___fst_exp__h163336) ;
+		  _theResult___exp__h164098 :
+		  _theResult___fst_exp__h163453) ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3760 =
-	     (guard__h173663 == 2'b0 || iFifo$D_OUT[168]) ?
-	       _theResult___fst_exp__h181653 :
-	       _theResult___exp__h182323 ;
+	     (guard__h173780 == 2'b0 || iFifo$D_OUT[168]) ?
+	       _theResult___fst_exp__h181770 :
+	       _theResult___exp__h182440 ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3762 =
-	     (guard__h173663 == 2'b0) ?
-	       _theResult___fst_exp__h181653 :
+	     (guard__h173780 == 2'b0) ?
+	       _theResult___fst_exp__h181770 :
 	       (iFifo$D_OUT[168] ?
-		  _theResult___exp__h182323 :
-		  _theResult___fst_exp__h181653) ;
+		  _theResult___exp__h182440 :
+		  _theResult___fst_exp__h181770) ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3786 =
-	     (guard__h155375 == 2'b0 || iFifo$D_OUT[168]) ?
-	       _theResult___snd__h163287[56:5] :
-	       _theResult___sfd__h163982 ;
+	     (guard__h155492 == 2'b0 || iFifo$D_OUT[168]) ?
+	       _theResult___snd__h163404[56:5] :
+	       _theResult___sfd__h164099 ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3788 =
-	     (guard__h155375 == 2'b0) ?
-	       _theResult___snd__h163287[56:5] :
+	     (guard__h155492 == 2'b0) ?
+	       _theResult___snd__h163404[56:5] :
 	       (iFifo$D_OUT[168] ?
-		  _theResult___sfd__h163982 :
-		  _theResult___snd__h163287[56:5]) ;
+		  _theResult___sfd__h164099 :
+		  _theResult___snd__h163404[56:5]) ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3832 =
-	     (guard__h173663 == 2'b0 || iFifo$D_OUT[168]) ?
-	       _theResult___snd__h181599[56:5] :
-	       _theResult___sfd__h182324 ;
+	     (guard__h173780 == 2'b0 || iFifo$D_OUT[168]) ?
+	       _theResult___snd__h181716[56:5] :
+	       _theResult___sfd__h182441 ;
   assign IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3834 =
-	     (guard__h173663 == 2'b0) ?
-	       _theResult___snd__h181599[56:5] :
+	     (guard__h173780 == 2'b0) ?
+	       _theResult___snd__h181716[56:5] :
 	       (iFifo$D_OUT[168] ?
-		  _theResult___sfd__h182324 :
-		  _theResult___snd__h181599[56:5]) ;
+		  _theResult___sfd__h182441 :
+		  _theResult___snd__h181716[56:5]) ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4398 =
-	     (guard__h232952 == 2'b0 || iFifo$D_OUT[38]) ?
-	       _theResult___fst_exp__h240913 :
-	       _theResult___exp__h241558 ;
+	     (guard__h233069 == 2'b0 || iFifo$D_OUT[38]) ?
+	       _theResult___fst_exp__h241030 :
+	       _theResult___exp__h241675 ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4400 =
-	     (guard__h232952 == 2'b0) ?
-	       _theResult___fst_exp__h240913 :
+	     (guard__h233069 == 2'b0) ?
+	       _theResult___fst_exp__h241030 :
 	       (iFifo$D_OUT[38] ?
-		  _theResult___exp__h241558 :
-		  _theResult___fst_exp__h240913) ;
+		  _theResult___exp__h241675 :
+		  _theResult___fst_exp__h241030) ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4467 =
-	     (guard__h251240 == 2'b0 || iFifo$D_OUT[38]) ?
-	       _theResult___fst_exp__h259230 :
-	       _theResult___exp__h259900 ;
+	     (guard__h251357 == 2'b0 || iFifo$D_OUT[38]) ?
+	       _theResult___fst_exp__h259347 :
+	       _theResult___exp__h260017 ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4469 =
-	     (guard__h251240 == 2'b0) ?
-	       _theResult___fst_exp__h259230 :
+	     (guard__h251357 == 2'b0) ?
+	       _theResult___fst_exp__h259347 :
 	       (iFifo$D_OUT[38] ?
-		  _theResult___exp__h259900 :
-		  _theResult___fst_exp__h259230) ;
+		  _theResult___exp__h260017 :
+		  _theResult___fst_exp__h259347) ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4493 =
-	     (guard__h232952 == 2'b0 || iFifo$D_OUT[38]) ?
-	       _theResult___snd__h240864[56:5] :
-	       _theResult___sfd__h241559 ;
+	     (guard__h233069 == 2'b0 || iFifo$D_OUT[38]) ?
+	       _theResult___snd__h240981[56:5] :
+	       _theResult___sfd__h241676 ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4495 =
-	     (guard__h232952 == 2'b0) ?
-	       _theResult___snd__h240864[56:5] :
+	     (guard__h233069 == 2'b0) ?
+	       _theResult___snd__h240981[56:5] :
 	       (iFifo$D_OUT[38] ?
-		  _theResult___sfd__h241559 :
-		  _theResult___snd__h240864[56:5]) ;
+		  _theResult___sfd__h241676 :
+		  _theResult___snd__h240981[56:5]) ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4538 =
-	     (guard__h251240 == 2'b0 || iFifo$D_OUT[38]) ?
-	       _theResult___snd__h259176[56:5] :
-	       _theResult___sfd__h259901 ;
+	     (guard__h251357 == 2'b0 || iFifo$D_OUT[38]) ?
+	       _theResult___snd__h259293[56:5] :
+	       _theResult___sfd__h260018 ;
   assign IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4540 =
-	     (guard__h251240 == 2'b0) ?
-	       _theResult___snd__h259176[56:5] :
+	     (guard__h251357 == 2'b0) ?
+	       _theResult___snd__h259293[56:5] :
 	       (iFifo$D_OUT[38] ?
-		  _theResult___sfd__h259901 :
-		  _theResult___snd__h259176[56:5]) ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6479 =
-	     (guard__h278294 == 2'b0 || resWire$wget[68]) ?
-	       _theResult___fst_exp__h286342 :
-	       _theResult___exp__h286784 ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6481 =
-	     (guard__h278294 == 2'b0) ?
-	       _theResult___fst_exp__h286342 :
+		  _theResult___sfd__h260018 :
+		  _theResult___snd__h259293[56:5]) ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6481 =
+	     (guard__h278494 == 2'b0 || resWire$wget[68]) ?
+	       _theResult___fst_exp__h286542 :
+	       _theResult___exp__h286984 ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6483 =
+	     (guard__h278494 == 2'b0) ?
+	       _theResult___fst_exp__h286542 :
 	       (resWire$wget[68] ?
-		  _theResult___exp__h286784 :
-		  _theResult___fst_exp__h286342) ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6549 =
-	     (guard__h296060 == 2'b0 || resWire$wget[68]) ?
-	       _theResult___fst_exp__h304137 :
-	       _theResult___exp__h304604 ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6551 =
-	     (guard__h296060 == 2'b0) ?
-	       _theResult___fst_exp__h304137 :
+		  _theResult___exp__h286984 :
+		  _theResult___fst_exp__h286542) ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6551 =
+	     (guard__h296260 == 2'b0 || resWire$wget[68]) ?
+	       _theResult___fst_exp__h304337 :
+	       _theResult___exp__h304804 ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6553 =
+	     (guard__h296260 == 2'b0) ?
+	       _theResult___fst_exp__h304337 :
 	       (resWire$wget[68] ?
-		  _theResult___exp__h304604 :
-		  _theResult___fst_exp__h304137) ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6595 =
-	     (guard__h278294 == 2'b0 || resWire$wget[68]) ?
-	       _theResult___snd__h286293[56:34] :
-	       _theResult___sfd__h286785 ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6597 =
-	     (guard__h278294 == 2'b0) ?
-	       _theResult___snd__h286293[56:34] :
+		  _theResult___exp__h304804 :
+		  _theResult___fst_exp__h304337) ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6597 =
+	     (guard__h278494 == 2'b0 || resWire$wget[68]) ?
+	       _theResult___snd__h286493[56:34] :
+	       _theResult___sfd__h286985 ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6599 =
+	     (guard__h278494 == 2'b0) ?
+	       _theResult___snd__h286493[56:34] :
 	       (resWire$wget[68] ?
-		  _theResult___sfd__h286785 :
-		  _theResult___snd__h286293[56:34]) ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6641 =
-	     (guard__h296060 == 2'b0 || resWire$wget[68]) ?
-	       _theResult___snd__h304083[56:34] :
-	       _theResult___sfd__h304605 ;
-  assign IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6643 =
-	     (guard__h296060 == 2'b0) ?
-	       _theResult___snd__h304083[56:34] :
+		  _theResult___sfd__h286985 :
+		  _theResult___snd__h286493[56:34]) ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6643 =
+	     (guard__h296260 == 2'b0 || resWire$wget[68]) ?
+	       _theResult___snd__h304283[56:34] :
+	       _theResult___sfd__h304805 ;
+  assign IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6645 =
+	     (guard__h296260 == 2'b0) ?
+	       _theResult___snd__h304283[56:34] :
 	       (resWire$wget[68] ?
-		  _theResult___sfd__h304605 :
-		  _theResult___snd__h304083[56:34]) ;
+		  _theResult___sfd__h304805 :
+		  _theResult___snd__h304283[56:34]) ;
   assign IF_IF_fpu_div64_fState_S3_first__86_BITS_120_T_ETC___d643 =
 	     (_theResult___fst_exp__h42290 == 11'd0) ?
 	       12'd3074 :
@@ -4196,20 +4205,20 @@ module mkFPU(CLK,
 	     12'd3074 ;
   assign IF_SEXT_iFifo_first__087_BITS_102_TO_95_625_MI_ETC___d5146 =
 	     SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4808 ?
-	       ((_theResult___fst_exp__h211490 == 11'd2047) ?
+	       ((_theResult___fst_exp__h211607 == 11'd2047) ?
 		  iFifo$D_OUT[103] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q117) :
-	       ((_theResult___fst_exp__h220291 == 11'd2047) ?
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q117) :
+	       ((_theResult___fst_exp__h220408 == 11'd2047) ?
 		  iFifo$D_OUT[103] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q119) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q119) ;
   assign IF_SEXT_iFifo_first__087_BITS_102_TO_95_625_MI_ETC___d5374 =
 	     SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4808 ?
-	       ((_theResult___fst_exp__h211490 == 11'd2047) ?
+	       ((_theResult___fst_exp__h211607 == 11'd2047) ?
 		  !iFifo$D_OUT[103] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q123) :
-	       ((_theResult___fst_exp__h220291 == 11'd2047) ?
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q123) :
+	       ((_theResult___fst_exp__h220408 == 11'd2047) ?
 		  !iFifo$D_OUT[103] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q125) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q125) ;
   assign IF_SEXT_iFifo_first__087_BITS_167_TO_160_130_M_ETC___d3623 =
 	     ((SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC__q36[10:0] ==
 	       11'd0) ?
@@ -4219,12 +4228,12 @@ module mkFPU(CLK,
 	     12'd3074 ;
   assign IF_SEXT_iFifo_first__087_BITS_167_TO_160_130_M_ETC___d3663 =
 	     SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3325 ?
-	       ((_theResult___fst_exp__h172852 == 11'd2047) ?
+	       ((_theResult___fst_exp__h172969 == 11'd2047) ?
 		  iFifo$D_OUT[168] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64624_ETC__q57) :
-	       ((_theResult___fst_exp__h181653 == 11'd2047) ?
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64741_ETC__q57) :
+	       ((_theResult___fst_exp__h181770 == 11'd2047) ?
 		  iFifo$D_OUT[168] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73663_ETC__q59) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73780_ETC__q59) ;
   assign IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4331 =
 	     ((SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q63[10:0] ==
 	       11'd0) ?
@@ -4234,58 +4243,58 @@ module mkFPU(CLK,
 	     12'd3074 ;
   assign IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4371 =
 	     SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4033 ?
-	       ((_theResult___fst_exp__h250429 == 11'd2047) ?
+	       ((_theResult___fst_exp__h250546 == 11'd2047) ?
 		  iFifo$D_OUT[38] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q84) :
-	       ((_theResult___fst_exp__h259230 == 11'd2047) ?
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q84) :
+	       ((_theResult___fst_exp__h259347 == 11'd2047) ?
 		  iFifo$D_OUT[38] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q86) ;
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q86) ;
   assign IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4608 =
 	     SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4033 ?
-	       ((_theResult___fst_exp__h250429 == 11'd2047) ?
+	       ((_theResult___fst_exp__h250546 == 11'd2047) ?
 		  !iFifo$D_OUT[38] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q90) :
-	       ((_theResult___fst_exp__h259230 == 11'd2047) ?
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q90) :
+	       ((_theResult___fst_exp__h259347 == 11'd2047) ?
 		  !iFifo$D_OUT[38] :
-		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q92) ;
-  assign IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6332 =
-	     ((SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138[7:0] ==
+		  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92) ;
+  assign IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6334 =
+	     ((SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138[7:0] ==
 	       8'd0) ?
 		9'd386 :
-		{ SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q141[7],
-		  SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q141 }) -
+		{ SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q141[7],
+		  SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q141 }) -
 	     9'd386 ;
-  assign IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6375 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       ((_theResult___fst_exp__h295452 == 8'd255) ?
+  assign IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6377 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       ((_theResult___fst_exp__h295652 == 8'd255) ?
 		  !resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6324) :
-	       ((_theResult___fst_exp__h304137 == 8'd255) ?
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6326) :
+	       ((_theResult___fst_exp__h304337 == 8'd255) ?
 		  !resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6373) ;
-  assign IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6420 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       ((_theResult___fst_exp__h295452 == 8'd255) ?
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6375) ;
+  assign IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6422 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       ((_theResult___fst_exp__h295652 == 8'd255) ?
 		  resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6409) :
-	       ((_theResult___fst_exp__h304137 == 8'd255) ?
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6411) :
+	       ((_theResult___fst_exp__h304337 == 8'd255) ?
 		  resWire$wget[68] :
-		  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6418) ;
-  assign IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6734 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705[2] :
-	       _theResult___fst_exp__h304685 == 8'd255 &&
-	       _theResult___fst_sfd__h304686 == 23'd0 ;
-  assign IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6747 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705[1] :
-	       _theResult___fst_exp__h304137 == 8'd0 &&
-	       guard__h296060 != 2'b0 ;
-  assign IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6760 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705[0] :
-	       _theResult___fst_exp__h304137 != 8'd255 &&
-	       guard__h296060 != 2'b0 ;
+		  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6420) ;
+  assign IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6737 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708[2] :
+	       _theResult___fst_exp__h304885 == 8'd255 &&
+	       _theResult___fst_sfd__h304886 == 23'd0 ;
+  assign IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6750 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708[1] :
+	       _theResult___fst_exp__h304337 == 8'd0 &&
+	       guard__h296260 != 2'b0 ;
+  assign IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6763 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708[0] :
+	       _theResult___fst_exp__h304337 != 8'd255 &&
+	       guard__h296260 != 2'b0 ;
   assign IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d352 =
 	     (((fpu_div64_fOperands_S0$D_OUT[129:119] == 11'd0) ?
 		 13'd7170 :
@@ -4624,10 +4633,14 @@ module mkFPU(CLK,
 	      !fpu_sqr64_fOperand_S0$D_OUT[66]) ?
 	       { 1'd1,
 		 fpu_sqr64_fOperand_S0$D_OUT[66:3],
-		 130'h00AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA } :
+		 5'd0,
+		 125'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } :
 	       (fpu_sqr64_fOperand_S0$D_OUT[66] ?
-		  195'h5FFE00000000000020AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :
-		  { 70'h155555555555555540,
+		  { 70'h2FFF00000000000010,
+		    125'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } :
+		  { 1'd0,
+		    64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		    5'd0,
 		    fpu_sqr64_fOperand_S0$D_OUT[2:0],
 		    fpu_sqr64_fOperand_S0$D_OUT[66],
 		    x__h52551[10:0],
@@ -4975,11 +4988,11 @@ module mkFPU(CLK,
   assign IF_iFifo_first__087_BITS_102_TO_95_625_EQ_255__ETC___d5327 =
 	     { (iFifo$D_OUT[102:95] == 8'd255) ?
 		 11'd2047 :
-		 _theResult___fst_exp__h221054,
+		 _theResult___fst_exp__h221171,
 	       (iFifo$D_OUT[102:95] == 8'd255 &&
 		iFifo$D_OUT[94:72] != 23'd0) ?
-		 _theResult___snd_fst_sfd__h183126 :
-		 _theResult___fst_sfd__h221058 } ;
+		 _theResult___snd_fst_sfd__h183243 :
+		 _theResult___fst_sfd__h221175 } ;
   assign IF_iFifo_first__087_BITS_102_TO_95_625_EQ_255__ETC___d5328 =
 	     { (iFifo$D_OUT[102:95] == 8'd255 &&
 		iFifo$D_OUT[94:72] != 23'd0 ||
@@ -5067,11 +5080,11 @@ module mkFPU(CLK,
 		 IF_iFifo_first__087_BITS_167_TO_160_130_EQ_0_1_ETC___d3665,
 	       (iFifo$D_OUT[167:160] == 8'd255) ?
 		 11'd2047 :
-		 _theResult___fst_exp__h182416,
+		 _theResult___fst_exp__h182533,
 	       (iFifo$D_OUT[167:160] == 8'd255 &&
 		iFifo$D_OUT[159:137] != 23'd0) ?
-		 _theResult___snd_fst_sfd__h144486 :
-		 _theResult___fst_sfd__h182420 } ;
+		 _theResult___snd_fst_sfd__h144603 :
+		 _theResult___fst_sfd__h182537 } ;
   assign IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d3982 =
 	     ((iFifo$D_OUT[37:30] == 8'd0) ?
 		(iFifo$D_OUT[29] ?
@@ -5142,10 +5155,10 @@ module mkFPU(CLK,
   assign IF_iFifo_first__087_BITS_37_TO_30_850_EQ_255_8_ETC___d4552 =
 	     { (iFifo$D_OUT[37:30] == 8'd255) ?
 		 11'd2047 :
-		 _theResult___fst_exp__h259993,
+		 _theResult___fst_exp__h260110,
 	       (iFifo$D_OUT[37:30] == 8'd255 && iFifo$D_OUT[29:7] != 23'd0) ?
-		 _theResult___snd_fst_sfd__h222065 :
-		 _theResult___fst_sfd__h259997 } ;
+		 _theResult___snd_fst_sfd__h222182 :
+		 _theResult___fst_sfd__h260114 } ;
   assign IF_iFifo_first__087_BITS_37_TO_30_850_EQ_255_8_ETC___d4553 =
 	     { (iFifo$D_OUT[37:30] == 8'd255 && iFifo$D_OUT[29:7] != 23'd0 ||
 		(iFifo$D_OUT[37:30] == 8'd255 ||
@@ -5178,14 +5191,14 @@ module mkFPU(CLK,
 	     iFifo$D_OUT[71] ?
 	       IF_iFifo_first__087_BITS_37_TO_30_850_EQ_255_8_ETC___d4612 :
 	       { iFifo$D_OUT[71] || !iFifo$D_OUT[70], iFifo$D_OUT[69:7] } ;
-  assign IF_isDoubleFifo_first__407_THEN_IF_isNegateFif_ETC___d6657 =
+  assign IF_isDoubleFifo_first__409_THEN_IF_isNegateFif_ETC___d6659 =
 	     isDoubleFifo$D_OUT ?
 	       { isNegateFifo$D_OUT ^ resWire$wget[68], resWire$wget[67:5] } :
-	       { 32'hAAAAAAAA,
-		 IF_isNegateFifo_first__409_THEN_IF_resWire_wge_ETC___d6424,
-		 exp__h304706,
-		 sfd__h304707 } ;
-  assign IF_isNegateFifo_first__409_THEN_IF_resWire_wge_ETC___d6424 =
+	       { 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		 IF_isNegateFifo_first__411_THEN_IF_resWire_wge_ETC___d6426,
+		 exp__h304906,
+		 sfd__h304907 } ;
+  assign IF_isNegateFifo_first__411_THEN_IF_resWire_wge_ETC___d6426 =
 	     isNegateFifo$D_OUT ?
 	       ((resWire$wget[67:57] == 11'd2047 &&
 		 resWire$wget[56:5] != 52'd0 ||
@@ -5193,15 +5206,15 @@ module mkFPU(CLK,
 		  resWire$wget[67:57] == 11'd0) &&
 		 resWire$wget[56:5] == 52'd0) ?
 		  !resWire$wget[68] :
-		  IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6377) :
+		  IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6379) :
 	       ((resWire$wget[67:57] == 11'd2047 &&
 		 resWire$wget[56:5] != 52'd0 ||
 		 (resWire$wget[67:57] == 11'd2047 ||
 		  resWire$wget[67:57] == 11'd0) &&
 		 resWire$wget[56:5] == 52'd0) ?
 		  resWire$wget[68] :
-		  IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6422) ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982 =
+		  IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6424) ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984 =
 	     ((resWire$wget[67:57] == 11'd0) ?
 		(resWire$wget[56] ?
 		   6'd2 :
@@ -5310,49 +5323,49 @@ module mkFPU(CLK,
 																					    6'd57)))))))))))))))))))))))))))))))))))))))))))))))))))) :
 		6'd1) -
 	     6'd1 ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6377 =
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6379 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 ?
-		  IF_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BI_ETC___d6025 :
-		  IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6028) :
-	       (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 ?
-		  IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6375 :
-		  IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6028) ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6422 =
+	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 ?
+		  IF_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BI_ETC___d6027 :
+		  IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6030) :
+	       (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 ?
+		  IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6377 :
+		  IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6030) ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6424 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 ?
-		  IF_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BI_ETC___d6399 :
-		  IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6400) :
-	       (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 ?
-		  IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6420 :
-		  IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6400) ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6709 =
+	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 ?
+		  IF_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BI_ETC___d6401 :
+		  IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6402) :
+	       (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 ?
+		  IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6422 :
+		  IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6402) ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6712 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6691 :
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 &&
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 &&
-	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705[4] ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6720 =
+	       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6694 :
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 &&
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 &&
+	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708[4] ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6723 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6716 :
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 &&
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 &&
-	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705[3] ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6736 =
+	       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6719 :
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 &&
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 &&
+	       _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708[3] ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6739 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__410_B_ETC___d6728 :
-	       !SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 ||
-	       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6734 ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6749 =
+	       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__412_B_ETC___d6731 :
+	       !SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 ||
+	       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6737 ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6752 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6743 :
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 &&
-	       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6747 ;
-  assign IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6762 =
+	       _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6746 :
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 &&
+	       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6750 ;
+  assign IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6765 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__410_B_ETC___d6756 :
-	       !SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 ||
-	       IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6760 ;
+	       NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__412_B_ETC___d6759 :
+	       !SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 ||
+	       IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6763 ;
   assign IF_rg_index_1_4_ULE_58_8_THEN_IF_rg_res_1_BIT__ETC___d49 =
 	     rg_index_1_4_ULE_58___d38 ? _theResult___fst__h1515 : rg_b ;
   assign IF_rg_index_1_4_ULE_58_8_THEN_IF_rg_res_1_BIT__ETC___d69 =
@@ -5392,8 +5405,8 @@ module mkFPU(CLK,
 	     rg_res[116] ?
 	       rg_res[115:0] :
 	       ((rg_b == 116'd0) ? rg_r_1 : rg_res[115:0]) ;
-  assign IF_sfdin11484_BIT_4_THEN_2_ELSE_0__q98 =
-	     sfdin__h211484[4] ? 2'd2 : 2'd0 ;
+  assign IF_sfdin11601_BIT_4_THEN_2_ELSE_0__q98 =
+	     sfdin__h211601[4] ? 2'd2 : 2'd0 ;
   assign IF_sfdin2327_BIT_5_THEN_2_ELSE_0__q13 =
 	     sfdin__h42327[5] ? 2'd2 : 2'd0 ;
   assign IF_sfdin30943_BIT_53_THEN_2_ELSE_0__q25 =
@@ -5402,40 +5415,40 @@ module mkFPU(CLK,
 	     sfdin__h141369[4] ? 2'd2 : 2'd0 ;
   assign IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q20 =
 	     sfdin__h94744[6] ? 2'd2 : 2'd0 ;
-  assign IF_sfdin50423_BIT_4_THEN_2_ELSE_0__q65 =
-	     sfdin__h250423[4] ? 2'd2 : 2'd0 ;
-  assign IF_sfdin72846_BIT_4_THEN_2_ELSE_0__q38 =
-	     sfdin__h172846[4] ? 2'd2 : 2'd0 ;
-  assign IF_sfdin77680_BIT_33_THEN_2_ELSE_0__q134 =
-	     sfdin__h277680[33] ? 2'd2 : 2'd0 ;
-  assign IF_sfdin95446_BIT_33_THEN_2_ELSE_0__q140 =
-	     sfdin__h295446[33] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd01925_BIT_4_THEN_2_ELSE_0__q94 =
-	     _theResult___snd__h201925[4] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd04083_BIT_33_THEN_2_ELSE_0__q143 =
-	     _theResult___snd__h304083[33] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd20237_BIT_4_THEN_2_ELSE_0__q101 =
-	     _theResult___snd__h220237[4] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd40864_BIT_4_THEN_2_ELSE_0__q61 =
-	     _theResult___snd__h240864[4] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd59176_BIT_4_THEN_2_ELSE_0__q68 =
-	     _theResult___snd__h259176[4] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd63287_BIT_4_THEN_2_ELSE_0__q34 =
-	     _theResult___snd__h163287[4] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd81599_BIT_4_THEN_2_ELSE_0__q41 =
-	     _theResult___snd__h181599[4] ? 2'd2 : 2'd0 ;
-  assign IF_theResult___snd86293_BIT_33_THEN_2_ELSE_0__q136 =
-	     _theResult___snd__h286293[33] ? 2'd2 : 2'd0 ;
-  assign NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__410_B_ETC___d6728 =
-	     !_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 ||
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676[2] :
-		_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688[2]) ;
-  assign NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__410_B_ETC___d6756 =
-	     !_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 ||
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676[0] :
-		_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688[0]) ;
+  assign IF_sfdin50540_BIT_4_THEN_2_ELSE_0__q65 =
+	     sfdin__h250540[4] ? 2'd2 : 2'd0 ;
+  assign IF_sfdin72963_BIT_4_THEN_2_ELSE_0__q38 =
+	     sfdin__h172963[4] ? 2'd2 : 2'd0 ;
+  assign IF_sfdin77880_BIT_33_THEN_2_ELSE_0__q134 =
+	     sfdin__h277880[33] ? 2'd2 : 2'd0 ;
+  assign IF_sfdin95646_BIT_33_THEN_2_ELSE_0__q140 =
+	     sfdin__h295646[33] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd02042_BIT_4_THEN_2_ELSE_0__q94 =
+	     _theResult___snd__h202042[4] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd04283_BIT_33_THEN_2_ELSE_0__q143 =
+	     _theResult___snd__h304283[33] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd20354_BIT_4_THEN_2_ELSE_0__q101 =
+	     _theResult___snd__h220354[4] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd40981_BIT_4_THEN_2_ELSE_0__q61 =
+	     _theResult___snd__h240981[4] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd59293_BIT_4_THEN_2_ELSE_0__q68 =
+	     _theResult___snd__h259293[4] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd63404_BIT_4_THEN_2_ELSE_0__q34 =
+	     _theResult___snd__h163404[4] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd81716_BIT_4_THEN_2_ELSE_0__q41 =
+	     _theResult___snd__h181716[4] ? 2'd2 : 2'd0 ;
+  assign IF_theResult___snd86493_BIT_33_THEN_2_ELSE_0__q136 =
+	     _theResult___snd__h286493[33] ? 2'd2 : 2'd0 ;
+  assign NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__412_B_ETC___d6731 =
+	     !_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 ||
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679[2] :
+		_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691[2]) ;
+  assign NOT_3074_MINUS_0_CONCAT_IF_resWire_wget__412_B_ETC___d6759 =
+	     !_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 ||
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679[0] :
+		_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691[0]) ;
   assign NOT_IF_fpu_madd_fOperand_S0_first__803_BIT_195_ETC___d1946 =
 	     (x__h96539 != 11'd2047 || !_theResult___fst_sfd__h96608[51]) &&
 	     (fpu_madd_fOperand_S0$D_OUT[129:119] != 11'd2047 ||
@@ -5587,7 +5600,7 @@ module mkFPU(CLK,
 	     !iFifo$D_OUT[74] &&
 	     !iFifo$D_OUT[73] &&
 	     !iFifo$D_OUT[72] ;
-  assign NOT_resWire_wget__410_BIT_56_426_825_AND_NOT_r_ETC___d5927 =
+  assign NOT_resWire_wget__412_BIT_56_428_827_AND_NOT_r_ETC___d5929 =
 	     !resWire$wget[56] && !resWire$wget[55] && !resWire$wget[54] &&
 	     !resWire$wget[53] &&
 	     !resWire$wget[52] &&
@@ -5689,39 +5702,39 @@ module mkFPU(CLK,
   assign SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q66 =
 	     SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q63[10:0] -
 	     11'd1023 ;
-  assign SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6031 =
+  assign SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6033 =
 	     { resWirewget_BITS_67_TO_57_MINUS_1023__q137[10],
 	       resWirewget_BITS_67_TO_57_MINUS_1023__q137 } ;
-  assign SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 =
-	     (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6031 ^
+  assign SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 =
+	     (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6033 ^
 	      12'h800) <=
 	     12'd2175 ;
-  assign SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 =
-	     (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6031 ^
+  assign SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 =
+	     (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6033 ^
 	      12'h800) <
 	     12'd1922 ;
-  assign SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6031 +
+  assign SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6033 +
 	     12'd127 ;
-  assign SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q141 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138[7:0] -
+  assign SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q141 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138[7:0] -
 	     8'd127 ;
-  assign _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5769 =
+  assign _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5771 =
 	     ({ 3'd0,
-		IF_IF_0b0_CONCAT_NOT_resWire_wget__410_BITS_67_ETC___d5767 } ^
+		IF_IF_0b0_CONCAT_NOT_resWire_wget__412_BITS_67_ETC___d5769 } ^
 	      9'h100) <=
 	     9'd256 ;
-  assign _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676 =
+  assign _0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679 =
 	     { 3'd0,
-	       _theResult___fst_exp__h277686 == 8'd0 &&
-	       (sfdin__h277680[56:34] == 23'd0 || guard__h269587 != 2'b0),
+	       _theResult___fst_exp__h277886 == 8'd0 &&
+	       (sfdin__h277880[56:34] == 23'd0 || guard__h269787 != 2'b0),
 	       1'd0 } |
 	     { 2'd0,
-	       _theResult___fst_exp__h278283 == 8'd255 &&
-	       _theResult___fst_sfd__h278284 == 23'd0,
+	       _theResult___fst_exp__h278483 == 8'd255 &&
+	       _theResult___fst_sfd__h278484 == 23'd0,
 	       1'd0,
-	       _theResult___fst_exp__h277686 != 8'd255 &&
-	       guard__h269587 != 2'b0 } ;
+	       _theResult___fst_exp__h277886 != 8'd255 &&
+	       guard__h269787 != 2'b0 } ;
   assign _0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d3574 =
 	     ({ 6'd0,
 		IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_16_ETC___d3572 } ^
@@ -5737,22 +5750,22 @@ module mkFPU(CLK,
 		IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_10_ETC___d5055 } ^
 	      12'h800) <=
 	     12'd2048 ;
-  assign _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6280 =
+  assign _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6282 =
 	     ({ 3'd0,
-		IF_IF_3970_MINUS_SEXT_resWire_wget__410_BITS_6_ETC___d6278 } ^
+		IF_IF_3970_MINUS_SEXT_resWire_wget__412_BITS_6_ETC___d6280 } ^
 	      9'h100) <=
 	     9'd256 ;
-  assign _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6705 =
+  assign _0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6708 =
 	     { 3'd0,
-	       _theResult___fst_exp__h295452 == 8'd0 &&
-	       (sfdin__h295446[56:34] == 23'd0 || guard__h287224 != 2'b0),
+	       _theResult___fst_exp__h295652 == 8'd0 &&
+	       (sfdin__h295646[56:34] == 23'd0 || guard__h287424 != 2'b0),
 	       1'd0 } |
 	     { 2'd0,
-	       _theResult___fst_exp__h296049 == 8'd255 &&
-	       _theResult___fst_sfd__h296050 == 23'd0,
+	       _theResult___fst_exp__h296249 == 8'd255 &&
+	       _theResult___fst_sfd__h296250 == 23'd0,
 	       1'd0,
-	       _theResult___fst_exp__h295452 != 8'd255 &&
-	       guard__h287224 != 2'b0 } ;
+	       _theResult___fst_exp__h295652 != 8'd255 &&
+	       guard__h287424 != 2'b0 } ;
   assign _0_CONCAT_IF_IF_7170_MINUS_fpu_madd_fState_S3_f_ETC___d2463 =
 	     ({ 5'd0,
 		IF_IF_7170_MINUS_fpu_madd_fState_S3_first__995_ETC___d2460 } ^
@@ -5810,41 +5823,41 @@ module mkFPU(CLK,
 	      12'h800) <=
 	     (IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4331 ^
 	      12'h800) ;
-  assign _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d5984 =
+  assign _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d5986 =
 	     ({ 3'd0,
-		IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982 } ^
+		IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984 } ^
 	      9'h100) <=
 	     9'd384 ;
-  assign _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6333 =
+  assign _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6335 =
 	     ({ 3'd0,
-		IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982 } ^
+		IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984 } ^
 	      9'h100) <=
-	     (IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6332 ^
+	     (IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6334 ^
 	      9'h100) ;
-  assign _0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688 =
+  assign _0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691 =
 	     { 3'd0,
-	       _theResult___fst_exp__h286342 == 8'd0 &&
-	       guard__h278294 != 2'b0,
+	       _theResult___fst_exp__h286542 == 8'd0 &&
+	       guard__h278494 != 2'b0,
 	       1'd0 } |
 	     { 2'd0,
-	       _theResult___fst_exp__h286865 == 8'd255 &&
-	       _theResult___fst_sfd__h286866 == 23'd0,
+	       _theResult___fst_exp__h287065 == 8'd255 &&
+	       _theResult___fst_sfd__h287066 == 23'd0,
 	       1'd0,
-	       _theResult___fst_exp__h286342 != 8'd255 &&
-	       guard__h278294 != 2'b0 } ;
+	       _theResult___fst_exp__h286542 != 8'd255 &&
+	       guard__h278494 != 2'b0 } ;
   assign _0b0_CONCAT_NOT_iFifo_first__087_BITS_102_TO_95_ETC___d4813 =
-	     sfd__h183176 >>
+	     sfd__h183293 >>
 	     _3074_MINUS_SEXT_iFifo_first__087_BITS_102_TO_9_ETC___d4809 ;
   assign _0b0_CONCAT_NOT_iFifo_first__087_BITS_167_TO_16_ETC___d3330 =
-	     sfd__h144536 >>
+	     sfd__h144653 >>
 	     _3074_MINUS_SEXT_iFifo_first__087_BITS_167_TO_1_ETC___d3326 ;
   assign _0b0_CONCAT_NOT_iFifo_first__087_BITS_37_TO_30__ETC___d4038 =
-	     sfd__h222115 >>
+	     sfd__h222232 >>
 	     _3074_MINUS_SEXT_iFifo_first__087_BITS_37_TO_30_ETC___d4034 ;
-  assign _0b0_CONCAT_NOT_resWire_wget__410_BITS_67_TO_57_ETC___d6038 =
-	     sfd__h261975 >>
-	     _3970_MINUS_SEXT_resWire_wget__410_BITS_67_TO_5_ETC___d6034 ;
-  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5531 =
+  assign _0b0_CONCAT_NOT_resWire_wget__412_BITS_67_TO_57_ETC___d6040 =
+	     sfd__h262175 >>
+	     _3970_MINUS_SEXT_resWire_wget__412_BITS_67_TO_5_ETC___d6036 ;
+  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5533 =
 	     12'd3074 -
 	     { 6'd0,
 	       resWire$wget[56] ?
@@ -5952,29 +5965,29 @@ module mkFPU(CLK,
 																				       (resWire$wget[5] ?
 																					  6'd51 :
 																					  6'd52))))))))))))))))))))))))))))))))))))))))))))))))))) } ;
-  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 =
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5531 ^
+  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 =
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5533 ^
 	      12'h800) <=
 	     12'd2175 ;
-  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 =
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5531 ^
+  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 =
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5533 ^
 	      12'h800) <
 	     12'd1922 ;
-  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6691 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 &&
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676[4] :
-		_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688[4]) ;
-  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6716 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 &&
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676[3] :
-		_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688[3]) ;
-  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d6743 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 &&
-	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6676[1] :
-		_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6688[1]) ;
+  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6694 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 &&
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679[4] :
+		_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691[4]) ;
+  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6719 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 &&
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679[3] :
+		_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691[3]) ;
+  assign _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d6746 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 &&
+	     (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+		_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d6679[1] :
+		_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6691[1]) ;
   assign _3074_MINUS_SEXT_iFifo_first__087_BITS_102_TO_9_ETC___d4809 =
 	     12'd3074 -
 	     SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4806 ;
@@ -6158,41 +6171,41 @@ module mkFPU(CLK,
 	     (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4683 ^
 	      12'h800) <
 	     12'd1026 ;
-  assign _3970_MINUS_SEXT_resWire_wget__410_BITS_67_TO_5_ETC___d6034 =
+  assign _3970_MINUS_SEXT_resWire_wget__412_BITS_67_TO_5_ETC___d6036 =
 	     12'd3970 -
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6031 ;
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6033 ;
   assign _7170_MINUS_fpu_madd_fState_S3_first__995_BITS__ETC___d2007 =
 	     13'd7170 - fpu_madd_fState_S3$D_OUT[12:0] ;
   assign _7170_MINUS_fpu_madd_fState_S3_first__995_BITS__ETC___d2008 =
 	     (_7170_MINUS_fpu_madd_fState_S3_first__995_BITS__ETC___d2007 ^
 	      13'h1000) <=
 	     13'd4096 ;
-  assign _theResult____h164614 =
+  assign _theResult____h164731 =
 	     ((_3074_MINUS_SEXT_iFifo_first__087_BITS_167_TO_1_ETC___d3326 ^
 	       12'h800) <
 	      12'd2105) ?
-	       result__h165227 :
-	       ((value__h148923 == 25'd0) ? sfd__h144536 : 57'd1) ;
-  assign _theResult____h203252 =
+	       result__h165344 :
+	       ((value__h149040 == 25'd0) ? sfd__h144653 : 57'd1) ;
+  assign _theResult____h203369 =
 	     ((_3074_MINUS_SEXT_iFifo_first__087_BITS_102_TO_9_ETC___d4809 ^
 	       12'h800) <
 	      12'd2105) ?
-	       result__h203865 :
-	       ((value__h187561 == 25'd0) ? sfd__h183176 : 57'd1) ;
-  assign _theResult____h242191 =
+	       result__h203982 :
+	       ((value__h187678 == 25'd0) ? sfd__h183293 : 57'd1) ;
+  assign _theResult____h242308 =
 	     ((_3074_MINUS_SEXT_iFifo_first__087_BITS_37_TO_30_ETC___d4034 ^
 	       12'h800) <
 	      12'd2105) ?
-	       result__h242804 :
-	       ((value__h226500 == 25'd0) ? sfd__h222115 : 57'd1) ;
-  assign _theResult____h269577 =
-	     (value__h270197 == 54'd0) ? sfd__h261975 : 57'd1 ;
-  assign _theResult____h287214 =
-	     ((_3970_MINUS_SEXT_resWire_wget__410_BITS_67_TO_5_ETC___d6034 ^
+	       result__h242921 :
+	       ((value__h226617 == 25'd0) ? sfd__h222232 : 57'd1) ;
+  assign _theResult____h269777 =
+	     (value__h270397 == 54'd0) ? sfd__h262175 : 57'd1 ;
+  assign _theResult____h287414 =
+	     ((_3970_MINUS_SEXT_resWire_wget__412_BITS_67_TO_5_ETC___d6036 ^
 	       12'h800) <
 	      12'd2105) ?
-	       result__h287827 :
-	       _theResult____h269577 ;
+	       result__h288027 :
+	       _theResult____h269777 ;
   assign _theResult____h32523 =
 	     (fpu_div64_fState_S2$D_OUT[10:0] < 11'd58) ?
 	       result__h32648 :
@@ -6203,123 +6216,123 @@ module mkFPU(CLK,
 		  11'd2047 :
 		  din_inc___2_exp__h142626) :
 	       IF_fpu_madd_fState_S8_first__960_BITS_65_TO_55_ETC___d2986 ;
-  assign _theResult___exp__h163981 =
-	     sfd__h163354[53] ?
-	       ((_theResult___fst_exp__h163336 == 11'd2046) ?
+  assign _theResult___exp__h164098 =
+	     sfd__h163471[53] ?
+	       ((_theResult___fst_exp__h163453 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h182469) :
-	       ((_theResult___fst_exp__h163336 == 11'd0 &&
-		 sfd__h163354[53:52] == 2'b01) ?
+		  din_inc___2_exp__h182586) :
+	       ((_theResult___fst_exp__h163453 == 11'd0 &&
+		 sfd__h163471[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h163336) ;
-  assign _theResult___exp__h173571 =
-	     sfd__h172944[53] ?
-	       ((_theResult___fst_exp__h172852 == 11'd2046) ?
+		  _theResult___fst_exp__h163453) ;
+  assign _theResult___exp__h173688 =
+	     sfd__h173061[53] ?
+	       ((_theResult___fst_exp__h172969 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h182504) :
-	       ((_theResult___fst_exp__h172852 == 11'd0 &&
-		 sfd__h172944[53:52] == 2'b01) ?
+		  din_inc___2_exp__h182621) :
+	       ((_theResult___fst_exp__h172969 == 11'd0 &&
+		 sfd__h173061[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h172852) ;
-  assign _theResult___exp__h182323 =
-	     sfd__h181672[53] ?
-	       ((_theResult___fst_exp__h181653 == 11'd2046) ?
+		  _theResult___fst_exp__h172969) ;
+  assign _theResult___exp__h182440 =
+	     sfd__h181789[53] ?
+	       ((_theResult___fst_exp__h181770 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h182530) :
-	       ((_theResult___fst_exp__h181653 == 11'd0 &&
-		 sfd__h181672[53:52] == 2'b01) ?
+		  din_inc___2_exp__h182647) :
+	       ((_theResult___fst_exp__h181770 == 11'd0 &&
+		 sfd__h181789[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h181653) ;
-  assign _theResult___exp__h202619 =
-	     sfd__h201992[53] ?
-	       ((_theResult___fst_exp__h201974 == 11'd2046) ?
+		  _theResult___fst_exp__h181770) ;
+  assign _theResult___exp__h202736 =
+	     sfd__h202109[53] ?
+	       ((_theResult___fst_exp__h202091 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h221107) :
-	       ((_theResult___fst_exp__h201974 == 11'd0 &&
-		 sfd__h201992[53:52] == 2'b01) ?
+		  din_inc___2_exp__h221224) :
+	       ((_theResult___fst_exp__h202091 == 11'd0 &&
+		 sfd__h202109[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h201974) ;
-  assign _theResult___exp__h212209 =
-	     sfd__h211582[53] ?
-	       ((_theResult___fst_exp__h211490 == 11'd2046) ?
+		  _theResult___fst_exp__h202091) ;
+  assign _theResult___exp__h212326 =
+	     sfd__h211699[53] ?
+	       ((_theResult___fst_exp__h211607 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h221142) :
-	       ((_theResult___fst_exp__h211490 == 11'd0 &&
-		 sfd__h211582[53:52] == 2'b01) ?
+		  din_inc___2_exp__h221259) :
+	       ((_theResult___fst_exp__h211607 == 11'd0 &&
+		 sfd__h211699[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h211490) ;
-  assign _theResult___exp__h220961 =
-	     sfd__h220310[53] ?
-	       ((_theResult___fst_exp__h220291 == 11'd2046) ?
+		  _theResult___fst_exp__h211607) ;
+  assign _theResult___exp__h221078 =
+	     sfd__h220427[53] ?
+	       ((_theResult___fst_exp__h220408 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h221168) :
-	       ((_theResult___fst_exp__h220291 == 11'd0 &&
-		 sfd__h220310[53:52] == 2'b01) ?
+		  din_inc___2_exp__h221285) :
+	       ((_theResult___fst_exp__h220408 == 11'd0 &&
+		 sfd__h220427[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h220291) ;
-  assign _theResult___exp__h241558 =
-	     sfd__h240931[53] ?
-	       ((_theResult___fst_exp__h240913 == 11'd2046) ?
+		  _theResult___fst_exp__h220408) ;
+  assign _theResult___exp__h241675 =
+	     sfd__h241048[53] ?
+	       ((_theResult___fst_exp__h241030 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h260046) :
-	       ((_theResult___fst_exp__h240913 == 11'd0 &&
-		 sfd__h240931[53:52] == 2'b01) ?
+		  din_inc___2_exp__h260163) :
+	       ((_theResult___fst_exp__h241030 == 11'd0 &&
+		 sfd__h241048[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h240913) ;
-  assign _theResult___exp__h251148 =
-	     sfd__h250521[53] ?
-	       ((_theResult___fst_exp__h250429 == 11'd2046) ?
+		  _theResult___fst_exp__h241030) ;
+  assign _theResult___exp__h251265 =
+	     sfd__h250638[53] ?
+	       ((_theResult___fst_exp__h250546 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h260081) :
-	       ((_theResult___fst_exp__h250429 == 11'd0 &&
-		 sfd__h250521[53:52] == 2'b01) ?
+		  din_inc___2_exp__h260198) :
+	       ((_theResult___fst_exp__h250546 == 11'd0 &&
+		 sfd__h250638[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h250429) ;
-  assign _theResult___exp__h259900 =
-	     sfd__h259249[53] ?
-	       ((_theResult___fst_exp__h259230 == 11'd2046) ?
+		  _theResult___fst_exp__h250546) ;
+  assign _theResult___exp__h260017 =
+	     sfd__h259366[53] ?
+	       ((_theResult___fst_exp__h259347 == 11'd2046) ?
 		  11'd2047 :
-		  din_inc___2_exp__h260107) :
-	       ((_theResult___fst_exp__h259230 == 11'd0 &&
-		 sfd__h259249[53:52] == 2'b01) ?
+		  din_inc___2_exp__h260224) :
+	       ((_theResult___fst_exp__h259347 == 11'd0 &&
+		 sfd__h259366[53:52] == 2'b01) ?
 		  11'd1 :
-		  _theResult___fst_exp__h259230) ;
-  assign _theResult___exp__h278202 =
-	     sfd__h277778[24] ?
-	       ((_theResult___fst_exp__h277686 == 8'd254) ?
+		  _theResult___fst_exp__h259347) ;
+  assign _theResult___exp__h278402 =
+	     sfd__h277978[24] ?
+	       ((_theResult___fst_exp__h277886 == 8'd254) ?
 		  8'd255 :
-		  din_inc___2_exp__h304723) :
-	       ((_theResult___fst_exp__h277686 == 8'd0 &&
-		 sfd__h277778[24:23] == 2'b01) ?
+		  din_inc___2_exp__h304923) :
+	       ((_theResult___fst_exp__h277886 == 8'd0 &&
+		 sfd__h277978[24:23] == 2'b01) ?
 		  8'd1 :
-		  _theResult___fst_exp__h277686) ;
-  assign _theResult___exp__h286784 =
-	     sfd__h286360[24] ?
-	       ((_theResult___fst_exp__h286342 == 8'd254) ?
+		  _theResult___fst_exp__h277886) ;
+  assign _theResult___exp__h286984 =
+	     sfd__h286560[24] ?
+	       ((_theResult___fst_exp__h286542 == 8'd254) ?
 		  8'd255 :
-		  din_inc___2_exp__h304749) :
-	       ((_theResult___fst_exp__h286342 == 8'd0 &&
-		 sfd__h286360[24:23] == 2'b01) ?
+		  din_inc___2_exp__h304949) :
+	       ((_theResult___fst_exp__h286542 == 8'd0 &&
+		 sfd__h286560[24:23] == 2'b01) ?
 		  8'd1 :
-		  _theResult___fst_exp__h286342) ;
-  assign _theResult___exp__h295968 =
-	     sfd__h295544[24] ?
-	       ((_theResult___fst_exp__h295452 == 8'd254) ?
+		  _theResult___fst_exp__h286542) ;
+  assign _theResult___exp__h296168 =
+	     sfd__h295744[24] ?
+	       ((_theResult___fst_exp__h295652 == 8'd254) ?
 		  8'd255 :
-		  din_inc___2_exp__h304784) :
-	       ((_theResult___fst_exp__h295452 == 8'd0 &&
-		 sfd__h295544[24:23] == 2'b01) ?
+		  din_inc___2_exp__h304984) :
+	       ((_theResult___fst_exp__h295652 == 8'd0 &&
+		 sfd__h295744[24:23] == 2'b01) ?
 		  8'd1 :
-		  _theResult___fst_exp__h295452) ;
-  assign _theResult___exp__h304604 =
-	     sfd__h304156[24] ?
-	       ((_theResult___fst_exp__h304137 == 8'd254) ?
+		  _theResult___fst_exp__h295652) ;
+  assign _theResult___exp__h304804 =
+	     sfd__h304356[24] ?
+	       ((_theResult___fst_exp__h304337 == 8'd254) ?
 		  8'd255 :
-		  din_inc___2_exp__h304810) :
-	       ((_theResult___fst_exp__h304137 == 8'd0 &&
-		 sfd__h304156[24:23] == 2'b01) ?
+		  din_inc___2_exp__h305010) :
+	       ((_theResult___fst_exp__h304337 == 8'd0 &&
+		 sfd__h304356[24:23] == 2'b01) ?
 		  8'd1 :
-		  _theResult___fst_exp__h304137) ;
+		  _theResult___fst_exp__h304337) ;
   assign _theResult___exp__h43475 =
 	     sfd__h42982[53] ?
 	       ((fpu_div64_fState_S4$D_OUT[64:54] == 11'd2046) ?
@@ -6565,598 +6578,598 @@ module mkFPU(CLK,
 	     (!sfd__h133119[56] && sfd__h133119[55]) ?
 	       _theResult___fst_exp__h141412 :
 	       _theResult___fst_exp__h141457 ;
-  assign _theResult___fst_exp__h163327 =
+  assign _theResult___fst_exp__h163444 =
 	     11'd897 -
 	     { 5'd0,
 	       IF_iFifo_first__087_BITS_167_TO_160_130_EQ_0_1_ETC___d3271 } ;
-  assign _theResult___fst_exp__h163333 =
+  assign _theResult___fst_exp__h163450 =
 	     (iFifo$D_OUT[167:160] == 8'd0 && !iFifo$D_OUT[159] &&
 	      NOT_iFifo_first__087_BIT_158_142_202_AND_NOT_i_ETC___d3244 ||
 	      !_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_160_1_ETC___d3273) ?
 	       11'd0 :
-	       _theResult___fst_exp__h163327 ;
-  assign _theResult___fst_exp__h163336 =
+	       _theResult___fst_exp__h163444 ;
+  assign _theResult___fst_exp__h163453 =
 	     (iFifo$D_OUT[167:160] == 8'd0) ?
-	       _theResult___fst_exp__h163333 :
+	       _theResult___fst_exp__h163450 :
 	       11'd897 ;
-  assign _theResult___fst_exp__h164062 =
-	     (_theResult___fst_exp__h163336 == 11'd2047) ?
-	       _theResult___fst_exp__h163336 :
-	       _theResult___fst_exp__h164059 ;
-  assign _theResult___fst_exp__h172852 =
-	     _theResult____h164614[56] ?
+  assign _theResult___fst_exp__h164179 =
+	     (_theResult___fst_exp__h163453 == 11'd2047) ?
+	       _theResult___fst_exp__h163453 :
+	       _theResult___fst_exp__h164176 ;
+  assign _theResult___fst_exp__h172969 =
+	     _theResult____h164731[56] ?
 	       11'd2 :
-	       _theResult___fst_exp__h172926 ;
-  assign _theResult___fst_exp__h172917 =
+	       _theResult___fst_exp__h173043 ;
+  assign _theResult___fst_exp__h173034 =
 	     11'd0 -
 	     { 5'd0,
 	       IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_16_ETC___d3572 } ;
-  assign _theResult___fst_exp__h172923 =
-	     (!_theResult____h164614[56] && !_theResult____h164614[55] &&
-	      !_theResult____h164614[54] &&
-	      !_theResult____h164614[53] &&
-	      !_theResult____h164614[52] &&
-	      !_theResult____h164614[51] &&
-	      !_theResult____h164614[50] &&
-	      !_theResult____h164614[49] &&
-	      !_theResult____h164614[48] &&
-	      !_theResult____h164614[47] &&
-	      !_theResult____h164614[46] &&
-	      !_theResult____h164614[45] &&
-	      !_theResult____h164614[44] &&
-	      !_theResult____h164614[43] &&
-	      !_theResult____h164614[42] &&
-	      !_theResult____h164614[41] &&
-	      !_theResult____h164614[40] &&
-	      !_theResult____h164614[39] &&
-	      !_theResult____h164614[38] &&
-	      !_theResult____h164614[37] &&
-	      !_theResult____h164614[36] &&
-	      !_theResult____h164614[35] &&
-	      !_theResult____h164614[34] &&
-	      !_theResult____h164614[33] &&
-	      !_theResult____h164614[32] &&
-	      !_theResult____h164614[31] &&
-	      !_theResult____h164614[30] &&
-	      !_theResult____h164614[29] &&
-	      !_theResult____h164614[28] &&
-	      !_theResult____h164614[27] &&
-	      !_theResult____h164614[26] &&
-	      !_theResult____h164614[25] &&
-	      !_theResult____h164614[24] &&
-	      !_theResult____h164614[23] &&
-	      !_theResult____h164614[22] &&
-	      !_theResult____h164614[21] &&
-	      !_theResult____h164614[20] &&
-	      !_theResult____h164614[19] &&
-	      !_theResult____h164614[18] &&
-	      !_theResult____h164614[17] &&
-	      !_theResult____h164614[16] &&
-	      !_theResult____h164614[15] &&
-	      !_theResult____h164614[14] &&
-	      !_theResult____h164614[13] &&
-	      !_theResult____h164614[12] &&
-	      !_theResult____h164614[11] &&
-	      !_theResult____h164614[10] &&
-	      !_theResult____h164614[9] &&
-	      !_theResult____h164614[8] &&
-	      !_theResult____h164614[7] &&
-	      !_theResult____h164614[6] &&
-	      !_theResult____h164614[5] &&
-	      !_theResult____h164614[4] &&
-	      !_theResult____h164614[3] &&
-	      !_theResult____h164614[2] &&
-	      !_theResult____h164614[1] &&
-	      !_theResult____h164614[0] ||
+  assign _theResult___fst_exp__h173040 =
+	     (!_theResult____h164731[56] && !_theResult____h164731[55] &&
+	      !_theResult____h164731[54] &&
+	      !_theResult____h164731[53] &&
+	      !_theResult____h164731[52] &&
+	      !_theResult____h164731[51] &&
+	      !_theResult____h164731[50] &&
+	      !_theResult____h164731[49] &&
+	      !_theResult____h164731[48] &&
+	      !_theResult____h164731[47] &&
+	      !_theResult____h164731[46] &&
+	      !_theResult____h164731[45] &&
+	      !_theResult____h164731[44] &&
+	      !_theResult____h164731[43] &&
+	      !_theResult____h164731[42] &&
+	      !_theResult____h164731[41] &&
+	      !_theResult____h164731[40] &&
+	      !_theResult____h164731[39] &&
+	      !_theResult____h164731[38] &&
+	      !_theResult____h164731[37] &&
+	      !_theResult____h164731[36] &&
+	      !_theResult____h164731[35] &&
+	      !_theResult____h164731[34] &&
+	      !_theResult____h164731[33] &&
+	      !_theResult____h164731[32] &&
+	      !_theResult____h164731[31] &&
+	      !_theResult____h164731[30] &&
+	      !_theResult____h164731[29] &&
+	      !_theResult____h164731[28] &&
+	      !_theResult____h164731[27] &&
+	      !_theResult____h164731[26] &&
+	      !_theResult____h164731[25] &&
+	      !_theResult____h164731[24] &&
+	      !_theResult____h164731[23] &&
+	      !_theResult____h164731[22] &&
+	      !_theResult____h164731[21] &&
+	      !_theResult____h164731[20] &&
+	      !_theResult____h164731[19] &&
+	      !_theResult____h164731[18] &&
+	      !_theResult____h164731[17] &&
+	      !_theResult____h164731[16] &&
+	      !_theResult____h164731[15] &&
+	      !_theResult____h164731[14] &&
+	      !_theResult____h164731[13] &&
+	      !_theResult____h164731[12] &&
+	      !_theResult____h164731[11] &&
+	      !_theResult____h164731[10] &&
+	      !_theResult____h164731[9] &&
+	      !_theResult____h164731[8] &&
+	      !_theResult____h164731[7] &&
+	      !_theResult____h164731[6] &&
+	      !_theResult____h164731[5] &&
+	      !_theResult____h164731[4] &&
+	      !_theResult____h164731[3] &&
+	      !_theResult____h164731[2] &&
+	      !_theResult____h164731[1] &&
+	      !_theResult____h164731[0] ||
 	      !_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d3574) ?
 	       11'd0 :
-	       _theResult___fst_exp__h172917 ;
-  assign _theResult___fst_exp__h172926 =
-	     (!_theResult____h164614[56] && _theResult____h164614[55]) ?
+	       _theResult___fst_exp__h173034 ;
+  assign _theResult___fst_exp__h173043 =
+	     (!_theResult____h164731[56] && _theResult____h164731[55]) ?
 	       11'd1 :
-	       _theResult___fst_exp__h172923 ;
-  assign _theResult___fst_exp__h173652 =
-	     (_theResult___fst_exp__h172852 == 11'd2047) ?
-	       _theResult___fst_exp__h172852 :
-	       _theResult___fst_exp__h173649 ;
-  assign _theResult___fst_exp__h181605 =
+	       _theResult___fst_exp__h173040 ;
+  assign _theResult___fst_exp__h173769 =
+	     (_theResult___fst_exp__h172969 == 11'd2047) ?
+	       _theResult___fst_exp__h172969 :
+	       _theResult___fst_exp__h173766 ;
+  assign _theResult___fst_exp__h181722 =
 	     (SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC__q36[10:0] ==
 	      11'd0) ?
 	       11'd1 :
 	       SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC__q36[10:0] ;
-  assign _theResult___fst_exp__h181644 =
+  assign _theResult___fst_exp__h181761 =
 	     SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC__q36[10:0] -
 	     { 5'd0,
 	       IF_iFifo_first__087_BITS_167_TO_160_130_EQ_0_1_ETC___d3271 } ;
-  assign _theResult___fst_exp__h181650 =
+  assign _theResult___fst_exp__h181767 =
 	     (iFifo$D_OUT[167:160] == 8'd0 && !iFifo$D_OUT[159] &&
 	      NOT_iFifo_first__087_BIT_158_142_202_AND_NOT_i_ETC___d3244 ||
 	      !_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_160_1_ETC___d3624) ?
 	       11'd0 :
-	       _theResult___fst_exp__h181644 ;
-  assign _theResult___fst_exp__h181653 =
+	       _theResult___fst_exp__h181761 ;
+  assign _theResult___fst_exp__h181770 =
 	     (iFifo$D_OUT[167:160] == 8'd0) ?
-	       _theResult___fst_exp__h181650 :
-	       _theResult___fst_exp__h181605 ;
-  assign _theResult___fst_exp__h182404 =
-	     (_theResult___fst_exp__h181653 == 11'd2047) ?
-	       _theResult___fst_exp__h181653 :
-	       _theResult___fst_exp__h182401 ;
-  assign _theResult___fst_exp__h182413 =
+	       _theResult___fst_exp__h181767 :
+	       _theResult___fst_exp__h181722 ;
+  assign _theResult___fst_exp__h182521 =
+	     (_theResult___fst_exp__h181770 == 11'd2047) ?
+	       _theResult___fst_exp__h181770 :
+	       _theResult___fst_exp__h182518 ;
+  assign _theResult___fst_exp__h182530 =
 	     (iFifo$D_OUT[167:160] == 8'd0) ?
 	       (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3189 ?
-		  _theResult___snd_fst_exp__h164065 :
-		  _theResult___fst_exp__h148291) :
+		  _theResult___snd_fst_exp__h164182 :
+		  _theResult___fst_exp__h148408) :
 	       (SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3324 ?
-		  _theResult___snd_fst_exp__h182407 :
-		  _theResult___fst_exp__h148291) ;
-  assign _theResult___fst_exp__h182416 =
+		  _theResult___snd_fst_exp__h182524 :
+		  _theResult___fst_exp__h148408) ;
+  assign _theResult___fst_exp__h182533 =
 	     (iFifo$D_OUT[167:160] == 8'd0 && iFifo$D_OUT[159:137] == 23'd0) ?
 	       11'd0 :
-	       _theResult___fst_exp__h182413 ;
-  assign _theResult___fst_exp__h201965 =
+	       _theResult___fst_exp__h182530 ;
+  assign _theResult___fst_exp__h202082 =
 	     11'd897 -
 	     { 5'd0,
 	       IF_iFifo_first__087_BITS_102_TO_95_625_EQ_0_63_ETC___d4757 } ;
-  assign _theResult___fst_exp__h201971 =
+  assign _theResult___fst_exp__h202088 =
 	     (iFifo$D_OUT[102:95] == 8'd0 && !iFifo$D_OUT[94] &&
 	      NOT_iFifo_first__087_BIT_93_637_688_AND_NOT_iF_ETC___d4730 ||
 	      !_0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_62_ETC___d4759) ?
 	       11'd0 :
-	       _theResult___fst_exp__h201965 ;
-  assign _theResult___fst_exp__h201974 =
+	       _theResult___fst_exp__h202082 ;
+  assign _theResult___fst_exp__h202091 =
 	     (iFifo$D_OUT[102:95] == 8'd0) ?
-	       _theResult___fst_exp__h201971 :
+	       _theResult___fst_exp__h202088 :
 	       11'd897 ;
-  assign _theResult___fst_exp__h202700 =
-	     (_theResult___fst_exp__h201974 == 11'd2047) ?
-	       _theResult___fst_exp__h201974 :
-	       _theResult___fst_exp__h202697 ;
-  assign _theResult___fst_exp__h211490 =
-	     _theResult____h203252[56] ?
+  assign _theResult___fst_exp__h202817 =
+	     (_theResult___fst_exp__h202091 == 11'd2047) ?
+	       _theResult___fst_exp__h202091 :
+	       _theResult___fst_exp__h202814 ;
+  assign _theResult___fst_exp__h211607 =
+	     _theResult____h203369[56] ?
 	       11'd2 :
-	       _theResult___fst_exp__h211564 ;
-  assign _theResult___fst_exp__h211555 =
+	       _theResult___fst_exp__h211681 ;
+  assign _theResult___fst_exp__h211672 =
 	     11'd0 -
 	     { 5'd0,
 	       IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_10_ETC___d5055 } ;
-  assign _theResult___fst_exp__h211561 =
-	     (!_theResult____h203252[56] && !_theResult____h203252[55] &&
-	      !_theResult____h203252[54] &&
-	      !_theResult____h203252[53] &&
-	      !_theResult____h203252[52] &&
-	      !_theResult____h203252[51] &&
-	      !_theResult____h203252[50] &&
-	      !_theResult____h203252[49] &&
-	      !_theResult____h203252[48] &&
-	      !_theResult____h203252[47] &&
-	      !_theResult____h203252[46] &&
-	      !_theResult____h203252[45] &&
-	      !_theResult____h203252[44] &&
-	      !_theResult____h203252[43] &&
-	      !_theResult____h203252[42] &&
-	      !_theResult____h203252[41] &&
-	      !_theResult____h203252[40] &&
-	      !_theResult____h203252[39] &&
-	      !_theResult____h203252[38] &&
-	      !_theResult____h203252[37] &&
-	      !_theResult____h203252[36] &&
-	      !_theResult____h203252[35] &&
-	      !_theResult____h203252[34] &&
-	      !_theResult____h203252[33] &&
-	      !_theResult____h203252[32] &&
-	      !_theResult____h203252[31] &&
-	      !_theResult____h203252[30] &&
-	      !_theResult____h203252[29] &&
-	      !_theResult____h203252[28] &&
-	      !_theResult____h203252[27] &&
-	      !_theResult____h203252[26] &&
-	      !_theResult____h203252[25] &&
-	      !_theResult____h203252[24] &&
-	      !_theResult____h203252[23] &&
-	      !_theResult____h203252[22] &&
-	      !_theResult____h203252[21] &&
-	      !_theResult____h203252[20] &&
-	      !_theResult____h203252[19] &&
-	      !_theResult____h203252[18] &&
-	      !_theResult____h203252[17] &&
-	      !_theResult____h203252[16] &&
-	      !_theResult____h203252[15] &&
-	      !_theResult____h203252[14] &&
-	      !_theResult____h203252[13] &&
-	      !_theResult____h203252[12] &&
-	      !_theResult____h203252[11] &&
-	      !_theResult____h203252[10] &&
-	      !_theResult____h203252[9] &&
-	      !_theResult____h203252[8] &&
-	      !_theResult____h203252[7] &&
-	      !_theResult____h203252[6] &&
-	      !_theResult____h203252[5] &&
-	      !_theResult____h203252[4] &&
-	      !_theResult____h203252[3] &&
-	      !_theResult____h203252[2] &&
-	      !_theResult____h203252[1] &&
-	      !_theResult____h203252[0] ||
+  assign _theResult___fst_exp__h211678 =
+	     (!_theResult____h203369[56] && !_theResult____h203369[55] &&
+	      !_theResult____h203369[54] &&
+	      !_theResult____h203369[53] &&
+	      !_theResult____h203369[52] &&
+	      !_theResult____h203369[51] &&
+	      !_theResult____h203369[50] &&
+	      !_theResult____h203369[49] &&
+	      !_theResult____h203369[48] &&
+	      !_theResult____h203369[47] &&
+	      !_theResult____h203369[46] &&
+	      !_theResult____h203369[45] &&
+	      !_theResult____h203369[44] &&
+	      !_theResult____h203369[43] &&
+	      !_theResult____h203369[42] &&
+	      !_theResult____h203369[41] &&
+	      !_theResult____h203369[40] &&
+	      !_theResult____h203369[39] &&
+	      !_theResult____h203369[38] &&
+	      !_theResult____h203369[37] &&
+	      !_theResult____h203369[36] &&
+	      !_theResult____h203369[35] &&
+	      !_theResult____h203369[34] &&
+	      !_theResult____h203369[33] &&
+	      !_theResult____h203369[32] &&
+	      !_theResult____h203369[31] &&
+	      !_theResult____h203369[30] &&
+	      !_theResult____h203369[29] &&
+	      !_theResult____h203369[28] &&
+	      !_theResult____h203369[27] &&
+	      !_theResult____h203369[26] &&
+	      !_theResult____h203369[25] &&
+	      !_theResult____h203369[24] &&
+	      !_theResult____h203369[23] &&
+	      !_theResult____h203369[22] &&
+	      !_theResult____h203369[21] &&
+	      !_theResult____h203369[20] &&
+	      !_theResult____h203369[19] &&
+	      !_theResult____h203369[18] &&
+	      !_theResult____h203369[17] &&
+	      !_theResult____h203369[16] &&
+	      !_theResult____h203369[15] &&
+	      !_theResult____h203369[14] &&
+	      !_theResult____h203369[13] &&
+	      !_theResult____h203369[12] &&
+	      !_theResult____h203369[11] &&
+	      !_theResult____h203369[10] &&
+	      !_theResult____h203369[9] &&
+	      !_theResult____h203369[8] &&
+	      !_theResult____h203369[7] &&
+	      !_theResult____h203369[6] &&
+	      !_theResult____h203369[5] &&
+	      !_theResult____h203369[4] &&
+	      !_theResult____h203369[3] &&
+	      !_theResult____h203369[2] &&
+	      !_theResult____h203369[1] &&
+	      !_theResult____h203369[0] ||
 	      !_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d5057) ?
 	       11'd0 :
-	       _theResult___fst_exp__h211555 ;
-  assign _theResult___fst_exp__h211564 =
-	     (!_theResult____h203252[56] && _theResult____h203252[55]) ?
+	       _theResult___fst_exp__h211672 ;
+  assign _theResult___fst_exp__h211681 =
+	     (!_theResult____h203369[56] && _theResult____h203369[55]) ?
 	       11'd1 :
-	       _theResult___fst_exp__h211561 ;
-  assign _theResult___fst_exp__h212290 =
-	     (_theResult___fst_exp__h211490 == 11'd2047) ?
-	       _theResult___fst_exp__h211490 :
-	       _theResult___fst_exp__h212287 ;
-  assign _theResult___fst_exp__h220243 =
+	       _theResult___fst_exp__h211678 ;
+  assign _theResult___fst_exp__h212407 =
+	     (_theResult___fst_exp__h211607 == 11'd2047) ?
+	       _theResult___fst_exp__h211607 :
+	       _theResult___fst_exp__h212404 ;
+  assign _theResult___fst_exp__h220360 =
 	     (SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC__q96[10:0] ==
 	      11'd0) ?
 	       11'd1 :
 	       SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC__q96[10:0] ;
-  assign _theResult___fst_exp__h220282 =
+  assign _theResult___fst_exp__h220399 =
 	     SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC__q96[10:0] -
 	     { 5'd0,
 	       IF_iFifo_first__087_BITS_102_TO_95_625_EQ_0_63_ETC___d4757 } ;
-  assign _theResult___fst_exp__h220288 =
+  assign _theResult___fst_exp__h220405 =
 	     (iFifo$D_OUT[102:95] == 8'd0 && !iFifo$D_OUT[94] &&
 	      NOT_iFifo_first__087_BIT_93_637_688_AND_NOT_iF_ETC___d4730 ||
 	      !_0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_62_ETC___d5107) ?
 	       11'd0 :
-	       _theResult___fst_exp__h220282 ;
-  assign _theResult___fst_exp__h220291 =
+	       _theResult___fst_exp__h220399 ;
+  assign _theResult___fst_exp__h220408 =
 	     (iFifo$D_OUT[102:95] == 8'd0) ?
-	       _theResult___fst_exp__h220288 :
-	       _theResult___fst_exp__h220243 ;
-  assign _theResult___fst_exp__h221042 =
-	     (_theResult___fst_exp__h220291 == 11'd2047) ?
-	       _theResult___fst_exp__h220291 :
-	       _theResult___fst_exp__h221039 ;
-  assign _theResult___fst_exp__h221051 =
+	       _theResult___fst_exp__h220405 :
+	       _theResult___fst_exp__h220360 ;
+  assign _theResult___fst_exp__h221159 =
+	     (_theResult___fst_exp__h220408 == 11'd2047) ?
+	       _theResult___fst_exp__h220408 :
+	       _theResult___fst_exp__h221156 ;
+  assign _theResult___fst_exp__h221168 =
 	     (iFifo$D_OUT[102:95] == 8'd0) ?
 	       (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4684 ?
-		  _theResult___snd_fst_exp__h202703 :
-		  _theResult___fst_exp__h186931) :
+		  _theResult___snd_fst_exp__h202820 :
+		  _theResult___fst_exp__h187048) :
 	       (SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4807 ?
-		  _theResult___snd_fst_exp__h221045 :
-		  _theResult___fst_exp__h186931) ;
-  assign _theResult___fst_exp__h221054 =
+		  _theResult___snd_fst_exp__h221162 :
+		  _theResult___fst_exp__h187048) ;
+  assign _theResult___fst_exp__h221171 =
 	     (iFifo$D_OUT[102:95] == 8'd0 && iFifo$D_OUT[94:72] == 23'd0) ?
 	       11'd0 :
-	       _theResult___fst_exp__h221051 ;
-  assign _theResult___fst_exp__h240904 =
+	       _theResult___fst_exp__h221168 ;
+  assign _theResult___fst_exp__h241021 =
 	     11'd897 -
 	     { 5'd0,
 	       IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d3982 } ;
-  assign _theResult___fst_exp__h240910 =
+  assign _theResult___fst_exp__h241027 =
 	     (iFifo$D_OUT[37:30] == 8'd0 && !iFifo$D_OUT[29] &&
 	      NOT_iFifo_first__087_BIT_28_862_913_AND_NOT_iF_ETC___d3955 ||
 	      !_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30_850_ETC___d3984) ?
 	       11'd0 :
-	       _theResult___fst_exp__h240904 ;
-  assign _theResult___fst_exp__h240913 =
+	       _theResult___fst_exp__h241021 ;
+  assign _theResult___fst_exp__h241030 =
 	     (iFifo$D_OUT[37:30] == 8'd0) ?
-	       _theResult___fst_exp__h240910 :
+	       _theResult___fst_exp__h241027 :
 	       11'd897 ;
-  assign _theResult___fst_exp__h241639 =
-	     (_theResult___fst_exp__h240913 == 11'd2047) ?
-	       _theResult___fst_exp__h240913 :
-	       _theResult___fst_exp__h241636 ;
-  assign _theResult___fst_exp__h250429 =
-	     _theResult____h242191[56] ?
+  assign _theResult___fst_exp__h241756 =
+	     (_theResult___fst_exp__h241030 == 11'd2047) ?
+	       _theResult___fst_exp__h241030 :
+	       _theResult___fst_exp__h241753 ;
+  assign _theResult___fst_exp__h250546 =
+	     _theResult____h242308[56] ?
 	       11'd2 :
-	       _theResult___fst_exp__h250503 ;
-  assign _theResult___fst_exp__h250494 =
+	       _theResult___fst_exp__h250620 ;
+  assign _theResult___fst_exp__h250611 =
 	     11'd0 -
 	     { 5'd0,
 	       IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_37_ETC___d4280 } ;
-  assign _theResult___fst_exp__h250500 =
-	     (!_theResult____h242191[56] && !_theResult____h242191[55] &&
-	      !_theResult____h242191[54] &&
-	      !_theResult____h242191[53] &&
-	      !_theResult____h242191[52] &&
-	      !_theResult____h242191[51] &&
-	      !_theResult____h242191[50] &&
-	      !_theResult____h242191[49] &&
-	      !_theResult____h242191[48] &&
-	      !_theResult____h242191[47] &&
-	      !_theResult____h242191[46] &&
-	      !_theResult____h242191[45] &&
-	      !_theResult____h242191[44] &&
-	      !_theResult____h242191[43] &&
-	      !_theResult____h242191[42] &&
-	      !_theResult____h242191[41] &&
-	      !_theResult____h242191[40] &&
-	      !_theResult____h242191[39] &&
-	      !_theResult____h242191[38] &&
-	      !_theResult____h242191[37] &&
-	      !_theResult____h242191[36] &&
-	      !_theResult____h242191[35] &&
-	      !_theResult____h242191[34] &&
-	      !_theResult____h242191[33] &&
-	      !_theResult____h242191[32] &&
-	      !_theResult____h242191[31] &&
-	      !_theResult____h242191[30] &&
-	      !_theResult____h242191[29] &&
-	      !_theResult____h242191[28] &&
-	      !_theResult____h242191[27] &&
-	      !_theResult____h242191[26] &&
-	      !_theResult____h242191[25] &&
-	      !_theResult____h242191[24] &&
-	      !_theResult____h242191[23] &&
-	      !_theResult____h242191[22] &&
-	      !_theResult____h242191[21] &&
-	      !_theResult____h242191[20] &&
-	      !_theResult____h242191[19] &&
-	      !_theResult____h242191[18] &&
-	      !_theResult____h242191[17] &&
-	      !_theResult____h242191[16] &&
-	      !_theResult____h242191[15] &&
-	      !_theResult____h242191[14] &&
-	      !_theResult____h242191[13] &&
-	      !_theResult____h242191[12] &&
-	      !_theResult____h242191[11] &&
-	      !_theResult____h242191[10] &&
-	      !_theResult____h242191[9] &&
-	      !_theResult____h242191[8] &&
-	      !_theResult____h242191[7] &&
-	      !_theResult____h242191[6] &&
-	      !_theResult____h242191[5] &&
-	      !_theResult____h242191[4] &&
-	      !_theResult____h242191[3] &&
-	      !_theResult____h242191[2] &&
-	      !_theResult____h242191[1] &&
-	      !_theResult____h242191[0] ||
+  assign _theResult___fst_exp__h250617 =
+	     (!_theResult____h242308[56] && !_theResult____h242308[55] &&
+	      !_theResult____h242308[54] &&
+	      !_theResult____h242308[53] &&
+	      !_theResult____h242308[52] &&
+	      !_theResult____h242308[51] &&
+	      !_theResult____h242308[50] &&
+	      !_theResult____h242308[49] &&
+	      !_theResult____h242308[48] &&
+	      !_theResult____h242308[47] &&
+	      !_theResult____h242308[46] &&
+	      !_theResult____h242308[45] &&
+	      !_theResult____h242308[44] &&
+	      !_theResult____h242308[43] &&
+	      !_theResult____h242308[42] &&
+	      !_theResult____h242308[41] &&
+	      !_theResult____h242308[40] &&
+	      !_theResult____h242308[39] &&
+	      !_theResult____h242308[38] &&
+	      !_theResult____h242308[37] &&
+	      !_theResult____h242308[36] &&
+	      !_theResult____h242308[35] &&
+	      !_theResult____h242308[34] &&
+	      !_theResult____h242308[33] &&
+	      !_theResult____h242308[32] &&
+	      !_theResult____h242308[31] &&
+	      !_theResult____h242308[30] &&
+	      !_theResult____h242308[29] &&
+	      !_theResult____h242308[28] &&
+	      !_theResult____h242308[27] &&
+	      !_theResult____h242308[26] &&
+	      !_theResult____h242308[25] &&
+	      !_theResult____h242308[24] &&
+	      !_theResult____h242308[23] &&
+	      !_theResult____h242308[22] &&
+	      !_theResult____h242308[21] &&
+	      !_theResult____h242308[20] &&
+	      !_theResult____h242308[19] &&
+	      !_theResult____h242308[18] &&
+	      !_theResult____h242308[17] &&
+	      !_theResult____h242308[16] &&
+	      !_theResult____h242308[15] &&
+	      !_theResult____h242308[14] &&
+	      !_theResult____h242308[13] &&
+	      !_theResult____h242308[12] &&
+	      !_theResult____h242308[11] &&
+	      !_theResult____h242308[10] &&
+	      !_theResult____h242308[9] &&
+	      !_theResult____h242308[8] &&
+	      !_theResult____h242308[7] &&
+	      !_theResult____h242308[6] &&
+	      !_theResult____h242308[5] &&
+	      !_theResult____h242308[4] &&
+	      !_theResult____h242308[3] &&
+	      !_theResult____h242308[2] &&
+	      !_theResult____h242308[1] &&
+	      !_theResult____h242308[0] ||
 	      !_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__08_ETC___d4282) ?
 	       11'd0 :
-	       _theResult___fst_exp__h250494 ;
-  assign _theResult___fst_exp__h250503 =
-	     (!_theResult____h242191[56] && _theResult____h242191[55]) ?
+	       _theResult___fst_exp__h250611 ;
+  assign _theResult___fst_exp__h250620 =
+	     (!_theResult____h242308[56] && _theResult____h242308[55]) ?
 	       11'd1 :
-	       _theResult___fst_exp__h250500 ;
-  assign _theResult___fst_exp__h251229 =
-	     (_theResult___fst_exp__h250429 == 11'd2047) ?
-	       _theResult___fst_exp__h250429 :
-	       _theResult___fst_exp__h251226 ;
-  assign _theResult___fst_exp__h259182 =
+	       _theResult___fst_exp__h250617 ;
+  assign _theResult___fst_exp__h251346 =
+	     (_theResult___fst_exp__h250546 == 11'd2047) ?
+	       _theResult___fst_exp__h250546 :
+	       _theResult___fst_exp__h251343 ;
+  assign _theResult___fst_exp__h259299 =
 	     (SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q63[10:0] ==
 	      11'd0) ?
 	       11'd1 :
 	       SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q63[10:0] ;
-  assign _theResult___fst_exp__h259221 =
+  assign _theResult___fst_exp__h259338 =
 	     SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC__q63[10:0] -
 	     { 5'd0,
 	       IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d3982 } ;
-  assign _theResult___fst_exp__h259227 =
+  assign _theResult___fst_exp__h259344 =
 	     (iFifo$D_OUT[37:30] == 8'd0 && !iFifo$D_OUT[29] &&
 	      NOT_iFifo_first__087_BIT_28_862_913_AND_NOT_iF_ETC___d3955 ||
 	      !_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30_850_ETC___d4332) ?
 	       11'd0 :
-	       _theResult___fst_exp__h259221 ;
-  assign _theResult___fst_exp__h259230 =
+	       _theResult___fst_exp__h259338 ;
+  assign _theResult___fst_exp__h259347 =
 	     (iFifo$D_OUT[37:30] == 8'd0) ?
-	       _theResult___fst_exp__h259227 :
-	       _theResult___fst_exp__h259182 ;
-  assign _theResult___fst_exp__h259981 =
-	     (_theResult___fst_exp__h259230 == 11'd2047) ?
-	       _theResult___fst_exp__h259230 :
-	       _theResult___fst_exp__h259978 ;
-  assign _theResult___fst_exp__h259990 =
+	       _theResult___fst_exp__h259344 :
+	       _theResult___fst_exp__h259299 ;
+  assign _theResult___fst_exp__h260098 =
+	     (_theResult___fst_exp__h259347 == 11'd2047) ?
+	       _theResult___fst_exp__h259347 :
+	       _theResult___fst_exp__h260095 ;
+  assign _theResult___fst_exp__h260107 =
 	     (iFifo$D_OUT[37:30] == 8'd0) ?
 	       (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3909 ?
-		  _theResult___snd_fst_exp__h241642 :
-		  _theResult___fst_exp__h225870) :
+		  _theResult___snd_fst_exp__h241759 :
+		  _theResult___fst_exp__h225987) :
 	       (SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4032 ?
-		  _theResult___snd_fst_exp__h259984 :
-		  _theResult___fst_exp__h225870) ;
-  assign _theResult___fst_exp__h259993 =
+		  _theResult___snd_fst_exp__h260101 :
+		  _theResult___fst_exp__h225987) ;
+  assign _theResult___fst_exp__h260110 =
 	     (iFifo$D_OUT[37:30] == 8'd0 && iFifo$D_OUT[29:7] == 23'd0) ?
 	       11'd0 :
-	       _theResult___fst_exp__h259990 ;
-  assign _theResult___fst_exp__h277686 =
-	     _theResult____h269577[56] ?
+	       _theResult___fst_exp__h260107 ;
+  assign _theResult___fst_exp__h277886 =
+	     _theResult____h269777[56] ?
 	       8'd2 :
-	       _theResult___fst_exp__h277760 ;
-  assign _theResult___fst_exp__h277751 =
+	       _theResult___fst_exp__h277960 ;
+  assign _theResult___fst_exp__h277951 =
 	     8'd0 -
 	     { 2'd0,
-	       IF_IF_0b0_CONCAT_NOT_resWire_wget__410_BITS_67_ETC___d5767 } ;
-  assign _theResult___fst_exp__h277757 =
-	     (!_theResult____h269577[56] && !_theResult____h269577[55] &&
-	      !_theResult____h269577[54] &&
-	      !_theResult____h269577[53] &&
-	      !_theResult____h269577[52] &&
-	      !_theResult____h269577[51] &&
-	      !_theResult____h269577[50] &&
-	      !_theResult____h269577[49] &&
-	      !_theResult____h269577[48] &&
-	      !_theResult____h269577[47] &&
-	      !_theResult____h269577[46] &&
-	      !_theResult____h269577[45] &&
-	      !_theResult____h269577[44] &&
-	      !_theResult____h269577[43] &&
-	      !_theResult____h269577[42] &&
-	      !_theResult____h269577[41] &&
-	      !_theResult____h269577[40] &&
-	      !_theResult____h269577[39] &&
-	      !_theResult____h269577[38] &&
-	      !_theResult____h269577[37] &&
-	      !_theResult____h269577[36] &&
-	      !_theResult____h269577[35] &&
-	      !_theResult____h269577[34] &&
-	      !_theResult____h269577[33] &&
-	      !_theResult____h269577[32] &&
-	      !_theResult____h269577[31] &&
-	      !_theResult____h269577[30] &&
-	      !_theResult____h269577[29] &&
-	      !_theResult____h269577[28] &&
-	      !_theResult____h269577[27] &&
-	      !_theResult____h269577[26] &&
-	      !_theResult____h269577[25] &&
-	      !_theResult____h269577[24] &&
-	      !_theResult____h269577[23] &&
-	      !_theResult____h269577[22] &&
-	      !_theResult____h269577[21] &&
-	      !_theResult____h269577[20] &&
-	      !_theResult____h269577[19] &&
-	      !_theResult____h269577[18] &&
-	      !_theResult____h269577[17] &&
-	      !_theResult____h269577[16] &&
-	      !_theResult____h269577[15] &&
-	      !_theResult____h269577[14] &&
-	      !_theResult____h269577[13] &&
-	      !_theResult____h269577[12] &&
-	      !_theResult____h269577[11] &&
-	      !_theResult____h269577[10] &&
-	      !_theResult____h269577[9] &&
-	      !_theResult____h269577[8] &&
-	      !_theResult____h269577[7] &&
-	      !_theResult____h269577[6] &&
-	      !_theResult____h269577[5] &&
-	      !_theResult____h269577[4] &&
-	      !_theResult____h269577[3] &&
-	      !_theResult____h269577[2] &&
-	      !_theResult____h269577[1] &&
-	      !_theResult____h269577[0] ||
-	      !_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5769) ?
+	       IF_IF_0b0_CONCAT_NOT_resWire_wget__412_BITS_67_ETC___d5769 } ;
+  assign _theResult___fst_exp__h277957 =
+	     (!_theResult____h269777[56] && !_theResult____h269777[55] &&
+	      !_theResult____h269777[54] &&
+	      !_theResult____h269777[53] &&
+	      !_theResult____h269777[52] &&
+	      !_theResult____h269777[51] &&
+	      !_theResult____h269777[50] &&
+	      !_theResult____h269777[49] &&
+	      !_theResult____h269777[48] &&
+	      !_theResult____h269777[47] &&
+	      !_theResult____h269777[46] &&
+	      !_theResult____h269777[45] &&
+	      !_theResult____h269777[44] &&
+	      !_theResult____h269777[43] &&
+	      !_theResult____h269777[42] &&
+	      !_theResult____h269777[41] &&
+	      !_theResult____h269777[40] &&
+	      !_theResult____h269777[39] &&
+	      !_theResult____h269777[38] &&
+	      !_theResult____h269777[37] &&
+	      !_theResult____h269777[36] &&
+	      !_theResult____h269777[35] &&
+	      !_theResult____h269777[34] &&
+	      !_theResult____h269777[33] &&
+	      !_theResult____h269777[32] &&
+	      !_theResult____h269777[31] &&
+	      !_theResult____h269777[30] &&
+	      !_theResult____h269777[29] &&
+	      !_theResult____h269777[28] &&
+	      !_theResult____h269777[27] &&
+	      !_theResult____h269777[26] &&
+	      !_theResult____h269777[25] &&
+	      !_theResult____h269777[24] &&
+	      !_theResult____h269777[23] &&
+	      !_theResult____h269777[22] &&
+	      !_theResult____h269777[21] &&
+	      !_theResult____h269777[20] &&
+	      !_theResult____h269777[19] &&
+	      !_theResult____h269777[18] &&
+	      !_theResult____h269777[17] &&
+	      !_theResult____h269777[16] &&
+	      !_theResult____h269777[15] &&
+	      !_theResult____h269777[14] &&
+	      !_theResult____h269777[13] &&
+	      !_theResult____h269777[12] &&
+	      !_theResult____h269777[11] &&
+	      !_theResult____h269777[10] &&
+	      !_theResult____h269777[9] &&
+	      !_theResult____h269777[8] &&
+	      !_theResult____h269777[7] &&
+	      !_theResult____h269777[6] &&
+	      !_theResult____h269777[5] &&
+	      !_theResult____h269777[4] &&
+	      !_theResult____h269777[3] &&
+	      !_theResult____h269777[2] &&
+	      !_theResult____h269777[1] &&
+	      !_theResult____h269777[0] ||
+	      !_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__41_ETC___d5771) ?
 	       8'd0 :
-	       _theResult___fst_exp__h277751 ;
-  assign _theResult___fst_exp__h277760 =
-	     (!_theResult____h269577[56] && _theResult____h269577[55]) ?
+	       _theResult___fst_exp__h277951 ;
+  assign _theResult___fst_exp__h277960 =
+	     (!_theResult____h269777[56] && _theResult____h269777[55]) ?
 	       8'd1 :
-	       _theResult___fst_exp__h277757 ;
-  assign _theResult___fst_exp__h278283 =
-	     (_theResult___fst_exp__h277686 == 8'd255) ?
-	       _theResult___fst_exp__h277686 :
-	       _theResult___fst_exp__h278280 ;
-  assign _theResult___fst_exp__h286333 =
+	       _theResult___fst_exp__h277957 ;
+  assign _theResult___fst_exp__h278483 =
+	     (_theResult___fst_exp__h277886 == 8'd255) ?
+	       _theResult___fst_exp__h277886 :
+	       _theResult___fst_exp__h278480 ;
+  assign _theResult___fst_exp__h286533 =
 	     8'd129 -
 	     { 2'd0,
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982 } ;
-  assign _theResult___fst_exp__h286339 =
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984 } ;
+  assign _theResult___fst_exp__h286539 =
 	     (resWire$wget[67:57] == 11'd0 &&
-	      NOT_resWire_wget__410_BIT_56_426_825_AND_NOT_r_ETC___d5927 ||
-	      !_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d5984) ?
+	      NOT_resWire_wget__412_BIT_56_428_827_AND_NOT_r_ETC___d5929 ||
+	      !_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d5986) ?
 	       8'd0 :
-	       _theResult___fst_exp__h286333 ;
-  assign _theResult___fst_exp__h286342 =
+	       _theResult___fst_exp__h286533 ;
+  assign _theResult___fst_exp__h286542 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _theResult___fst_exp__h286339 :
+	       _theResult___fst_exp__h286539 :
 	       8'd129 ;
-  assign _theResult___fst_exp__h286865 =
-	     (_theResult___fst_exp__h286342 == 8'd255) ?
-	       _theResult___fst_exp__h286342 :
-	       _theResult___fst_exp__h286862 ;
-  assign _theResult___fst_exp__h295452 =
-	     _theResult____h287214[56] ?
+  assign _theResult___fst_exp__h287065 =
+	     (_theResult___fst_exp__h286542 == 8'd255) ?
+	       _theResult___fst_exp__h286542 :
+	       _theResult___fst_exp__h287062 ;
+  assign _theResult___fst_exp__h295652 =
+	     _theResult____h287414[56] ?
 	       8'd2 :
-	       _theResult___fst_exp__h295526 ;
-  assign _theResult___fst_exp__h295517 =
+	       _theResult___fst_exp__h295726 ;
+  assign _theResult___fst_exp__h295717 =
 	     8'd0 -
 	     { 2'd0,
-	       IF_IF_3970_MINUS_SEXT_resWire_wget__410_BITS_6_ETC___d6278 } ;
-  assign _theResult___fst_exp__h295523 =
-	     (!_theResult____h287214[56] && !_theResult____h287214[55] &&
-	      !_theResult____h287214[54] &&
-	      !_theResult____h287214[53] &&
-	      !_theResult____h287214[52] &&
-	      !_theResult____h287214[51] &&
-	      !_theResult____h287214[50] &&
-	      !_theResult____h287214[49] &&
-	      !_theResult____h287214[48] &&
-	      !_theResult____h287214[47] &&
-	      !_theResult____h287214[46] &&
-	      !_theResult____h287214[45] &&
-	      !_theResult____h287214[44] &&
-	      !_theResult____h287214[43] &&
-	      !_theResult____h287214[42] &&
-	      !_theResult____h287214[41] &&
-	      !_theResult____h287214[40] &&
-	      !_theResult____h287214[39] &&
-	      !_theResult____h287214[38] &&
-	      !_theResult____h287214[37] &&
-	      !_theResult____h287214[36] &&
-	      !_theResult____h287214[35] &&
-	      !_theResult____h287214[34] &&
-	      !_theResult____h287214[33] &&
-	      !_theResult____h287214[32] &&
-	      !_theResult____h287214[31] &&
-	      !_theResult____h287214[30] &&
-	      !_theResult____h287214[29] &&
-	      !_theResult____h287214[28] &&
-	      !_theResult____h287214[27] &&
-	      !_theResult____h287214[26] &&
-	      !_theResult____h287214[25] &&
-	      !_theResult____h287214[24] &&
-	      !_theResult____h287214[23] &&
-	      !_theResult____h287214[22] &&
-	      !_theResult____h287214[21] &&
-	      !_theResult____h287214[20] &&
-	      !_theResult____h287214[19] &&
-	      !_theResult____h287214[18] &&
-	      !_theResult____h287214[17] &&
-	      !_theResult____h287214[16] &&
-	      !_theResult____h287214[15] &&
-	      !_theResult____h287214[14] &&
-	      !_theResult____h287214[13] &&
-	      !_theResult____h287214[12] &&
-	      !_theResult____h287214[11] &&
-	      !_theResult____h287214[10] &&
-	      !_theResult____h287214[9] &&
-	      !_theResult____h287214[8] &&
-	      !_theResult____h287214[7] &&
-	      !_theResult____h287214[6] &&
-	      !_theResult____h287214[5] &&
-	      !_theResult____h287214[4] &&
-	      !_theResult____h287214[3] &&
-	      !_theResult____h287214[2] &&
-	      !_theResult____h287214[1] &&
-	      !_theResult____h287214[0] ||
-	      !_0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6280) ?
+	       IF_IF_3970_MINUS_SEXT_resWire_wget__412_BITS_6_ETC___d6280 } ;
+  assign _theResult___fst_exp__h295723 =
+	     (!_theResult____h287414[56] && !_theResult____h287414[55] &&
+	      !_theResult____h287414[54] &&
+	      !_theResult____h287414[53] &&
+	      !_theResult____h287414[52] &&
+	      !_theResult____h287414[51] &&
+	      !_theResult____h287414[50] &&
+	      !_theResult____h287414[49] &&
+	      !_theResult____h287414[48] &&
+	      !_theResult____h287414[47] &&
+	      !_theResult____h287414[46] &&
+	      !_theResult____h287414[45] &&
+	      !_theResult____h287414[44] &&
+	      !_theResult____h287414[43] &&
+	      !_theResult____h287414[42] &&
+	      !_theResult____h287414[41] &&
+	      !_theResult____h287414[40] &&
+	      !_theResult____h287414[39] &&
+	      !_theResult____h287414[38] &&
+	      !_theResult____h287414[37] &&
+	      !_theResult____h287414[36] &&
+	      !_theResult____h287414[35] &&
+	      !_theResult____h287414[34] &&
+	      !_theResult____h287414[33] &&
+	      !_theResult____h287414[32] &&
+	      !_theResult____h287414[31] &&
+	      !_theResult____h287414[30] &&
+	      !_theResult____h287414[29] &&
+	      !_theResult____h287414[28] &&
+	      !_theResult____h287414[27] &&
+	      !_theResult____h287414[26] &&
+	      !_theResult____h287414[25] &&
+	      !_theResult____h287414[24] &&
+	      !_theResult____h287414[23] &&
+	      !_theResult____h287414[22] &&
+	      !_theResult____h287414[21] &&
+	      !_theResult____h287414[20] &&
+	      !_theResult____h287414[19] &&
+	      !_theResult____h287414[18] &&
+	      !_theResult____h287414[17] &&
+	      !_theResult____h287414[16] &&
+	      !_theResult____h287414[15] &&
+	      !_theResult____h287414[14] &&
+	      !_theResult____h287414[13] &&
+	      !_theResult____h287414[12] &&
+	      !_theResult____h287414[11] &&
+	      !_theResult____h287414[10] &&
+	      !_theResult____h287414[9] &&
+	      !_theResult____h287414[8] &&
+	      !_theResult____h287414[7] &&
+	      !_theResult____h287414[6] &&
+	      !_theResult____h287414[5] &&
+	      !_theResult____h287414[4] &&
+	      !_theResult____h287414[3] &&
+	      !_theResult____h287414[2] &&
+	      !_theResult____h287414[1] &&
+	      !_theResult____h287414[0] ||
+	      !_0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget__4_ETC___d6282) ?
 	       8'd0 :
-	       _theResult___fst_exp__h295517 ;
-  assign _theResult___fst_exp__h295526 =
-	     (!_theResult____h287214[56] && _theResult____h287214[55]) ?
+	       _theResult___fst_exp__h295717 ;
+  assign _theResult___fst_exp__h295726 =
+	     (!_theResult____h287414[56] && _theResult____h287414[55]) ?
 	       8'd1 :
-	       _theResult___fst_exp__h295523 ;
-  assign _theResult___fst_exp__h296049 =
-	     (_theResult___fst_exp__h295452 == 8'd255) ?
-	       _theResult___fst_exp__h295452 :
-	       _theResult___fst_exp__h296046 ;
-  assign _theResult___fst_exp__h304089 =
-	     (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138[7:0] ==
+	       _theResult___fst_exp__h295723 ;
+  assign _theResult___fst_exp__h296249 =
+	     (_theResult___fst_exp__h295652 == 8'd255) ?
+	       _theResult___fst_exp__h295652 :
+	       _theResult___fst_exp__h296246 ;
+  assign _theResult___fst_exp__h304289 =
+	     (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138[7:0] ==
 	      8'd0) ?
 	       8'd1 :
-	       SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138[7:0] ;
-  assign _theResult___fst_exp__h304128 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC__q138[7:0] -
+	       SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138[7:0] ;
+  assign _theResult___fst_exp__h304328 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC__q138[7:0] -
 	     { 2'd0,
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982 } ;
-  assign _theResult___fst_exp__h304134 =
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984 } ;
+  assign _theResult___fst_exp__h304334 =
 	     (resWire$wget[67:57] == 11'd0 &&
-	      NOT_resWire_wget__410_BIT_56_426_825_AND_NOT_r_ETC___d5927 ||
-	      !_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_41_ETC___d6333) ?
+	      NOT_resWire_wget__412_BIT_56_428_827_AND_NOT_r_ETC___d5929 ||
+	      !_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_41_ETC___d6335) ?
 	       8'd0 :
-	       _theResult___fst_exp__h304128 ;
-  assign _theResult___fst_exp__h304137 =
+	       _theResult___fst_exp__h304328 ;
+  assign _theResult___fst_exp__h304337 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _theResult___fst_exp__h304134 :
-	       _theResult___fst_exp__h304089 ;
-  assign _theResult___fst_exp__h304685 =
-	     (_theResult___fst_exp__h304137 == 8'd255) ?
-	       _theResult___fst_exp__h304137 :
-	       _theResult___fst_exp__h304682 ;
-  assign _theResult___fst_exp__h304694 =
+	       _theResult___fst_exp__h304334 :
+	       _theResult___fst_exp__h304289 ;
+  assign _theResult___fst_exp__h304885 =
+	     (_theResult___fst_exp__h304337 == 8'd255) ?
+	       _theResult___fst_exp__h304337 :
+	       _theResult___fst_exp__h304882 ;
+  assign _theResult___fst_exp__h304894 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 ?
-		  _theResult___snd_fst_exp__h286868 :
-		  _theResult___fst_exp__h269559) :
-	       (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 ?
-		  _theResult___snd_fst_exp__h304688 :
-		  _theResult___fst_exp__h269559) ;
-  assign _theResult___fst_exp__h304697 =
+	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 ?
+		  _theResult___snd_fst_exp__h287068 :
+		  _theResult___fst_exp__h269759) :
+	       (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 ?
+		  _theResult___snd_fst_exp__h304888 :
+		  _theResult___fst_exp__h269759) ;
+  assign _theResult___fst_exp__h304897 =
 	     (resWire$wget[67:57] == 11'd0 && resWire$wget[56:5] == 52'd0) ?
 	       8'd0 :
-	       _theResult___fst_exp__h304694 ;
+	       _theResult___fst_exp__h304894 ;
   assign _theResult___fst_exp__h42284 =
 	     fpu_div64_fState_S3$D_OUT[120:110] - 11'd1 ;
   assign _theResult___fst_exp__h42287 =
@@ -7352,113 +7365,113 @@ module mkFPU(CLK,
 	     (fpu_sqr64_fState_S4$D_OUT[64:54] == 11'd2047) ?
 	       fpu_sqr64_fState_S4$D_OUT[64:54] :
 	       _theResult___fst_exp__h95987 ;
-  assign _theResult___fst_sfd__h164063 =
-	     (_theResult___fst_exp__h163336 == 11'd2047) ?
-	       _theResult___snd__h163287[56:5] :
-	       _theResult___fst_sfd__h164060 ;
-  assign _theResult___fst_sfd__h173653 =
-	     (_theResult___fst_exp__h172852 == 11'd2047) ?
-	       sfdin__h172846[56:5] :
-	       _theResult___fst_sfd__h173650 ;
-  assign _theResult___fst_sfd__h182405 =
-	     (_theResult___fst_exp__h181653 == 11'd2047) ?
-	       _theResult___snd__h181599[56:5] :
-	       _theResult___fst_sfd__h182402 ;
-  assign _theResult___fst_sfd__h182414 =
+  assign _theResult___fst_sfd__h164180 =
+	     (_theResult___fst_exp__h163453 == 11'd2047) ?
+	       _theResult___snd__h163404[56:5] :
+	       _theResult___fst_sfd__h164177 ;
+  assign _theResult___fst_sfd__h173770 =
+	     (_theResult___fst_exp__h172969 == 11'd2047) ?
+	       sfdin__h172963[56:5] :
+	       _theResult___fst_sfd__h173767 ;
+  assign _theResult___fst_sfd__h182522 =
+	     (_theResult___fst_exp__h181770 == 11'd2047) ?
+	       _theResult___snd__h181716[56:5] :
+	       _theResult___fst_sfd__h182519 ;
+  assign _theResult___fst_sfd__h182531 =
 	     (iFifo$D_OUT[167:160] == 8'd0) ?
 	       (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3189 ?
-		  _theResult___snd_fst_sfd__h164066 :
-		  _theResult___fst_sfd__h148292) :
+		  _theResult___snd_fst_sfd__h164183 :
+		  _theResult___fst_sfd__h148409) :
 	       (SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3324 ?
-		  _theResult___snd_fst_sfd__h182408 :
-		  _theResult___fst_sfd__h148292) ;
-  assign _theResult___fst_sfd__h182420 =
+		  _theResult___snd_fst_sfd__h182525 :
+		  _theResult___fst_sfd__h148409) ;
+  assign _theResult___fst_sfd__h182537 =
 	     ((iFifo$D_OUT[167:160] == 8'd255 ||
 	       iFifo$D_OUT[167:160] == 8'd0) &&
 	      iFifo$D_OUT[159:137] == 23'd0) ?
 	       52'd0 :
-	       _theResult___fst_sfd__h182414 ;
-  assign _theResult___fst_sfd__h202701 =
-	     (_theResult___fst_exp__h201974 == 11'd2047) ?
-	       _theResult___snd__h201925[56:5] :
-	       _theResult___fst_sfd__h202698 ;
-  assign _theResult___fst_sfd__h212291 =
-	     (_theResult___fst_exp__h211490 == 11'd2047) ?
-	       sfdin__h211484[56:5] :
-	       _theResult___fst_sfd__h212288 ;
-  assign _theResult___fst_sfd__h221043 =
-	     (_theResult___fst_exp__h220291 == 11'd2047) ?
-	       _theResult___snd__h220237[56:5] :
-	       _theResult___fst_sfd__h221040 ;
-  assign _theResult___fst_sfd__h221052 =
+	       _theResult___fst_sfd__h182531 ;
+  assign _theResult___fst_sfd__h202818 =
+	     (_theResult___fst_exp__h202091 == 11'd2047) ?
+	       _theResult___snd__h202042[56:5] :
+	       _theResult___fst_sfd__h202815 ;
+  assign _theResult___fst_sfd__h212408 =
+	     (_theResult___fst_exp__h211607 == 11'd2047) ?
+	       sfdin__h211601[56:5] :
+	       _theResult___fst_sfd__h212405 ;
+  assign _theResult___fst_sfd__h221160 =
+	     (_theResult___fst_exp__h220408 == 11'd2047) ?
+	       _theResult___snd__h220354[56:5] :
+	       _theResult___fst_sfd__h221157 ;
+  assign _theResult___fst_sfd__h221169 =
 	     (iFifo$D_OUT[102:95] == 8'd0) ?
 	       (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4684 ?
-		  _theResult___snd_fst_sfd__h202704 :
-		  _theResult___fst_sfd__h186932) :
+		  _theResult___snd_fst_sfd__h202821 :
+		  _theResult___fst_sfd__h187049) :
 	       (SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4807 ?
-		  _theResult___snd_fst_sfd__h221046 :
-		  _theResult___fst_sfd__h186932) ;
-  assign _theResult___fst_sfd__h221058 =
+		  _theResult___snd_fst_sfd__h221163 :
+		  _theResult___fst_sfd__h187049) ;
+  assign _theResult___fst_sfd__h221175 =
 	     ((iFifo$D_OUT[102:95] == 8'd255 ||
 	       iFifo$D_OUT[102:95] == 8'd0) &&
 	      iFifo$D_OUT[94:72] == 23'd0) ?
 	       52'd0 :
-	       _theResult___fst_sfd__h221052 ;
-  assign _theResult___fst_sfd__h241640 =
-	     (_theResult___fst_exp__h240913 == 11'd2047) ?
-	       _theResult___snd__h240864[56:5] :
-	       _theResult___fst_sfd__h241637 ;
-  assign _theResult___fst_sfd__h251230 =
-	     (_theResult___fst_exp__h250429 == 11'd2047) ?
-	       sfdin__h250423[56:5] :
-	       _theResult___fst_sfd__h251227 ;
-  assign _theResult___fst_sfd__h259982 =
-	     (_theResult___fst_exp__h259230 == 11'd2047) ?
-	       _theResult___snd__h259176[56:5] :
-	       _theResult___fst_sfd__h259979 ;
-  assign _theResult___fst_sfd__h259991 =
+	       _theResult___fst_sfd__h221169 ;
+  assign _theResult___fst_sfd__h241757 =
+	     (_theResult___fst_exp__h241030 == 11'd2047) ?
+	       _theResult___snd__h240981[56:5] :
+	       _theResult___fst_sfd__h241754 ;
+  assign _theResult___fst_sfd__h251347 =
+	     (_theResult___fst_exp__h250546 == 11'd2047) ?
+	       sfdin__h250540[56:5] :
+	       _theResult___fst_sfd__h251344 ;
+  assign _theResult___fst_sfd__h260099 =
+	     (_theResult___fst_exp__h259347 == 11'd2047) ?
+	       _theResult___snd__h259293[56:5] :
+	       _theResult___fst_sfd__h260096 ;
+  assign _theResult___fst_sfd__h260108 =
 	     (iFifo$D_OUT[37:30] == 8'd0) ?
 	       (_3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3909 ?
-		  _theResult___snd_fst_sfd__h241643 :
-		  _theResult___fst_sfd__h225871) :
+		  _theResult___snd_fst_sfd__h241760 :
+		  _theResult___fst_sfd__h225988) :
 	       (SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4032 ?
-		  _theResult___snd_fst_sfd__h259985 :
-		  _theResult___fst_sfd__h225871) ;
-  assign _theResult___fst_sfd__h259997 =
+		  _theResult___snd_fst_sfd__h260102 :
+		  _theResult___fst_sfd__h225988) ;
+  assign _theResult___fst_sfd__h260114 =
 	     ((iFifo$D_OUT[37:30] == 8'd255 || iFifo$D_OUT[37:30] == 8'd0) &&
 	      iFifo$D_OUT[29:7] == 23'd0) ?
 	       52'd0 :
-	       _theResult___fst_sfd__h259991 ;
-  assign _theResult___fst_sfd__h278284 =
-	     (_theResult___fst_exp__h277686 == 8'd255) ?
-	       sfdin__h277680[56:34] :
-	       _theResult___fst_sfd__h278281 ;
-  assign _theResult___fst_sfd__h286866 =
-	     (_theResult___fst_exp__h286342 == 8'd255) ?
-	       _theResult___snd__h286293[56:34] :
-	       _theResult___fst_sfd__h286863 ;
-  assign _theResult___fst_sfd__h296050 =
-	     (_theResult___fst_exp__h295452 == 8'd255) ?
-	       sfdin__h295446[56:34] :
-	       _theResult___fst_sfd__h296047 ;
-  assign _theResult___fst_sfd__h304686 =
-	     (_theResult___fst_exp__h304137 == 8'd255) ?
-	       _theResult___snd__h304083[56:34] :
-	       _theResult___fst_sfd__h304683 ;
-  assign _theResult___fst_sfd__h304695 =
+	       _theResult___fst_sfd__h260108 ;
+  assign _theResult___fst_sfd__h278484 =
+	     (_theResult___fst_exp__h277886 == 8'd255) ?
+	       sfdin__h277880[56:34] :
+	       _theResult___fst_sfd__h278481 ;
+  assign _theResult___fst_sfd__h287066 =
+	     (_theResult___fst_exp__h286542 == 8'd255) ?
+	       _theResult___snd__h286493[56:34] :
+	       _theResult___fst_sfd__h287063 ;
+  assign _theResult___fst_sfd__h296250 =
+	     (_theResult___fst_exp__h295652 == 8'd255) ?
+	       sfdin__h295646[56:34] :
+	       _theResult___fst_sfd__h296247 ;
+  assign _theResult___fst_sfd__h304886 =
+	     (_theResult___fst_exp__h304337 == 8'd255) ?
+	       _theResult___snd__h304283[56:34] :
+	       _theResult___fst_sfd__h304883 ;
+  assign _theResult___fst_sfd__h304895 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5532 ?
-		  _theResult___snd_fst_sfd__h286869 :
-		  _theResult___fst_sfd__h269560) :
-	       (SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6032 ?
-		  _theResult___snd_fst_sfd__h304689 :
-		  _theResult___fst_sfd__h269560) ;
-  assign _theResult___fst_sfd__h304701 =
+	       (_3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5534 ?
+		  _theResult___snd_fst_sfd__h287069 :
+		  _theResult___fst_sfd__h269760) :
+	       (SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6034 ?
+		  _theResult___snd_fst_sfd__h304889 :
+		  _theResult___fst_sfd__h269760) ;
+  assign _theResult___fst_sfd__h304901 =
 	     ((resWire$wget[67:57] == 11'd2047 ||
 	       resWire$wget[67:57] == 11'd0) &&
 	      resWire$wget[56:5] == 52'd0) ?
 	       23'd0 :
-	       _theResult___fst_sfd__h304695 ;
+	       _theResult___fst_sfd__h304895 ;
   assign _theResult___fst_sfd__h43557 =
 	     (fpu_div64_fState_S4$D_OUT[64:54] == 11'd2047) ?
 	       fpu_div64_fState_S4$D_OUT[53:2] :
@@ -7477,84 +7490,84 @@ module mkFPU(CLK,
 		  52'd0 :
 		  sfd__h142040[52:1]) :
 	       sfd__h142040[51:0] ;
-  assign _theResult___sfd__h163982 =
-	     sfd__h163354[53] ?
-	       ((_theResult___fst_exp__h163336 == 11'd2046) ?
+  assign _theResult___sfd__h164099 =
+	     sfd__h163471[53] ?
+	       ((_theResult___fst_exp__h163453 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h163354[52:1]) :
-	       sfd__h163354[51:0] ;
-  assign _theResult___sfd__h173572 =
-	     sfd__h172944[53] ?
-	       ((_theResult___fst_exp__h172852 == 11'd2046) ?
+		  sfd__h163471[52:1]) :
+	       sfd__h163471[51:0] ;
+  assign _theResult___sfd__h173689 =
+	     sfd__h173061[53] ?
+	       ((_theResult___fst_exp__h172969 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h172944[52:1]) :
-	       sfd__h172944[51:0] ;
-  assign _theResult___sfd__h182324 =
-	     sfd__h181672[53] ?
-	       ((_theResult___fst_exp__h181653 == 11'd2046) ?
+		  sfd__h173061[52:1]) :
+	       sfd__h173061[51:0] ;
+  assign _theResult___sfd__h182441 =
+	     sfd__h181789[53] ?
+	       ((_theResult___fst_exp__h181770 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h181672[52:1]) :
-	       sfd__h181672[51:0] ;
-  assign _theResult___sfd__h202620 =
-	     sfd__h201992[53] ?
-	       ((_theResult___fst_exp__h201974 == 11'd2046) ?
+		  sfd__h181789[52:1]) :
+	       sfd__h181789[51:0] ;
+  assign _theResult___sfd__h202737 =
+	     sfd__h202109[53] ?
+	       ((_theResult___fst_exp__h202091 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h201992[52:1]) :
-	       sfd__h201992[51:0] ;
-  assign _theResult___sfd__h212210 =
-	     sfd__h211582[53] ?
-	       ((_theResult___fst_exp__h211490 == 11'd2046) ?
+		  sfd__h202109[52:1]) :
+	       sfd__h202109[51:0] ;
+  assign _theResult___sfd__h212327 =
+	     sfd__h211699[53] ?
+	       ((_theResult___fst_exp__h211607 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h211582[52:1]) :
-	       sfd__h211582[51:0] ;
-  assign _theResult___sfd__h220962 =
-	     sfd__h220310[53] ?
-	       ((_theResult___fst_exp__h220291 == 11'd2046) ?
+		  sfd__h211699[52:1]) :
+	       sfd__h211699[51:0] ;
+  assign _theResult___sfd__h221079 =
+	     sfd__h220427[53] ?
+	       ((_theResult___fst_exp__h220408 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h220310[52:1]) :
-	       sfd__h220310[51:0] ;
-  assign _theResult___sfd__h241559 =
-	     sfd__h240931[53] ?
-	       ((_theResult___fst_exp__h240913 == 11'd2046) ?
+		  sfd__h220427[52:1]) :
+	       sfd__h220427[51:0] ;
+  assign _theResult___sfd__h241676 =
+	     sfd__h241048[53] ?
+	       ((_theResult___fst_exp__h241030 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h240931[52:1]) :
-	       sfd__h240931[51:0] ;
-  assign _theResult___sfd__h251149 =
-	     sfd__h250521[53] ?
-	       ((_theResult___fst_exp__h250429 == 11'd2046) ?
+		  sfd__h241048[52:1]) :
+	       sfd__h241048[51:0] ;
+  assign _theResult___sfd__h251266 =
+	     sfd__h250638[53] ?
+	       ((_theResult___fst_exp__h250546 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h250521[52:1]) :
-	       sfd__h250521[51:0] ;
-  assign _theResult___sfd__h259901 =
-	     sfd__h259249[53] ?
-	       ((_theResult___fst_exp__h259230 == 11'd2046) ?
+		  sfd__h250638[52:1]) :
+	       sfd__h250638[51:0] ;
+  assign _theResult___sfd__h260018 =
+	     sfd__h259366[53] ?
+	       ((_theResult___fst_exp__h259347 == 11'd2046) ?
 		  52'd0 :
-		  sfd__h259249[52:1]) :
-	       sfd__h259249[51:0] ;
-  assign _theResult___sfd__h278203 =
-	     sfd__h277778[24] ?
-	       ((_theResult___fst_exp__h277686 == 8'd254) ?
+		  sfd__h259366[52:1]) :
+	       sfd__h259366[51:0] ;
+  assign _theResult___sfd__h278403 =
+	     sfd__h277978[24] ?
+	       ((_theResult___fst_exp__h277886 == 8'd254) ?
 		  23'd0 :
-		  sfd__h277778[23:1]) :
-	       sfd__h277778[22:0] ;
-  assign _theResult___sfd__h286785 =
-	     sfd__h286360[24] ?
-	       ((_theResult___fst_exp__h286342 == 8'd254) ?
+		  sfd__h277978[23:1]) :
+	       sfd__h277978[22:0] ;
+  assign _theResult___sfd__h286985 =
+	     sfd__h286560[24] ?
+	       ((_theResult___fst_exp__h286542 == 8'd254) ?
 		  23'd0 :
-		  sfd__h286360[23:1]) :
-	       sfd__h286360[22:0] ;
-  assign _theResult___sfd__h295969 =
-	     sfd__h295544[24] ?
-	       ((_theResult___fst_exp__h295452 == 8'd254) ?
+		  sfd__h286560[23:1]) :
+	       sfd__h286560[22:0] ;
+  assign _theResult___sfd__h296169 =
+	     sfd__h295744[24] ?
+	       ((_theResult___fst_exp__h295652 == 8'd254) ?
 		  23'd0 :
-		  sfd__h295544[23:1]) :
-	       sfd__h295544[22:0] ;
-  assign _theResult___sfd__h304605 =
-	     sfd__h304156[24] ?
-	       ((_theResult___fst_exp__h304137 == 8'd254) ?
+		  sfd__h295744[23:1]) :
+	       sfd__h295744[22:0] ;
+  assign _theResult___sfd__h304805 =
+	     sfd__h304356[24] ?
+	       ((_theResult___fst_exp__h304337 == 8'd254) ?
 		  23'd0 :
-		  sfd__h304156[23:1]) :
-	       sfd__h304156[22:0] ;
+		  sfd__h304356[23:1]) :
+	       sfd__h304356[22:0] ;
   assign _theResult___sfd__h43476 =
 	     sfd__h42982[53] ?
 	       ((fpu_div64_fState_S4$D_OUT[64:54] == 11'd2046) ?
@@ -7763,485 +7776,485 @@ module mkFPU(CLK,
   assign _theResult___snd__h141449 =
 	     sfd__h133119 <<
 	     IF_IF_fpu_madd_fState_S7_first__651_BIT_128_65_ETC___d2901 ;
-  assign _theResult___snd__h163287 =
+  assign _theResult___snd__h163404 =
 	     (iFifo$D_OUT[167:160] == 8'd0) ?
-	       _theResult___snd__h163296 :
-	       _theResult___snd__h163289 ;
-  assign _theResult___snd__h163289 = { iFifo$D_OUT[159:137], 34'd0 } ;
-  assign _theResult___snd__h163296 =
+	       _theResult___snd__h163413 :
+	       _theResult___snd__h163406 ;
+  assign _theResult___snd__h163406 = { iFifo$D_OUT[159:137], 34'd0 } ;
+  assign _theResult___snd__h163413 =
 	     (iFifo$D_OUT[167:160] == 8'd0 && !iFifo$D_OUT[159] &&
 	      NOT_iFifo_first__087_BIT_158_142_202_AND_NOT_i_ETC___d3244) ?
-	       sfd__h144536 :
-	       _theResult___snd__h163302 ;
-  assign _theResult___snd__h163302 =
+	       sfd__h144653 :
+	       _theResult___snd__h163419 ;
+  assign _theResult___snd__h163419 =
 	     { IF_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_16_ETC__q33[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h163325 =
-	     sfd__h144536 <<
+  assign _theResult___snd__h163442 =
+	     sfd__h144653 <<
 	     IF_iFifo_first__087_BITS_167_TO_160_130_EQ_0_1_ETC___d3271 ;
-  assign _theResult___snd__h172863 = { _theResult____h164614[55:0], 1'd0 } ;
-  assign _theResult___snd__h172874 =
-	     (!_theResult____h164614[56] && _theResult____h164614[55]) ?
-	       _theResult___snd__h172876 :
-	       _theResult___snd__h172886 ;
-  assign _theResult___snd__h172876 = { _theResult____h164614[54:0], 2'd0 } ;
-  assign _theResult___snd__h172886 =
-	     (!_theResult____h164614[56] && !_theResult____h164614[55] &&
-	      !_theResult____h164614[54] &&
-	      !_theResult____h164614[53] &&
-	      !_theResult____h164614[52] &&
-	      !_theResult____h164614[51] &&
-	      !_theResult____h164614[50] &&
-	      !_theResult____h164614[49] &&
-	      !_theResult____h164614[48] &&
-	      !_theResult____h164614[47] &&
-	      !_theResult____h164614[46] &&
-	      !_theResult____h164614[45] &&
-	      !_theResult____h164614[44] &&
-	      !_theResult____h164614[43] &&
-	      !_theResult____h164614[42] &&
-	      !_theResult____h164614[41] &&
-	      !_theResult____h164614[40] &&
-	      !_theResult____h164614[39] &&
-	      !_theResult____h164614[38] &&
-	      !_theResult____h164614[37] &&
-	      !_theResult____h164614[36] &&
-	      !_theResult____h164614[35] &&
-	      !_theResult____h164614[34] &&
-	      !_theResult____h164614[33] &&
-	      !_theResult____h164614[32] &&
-	      !_theResult____h164614[31] &&
-	      !_theResult____h164614[30] &&
-	      !_theResult____h164614[29] &&
-	      !_theResult____h164614[28] &&
-	      !_theResult____h164614[27] &&
-	      !_theResult____h164614[26] &&
-	      !_theResult____h164614[25] &&
-	      !_theResult____h164614[24] &&
-	      !_theResult____h164614[23] &&
-	      !_theResult____h164614[22] &&
-	      !_theResult____h164614[21] &&
-	      !_theResult____h164614[20] &&
-	      !_theResult____h164614[19] &&
-	      !_theResult____h164614[18] &&
-	      !_theResult____h164614[17] &&
-	      !_theResult____h164614[16] &&
-	      !_theResult____h164614[15] &&
-	      !_theResult____h164614[14] &&
-	      !_theResult____h164614[13] &&
-	      !_theResult____h164614[12] &&
-	      !_theResult____h164614[11] &&
-	      !_theResult____h164614[10] &&
-	      !_theResult____h164614[9] &&
-	      !_theResult____h164614[8] &&
-	      !_theResult____h164614[7] &&
-	      !_theResult____h164614[6] &&
-	      !_theResult____h164614[5] &&
-	      !_theResult____h164614[4] &&
-	      !_theResult____h164614[3] &&
-	      !_theResult____h164614[2] &&
-	      !_theResult____h164614[1] &&
-	      !_theResult____h164614[0]) ?
-	       _theResult____h164614 :
-	       _theResult___snd__h172892 ;
-  assign _theResult___snd__h172892 =
+  assign _theResult___snd__h172980 = { _theResult____h164731[55:0], 1'd0 } ;
+  assign _theResult___snd__h172991 =
+	     (!_theResult____h164731[56] && _theResult____h164731[55]) ?
+	       _theResult___snd__h172993 :
+	       _theResult___snd__h173003 ;
+  assign _theResult___snd__h172993 = { _theResult____h164731[54:0], 2'd0 } ;
+  assign _theResult___snd__h173003 =
+	     (!_theResult____h164731[56] && !_theResult____h164731[55] &&
+	      !_theResult____h164731[54] &&
+	      !_theResult____h164731[53] &&
+	      !_theResult____h164731[52] &&
+	      !_theResult____h164731[51] &&
+	      !_theResult____h164731[50] &&
+	      !_theResult____h164731[49] &&
+	      !_theResult____h164731[48] &&
+	      !_theResult____h164731[47] &&
+	      !_theResult____h164731[46] &&
+	      !_theResult____h164731[45] &&
+	      !_theResult____h164731[44] &&
+	      !_theResult____h164731[43] &&
+	      !_theResult____h164731[42] &&
+	      !_theResult____h164731[41] &&
+	      !_theResult____h164731[40] &&
+	      !_theResult____h164731[39] &&
+	      !_theResult____h164731[38] &&
+	      !_theResult____h164731[37] &&
+	      !_theResult____h164731[36] &&
+	      !_theResult____h164731[35] &&
+	      !_theResult____h164731[34] &&
+	      !_theResult____h164731[33] &&
+	      !_theResult____h164731[32] &&
+	      !_theResult____h164731[31] &&
+	      !_theResult____h164731[30] &&
+	      !_theResult____h164731[29] &&
+	      !_theResult____h164731[28] &&
+	      !_theResult____h164731[27] &&
+	      !_theResult____h164731[26] &&
+	      !_theResult____h164731[25] &&
+	      !_theResult____h164731[24] &&
+	      !_theResult____h164731[23] &&
+	      !_theResult____h164731[22] &&
+	      !_theResult____h164731[21] &&
+	      !_theResult____h164731[20] &&
+	      !_theResult____h164731[19] &&
+	      !_theResult____h164731[18] &&
+	      !_theResult____h164731[17] &&
+	      !_theResult____h164731[16] &&
+	      !_theResult____h164731[15] &&
+	      !_theResult____h164731[14] &&
+	      !_theResult____h164731[13] &&
+	      !_theResult____h164731[12] &&
+	      !_theResult____h164731[11] &&
+	      !_theResult____h164731[10] &&
+	      !_theResult____h164731[9] &&
+	      !_theResult____h164731[8] &&
+	      !_theResult____h164731[7] &&
+	      !_theResult____h164731[6] &&
+	      !_theResult____h164731[5] &&
+	      !_theResult____h164731[4] &&
+	      !_theResult____h164731[3] &&
+	      !_theResult____h164731[2] &&
+	      !_theResult____h164731[1] &&
+	      !_theResult____h164731[0]) ?
+	       _theResult____h164731 :
+	       _theResult___snd__h173009 ;
+  assign _theResult___snd__h173009 =
 	     { IF_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__ETC__q37[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h172915 =
-	     _theResult____h164614 <<
+  assign _theResult___snd__h173032 =
+	     _theResult____h164731 <<
 	     IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_16_ETC___d3572 ;
-  assign _theResult___snd__h181599 =
+  assign _theResult___snd__h181716 =
 	     (iFifo$D_OUT[167:160] == 8'd0) ?
-	       _theResult___snd__h181613 :
-	       _theResult___snd__h163289 ;
-  assign _theResult___snd__h181613 =
+	       _theResult___snd__h181730 :
+	       _theResult___snd__h163406 ;
+  assign _theResult___snd__h181730 =
 	     (iFifo$D_OUT[167:160] == 8'd0 && !iFifo$D_OUT[159] &&
 	      NOT_iFifo_first__087_BIT_158_142_202_AND_NOT_i_ETC___d3244) ?
-	       sfd__h144536 :
-	       _theResult___snd__h181619 ;
-  assign _theResult___snd__h181619 =
+	       sfd__h144653 :
+	       _theResult___snd__h181736 ;
+  assign _theResult___snd__h181736 =
 	     { IF_0_CONCAT_IF_iFifo_first__087_BITS_167_TO_16_ETC__q40[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h181637 =
-	     sfd__h144536 <<
+  assign _theResult___snd__h181754 =
+	     sfd__h144653 <<
 	     IF_SEXT_iFifo_first__087_BITS_167_TO_160_130_M_ETC___d3623 ;
-  assign _theResult___snd__h201925 =
+  assign _theResult___snd__h202042 =
 	     (iFifo$D_OUT[102:95] == 8'd0) ?
-	       _theResult___snd__h201934 :
-	       _theResult___snd__h201927 ;
-  assign _theResult___snd__h201927 = { iFifo$D_OUT[94:72], 34'd0 } ;
-  assign _theResult___snd__h201934 =
+	       _theResult___snd__h202051 :
+	       _theResult___snd__h202044 ;
+  assign _theResult___snd__h202044 = { iFifo$D_OUT[94:72], 34'd0 } ;
+  assign _theResult___snd__h202051 =
 	     (iFifo$D_OUT[102:95] == 8'd0 && !iFifo$D_OUT[94] &&
 	      NOT_iFifo_first__087_BIT_93_637_688_AND_NOT_iF_ETC___d4730) ?
-	       sfd__h183176 :
-	       _theResult___snd__h201940 ;
-  assign _theResult___snd__h201940 =
+	       sfd__h183293 :
+	       _theResult___snd__h202057 ;
+  assign _theResult___snd__h202057 =
 	     { IF_0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_ETC__q93[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h201963 =
-	     sfd__h183176 <<
+  assign _theResult___snd__h202080 =
+	     sfd__h183293 <<
 	     IF_iFifo_first__087_BITS_102_TO_95_625_EQ_0_63_ETC___d4757 ;
-  assign _theResult___snd__h211501 = { _theResult____h203252[55:0], 1'd0 } ;
-  assign _theResult___snd__h211512 =
-	     (!_theResult____h203252[56] && _theResult____h203252[55]) ?
-	       _theResult___snd__h211514 :
-	       _theResult___snd__h211524 ;
-  assign _theResult___snd__h211514 = { _theResult____h203252[54:0], 2'd0 } ;
-  assign _theResult___snd__h211524 =
-	     (!_theResult____h203252[56] && !_theResult____h203252[55] &&
-	      !_theResult____h203252[54] &&
-	      !_theResult____h203252[53] &&
-	      !_theResult____h203252[52] &&
-	      !_theResult____h203252[51] &&
-	      !_theResult____h203252[50] &&
-	      !_theResult____h203252[49] &&
-	      !_theResult____h203252[48] &&
-	      !_theResult____h203252[47] &&
-	      !_theResult____h203252[46] &&
-	      !_theResult____h203252[45] &&
-	      !_theResult____h203252[44] &&
-	      !_theResult____h203252[43] &&
-	      !_theResult____h203252[42] &&
-	      !_theResult____h203252[41] &&
-	      !_theResult____h203252[40] &&
-	      !_theResult____h203252[39] &&
-	      !_theResult____h203252[38] &&
-	      !_theResult____h203252[37] &&
-	      !_theResult____h203252[36] &&
-	      !_theResult____h203252[35] &&
-	      !_theResult____h203252[34] &&
-	      !_theResult____h203252[33] &&
-	      !_theResult____h203252[32] &&
-	      !_theResult____h203252[31] &&
-	      !_theResult____h203252[30] &&
-	      !_theResult____h203252[29] &&
-	      !_theResult____h203252[28] &&
-	      !_theResult____h203252[27] &&
-	      !_theResult____h203252[26] &&
-	      !_theResult____h203252[25] &&
-	      !_theResult____h203252[24] &&
-	      !_theResult____h203252[23] &&
-	      !_theResult____h203252[22] &&
-	      !_theResult____h203252[21] &&
-	      !_theResult____h203252[20] &&
-	      !_theResult____h203252[19] &&
-	      !_theResult____h203252[18] &&
-	      !_theResult____h203252[17] &&
-	      !_theResult____h203252[16] &&
-	      !_theResult____h203252[15] &&
-	      !_theResult____h203252[14] &&
-	      !_theResult____h203252[13] &&
-	      !_theResult____h203252[12] &&
-	      !_theResult____h203252[11] &&
-	      !_theResult____h203252[10] &&
-	      !_theResult____h203252[9] &&
-	      !_theResult____h203252[8] &&
-	      !_theResult____h203252[7] &&
-	      !_theResult____h203252[6] &&
-	      !_theResult____h203252[5] &&
-	      !_theResult____h203252[4] &&
-	      !_theResult____h203252[3] &&
-	      !_theResult____h203252[2] &&
-	      !_theResult____h203252[1] &&
-	      !_theResult____h203252[0]) ?
-	       _theResult____h203252 :
-	       _theResult___snd__h211530 ;
-  assign _theResult___snd__h211530 =
+  assign _theResult___snd__h211618 = { _theResult____h203369[55:0], 1'd0 } ;
+  assign _theResult___snd__h211629 =
+	     (!_theResult____h203369[56] && _theResult____h203369[55]) ?
+	       _theResult___snd__h211631 :
+	       _theResult___snd__h211641 ;
+  assign _theResult___snd__h211631 = { _theResult____h203369[54:0], 2'd0 } ;
+  assign _theResult___snd__h211641 =
+	     (!_theResult____h203369[56] && !_theResult____h203369[55] &&
+	      !_theResult____h203369[54] &&
+	      !_theResult____h203369[53] &&
+	      !_theResult____h203369[52] &&
+	      !_theResult____h203369[51] &&
+	      !_theResult____h203369[50] &&
+	      !_theResult____h203369[49] &&
+	      !_theResult____h203369[48] &&
+	      !_theResult____h203369[47] &&
+	      !_theResult____h203369[46] &&
+	      !_theResult____h203369[45] &&
+	      !_theResult____h203369[44] &&
+	      !_theResult____h203369[43] &&
+	      !_theResult____h203369[42] &&
+	      !_theResult____h203369[41] &&
+	      !_theResult____h203369[40] &&
+	      !_theResult____h203369[39] &&
+	      !_theResult____h203369[38] &&
+	      !_theResult____h203369[37] &&
+	      !_theResult____h203369[36] &&
+	      !_theResult____h203369[35] &&
+	      !_theResult____h203369[34] &&
+	      !_theResult____h203369[33] &&
+	      !_theResult____h203369[32] &&
+	      !_theResult____h203369[31] &&
+	      !_theResult____h203369[30] &&
+	      !_theResult____h203369[29] &&
+	      !_theResult____h203369[28] &&
+	      !_theResult____h203369[27] &&
+	      !_theResult____h203369[26] &&
+	      !_theResult____h203369[25] &&
+	      !_theResult____h203369[24] &&
+	      !_theResult____h203369[23] &&
+	      !_theResult____h203369[22] &&
+	      !_theResult____h203369[21] &&
+	      !_theResult____h203369[20] &&
+	      !_theResult____h203369[19] &&
+	      !_theResult____h203369[18] &&
+	      !_theResult____h203369[17] &&
+	      !_theResult____h203369[16] &&
+	      !_theResult____h203369[15] &&
+	      !_theResult____h203369[14] &&
+	      !_theResult____h203369[13] &&
+	      !_theResult____h203369[12] &&
+	      !_theResult____h203369[11] &&
+	      !_theResult____h203369[10] &&
+	      !_theResult____h203369[9] &&
+	      !_theResult____h203369[8] &&
+	      !_theResult____h203369[7] &&
+	      !_theResult____h203369[6] &&
+	      !_theResult____h203369[5] &&
+	      !_theResult____h203369[4] &&
+	      !_theResult____h203369[3] &&
+	      !_theResult____h203369[2] &&
+	      !_theResult____h203369[1] &&
+	      !_theResult____h203369[0]) ?
+	       _theResult____h203369 :
+	       _theResult___snd__h211647 ;
+  assign _theResult___snd__h211647 =
 	     { IF_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__ETC__q97[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h211553 =
-	     _theResult____h203252 <<
+  assign _theResult___snd__h211670 =
+	     _theResult____h203369 <<
 	     IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_10_ETC___d5055 ;
-  assign _theResult___snd__h220237 =
+  assign _theResult___snd__h220354 =
 	     (iFifo$D_OUT[102:95] == 8'd0) ?
-	       _theResult___snd__h220251 :
-	       _theResult___snd__h201927 ;
-  assign _theResult___snd__h220251 =
+	       _theResult___snd__h220368 :
+	       _theResult___snd__h202044 ;
+  assign _theResult___snd__h220368 =
 	     (iFifo$D_OUT[102:95] == 8'd0 && !iFifo$D_OUT[94] &&
 	      NOT_iFifo_first__087_BIT_93_637_688_AND_NOT_iF_ETC___d4730) ?
-	       sfd__h183176 :
-	       _theResult___snd__h220257 ;
-  assign _theResult___snd__h220257 =
+	       sfd__h183293 :
+	       _theResult___snd__h220374 ;
+  assign _theResult___snd__h220374 =
 	     { IF_0_CONCAT_IF_iFifo_first__087_BITS_102_TO_95_ETC__q100[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h220275 =
-	     sfd__h183176 <<
+  assign _theResult___snd__h220392 =
+	     sfd__h183293 <<
 	     IF_SEXT_iFifo_first__087_BITS_102_TO_95_625_MI_ETC___d5106 ;
-  assign _theResult___snd__h240864 =
+  assign _theResult___snd__h240981 =
 	     (iFifo$D_OUT[37:30] == 8'd0) ?
-	       _theResult___snd__h240873 :
-	       _theResult___snd__h240866 ;
-  assign _theResult___snd__h240866 = { iFifo$D_OUT[29:7], 34'd0 } ;
-  assign _theResult___snd__h240873 =
+	       _theResult___snd__h240990 :
+	       _theResult___snd__h240983 ;
+  assign _theResult___snd__h240983 = { iFifo$D_OUT[29:7], 34'd0 } ;
+  assign _theResult___snd__h240990 =
 	     (iFifo$D_OUT[37:30] == 8'd0 && !iFifo$D_OUT[29] &&
 	      NOT_iFifo_first__087_BIT_28_862_913_AND_NOT_iF_ETC___d3955) ?
-	       sfd__h222115 :
-	       _theResult___snd__h240879 ;
-  assign _theResult___snd__h240879 =
+	       sfd__h222232 :
+	       _theResult___snd__h240996 ;
+  assign _theResult___snd__h240996 =
 	     { IF_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30__ETC__q60[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h240902 =
-	     sfd__h222115 <<
+  assign _theResult___snd__h241019 =
+	     sfd__h222232 <<
 	     IF_iFifo_first__087_BITS_37_TO_30_850_EQ_0_856_ETC___d3982 ;
-  assign _theResult___snd__h250440 = { _theResult____h242191[55:0], 1'd0 } ;
-  assign _theResult___snd__h250451 =
-	     (!_theResult____h242191[56] && _theResult____h242191[55]) ?
-	       _theResult___snd__h250453 :
-	       _theResult___snd__h250463 ;
-  assign _theResult___snd__h250453 = { _theResult____h242191[54:0], 2'd0 } ;
-  assign _theResult___snd__h250463 =
-	     (!_theResult____h242191[56] && !_theResult____h242191[55] &&
-	      !_theResult____h242191[54] &&
-	      !_theResult____h242191[53] &&
-	      !_theResult____h242191[52] &&
-	      !_theResult____h242191[51] &&
-	      !_theResult____h242191[50] &&
-	      !_theResult____h242191[49] &&
-	      !_theResult____h242191[48] &&
-	      !_theResult____h242191[47] &&
-	      !_theResult____h242191[46] &&
-	      !_theResult____h242191[45] &&
-	      !_theResult____h242191[44] &&
-	      !_theResult____h242191[43] &&
-	      !_theResult____h242191[42] &&
-	      !_theResult____h242191[41] &&
-	      !_theResult____h242191[40] &&
-	      !_theResult____h242191[39] &&
-	      !_theResult____h242191[38] &&
-	      !_theResult____h242191[37] &&
-	      !_theResult____h242191[36] &&
-	      !_theResult____h242191[35] &&
-	      !_theResult____h242191[34] &&
-	      !_theResult____h242191[33] &&
-	      !_theResult____h242191[32] &&
-	      !_theResult____h242191[31] &&
-	      !_theResult____h242191[30] &&
-	      !_theResult____h242191[29] &&
-	      !_theResult____h242191[28] &&
-	      !_theResult____h242191[27] &&
-	      !_theResult____h242191[26] &&
-	      !_theResult____h242191[25] &&
-	      !_theResult____h242191[24] &&
-	      !_theResult____h242191[23] &&
-	      !_theResult____h242191[22] &&
-	      !_theResult____h242191[21] &&
-	      !_theResult____h242191[20] &&
-	      !_theResult____h242191[19] &&
-	      !_theResult____h242191[18] &&
-	      !_theResult____h242191[17] &&
-	      !_theResult____h242191[16] &&
-	      !_theResult____h242191[15] &&
-	      !_theResult____h242191[14] &&
-	      !_theResult____h242191[13] &&
-	      !_theResult____h242191[12] &&
-	      !_theResult____h242191[11] &&
-	      !_theResult____h242191[10] &&
-	      !_theResult____h242191[9] &&
-	      !_theResult____h242191[8] &&
-	      !_theResult____h242191[7] &&
-	      !_theResult____h242191[6] &&
-	      !_theResult____h242191[5] &&
-	      !_theResult____h242191[4] &&
-	      !_theResult____h242191[3] &&
-	      !_theResult____h242191[2] &&
-	      !_theResult____h242191[1] &&
-	      !_theResult____h242191[0]) ?
-	       _theResult____h242191 :
-	       _theResult___snd__h250469 ;
-  assign _theResult___snd__h250469 =
+  assign _theResult___snd__h250557 = { _theResult____h242308[55:0], 1'd0 } ;
+  assign _theResult___snd__h250568 =
+	     (!_theResult____h242308[56] && _theResult____h242308[55]) ?
+	       _theResult___snd__h250570 :
+	       _theResult___snd__h250580 ;
+  assign _theResult___snd__h250570 = { _theResult____h242308[54:0], 2'd0 } ;
+  assign _theResult___snd__h250580 =
+	     (!_theResult____h242308[56] && !_theResult____h242308[55] &&
+	      !_theResult____h242308[54] &&
+	      !_theResult____h242308[53] &&
+	      !_theResult____h242308[52] &&
+	      !_theResult____h242308[51] &&
+	      !_theResult____h242308[50] &&
+	      !_theResult____h242308[49] &&
+	      !_theResult____h242308[48] &&
+	      !_theResult____h242308[47] &&
+	      !_theResult____h242308[46] &&
+	      !_theResult____h242308[45] &&
+	      !_theResult____h242308[44] &&
+	      !_theResult____h242308[43] &&
+	      !_theResult____h242308[42] &&
+	      !_theResult____h242308[41] &&
+	      !_theResult____h242308[40] &&
+	      !_theResult____h242308[39] &&
+	      !_theResult____h242308[38] &&
+	      !_theResult____h242308[37] &&
+	      !_theResult____h242308[36] &&
+	      !_theResult____h242308[35] &&
+	      !_theResult____h242308[34] &&
+	      !_theResult____h242308[33] &&
+	      !_theResult____h242308[32] &&
+	      !_theResult____h242308[31] &&
+	      !_theResult____h242308[30] &&
+	      !_theResult____h242308[29] &&
+	      !_theResult____h242308[28] &&
+	      !_theResult____h242308[27] &&
+	      !_theResult____h242308[26] &&
+	      !_theResult____h242308[25] &&
+	      !_theResult____h242308[24] &&
+	      !_theResult____h242308[23] &&
+	      !_theResult____h242308[22] &&
+	      !_theResult____h242308[21] &&
+	      !_theResult____h242308[20] &&
+	      !_theResult____h242308[19] &&
+	      !_theResult____h242308[18] &&
+	      !_theResult____h242308[17] &&
+	      !_theResult____h242308[16] &&
+	      !_theResult____h242308[15] &&
+	      !_theResult____h242308[14] &&
+	      !_theResult____h242308[13] &&
+	      !_theResult____h242308[12] &&
+	      !_theResult____h242308[11] &&
+	      !_theResult____h242308[10] &&
+	      !_theResult____h242308[9] &&
+	      !_theResult____h242308[8] &&
+	      !_theResult____h242308[7] &&
+	      !_theResult____h242308[6] &&
+	      !_theResult____h242308[5] &&
+	      !_theResult____h242308[4] &&
+	      !_theResult____h242308[3] &&
+	      !_theResult____h242308[2] &&
+	      !_theResult____h242308[1] &&
+	      !_theResult____h242308[0]) ?
+	       _theResult____h242308 :
+	       _theResult___snd__h250586 ;
+  assign _theResult___snd__h250586 =
 	     { IF_0_CONCAT_IF_IF_3074_MINUS_SEXT_iFifo_first__ETC__q64[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h250492 =
-	     _theResult____h242191 <<
+  assign _theResult___snd__h250609 =
+	     _theResult____h242308 <<
 	     IF_IF_3074_MINUS_SEXT_iFifo_first__087_BITS_37_ETC___d4280 ;
-  assign _theResult___snd__h259176 =
+  assign _theResult___snd__h259293 =
 	     (iFifo$D_OUT[37:30] == 8'd0) ?
-	       _theResult___snd__h259190 :
-	       _theResult___snd__h240866 ;
-  assign _theResult___snd__h259190 =
+	       _theResult___snd__h259307 :
+	       _theResult___snd__h240983 ;
+  assign _theResult___snd__h259307 =
 	     (iFifo$D_OUT[37:30] == 8'd0 && !iFifo$D_OUT[29] &&
 	      NOT_iFifo_first__087_BIT_28_862_913_AND_NOT_iF_ETC___d3955) ?
-	       sfd__h222115 :
-	       _theResult___snd__h259196 ;
-  assign _theResult___snd__h259196 =
+	       sfd__h222232 :
+	       _theResult___snd__h259313 ;
+  assign _theResult___snd__h259313 =
 	     { IF_0_CONCAT_IF_iFifo_first__087_BITS_37_TO_30__ETC__q67[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h259214 =
-	     sfd__h222115 <<
+  assign _theResult___snd__h259331 =
+	     sfd__h222232 <<
 	     IF_SEXT_iFifo_first__087_BITS_37_TO_30_850_MIN_ETC___d4331 ;
-  assign _theResult___snd__h277697 = { _theResult____h269577[55:0], 1'd0 } ;
-  assign _theResult___snd__h277708 =
-	     (!_theResult____h269577[56] && _theResult____h269577[55]) ?
-	       _theResult___snd__h277710 :
-	       _theResult___snd__h277720 ;
-  assign _theResult___snd__h277710 = { _theResult____h269577[54:0], 2'd0 } ;
-  assign _theResult___snd__h277720 =
-	     (!_theResult____h269577[56] && !_theResult____h269577[55] &&
-	      !_theResult____h269577[54] &&
-	      !_theResult____h269577[53] &&
-	      !_theResult____h269577[52] &&
-	      !_theResult____h269577[51] &&
-	      !_theResult____h269577[50] &&
-	      !_theResult____h269577[49] &&
-	      !_theResult____h269577[48] &&
-	      !_theResult____h269577[47] &&
-	      !_theResult____h269577[46] &&
-	      !_theResult____h269577[45] &&
-	      !_theResult____h269577[44] &&
-	      !_theResult____h269577[43] &&
-	      !_theResult____h269577[42] &&
-	      !_theResult____h269577[41] &&
-	      !_theResult____h269577[40] &&
-	      !_theResult____h269577[39] &&
-	      !_theResult____h269577[38] &&
-	      !_theResult____h269577[37] &&
-	      !_theResult____h269577[36] &&
-	      !_theResult____h269577[35] &&
-	      !_theResult____h269577[34] &&
-	      !_theResult____h269577[33] &&
-	      !_theResult____h269577[32] &&
-	      !_theResult____h269577[31] &&
-	      !_theResult____h269577[30] &&
-	      !_theResult____h269577[29] &&
-	      !_theResult____h269577[28] &&
-	      !_theResult____h269577[27] &&
-	      !_theResult____h269577[26] &&
-	      !_theResult____h269577[25] &&
-	      !_theResult____h269577[24] &&
-	      !_theResult____h269577[23] &&
-	      !_theResult____h269577[22] &&
-	      !_theResult____h269577[21] &&
-	      !_theResult____h269577[20] &&
-	      !_theResult____h269577[19] &&
-	      !_theResult____h269577[18] &&
-	      !_theResult____h269577[17] &&
-	      !_theResult____h269577[16] &&
-	      !_theResult____h269577[15] &&
-	      !_theResult____h269577[14] &&
-	      !_theResult____h269577[13] &&
-	      !_theResult____h269577[12] &&
-	      !_theResult____h269577[11] &&
-	      !_theResult____h269577[10] &&
-	      !_theResult____h269577[9] &&
-	      !_theResult____h269577[8] &&
-	      !_theResult____h269577[7] &&
-	      !_theResult____h269577[6] &&
-	      !_theResult____h269577[5] &&
-	      !_theResult____h269577[4] &&
-	      !_theResult____h269577[3] &&
-	      !_theResult____h269577[2] &&
-	      !_theResult____h269577[1] &&
-	      !_theResult____h269577[0]) ?
-	       _theResult____h269577 :
-	       _theResult___snd__h277726 ;
-  assign _theResult___snd__h277726 =
+  assign _theResult___snd__h277897 = { _theResult____h269777[55:0], 1'd0 } ;
+  assign _theResult___snd__h277908 =
+	     (!_theResult____h269777[56] && _theResult____h269777[55]) ?
+	       _theResult___snd__h277910 :
+	       _theResult___snd__h277920 ;
+  assign _theResult___snd__h277910 = { _theResult____h269777[54:0], 2'd0 } ;
+  assign _theResult___snd__h277920 =
+	     (!_theResult____h269777[56] && !_theResult____h269777[55] &&
+	      !_theResult____h269777[54] &&
+	      !_theResult____h269777[53] &&
+	      !_theResult____h269777[52] &&
+	      !_theResult____h269777[51] &&
+	      !_theResult____h269777[50] &&
+	      !_theResult____h269777[49] &&
+	      !_theResult____h269777[48] &&
+	      !_theResult____h269777[47] &&
+	      !_theResult____h269777[46] &&
+	      !_theResult____h269777[45] &&
+	      !_theResult____h269777[44] &&
+	      !_theResult____h269777[43] &&
+	      !_theResult____h269777[42] &&
+	      !_theResult____h269777[41] &&
+	      !_theResult____h269777[40] &&
+	      !_theResult____h269777[39] &&
+	      !_theResult____h269777[38] &&
+	      !_theResult____h269777[37] &&
+	      !_theResult____h269777[36] &&
+	      !_theResult____h269777[35] &&
+	      !_theResult____h269777[34] &&
+	      !_theResult____h269777[33] &&
+	      !_theResult____h269777[32] &&
+	      !_theResult____h269777[31] &&
+	      !_theResult____h269777[30] &&
+	      !_theResult____h269777[29] &&
+	      !_theResult____h269777[28] &&
+	      !_theResult____h269777[27] &&
+	      !_theResult____h269777[26] &&
+	      !_theResult____h269777[25] &&
+	      !_theResult____h269777[24] &&
+	      !_theResult____h269777[23] &&
+	      !_theResult____h269777[22] &&
+	      !_theResult____h269777[21] &&
+	      !_theResult____h269777[20] &&
+	      !_theResult____h269777[19] &&
+	      !_theResult____h269777[18] &&
+	      !_theResult____h269777[17] &&
+	      !_theResult____h269777[16] &&
+	      !_theResult____h269777[15] &&
+	      !_theResult____h269777[14] &&
+	      !_theResult____h269777[13] &&
+	      !_theResult____h269777[12] &&
+	      !_theResult____h269777[11] &&
+	      !_theResult____h269777[10] &&
+	      !_theResult____h269777[9] &&
+	      !_theResult____h269777[8] &&
+	      !_theResult____h269777[7] &&
+	      !_theResult____h269777[6] &&
+	      !_theResult____h269777[5] &&
+	      !_theResult____h269777[4] &&
+	      !_theResult____h269777[3] &&
+	      !_theResult____h269777[2] &&
+	      !_theResult____h269777[1] &&
+	      !_theResult____h269777[0]) ?
+	       _theResult____h269777 :
+	       _theResult___snd__h277926 ;
+  assign _theResult___snd__h277926 =
 	     { IF_0_CONCAT_IF_IF_0b0_CONCAT_NOT_resWire_wget__ETC__q133[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h277749 =
-	     _theResult____h269577 <<
-	     IF_IF_0b0_CONCAT_NOT_resWire_wget__410_BITS_67_ETC___d5767 ;
-  assign _theResult___snd__h286293 =
+  assign _theResult___snd__h277949 =
+	     _theResult____h269777 <<
+	     IF_IF_0b0_CONCAT_NOT_resWire_wget__412_BITS_67_ETC___d5769 ;
+  assign _theResult___snd__h286493 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _theResult___snd__h286302 :
-	       _theResult___snd__h286295 ;
-  assign _theResult___snd__h286295 = { resWire$wget[56:5], 5'd0 } ;
-  assign _theResult___snd__h286302 =
+	       _theResult___snd__h286502 :
+	       _theResult___snd__h286495 ;
+  assign _theResult___snd__h286495 = { resWire$wget[56:5], 5'd0 } ;
+  assign _theResult___snd__h286502 =
 	     (resWire$wget[67:57] == 11'd0 &&
-	      NOT_resWire_wget__410_BIT_56_426_825_AND_NOT_r_ETC___d5927) ?
-	       sfd__h261975 :
-	       _theResult___snd__h286308 ;
-  assign _theResult___snd__h286308 =
-	     { IF_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_ETC__q135[54:0],
+	      NOT_resWire_wget__412_BIT_56_428_827_AND_NOT_r_ETC___d5929) ?
+	       sfd__h262175 :
+	       _theResult___snd__h286508 ;
+  assign _theResult___snd__h286508 =
+	     { IF_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_ETC__q135[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h286331 =
-	     sfd__h261975 <<
-	     IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d5982 ;
-  assign _theResult___snd__h295463 = { _theResult____h287214[55:0], 1'd0 } ;
-  assign _theResult___snd__h295474 =
-	     (!_theResult____h287214[56] && _theResult____h287214[55]) ?
-	       _theResult___snd__h295476 :
-	       _theResult___snd__h295486 ;
-  assign _theResult___snd__h295476 = { _theResult____h287214[54:0], 2'd0 } ;
-  assign _theResult___snd__h295486 =
-	     (!_theResult____h287214[56] && !_theResult____h287214[55] &&
-	      !_theResult____h287214[54] &&
-	      !_theResult____h287214[53] &&
-	      !_theResult____h287214[52] &&
-	      !_theResult____h287214[51] &&
-	      !_theResult____h287214[50] &&
-	      !_theResult____h287214[49] &&
-	      !_theResult____h287214[48] &&
-	      !_theResult____h287214[47] &&
-	      !_theResult____h287214[46] &&
-	      !_theResult____h287214[45] &&
-	      !_theResult____h287214[44] &&
-	      !_theResult____h287214[43] &&
-	      !_theResult____h287214[42] &&
-	      !_theResult____h287214[41] &&
-	      !_theResult____h287214[40] &&
-	      !_theResult____h287214[39] &&
-	      !_theResult____h287214[38] &&
-	      !_theResult____h287214[37] &&
-	      !_theResult____h287214[36] &&
-	      !_theResult____h287214[35] &&
-	      !_theResult____h287214[34] &&
-	      !_theResult____h287214[33] &&
-	      !_theResult____h287214[32] &&
-	      !_theResult____h287214[31] &&
-	      !_theResult____h287214[30] &&
-	      !_theResult____h287214[29] &&
-	      !_theResult____h287214[28] &&
-	      !_theResult____h287214[27] &&
-	      !_theResult____h287214[26] &&
-	      !_theResult____h287214[25] &&
-	      !_theResult____h287214[24] &&
-	      !_theResult____h287214[23] &&
-	      !_theResult____h287214[22] &&
-	      !_theResult____h287214[21] &&
-	      !_theResult____h287214[20] &&
-	      !_theResult____h287214[19] &&
-	      !_theResult____h287214[18] &&
-	      !_theResult____h287214[17] &&
-	      !_theResult____h287214[16] &&
-	      !_theResult____h287214[15] &&
-	      !_theResult____h287214[14] &&
-	      !_theResult____h287214[13] &&
-	      !_theResult____h287214[12] &&
-	      !_theResult____h287214[11] &&
-	      !_theResult____h287214[10] &&
-	      !_theResult____h287214[9] &&
-	      !_theResult____h287214[8] &&
-	      !_theResult____h287214[7] &&
-	      !_theResult____h287214[6] &&
-	      !_theResult____h287214[5] &&
-	      !_theResult____h287214[4] &&
-	      !_theResult____h287214[3] &&
-	      !_theResult____h287214[2] &&
-	      !_theResult____h287214[1] &&
-	      !_theResult____h287214[0]) ?
-	       _theResult____h287214 :
-	       _theResult___snd__h295492 ;
-  assign _theResult___snd__h295492 =
+  assign _theResult___snd__h286531 =
+	     sfd__h262175 <<
+	     IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d5984 ;
+  assign _theResult___snd__h295663 = { _theResult____h287414[55:0], 1'd0 } ;
+  assign _theResult___snd__h295674 =
+	     (!_theResult____h287414[56] && _theResult____h287414[55]) ?
+	       _theResult___snd__h295676 :
+	       _theResult___snd__h295686 ;
+  assign _theResult___snd__h295676 = { _theResult____h287414[54:0], 2'd0 } ;
+  assign _theResult___snd__h295686 =
+	     (!_theResult____h287414[56] && !_theResult____h287414[55] &&
+	      !_theResult____h287414[54] &&
+	      !_theResult____h287414[53] &&
+	      !_theResult____h287414[52] &&
+	      !_theResult____h287414[51] &&
+	      !_theResult____h287414[50] &&
+	      !_theResult____h287414[49] &&
+	      !_theResult____h287414[48] &&
+	      !_theResult____h287414[47] &&
+	      !_theResult____h287414[46] &&
+	      !_theResult____h287414[45] &&
+	      !_theResult____h287414[44] &&
+	      !_theResult____h287414[43] &&
+	      !_theResult____h287414[42] &&
+	      !_theResult____h287414[41] &&
+	      !_theResult____h287414[40] &&
+	      !_theResult____h287414[39] &&
+	      !_theResult____h287414[38] &&
+	      !_theResult____h287414[37] &&
+	      !_theResult____h287414[36] &&
+	      !_theResult____h287414[35] &&
+	      !_theResult____h287414[34] &&
+	      !_theResult____h287414[33] &&
+	      !_theResult____h287414[32] &&
+	      !_theResult____h287414[31] &&
+	      !_theResult____h287414[30] &&
+	      !_theResult____h287414[29] &&
+	      !_theResult____h287414[28] &&
+	      !_theResult____h287414[27] &&
+	      !_theResult____h287414[26] &&
+	      !_theResult____h287414[25] &&
+	      !_theResult____h287414[24] &&
+	      !_theResult____h287414[23] &&
+	      !_theResult____h287414[22] &&
+	      !_theResult____h287414[21] &&
+	      !_theResult____h287414[20] &&
+	      !_theResult____h287414[19] &&
+	      !_theResult____h287414[18] &&
+	      !_theResult____h287414[17] &&
+	      !_theResult____h287414[16] &&
+	      !_theResult____h287414[15] &&
+	      !_theResult____h287414[14] &&
+	      !_theResult____h287414[13] &&
+	      !_theResult____h287414[12] &&
+	      !_theResult____h287414[11] &&
+	      !_theResult____h287414[10] &&
+	      !_theResult____h287414[9] &&
+	      !_theResult____h287414[8] &&
+	      !_theResult____h287414[7] &&
+	      !_theResult____h287414[6] &&
+	      !_theResult____h287414[5] &&
+	      !_theResult____h287414[4] &&
+	      !_theResult____h287414[3] &&
+	      !_theResult____h287414[2] &&
+	      !_theResult____h287414[1] &&
+	      !_theResult____h287414[0]) ?
+	       _theResult____h287414 :
+	       _theResult___snd__h295692 ;
+  assign _theResult___snd__h295692 =
 	     { IF_0_CONCAT_IF_IF_3970_MINUS_SEXT_resWire_wget_ETC__q139[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h295515 =
-	     _theResult____h287214 <<
-	     IF_IF_3970_MINUS_SEXT_resWire_wget__410_BITS_6_ETC___d6278 ;
-  assign _theResult___snd__h304083 =
+  assign _theResult___snd__h295715 =
+	     _theResult____h287414 <<
+	     IF_IF_3970_MINUS_SEXT_resWire_wget__412_BITS_6_ETC___d6280 ;
+  assign _theResult___snd__h304283 =
 	     (resWire$wget[67:57] == 11'd0) ?
-	       _theResult___snd__h304097 :
-	       _theResult___snd__h286295 ;
-  assign _theResult___snd__h304097 =
+	       _theResult___snd__h304297 :
+	       _theResult___snd__h286495 ;
+  assign _theResult___snd__h304297 =
 	     (resWire$wget[67:57] == 11'd0 &&
-	      NOT_resWire_wget__410_BIT_56_426_825_AND_NOT_r_ETC___d5927) ?
-	       sfd__h261975 :
-	       _theResult___snd__h304103 ;
-  assign _theResult___snd__h304103 =
-	     { IF_0_CONCAT_IF_resWire_wget__410_BITS_67_TO_57_ETC__q142[54:0],
+	      NOT_resWire_wget__412_BIT_56_428_827_AND_NOT_r_ETC___d5929) ?
+	       sfd__h262175 :
+	       _theResult___snd__h304303 ;
+  assign _theResult___snd__h304303 =
+	     { IF_0_CONCAT_IF_resWire_wget__412_BITS_67_TO_57_ETC__q142[54:0],
 	       2'd0 } ;
-  assign _theResult___snd__h304121 =
-	     sfd__h261975 <<
-	     IF_SEXT_resWire_wget__410_BITS_67_TO_57_416_MI_ETC___d6332 ;
+  assign _theResult___snd__h304321 =
+	     sfd__h262175 <<
+	     IF_SEXT_resWire_wget__412_BITS_67_TO_57_418_MI_ETC___d6334 ;
   assign _theResult___snd__h34715 =
 	     { fpu_div64_fState_S3$D_OUT[56:0], 1'd0 } ;
   assign _theResult___snd__h42350 = { sfdin__h34118[56:0], 1'd0 } ;
@@ -8426,38 +8439,38 @@ module mkFPU(CLK,
   assign _theResult___snd_fst__h94856 =
 	     { IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q20[1],
 	       { sfdin__h94744[5:0], 52'd0 } != 58'd0 } ;
-  assign _theResult___snd_fst_exp__h164065 =
+  assign _theResult___snd_fst_exp__h164182 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3190 ?
 	       11'd0 :
-	       _theResult___fst_exp__h164062 ;
-  assign _theResult___snd_fst_exp__h182407 =
+	       _theResult___fst_exp__h164179 ;
+  assign _theResult___snd_fst_exp__h182524 =
 	     SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3325 ?
-	       _theResult___fst_exp__h173652 :
-	       _theResult___fst_exp__h182404 ;
-  assign _theResult___snd_fst_exp__h202703 =
+	       _theResult___fst_exp__h173769 :
+	       _theResult___fst_exp__h182521 ;
+  assign _theResult___snd_fst_exp__h202820 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4685 ?
 	       11'd0 :
-	       _theResult___fst_exp__h202700 ;
-  assign _theResult___snd_fst_exp__h221045 =
+	       _theResult___fst_exp__h202817 ;
+  assign _theResult___snd_fst_exp__h221162 =
 	     SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4808 ?
-	       _theResult___fst_exp__h212290 :
-	       _theResult___fst_exp__h221042 ;
-  assign _theResult___snd_fst_exp__h241642 =
+	       _theResult___fst_exp__h212407 :
+	       _theResult___fst_exp__h221159 ;
+  assign _theResult___snd_fst_exp__h241759 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3910 ?
 	       11'd0 :
-	       _theResult___fst_exp__h241639 ;
-  assign _theResult___snd_fst_exp__h259984 =
+	       _theResult___fst_exp__h241756 ;
+  assign _theResult___snd_fst_exp__h260101 =
 	     SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4033 ?
-	       _theResult___fst_exp__h251229 :
-	       _theResult___fst_exp__h259981 ;
-  assign _theResult___snd_fst_exp__h286868 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-	       _theResult___fst_exp__h278283 :
-	       _theResult___fst_exp__h286865 ;
-  assign _theResult___snd_fst_exp__h304688 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       _theResult___fst_exp__h296049 :
-	       _theResult___fst_exp__h304685 ;
+	       _theResult___fst_exp__h251346 :
+	       _theResult___fst_exp__h260098 ;
+  assign _theResult___snd_fst_exp__h287068 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+	       _theResult___fst_exp__h278483 :
+	       _theResult___fst_exp__h287065 ;
+  assign _theResult___snd_fst_exp__h304888 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       _theResult___fst_exp__h296249 :
+	       _theResult___fst_exp__h304885 ;
   assign _theResult___snd_fst_exp__h31334 =
 	     (IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d355 ||
 	      IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d499) ?
@@ -8471,54 +8484,54 @@ module mkFPU(CLK,
 	     fpu_div64_fOperands_S0_first__06_BITS_129_TO_1_ETC___d498 ?
 	       11'd0 :
 	       _theResult___snd_fst_exp__h31337 ;
-  assign _theResult___snd_fst_sfd__h144486 =
+  assign _theResult___snd_fst_sfd__h144603 =
 	     (iFifo$D_OUT[159:137] == 23'd0) ?
 	       52'h4000000000000 :
-	       out___1_sfd__h144235 ;
-  assign _theResult___snd_fst_sfd__h164066 =
+	       out___1_sfd__h144352 ;
+  assign _theResult___snd_fst_sfd__h164183 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3190 ?
 	       52'd0 :
-	       _theResult___fst_sfd__h164063 ;
-  assign _theResult___snd_fst_sfd__h182408 =
+	       _theResult___fst_sfd__h164180 ;
+  assign _theResult___snd_fst_sfd__h182525 =
 	     SEXT_iFifo_first__087_BITS_167_TO_160_130_MINU_ETC___d3325 ?
-	       _theResult___fst_sfd__h173653 :
-	       _theResult___fst_sfd__h182405 ;
-  assign _theResult___snd_fst_sfd__h183126 =
+	       _theResult___fst_sfd__h173770 :
+	       _theResult___fst_sfd__h182522 ;
+  assign _theResult___snd_fst_sfd__h183243 =
 	     (iFifo$D_OUT[94:72] == 23'd0) ?
 	       52'h4000000000000 :
-	       out___1_sfd__h182875 ;
-  assign _theResult___snd_fst_sfd__h202704 =
+	       out___1_sfd__h182992 ;
+  assign _theResult___snd_fst_sfd__h202821 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_94_ETC___d4685 ?
 	       52'd0 :
-	       _theResult___fst_sfd__h202701 ;
-  assign _theResult___snd_fst_sfd__h221046 =
+	       _theResult___fst_sfd__h202818 ;
+  assign _theResult___snd_fst_sfd__h221163 =
 	     SEXT_iFifo_first__087_BITS_102_TO_95_625_MINUS_ETC___d4808 ?
-	       _theResult___fst_sfd__h212291 :
-	       _theResult___fst_sfd__h221043 ;
-  assign _theResult___snd_fst_sfd__h222065 =
+	       _theResult___fst_sfd__h212408 :
+	       _theResult___fst_sfd__h221160 ;
+  assign _theResult___snd_fst_sfd__h222182 =
 	     (iFifo$D_OUT[29:7] == 23'd0) ?
 	       52'h4000000000000 :
-	       out___1_sfd__h221814 ;
-  assign _theResult___snd_fst_sfd__h241643 =
+	       out___1_sfd__h221931 ;
+  assign _theResult___snd_fst_sfd__h241760 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_29_ETC___d3910 ?
 	       52'd0 :
-	       _theResult___fst_sfd__h241640 ;
-  assign _theResult___snd_fst_sfd__h259985 =
+	       _theResult___fst_sfd__h241757 ;
+  assign _theResult___snd_fst_sfd__h260102 =
 	     SEXT_iFifo_first__087_BITS_37_TO_30_850_MINUS__ETC___d4033 ?
-	       _theResult___fst_sfd__h251230 :
-	       _theResult___fst_sfd__h259982 ;
-  assign _theResult___snd_fst_sfd__h261925 =
+	       _theResult___fst_sfd__h251347 :
+	       _theResult___fst_sfd__h260099 ;
+  assign _theResult___snd_fst_sfd__h262125 =
 	     (resWire$wget[56:34] == 23'd0) ?
 	       23'd2097152 :
 	       resWire$wget[56:34] ;
-  assign _theResult___snd_fst_sfd__h286869 =
-	     _3074_MINUS_0_CONCAT_IF_resWire_wget__410_BIT_5_ETC___d5533 ?
-	       _theResult___fst_sfd__h278284 :
-	       _theResult___fst_sfd__h286866 ;
-  assign _theResult___snd_fst_sfd__h304689 =
-	     SEXT_resWire_wget__410_BITS_67_TO_57_416_MINUS_ETC___d6033 ?
-	       _theResult___fst_sfd__h296050 :
-	       _theResult___fst_sfd__h304686 ;
+  assign _theResult___snd_fst_sfd__h287069 =
+	     _3074_MINUS_0_CONCAT_IF_resWire_wget__412_BIT_5_ETC___d5535 ?
+	       _theResult___fst_sfd__h278484 :
+	       _theResult___fst_sfd__h287066 ;
+  assign _theResult___snd_fst_sfd__h304889 =
+	     SEXT_resWire_wget__412_BITS_67_TO_57_418_MINUS_ETC___d6035 ?
+	       _theResult___fst_sfd__h296250 :
+	       _theResult___fst_sfd__h304886 ;
   assign _theResult___snd_fst_sfd__h31362 =
 	     (fpu_div64_fOperands_S0_first__06_BITS_129_TO_1_ETC___d498 ||
 	      IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d353) ?
@@ -8781,25 +8794,25 @@ module mkFPU(CLK,
 	       value__h130883[10:0] :
 	       11'd0 ;
   assign din_inc___2_exp__h142626 = fpu_madd_fState_S8$D_OUT[65:55] + 11'd1 ;
-  assign din_inc___2_exp__h182469 = _theResult___fst_exp__h163336 + 11'd1 ;
-  assign din_inc___2_exp__h182504 = _theResult___fst_exp__h172852 + 11'd1 ;
-  assign din_inc___2_exp__h182530 = _theResult___fst_exp__h181653 + 11'd1 ;
-  assign din_inc___2_exp__h221107 = _theResult___fst_exp__h201974 + 11'd1 ;
-  assign din_inc___2_exp__h221142 = _theResult___fst_exp__h211490 + 11'd1 ;
-  assign din_inc___2_exp__h221168 = _theResult___fst_exp__h220291 + 11'd1 ;
-  assign din_inc___2_exp__h260046 = _theResult___fst_exp__h240913 + 11'd1 ;
-  assign din_inc___2_exp__h260081 = _theResult___fst_exp__h250429 + 11'd1 ;
-  assign din_inc___2_exp__h260107 = _theResult___fst_exp__h259230 + 11'd1 ;
-  assign din_inc___2_exp__h304723 = _theResult___fst_exp__h277686 + 8'd1 ;
-  assign din_inc___2_exp__h304749 = _theResult___fst_exp__h286342 + 8'd1 ;
-  assign din_inc___2_exp__h304784 = _theResult___fst_exp__h295452 + 8'd1 ;
-  assign din_inc___2_exp__h304810 = _theResult___fst_exp__h304137 + 8'd1 ;
+  assign din_inc___2_exp__h182586 = _theResult___fst_exp__h163453 + 11'd1 ;
+  assign din_inc___2_exp__h182621 = _theResult___fst_exp__h172969 + 11'd1 ;
+  assign din_inc___2_exp__h182647 = _theResult___fst_exp__h181770 + 11'd1 ;
+  assign din_inc___2_exp__h221224 = _theResult___fst_exp__h202091 + 11'd1 ;
+  assign din_inc___2_exp__h221259 = _theResult___fst_exp__h211607 + 11'd1 ;
+  assign din_inc___2_exp__h221285 = _theResult___fst_exp__h220408 + 11'd1 ;
+  assign din_inc___2_exp__h260163 = _theResult___fst_exp__h241030 + 11'd1 ;
+  assign din_inc___2_exp__h260198 = _theResult___fst_exp__h250546 + 11'd1 ;
+  assign din_inc___2_exp__h260224 = _theResult___fst_exp__h259347 + 11'd1 ;
+  assign din_inc___2_exp__h304923 = _theResult___fst_exp__h277886 + 8'd1 ;
+  assign din_inc___2_exp__h304949 = _theResult___fst_exp__h286542 + 8'd1 ;
+  assign din_inc___2_exp__h304984 = _theResult___fst_exp__h295652 + 8'd1 ;
+  assign din_inc___2_exp__h305010 = _theResult___fst_exp__h304337 + 8'd1 ;
   assign din_inc___2_exp__h43566 = fpu_div64_fState_S4$D_OUT[64:54] + 11'd1 ;
   assign din_inc___2_exp__h96000 = fpu_sqr64_fState_S4$D_OUT[64:54] + 11'd1 ;
-  assign exp__h304706 =
+  assign exp__h304906 =
 	     (resWire$wget[67:57] == 11'd2047) ?
 	       8'd255 :
-	       _theResult___fst_exp__h304697 ;
+	       _theResult___fst_exp__h304897 ;
   assign fpu_div64_fOperands_S0D_OUT_BITS_129_TO_119_M_ETC__q7 =
 	     fpu_div64_fOperands_S0$D_OUT[129:119] - 11'd1023 ;
   assign fpu_div64_fOperands_S0D_OUT_BITS_65_TO_55_MIN_ETC__q8 =
@@ -8963,49 +8976,49 @@ module mkFPU(CLK,
 	      12'd1023) ?
 	       2'd3 :
 	       _theResult___snd_fst__h141477 ;
-  assign guard__h155375 =
-	     { IF_theResult___snd63287_BIT_4_THEN_2_ELSE_0__q34[1],
-	       { _theResult___snd__h163287[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h164624 =
-	     { IF_sfdin72846_BIT_4_THEN_2_ELSE_0__q38[1],
-	       { sfdin__h172846[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h165222 = x__h165324 != 57'd0 ;
-  assign guard__h173663 =
-	     { IF_theResult___snd81599_BIT_4_THEN_2_ELSE_0__q41[1],
-	       { _theResult___snd__h181599[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h194013 =
-	     { IF_theResult___snd01925_BIT_4_THEN_2_ELSE_0__q94[1],
-	       { _theResult___snd__h201925[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h203262 =
-	     { IF_sfdin11484_BIT_4_THEN_2_ELSE_0__q98[1],
-	       { sfdin__h211484[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h203860 = x__h203962 != 57'd0 ;
-  assign guard__h212301 =
-	     { IF_theResult___snd20237_BIT_4_THEN_2_ELSE_0__q101[1],
-	       { _theResult___snd__h220237[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h232952 =
-	     { IF_theResult___snd40864_BIT_4_THEN_2_ELSE_0__q61[1],
-	       { _theResult___snd__h240864[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h242201 =
-	     { IF_sfdin50423_BIT_4_THEN_2_ELSE_0__q65[1],
-	       { sfdin__h250423[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h242799 = x__h242901 != 57'd0 ;
-  assign guard__h251240 =
-	     { IF_theResult___snd59176_BIT_4_THEN_2_ELSE_0__q68[1],
-	       { _theResult___snd__h259176[3:0], 52'd0 } != 56'd0 } ;
-  assign guard__h269587 =
-	     { IF_sfdin77680_BIT_33_THEN_2_ELSE_0__q134[1],
-	       { sfdin__h277680[32:0], 23'd0 } != 56'd0 } ;
-  assign guard__h278294 =
-	     { IF_theResult___snd86293_BIT_33_THEN_2_ELSE_0__q136[1],
-	       { _theResult___snd__h286293[32:0], 23'd0 } != 56'd0 } ;
-  assign guard__h287224 =
-	     { IF_sfdin95446_BIT_33_THEN_2_ELSE_0__q140[1],
-	       { sfdin__h295446[32:0], 23'd0 } != 56'd0 } ;
-  assign guard__h287822 = x__h287924 != 57'd0 ;
-  assign guard__h296060 =
-	     { IF_theResult___snd04083_BIT_33_THEN_2_ELSE_0__q143[1],
-	       { _theResult___snd__h304083[32:0], 23'd0 } != 56'd0 } ;
+  assign guard__h155492 =
+	     { IF_theResult___snd63404_BIT_4_THEN_2_ELSE_0__q34[1],
+	       { _theResult___snd__h163404[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h164741 =
+	     { IF_sfdin72963_BIT_4_THEN_2_ELSE_0__q38[1],
+	       { sfdin__h172963[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h165339 = x__h165441 != 57'd0 ;
+  assign guard__h173780 =
+	     { IF_theResult___snd81716_BIT_4_THEN_2_ELSE_0__q41[1],
+	       { _theResult___snd__h181716[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h194130 =
+	     { IF_theResult___snd02042_BIT_4_THEN_2_ELSE_0__q94[1],
+	       { _theResult___snd__h202042[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h203379 =
+	     { IF_sfdin11601_BIT_4_THEN_2_ELSE_0__q98[1],
+	       { sfdin__h211601[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h203977 = x__h204079 != 57'd0 ;
+  assign guard__h212418 =
+	     { IF_theResult___snd20354_BIT_4_THEN_2_ELSE_0__q101[1],
+	       { _theResult___snd__h220354[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h233069 =
+	     { IF_theResult___snd40981_BIT_4_THEN_2_ELSE_0__q61[1],
+	       { _theResult___snd__h240981[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h242318 =
+	     { IF_sfdin50540_BIT_4_THEN_2_ELSE_0__q65[1],
+	       { sfdin__h250540[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h242916 = x__h243018 != 57'd0 ;
+  assign guard__h251357 =
+	     { IF_theResult___snd59293_BIT_4_THEN_2_ELSE_0__q68[1],
+	       { _theResult___snd__h259293[3:0], 52'd0 } != 56'd0 } ;
+  assign guard__h269787 =
+	     { IF_sfdin77880_BIT_33_THEN_2_ELSE_0__q134[1],
+	       { sfdin__h277880[32:0], 23'd0 } != 56'd0 } ;
+  assign guard__h278494 =
+	     { IF_theResult___snd86493_BIT_33_THEN_2_ELSE_0__q136[1],
+	       { _theResult___snd__h286493[32:0], 23'd0 } != 56'd0 } ;
+  assign guard__h287424 =
+	     { IF_sfdin95646_BIT_33_THEN_2_ELSE_0__q140[1],
+	       { sfdin__h295646[32:0], 23'd0 } != 56'd0 } ;
+  assign guard__h288022 = x__h288124 != 57'd0 ;
+  assign guard__h296260 =
+	     { IF_theResult___snd04283_BIT_33_THEN_2_ELSE_0__q143[1],
+	       { _theResult___snd__h304283[32:0], 23'd0 } != 56'd0 } ;
   assign guard__h33946 = x__h42705 ;
   assign guard__h86435 = x__h95138 ;
   assign iFifoD_OUT_BITS_102_TO_95_MINUS_127__q95 =
@@ -9014,65 +9027,65 @@ module mkFPU(CLK,
 	     iFifo$D_OUT[167:160] - 8'd127 ;
   assign iFifoD_OUT_BITS_37_TO_30_MINUS_127__q62 =
 	     iFifo$D_OUT[37:30] - 8'd127 ;
-  assign out___1_sfd__h144235 = { iFifo$D_OUT[159:137], 29'd0 } ;
-  assign out___1_sfd__h182875 = { iFifo$D_OUT[94:72], 29'd0 } ;
-  assign out___1_sfd__h221814 = { iFifo$D_OUT[29:7], 29'd0 } ;
+  assign out___1_sfd__h144352 = { iFifo$D_OUT[159:137], 29'd0 } ;
+  assign out___1_sfd__h182992 = { iFifo$D_OUT[94:72], 29'd0 } ;
+  assign out___1_sfd__h221931 = { iFifo$D_OUT[29:7], 29'd0 } ;
   assign out_exp__h142544 =
 	     fpu_madd_fState_S8$D_OUT[3] ?
 	       _theResult___exp__h142541 :
 	       fpu_madd_fState_S8$D_OUT[65:55] ;
-  assign out_exp__h163984 =
-	     _theResult___snd__h163287[5] ?
-	       _theResult___exp__h163981 :
-	       _theResult___fst_exp__h163336 ;
-  assign out_exp__h173574 =
-	     sfdin__h172846[5] ?
-	       _theResult___exp__h173571 :
-	       _theResult___fst_exp__h172852 ;
-  assign out_exp__h182326 =
-	     _theResult___snd__h181599[5] ?
-	       _theResult___exp__h182323 :
-	       _theResult___fst_exp__h181653 ;
-  assign out_exp__h202622 =
-	     _theResult___snd__h201925[5] ?
-	       _theResult___exp__h202619 :
-	       _theResult___fst_exp__h201974 ;
-  assign out_exp__h212212 =
-	     sfdin__h211484[5] ?
-	       _theResult___exp__h212209 :
-	       _theResult___fst_exp__h211490 ;
-  assign out_exp__h220964 =
-	     _theResult___snd__h220237[5] ?
-	       _theResult___exp__h220961 :
-	       _theResult___fst_exp__h220291 ;
-  assign out_exp__h241561 =
-	     _theResult___snd__h240864[5] ?
-	       _theResult___exp__h241558 :
-	       _theResult___fst_exp__h240913 ;
-  assign out_exp__h251151 =
-	     sfdin__h250423[5] ?
-	       _theResult___exp__h251148 :
-	       _theResult___fst_exp__h250429 ;
-  assign out_exp__h259903 =
-	     _theResult___snd__h259176[5] ?
-	       _theResult___exp__h259900 :
-	       _theResult___fst_exp__h259230 ;
-  assign out_exp__h278205 =
-	     sfdin__h277680[34] ?
-	       _theResult___exp__h278202 :
-	       _theResult___fst_exp__h277686 ;
-  assign out_exp__h286787 =
-	     _theResult___snd__h286293[34] ?
-	       _theResult___exp__h286784 :
-	       _theResult___fst_exp__h286342 ;
-  assign out_exp__h295971 =
-	     sfdin__h295446[34] ?
-	       _theResult___exp__h295968 :
-	       _theResult___fst_exp__h295452 ;
-  assign out_exp__h304607 =
-	     _theResult___snd__h304083[34] ?
-	       _theResult___exp__h304604 :
-	       _theResult___fst_exp__h304137 ;
+  assign out_exp__h164101 =
+	     _theResult___snd__h163404[5] ?
+	       _theResult___exp__h164098 :
+	       _theResult___fst_exp__h163453 ;
+  assign out_exp__h173691 =
+	     sfdin__h172963[5] ?
+	       _theResult___exp__h173688 :
+	       _theResult___fst_exp__h172969 ;
+  assign out_exp__h182443 =
+	     _theResult___snd__h181716[5] ?
+	       _theResult___exp__h182440 :
+	       _theResult___fst_exp__h181770 ;
+  assign out_exp__h202739 =
+	     _theResult___snd__h202042[5] ?
+	       _theResult___exp__h202736 :
+	       _theResult___fst_exp__h202091 ;
+  assign out_exp__h212329 =
+	     sfdin__h211601[5] ?
+	       _theResult___exp__h212326 :
+	       _theResult___fst_exp__h211607 ;
+  assign out_exp__h221081 =
+	     _theResult___snd__h220354[5] ?
+	       _theResult___exp__h221078 :
+	       _theResult___fst_exp__h220408 ;
+  assign out_exp__h241678 =
+	     _theResult___snd__h240981[5] ?
+	       _theResult___exp__h241675 :
+	       _theResult___fst_exp__h241030 ;
+  assign out_exp__h251268 =
+	     sfdin__h250540[5] ?
+	       _theResult___exp__h251265 :
+	       _theResult___fst_exp__h250546 ;
+  assign out_exp__h260020 =
+	     _theResult___snd__h259293[5] ?
+	       _theResult___exp__h260017 :
+	       _theResult___fst_exp__h259347 ;
+  assign out_exp__h278405 =
+	     sfdin__h277880[34] ?
+	       _theResult___exp__h278402 :
+	       _theResult___fst_exp__h277886 ;
+  assign out_exp__h286987 =
+	     _theResult___snd__h286493[34] ?
+	       _theResult___exp__h286984 :
+	       _theResult___fst_exp__h286542 ;
+  assign out_exp__h296171 =
+	     sfdin__h295646[34] ?
+	       _theResult___exp__h296168 :
+	       _theResult___fst_exp__h295652 ;
+  assign out_exp__h304807 =
+	     _theResult___snd__h304283[34] ?
+	       _theResult___exp__h304804 :
+	       _theResult___fst_exp__h304337 ;
   assign out_exp__h43478 =
 	     fpu_div64_fState_S4$D_OUT[2] ?
 	       _theResult___exp__h43475 :
@@ -9085,58 +9098,58 @@ module mkFPU(CLK,
 	     fpu_madd_fState_S8$D_OUT[3] ?
 	       _theResult___sfd__h142542 :
 	       fpu_madd_fState_S8$D_OUT[54:3] ;
-  assign out_sfd__h163985 =
-	     _theResult___snd__h163287[5] ?
-	       _theResult___sfd__h163982 :
-	       _theResult___snd__h163287[56:5] ;
-  assign out_sfd__h173575 =
-	     sfdin__h172846[5] ?
-	       _theResult___sfd__h173572 :
-	       sfdin__h172846[56:5] ;
-  assign out_sfd__h182327 =
-	     _theResult___snd__h181599[5] ?
-	       _theResult___sfd__h182324 :
-	       _theResult___snd__h181599[56:5] ;
-  assign out_sfd__h202623 =
-	     _theResult___snd__h201925[5] ?
-	       _theResult___sfd__h202620 :
-	       _theResult___snd__h201925[56:5] ;
-  assign out_sfd__h212213 =
-	     sfdin__h211484[5] ?
-	       _theResult___sfd__h212210 :
-	       sfdin__h211484[56:5] ;
-  assign out_sfd__h220965 =
-	     _theResult___snd__h220237[5] ?
-	       _theResult___sfd__h220962 :
-	       _theResult___snd__h220237[56:5] ;
-  assign out_sfd__h241562 =
-	     _theResult___snd__h240864[5] ?
-	       _theResult___sfd__h241559 :
-	       _theResult___snd__h240864[56:5] ;
-  assign out_sfd__h251152 =
-	     sfdin__h250423[5] ?
-	       _theResult___sfd__h251149 :
-	       sfdin__h250423[56:5] ;
-  assign out_sfd__h259904 =
-	     _theResult___snd__h259176[5] ?
-	       _theResult___sfd__h259901 :
-	       _theResult___snd__h259176[56:5] ;
-  assign out_sfd__h278206 =
-	     sfdin__h277680[34] ?
-	       _theResult___sfd__h278203 :
-	       sfdin__h277680[56:34] ;
-  assign out_sfd__h286788 =
-	     _theResult___snd__h286293[34] ?
-	       _theResult___sfd__h286785 :
-	       _theResult___snd__h286293[56:34] ;
-  assign out_sfd__h295972 =
-	     sfdin__h295446[34] ?
-	       _theResult___sfd__h295969 :
-	       sfdin__h295446[56:34] ;
-  assign out_sfd__h304608 =
-	     _theResult___snd__h304083[34] ?
-	       _theResult___sfd__h304605 :
-	       _theResult___snd__h304083[56:34] ;
+  assign out_sfd__h164102 =
+	     _theResult___snd__h163404[5] ?
+	       _theResult___sfd__h164099 :
+	       _theResult___snd__h163404[56:5] ;
+  assign out_sfd__h173692 =
+	     sfdin__h172963[5] ?
+	       _theResult___sfd__h173689 :
+	       sfdin__h172963[56:5] ;
+  assign out_sfd__h182444 =
+	     _theResult___snd__h181716[5] ?
+	       _theResult___sfd__h182441 :
+	       _theResult___snd__h181716[56:5] ;
+  assign out_sfd__h202740 =
+	     _theResult___snd__h202042[5] ?
+	       _theResult___sfd__h202737 :
+	       _theResult___snd__h202042[56:5] ;
+  assign out_sfd__h212330 =
+	     sfdin__h211601[5] ?
+	       _theResult___sfd__h212327 :
+	       sfdin__h211601[56:5] ;
+  assign out_sfd__h221082 =
+	     _theResult___snd__h220354[5] ?
+	       _theResult___sfd__h221079 :
+	       _theResult___snd__h220354[56:5] ;
+  assign out_sfd__h241679 =
+	     _theResult___snd__h240981[5] ?
+	       _theResult___sfd__h241676 :
+	       _theResult___snd__h240981[56:5] ;
+  assign out_sfd__h251269 =
+	     sfdin__h250540[5] ?
+	       _theResult___sfd__h251266 :
+	       sfdin__h250540[56:5] ;
+  assign out_sfd__h260021 =
+	     _theResult___snd__h259293[5] ?
+	       _theResult___sfd__h260018 :
+	       _theResult___snd__h259293[56:5] ;
+  assign out_sfd__h278406 =
+	     sfdin__h277880[34] ?
+	       _theResult___sfd__h278403 :
+	       sfdin__h277880[56:34] ;
+  assign out_sfd__h286988 =
+	     _theResult___snd__h286493[34] ?
+	       _theResult___sfd__h286985 :
+	       _theResult___snd__h286493[56:34] ;
+  assign out_sfd__h296172 =
+	     sfdin__h295646[34] ?
+	       _theResult___sfd__h296169 :
+	       sfdin__h295646[56:34] ;
+  assign out_sfd__h304808 =
+	     _theResult___snd__h304283[34] ?
+	       _theResult___sfd__h304805 :
+	       _theResult___snd__h304283[56:34] ;
   assign out_sfd__h43479 =
 	     fpu_div64_fState_S4$D_OUT[2] ?
 	       _theResult___sfd__h43476 :
@@ -9153,7 +9166,7 @@ module mkFPU(CLK,
   assign r__h1753 =
 	     { 1'd0,
 	       IF_rg_index_1_4_ULE_58_8_THEN_IF_rg_res_1_BIT__ETC___d69[115:1] } ;
-  assign resWire_wget__410_BITS_4_TO_0_658_OR_NOT_resWi_ETC___d6768 =
+  assign resWire_wget__412_BITS_4_TO_0_661_OR_NOT_resWi_ETC___d6771 =
 	     resWire$wget[4:0] |
 	     { (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] == 52'd0) &&
@@ -9161,57 +9174,57 @@ module mkFPU(CLK,
 		resWire$wget[56:5] != 52'd0) &&
 	       (resWire$wget[67:57] != 11'd0 ||
 		resWire$wget[56:5] != 52'd0) &&
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6709,
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6712,
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] == 52'd0) &&
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] != 52'd0) &&
 	       (resWire$wget[67:57] != 11'd0 ||
 		resWire$wget[56:5] != 52'd0) &&
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6720,
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6723,
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] == 52'd0) &&
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] != 52'd0) &&
 	       (resWire$wget[67:57] != 11'd0 ||
 		resWire$wget[56:5] != 52'd0) &&
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6736,
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6739,
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] == 52'd0) &&
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] != 52'd0) &&
 	       (resWire$wget[67:57] != 11'd0 ||
 		resWire$wget[56:5] != 52'd0) &&
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6749,
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6752,
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] == 52'd0) &&
 	       (resWire$wget[67:57] != 11'd2047 ||
 		resWire$wget[56:5] != 52'd0) &&
 	       (resWire$wget[67:57] != 11'd0 ||
 		resWire$wget[56:5] != 52'd0) &&
-	       IF_resWire_wget__410_BITS_67_TO_57_416_EQ_0_42_ETC___d6762 } ;
+	       IF_resWire_wget__412_BITS_67_TO_57_418_EQ_0_42_ETC___d6765 } ;
   assign resWirewget_BITS_67_TO_57_MINUS_1023__q137 =
 	     resWire$wget[67:57] - 11'd1023 ;
   assign result__h132372 =
 	     { fpu_madd_fState_S5_first__601_BITS_56_TO_0_610_ETC___d2615[56:1],
 	       fpu_madd_fState_S5_first__601_BITS_56_TO_0_610_ETC___d2615[0] |
 	       guard__h132367 != 57'd0 } ;
-  assign result__h165227 =
+  assign result__h165344 =
 	     { _0b0_CONCAT_NOT_iFifo_first__087_BITS_167_TO_16_ETC___d3330[56:1],
 	       _0b0_CONCAT_NOT_iFifo_first__087_BITS_167_TO_16_ETC___d3330[0] |
-	       guard__h165222 } ;
-  assign result__h203865 =
+	       guard__h165339 } ;
+  assign result__h203982 =
 	     { _0b0_CONCAT_NOT_iFifo_first__087_BITS_102_TO_95_ETC___d4813[56:1],
 	       _0b0_CONCAT_NOT_iFifo_first__087_BITS_102_TO_95_ETC___d4813[0] |
-	       guard__h203860 } ;
-  assign result__h242804 =
+	       guard__h203977 } ;
+  assign result__h242921 =
 	     { _0b0_CONCAT_NOT_iFifo_first__087_BITS_37_TO_30__ETC___d4038[56:1],
 	       _0b0_CONCAT_NOT_iFifo_first__087_BITS_37_TO_30__ETC___d4038[0] |
-	       guard__h242799 } ;
-  assign result__h287827 =
-	     { _0b0_CONCAT_NOT_resWire_wget__410_BITS_67_TO_57_ETC___d6038[56:1],
-	       _0b0_CONCAT_NOT_resWire_wget__410_BITS_67_TO_57_ETC___d6038[0] |
-	       guard__h287822 } ;
+	       guard__h242916 } ;
+  assign result__h288027 =
+	     { _0b0_CONCAT_NOT_resWire_wget__412_BITS_67_TO_57_ETC___d6040[56:1],
+	       _0b0_CONCAT_NOT_resWire_wget__412_BITS_67_TO_57_ETC___d6040[0] |
+	       guard__h288022 } ;
   assign result__h32617 = { _theResult____h32523[57:1], 1'd1 } ;
   assign result__h32648 =
 	     { 1'd0,
@@ -9265,82 +9278,82 @@ module mkFPU(CLK,
 	       fpu_madd_fState_S8$D_OUT[65:55] != 11'd0,
 	       fpu_madd_fState_S8$D_OUT[54:3] } +
 	     54'd1 ;
-  assign sfd__h144536 = { value__h148923, 32'd0 } ;
-  assign sfd__h163354 =
+  assign sfd__h144653 = { value__h149040, 32'd0 } ;
+  assign sfd__h163471 =
 	     { 1'b0,
-	       _theResult___fst_exp__h163336 != 11'd0,
-	       _theResult___snd__h163287[56:5] } +
+	       _theResult___fst_exp__h163453 != 11'd0,
+	       _theResult___snd__h163404[56:5] } +
 	     54'd1 ;
-  assign sfd__h172944 =
+  assign sfd__h173061 =
 	     { 1'b0,
-	       _theResult___fst_exp__h172852 != 11'd0,
-	       sfdin__h172846[56:5] } +
+	       _theResult___fst_exp__h172969 != 11'd0,
+	       sfdin__h172963[56:5] } +
 	     54'd1 ;
-  assign sfd__h181672 =
+  assign sfd__h181789 =
 	     { 1'b0,
-	       _theResult___fst_exp__h181653 != 11'd0,
-	       _theResult___snd__h181599[56:5] } +
+	       _theResult___fst_exp__h181770 != 11'd0,
+	       _theResult___snd__h181716[56:5] } +
 	     54'd1 ;
-  assign sfd__h183176 = { value__h187561, 32'd0 } ;
+  assign sfd__h183293 = { value__h187678, 32'd0 } ;
   assign sfd__h18934 = { 1'd1, fpu_div64_fOperands_S0$D_OUT[117:67] } ;
   assign sfd__h18937 = { 1'd1, fpu_div64_fOperands_S0$D_OUT[53:3] } ;
-  assign sfd__h201992 =
+  assign sfd__h202109 =
 	     { 1'b0,
-	       _theResult___fst_exp__h201974 != 11'd0,
-	       _theResult___snd__h201925[56:5] } +
+	       _theResult___fst_exp__h202091 != 11'd0,
+	       _theResult___snd__h202042[56:5] } +
 	     54'd1 ;
-  assign sfd__h211582 =
+  assign sfd__h211699 =
 	     { 1'b0,
-	       _theResult___fst_exp__h211490 != 11'd0,
-	       sfdin__h211484[56:5] } +
+	       _theResult___fst_exp__h211607 != 11'd0,
+	       sfdin__h211601[56:5] } +
 	     54'd1 ;
-  assign sfd__h220310 =
+  assign sfd__h220427 =
 	     { 1'b0,
-	       _theResult___fst_exp__h220291 != 11'd0,
-	       _theResult___snd__h220237[56:5] } +
+	       _theResult___fst_exp__h220408 != 11'd0,
+	       _theResult___snd__h220354[56:5] } +
 	     54'd1 ;
-  assign sfd__h222115 = { value__h226500, 32'd0 } ;
-  assign sfd__h240931 =
+  assign sfd__h222232 = { value__h226617, 32'd0 } ;
+  assign sfd__h241048 =
 	     { 1'b0,
-	       _theResult___fst_exp__h240913 != 11'd0,
-	       _theResult___snd__h240864[56:5] } +
+	       _theResult___fst_exp__h241030 != 11'd0,
+	       _theResult___snd__h240981[56:5] } +
 	     54'd1 ;
-  assign sfd__h250521 =
+  assign sfd__h250638 =
 	     { 1'b0,
-	       _theResult___fst_exp__h250429 != 11'd0,
-	       sfdin__h250423[56:5] } +
+	       _theResult___fst_exp__h250546 != 11'd0,
+	       sfdin__h250540[56:5] } +
 	     54'd1 ;
-  assign sfd__h259249 =
+  assign sfd__h259366 =
 	     { 1'b0,
-	       _theResult___fst_exp__h259230 != 11'd0,
-	       _theResult___snd__h259176[56:5] } +
+	       _theResult___fst_exp__h259347 != 11'd0,
+	       _theResult___snd__h259293[56:5] } +
 	     54'd1 ;
-  assign sfd__h261975 = { value__h270197, 3'd0 } ;
-  assign sfd__h277778 =
+  assign sfd__h262175 = { value__h270397, 3'd0 } ;
+  assign sfd__h277978 =
 	     { 1'b0,
-	       _theResult___fst_exp__h277686 != 8'd0,
-	       sfdin__h277680[56:34] } +
+	       _theResult___fst_exp__h277886 != 8'd0,
+	       sfdin__h277880[56:34] } +
 	     25'd1 ;
-  assign sfd__h286360 =
+  assign sfd__h286560 =
 	     { 1'b0,
-	       _theResult___fst_exp__h286342 != 8'd0,
-	       _theResult___snd__h286293[56:34] } +
+	       _theResult___fst_exp__h286542 != 8'd0,
+	       _theResult___snd__h286493[56:34] } +
 	     25'd1 ;
-  assign sfd__h295544 =
+  assign sfd__h295744 =
 	     { 1'b0,
-	       _theResult___fst_exp__h295452 != 8'd0,
-	       sfdin__h295446[56:34] } +
+	       _theResult___fst_exp__h295652 != 8'd0,
+	       sfdin__h295646[56:34] } +
 	     25'd1 ;
-  assign sfd__h304156 =
+  assign sfd__h304356 =
 	     { 1'b0,
-	       _theResult___fst_exp__h304137 != 8'd0,
-	       _theResult___snd__h304083[56:34] } +
+	       _theResult___fst_exp__h304337 != 8'd0,
+	       _theResult___snd__h304283[56:34] } +
 	     25'd1 ;
-  assign sfd__h304707 =
+  assign sfd__h304907 =
 	     (resWire$wget[67:57] == 11'd2047 &&
 	      resWire$wget[56:5] != 52'd0) ?
-	       _theResult___snd_fst_sfd__h261925 :
-	       _theResult___fst_sfd__h304701 ;
+	       _theResult___snd_fst_sfd__h262125 :
+	       _theResult___fst_sfd__h304901 ;
   assign sfd__h42982 =
 	     { 1'b0,
 	       fpu_div64_fState_S4$D_OUT[64:54] != 11'd0,
@@ -9365,26 +9378,26 @@ module mkFPU(CLK,
 	     sfd__h133119[56] ?
 	       _theResult___snd__h141392 :
 	       _theResult___snd__h141406 ;
-  assign sfdin__h172846 =
-	     _theResult____h164614[56] ?
-	       _theResult___snd__h172863 :
-	       _theResult___snd__h172874 ;
-  assign sfdin__h211484 =
-	     _theResult____h203252[56] ?
-	       _theResult___snd__h211501 :
-	       _theResult___snd__h211512 ;
-  assign sfdin__h250423 =
-	     _theResult____h242191[56] ?
-	       _theResult___snd__h250440 :
-	       _theResult___snd__h250451 ;
-  assign sfdin__h277680 =
-	     _theResult____h269577[56] ?
-	       _theResult___snd__h277697 :
-	       _theResult___snd__h277708 ;
-  assign sfdin__h295446 =
-	     _theResult____h287214[56] ?
-	       _theResult___snd__h295463 :
-	       _theResult___snd__h295474 ;
+  assign sfdin__h172963 =
+	     _theResult____h164731[56] ?
+	       _theResult___snd__h172980 :
+	       _theResult___snd__h172991 ;
+  assign sfdin__h211601 =
+	     _theResult____h203369[56] ?
+	       _theResult___snd__h211618 :
+	       _theResult___snd__h211629 ;
+  assign sfdin__h250540 =
+	     _theResult____h242308[56] ?
+	       _theResult___snd__h250557 :
+	       _theResult___snd__h250568 ;
+  assign sfdin__h277880 =
+	     _theResult____h269777[56] ?
+	       _theResult___snd__h277897 :
+	       _theResult___snd__h277908 ;
+  assign sfdin__h295646 =
+	     _theResult____h287414[56] ?
+	       _theResult___snd__h295663 :
+	       _theResult___snd__h295674 ;
   assign sfdin__h34118 =
 	     (fpu_div64_fState_S3$D_OUT[120:110] == 11'd2047) ?
 	       _theResult___snd_snd_snd__h33963 :
@@ -9410,13 +9423,13 @@ module mkFPU(CLK,
   assign value_BIT_52___h53270 = fpu_sqr64_fOperand_S0$D_OUT[65:55] != 11'd0 ;
   assign value__h130883 = fpu_madd_fState_S3$D_OUT[12:0] + 13'd1023 ;
   assign value__h141307 = fpu_madd_fState_S7$D_OUT[126:114] + 13'd1023 ;
-  assign value__h148923 =
+  assign value__h149040 =
 	     { 1'b0, iFifo$D_OUT[167:160] != 8'd0, iFifo$D_OUT[159:137] } ;
-  assign value__h187561 =
+  assign value__h187678 =
 	     { 1'b0, iFifo$D_OUT[102:95] != 8'd0, iFifo$D_OUT[94:72] } ;
-  assign value__h226500 =
+  assign value__h226617 =
 	     { 1'b0, iFifo$D_OUT[37:30] != 8'd0, iFifo$D_OUT[29:7] } ;
-  assign value__h270197 =
+  assign value__h270397 =
 	     { 1'b0, resWire$wget[67:57] != 11'd0, resWire$wget[56:5] } ;
   assign value__h31374 =
 	     IF_fpu_div64_fOperands_S0_first__06_BITS_129_T_ETC___d352 +
@@ -9481,22 +9494,22 @@ module mkFPU(CLK,
 	     fpu_madd_fState_S6$D_OUT[113:57] -
 	     fpu_madd_fState_S6$D_OUT[56:0] ;
   assign x__h141760 = fpu_madd_fState_S7$D_OUT[202] ? 2'd0 : guard__h133123 ;
-  assign x__h165324 = sfd__h144536 << x__h165357 ;
-  assign x__h165357 =
+  assign x__h165441 = sfd__h144653 << x__h165474 ;
+  assign x__h165474 =
 	     12'd57 -
 	     _3074_MINUS_SEXT_iFifo_first__087_BITS_167_TO_1_ETC___d3326 ;
-  assign x__h203962 = sfd__h183176 << x__h203995 ;
-  assign x__h203995 =
+  assign x__h204079 = sfd__h183293 << x__h204112 ;
+  assign x__h204112 =
 	     12'd57 -
 	     _3074_MINUS_SEXT_iFifo_first__087_BITS_102_TO_9_ETC___d4809 ;
-  assign x__h242901 = sfd__h222115 << x__h242934 ;
-  assign x__h242934 =
+  assign x__h243018 = sfd__h222232 << x__h243051 ;
+  assign x__h243051 =
 	     12'd57 -
 	     _3074_MINUS_SEXT_iFifo_first__087_BITS_37_TO_30_ETC___d4034 ;
-  assign x__h287924 = sfd__h261975 << x__h287957 ;
-  assign x__h287957 =
+  assign x__h288124 = sfd__h262175 << x__h288157 ;
+  assign x__h288157 =
 	     12'd57 -
-	     _3970_MINUS_SEXT_resWire_wget__410_BITS_67_TO_5_ETC___d6034 ;
+	     _3970_MINUS_SEXT_resWire_wget__412_BITS_67_TO_5_ETC___d6036 ;
   assign x__h31426 = { value__h31429, 60'd0 } ;
   assign x__h31487 = { sfdB__h2041, 4'b0 } ;
   assign x__h31541 =
@@ -9714,85 +9727,85 @@ module mkFPU(CLK,
   always@(iFifo$D_OUT)
   begin
     case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1: _theResult___fst_exp__h148291 = 11'd2047;
+      3'd0, 3'd1: _theResult___fst_exp__h148408 = 11'd2047;
       3'd2:
-	  _theResult___fst_exp__h148291 =
+	  _theResult___fst_exp__h148408 =
 	      iFifo$D_OUT[168] ? 11'd2046 : 11'd2047;
       3'd3:
-	  _theResult___fst_exp__h148291 =
+	  _theResult___fst_exp__h148408 =
 	      iFifo$D_OUT[168] ? 11'd2047 : 11'd2046;
-      3'd4: _theResult___fst_exp__h148291 = 11'd2046;
-      default: _theResult___fst_exp__h148291 = 11'd0;
+      3'd4: _theResult___fst_exp__h148408 = 11'd2046;
+      default: _theResult___fst_exp__h148408 = 11'd0;
     endcase
   end
   always@(iFifo$D_OUT)
   begin
     case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1: _theResult___fst_sfd__h148292 = 52'd0;
+      3'd0, 3'd1: _theResult___fst_sfd__h148409 = 52'd0;
       3'd2:
-	  _theResult___fst_sfd__h148292 =
+	  _theResult___fst_sfd__h148409 =
 	      iFifo$D_OUT[168] ? 52'hFFFFFFFFFFFFF : 52'd0;
       3'd3:
-	  _theResult___fst_sfd__h148292 =
+	  _theResult___fst_sfd__h148409 =
 	      iFifo$D_OUT[168] ? 52'd0 : 52'hFFFFFFFFFFFFF;
-      3'd4: _theResult___fst_sfd__h148292 = 52'hFFFFFFFFFFFFF;
-      default: _theResult___fst_sfd__h148292 = 52'd0;
+      3'd4: _theResult___fst_sfd__h148409 = 52'hFFFFFFFFFFFFF;
+      default: _theResult___fst_sfd__h148409 = 52'd0;
     endcase
   end
   always@(iFifo$D_OUT)
   begin
     case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1: _theResult___fst_exp__h186931 = 11'd2047;
+      3'd0, 3'd1: _theResult___fst_exp__h187048 = 11'd2047;
       3'd2:
-	  _theResult___fst_exp__h186931 =
+	  _theResult___fst_exp__h187048 =
 	      iFifo$D_OUT[103] ? 11'd2046 : 11'd2047;
       3'd3:
-	  _theResult___fst_exp__h186931 =
+	  _theResult___fst_exp__h187048 =
 	      iFifo$D_OUT[103] ? 11'd2047 : 11'd2046;
-      3'd4: _theResult___fst_exp__h186931 = 11'd2046;
-      default: _theResult___fst_exp__h186931 = 11'd0;
+      3'd4: _theResult___fst_exp__h187048 = 11'd2046;
+      default: _theResult___fst_exp__h187048 = 11'd0;
     endcase
   end
   always@(iFifo$D_OUT)
   begin
     case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1: _theResult___fst_exp__h225870 = 11'd2047;
+      3'd0, 3'd1: _theResult___fst_exp__h225987 = 11'd2047;
       3'd2:
-	  _theResult___fst_exp__h225870 =
+	  _theResult___fst_exp__h225987 =
 	      iFifo$D_OUT[38] ? 11'd2046 : 11'd2047;
       3'd3:
-	  _theResult___fst_exp__h225870 =
+	  _theResult___fst_exp__h225987 =
 	      iFifo$D_OUT[38] ? 11'd2047 : 11'd2046;
-      3'd4: _theResult___fst_exp__h225870 = 11'd2046;
-      default: _theResult___fst_exp__h225870 = 11'd0;
+      3'd4: _theResult___fst_exp__h225987 = 11'd2046;
+      default: _theResult___fst_exp__h225987 = 11'd0;
     endcase
   end
   always@(iFifo$D_OUT)
   begin
     case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1: _theResult___fst_sfd__h186932 = 52'd0;
+      3'd0, 3'd1: _theResult___fst_sfd__h187049 = 52'd0;
       3'd2:
-	  _theResult___fst_sfd__h186932 =
+	  _theResult___fst_sfd__h187049 =
 	      iFifo$D_OUT[103] ? 52'hFFFFFFFFFFFFF : 52'd0;
       3'd3:
-	  _theResult___fst_sfd__h186932 =
+	  _theResult___fst_sfd__h187049 =
 	      iFifo$D_OUT[103] ? 52'd0 : 52'hFFFFFFFFFFFFF;
-      3'd4: _theResult___fst_sfd__h186932 = 52'hFFFFFFFFFFFFF;
-      default: _theResult___fst_sfd__h186932 = 52'd0;
+      3'd4: _theResult___fst_sfd__h187049 = 52'hFFFFFFFFFFFFF;
+      default: _theResult___fst_sfd__h187049 = 52'd0;
     endcase
   end
   always@(iFifo$D_OUT)
   begin
     case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1: _theResult___fst_sfd__h225871 = 52'd0;
+      3'd0, 3'd1: _theResult___fst_sfd__h225988 = 52'd0;
       3'd2:
-	  _theResult___fst_sfd__h225871 =
+	  _theResult___fst_sfd__h225988 =
 	      iFifo$D_OUT[38] ? 52'hFFFFFFFFFFFFF : 52'd0;
       3'd3:
-	  _theResult___fst_sfd__h225871 =
+	  _theResult___fst_sfd__h225988 =
 	      iFifo$D_OUT[38] ? 52'd0 : 52'hFFFFFFFFFFFFF;
-      3'd4: _theResult___fst_sfd__h225871 = 52'hFFFFFFFFFFFFF;
-      default: _theResult___fst_sfd__h225871 = 52'd0;
+      3'd4: _theResult___fst_sfd__h225988 = 52'hFFFFFFFFFFFFF;
+      default: _theResult___fst_sfd__h225988 = 52'd0;
     endcase
   end
   always@(fpu_div64_fOperands_S0$D_OUT or
@@ -10029,346 +10042,346 @@ module mkFPU(CLK,
       default: _theResult___fst_exp__h142619 = 11'd0;
     endcase
   end
-  always@(guard__h155375 or
-	  _theResult___fst_exp__h163336 or
-	  out_exp__h163984 or _theResult___exp__h163981)
+  always@(guard__h155492 or
+	  _theResult___fst_exp__h163453 or
+	  out_exp__h164101 or _theResult___exp__h164098)
   begin
-    case (guard__h155375)
+    case (guard__h155492)
       2'b0, 2'b01:
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q42 =
-	      _theResult___fst_exp__h163336;
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q42 =
+	      _theResult___fst_exp__h163453;
       2'b10:
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q42 =
-	      out_exp__h163984;
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q42 =
+	      out_exp__h164101;
       2'b11:
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q42 =
-	      _theResult___exp__h163981;
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q42 =
+	      _theResult___exp__h164098;
     endcase
   end
-  always@(guard__h155375 or
-	  _theResult___fst_exp__h163336 or _theResult___exp__h163981)
+  always@(guard__h155492 or
+	  _theResult___fst_exp__h163453 or _theResult___exp__h164098)
   begin
-    case (guard__h155375)
+    case (guard__h155492)
       2'b0:
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q43 =
-	      _theResult___fst_exp__h163336;
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q43 =
+	      _theResult___fst_exp__h163453;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q43 =
-	      _theResult___exp__h163981;
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q43 =
+	      _theResult___exp__h164098;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q42 or
-	  CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q43 or
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q42 or
+	  CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q43 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3690 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3692 or
-	  _theResult___fst_exp__h163336)
+	  _theResult___fst_exp__h163453)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h164059 =
-	      CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q42;
+	  _theResult___fst_exp__h164176 =
+	      CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q42;
       3'd1:
-	  _theResult___fst_exp__h164059 =
-	      CASE_guard55375_0b0_theResult___fst_exp63336_0_ETC__q43;
+	  _theResult___fst_exp__h164176 =
+	      CASE_guard55492_0b0_theResult___fst_exp63453_0_ETC__q43;
       3'd2:
-	  _theResult___fst_exp__h164059 =
+	  _theResult___fst_exp__h164176 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3690;
       3'd3:
-	  _theResult___fst_exp__h164059 =
+	  _theResult___fst_exp__h164176 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3692;
-      3'd4: _theResult___fst_exp__h164059 = _theResult___fst_exp__h163336;
-      default: _theResult___fst_exp__h164059 = 11'd0;
+      3'd4: _theResult___fst_exp__h164176 = _theResult___fst_exp__h163453;
+      default: _theResult___fst_exp__h164176 = 11'd0;
     endcase
   end
-  always@(guard__h164624 or
-	  _theResult___fst_exp__h172852 or
-	  out_exp__h173574 or _theResult___exp__h173571)
+  always@(guard__h164741 or
+	  _theResult___fst_exp__h172969 or
+	  out_exp__h173691 or _theResult___exp__h173688)
   begin
-    case (guard__h164624)
+    case (guard__h164741)
       2'b0, 2'b01:
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q44 =
-	      _theResult___fst_exp__h172852;
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q44 =
+	      _theResult___fst_exp__h172969;
       2'b10:
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q44 =
-	      out_exp__h173574;
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q44 =
+	      out_exp__h173691;
       2'b11:
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q44 =
-	      _theResult___exp__h173571;
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q44 =
+	      _theResult___exp__h173688;
     endcase
   end
-  always@(guard__h164624 or
-	  _theResult___fst_exp__h172852 or _theResult___exp__h173571)
+  always@(guard__h164741 or
+	  _theResult___fst_exp__h172969 or _theResult___exp__h173688)
   begin
-    case (guard__h164624)
+    case (guard__h164741)
       2'b0:
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q45 =
-	      _theResult___fst_exp__h172852;
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q45 =
+	      _theResult___fst_exp__h172969;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q45 =
-	      _theResult___exp__h173571;
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q45 =
+	      _theResult___exp__h173688;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q44 or
-	  CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q45 or
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q44 or
+	  CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q45 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3729 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3731 or
-	  _theResult___fst_exp__h172852)
+	  _theResult___fst_exp__h172969)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h173649 =
-	      CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q44;
+	  _theResult___fst_exp__h173766 =
+	      CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q44;
       3'd1:
-	  _theResult___fst_exp__h173649 =
-	      CASE_guard64624_0b0_theResult___fst_exp72852_0_ETC__q45;
+	  _theResult___fst_exp__h173766 =
+	      CASE_guard64741_0b0_theResult___fst_exp72969_0_ETC__q45;
       3'd2:
-	  _theResult___fst_exp__h173649 =
+	  _theResult___fst_exp__h173766 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3729;
       3'd3:
-	  _theResult___fst_exp__h173649 =
+	  _theResult___fst_exp__h173766 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3731;
-      3'd4: _theResult___fst_exp__h173649 = _theResult___fst_exp__h172852;
-      default: _theResult___fst_exp__h173649 = 11'd0;
+      3'd4: _theResult___fst_exp__h173766 = _theResult___fst_exp__h172969;
+      default: _theResult___fst_exp__h173766 = 11'd0;
     endcase
   end
-  always@(guard__h173663 or
-	  _theResult___fst_exp__h181653 or
-	  out_exp__h182326 or _theResult___exp__h182323)
+  always@(guard__h173780 or
+	  _theResult___fst_exp__h181770 or
+	  out_exp__h182443 or _theResult___exp__h182440)
   begin
-    case (guard__h173663)
+    case (guard__h173780)
       2'b0, 2'b01:
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q46 =
-	      _theResult___fst_exp__h181653;
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q46 =
+	      _theResult___fst_exp__h181770;
       2'b10:
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q46 =
-	      out_exp__h182326;
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q46 =
+	      out_exp__h182443;
       2'b11:
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q46 =
-	      _theResult___exp__h182323;
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q46 =
+	      _theResult___exp__h182440;
     endcase
   end
-  always@(guard__h173663 or
-	  _theResult___fst_exp__h181653 or _theResult___exp__h182323)
+  always@(guard__h173780 or
+	  _theResult___fst_exp__h181770 or _theResult___exp__h182440)
   begin
-    case (guard__h173663)
+    case (guard__h173780)
       2'b0:
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q47 =
-	      _theResult___fst_exp__h181653;
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q47 =
+	      _theResult___fst_exp__h181770;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q47 =
-	      _theResult___exp__h182323;
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q47 =
+	      _theResult___exp__h182440;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q46 or
-	  CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q47 or
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q46 or
+	  CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q47 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3760 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3762 or
-	  _theResult___fst_exp__h181653)
+	  _theResult___fst_exp__h181770)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h182401 =
-	      CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q46;
+	  _theResult___fst_exp__h182518 =
+	      CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q46;
       3'd1:
-	  _theResult___fst_exp__h182401 =
-	      CASE_guard73663_0b0_theResult___fst_exp81653_0_ETC__q47;
+	  _theResult___fst_exp__h182518 =
+	      CASE_guard73780_0b0_theResult___fst_exp81770_0_ETC__q47;
       3'd2:
-	  _theResult___fst_exp__h182401 =
+	  _theResult___fst_exp__h182518 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3760;
       3'd3:
-	  _theResult___fst_exp__h182401 =
+	  _theResult___fst_exp__h182518 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3762;
-      3'd4: _theResult___fst_exp__h182401 = _theResult___fst_exp__h181653;
-      default: _theResult___fst_exp__h182401 = 11'd0;
+      3'd4: _theResult___fst_exp__h182518 = _theResult___fst_exp__h181770;
+      default: _theResult___fst_exp__h182518 = 11'd0;
     endcase
   end
-  always@(guard__h155375 or
-	  _theResult___snd__h163287 or
-	  out_sfd__h163985 or _theResult___sfd__h163982)
+  always@(guard__h155492 or
+	  _theResult___snd__h163404 or
+	  out_sfd__h164102 or _theResult___sfd__h164099)
   begin
-    case (guard__h155375)
+    case (guard__h155492)
       2'b0, 2'b01:
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q48 =
-	      _theResult___snd__h163287[56:5];
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q48 =
+	      _theResult___snd__h163404[56:5];
       2'b10:
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q48 =
-	      out_sfd__h163985;
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q48 =
+	      out_sfd__h164102;
       2'b11:
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q48 =
-	      _theResult___sfd__h163982;
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q48 =
+	      _theResult___sfd__h164099;
     endcase
   end
-  always@(guard__h155375 or
-	  _theResult___snd__h163287 or _theResult___sfd__h163982)
+  always@(guard__h155492 or
+	  _theResult___snd__h163404 or _theResult___sfd__h164099)
   begin
-    case (guard__h155375)
+    case (guard__h155492)
       2'b0:
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q49 =
-	      _theResult___snd__h163287[56:5];
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q49 =
+	      _theResult___snd__h163404[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q49 =
-	      _theResult___sfd__h163982;
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q49 =
+	      _theResult___sfd__h164099;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q48 or
-	  CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q49 or
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q48 or
+	  CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q49 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3786 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3788 or
-	  _theResult___snd__h163287)
+	  _theResult___snd__h163404)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h164060 =
-	      CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q48;
+	  _theResult___fst_sfd__h164177 =
+	      CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q48;
       3'd1:
-	  _theResult___fst_sfd__h164060 =
-	      CASE_guard55375_0b0_theResult___snd63287_BITS__ETC__q49;
+	  _theResult___fst_sfd__h164177 =
+	      CASE_guard55492_0b0_theResult___snd63404_BITS__ETC__q49;
       3'd2:
-	  _theResult___fst_sfd__h164060 =
+	  _theResult___fst_sfd__h164177 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3786;
       3'd3:
-	  _theResult___fst_sfd__h164060 =
+	  _theResult___fst_sfd__h164177 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3788;
-      3'd4: _theResult___fst_sfd__h164060 = _theResult___snd__h163287[56:5];
-      default: _theResult___fst_sfd__h164060 = 52'd0;
+      3'd4: _theResult___fst_sfd__h164177 = _theResult___snd__h163404[56:5];
+      default: _theResult___fst_sfd__h164177 = 52'd0;
     endcase
   end
-  always@(guard__h164624 or
-	  sfdin__h172846 or out_sfd__h173575 or _theResult___sfd__h173572)
+  always@(guard__h164741 or
+	  sfdin__h172963 or out_sfd__h173692 or _theResult___sfd__h173689)
   begin
-    case (guard__h164624)
+    case (guard__h164741)
       2'b0, 2'b01:
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q50 =
-	      sfdin__h172846[56:5];
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q50 =
+	      sfdin__h172963[56:5];
       2'b10:
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q50 =
-	      out_sfd__h173575;
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q50 =
+	      out_sfd__h173692;
       2'b11:
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q50 =
-	      _theResult___sfd__h173572;
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q50 =
+	      _theResult___sfd__h173689;
     endcase
   end
-  always@(guard__h164624 or sfdin__h172846 or _theResult___sfd__h173572)
+  always@(guard__h164741 or sfdin__h172963 or _theResult___sfd__h173689)
   begin
-    case (guard__h164624)
+    case (guard__h164741)
       2'b0:
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q51 =
-	      sfdin__h172846[56:5];
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q51 =
+	      sfdin__h172963[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q51 =
-	      _theResult___sfd__h173572;
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q51 =
+	      _theResult___sfd__h173689;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q50 or
-	  CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q51 or
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q50 or
+	  CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q51 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3813 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3815 or
-	  sfdin__h172846)
+	  sfdin__h172963)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h173650 =
-	      CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q50;
+	  _theResult___fst_sfd__h173767 =
+	      CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q50;
       3'd1:
-	  _theResult___fst_sfd__h173650 =
-	      CASE_guard64624_0b0_sfdin72846_BITS_56_TO_5_0b_ETC__q51;
+	  _theResult___fst_sfd__h173767 =
+	      CASE_guard64741_0b0_sfdin72963_BITS_56_TO_5_0b_ETC__q51;
       3'd2:
-	  _theResult___fst_sfd__h173650 =
+	  _theResult___fst_sfd__h173767 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3813;
       3'd3:
-	  _theResult___fst_sfd__h173650 =
+	  _theResult___fst_sfd__h173767 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d3815;
-      3'd4: _theResult___fst_sfd__h173650 = sfdin__h172846[56:5];
-      default: _theResult___fst_sfd__h173650 = 52'd0;
+      3'd4: _theResult___fst_sfd__h173767 = sfdin__h172963[56:5];
+      default: _theResult___fst_sfd__h173767 = 52'd0;
     endcase
   end
-  always@(guard__h173663 or
-	  _theResult___snd__h181599 or
-	  out_sfd__h182327 or _theResult___sfd__h182324)
+  always@(guard__h173780 or
+	  _theResult___snd__h181716 or
+	  out_sfd__h182444 or _theResult___sfd__h182441)
   begin
-    case (guard__h173663)
+    case (guard__h173780)
       2'b0, 2'b01:
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q52 =
-	      _theResult___snd__h181599[56:5];
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q52 =
+	      _theResult___snd__h181716[56:5];
       2'b10:
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q52 =
-	      out_sfd__h182327;
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q52 =
+	      out_sfd__h182444;
       2'b11:
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q52 =
-	      _theResult___sfd__h182324;
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q52 =
+	      _theResult___sfd__h182441;
     endcase
   end
-  always@(guard__h173663 or
-	  _theResult___snd__h181599 or _theResult___sfd__h182324)
+  always@(guard__h173780 or
+	  _theResult___snd__h181716 or _theResult___sfd__h182441)
   begin
-    case (guard__h173663)
+    case (guard__h173780)
       2'b0:
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q53 =
-	      _theResult___snd__h181599[56:5];
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q53 =
+	      _theResult___snd__h181716[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q53 =
-	      _theResult___sfd__h182324;
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q53 =
+	      _theResult___sfd__h182441;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q52 or
-	  CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q53 or
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q52 or
+	  CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q53 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3832 or
 	  IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3834 or
-	  _theResult___snd__h181599)
+	  _theResult___snd__h181716)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h182402 =
-	      CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q52;
+	  _theResult___fst_sfd__h182519 =
+	      CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q52;
       3'd1:
-	  _theResult___fst_sfd__h182402 =
-	      CASE_guard73663_0b0_theResult___snd81599_BITS__ETC__q53;
+	  _theResult___fst_sfd__h182519 =
+	      CASE_guard73780_0b0_theResult___snd81716_BITS__ETC__q53;
       3'd2:
-	  _theResult___fst_sfd__h182402 =
+	  _theResult___fst_sfd__h182519 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3832;
       3'd3:
-	  _theResult___fst_sfd__h182402 =
+	  _theResult___fst_sfd__h182519 =
 	      IF_IF_IF_iFifo_first__087_BITS_167_TO_160_130__ETC___d3834;
-      3'd4: _theResult___fst_sfd__h182402 = _theResult___snd__h181599[56:5];
-      default: _theResult___fst_sfd__h182402 = 52'd0;
+      3'd4: _theResult___fst_sfd__h182519 = _theResult___snd__h181716[56:5];
+      default: _theResult___fst_sfd__h182519 = 52'd0;
     endcase
   end
-  always@(guard__h155375 or iFifo$D_OUT)
+  always@(guard__h155492 or iFifo$D_OUT)
   begin
-    case (guard__h155375)
+    case (guard__h155492)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard55375_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54 =
+	  CASE_guard55492_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54 =
 	      iFifo$D_OUT[168];
       2'd3:
-	  CASE_guard55375_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54 =
-	      guard__h155375 == 2'b11 && iFifo$D_OUT[168];
+	  CASE_guard55492_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54 =
+	      guard__h155492 == 2'b11 && iFifo$D_OUT[168];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard55375_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54 or
-	  guard__h155375)
+	  CASE_guard55492_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54 or
+	  guard__h155492)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55375_ETC__q55 =
-	      CASE_guard55375_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55492_ETC__q55 =
+	      CASE_guard55492_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q54;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55375_ETC__q55 =
-	      (guard__h155375 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55492_ETC__q55 =
+	      (guard__h155492 == 2'b0) ?
 		iFifo$D_OUT[168] :
-		(guard__h155375 == 2'b01 || guard__h155375 == 2'b10 ||
-		 guard__h155375 == 2'b11) &&
+		(guard__h155492 == 2'b01 || guard__h155492 == 2'b10 ||
+		 guard__h155492 == 2'b11) &&
 		iFifo$D_OUT[168];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55375_ETC__q55 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55492_ETC__q55 =
 	      iFifo$D_OUT[168];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55375_ETC__q55 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard55492_ETC__q55 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[168];
     endcase
   end
@@ -10382,413 +10395,413 @@ module mkFPU(CLK,
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[168];
     endcase
   end
-  always@(guard__h164624 or iFifo$D_OUT)
+  always@(guard__h164741 or iFifo$D_OUT)
   begin
-    case (guard__h164624)
+    case (guard__h164741)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard64624_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56 =
+	  CASE_guard64741_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56 =
 	      iFifo$D_OUT[168];
       2'd3:
-	  CASE_guard64624_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56 =
-	      guard__h164624 == 2'b11 && iFifo$D_OUT[168];
+	  CASE_guard64741_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56 =
+	      guard__h164741 == 2'b11 && iFifo$D_OUT[168];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard64624_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56 or
-	  guard__h164624)
+	  CASE_guard64741_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56 or
+	  guard__h164741)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64624_ETC__q57 =
-	      CASE_guard64624_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64741_ETC__q57 =
+	      CASE_guard64741_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q56;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64624_ETC__q57 =
-	      (guard__h164624 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64741_ETC__q57 =
+	      (guard__h164741 == 2'b0) ?
 		iFifo$D_OUT[168] :
-		(guard__h164624 == 2'b01 || guard__h164624 == 2'b10 ||
-		 guard__h164624 == 2'b11) &&
+		(guard__h164741 == 2'b01 || guard__h164741 == 2'b10 ||
+		 guard__h164741 == 2'b11) &&
 		iFifo$D_OUT[168];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64624_ETC__q57 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64741_ETC__q57 =
 	      iFifo$D_OUT[168];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64624_ETC__q57 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard64741_ETC__q57 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[168];
     endcase
   end
-  always@(guard__h173663 or iFifo$D_OUT)
+  always@(guard__h173780 or iFifo$D_OUT)
   begin
-    case (guard__h173663)
+    case (guard__h173780)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard73663_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58 =
+	  CASE_guard73780_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58 =
 	      iFifo$D_OUT[168];
       2'd3:
-	  CASE_guard73663_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58 =
-	      guard__h173663 == 2'b11 && iFifo$D_OUT[168];
+	  CASE_guard73780_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58 =
+	      guard__h173780 == 2'b11 && iFifo$D_OUT[168];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard73663_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58 or
-	  guard__h173663)
+	  CASE_guard73780_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58 or
+	  guard__h173780)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73663_ETC__q59 =
-	      CASE_guard73663_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73780_ETC__q59 =
+	      CASE_guard73780_0b0_iFifoD_OUT_BIT_168_0b1_iF_ETC__q58;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73663_ETC__q59 =
-	      (guard__h173663 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73780_ETC__q59 =
+	      (guard__h173780 == 2'b0) ?
 		iFifo$D_OUT[168] :
-		(guard__h173663 == 2'b01 || guard__h173663 == 2'b10 ||
-		 guard__h173663 == 2'b11) &&
+		(guard__h173780 == 2'b01 || guard__h173780 == 2'b10 ||
+		 guard__h173780 == 2'b11) &&
 		iFifo$D_OUT[168];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73663_ETC__q59 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73780_ETC__q59 =
 	      iFifo$D_OUT[168];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73663_ETC__q59 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard73780_ETC__q59 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[168];
     endcase
   end
-  always@(guard__h232952 or
-	  _theResult___fst_exp__h240913 or
-	  out_exp__h241561 or _theResult___exp__h241558)
+  always@(guard__h233069 or
+	  _theResult___fst_exp__h241030 or
+	  out_exp__h241678 or _theResult___exp__h241675)
   begin
-    case (guard__h232952)
+    case (guard__h233069)
       2'b0, 2'b01:
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q69 =
-	      _theResult___fst_exp__h240913;
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q69 =
+	      _theResult___fst_exp__h241030;
       2'b10:
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q69 =
-	      out_exp__h241561;
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q69 =
+	      out_exp__h241678;
       2'b11:
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q69 =
-	      _theResult___exp__h241558;
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q69 =
+	      _theResult___exp__h241675;
     endcase
   end
-  always@(guard__h232952 or
-	  _theResult___fst_exp__h240913 or _theResult___exp__h241558)
+  always@(guard__h233069 or
+	  _theResult___fst_exp__h241030 or _theResult___exp__h241675)
   begin
-    case (guard__h232952)
+    case (guard__h233069)
       2'b0:
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q70 =
-	      _theResult___fst_exp__h240913;
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q70 =
+	      _theResult___fst_exp__h241030;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q70 =
-	      _theResult___exp__h241558;
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q70 =
+	      _theResult___exp__h241675;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q69 or
-	  CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q70 or
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q69 or
+	  CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q70 or
 	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4398 or
 	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4400 or
-	  _theResult___fst_exp__h240913)
+	  _theResult___fst_exp__h241030)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h241636 =
-	      CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q69;
+	  _theResult___fst_exp__h241753 =
+	      CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q69;
       3'd1:
-	  _theResult___fst_exp__h241636 =
-	      CASE_guard32952_0b0_theResult___fst_exp40913_0_ETC__q70;
+	  _theResult___fst_exp__h241753 =
+	      CASE_guard33069_0b0_theResult___fst_exp41030_0_ETC__q70;
       3'd2:
-	  _theResult___fst_exp__h241636 =
+	  _theResult___fst_exp__h241753 =
 	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4398;
       3'd3:
-	  _theResult___fst_exp__h241636 =
+	  _theResult___fst_exp__h241753 =
 	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4400;
-      3'd4: _theResult___fst_exp__h241636 = _theResult___fst_exp__h240913;
-      default: _theResult___fst_exp__h241636 = 11'd0;
+      3'd4: _theResult___fst_exp__h241753 = _theResult___fst_exp__h241030;
+      default: _theResult___fst_exp__h241753 = 11'd0;
     endcase
   end
-  always@(guard__h242201 or
-	  _theResult___fst_exp__h250429 or
-	  out_exp__h251151 or _theResult___exp__h251148)
+  always@(guard__h242318 or
+	  _theResult___fst_exp__h250546 or
+	  out_exp__h251268 or _theResult___exp__h251265)
   begin
-    case (guard__h242201)
+    case (guard__h242318)
       2'b0, 2'b01:
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q71 =
-	      _theResult___fst_exp__h250429;
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q71 =
+	      _theResult___fst_exp__h250546;
       2'b10:
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q71 =
-	      out_exp__h251151;
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q71 =
+	      out_exp__h251268;
       2'b11:
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q71 =
-	      _theResult___exp__h251148;
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q71 =
+	      _theResult___exp__h251265;
     endcase
   end
-  always@(guard__h242201 or
-	  _theResult___fst_exp__h250429 or _theResult___exp__h251148)
+  always@(guard__h242318 or
+	  _theResult___fst_exp__h250546 or _theResult___exp__h251265)
   begin
-    case (guard__h242201)
+    case (guard__h242318)
       2'b0:
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q72 =
-	      _theResult___fst_exp__h250429;
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q72 =
+	      _theResult___fst_exp__h250546;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q72 =
-	      _theResult___exp__h251148;
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q72 =
+	      _theResult___exp__h251265;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q71 or
-	  CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q72 or
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q71 or
+	  CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q72 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4436 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4438 or
-	  _theResult___fst_exp__h250429)
+	  _theResult___fst_exp__h250546)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h251226 =
-	      CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q71;
+	  _theResult___fst_exp__h251343 =
+	      CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q71;
       3'd1:
-	  _theResult___fst_exp__h251226 =
-	      CASE_guard42201_0b0_theResult___fst_exp50429_0_ETC__q72;
+	  _theResult___fst_exp__h251343 =
+	      CASE_guard42318_0b0_theResult___fst_exp50546_0_ETC__q72;
       3'd2:
-	  _theResult___fst_exp__h251226 =
+	  _theResult___fst_exp__h251343 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4436;
       3'd3:
-	  _theResult___fst_exp__h251226 =
+	  _theResult___fst_exp__h251343 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4438;
-      3'd4: _theResult___fst_exp__h251226 = _theResult___fst_exp__h250429;
-      default: _theResult___fst_exp__h251226 = 11'd0;
+      3'd4: _theResult___fst_exp__h251343 = _theResult___fst_exp__h250546;
+      default: _theResult___fst_exp__h251343 = 11'd0;
     endcase
   end
-  always@(guard__h251240 or
-	  _theResult___fst_exp__h259230 or
-	  out_exp__h259903 or _theResult___exp__h259900)
+  always@(guard__h251357 or
+	  _theResult___fst_exp__h259347 or
+	  out_exp__h260020 or _theResult___exp__h260017)
   begin
-    case (guard__h251240)
+    case (guard__h251357)
       2'b0, 2'b01:
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q73 =
-	      _theResult___fst_exp__h259230;
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q73 =
+	      _theResult___fst_exp__h259347;
       2'b10:
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q73 =
-	      out_exp__h259903;
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q73 =
+	      out_exp__h260020;
       2'b11:
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q73 =
-	      _theResult___exp__h259900;
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q73 =
+	      _theResult___exp__h260017;
     endcase
   end
-  always@(guard__h251240 or
-	  _theResult___fst_exp__h259230 or _theResult___exp__h259900)
+  always@(guard__h251357 or
+	  _theResult___fst_exp__h259347 or _theResult___exp__h260017)
   begin
-    case (guard__h251240)
+    case (guard__h251357)
       2'b0:
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q74 =
-	      _theResult___fst_exp__h259230;
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q74 =
+	      _theResult___fst_exp__h259347;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q74 =
-	      _theResult___exp__h259900;
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q74 =
+	      _theResult___exp__h260017;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q73 or
-	  CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q74 or
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q73 or
+	  CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q74 or
 	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4467 or
 	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4469 or
-	  _theResult___fst_exp__h259230)
+	  _theResult___fst_exp__h259347)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h259978 =
-	      CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q73;
+	  _theResult___fst_exp__h260095 =
+	      CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q73;
       3'd1:
-	  _theResult___fst_exp__h259978 =
-	      CASE_guard51240_0b0_theResult___fst_exp59230_0_ETC__q74;
+	  _theResult___fst_exp__h260095 =
+	      CASE_guard51357_0b0_theResult___fst_exp59347_0_ETC__q74;
       3'd2:
-	  _theResult___fst_exp__h259978 =
+	  _theResult___fst_exp__h260095 =
 	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4467;
       3'd3:
-	  _theResult___fst_exp__h259978 =
+	  _theResult___fst_exp__h260095 =
 	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4469;
-      3'd4: _theResult___fst_exp__h259978 = _theResult___fst_exp__h259230;
-      default: _theResult___fst_exp__h259978 = 11'd0;
+      3'd4: _theResult___fst_exp__h260095 = _theResult___fst_exp__h259347;
+      default: _theResult___fst_exp__h260095 = 11'd0;
     endcase
   end
-  always@(guard__h232952 or
-	  _theResult___snd__h240864 or
-	  out_sfd__h241562 or _theResult___sfd__h241559)
+  always@(guard__h233069 or
+	  _theResult___snd__h240981 or
+	  out_sfd__h241679 or _theResult___sfd__h241676)
   begin
-    case (guard__h232952)
+    case (guard__h233069)
       2'b0, 2'b01:
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q75 =
-	      _theResult___snd__h240864[56:5];
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q75 =
+	      _theResult___snd__h240981[56:5];
       2'b10:
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q75 =
-	      out_sfd__h241562;
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q75 =
+	      out_sfd__h241679;
       2'b11:
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q75 =
-	      _theResult___sfd__h241559;
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q75 =
+	      _theResult___sfd__h241676;
     endcase
   end
-  always@(guard__h232952 or
-	  _theResult___snd__h240864 or _theResult___sfd__h241559)
+  always@(guard__h233069 or
+	  _theResult___snd__h240981 or _theResult___sfd__h241676)
   begin
-    case (guard__h232952)
+    case (guard__h233069)
       2'b0:
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q76 =
-	      _theResult___snd__h240864[56:5];
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q76 =
+	      _theResult___snd__h240981[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q76 =
-	      _theResult___sfd__h241559;
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q76 =
+	      _theResult___sfd__h241676;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q75 or
-	  CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q76 or
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q75 or
+	  CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q76 or
 	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4493 or
 	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4495 or
-	  _theResult___snd__h240864)
+	  _theResult___snd__h240981)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h241637 =
-	      CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q75;
+	  _theResult___fst_sfd__h241754 =
+	      CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q75;
       3'd1:
-	  _theResult___fst_sfd__h241637 =
-	      CASE_guard32952_0b0_theResult___snd40864_BITS__ETC__q76;
+	  _theResult___fst_sfd__h241754 =
+	      CASE_guard33069_0b0_theResult___snd40981_BITS__ETC__q76;
       3'd2:
-	  _theResult___fst_sfd__h241637 =
+	  _theResult___fst_sfd__h241754 =
 	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4493;
       3'd3:
-	  _theResult___fst_sfd__h241637 =
+	  _theResult___fst_sfd__h241754 =
 	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4495;
-      3'd4: _theResult___fst_sfd__h241637 = _theResult___snd__h240864[56:5];
-      default: _theResult___fst_sfd__h241637 = 52'd0;
+      3'd4: _theResult___fst_sfd__h241754 = _theResult___snd__h240981[56:5];
+      default: _theResult___fst_sfd__h241754 = 52'd0;
     endcase
   end
-  always@(guard__h242201 or
-	  sfdin__h250423 or out_sfd__h251152 or _theResult___sfd__h251149)
+  always@(guard__h242318 or
+	  sfdin__h250540 or out_sfd__h251269 or _theResult___sfd__h251266)
   begin
-    case (guard__h242201)
+    case (guard__h242318)
       2'b0, 2'b01:
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q77 =
-	      sfdin__h250423[56:5];
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q77 =
+	      sfdin__h250540[56:5];
       2'b10:
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q77 =
-	      out_sfd__h251152;
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q77 =
+	      out_sfd__h251269;
       2'b11:
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q77 =
-	      _theResult___sfd__h251149;
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q77 =
+	      _theResult___sfd__h251266;
     endcase
   end
-  always@(guard__h242201 or sfdin__h250423 or _theResult___sfd__h251149)
+  always@(guard__h242318 or sfdin__h250540 or _theResult___sfd__h251266)
   begin
-    case (guard__h242201)
+    case (guard__h242318)
       2'b0:
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q78 =
-	      sfdin__h250423[56:5];
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q78 =
+	      sfdin__h250540[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q78 =
-	      _theResult___sfd__h251149;
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q78 =
+	      _theResult___sfd__h251266;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q77 or
-	  CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q78 or
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q77 or
+	  CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q78 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4519 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4521 or
-	  sfdin__h250423)
+	  sfdin__h250540)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h251227 =
-	      CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q77;
+	  _theResult___fst_sfd__h251344 =
+	      CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q77;
       3'd1:
-	  _theResult___fst_sfd__h251227 =
-	      CASE_guard42201_0b0_sfdin50423_BITS_56_TO_5_0b_ETC__q78;
+	  _theResult___fst_sfd__h251344 =
+	      CASE_guard42318_0b0_sfdin50540_BITS_56_TO_5_0b_ETC__q78;
       3'd2:
-	  _theResult___fst_sfd__h251227 =
+	  _theResult___fst_sfd__h251344 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4519;
       3'd3:
-	  _theResult___fst_sfd__h251227 =
+	  _theResult___fst_sfd__h251344 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d4521;
-      3'd4: _theResult___fst_sfd__h251227 = sfdin__h250423[56:5];
-      default: _theResult___fst_sfd__h251227 = 52'd0;
+      3'd4: _theResult___fst_sfd__h251344 = sfdin__h250540[56:5];
+      default: _theResult___fst_sfd__h251344 = 52'd0;
     endcase
   end
-  always@(guard__h251240 or
-	  _theResult___snd__h259176 or
-	  out_sfd__h259904 or _theResult___sfd__h259901)
+  always@(guard__h233069 or iFifo$D_OUT)
   begin
-    case (guard__h251240)
-      2'b0, 2'b01:
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q79 =
-	      _theResult___snd__h259176[56:5];
-      2'b10:
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q79 =
-	      out_sfd__h259904;
-      2'b11:
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q79 =
-	      _theResult___sfd__h259901;
-    endcase
-  end
-  always@(guard__h251240 or
-	  _theResult___snd__h259176 or _theResult___sfd__h259901)
-  begin
-    case (guard__h251240)
-      2'b0:
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q80 =
-	      _theResult___snd__h259176[56:5];
-      2'b01, 2'b10, 2'b11:
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q80 =
-	      _theResult___sfd__h259901;
-    endcase
-  end
-  always@(iFifo$D_OUT or
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q79 or
-	  CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q80 or
-	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4538 or
-	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4540 or
-	  _theResult___snd__h259176)
-  begin
-    case (iFifo$D_OUT[6:4])
-      3'd0:
-	  _theResult___fst_sfd__h259979 =
-	      CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q79;
-      3'd1:
-	  _theResult___fst_sfd__h259979 =
-	      CASE_guard51240_0b0_theResult___snd59176_BITS__ETC__q80;
-      3'd2:
-	  _theResult___fst_sfd__h259979 =
-	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4538;
-      3'd3:
-	  _theResult___fst_sfd__h259979 =
-	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4540;
-      3'd4: _theResult___fst_sfd__h259979 = _theResult___snd__h259176[56:5];
-      default: _theResult___fst_sfd__h259979 = 52'd0;
-    endcase
-  end
-  always@(guard__h232952 or iFifo$D_OUT)
-  begin
-    case (guard__h232952)
+    case (guard__h233069)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard32952_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q81 =
+	  CASE_guard33069_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q79 =
 	      iFifo$D_OUT[38];
       2'd3:
-	  CASE_guard32952_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q81 =
-	      guard__h232952 == 2'b11 && iFifo$D_OUT[38];
+	  CASE_guard33069_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q79 =
+	      guard__h233069 == 2'b11 && iFifo$D_OUT[38];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard32952_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q81 or
-	  guard__h232952)
+	  CASE_guard33069_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q79 or
+	  guard__h233069)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q82 =
-	      CASE_guard32952_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q81;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q80 =
+	      CASE_guard33069_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q79;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q82 =
-	      (guard__h232952 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q80 =
+	      (guard__h233069 == 2'b0) ?
 		iFifo$D_OUT[38] :
-		(guard__h232952 == 2'b01 || guard__h232952 == 2'b10 ||
-		 guard__h232952 == 2'b11) &&
+		(guard__h233069 == 2'b01 || guard__h233069 == 2'b10 ||
+		 guard__h233069 == 2'b11) &&
 		iFifo$D_OUT[38];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q82 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q80 =
 	      iFifo$D_OUT[38];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q82 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q80 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[38];
+    endcase
+  end
+  always@(guard__h251357 or
+	  _theResult___snd__h259293 or
+	  out_sfd__h260021 or _theResult___sfd__h260018)
+  begin
+    case (guard__h251357)
+      2'b0, 2'b01:
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q81 =
+	      _theResult___snd__h259293[56:5];
+      2'b10:
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q81 =
+	      out_sfd__h260021;
+      2'b11:
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q81 =
+	      _theResult___sfd__h260018;
+    endcase
+  end
+  always@(guard__h251357 or
+	  _theResult___snd__h259293 or _theResult___sfd__h260018)
+  begin
+    case (guard__h251357)
+      2'b0:
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q82 =
+	      _theResult___snd__h259293[56:5];
+      2'b01, 2'b10, 2'b11:
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q82 =
+	      _theResult___sfd__h260018;
+    endcase
+  end
+  always@(iFifo$D_OUT or
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q81 or
+	  CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q82 or
+	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4538 or
+	  IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4540 or
+	  _theResult___snd__h259293)
+  begin
+    case (iFifo$D_OUT[6:4])
+      3'd0:
+	  _theResult___fst_sfd__h260096 =
+	      CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q81;
+      3'd1:
+	  _theResult___fst_sfd__h260096 =
+	      CASE_guard51357_0b0_theResult___snd59293_BITS__ETC__q82;
+      3'd2:
+	  _theResult___fst_sfd__h260096 =
+	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4538;
+      3'd3:
+	  _theResult___fst_sfd__h260096 =
+	      IF_IF_IF_iFifo_first__087_BITS_37_TO_30_850_EQ_ETC___d4540;
+      3'd4: _theResult___fst_sfd__h260096 = _theResult___snd__h259293[56:5];
+      default: _theResult___fst_sfd__h260096 = 52'd0;
     endcase
   end
   always@(iFifo$D_OUT)
@@ -10801,168 +10814,168 @@ module mkFPU(CLK,
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[38];
     endcase
   end
-  always@(guard__h242201 or iFifo$D_OUT)
+  always@(guard__h242318 or iFifo$D_OUT)
   begin
-    case (guard__h242201)
+    case (guard__h242318)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard42201_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83 =
+	  CASE_guard42318_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83 =
 	      iFifo$D_OUT[38];
       2'd3:
-	  CASE_guard42201_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83 =
-	      guard__h242201 == 2'b11 && iFifo$D_OUT[38];
+	  CASE_guard42318_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83 =
+	      guard__h242318 == 2'b11 && iFifo$D_OUT[38];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard42201_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83 or
-	  guard__h242201)
+	  CASE_guard42318_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83 or
+	  guard__h242318)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q84 =
-	      CASE_guard42201_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q84 =
+	      CASE_guard42318_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q83;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q84 =
-	      (guard__h242201 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q84 =
+	      (guard__h242318 == 2'b0) ?
 		iFifo$D_OUT[38] :
-		(guard__h242201 == 2'b01 || guard__h242201 == 2'b10 ||
-		 guard__h242201 == 2'b11) &&
+		(guard__h242318 == 2'b01 || guard__h242318 == 2'b10 ||
+		 guard__h242318 == 2'b11) &&
 		iFifo$D_OUT[38];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q84 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q84 =
 	      iFifo$D_OUT[38];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q84 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q84 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[38];
     endcase
   end
-  always@(guard__h251240 or iFifo$D_OUT)
+  always@(guard__h251357 or iFifo$D_OUT)
   begin
-    case (guard__h251240)
+    case (guard__h251357)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard51240_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85 =
+	  CASE_guard51357_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85 =
 	      iFifo$D_OUT[38];
       2'd3:
-	  CASE_guard51240_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85 =
-	      guard__h251240 == 2'b11 && iFifo$D_OUT[38];
+	  CASE_guard51357_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85 =
+	      guard__h251357 == 2'b11 && iFifo$D_OUT[38];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard51240_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85 or
-	  guard__h251240)
+	  CASE_guard51357_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85 or
+	  guard__h251357)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q86 =
-	      CASE_guard51240_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q86 =
+	      CASE_guard51357_0b0_iFifoD_OUT_BIT_38_0b1_iFi_ETC__q85;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q86 =
-	      (guard__h251240 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q86 =
+	      (guard__h251357 == 2'b0) ?
 		iFifo$D_OUT[38] :
-		(guard__h251240 == 2'b01 || guard__h251240 == 2'b10 ||
-		 guard__h251240 == 2'b11) &&
+		(guard__h251357 == 2'b01 || guard__h251357 == 2'b10 ||
+		 guard__h251357 == 2'b11) &&
 		iFifo$D_OUT[38];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q86 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q86 =
 	      iFifo$D_OUT[38];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q86 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q86 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[38];
     endcase
   end
-  always@(guard__h232952 or iFifo$D_OUT)
+  always@(guard__h233069 or iFifo$D_OUT)
   begin
-    case (guard__h232952)
+    case (guard__h233069)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard32952_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87 =
+	  CASE_guard33069_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87 =
 	      !iFifo$D_OUT[38];
       2'd3:
-	  CASE_guard32952_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87 =
-	      guard__h232952 != 2'b11 || !iFifo$D_OUT[38];
+	  CASE_guard33069_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87 =
+	      guard__h233069 != 2'b11 || !iFifo$D_OUT[38];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard32952_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87 or
-	  guard__h232952)
+	  CASE_guard33069_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87 or
+	  guard__h233069)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q88 =
-	      CASE_guard32952_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q88 =
+	      CASE_guard33069_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q87;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q88 =
-	      (guard__h232952 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q88 =
+	      (guard__h233069 == 2'b0) ?
 		!iFifo$D_OUT[38] :
-		guard__h232952 != 2'b01 && guard__h232952 != 2'b10 &&
-		guard__h232952 != 2'b11 ||
+		guard__h233069 != 2'b01 && guard__h233069 != 2'b10 &&
+		guard__h233069 != 2'b11 ||
 		!iFifo$D_OUT[38];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q88 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q88 =
 	      !iFifo$D_OUT[38];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard32952_ETC__q88 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard33069_ETC__q88 =
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
     endcase
   end
-  always@(guard__h242201 or iFifo$D_OUT)
+  always@(guard__h242318 or iFifo$D_OUT)
   begin
-    case (guard__h242201)
+    case (guard__h242318)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard42201_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89 =
+	  CASE_guard42318_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89 =
 	      !iFifo$D_OUT[38];
       2'd3:
-	  CASE_guard42201_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89 =
-	      guard__h242201 != 2'b11 || !iFifo$D_OUT[38];
+	  CASE_guard42318_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89 =
+	      guard__h242318 != 2'b11 || !iFifo$D_OUT[38];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard42201_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89 or
-	  guard__h242201)
+	  CASE_guard42318_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89 or
+	  guard__h242318)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q90 =
-	      CASE_guard42201_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q90 =
+	      CASE_guard42318_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q89;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q90 =
-	      (guard__h242201 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q90 =
+	      (guard__h242318 == 2'b0) ?
 		!iFifo$D_OUT[38] :
-		guard__h242201 != 2'b01 && guard__h242201 != 2'b10 &&
-		guard__h242201 != 2'b11 ||
+		guard__h242318 != 2'b01 && guard__h242318 != 2'b10 &&
+		guard__h242318 != 2'b11 ||
 		!iFifo$D_OUT[38];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q90 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q90 =
 	      !iFifo$D_OUT[38];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42201_ETC__q90 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard42318_ETC__q90 =
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
     endcase
   end
-  always@(guard__h251240 or iFifo$D_OUT)
+  always@(guard__h251357 or iFifo$D_OUT)
   begin
-    case (guard__h251240)
+    case (guard__h251357)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard51240_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91 =
+	  CASE_guard51357_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91 =
 	      !iFifo$D_OUT[38];
       2'd3:
-	  CASE_guard51240_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91 =
-	      guard__h251240 != 2'b11 || !iFifo$D_OUT[38];
+	  CASE_guard51357_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91 =
+	      guard__h251357 != 2'b11 || !iFifo$D_OUT[38];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard51240_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91 or
-	  guard__h251240)
+	  CASE_guard51357_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91 or
+	  guard__h251357)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q92 =
-	      CASE_guard51240_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92 =
+	      CASE_guard51357_0b0_NOT_iFifoD_OUT_BIT_38_0b1_ETC__q91;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q92 =
-	      (guard__h251240 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92 =
+	      (guard__h251357 == 2'b0) ?
 		!iFifo$D_OUT[38] :
-		guard__h251240 != 2'b01 && guard__h251240 != 2'b10 &&
-		guard__h251240 != 2'b11 ||
+		guard__h251357 != 2'b01 && guard__h251357 != 2'b10 &&
+		guard__h251357 != 2'b11 ||
 		!iFifo$D_OUT[38];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q92 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92 =
 	      !iFifo$D_OUT[38];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51240_ETC__q92 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92 =
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
     endcase
   end
@@ -10976,346 +10989,346 @@ module mkFPU(CLK,
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
     endcase
   end
-  always@(guard__h194013 or
-	  _theResult___fst_exp__h201974 or
-	  out_exp__h202622 or _theResult___exp__h202619)
+  always@(guard__h194130 or
+	  _theResult___fst_exp__h202091 or
+	  out_exp__h202739 or _theResult___exp__h202736)
   begin
-    case (guard__h194013)
+    case (guard__h194130)
       2'b0, 2'b01:
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q102 =
-	      _theResult___fst_exp__h201974;
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q102 =
+	      _theResult___fst_exp__h202091;
       2'b10:
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q102 =
-	      out_exp__h202622;
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q102 =
+	      out_exp__h202739;
       2'b11:
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q102 =
-	      _theResult___exp__h202619;
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q102 =
+	      _theResult___exp__h202736;
     endcase
   end
-  always@(guard__h194013 or
-	  _theResult___fst_exp__h201974 or _theResult___exp__h202619)
+  always@(guard__h194130 or
+	  _theResult___fst_exp__h202091 or _theResult___exp__h202736)
   begin
-    case (guard__h194013)
+    case (guard__h194130)
       2'b0:
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q103 =
-	      _theResult___fst_exp__h201974;
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q103 =
+	      _theResult___fst_exp__h202091;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q103 =
-	      _theResult___exp__h202619;
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q103 =
+	      _theResult___exp__h202736;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q102 or
-	  CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q103 or
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q102 or
+	  CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q103 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5173 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5175 or
-	  _theResult___fst_exp__h201974)
+	  _theResult___fst_exp__h202091)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h202697 =
-	      CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q102;
+	  _theResult___fst_exp__h202814 =
+	      CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q102;
       3'd1:
-	  _theResult___fst_exp__h202697 =
-	      CASE_guard94013_0b0_theResult___fst_exp01974_0_ETC__q103;
+	  _theResult___fst_exp__h202814 =
+	      CASE_guard94130_0b0_theResult___fst_exp02091_0_ETC__q103;
       3'd2:
-	  _theResult___fst_exp__h202697 =
+	  _theResult___fst_exp__h202814 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5173;
       3'd3:
-	  _theResult___fst_exp__h202697 =
+	  _theResult___fst_exp__h202814 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5175;
-      3'd4: _theResult___fst_exp__h202697 = _theResult___fst_exp__h201974;
-      default: _theResult___fst_exp__h202697 = 11'd0;
+      3'd4: _theResult___fst_exp__h202814 = _theResult___fst_exp__h202091;
+      default: _theResult___fst_exp__h202814 = 11'd0;
     endcase
   end
-  always@(guard__h203262 or
-	  _theResult___fst_exp__h211490 or
-	  out_exp__h212212 or _theResult___exp__h212209)
+  always@(guard__h203379 or
+	  _theResult___fst_exp__h211607 or
+	  out_exp__h212329 or _theResult___exp__h212326)
   begin
-    case (guard__h203262)
+    case (guard__h203379)
       2'b0, 2'b01:
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q104 =
-	      _theResult___fst_exp__h211490;
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104 =
+	      _theResult___fst_exp__h211607;
       2'b10:
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q104 =
-	      out_exp__h212212;
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104 =
+	      out_exp__h212329;
       2'b11:
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q104 =
-	      _theResult___exp__h212209;
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104 =
+	      _theResult___exp__h212326;
     endcase
   end
-  always@(guard__h203262 or
-	  _theResult___fst_exp__h211490 or _theResult___exp__h212209)
+  always@(guard__h203379 or
+	  _theResult___fst_exp__h211607 or _theResult___exp__h212326)
   begin
-    case (guard__h203262)
+    case (guard__h203379)
       2'b0:
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q105 =
-	      _theResult___fst_exp__h211490;
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q105 =
+	      _theResult___fst_exp__h211607;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q105 =
-	      _theResult___exp__h212209;
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q105 =
+	      _theResult___exp__h212326;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q104 or
-	  CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q105 or
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104 or
+	  CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q105 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5211 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5213 or
-	  _theResult___fst_exp__h211490)
+	  _theResult___fst_exp__h211607)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h212287 =
-	      CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q104;
+	  _theResult___fst_exp__h212404 =
+	      CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104;
       3'd1:
-	  _theResult___fst_exp__h212287 =
-	      CASE_guard03262_0b0_theResult___fst_exp11490_0_ETC__q105;
+	  _theResult___fst_exp__h212404 =
+	      CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q105;
       3'd2:
-	  _theResult___fst_exp__h212287 =
+	  _theResult___fst_exp__h212404 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5211;
       3'd3:
-	  _theResult___fst_exp__h212287 =
+	  _theResult___fst_exp__h212404 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5213;
-      3'd4: _theResult___fst_exp__h212287 = _theResult___fst_exp__h211490;
-      default: _theResult___fst_exp__h212287 = 11'd0;
+      3'd4: _theResult___fst_exp__h212404 = _theResult___fst_exp__h211607;
+      default: _theResult___fst_exp__h212404 = 11'd0;
     endcase
   end
-  always@(guard__h212301 or
-	  _theResult___fst_exp__h220291 or
-	  out_exp__h220964 or _theResult___exp__h220961)
+  always@(guard__h212418 or
+	  _theResult___fst_exp__h220408 or
+	  out_exp__h221081 or _theResult___exp__h221078)
   begin
-    case (guard__h212301)
+    case (guard__h212418)
       2'b0, 2'b01:
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q106 =
-	      _theResult___fst_exp__h220291;
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106 =
+	      _theResult___fst_exp__h220408;
       2'b10:
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q106 =
-	      out_exp__h220964;
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106 =
+	      out_exp__h221081;
       2'b11:
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q106 =
-	      _theResult___exp__h220961;
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106 =
+	      _theResult___exp__h221078;
     endcase
   end
-  always@(guard__h212301 or
-	  _theResult___fst_exp__h220291 or _theResult___exp__h220961)
+  always@(guard__h212418 or
+	  _theResult___fst_exp__h220408 or _theResult___exp__h221078)
   begin
-    case (guard__h212301)
+    case (guard__h212418)
       2'b0:
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q107 =
-	      _theResult___fst_exp__h220291;
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q107 =
+	      _theResult___fst_exp__h220408;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q107 =
-	      _theResult___exp__h220961;
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q107 =
+	      _theResult___exp__h221078;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q106 or
-	  CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q107 or
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106 or
+	  CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q107 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5242 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5244 or
-	  _theResult___fst_exp__h220291)
+	  _theResult___fst_exp__h220408)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_exp__h221039 =
-	      CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q106;
+	  _theResult___fst_exp__h221156 =
+	      CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106;
       3'd1:
-	  _theResult___fst_exp__h221039 =
-	      CASE_guard12301_0b0_theResult___fst_exp20291_0_ETC__q107;
+	  _theResult___fst_exp__h221156 =
+	      CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q107;
       3'd2:
-	  _theResult___fst_exp__h221039 =
+	  _theResult___fst_exp__h221156 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5242;
       3'd3:
-	  _theResult___fst_exp__h221039 =
+	  _theResult___fst_exp__h221156 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5244;
-      3'd4: _theResult___fst_exp__h221039 = _theResult___fst_exp__h220291;
-      default: _theResult___fst_exp__h221039 = 11'd0;
+      3'd4: _theResult___fst_exp__h221156 = _theResult___fst_exp__h220408;
+      default: _theResult___fst_exp__h221156 = 11'd0;
     endcase
   end
-  always@(guard__h194013 or
-	  _theResult___snd__h201925 or
-	  out_sfd__h202623 or _theResult___sfd__h202620)
+  always@(guard__h194130 or
+	  _theResult___snd__h202042 or
+	  out_sfd__h202740 or _theResult___sfd__h202737)
   begin
-    case (guard__h194013)
+    case (guard__h194130)
       2'b0, 2'b01:
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q108 =
-	      _theResult___snd__h201925[56:5];
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q108 =
+	      _theResult___snd__h202042[56:5];
       2'b10:
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q108 =
-	      out_sfd__h202623;
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q108 =
+	      out_sfd__h202740;
       2'b11:
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q108 =
-	      _theResult___sfd__h202620;
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q108 =
+	      _theResult___sfd__h202737;
     endcase
   end
-  always@(guard__h194013 or
-	  _theResult___snd__h201925 or _theResult___sfd__h202620)
+  always@(guard__h194130 or
+	  _theResult___snd__h202042 or _theResult___sfd__h202737)
   begin
-    case (guard__h194013)
+    case (guard__h194130)
       2'b0:
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q109 =
-	      _theResult___snd__h201925[56:5];
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q109 =
+	      _theResult___snd__h202042[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q109 =
-	      _theResult___sfd__h202620;
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q109 =
+	      _theResult___sfd__h202737;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q108 or
-	  CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q109 or
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q108 or
+	  CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q109 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5268 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5270 or
-	  _theResult___snd__h201925)
+	  _theResult___snd__h202042)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h202698 =
-	      CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q108;
+	  _theResult___fst_sfd__h202815 =
+	      CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q108;
       3'd1:
-	  _theResult___fst_sfd__h202698 =
-	      CASE_guard94013_0b0_theResult___snd01925_BITS__ETC__q109;
+	  _theResult___fst_sfd__h202815 =
+	      CASE_guard94130_0b0_theResult___snd02042_BITS__ETC__q109;
       3'd2:
-	  _theResult___fst_sfd__h202698 =
+	  _theResult___fst_sfd__h202815 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5268;
       3'd3:
-	  _theResult___fst_sfd__h202698 =
+	  _theResult___fst_sfd__h202815 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5270;
-      3'd4: _theResult___fst_sfd__h202698 = _theResult___snd__h201925[56:5];
-      default: _theResult___fst_sfd__h202698 = 52'd0;
+      3'd4: _theResult___fst_sfd__h202815 = _theResult___snd__h202042[56:5];
+      default: _theResult___fst_sfd__h202815 = 52'd0;
     endcase
   end
-  always@(guard__h203262 or
-	  sfdin__h211484 or out_sfd__h212213 or _theResult___sfd__h212210)
+  always@(guard__h203379 or
+	  sfdin__h211601 or out_sfd__h212330 or _theResult___sfd__h212327)
   begin
-    case (guard__h203262)
+    case (guard__h203379)
       2'b0, 2'b01:
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q110 =
-	      sfdin__h211484[56:5];
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q110 =
+	      sfdin__h211601[56:5];
       2'b10:
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q110 =
-	      out_sfd__h212213;
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q110 =
+	      out_sfd__h212330;
       2'b11:
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q110 =
-	      _theResult___sfd__h212210;
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q110 =
+	      _theResult___sfd__h212327;
     endcase
   end
-  always@(guard__h203262 or sfdin__h211484 or _theResult___sfd__h212210)
+  always@(guard__h203379 or sfdin__h211601 or _theResult___sfd__h212327)
   begin
-    case (guard__h203262)
+    case (guard__h203379)
       2'b0:
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q111 =
-	      sfdin__h211484[56:5];
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q111 =
+	      sfdin__h211601[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q111 =
-	      _theResult___sfd__h212210;
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q111 =
+	      _theResult___sfd__h212327;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q110 or
-	  CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q111 or
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q110 or
+	  CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q111 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5294 or
 	  IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5296 or
-	  sfdin__h211484)
+	  sfdin__h211601)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h212288 =
-	      CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q110;
+	  _theResult___fst_sfd__h212405 =
+	      CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q110;
       3'd1:
-	  _theResult___fst_sfd__h212288 =
-	      CASE_guard03262_0b0_sfdin11484_BITS_56_TO_5_0b_ETC__q111;
+	  _theResult___fst_sfd__h212405 =
+	      CASE_guard03379_0b0_sfdin11601_BITS_56_TO_5_0b_ETC__q111;
       3'd2:
-	  _theResult___fst_sfd__h212288 =
+	  _theResult___fst_sfd__h212405 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5294;
       3'd3:
-	  _theResult___fst_sfd__h212288 =
+	  _theResult___fst_sfd__h212405 =
 	      IF_IF_IF_IF_3074_MINUS_SEXT_iFifo_first__087_B_ETC___d5296;
-      3'd4: _theResult___fst_sfd__h212288 = sfdin__h211484[56:5];
-      default: _theResult___fst_sfd__h212288 = 52'd0;
+      3'd4: _theResult___fst_sfd__h212405 = sfdin__h211601[56:5];
+      default: _theResult___fst_sfd__h212405 = 52'd0;
     endcase
   end
-  always@(guard__h212301 or
-	  _theResult___snd__h220237 or
-	  out_sfd__h220965 or _theResult___sfd__h220962)
+  always@(guard__h212418 or
+	  _theResult___snd__h220354 or
+	  out_sfd__h221082 or _theResult___sfd__h221079)
   begin
-    case (guard__h212301)
+    case (guard__h212418)
       2'b0, 2'b01:
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q112 =
-	      _theResult___snd__h220237[56:5];
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q112 =
+	      _theResult___snd__h220354[56:5];
       2'b10:
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q112 =
-	      out_sfd__h220965;
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q112 =
+	      out_sfd__h221082;
       2'b11:
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q112 =
-	      _theResult___sfd__h220962;
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q112 =
+	      _theResult___sfd__h221079;
     endcase
   end
-  always@(guard__h212301 or
-	  _theResult___snd__h220237 or _theResult___sfd__h220962)
+  always@(guard__h212418 or
+	  _theResult___snd__h220354 or _theResult___sfd__h221079)
   begin
-    case (guard__h212301)
+    case (guard__h212418)
       2'b0:
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q113 =
-	      _theResult___snd__h220237[56:5];
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q113 =
+	      _theResult___snd__h220354[56:5];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q113 =
-	      _theResult___sfd__h220962;
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q113 =
+	      _theResult___sfd__h221079;
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q112 or
-	  CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q113 or
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q112 or
+	  CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q113 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5313 or
 	  IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5315 or
-	  _theResult___snd__h220237)
+	  _theResult___snd__h220354)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  _theResult___fst_sfd__h221040 =
-	      CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q112;
+	  _theResult___fst_sfd__h221157 =
+	      CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q112;
       3'd1:
-	  _theResult___fst_sfd__h221040 =
-	      CASE_guard12301_0b0_theResult___snd20237_BITS__ETC__q113;
+	  _theResult___fst_sfd__h221157 =
+	      CASE_guard12418_0b0_theResult___snd20354_BITS__ETC__q113;
       3'd2:
-	  _theResult___fst_sfd__h221040 =
+	  _theResult___fst_sfd__h221157 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5313;
       3'd3:
-	  _theResult___fst_sfd__h221040 =
+	  _theResult___fst_sfd__h221157 =
 	      IF_IF_IF_iFifo_first__087_BITS_102_TO_95_625_E_ETC___d5315;
-      3'd4: _theResult___fst_sfd__h221040 = _theResult___snd__h220237[56:5];
-      default: _theResult___fst_sfd__h221040 = 52'd0;
+      3'd4: _theResult___fst_sfd__h221157 = _theResult___snd__h220354[56:5];
+      default: _theResult___fst_sfd__h221157 = 52'd0;
     endcase
   end
-  always@(guard__h194013 or iFifo$D_OUT)
+  always@(guard__h194130 or iFifo$D_OUT)
   begin
-    case (guard__h194013)
+    case (guard__h194130)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard94013_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114 =
+	  CASE_guard94130_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114 =
 	      iFifo$D_OUT[103];
       2'd3:
-	  CASE_guard94013_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114 =
-	      guard__h194013 == 2'b11 && iFifo$D_OUT[103];
+	  CASE_guard94130_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114 =
+	      guard__h194130 == 2'b11 && iFifo$D_OUT[103];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard94013_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114 or
-	  guard__h194013)
+	  CASE_guard94130_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114 or
+	  guard__h194130)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q115 =
-	      CASE_guard94013_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q115 =
+	      CASE_guard94130_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q114;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q115 =
-	      (guard__h194013 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q115 =
+	      (guard__h194130 == 2'b0) ?
 		iFifo$D_OUT[103] :
-		(guard__h194013 == 2'b01 || guard__h194013 == 2'b10 ||
-		 guard__h194013 == 2'b11) &&
+		(guard__h194130 == 2'b01 || guard__h194130 == 2'b10 ||
+		 guard__h194130 == 2'b11) &&
 		iFifo$D_OUT[103];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q115 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q115 =
 	      iFifo$D_OUT[103];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q115 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q115 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[103];
     endcase
   end
@@ -11329,102 +11342,168 @@ module mkFPU(CLK,
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[103];
     endcase
   end
-  always@(guard__h203262 or iFifo$D_OUT)
+  always@(guard__h203379 or iFifo$D_OUT)
   begin
-    case (guard__h203262)
+    case (guard__h203379)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard03262_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116 =
+	  CASE_guard03379_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116 =
 	      iFifo$D_OUT[103];
       2'd3:
-	  CASE_guard03262_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116 =
-	      guard__h203262 == 2'b11 && iFifo$D_OUT[103];
+	  CASE_guard03379_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116 =
+	      guard__h203379 == 2'b11 && iFifo$D_OUT[103];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard03262_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116 or
-	  guard__h203262)
+	  CASE_guard03379_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116 or
+	  guard__h203379)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q117 =
-	      CASE_guard03262_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q117 =
+	      CASE_guard03379_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q116;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q117 =
-	      (guard__h203262 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q117 =
+	      (guard__h203379 == 2'b0) ?
 		iFifo$D_OUT[103] :
-		(guard__h203262 == 2'b01 || guard__h203262 == 2'b10 ||
-		 guard__h203262 == 2'b11) &&
+		(guard__h203379 == 2'b01 || guard__h203379 == 2'b10 ||
+		 guard__h203379 == 2'b11) &&
 		iFifo$D_OUT[103];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q117 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q117 =
 	      iFifo$D_OUT[103];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q117 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q117 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[103];
     endcase
   end
-  always@(guard__h212301 or iFifo$D_OUT)
+  always@(guard__h212418 or iFifo$D_OUT)
   begin
-    case (guard__h212301)
+    case (guard__h212418)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard12301_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118 =
+	  CASE_guard12418_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118 =
 	      iFifo$D_OUT[103];
       2'd3:
-	  CASE_guard12301_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118 =
-	      guard__h212301 == 2'b11 && iFifo$D_OUT[103];
+	  CASE_guard12418_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118 =
+	      guard__h212418 == 2'b11 && iFifo$D_OUT[103];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard12301_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118 or
-	  guard__h212301)
+	  CASE_guard12418_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118 or
+	  guard__h212418)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q119 =
-	      CASE_guard12301_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q119 =
+	      CASE_guard12418_0b0_iFifoD_OUT_BIT_103_0b1_iF_ETC__q118;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q119 =
-	      (guard__h212301 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q119 =
+	      (guard__h212418 == 2'b0) ?
 		iFifo$D_OUT[103] :
-		(guard__h212301 == 2'b01 || guard__h212301 == 2'b10 ||
-		 guard__h212301 == 2'b11) &&
+		(guard__h212418 == 2'b01 || guard__h212418 == 2'b10 ||
+		 guard__h212418 == 2'b11) &&
 		iFifo$D_OUT[103];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q119 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q119 =
 	      iFifo$D_OUT[103];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q119 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q119 =
 		   iFifo$D_OUT[6:4] == 3'd4 && iFifo$D_OUT[103];
     endcase
   end
-  always@(guard__h194013 or iFifo$D_OUT)
+  always@(guard__h194130 or iFifo$D_OUT)
   begin
-    case (guard__h194013)
+    case (guard__h194130)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard94013_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120 =
+	  CASE_guard94130_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120 =
 	      !iFifo$D_OUT[103];
       2'd3:
-	  CASE_guard94013_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120 =
-	      guard__h194013 != 2'b11 || !iFifo$D_OUT[103];
+	  CASE_guard94130_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120 =
+	      guard__h194130 != 2'b11 || !iFifo$D_OUT[103];
     endcase
   end
   always@(iFifo$D_OUT or
-	  CASE_guard94013_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120 or
-	  guard__h194013)
+	  CASE_guard94130_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120 or
+	  guard__h194130)
   begin
     case (iFifo$D_OUT[6:4])
       3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q121 =
-	      CASE_guard94013_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120;
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q121 =
+	      CASE_guard94130_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q120;
       3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q121 =
-	      (guard__h194013 == 2'b0) ?
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q121 =
+	      (guard__h194130 == 2'b0) ?
 		!iFifo$D_OUT[103] :
-		guard__h194013 != 2'b01 && guard__h194013 != 2'b10 &&
-		guard__h194013 != 2'b11 ||
+		guard__h194130 != 2'b01 && guard__h194130 != 2'b10 &&
+		guard__h194130 != 2'b11 ||
 		!iFifo$D_OUT[103];
       3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q121 =
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q121 =
 	      !iFifo$D_OUT[103];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94013_ETC__q121 =
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard94130_ETC__q121 =
+		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[103];
+    endcase
+  end
+  always@(guard__h203379 or iFifo$D_OUT)
+  begin
+    case (guard__h203379)
+      2'b0, 2'b01, 2'b10:
+	  CASE_guard03379_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122 =
+	      !iFifo$D_OUT[103];
+      2'd3:
+	  CASE_guard03379_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122 =
+	      guard__h203379 != 2'b11 || !iFifo$D_OUT[103];
+    endcase
+  end
+  always@(iFifo$D_OUT or
+	  CASE_guard03379_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122 or
+	  guard__h203379)
+  begin
+    case (iFifo$D_OUT[6:4])
+      3'd0:
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q123 =
+	      CASE_guard03379_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122;
+      3'd1:
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q123 =
+	      (guard__h203379 == 2'b0) ?
+		!iFifo$D_OUT[103] :
+		guard__h203379 != 2'b01 && guard__h203379 != 2'b10 &&
+		guard__h203379 != 2'b11 ||
+		!iFifo$D_OUT[103];
+      3'd2, 3'd3:
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q123 =
+	      !iFifo$D_OUT[103];
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03379_ETC__q123 =
+		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[103];
+    endcase
+  end
+  always@(guard__h212418 or iFifo$D_OUT)
+  begin
+    case (guard__h212418)
+      2'b0, 2'b01, 2'b10:
+	  CASE_guard12418_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124 =
+	      !iFifo$D_OUT[103];
+      2'd3:
+	  CASE_guard12418_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124 =
+	      guard__h212418 != 2'b11 || !iFifo$D_OUT[103];
+    endcase
+  end
+  always@(iFifo$D_OUT or
+	  CASE_guard12418_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124 or
+	  guard__h212418)
+  begin
+    case (iFifo$D_OUT[6:4])
+      3'd0:
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q125 =
+	      CASE_guard12418_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124;
+      3'd1:
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q125 =
+	      (guard__h212418 == 2'b0) ?
+		!iFifo$D_OUT[103] :
+		guard__h212418 != 2'b01 && guard__h212418 != 2'b10 &&
+		guard__h212418 != 2'b11 ||
+		!iFifo$D_OUT[103];
+      3'd2, 3'd3:
+	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q125 =
+	      !iFifo$D_OUT[103];
+      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12418_ETC__q125 =
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[103];
     endcase
   end
@@ -11435,72 +11514,6 @@ module mkFPU(CLK,
 	  IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d5348 =
 	      !iFifo$D_OUT[103];
       default: IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d5348 =
-		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[103];
-    endcase
-  end
-  always@(guard__h203262 or iFifo$D_OUT)
-  begin
-    case (guard__h203262)
-      2'b0, 2'b01, 2'b10:
-	  CASE_guard03262_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122 =
-	      !iFifo$D_OUT[103];
-      2'd3:
-	  CASE_guard03262_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122 =
-	      guard__h203262 != 2'b11 || !iFifo$D_OUT[103];
-    endcase
-  end
-  always@(iFifo$D_OUT or
-	  CASE_guard03262_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122 or
-	  guard__h203262)
-  begin
-    case (iFifo$D_OUT[6:4])
-      3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q123 =
-	      CASE_guard03262_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q122;
-      3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q123 =
-	      (guard__h203262 == 2'b0) ?
-		!iFifo$D_OUT[103] :
-		guard__h203262 != 2'b01 && guard__h203262 != 2'b10 &&
-		guard__h203262 != 2'b11 ||
-		!iFifo$D_OUT[103];
-      3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q123 =
-	      !iFifo$D_OUT[103];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard03262_ETC__q123 =
-		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[103];
-    endcase
-  end
-  always@(guard__h212301 or iFifo$D_OUT)
-  begin
-    case (guard__h212301)
-      2'b0, 2'b01, 2'b10:
-	  CASE_guard12301_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124 =
-	      !iFifo$D_OUT[103];
-      2'd3:
-	  CASE_guard12301_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124 =
-	      guard__h212301 != 2'b11 || !iFifo$D_OUT[103];
-    endcase
-  end
-  always@(iFifo$D_OUT or
-	  CASE_guard12301_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124 or
-	  guard__h212301)
-  begin
-    case (iFifo$D_OUT[6:4])
-      3'd0:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q125 =
-	      CASE_guard12301_0b0_NOT_iFifoD_OUT_BIT_103_0b_ETC__q124;
-      3'd1:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q125 =
-	      (guard__h212301 == 2'b0) ?
-		!iFifo$D_OUT[103] :
-		guard__h212301 != 2'b01 && guard__h212301 != 2'b10 &&
-		guard__h212301 != 2'b11 ||
-		!iFifo$D_OUT[103];
-      3'd2, 3'd3:
-	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q125 =
-	      !iFifo$D_OUT[103];
-      default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard12301_ETC__q125 =
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[103];
     endcase
   end
@@ -11556,6 +11569,24 @@ module mkFPU(CLK,
 	      IF_iFifo_first__087_BIT_71_849_THEN_IF_iFifo_f_ETC___d4618;
       default: IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d4623 =
 		   IF_iFifo_first__087_BIT_71_849_THEN_IF_iFifo_f_ETC___d4618;
+    endcase
+  end
+  always@(iFifo$D_OUT or
+	  fpu_madd_fOperand_S0$FULL_N or
+	  fpu_div64_fOperands_S0$FULL_N or fpu_sqr64_fOperand_S0$FULL_N)
+  begin
+    case (iFifo$D_OUT[3:0])
+      4'd0, 4'd1, 4'd2, 4'd5, 4'd6, 4'd7:
+	  IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
+	      fpu_madd_fOperand_S0$FULL_N;
+      4'd3:
+	  IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
+	      fpu_div64_fOperands_S0$FULL_N;
+      4'd4:
+	  IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
+	      fpu_sqr64_fOperand_S0$FULL_N;
+      default: IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
+		   iFifo$D_OUT[3:0] != 4'd8 || fpu_madd_fOperand_S0$FULL_N;
     endcase
   end
   always@(fpu_madd_fState_S8$D_OUT or
@@ -11619,319 +11650,301 @@ module mkFPU(CLK,
 		   63'd0;
     endcase
   end
-  always@(iFifo$D_OUT or
-	  fpu_madd_fOperand_S0$FULL_N or
-	  fpu_div64_fOperands_S0$FULL_N or fpu_sqr64_fOperand_S0$FULL_N)
-  begin
-    case (iFifo$D_OUT[3:0])
-      4'd0, 4'd1, 4'd2, 4'd5, 4'd6, 4'd7:
-	  IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
-	      fpu_madd_fOperand_S0$FULL_N;
-      4'd3:
-	  IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
-	      fpu_div64_fOperands_S0$FULL_N;
-      4'd4:
-	  IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
-	      fpu_sqr64_fOperand_S0$FULL_N;
-      default: IF_iFifo_first__087_BITS_3_TO_0_088_EQ_0_089_O_ETC___d3110 =
-		   iFifo$D_OUT[3:0] != 4'd8 || fpu_madd_fOperand_S0$FULL_N;
-    endcase
-  end
   always@(rmdFifo$D_OUT or resWire$wget)
   begin
     case (rmdFifo$D_OUT)
-      3'd0, 3'd1: _theResult___fst_exp__h269559 = 8'd255;
+      3'd0, 3'd1: _theResult___fst_exp__h269759 = 8'd255;
       3'd2:
-	  _theResult___fst_exp__h269559 = resWire$wget[68] ? 8'd254 : 8'd255;
+	  _theResult___fst_exp__h269759 = resWire$wget[68] ? 8'd254 : 8'd255;
       3'd3:
-	  _theResult___fst_exp__h269559 = resWire$wget[68] ? 8'd255 : 8'd254;
-      3'd4: _theResult___fst_exp__h269559 = 8'd254;
-      default: _theResult___fst_exp__h269559 = 8'd0;
+	  _theResult___fst_exp__h269759 = resWire$wget[68] ? 8'd255 : 8'd254;
+      3'd4: _theResult___fst_exp__h269759 = 8'd254;
+      default: _theResult___fst_exp__h269759 = 8'd0;
     endcase
   end
   always@(rmdFifo$D_OUT or resWire$wget)
   begin
     case (rmdFifo$D_OUT)
-      3'd0, 3'd1: _theResult___fst_sfd__h269560 = 23'd0;
+      3'd0, 3'd1: _theResult___fst_sfd__h269760 = 23'd0;
       3'd2:
-	  _theResult___fst_sfd__h269560 =
+	  _theResult___fst_sfd__h269760 =
 	      resWire$wget[68] ? 23'd8388607 : 23'd0;
       3'd3:
-	  _theResult___fst_sfd__h269560 =
+	  _theResult___fst_sfd__h269760 =
 	      resWire$wget[68] ? 23'd0 : 23'd8388607;
-      3'd4: _theResult___fst_sfd__h269560 = 23'd8388607;
-      default: _theResult___fst_sfd__h269560 = 23'd0;
+      3'd4: _theResult___fst_sfd__h269760 = 23'd8388607;
+      default: _theResult___fst_sfd__h269760 = 23'd0;
     endcase
   end
-  always@(guard__h269587 or resWire$wget)
+  always@(guard__h269787 or resWire$wget)
   begin
-    case (guard__h269587)
+    case (guard__h269787)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard69587_0b0_resWirewget_BIT_68_0b1_re_ETC__q144 =
+	  CASE_guard69787_0b0_resWirewget_BIT_68_0b1_re_ETC__q144 =
 	      resWire$wget[68];
       2'd3:
-	  CASE_guard69587_0b0_resWirewget_BIT_68_0b1_re_ETC__q144 =
-	      guard__h269587 == 2'b11 && resWire$wget[68];
+	  CASE_guard69787_0b0_resWirewget_BIT_68_0b1_re_ETC__q144 =
+	      guard__h269787 == 2'b11 && resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard69587_0b0_resWirewget_BIT_68_0b1_re_ETC__q144 or
-	  guard__h269587)
+	  CASE_guard69787_0b0_resWirewget_BIT_68_0b1_re_ETC__q144 or
+	  guard__h269787)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6388 =
-	      CASE_guard69587_0b0_resWirewget_BIT_68_0b1_re_ETC__q144;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6390 =
+	      CASE_guard69787_0b0_resWirewget_BIT_68_0b1_re_ETC__q144;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6388 =
-	      (guard__h269587 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6390 =
+	      (guard__h269787 == 2'b0) ?
 		resWire$wget[68] :
-		(guard__h269587 == 2'b01 || guard__h269587 == 2'b10 ||
-		 guard__h269587 == 2'b11) &&
+		(guard__h269787 == 2'b01 || guard__h269787 == 2'b10 ||
+		 guard__h269787 == 2'b11) &&
 		resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6388 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6390 =
 	      resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6388 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6390 =
 		   rmdFifo$D_OUT == 3'd4 && resWire$wget[68];
     endcase
   end
-  always@(guard__h269587 or resWire$wget)
+  always@(guard__h269787 or resWire$wget)
   begin
-    case (guard__h269587)
+    case (guard__h269787)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard69587_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145 =
+	  CASE_guard69787_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145 =
 	      !resWire$wget[68];
       2'd3:
-	  CASE_guard69587_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145 =
-	      guard__h269587 != 2'b11 || !resWire$wget[68];
+	  CASE_guard69787_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145 =
+	      guard__h269787 != 2'b11 || !resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard69587_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145 or
-	  guard__h269587)
+	  CASE_guard69787_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145 or
+	  guard__h269787)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d5823 =
-	      CASE_guard69587_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d5825 =
+	      CASE_guard69787_0b0_NOT_resWirewget_BIT_68_0b_ETC__q145;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d5823 =
-	      (guard__h269587 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d5825 =
+	      (guard__h269787 == 2'b0) ?
 		!resWire$wget[68] :
-		guard__h269587 != 2'b01 && guard__h269587 != 2'b10 &&
-		guard__h269587 != 2'b11 ||
+		guard__h269787 != 2'b01 && guard__h269787 != 2'b10 &&
+		guard__h269787 != 2'b11 ||
 		!resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d5823 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d5825 =
 	      !resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d5823 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d5825 =
 		   rmdFifo$D_OUT != 3'd4 || !resWire$wget[68];
     endcase
   end
-  always@(guard__h278294 or resWire$wget)
+  always@(guard__h278494 or resWire$wget)
   begin
-    case (guard__h278294)
+    case (guard__h278494)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard78294_0b0_resWirewget_BIT_68_0b1_re_ETC__q146 =
+	  CASE_guard78494_0b0_resWirewget_BIT_68_0b1_re_ETC__q146 =
 	      resWire$wget[68];
       2'd3:
-	  CASE_guard78294_0b0_resWirewget_BIT_68_0b1_re_ETC__q146 =
-	      guard__h278294 == 2'b11 && resWire$wget[68];
+	  CASE_guard78494_0b0_resWirewget_BIT_68_0b1_re_ETC__q146 =
+	      guard__h278494 == 2'b11 && resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard78294_0b0_resWirewget_BIT_68_0b1_re_ETC__q146 or
-	  guard__h278294)
+	  CASE_guard78494_0b0_resWirewget_BIT_68_0b1_re_ETC__q146 or
+	  guard__h278494)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6397 =
-	      CASE_guard78294_0b0_resWirewget_BIT_68_0b1_re_ETC__q146;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6399 =
+	      CASE_guard78494_0b0_resWirewget_BIT_68_0b1_re_ETC__q146;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6397 =
-	      (guard__h278294 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6399 =
+	      (guard__h278494 == 2'b0) ?
 		resWire$wget[68] :
-		(guard__h278294 == 2'b01 || guard__h278294 == 2'b10 ||
-		 guard__h278294 == 2'b11) &&
+		(guard__h278494 == 2'b01 || guard__h278494 == 2'b10 ||
+		 guard__h278494 == 2'b11) &&
 		resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6397 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6399 =
 	      resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6397 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6399 =
 		   rmdFifo$D_OUT == 3'd4 && resWire$wget[68];
     endcase
   end
-  always@(guard__h278294 or resWire$wget)
+  always@(guard__h278494 or resWire$wget)
   begin
-    case (guard__h278294)
+    case (guard__h278494)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard78294_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147 =
+	  CASE_guard78494_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147 =
 	      !resWire$wget[68];
       2'd3:
-	  CASE_guard78294_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147 =
-	      guard__h278294 != 2'b11 || !resWire$wget[68];
+	  CASE_guard78494_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147 =
+	      guard__h278494 != 2'b11 || !resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard78294_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147 or
-	  guard__h278294)
+	  CASE_guard78494_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147 or
+	  guard__h278494)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6023 =
-	      CASE_guard78294_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6025 =
+	      CASE_guard78494_0b0_NOT_resWirewget_BIT_68_0b_ETC__q147;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6023 =
-	      (guard__h278294 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6025 =
+	      (guard__h278494 == 2'b0) ?
 		!resWire$wget[68] :
-		guard__h278294 != 2'b01 && guard__h278294 != 2'b10 &&
-		guard__h278294 != 2'b11 ||
+		guard__h278494 != 2'b01 && guard__h278494 != 2'b10 &&
+		guard__h278494 != 2'b11 ||
 		!resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6023 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6025 =
 	      !resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6023 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6025 =
 		   rmdFifo$D_OUT != 3'd4 || !resWire$wget[68];
     endcase
   end
-  always@(guard__h287224 or resWire$wget)
+  always@(guard__h287424 or resWire$wget)
   begin
-    case (guard__h287224)
+    case (guard__h287424)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard87224_0b0_resWirewget_BIT_68_0b1_re_ETC__q148 =
+	  CASE_guard87424_0b0_resWirewget_BIT_68_0b1_re_ETC__q148 =
 	      resWire$wget[68];
       2'd3:
-	  CASE_guard87224_0b0_resWirewget_BIT_68_0b1_re_ETC__q148 =
-	      guard__h287224 == 2'b11 && resWire$wget[68];
+	  CASE_guard87424_0b0_resWirewget_BIT_68_0b1_re_ETC__q148 =
+	      guard__h287424 == 2'b11 && resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard87224_0b0_resWirewget_BIT_68_0b1_re_ETC__q148 or
-	  guard__h287224)
+	  CASE_guard87424_0b0_resWirewget_BIT_68_0b1_re_ETC__q148 or
+	  guard__h287424)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6409 =
-	      CASE_guard87224_0b0_resWirewget_BIT_68_0b1_re_ETC__q148;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6411 =
+	      CASE_guard87424_0b0_resWirewget_BIT_68_0b1_re_ETC__q148;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6409 =
-	      (guard__h287224 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6411 =
+	      (guard__h287424 == 2'b0) ?
 		resWire$wget[68] :
-		(guard__h287224 == 2'b01 || guard__h287224 == 2'b10 ||
-		 guard__h287224 == 2'b11) &&
+		(guard__h287424 == 2'b01 || guard__h287424 == 2'b10 ||
+		 guard__h287424 == 2'b11) &&
 		resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6409 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6411 =
 	      resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6409 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6411 =
 		   rmdFifo$D_OUT == 3'd4 && resWire$wget[68];
     endcase
   end
-  always@(guard__h287224 or resWire$wget)
+  always@(guard__h287424 or resWire$wget)
   begin
-    case (guard__h287224)
+    case (guard__h287424)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard87224_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149 =
+	  CASE_guard87424_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149 =
 	      !resWire$wget[68];
       2'd3:
-	  CASE_guard87224_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149 =
-	      guard__h287224 != 2'b11 || !resWire$wget[68];
+	  CASE_guard87424_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149 =
+	      guard__h287424 != 2'b11 || !resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard87224_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149 or
-	  guard__h287224)
+	  CASE_guard87424_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149 or
+	  guard__h287424)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6324 =
-	      CASE_guard87224_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6326 =
+	      CASE_guard87424_0b0_NOT_resWirewget_BIT_68_0b_ETC__q149;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6324 =
-	      (guard__h287224 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6326 =
+	      (guard__h287424 == 2'b0) ?
 		!resWire$wget[68] :
-		guard__h287224 != 2'b01 && guard__h287224 != 2'b10 &&
-		guard__h287224 != 2'b11 ||
+		guard__h287424 != 2'b01 && guard__h287424 != 2'b10 &&
+		guard__h287424 != 2'b11 ||
 		!resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6324 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6326 =
 	      !resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_I_ETC___d6324 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_I_ETC___d6326 =
 		   rmdFifo$D_OUT != 3'd4 || !resWire$wget[68];
     endcase
   end
-  always@(guard__h296060 or resWire$wget)
+  always@(guard__h296260 or resWire$wget)
   begin
-    case (guard__h296060)
+    case (guard__h296260)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard96060_0b0_resWirewget_BIT_68_0b1_re_ETC__q150 =
+	  CASE_guard96260_0b0_resWirewget_BIT_68_0b1_re_ETC__q150 =
 	      resWire$wget[68];
       2'd3:
-	  CASE_guard96060_0b0_resWirewget_BIT_68_0b1_re_ETC__q150 =
-	      guard__h296060 == 2'b11 && resWire$wget[68];
+	  CASE_guard96260_0b0_resWirewget_BIT_68_0b1_re_ETC__q150 =
+	      guard__h296260 == 2'b11 && resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard96060_0b0_resWirewget_BIT_68_0b1_re_ETC__q150 or
-	  guard__h296060)
+	  CASE_guard96260_0b0_resWirewget_BIT_68_0b1_re_ETC__q150 or
+	  guard__h296260)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6418 =
-	      CASE_guard96060_0b0_resWirewget_BIT_68_0b1_re_ETC__q150;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6420 =
+	      CASE_guard96260_0b0_resWirewget_BIT_68_0b1_re_ETC__q150;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6418 =
-	      (guard__h296060 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6420 =
+	      (guard__h296260 == 2'b0) ?
 		resWire$wget[68] :
-		(guard__h296060 == 2'b01 || guard__h296060 == 2'b10 ||
-		 guard__h296060 == 2'b11) &&
+		(guard__h296260 == 2'b01 || guard__h296260 == 2'b10 ||
+		 guard__h296260 == 2'b11) &&
 		resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6418 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6420 =
 	      resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6418 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6420 =
 		   rmdFifo$D_OUT == 3'd4 && resWire$wget[68];
     endcase
   end
-  always@(guard__h296060 or resWire$wget)
+  always@(guard__h296260 or resWire$wget)
   begin
-    case (guard__h296060)
+    case (guard__h296260)
       2'b0, 2'b01, 2'b10:
-	  CASE_guard96060_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151 =
+	  CASE_guard96260_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151 =
 	      !resWire$wget[68];
       2'd3:
-	  CASE_guard96060_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151 =
-	      guard__h296060 != 2'b11 || !resWire$wget[68];
+	  CASE_guard96260_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151 =
+	      guard__h296260 != 2'b11 || !resWire$wget[68];
     endcase
   end
   always@(rmdFifo$D_OUT or
 	  resWire$wget or
-	  CASE_guard96060_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151 or
-	  guard__h296060)
+	  CASE_guard96260_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151 or
+	  guard__h296260)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6373 =
-	      CASE_guard96060_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151;
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6375 =
+	      CASE_guard96260_0b0_NOT_resWirewget_BIT_68_0b_ETC__q151;
       3'd1:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6373 =
-	      (guard__h296060 == 2'b0) ?
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6375 =
+	      (guard__h296260 == 2'b0) ?
 		!resWire$wget[68] :
-		guard__h296060 != 2'b01 && guard__h296060 != 2'b10 &&
-		guard__h296060 != 2'b11 ||
+		guard__h296260 != 2'b01 && guard__h296260 != 2'b10 &&
+		guard__h296260 != 2'b11 ||
 		!resWire$wget[68];
       3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6373 =
+	  IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6375 =
 	      !resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_THEN_IF_IF_IF_r_ETC___d6373 =
+      default: IF_rmdFifo_first__780_EQ_0_781_THEN_IF_IF_IF_r_ETC___d6375 =
 		   rmdFifo$D_OUT != 3'd4 || !resWire$wget[68];
     endcase
   end
@@ -11939,9 +11952,9 @@ module mkFPU(CLK,
   begin
     case (rmdFifo$D_OUT)
       3'd0, 3'd1, 3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6400 =
+	  IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6402 =
 	      resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6400 =
+      default: IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6402 =
 		   rmdFifo$D_OUT == 3'd4 && resWire$wget[68];
     endcase
   end
@@ -11949,422 +11962,422 @@ module mkFPU(CLK,
   begin
     case (rmdFifo$D_OUT)
       3'd0, 3'd1, 3'd2, 3'd3:
-	  IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6028 =
+	  IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6030 =
 	      !resWire$wget[68];
-      default: IF_rmdFifo_first__778_EQ_0_779_OR_rmdFifo_firs_ETC___d6028 =
+      default: IF_rmdFifo_first__780_EQ_0_781_OR_rmdFifo_firs_ETC___d6030 =
 		   rmdFifo$D_OUT != 3'd4 || !resWire$wget[68];
     endcase
   end
-  always@(guard__h278294 or
-	  _theResult___fst_exp__h286342 or
-	  out_exp__h286787 or _theResult___exp__h286784)
+  always@(guard__h278494 or
+	  _theResult___fst_exp__h286542 or
+	  out_exp__h286987 or _theResult___exp__h286984)
   begin
-    case (guard__h278294)
+    case (guard__h278494)
       2'b0, 2'b01:
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q152 =
-	      _theResult___fst_exp__h286342;
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 =
+	      _theResult___fst_exp__h286542;
       2'b10:
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q152 =
-	      out_exp__h286787;
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 =
+	      out_exp__h286987;
       2'b11:
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q152 =
-	      _theResult___exp__h286784;
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 =
+	      _theResult___exp__h286984;
     endcase
   end
-  always@(guard__h278294 or
-	  _theResult___fst_exp__h286342 or _theResult___exp__h286784)
+  always@(guard__h278494 or
+	  _theResult___fst_exp__h286542 or _theResult___exp__h286984)
   begin
-    case (guard__h278294)
+    case (guard__h278494)
       2'b0:
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q153 =
-	      _theResult___fst_exp__h286342;
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153 =
+	      _theResult___fst_exp__h286542;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q153 =
-	      _theResult___exp__h286784;
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153 =
+	      _theResult___exp__h286984;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q152 or
-	  CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q153 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6479 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6481 or
-	  _theResult___fst_exp__h286342)
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 or
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6481 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6483 or
+	  _theResult___fst_exp__h286542)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_exp__h286862 =
-	      CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q152;
+	  _theResult___fst_exp__h287062 =
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152;
       3'd1:
-	  _theResult___fst_exp__h286862 =
-	      CASE_guard78294_0b0_theResult___fst_exp86342_0_ETC__q153;
+	  _theResult___fst_exp__h287062 =
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153;
       3'd2:
-	  _theResult___fst_exp__h286862 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6479;
+	  _theResult___fst_exp__h287062 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6481;
       3'd3:
-	  _theResult___fst_exp__h286862 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6481;
-      3'd4: _theResult___fst_exp__h286862 = _theResult___fst_exp__h286342;
-      default: _theResult___fst_exp__h286862 = 8'd0;
+	  _theResult___fst_exp__h287062 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6483;
+      3'd4: _theResult___fst_exp__h287062 = _theResult___fst_exp__h286542;
+      default: _theResult___fst_exp__h287062 = 8'd0;
     endcase
   end
-  always@(guard__h269587 or
-	  _theResult___fst_exp__h277686 or
-	  out_exp__h278205 or _theResult___exp__h278202)
+  always@(guard__h269787 or
+	  _theResult___fst_exp__h277886 or
+	  out_exp__h278405 or _theResult___exp__h278402)
   begin
-    case (guard__h269587)
+    case (guard__h269787)
       2'b0, 2'b01:
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q154 =
-	      _theResult___fst_exp__h277686;
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 =
+	      _theResult___fst_exp__h277886;
       2'b10:
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q154 =
-	      out_exp__h278205;
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 =
+	      out_exp__h278405;
       2'b11:
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q154 =
-	      _theResult___exp__h278202;
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 =
+	      _theResult___exp__h278402;
     endcase
   end
-  always@(guard__h269587 or
-	  _theResult___fst_exp__h277686 or _theResult___exp__h278202)
+  always@(guard__h269787 or
+	  _theResult___fst_exp__h277886 or _theResult___exp__h278402)
   begin
-    case (guard__h269587)
+    case (guard__h269787)
       2'b0:
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q155 =
-	      _theResult___fst_exp__h277686;
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155 =
+	      _theResult___fst_exp__h277886;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q155 =
-	      _theResult___exp__h278202;
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155 =
+	      _theResult___exp__h278402;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q154 or
-	  CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q155 or
-	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6448 or
-	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6450 or
-	  _theResult___fst_exp__h277686)
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 or
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155 or
+	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450 or
+	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452 or
+	  _theResult___fst_exp__h277886)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_exp__h278280 =
-	      CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q154;
+	  _theResult___fst_exp__h278480 =
+	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154;
       3'd1:
-	  _theResult___fst_exp__h278280 =
-	      CASE_guard69587_0b0_theResult___fst_exp77686_0_ETC__q155;
+	  _theResult___fst_exp__h278480 =
+	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155;
       3'd2:
-	  _theResult___fst_exp__h278280 =
-	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6448;
+	  _theResult___fst_exp__h278480 =
+	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450;
       3'd3:
-	  _theResult___fst_exp__h278280 =
-	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6450;
-      3'd4: _theResult___fst_exp__h278280 = _theResult___fst_exp__h277686;
-      default: _theResult___fst_exp__h278280 = 8'd0;
+	  _theResult___fst_exp__h278480 =
+	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452;
+      3'd4: _theResult___fst_exp__h278480 = _theResult___fst_exp__h277886;
+      default: _theResult___fst_exp__h278480 = 8'd0;
     endcase
   end
-  always@(guard__h287224 or
-	  _theResult___fst_exp__h295452 or
-	  out_exp__h295971 or _theResult___exp__h295968)
+  always@(guard__h287424 or
+	  _theResult___fst_exp__h295652 or
+	  out_exp__h296171 or _theResult___exp__h296168)
   begin
-    case (guard__h287224)
+    case (guard__h287424)
       2'b0, 2'b01:
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q156 =
-	      _theResult___fst_exp__h295452;
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156 =
+	      _theResult___fst_exp__h295652;
       2'b10:
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q156 =
-	      out_exp__h295971;
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156 =
+	      out_exp__h296171;
       2'b11:
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q156 =
-	      _theResult___exp__h295968;
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156 =
+	      _theResult___exp__h296168;
     endcase
   end
-  always@(guard__h287224 or
-	  _theResult___fst_exp__h295452 or _theResult___exp__h295968)
+  always@(guard__h287424 or
+	  _theResult___fst_exp__h295652 or _theResult___exp__h296168)
   begin
-    case (guard__h287224)
+    case (guard__h287424)
       2'b0:
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q157 =
-	      _theResult___fst_exp__h295452;
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q157 =
+	      _theResult___fst_exp__h295652;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q157 =
-	      _theResult___exp__h295968;
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q157 =
+	      _theResult___exp__h296168;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q156 or
-	  CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q157 or
-	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6518 or
-	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6520 or
-	  _theResult___fst_exp__h295452)
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156 or
+	  CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q157 or
+	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6520 or
+	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6522 or
+	  _theResult___fst_exp__h295652)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_exp__h296046 =
-	      CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q156;
+	  _theResult___fst_exp__h296246 =
+	      CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156;
       3'd1:
-	  _theResult___fst_exp__h296046 =
-	      CASE_guard87224_0b0_theResult___fst_exp95452_0_ETC__q157;
+	  _theResult___fst_exp__h296246 =
+	      CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q157;
       3'd2:
-	  _theResult___fst_exp__h296046 =
-	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6518;
+	  _theResult___fst_exp__h296246 =
+	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6520;
       3'd3:
-	  _theResult___fst_exp__h296046 =
-	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6520;
-      3'd4: _theResult___fst_exp__h296046 = _theResult___fst_exp__h295452;
-      default: _theResult___fst_exp__h296046 = 8'd0;
+	  _theResult___fst_exp__h296246 =
+	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6522;
+      3'd4: _theResult___fst_exp__h296246 = _theResult___fst_exp__h295652;
+      default: _theResult___fst_exp__h296246 = 8'd0;
     endcase
   end
-  always@(guard__h296060 or
-	  _theResult___fst_exp__h304137 or
-	  out_exp__h304607 or _theResult___exp__h304604)
+  always@(guard__h296260 or
+	  _theResult___fst_exp__h304337 or
+	  out_exp__h304807 or _theResult___exp__h304804)
   begin
-    case (guard__h296060)
+    case (guard__h296260)
       2'b0, 2'b01:
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q158 =
-	      _theResult___fst_exp__h304137;
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158 =
+	      _theResult___fst_exp__h304337;
       2'b10:
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q158 =
-	      out_exp__h304607;
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158 =
+	      out_exp__h304807;
       2'b11:
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q158 =
-	      _theResult___exp__h304604;
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158 =
+	      _theResult___exp__h304804;
     endcase
   end
-  always@(guard__h296060 or
-	  _theResult___fst_exp__h304137 or _theResult___exp__h304604)
+  always@(guard__h296260 or
+	  _theResult___fst_exp__h304337 or _theResult___exp__h304804)
   begin
-    case (guard__h296060)
+    case (guard__h296260)
       2'b0:
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q159 =
-	      _theResult___fst_exp__h304137;
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q159 =
+	      _theResult___fst_exp__h304337;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q159 =
-	      _theResult___exp__h304604;
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q159 =
+	      _theResult___exp__h304804;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q158 or
-	  CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q159 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6549 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6551 or
-	  _theResult___fst_exp__h304137)
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158 or
+	  CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q159 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6551 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6553 or
+	  _theResult___fst_exp__h304337)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_exp__h304682 =
-	      CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q158;
+	  _theResult___fst_exp__h304882 =
+	      CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158;
       3'd1:
-	  _theResult___fst_exp__h304682 =
-	      CASE_guard96060_0b0_theResult___fst_exp04137_0_ETC__q159;
+	  _theResult___fst_exp__h304882 =
+	      CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q159;
       3'd2:
-	  _theResult___fst_exp__h304682 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6549;
+	  _theResult___fst_exp__h304882 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6551;
       3'd3:
-	  _theResult___fst_exp__h304682 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6551;
-      3'd4: _theResult___fst_exp__h304682 = _theResult___fst_exp__h304137;
-      default: _theResult___fst_exp__h304682 = 8'd0;
+	  _theResult___fst_exp__h304882 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6553;
+      3'd4: _theResult___fst_exp__h304882 = _theResult___fst_exp__h304337;
+      default: _theResult___fst_exp__h304882 = 8'd0;
     endcase
   end
-  always@(guard__h278294 or
-	  _theResult___snd__h286293 or
-	  out_sfd__h286788 or _theResult___sfd__h286785)
+  always@(guard__h278494 or
+	  _theResult___snd__h286493 or
+	  out_sfd__h286988 or _theResult___sfd__h286985)
   begin
-    case (guard__h278294)
+    case (guard__h278494)
       2'b0, 2'b01:
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q160 =
-	      _theResult___snd__h286293[56:34];
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q160 =
+	      _theResult___snd__h286493[56:34];
       2'b10:
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q160 =
-	      out_sfd__h286788;
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q160 =
+	      out_sfd__h286988;
       2'b11:
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q160 =
-	      _theResult___sfd__h286785;
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q160 =
+	      _theResult___sfd__h286985;
     endcase
   end
-  always@(guard__h278294 or
-	  _theResult___snd__h286293 or _theResult___sfd__h286785)
+  always@(guard__h278494 or
+	  _theResult___snd__h286493 or _theResult___sfd__h286985)
   begin
-    case (guard__h278294)
+    case (guard__h278494)
       2'b0:
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q161 =
-	      _theResult___snd__h286293[56:34];
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q161 =
+	      _theResult___snd__h286493[56:34];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q161 =
-	      _theResult___sfd__h286785;
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q161 =
+	      _theResult___sfd__h286985;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q160 or
-	  CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q161 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6595 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6597 or
-	  _theResult___snd__h286293)
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q160 or
+	  CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q161 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6597 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6599 or
+	  _theResult___snd__h286493)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_sfd__h286863 =
-	      CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q160;
+	  _theResult___fst_sfd__h287063 =
+	      CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q160;
       3'd1:
-	  _theResult___fst_sfd__h286863 =
-	      CASE_guard78294_0b0_theResult___snd86293_BITS__ETC__q161;
+	  _theResult___fst_sfd__h287063 =
+	      CASE_guard78494_0b0_theResult___snd86493_BITS__ETC__q161;
       3'd2:
-	  _theResult___fst_sfd__h286863 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6595;
+	  _theResult___fst_sfd__h287063 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6597;
       3'd3:
-	  _theResult___fst_sfd__h286863 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6597;
-      3'd4: _theResult___fst_sfd__h286863 = _theResult___snd__h286293[56:34];
-      default: _theResult___fst_sfd__h286863 = 23'd0;
+	  _theResult___fst_sfd__h287063 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6599;
+      3'd4: _theResult___fst_sfd__h287063 = _theResult___snd__h286493[56:34];
+      default: _theResult___fst_sfd__h287063 = 23'd0;
     endcase
   end
-  always@(guard__h269587 or
-	  sfdin__h277680 or out_sfd__h278206 or _theResult___sfd__h278203)
+  always@(guard__h269787 or
+	  sfdin__h277880 or out_sfd__h278406 or _theResult___sfd__h278403)
   begin
-    case (guard__h269587)
+    case (guard__h269787)
       2'b0, 2'b01:
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q162 =
-	      sfdin__h277680[56:34];
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q162 =
+	      sfdin__h277880[56:34];
       2'b10:
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q162 =
-	      out_sfd__h278206;
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q162 =
+	      out_sfd__h278406;
       2'b11:
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q162 =
-	      _theResult___sfd__h278203;
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q162 =
+	      _theResult___sfd__h278403;
     endcase
   end
-  always@(guard__h269587 or sfdin__h277680 or _theResult___sfd__h278203)
+  always@(guard__h269787 or sfdin__h277880 or _theResult___sfd__h278403)
   begin
-    case (guard__h269587)
+    case (guard__h269787)
       2'b0:
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q163 =
-	      sfdin__h277680[56:34];
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q163 =
+	      sfdin__h277880[56:34];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q163 =
-	      _theResult___sfd__h278203;
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q163 =
+	      _theResult___sfd__h278403;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q162 or
-	  CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q163 or
-	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6576 or
-	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6578 or
-	  sfdin__h277680)
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q162 or
+	  CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q163 or
+	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6578 or
+	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6580 or
+	  sfdin__h277880)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_sfd__h278281 =
-	      CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q162;
+	  _theResult___fst_sfd__h278481 =
+	      CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q162;
       3'd1:
-	  _theResult___fst_sfd__h278281 =
-	      CASE_guard69587_0b0_sfdin77680_BITS_56_TO_34_0_ETC__q163;
+	  _theResult___fst_sfd__h278481 =
+	      CASE_guard69787_0b0_sfdin77880_BITS_56_TO_34_0_ETC__q163;
       3'd2:
-	  _theResult___fst_sfd__h278281 =
-	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6576;
+	  _theResult___fst_sfd__h278481 =
+	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6578;
       3'd3:
-	  _theResult___fst_sfd__h278281 =
-	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__410_B_ETC___d6578;
-      3'd4: _theResult___fst_sfd__h278281 = sfdin__h277680[56:34];
-      default: _theResult___fst_sfd__h278281 = 23'd0;
+	  _theResult___fst_sfd__h278481 =
+	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6580;
+      3'd4: _theResult___fst_sfd__h278481 = sfdin__h277880[56:34];
+      default: _theResult___fst_sfd__h278481 = 23'd0;
     endcase
   end
-  always@(guard__h287224 or
-	  sfdin__h295446 or out_sfd__h295972 or _theResult___sfd__h295969)
+  always@(guard__h287424 or
+	  sfdin__h295646 or out_sfd__h296172 or _theResult___sfd__h296169)
   begin
-    case (guard__h287224)
+    case (guard__h287424)
       2'b0, 2'b01:
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q164 =
-	      sfdin__h295446[56:34];
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q164 =
+	      sfdin__h295646[56:34];
       2'b10:
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q164 =
-	      out_sfd__h295972;
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q164 =
+	      out_sfd__h296172;
       2'b11:
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q164 =
-	      _theResult___sfd__h295969;
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q164 =
+	      _theResult___sfd__h296169;
     endcase
   end
-  always@(guard__h287224 or sfdin__h295446 or _theResult___sfd__h295969)
+  always@(guard__h287424 or sfdin__h295646 or _theResult___sfd__h296169)
   begin
-    case (guard__h287224)
+    case (guard__h287424)
       2'b0:
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q165 =
-	      sfdin__h295446[56:34];
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q165 =
+	      sfdin__h295646[56:34];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q165 =
-	      _theResult___sfd__h295969;
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q165 =
+	      _theResult___sfd__h296169;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q164 or
-	  CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q165 or
-	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6622 or
-	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6624 or
-	  sfdin__h295446)
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q164 or
+	  CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q165 or
+	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6624 or
+	  IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6626 or
+	  sfdin__h295646)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_sfd__h296047 =
-	      CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q164;
+	  _theResult___fst_sfd__h296247 =
+	      CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q164;
       3'd1:
-	  _theResult___fst_sfd__h296047 =
-	      CASE_guard87224_0b0_sfdin95446_BITS_56_TO_34_0_ETC__q165;
+	  _theResult___fst_sfd__h296247 =
+	      CASE_guard87424_0b0_sfdin95646_BITS_56_TO_34_0_ETC__q165;
       3'd2:
-	  _theResult___fst_sfd__h296047 =
-	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6622;
+	  _theResult___fst_sfd__h296247 =
+	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6624;
       3'd3:
-	  _theResult___fst_sfd__h296047 =
-	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__410__ETC___d6624;
-      3'd4: _theResult___fst_sfd__h296047 = sfdin__h295446[56:34];
-      default: _theResult___fst_sfd__h296047 = 23'd0;
+	  _theResult___fst_sfd__h296247 =
+	      IF_IF_IF_IF_3970_MINUS_SEXT_resWire_wget__412__ETC___d6626;
+      3'd4: _theResult___fst_sfd__h296247 = sfdin__h295646[56:34];
+      default: _theResult___fst_sfd__h296247 = 23'd0;
     endcase
   end
-  always@(guard__h296060 or
-	  _theResult___snd__h304083 or
-	  out_sfd__h304608 or _theResult___sfd__h304605)
+  always@(guard__h296260 or
+	  _theResult___snd__h304283 or
+	  out_sfd__h304808 or _theResult___sfd__h304805)
   begin
-    case (guard__h296060)
+    case (guard__h296260)
       2'b0, 2'b01:
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q166 =
-	      _theResult___snd__h304083[56:34];
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q166 =
+	      _theResult___snd__h304283[56:34];
       2'b10:
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q166 =
-	      out_sfd__h304608;
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q166 =
+	      out_sfd__h304808;
       2'b11:
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q166 =
-	      _theResult___sfd__h304605;
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q166 =
+	      _theResult___sfd__h304805;
     endcase
   end
-  always@(guard__h296060 or
-	  _theResult___snd__h304083 or _theResult___sfd__h304605)
+  always@(guard__h296260 or
+	  _theResult___snd__h304283 or _theResult___sfd__h304805)
   begin
-    case (guard__h296060)
+    case (guard__h296260)
       2'b0:
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q167 =
-	      _theResult___snd__h304083[56:34];
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q167 =
+	      _theResult___snd__h304283[56:34];
       2'b01, 2'b10, 2'b11:
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q167 =
-	      _theResult___sfd__h304605;
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q167 =
+	      _theResult___sfd__h304805;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q166 or
-	  CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q167 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6641 or
-	  IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6643 or
-	  _theResult___snd__h304083)
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q166 or
+	  CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q167 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6643 or
+	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6645 or
+	  _theResult___snd__h304283)
   begin
     case (rmdFifo$D_OUT)
       3'd0:
-	  _theResult___fst_sfd__h304683 =
-	      CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q166;
+	  _theResult___fst_sfd__h304883 =
+	      CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q166;
       3'd1:
-	  _theResult___fst_sfd__h304683 =
-	      CASE_guard96060_0b0_theResult___snd04083_BITS__ETC__q167;
+	  _theResult___fst_sfd__h304883 =
+	      CASE_guard96260_0b0_theResult___snd04283_BITS__ETC__q167;
       3'd2:
-	  _theResult___fst_sfd__h304683 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6641;
+	  _theResult___fst_sfd__h304883 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6643;
       3'd3:
-	  _theResult___fst_sfd__h304683 =
-	      IF_IF_IF_resWire_wget__410_BITS_67_TO_57_416_E_ETC___d6643;
-      3'd4: _theResult___fst_sfd__h304683 = _theResult___snd__h304083[56:34];
-      default: _theResult___fst_sfd__h304683 = 23'd0;
+	  _theResult___fst_sfd__h304883 =
+	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6645;
+      3'd4: _theResult___fst_sfd__h304883 = _theResult___snd__h304283[56:34];
+      default: _theResult___fst_sfd__h304883 = 23'd0;
     endcase
   end
   always@(fpu_div64_fState_S4$D_OUT)
@@ -12640,6 +12653,9 @@ module mkFPU(CLK,
       begin
         crg_done <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	crg_done_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
+	oFifo_rv <= `BSV_ASSIGNMENT_DELAY
+	    { 1'd0,
+	      70'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	rg_busy <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	rg_busy_1 <= `BSV_ASSIGNMENT_DELAY 1'd0;
       end
@@ -12648,6 +12664,7 @@ module mkFPU(CLK,
         if (crg_done$EN) crg_done <= `BSV_ASSIGNMENT_DELAY crg_done$D_IN;
 	if (crg_done_1$EN)
 	  crg_done_1 <= `BSV_ASSIGNMENT_DELAY crg_done_1$D_IN;
+	if (oFifo_rv$EN) oFifo_rv <= `BSV_ASSIGNMENT_DELAY oFifo_rv$D_IN;
 	if (rg_busy$EN) rg_busy <= `BSV_ASSIGNMENT_DELAY rg_busy$D_IN;
 	if (rg_busy_1$EN) rg_busy_1 <= `BSV_ASSIGNMENT_DELAY rg_busy_1$D_IN;
       end
@@ -12669,6 +12686,7 @@ module mkFPU(CLK,
   begin
     crg_done = 1'h0;
     crg_done_1 = 1'h0;
+    oFifo_rv = 71'h2AAAAAAAAAAAAAAAAA;
     rg_b = 116'hAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;
     rg_busy = 1'h0;
     rg_busy_1 = 1'h0;
@@ -12692,13 +12710,13 @@ module mkFPU(CLK,
     #0;
     if (RST_N != `BSV_RESET_VALUE)
       if (fpu_div64_fResult_S5$EMPTY_N && fpu_madd_fResult_S9$EMPTY_N)
-	$display("Error: \"../src_Core/CPU/FPU.bsv\", line 109, column 29: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_getResDiv] and\n  [RL_getResMAdd] ) fired in the same clock cycle.\n");
+	$display("Error: \"../src_Core/CPU/FPU.bsv\", line 110, column 29: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_getResDiv] and\n  [RL_getResMAdd] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (fpu_div64_fResult_S5$EMPTY_N && fpu_sqr64_fResult_S5$EMPTY_N)
-	$display("Error: \"../src_Core/CPU/FPU.bsv\", line 109, column 29: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_getResDiv] and [RL_getResSqr]\n  ) fired in the same clock cycle.\n");
+	$display("Error: \"../src_Core/CPU/FPU.bsv\", line 110, column 29: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_getResDiv] and [RL_getResSqr]\n  ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (fpu_sqr64_fResult_S5$EMPTY_N && fpu_madd_fResult_S9$EMPTY_N)
-	$display("Error: \"../src_Core/CPU/FPU.bsv\", line 109, column 40: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_getResSqr] and\n  [RL_getResMAdd] ) fired in the same clock cycle.\n");
+	$display("Error: \"../src_Core/CPU/FPU.bsv\", line 110, column 40: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_getResSqr] and\n  [RL_getResMAdd] ) fired in the same clock cycle.\n");
   end
   // synopsys translate_on
 endmodule  // mkFPU
