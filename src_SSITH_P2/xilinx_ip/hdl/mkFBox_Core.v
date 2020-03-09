@@ -423,10 +423,10 @@ module mkFBox_Core(CLK,
 	       CASE_guard4821_0b0_x4836_BITS_10_TO_0_0b1_x483_ETC__q108,
 	       CASE_guard60150_0b0_theResult___fst_exp68111_0_ETC__q157,
 	       CASE_guard60150_0b0_theResult___fst_exp68111_0_ETC__q158,
-	       CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q159,
-	       CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q160,
-	       CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q161,
-	       CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q162,
+	       CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q161,
+	       CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q162,
+	       CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q159,
+	       CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q160,
 	       CASE_guard9455_0b0_0_0b1_0_0b10_out_exp0074_0b_ETC__q84,
 	       CASE_guard9455_0b0_0_0b1_theResult___exp0071_0_ETC__q85,
 	       CASE_guard9814_0b0_0_0b1_0_0b10_out_exp0433_0b_ETC__q79,
@@ -445,16 +445,16 @@ module mkFBox_Core(CLK,
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4951;
   reg [7 : 0] CASE_guard10454_0b0_theResult___fst_exp18551_0_ETC__q125,
 	      CASE_guard10454_0b0_theResult___fst_exp18551_0_ETC__q126,
-	      CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q127,
-	      CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q128,
-	      CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q16,
-	      CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q15,
+	      CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q129,
+	      CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q130,
+	      CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q12,
+	      CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q11,
 	      CASE_guard2758_0b0_x2773_BITS_7_TO_0_0b1_theRe_ETC__q17,
 	      CASE_guard2758_0b0_x2773_BITS_7_TO_0_0b1_x2773_ETC__q18,
 	      CASE_guard2795_0b0_0_0b1_0_0b10_out_exp3211_0b_ETC__q27,
 	      CASE_guard2795_0b0_0_0b1_theResult___exp3208_0_ETC__q28,
-	      CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q129,
-	      CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q130,
+	      CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q127,
+	      CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q128,
 	      CASE_guard3321_0b0_x3336_BITS_7_TO_0_0b1_theRe_ETC__q33,
 	      CASE_guard3321_0b0_x3336_BITS_7_TO_0_0b1_x3336_ETC__q34,
 	      CASE_guard37042_0b0_theResult___fst_exp45119_0_ETC__q131,
@@ -463,8 +463,8 @@ module mkFBox_Core(CLK,
 	      CASE_guard5283_0b0_0_0b1_theResult___exp5696_0_ETC__q56,
 	      CASE_guard5809_0b0_x5824_BITS_7_TO_0_0b1_theRe_ETC__q58,
 	      CASE_guard5809_0b0_x5824_BITS_7_TO_0_0b1_x5824_ETC__q59,
-	      CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q46,
-	      CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q45,
+	      CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q42,
+	      CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q41,
 	      CASE_guard9694_0b0_x9709_BITS_7_TO_0_0b1_theRe_ETC__q47,
 	      CASE_guard9694_0b0_x9709_BITS_7_TO_0_0b1_x9709_ETC__q48,
 	      CASE_requestR_BITS_194_TO_192_0x1_254_0x2_IF_r_ETC__q3,
@@ -484,8 +484,8 @@ module mkFBox_Core(CLK,
   reg CASE_guard0544_0b0_requestR_BIT_159_0b1_reques_ETC__q72,
       CASE_guard10454_0b0_requestR_BIT_191_0b1_reque_ETC__q141,
       CASE_guard19189_0b0_requestR_BIT_191_0b1_reque_ETC__q143,
-      CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q11,
-      CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q13,
+      CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q13,
+      CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q15,
       CASE_guard28178_0b0_requestR_BIT_191_0b1_reque_ETC__q145,
       CASE_guard3135_0b0_requestR_BIT_191_0b1_reques_ETC__q95,
       CASE_guard37042_0b0_requestR_BIT_191_0b1_reque_ETC__q147,
@@ -493,20 +493,20 @@ module mkFBox_Core(CLK,
       CASE_guard60150_0b0_requestR_BITS_191_TO_160_E_ETC__q163,
       CASE_guard69458_0b0_requestR_BITS_191_TO_160_E_ETC__q165,
       CASE_guard78525_0b0_requestR_BITS_191_TO_160_E_ETC__q167,
-      CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q41,
-      CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q43,
+      CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q43,
+      CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q45,
       CASE_guard9814_0b0_requestR_BIT_159_0b1_reques_ETC__q70,
-      CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q12,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q142,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q144,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q146,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q148,
+      CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q16,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q164,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q166,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q168,
-      CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q42,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44,
+      CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q46,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q71,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q73,
       CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q96,
@@ -2760,15 +2760,15 @@ module mkFBox_Core(CLK,
 	       ((requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 		 requestR[194:192] != 3'h3 &&
 		 requestR[194:192] != 3'h4) ?
-		  CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q41 :
-		  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q42) :
+		  CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q43 :
+		  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44) :
 	       ((x__h29709[7:0] == 8'd255) ?
 		  requestR[159] :
 		  ((requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 		    requestR[194:192] != 3'h3 &&
 		    requestR[194:192] != 3'h4) ?
-		     CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q43 :
-		     CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44)) ;
+		     CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q45 :
+		     CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q46)) ;
   assign IF_32_MINUS_0_CONCAT_IF_IF_requestR_3_BIT_159__ETC___d1481 =
 	     _32_MINUS_0_CONCAT_IF_IF_requestR_3_BIT_159_6_T_ETC___d1279 ?
 	       guard__h29167 != 2'b0 :
@@ -2822,15 +2822,15 @@ module mkFBox_Core(CLK,
 	       ((requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 		 requestR[194:192] != 3'h3 &&
 		 requestR[194:192] != 3'h4) ?
-		  CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q11 :
-		  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q12) :
+		  CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q13 :
+		  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14) :
 	       ((x__h12773[7:0] == 8'd255) ?
 		  requestR[191] :
 		  ((requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 		    requestR[194:192] != 3'h3 &&
 		    requestR[194:192] != 3'h4) ?
-		     CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q13 :
-		     CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14)) ;
+		     CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q15 :
+		     CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q16)) ;
   assign IF_64_MINUS_0_CONCAT_IF_IF_requestR_3_BIT_191__ETC___d656 =
 	     _64_MINUS_0_CONCAT_IF_IF_requestR_3_BIT_191_47__ETC___d413 ?
 	       guard__h12228 != 2'b0 :
@@ -6858,13 +6858,13 @@ module mkFBox_Core(CLK,
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 	      requestR[194:192] != 3'h3 &&
 	      requestR[194:192] != 3'h4) ?
-	       CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q16 :
+	       CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q12 :
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d499 ;
   assign _theResult___fst_exp__h127787 =
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 	      requestR[194:192] != 3'h3 &&
 	      requestR[194:192] != 3'h4) ?
-	       CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q128 :
+	       CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q130 :
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 ;
   assign _theResult___fst_exp__h127790 =
 	     (_theResult___fst_exp__h127237 == 8'd255) ?
@@ -6956,7 +6956,7 @@ module mkFBox_Core(CLK,
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 	      requestR[194:192] != 3'h3 &&
 	      requestR[194:192] != 3'h4) ?
-	       CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q130 :
+	       CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q128 :
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4049 ;
   assign _theResult___fst_exp__h137031 =
 	     (_theResult___fst_exp__h136404 == 8'd255) ?
@@ -7108,7 +7108,7 @@ module mkFBox_Core(CLK,
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 	      requestR[194:192] != 3'h3 &&
 	      requestR[194:192] != 3'h4) ?
-	       CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q160 :
+	       CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q162 :
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 ;
   assign _theResult___fst_exp__h178514 =
 	     (_theResult___fst_exp__h177684 == 11'd2047) ?
@@ -7137,7 +7137,7 @@ module mkFBox_Core(CLK,
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 	      requestR[194:192] != 3'h3 &&
 	      requestR[194:192] != 3'h4) ?
-	       CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q162 :
+	       CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q160 :
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4951 ;
   assign _theResult___fst_exp__h187296 =
 	     (_theResult___fst_exp__h186515 == 11'd2047) ?
@@ -7175,7 +7175,7 @@ module mkFBox_Core(CLK,
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
 	      requestR[194:192] != 3'h3 &&
 	      requestR[194:192] != 3'h4) ?
-	       CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q46 :
+	       CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q42 :
 	       IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d1356 ;
   assign _theResult___fst_exp__h30230 =
 	     (requestR[194:192] != 3'h1 && requestR[194:192] != 3'h2 &&
@@ -9449,68 +9449,12 @@ module mkFBox_Core(CLK,
 		   3'd0;
     endcase
   end
-  always@(guard__h12228 or requestR)
-  begin
-    case (guard__h12228)
-      2'b0, 2'b01, 2'b10:
-	  CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q11 =
-	      requestR[191];
-      2'd3:
-	  CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q11 =
-	      guard__h12228 == 2'b11 && requestR[191];
-    endcase
-  end
-  always@(requestR or guard__h12228)
-  begin
-    case (requestR[194:192])
-      3'h2, 3'h3:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q12 =
-	      requestR[191];
-      3'h4:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q12 =
-	      (guard__h12228 == 2'b0) ?
-		requestR[191] :
-		(guard__h12228 == 2'b01 || guard__h12228 == 2'b10 ||
-		 guard__h12228 == 2'b11) &&
-		requestR[191];
-      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q12 =
-		   requestR[194:192] == 3'h1 && requestR[191];
-    endcase
-  end
-  always@(guard__h12758 or requestR)
-  begin
-    case (guard__h12758)
-      2'b0, 2'b01, 2'b10:
-	  CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q13 =
-	      requestR[191];
-      2'd3:
-	  CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q13 =
-	      guard__h12758 == 2'b11 && requestR[191];
-    endcase
-  end
-  always@(requestR or guard__h12758)
-  begin
-    case (requestR[194:192])
-      3'h2, 3'h3:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14 =
-	      requestR[191];
-      3'h4:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14 =
-	      (guard__h12758 == 2'b0) ?
-		requestR[191] :
-		(guard__h12758 == 2'b01 || guard__h12758 == 2'b10 ||
-		 guard__h12758 == 2'b11) &&
-		requestR[191];
-      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14 =
-		   requestR[194:192] == 3'h1 && requestR[191];
-    endcase
-  end
   always@(guard__h12228 or _theResult___exp__h12644)
   begin
     case (guard__h12228)
-      2'b0: CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q15 = 8'd0;
+      2'b0: CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q11 = 8'd0;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q15 =
+	  CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q11 =
 	      _theResult___exp__h12644;
     endcase
   end
@@ -9518,7 +9462,7 @@ module mkFBox_Core(CLK,
 	  IF_IF_IF_requestR_3_BIT_191_47_THEN_NEG_reques_ETC___d496 or
 	  guard__h12228 or
 	  _theResult___exp__h12644 or
-	  CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q15)
+	  CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q11)
   begin
     case (requestR[194:192])
       3'h2:
@@ -9531,7 +9475,7 @@ module mkFBox_Core(CLK,
 		_theResult___exp__h12644;
       3'h4:
 	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d499 =
-	      CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q15;
+	      CASE_guard2228_0b0_0_0b1_theResult___exp2644_0_ETC__q11;
       default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d499 =
 		   8'd0;
     endcase
@@ -9540,13 +9484,69 @@ module mkFBox_Core(CLK,
   begin
     case (guard__h12228)
       2'b0, 2'b01:
-	  CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q16 = 8'd0;
+	  CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q12 = 8'd0;
       2'b10:
-	  CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q16 =
+	  CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q12 =
 	      out_exp__h12647;
       2'b11:
-	  CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q16 =
+	  CASE_guard2228_0b0_0_0b1_0_0b10_out_exp2647_0b_ETC__q12 =
 	      _theResult___exp__h12644;
+    endcase
+  end
+  always@(guard__h12228 or requestR)
+  begin
+    case (guard__h12228)
+      2'b0, 2'b01, 2'b10:
+	  CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q13 =
+	      requestR[191];
+      2'd3:
+	  CASE_guard2228_0b0_requestR_BIT_191_0b1_reques_ETC__q13 =
+	      guard__h12228 == 2'b11 && requestR[191];
+    endcase
+  end
+  always@(requestR or guard__h12228)
+  begin
+    case (requestR[194:192])
+      3'h2, 3'h3:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14 =
+	      requestR[191];
+      3'h4:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14 =
+	      (guard__h12228 == 2'b0) ?
+		requestR[191] :
+		(guard__h12228 == 2'b01 || guard__h12228 == 2'b10 ||
+		 guard__h12228 == 2'b11) &&
+		requestR[191];
+      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q14 =
+		   requestR[194:192] == 3'h1 && requestR[191];
+    endcase
+  end
+  always@(guard__h12758 or requestR)
+  begin
+    case (guard__h12758)
+      2'b0, 2'b01, 2'b10:
+	  CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q15 =
+	      requestR[191];
+      2'd3:
+	  CASE_guard2758_0b0_requestR_BIT_191_0b1_reques_ETC__q15 =
+	      guard__h12758 == 2'b11 && requestR[191];
+    endcase
+  end
+  always@(requestR or guard__h12758)
+  begin
+    case (requestR[194:192])
+      3'h2, 3'h3:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q16 =
+	      requestR[191];
+      3'h4:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q16 =
+	      (guard__h12758 == 2'b0) ?
+		requestR[191] :
+		(guard__h12758 == 2'b01 || guard__h12758 == 2'b10 ||
+		 guard__h12758 == 2'b11) &&
+		requestR[191];
+      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q16 =
+		   requestR[194:192] == 3'h1 && requestR[191];
     endcase
   end
   always@(guard__h12758 or x__h12773 or _theResult___exp__h13197)
@@ -9915,68 +9915,12 @@ module mkFBox_Core(CLK,
 	      _theResult___sfd__h23209;
     endcase
   end
-  always@(guard__h29167 or requestR)
-  begin
-    case (guard__h29167)
-      2'b0, 2'b01, 2'b10:
-	  CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q41 =
-	      requestR[159];
-      2'd3:
-	  CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q41 =
-	      guard__h29167 == 2'b11 && requestR[159];
-    endcase
-  end
-  always@(requestR or guard__h29167)
-  begin
-    case (requestR[194:192])
-      3'h2, 3'h3:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q42 =
-	      requestR[159];
-      3'h4:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q42 =
-	      (guard__h29167 == 2'b0) ?
-		requestR[159] :
-		(guard__h29167 == 2'b01 || guard__h29167 == 2'b10 ||
-		 guard__h29167 == 2'b11) &&
-		requestR[159];
-      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q42 =
-		   requestR[194:192] == 3'h1 && requestR[159];
-    endcase
-  end
-  always@(guard__h29694 or requestR)
-  begin
-    case (guard__h29694)
-      2'b0, 2'b01, 2'b10:
-	  CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q43 =
-	      requestR[159];
-      2'd3:
-	  CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q43 =
-	      guard__h29694 == 2'b11 && requestR[159];
-    endcase
-  end
-  always@(requestR or guard__h29694)
-  begin
-    case (requestR[194:192])
-      3'h2, 3'h3:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44 =
-	      requestR[159];
-      3'h4:
-	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44 =
-	      (guard__h29694 == 2'b0) ?
-		requestR[159] :
-		(guard__h29694 == 2'b01 || guard__h29694 == 2'b10 ||
-		 guard__h29694 == 2'b11) &&
-		requestR[159];
-      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44 =
-		   requestR[194:192] == 3'h1 && requestR[159];
-    endcase
-  end
   always@(guard__h29167 or _theResult___exp__h29580)
   begin
     case (guard__h29167)
-      2'b0: CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q45 = 8'd0;
+      2'b0: CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q41 = 8'd0;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q45 =
+	  CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q41 =
 	      _theResult___exp__h29580;
     endcase
   end
@@ -9984,7 +9928,7 @@ module mkFBox_Core(CLK,
 	  IF_IF_IF_requestR_3_BIT_159_6_THEN_NEG_request_ETC___d1353 or
 	  guard__h29167 or
 	  _theResult___exp__h29580 or
-	  CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q45)
+	  CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q41)
   begin
     case (requestR[194:192])
       3'h2:
@@ -9997,7 +9941,7 @@ module mkFBox_Core(CLK,
 		_theResult___exp__h29580;
       3'h4:
 	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d1356 =
-	      CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q45;
+	      CASE_guard9167_0b0_0_0b1_theResult___exp9580_0_ETC__q41;
       default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d1356 =
 		   8'd0;
     endcase
@@ -10006,13 +9950,69 @@ module mkFBox_Core(CLK,
   begin
     case (guard__h29167)
       2'b0, 2'b01:
-	  CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q46 = 8'd0;
+	  CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q42 = 8'd0;
       2'b10:
-	  CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q46 =
+	  CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q42 =
 	      out_exp__h29583;
       2'b11:
-	  CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q46 =
+	  CASE_guard9167_0b0_0_0b1_0_0b10_out_exp9583_0b_ETC__q42 =
 	      _theResult___exp__h29580;
+    endcase
+  end
+  always@(guard__h29167 or requestR)
+  begin
+    case (guard__h29167)
+      2'b0, 2'b01, 2'b10:
+	  CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q43 =
+	      requestR[159];
+      2'd3:
+	  CASE_guard9167_0b0_requestR_BIT_159_0b1_reques_ETC__q43 =
+	      guard__h29167 == 2'b11 && requestR[159];
+    endcase
+  end
+  always@(requestR or guard__h29167)
+  begin
+    case (requestR[194:192])
+      3'h2, 3'h3:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44 =
+	      requestR[159];
+      3'h4:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44 =
+	      (guard__h29167 == 2'b0) ?
+		requestR[159] :
+		(guard__h29167 == 2'b01 || guard__h29167 == 2'b10 ||
+		 guard__h29167 == 2'b11) &&
+		requestR[159];
+      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q44 =
+		   requestR[194:192] == 3'h1 && requestR[159];
+    endcase
+  end
+  always@(guard__h29694 or requestR)
+  begin
+    case (guard__h29694)
+      2'b0, 2'b01, 2'b10:
+	  CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q45 =
+	      requestR[159];
+      2'd3:
+	  CASE_guard9694_0b0_requestR_BIT_159_0b1_reques_ETC__q45 =
+	      guard__h29694 == 2'b11 && requestR[159];
+    endcase
+  end
+  always@(requestR or guard__h29694)
+  begin
+    case (requestR[194:192])
+      3'h2, 3'h3:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q46 =
+	      requestR[159];
+      3'h4:
+	  CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q46 =
+	      (guard__h29694 == 2'b0) ?
+		requestR[159] :
+		(guard__h29694 == 2'b01 || guard__h29694 == 2'b10 ||
+		 guard__h29694 == 2'b11) &&
+		requestR[159];
+      default: CASE_requestR_BITS_194_TO_192_0x2_requestR_BIT_ETC__q46 =
+		   requestR[194:192] == 3'h1 && requestR[159];
     endcase
   end
   always@(guard__h29694 or x__h29709 or _theResult___exp__h30133)
@@ -11214,66 +11214,15 @@ module mkFBox_Core(CLK,
 	      _theResult___exp__h119077;
     endcase
   end
-  always@(guard__h119189 or
-	  _theResult___fst_exp__h127237 or _theResult___exp__h127689)
-  begin
-    case (guard__h119189)
-      2'b0:
-	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q127 =
-	      _theResult___fst_exp__h127237;
-      2'b01, 2'b10, 2'b11:
-	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q127 =
-	      _theResult___exp__h127689;
-    endcase
-  end
-  always@(requestR or
-	  _theResult___fst_exp__h127237 or
-	  IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3718 or
-	  IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3716 or
-	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q127)
-  begin
-    case (requestR[194:192])
-      3'h1:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
-	      _theResult___fst_exp__h127237;
-      3'h2:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
-	      IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3718;
-      3'h3:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
-	      IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3716;
-      3'h4:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
-	      CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q127;
-      default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
-		   8'd0;
-    endcase
-  end
-  always@(guard__h119189 or
-	  _theResult___fst_exp__h127237 or
-	  out_exp__h127692 or _theResult___exp__h127689)
-  begin
-    case (guard__h119189)
-      2'b0, 2'b01:
-	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q128 =
-	      _theResult___fst_exp__h127237;
-      2'b10:
-	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q128 =
-	      out_exp__h127692;
-      2'b11:
-	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q128 =
-	      _theResult___exp__h127689;
-    endcase
-  end
   always@(guard__h128178 or
 	  _theResult___fst_exp__h136404 or _theResult___exp__h136930)
   begin
     case (guard__h128178)
       2'b0:
-	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q129 =
+	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q127 =
 	      _theResult___fst_exp__h136404;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q129 =
+	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q127 =
 	      _theResult___exp__h136930;
     endcase
   end
@@ -11281,7 +11230,7 @@ module mkFBox_Core(CLK,
 	  _theResult___fst_exp__h136404 or
 	  IF_IF_IF_IF_3970_MINUS_SEXT_requestR_3_BITS_19_ETC___d4045 or
 	  IF_IF_IF_IF_3970_MINUS_SEXT_requestR_3_BITS_19_ETC___d4043 or
-	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q129)
+	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q127)
   begin
     case (requestR[194:192])
       3'h1:
@@ -11295,7 +11244,7 @@ module mkFBox_Core(CLK,
 	      IF_IF_IF_IF_3970_MINUS_SEXT_requestR_3_BITS_19_ETC___d4043;
       3'h4:
 	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4049 =
-	      CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q129;
+	      CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q127;
       default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4049 =
 		   8'd0;
     endcase
@@ -11306,14 +11255,65 @@ module mkFBox_Core(CLK,
   begin
     case (guard__h128178)
       2'b0, 2'b01:
-	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q130 =
+	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q128 =
 	      _theResult___fst_exp__h136404;
       2'b10:
-	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q130 =
+	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q128 =
 	      out_exp__h136933;
       2'b11:
-	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q130 =
+	  CASE_guard28178_0b0_theResult___fst_exp36404_0_ETC__q128 =
 	      _theResult___exp__h136930;
+    endcase
+  end
+  always@(guard__h119189 or
+	  _theResult___fst_exp__h127237 or _theResult___exp__h127689)
+  begin
+    case (guard__h119189)
+      2'b0:
+	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q129 =
+	      _theResult___fst_exp__h127237;
+      2'b01, 2'b10, 2'b11:
+	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q129 =
+	      _theResult___exp__h127689;
+    endcase
+  end
+  always@(requestR or
+	  _theResult___fst_exp__h127237 or
+	  IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3718 or
+	  IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3716 or
+	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q129)
+  begin
+    case (requestR[194:192])
+      3'h1:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
+	      _theResult___fst_exp__h127237;
+      3'h2:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
+	      IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3718;
+      3'h3:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
+	      IF_IF_IF_requestR_3_BITS_190_TO_180_608_EQ_0_6_ETC___d3716;
+      3'h4:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
+	      CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q129;
+      default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d3722 =
+		   8'd0;
+    endcase
+  end
+  always@(guard__h119189 or
+	  _theResult___fst_exp__h127237 or
+	  out_exp__h127692 or _theResult___exp__h127689)
+  begin
+    case (guard__h119189)
+      2'b0, 2'b01:
+	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q130 =
+	      _theResult___fst_exp__h127237;
+      2'b10:
+	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q130 =
+	      out_exp__h127692;
+      2'b11:
+	  CASE_guard19189_0b0_theResult___fst_exp27237_0_ETC__q130 =
+	      _theResult___exp__h127689;
     endcase
   end
   always@(guard__h137042 or
@@ -11730,66 +11730,15 @@ module mkFBox_Core(CLK,
 	      _theResult___exp__h168766;
     endcase
   end
-  always@(guard__h169458 or
-	  _theResult___fst_exp__h177684 or _theResult___exp__h178413)
-  begin
-    case (guard__h169458)
-      2'b0:
-	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q159 =
-	      _theResult___fst_exp__h177684;
-      2'b01, 2'b10, 2'b11:
-	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q159 =
-	      _theResult___exp__h178413;
-    endcase
-  end
-  always@(requestR or
-	  _theResult___fst_exp__h177684 or
-	  IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4878 or
-	  IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4876 or
-	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q159)
-  begin
-    case (requestR[194:192])
-      3'h1:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
-	      _theResult___fst_exp__h177684;
-      3'h2:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
-	      IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4878;
-      3'h3:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
-	      IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4876;
-      3'h4:
-	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
-	      CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q159;
-      default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
-		   11'd0;
-    endcase
-  end
-  always@(guard__h169458 or
-	  _theResult___fst_exp__h177684 or
-	  out_exp__h178416 or _theResult___exp__h178413)
-  begin
-    case (guard__h169458)
-      2'b0, 2'b01:
-	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q160 =
-	      _theResult___fst_exp__h177684;
-      2'b10:
-	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q160 =
-	      out_exp__h178416;
-      2'b11:
-	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q160 =
-	      _theResult___exp__h178413;
-    endcase
-  end
   always@(guard__h178525 or
 	  _theResult___fst_exp__h186515 or _theResult___exp__h187195)
   begin
     case (guard__h178525)
       2'b0:
-	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q161 =
+	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q159 =
 	      _theResult___fst_exp__h186515;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q161 =
+	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q159 =
 	      _theResult___exp__h187195;
     endcase
   end
@@ -11797,7 +11746,7 @@ module mkFBox_Core(CLK,
 	  _theResult___fst_exp__h186515 or
 	  IF_IF_IF_IF_requestR_3_BITS_191_TO_160_4_EQ_0x_ETC___d4947 or
 	  IF_IF_IF_IF_requestR_3_BITS_191_TO_160_4_EQ_0x_ETC___d4945 or
-	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q161)
+	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q159)
   begin
     case (requestR[194:192])
       3'h1:
@@ -11811,7 +11760,7 @@ module mkFBox_Core(CLK,
 	      IF_IF_IF_IF_requestR_3_BITS_191_TO_160_4_EQ_0x_ETC___d4945;
       3'h4:
 	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4951 =
-	      CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q161;
+	      CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q159;
       default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4951 =
 		   11'd0;
     endcase
@@ -11822,14 +11771,65 @@ module mkFBox_Core(CLK,
   begin
     case (guard__h178525)
       2'b0, 2'b01:
-	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q162 =
+	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q160 =
 	      _theResult___fst_exp__h186515;
       2'b10:
-	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q162 =
+	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q160 =
 	      out_exp__h187198;
       2'b11:
-	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q162 =
+	  CASE_guard78525_0b0_theResult___fst_exp86515_0_ETC__q160 =
 	      _theResult___exp__h187195;
+    endcase
+  end
+  always@(guard__h169458 or
+	  _theResult___fst_exp__h177684 or _theResult___exp__h178413)
+  begin
+    case (guard__h169458)
+      2'b0:
+	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q161 =
+	      _theResult___fst_exp__h177684;
+      2'b01, 2'b10, 2'b11:
+	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q161 =
+	      _theResult___exp__h178413;
+    endcase
+  end
+  always@(requestR or
+	  _theResult___fst_exp__h177684 or
+	  IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4878 or
+	  IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4876 or
+	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q161)
+  begin
+    case (requestR[194:192])
+      3'h1:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
+	      _theResult___fst_exp__h177684;
+      3'h2:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
+	      IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4878;
+      3'h3:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
+	      IF_IF_IF_IF_3074_MINUS_SEXT_IF_requestR_3_BITS_ETC___d4876;
+      3'h4:
+	  IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
+	      CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q161;
+      default: IF_requestR_3_BITS_194_TO_192_0_EQ_0x4_5_THEN__ETC___d4882 =
+		   11'd0;
+    endcase
+  end
+  always@(guard__h169458 or
+	  _theResult___fst_exp__h177684 or
+	  out_exp__h178416 or _theResult___exp__h178413)
+  begin
+    case (guard__h169458)
+      2'b0, 2'b01:
+	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q162 =
+	      _theResult___fst_exp__h177684;
+      2'b10:
+	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q162 =
+	      out_exp__h178416;
+      2'b11:
+	  CASE_guard69458_0b0_theResult___fst_exp77684_0_ETC__q162 =
+	      _theResult___exp__h178413;
     endcase
   end
   always@(guard__h160150 or requestR)

@@ -3148,7 +3148,7 @@ module mkMMU_ICache(CLK,
   assign cache_f_reset_rsps$D_IN = cache_f_reset_reqs$D_OUT ;
   assign cache_f_reset_rsps$ENQ = MUX_cache_rg_state$write_1__SEL_18 ;
   assign cache_f_reset_rsps$DEQ =
-	     EN_server_reset_response_get || EN_server_flush_response_get ;
+	     EN_server_flush_response_get || EN_server_reset_response_get ;
   assign cache_f_reset_rsps$CLR = 1'b0 ;
 
   // submodule cache_ram_state_and_ctag_cset

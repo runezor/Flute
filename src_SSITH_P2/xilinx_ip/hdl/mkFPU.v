@@ -553,8 +553,8 @@ module mkFPU(CLK,
 	       CASE_fpu_div64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q15,
 	       CASE_fpu_madd_fState_S8D_OUT_BITS_2_TO_1_0b0__ETC__q31,
 	       CASE_fpu_madd_fState_S8D_OUT_BITS_2_TO_1_0b0__ETC__q32,
-	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q18,
-	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q19,
+	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21,
+	       CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q22,
 	       CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q104,
 	       CASE_guard03379_0b0_theResult___fst_exp11607_0_ETC__q105,
 	       CASE_guard12418_0b0_theResult___fst_exp20408_0_ETC__q106,
@@ -589,10 +589,10 @@ module mkFPU(CLK,
 	       _theResult___fst_exp__h260095,
 	       _theResult___fst_exp__h43553,
 	       _theResult___fst_exp__h95987;
-  reg [7 : 0] CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q152,
-	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q153,
-	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q154,
-	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q155,
+  reg [7 : 0] CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154,
+	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155,
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152,
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153,
 	      CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q156,
 	      CASE_guard87424_0b0_theResult___fst_exp95652_0_ETC__q157,
 	      CASE_guard96260_0b0_theResult___fst_exp04337_0_ETC__q158,
@@ -743,7 +743,7 @@ module mkFPU(CLK,
 		IF_fpu_sqr64_fState_S3_first__375_BIT_58_384_A_ETC___d1678,
 		IF_iFifo_first__087_BITS_102_TO_95_625_EQ_255__ETC___d5327,
 		IF_iFifo_first__087_BITS_37_TO_30_850_EQ_255_8_ETC___d4552;
-  wire [58 : 0] IF_0_CONCAT_IF_fpu_sqr64_fState_S3_first__375__ETC__q21,
+  wire [58 : 0] IF_0_CONCAT_IF_fpu_sqr64_fState_S3_first__375__ETC__q19,
 		_theResult___snd__h94767,
 		_theResult___snd__h94782,
 		_theResult___snd__h94784,
@@ -1235,7 +1235,7 @@ module mkFPU(CLK,
 		fpu_madd_fState_S4D_OUT_BITS_128_TO_118_MINUS_ETC__q27,
 		fpu_madd_fState_S4D_OUT_BITS_64_TO_54_MINUS_1023__q26,
 		fpu_sqr64_fOperand_S0D_OUT_BITS_65_TO_55_MINU_ETC__q16,
-		fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q20,
+		fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q18,
 		out_exp__h142544,
 		out_exp__h164101,
 		out_exp__h173691,
@@ -1338,7 +1338,7 @@ module mkFPU(CLK,
 	       IF_sfdin2327_BIT_5_THEN_2_ELSE_0__q13,
 	       IF_sfdin30943_BIT_53_THEN_2_ELSE_0__q25,
 	       IF_sfdin41369_BIT_4_THEN_2_ELSE_0__q30,
-	       IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q22,
+	       IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q20,
 	       IF_sfdin50540_BIT_4_THEN_2_ELSE_0__q65,
 	       IF_sfdin72963_BIT_4_THEN_2_ELSE_0__q38,
 	       IF_sfdin77880_BIT_33_THEN_2_ELSE_0__q134,
@@ -2662,7 +2662,7 @@ module mkFPU(CLK,
 	     _0_CONCAT_IF_IF_fpu_madd_fState_S7_first__651_B_ETC___d2904 ?
 	       _theResult___snd__h141449 :
 	       _theResult___snd__h141444 ;
-  assign IF_0_CONCAT_IF_fpu_sqr64_fState_S3_first__375__ETC__q21 =
+  assign IF_0_CONCAT_IF_fpu_sqr64_fState_S3_first__375__ETC__q19 =
 	     _0_CONCAT_IF_fpu_sqr64_fState_S3_first__375_BIT_ETC___d1633 ?
 	       _theResult___snd__h94826 :
 	       _theResult___snd__h94821 ;
@@ -4774,8 +4774,8 @@ module mkFPU(CLK,
   assign IF_fpu_sqr64_fState_S3_first__375_BITS_121_TO__ETC___d1389 =
 	     (fpu_sqr64_fState_S3$D_OUT[121:111] == 11'd0) ?
 	       12'd3074 :
-	       { fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q20[10],
-		 fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q20 } ;
+	       { fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q18[10],
+		 fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q18 } ;
   assign IF_fpu_sqr64_fState_S3_first__375_BITS_121_TO__ETC___d1632 =
 	     IF_fpu_sqr64_fState_S3_first__375_BITS_121_TO__ETC___d1389 -
 	     12'd3074 ;
@@ -5417,7 +5417,7 @@ module mkFPU(CLK,
 	     sfdin__h130943[53] ? 2'd2 : 2'd0 ;
   assign IF_sfdin41369_BIT_4_THEN_2_ELSE_0__q30 =
 	     sfdin__h141369[4] ? 2'd2 : 2'd0 ;
-  assign IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q22 =
+  assign IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q20 =
 	     sfdin__h94744[6] ? 2'd2 : 2'd0 ;
   assign IF_sfdin50540_BIT_4_THEN_2_ELSE_0__q65 =
 	     sfdin__h250540[4] ? 2'd2 : 2'd0 ;
@@ -8408,7 +8408,7 @@ module mkFPU(CLK,
 	       fpu_sqr64_fState_S3$D_OUT[58:0] :
 	       _theResult___snd__h94803 ;
   assign _theResult___snd__h94803 =
-	     { IF_0_CONCAT_IF_fpu_sqr64_fState_S3_first__375__ETC__q21[56:0],
+	     { IF_0_CONCAT_IF_fpu_sqr64_fState_S3_first__375__ETC__q19[56:0],
 	       2'd0 } ;
   assign _theResult___snd__h94821 =
 	     fpu_sqr64_fState_S3$D_OUT[58:0] <<
@@ -8441,7 +8441,7 @@ module mkFPU(CLK,
 	     { IF_sfdin2327_BIT_5_THEN_2_ELSE_0__q13[1],
 	       { sfdin__h42327[4:0], 52'd0 } != 57'd0 } ;
   assign _theResult___snd_fst__h94856 =
-	     { IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q22[1],
+	     { IF_sfdin4744_BIT_6_THEN_2_ELSE_0__q20[1],
 	       { sfdin__h94744[5:0], 52'd0 } != 58'd0 } ;
   assign _theResult___snd_fst_exp__h164182 =
 	     _3970_MINUS_0_CONCAT_IF_iFifo_first__087_BIT_15_ETC___d3190 ?
@@ -8965,7 +8965,7 @@ module mkFPU(CLK,
 	       fpu_madd_fState_S8$D_OUT[2:1] != 2'b0 } ;
   assign fpu_sqr64_fOperand_S0D_OUT_BITS_65_TO_55_MINU_ETC__q16 =
 	     fpu_sqr64_fOperand_S0$D_OUT[65:55] - 11'd1023 ;
-  assign fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q20 =
+  assign fpu_sqr64_fState_S3D_OUT_BITS_121_TO_111_MINU_ETC__q18 =
 	     fpu_sqr64_fState_S3$D_OUT[121:111] - 11'd1023 ;
   assign guardBC__h115666 =
 	     (sfdBC__h115662[105] &&
@@ -9941,13 +9941,13 @@ module mkFPU(CLK,
   begin
     case (fpu_sqr64_fState_S4$D_OUT[1:0])
       2'b0, 2'b01:
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q18 =
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21 =
 	      fpu_sqr64_fState_S4$D_OUT[64:54];
       2'b10:
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q18 =
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21 =
 	      out_exp__h95912;
       2'b11:
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q18 =
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21 =
 	      _theResult___exp__h95909;
     endcase
   end
@@ -9955,25 +9955,25 @@ module mkFPU(CLK,
   begin
     case (fpu_sqr64_fState_S4$D_OUT[1:0])
       2'b0:
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q19 =
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q22 =
 	      fpu_sqr64_fState_S4$D_OUT[64:54];
       2'b01, 2'b10, 2'b11:
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q19 =
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q22 =
 	      _theResult___exp__h95909;
     endcase
   end
   always@(fpu_sqr64_fState_S4$D_OUT or
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q18 or
-	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q19 or
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21 or
+	  CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q22 or
 	  _theResult___exp__h95909)
   begin
     case (fpu_sqr64_fState_S4$D_OUT[68:66])
       3'd0:
 	  _theResult___fst_exp__h95987 =
-	      CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q18;
+	      CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q21;
       3'd1:
 	  _theResult___fst_exp__h95987 =
-	      CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q19;
+	      CASE_fpu_sqr64_fState_S4D_OUT_BITS_1_TO_0_0b0_ETC__q22;
       3'd2:
 	  _theResult___fst_exp__h95987 =
 	      (fpu_sqr64_fState_S4$D_OUT[1:0] == 2'b0 ||
@@ -10917,6 +10917,16 @@ module mkFPU(CLK,
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
     endcase
   end
+  always@(iFifo$D_OUT)
+  begin
+    case (iFifo$D_OUT[6:4])
+      3'd0, 3'd1, 3'd2, 3'd3:
+	  IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4582 =
+	      !iFifo$D_OUT[38];
+      default: IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4582 =
+		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
+    endcase
+  end
   always@(guard__h242318 or iFifo$D_OUT)
   begin
     case (guard__h242318)
@@ -10980,16 +10990,6 @@ module mkFPU(CLK,
 	  CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92 =
 	      !iFifo$D_OUT[38];
       default: CASE_iFifoD_OUT_BITS_6_TO_4_0_CASE_guard51357_ETC__q92 =
-		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
-    endcase
-  end
-  always@(iFifo$D_OUT)
-  begin
-    case (iFifo$D_OUT[6:4])
-      3'd0, 3'd1, 3'd2, 3'd3:
-	  IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4582 =
-	      !iFifo$D_OUT[38];
-      default: IF_iFifo_first__087_BITS_6_TO_4_118_EQ_0_191_O_ETC___d4582 =
 		   iFifo$D_OUT[6:4] != 3'd4 || !iFifo$D_OUT[38];
     endcase
   end
@@ -11972,71 +11972,19 @@ module mkFPU(CLK,
 		   rmdFifo$D_OUT != 3'd4 || !resWire$wget[68];
     endcase
   end
-  always@(guard__h269787 or
-	  _theResult___fst_exp__h277886 or
-	  out_exp__h278405 or _theResult___exp__h278402)
-  begin
-    case (guard__h269787)
-      2'b0, 2'b01:
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q152 =
-	      _theResult___fst_exp__h277886;
-      2'b10:
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q152 =
-	      out_exp__h278405;
-      2'b11:
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q152 =
-	      _theResult___exp__h278402;
-    endcase
-  end
-  always@(guard__h269787 or
-	  _theResult___fst_exp__h277886 or _theResult___exp__h278402)
-  begin
-    case (guard__h269787)
-      2'b0:
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q153 =
-	      _theResult___fst_exp__h277886;
-      2'b01, 2'b10, 2'b11:
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q153 =
-	      _theResult___exp__h278402;
-    endcase
-  end
-  always@(rmdFifo$D_OUT or
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q152 or
-	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q153 or
-	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450 or
-	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452 or
-	  _theResult___fst_exp__h277886)
-  begin
-    case (rmdFifo$D_OUT)
-      3'd0:
-	  _theResult___fst_exp__h278480 =
-	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q152;
-      3'd1:
-	  _theResult___fst_exp__h278480 =
-	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q153;
-      3'd2:
-	  _theResult___fst_exp__h278480 =
-	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450;
-      3'd3:
-	  _theResult___fst_exp__h278480 =
-	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452;
-      3'd4: _theResult___fst_exp__h278480 = _theResult___fst_exp__h277886;
-      default: _theResult___fst_exp__h278480 = 8'd0;
-    endcase
-  end
   always@(guard__h278494 or
 	  _theResult___fst_exp__h286542 or
 	  out_exp__h286987 or _theResult___exp__h286984)
   begin
     case (guard__h278494)
       2'b0, 2'b01:
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q154 =
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 =
 	      _theResult___fst_exp__h286542;
       2'b10:
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q154 =
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 =
 	      out_exp__h286987;
       2'b11:
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q154 =
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 =
 	      _theResult___exp__h286984;
     endcase
   end
@@ -12045,16 +11993,16 @@ module mkFPU(CLK,
   begin
     case (guard__h278494)
       2'b0:
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q155 =
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153 =
 	      _theResult___fst_exp__h286542;
       2'b01, 2'b10, 2'b11:
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q155 =
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153 =
 	      _theResult___exp__h286984;
     endcase
   end
   always@(rmdFifo$D_OUT or
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q154 or
-	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q155 or
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152 or
+	  CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153 or
 	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6481 or
 	  IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6483 or
 	  _theResult___fst_exp__h286542)
@@ -12062,10 +12010,10 @@ module mkFPU(CLK,
     case (rmdFifo$D_OUT)
       3'd0:
 	  _theResult___fst_exp__h287062 =
-	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q154;
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q152;
       3'd1:
 	  _theResult___fst_exp__h287062 =
-	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q155;
+	      CASE_guard78494_0b0_theResult___fst_exp86542_0_ETC__q153;
       3'd2:
 	  _theResult___fst_exp__h287062 =
 	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6481;
@@ -12074,6 +12022,58 @@ module mkFPU(CLK,
 	      IF_IF_IF_resWire_wget__412_BITS_67_TO_57_418_E_ETC___d6483;
       3'd4: _theResult___fst_exp__h287062 = _theResult___fst_exp__h286542;
       default: _theResult___fst_exp__h287062 = 8'd0;
+    endcase
+  end
+  always@(guard__h269787 or
+	  _theResult___fst_exp__h277886 or
+	  out_exp__h278405 or _theResult___exp__h278402)
+  begin
+    case (guard__h269787)
+      2'b0, 2'b01:
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 =
+	      _theResult___fst_exp__h277886;
+      2'b10:
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 =
+	      out_exp__h278405;
+      2'b11:
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 =
+	      _theResult___exp__h278402;
+    endcase
+  end
+  always@(guard__h269787 or
+	  _theResult___fst_exp__h277886 or _theResult___exp__h278402)
+  begin
+    case (guard__h269787)
+      2'b0:
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155 =
+	      _theResult___fst_exp__h277886;
+      2'b01, 2'b10, 2'b11:
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155 =
+	      _theResult___exp__h278402;
+    endcase
+  end
+  always@(rmdFifo$D_OUT or
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154 or
+	  CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155 or
+	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450 or
+	  IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452 or
+	  _theResult___fst_exp__h277886)
+  begin
+    case (rmdFifo$D_OUT)
+      3'd0:
+	  _theResult___fst_exp__h278480 =
+	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q154;
+      3'd1:
+	  _theResult___fst_exp__h278480 =
+	      CASE_guard69787_0b0_theResult___fst_exp77886_0_ETC__q155;
+      3'd2:
+	  _theResult___fst_exp__h278480 =
+	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6450;
+      3'd3:
+	  _theResult___fst_exp__h278480 =
+	      IF_IF_IF_IF_0b0_CONCAT_NOT_resWire_wget__412_B_ETC___d6452;
+      3'd4: _theResult___fst_exp__h278480 = _theResult___fst_exp__h277886;
+      default: _theResult___fst_exp__h278480 = 8'd0;
     endcase
   end
   always@(guard__h287424 or
