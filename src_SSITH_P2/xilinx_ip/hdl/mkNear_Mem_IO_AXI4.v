@@ -477,9 +477,7 @@ module mkNear_Mem_IO_AXI4(CLK,
   // inputs to muxes for submodule ports
   wire MUX_crg_time$port1__write_1__SEL_1,
        MUX_crg_timecmp$port1__write_1__SEL_1,
-       MUX_rg_msip$write_1__SEL_1,
-       MUX_rg_state$write_1__SEL_1,
-       MUX_rg_state$write_1__SEL_2;
+       MUX_rg_msip$write_1__SEL_1;
 
   // declarations used by system tasks
   // synopsys translate_off
@@ -745,12 +743,15 @@ module mkNear_Mem_IO_AXI4(CLK,
 						     .EMPTY_N(slave_xactor_shim_wff$EMPTY_N));
 
   // rule RL_rl_reset
-  assign CAN_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
-  assign WILL_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
+  assign CAN_FIRE_RL_rl_reset =
+	     !slave_xactor_clearing && f_reset_reqs$EMPTY_N &&
+	     f_reset_rsps$FULL_N &&
+	     !rg_state ;
+  assign WILL_FIRE_RL_rl_reset = CAN_FIRE_RL_rl_reset ;
 
   // rule RL_rl_soft_reset
-  assign CAN_FIRE_RL_rl_soft_reset = MUX_rg_state$write_1__SEL_1 ;
-  assign WILL_FIRE_RL_rl_soft_reset = MUX_rg_state$write_1__SEL_1 ;
+  assign CAN_FIRE_RL_rl_soft_reset = f_reset_reqs$EMPTY_N && rg_state ;
+  assign WILL_FIRE_RL_rl_soft_reset = CAN_FIRE_RL_rl_soft_reset ;
 
   // rule RL_rl_compare
   assign CAN_FIRE_RL_rl_compare =
@@ -884,11 +885,6 @@ module mkNear_Mem_IO_AXI4(CLK,
 	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
 	     byte_addr__h4824 == 64'h0 &&
 	     !rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187 ;
-  assign MUX_rg_state$write_1__SEL_1 = f_reset_reqs$EMPTY_N && rg_state ;
-  assign MUX_rg_state$write_1__SEL_2 =
-	     !slave_xactor_clearing && f_reset_reqs$EMPTY_N &&
-	     f_reset_rsps$FULL_N &&
-	     !rg_state ;
 
   // inlined wires
   assign slave_xactor_ug_slave_u_aw_putWire$wget =
@@ -1005,11 +1001,11 @@ module mkNear_Mem_IO_AXI4(CLK,
 
   // submodule f_reset_reqs
   assign f_reset_reqs$ENQ = EN_server_reset_request_put ;
-  assign f_reset_reqs$DEQ = MUX_rg_state$write_1__SEL_2 ;
+  assign f_reset_reqs$DEQ = CAN_FIRE_RL_rl_reset ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_rsps
-  assign f_reset_rsps$ENQ = MUX_rg_state$write_1__SEL_2 ;
+  assign f_reset_rsps$ENQ = CAN_FIRE_RL_rl_reset ;
   assign f_reset_rsps$DEQ = EN_server_reset_response_get ;
   assign f_reset_rsps$CLR = 1'b0 ;
 
@@ -1017,14 +1013,14 @@ module mkNear_Mem_IO_AXI4(CLK,
   assign f_sw_interrupt_req$D_IN = slave_xactor_shim_wff$D_OUT[9] ;
   assign f_sw_interrupt_req$ENQ = MUX_rg_msip$write_1__SEL_1 ;
   assign f_sw_interrupt_req$DEQ = EN_get_sw_interrupt_req_get ;
-  assign f_sw_interrupt_req$CLR = MUX_rg_state$write_1__SEL_2 ;
+  assign f_sw_interrupt_req$CLR = CAN_FIRE_RL_rl_reset ;
 
   // submodule f_timer_interrupt_req
   assign f_timer_interrupt_req$D_IN =
 	     NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67 ;
   assign f_timer_interrupt_req$ENQ = CAN_FIRE_RL_rl_compare ;
   assign f_timer_interrupt_req$DEQ = EN_get_timer_interrupt_req_get ;
-  assign f_timer_interrupt_req$CLR = MUX_rg_state$write_1__SEL_2 ;
+  assign f_timer_interrupt_req$CLR = CAN_FIRE_RL_rl_reset ;
 
   // submodule slave_xactor_shim_arff
   assign slave_xactor_shim_arff$D_IN =

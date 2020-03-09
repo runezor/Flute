@@ -102,7 +102,7 @@ module mkCPU_Stage3 #(Bit #(4)         verbosity,
 `ifdef ISA_F
    let fbypass_base = FBypass {bypass_state: BYPASS_RD_NONE,
 			       rd:           rg_stage3.rd,
-			       rd_val:       extract_flt(rg_stage3.rd_val)
+			       rd_val:       rg_stage3.frd_val
 			       };
 `endif
 
@@ -152,18 +152,21 @@ module mkCPU_Stage3 #(Bit #(4)         verbosity,
 `ifdef ISA_F
             // Write to FPR
             if (rg_stage3.rd_in_fpr)
-               fpr_regfile.write_rd (rg_stage3.rd, extract_flt(rg_stage3.rd_val));
-            // Write to GPR in a FD system
+               fpr_regfile.write_rd (rg_stage3.rd, rg_stage3.frd_val);
+
             else
-`endif
+               // Write to GPR
+               gpr_regfile.write_rd (rg_stage3.rd, extract_cap(rg_stage3.rd_val));
+`else
             // Write to GPR in a non-FD system
             gpr_regfile.write_rd (rg_stage3.rd, extract_cap(rg_stage3.rd_val));
+`endif
 
 	    if (verbosity > 1)
 `ifdef ISA_F
                if (rg_stage3.rd_in_fpr)
                   $display ("    S3.fa_deq: write FRd 0x%0h, rd_val 0x%0h",
-                            rg_stage3.rd, rg_stage3.rd_val);
+                            rg_stage3.rd, rg_stage3.frd_val);
                else
 `endif
                   $display ("    S3.fa_deq: write GRd 0x%0h, rd_val 0x%0h",

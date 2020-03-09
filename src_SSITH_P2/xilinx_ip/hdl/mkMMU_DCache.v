@@ -574,8 +574,6 @@ module mkMMU_DCache(CLK,
 		cache_master_xactor_shim_rff_rv$port2__read,
 		cache_master_xactor_shim_rff_rv$port3__read;
   wire [71 : 0] cache_master_xactor_ug_master_u_r_putWire$wget;
-  wire [10 : 0] cache_crg_sb_to_load_delay$port0__write_1,
-		cache_crg_sb_to_load_delay$port2__read;
   wire [6 : 0] cache_master_xactor_shim_bff_rv$port0__write_1,
 	       cache_master_xactor_shim_bff_rv$port1__read,
 	       cache_master_xactor_shim_bff_rv$port2__read,
@@ -583,7 +581,6 @@ module mkMMU_DCache(CLK,
   wire [5 : 0] cache_master_xactor_ug_master_u_b_putWire$wget;
   wire cache_crg_commit$port1__read,
        cache_crg_commit$port3__read,
-       cache_crg_sb_to_load_delay$EN_port1__write,
        cache_dw_valid$whas,
        cache_master_xactor_shim_arff_rv$EN_port0__write,
        cache_master_xactor_shim_rff_rv$EN_port1__write,
@@ -602,11 +599,6 @@ module mkMMU_DCache(CLK,
   // register cache_crg_commit
   reg cache_crg_commit;
   wire cache_crg_commit$D_IN, cache_crg_commit$EN;
-
-  // register cache_crg_sb_to_load_delay
-  reg [10 : 0] cache_crg_sb_to_load_delay;
-  wire [10 : 0] cache_crg_sb_to_load_delay$D_IN;
-  wire cache_crg_sb_to_load_delay$EN;
 
   // register cache_ctr_wr_rsps_pending_inrg
   reg [3 : 0] cache_ctr_wr_rsps_pending_inrg;
@@ -872,7 +864,6 @@ module mkMMU_DCache(CLK,
        CAN_FIRE_RL_cache_rl_ptw_level_2,
        CAN_FIRE_RL_cache_rl_rereq,
        CAN_FIRE_RL_cache_rl_reset,
-       CAN_FIRE_RL_cache_rl_shift_sb_to_load_delay,
        CAN_FIRE_RL_cache_rl_start_cache_refill,
        CAN_FIRE_RL_cache_rl_start_reset,
        CAN_FIRE_RL_cache_rl_start_tlb_refill,
@@ -923,7 +914,6 @@ module mkMMU_DCache(CLK,
        WILL_FIRE_RL_cache_rl_ptw_level_2,
        WILL_FIRE_RL_cache_rl_rereq,
        WILL_FIRE_RL_cache_rl_reset,
-       WILL_FIRE_RL_cache_rl_shift_sb_to_load_delay,
        WILL_FIRE_RL_cache_rl_start_cache_refill,
        WILL_FIRE_RL_cache_rl_start_reset,
        WILL_FIRE_RL_cache_rl_start_tlb_refill,
@@ -1023,372 +1013,372 @@ module mkMMU_DCache(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [31 : 0] v__h7444;
-  reg [31 : 0] v__h7543;
-  reg [31 : 0] v__h7977;
-  reg [31 : 0] v__h37594;
-  reg [31 : 0] v__h42182;
-  reg [31 : 0] v__h47375;
-  reg [63 : 0] v__h47645;
-  reg [31 : 0] v__h6909;
-  reg [31 : 0] v__h54614;
-  reg [63 : 0] v__h54854;
-  reg [63 : 0] v__h54974;
-  reg [31 : 0] v__h56682;
-  reg [31 : 0] v__h56770;
-  reg [31 : 0] v__h56988;
-  reg [31 : 0] v__h57110;
-  reg [63 : 0] v__h57341;
-  reg [63 : 0] v__h57461;
-  reg [31 : 0] v__h60527;
-  reg [31 : 0] v__h60774;
-  reg [31 : 0] v__h60735;
-  reg [31 : 0] v__h48461;
-  reg [31 : 0] v__h48218;
-  reg [63 : 0] v__h48639;
-  reg [31 : 0] v__h48784;
-  reg [31 : 0] v__h48896;
-  reg [31 : 0] v__h48390;
-  reg [31 : 0] v__h49535;
-  reg [31 : 0] v__h49295;
-  reg [63 : 0] v__h49713;
-  reg [31 : 0] v__h49970;
-  reg [31 : 0] v__h49858;
-  reg [31 : 0] v__h49464;
-  reg [31 : 0] v__h50447;
-  reg [31 : 0] v__h50518;
-  reg [31 : 0] v__h50600;
-  reg [31 : 0] v__h50376;
-  reg [31 : 0] v__h55207;
-  reg [31 : 0] v__h56344;
-  reg [31 : 0] v__h56458;
-  reg [31 : 0] v__h56182;
-  reg [31 : 0] v__h56569;
-  reg [31 : 0] v__h57638;
-  reg [31 : 0] v__h58006;
-  reg [31 : 0] v__h60217;
-  reg [31 : 0] v__h57934;
-  reg [31 : 0] v__h61165;
-  reg [31 : 0] v__h50735;
-  reg [63 : 0] v__h50903;
-  reg [31 : 0] v__h51751;
-  reg [31 : 0] v__h51993;
-  reg [31 : 0] v__h62754;
-  reg [31 : 0] v__h6903;
-  reg [31 : 0] v__h7438;
-  reg [31 : 0] v__h7537;
-  reg [31 : 0] v__h7971;
-  reg [31 : 0] v__h37588;
-  reg [31 : 0] v__h42176;
-  reg [31 : 0] v__h47369;
-  reg [31 : 0] v__h48212;
-  reg [31 : 0] v__h48384;
-  reg [31 : 0] v__h48455;
-  reg [31 : 0] v__h48778;
-  reg [31 : 0] v__h48890;
-  reg [31 : 0] v__h49289;
-  reg [31 : 0] v__h49458;
-  reg [31 : 0] v__h49529;
-  reg [31 : 0] v__h49852;
-  reg [31 : 0] v__h49964;
-  reg [31 : 0] v__h50370;
-  reg [31 : 0] v__h50441;
-  reg [31 : 0] v__h50512;
-  reg [31 : 0] v__h50594;
-  reg [31 : 0] v__h50729;
-  reg [31 : 0] v__h51745;
-  reg [31 : 0] v__h51987;
-  reg [31 : 0] v__h54608;
-  reg [31 : 0] v__h55201;
-  reg [31 : 0] v__h56176;
-  reg [31 : 0] v__h56338;
-  reg [31 : 0] v__h56452;
-  reg [31 : 0] v__h56563;
-  reg [31 : 0] v__h56676;
-  reg [31 : 0] v__h56764;
-  reg [31 : 0] v__h56982;
-  reg [31 : 0] v__h57104;
-  reg [31 : 0] v__h57632;
-  reg [31 : 0] v__h57928;
-  reg [31 : 0] v__h58000;
-  reg [31 : 0] v__h60211;
-  reg [31 : 0] v__h60521;
-  reg [31 : 0] v__h60729;
-  reg [31 : 0] v__h60768;
-  reg [31 : 0] v__h61159;
-  reg [31 : 0] v__h62748;
+  reg [31 : 0] v__h7445;
+  reg [31 : 0] v__h7544;
+  reg [31 : 0] v__h7695;
+  reg [31 : 0] v__h37340;
+  reg [31 : 0] v__h41867;
+  reg [31 : 0] v__h47004;
+  reg [63 : 0] v__h47274;
+  reg [31 : 0] v__h6908;
+  reg [31 : 0] v__h54243;
+  reg [63 : 0] v__h54483;
+  reg [63 : 0] v__h54603;
+  reg [31 : 0] v__h56311;
+  reg [31 : 0] v__h56399;
+  reg [31 : 0] v__h56617;
+  reg [31 : 0] v__h56739;
+  reg [63 : 0] v__h56970;
+  reg [63 : 0] v__h57090;
+  reg [31 : 0] v__h60156;
+  reg [31 : 0] v__h60403;
+  reg [31 : 0] v__h60364;
+  reg [31 : 0] v__h48090;
+  reg [31 : 0] v__h47847;
+  reg [63 : 0] v__h48268;
+  reg [31 : 0] v__h48413;
+  reg [31 : 0] v__h48525;
+  reg [31 : 0] v__h48019;
+  reg [31 : 0] v__h49164;
+  reg [31 : 0] v__h48924;
+  reg [63 : 0] v__h49342;
+  reg [31 : 0] v__h49599;
+  reg [31 : 0] v__h49487;
+  reg [31 : 0] v__h49093;
+  reg [31 : 0] v__h50076;
+  reg [31 : 0] v__h50147;
+  reg [31 : 0] v__h50229;
+  reg [31 : 0] v__h50005;
+  reg [31 : 0] v__h54836;
+  reg [31 : 0] v__h55973;
+  reg [31 : 0] v__h56087;
+  reg [31 : 0] v__h55811;
+  reg [31 : 0] v__h56198;
+  reg [31 : 0] v__h57267;
+  reg [31 : 0] v__h57635;
+  reg [31 : 0] v__h59846;
+  reg [31 : 0] v__h57563;
+  reg [31 : 0] v__h60794;
+  reg [31 : 0] v__h50364;
+  reg [63 : 0] v__h50532;
+  reg [31 : 0] v__h51380;
+  reg [31 : 0] v__h51622;
+  reg [31 : 0] v__h62383;
+  reg [31 : 0] v__h6902;
+  reg [31 : 0] v__h7439;
+  reg [31 : 0] v__h7538;
+  reg [31 : 0] v__h7689;
+  reg [31 : 0] v__h37334;
+  reg [31 : 0] v__h41861;
+  reg [31 : 0] v__h46998;
+  reg [31 : 0] v__h47841;
+  reg [31 : 0] v__h48013;
+  reg [31 : 0] v__h48084;
+  reg [31 : 0] v__h48407;
+  reg [31 : 0] v__h48519;
+  reg [31 : 0] v__h48918;
+  reg [31 : 0] v__h49087;
+  reg [31 : 0] v__h49158;
+  reg [31 : 0] v__h49481;
+  reg [31 : 0] v__h49593;
+  reg [31 : 0] v__h49999;
+  reg [31 : 0] v__h50070;
+  reg [31 : 0] v__h50141;
+  reg [31 : 0] v__h50223;
+  reg [31 : 0] v__h50358;
+  reg [31 : 0] v__h51374;
+  reg [31 : 0] v__h51616;
+  reg [31 : 0] v__h54237;
+  reg [31 : 0] v__h54830;
+  reg [31 : 0] v__h55805;
+  reg [31 : 0] v__h55967;
+  reg [31 : 0] v__h56081;
+  reg [31 : 0] v__h56192;
+  reg [31 : 0] v__h56305;
+  reg [31 : 0] v__h56393;
+  reg [31 : 0] v__h56611;
+  reg [31 : 0] v__h56733;
+  reg [31 : 0] v__h57261;
+  reg [31 : 0] v__h57557;
+  reg [31 : 0] v__h57629;
+  reg [31 : 0] v__h59840;
+  reg [31 : 0] v__h60150;
+  reg [31 : 0] v__h60358;
+  reg [31 : 0] v__h60397;
+  reg [31 : 0] v__h60788;
+  reg [31 : 0] v__h62377;
   // synopsys translate_on
 
   // remaining internal signals
-  reg [127 : 0] CASE_cache_rg_addr_BITS_2_TO_0_0_result5984_4__ETC__q53,
-		CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q48,
-		CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q51,
-		IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080,
-		IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097,
-		IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106,
-		IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190,
-		IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207,
-		IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216,
-		IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678,
-		IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988,
-		IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992,
-		_theResult___fst__h11000,
-		_theResult___fst__h43926,
-		_theResult___fst__h59965,
-		b__h38802,
-		b__h42582,
-		new_word128__h38784,
-		q1__h42643,
-		q1__h58099,
-		x__h36467,
-		x__h41964,
-		x__h55526;
-  reg [63 : 0] _theResult_____2__h42793,
-	       _theResult_____2__h58139,
-	       _theResult___fst__h9736,
-	       mem_req_wr_data_wdata__h6080;
-  reg [7 : 0] fabric_2_strb__h5678, mem_req_wr_data_wstrb__h6081;
-  reg [2 : 0] _theResult___snd_snd_fst_val__h6022, size_val__h57314;
+  reg [127 : 0] CASE_cache_rg_addr_BITS_2_TO_0_0_result5613_4__ETC__q53,
+		CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q48,
+		CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q51,
+		IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073,
+		IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090,
+		IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099,
+		IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183,
+		IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200,
+		IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209,
+		IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660,
+		IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981,
+		IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985,
+		_theResult___fst__h10736,
+		_theResult___fst__h43611,
+		_theResult___fst__h59594,
+		b__h38548,
+		b__h42267,
+		new_word128__h38530,
+		q1__h42328,
+		q1__h57728,
+		x__h36213,
+		x__h41649,
+		x__h55155;
+  reg [63 : 0] _theResult_____2__h42478,
+	       _theResult_____2__h57768,
+	       _theResult___fst__h9472,
+	       mem_req_wr_data_wdata__h6079;
+  reg [7 : 0] fabric_2_strb__h5677, mem_req_wr_data_wstrb__h6080;
+  reg [2 : 0] _theResult___snd_snd_fst_val__h6021, size_val__h56943;
   reg CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17,
-      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d432,
-      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d442,
-      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d448,
-      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d325,
-      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d335,
-      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d341,
-      IF_cache_rg_width_code_87_EQ_0_88_OR_cache_rg__ETC___d370,
-      IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352,
-      IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459;
-  wire [128 : 0] IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1120,
-		 IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1229,
-		 IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1119,
-		 IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1228,
-		 IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d1251,
-		 IF_cache_rg_victim_way_522_THEN_cache_master_x_ETC___d1592,
-		 IF_cache_rg_victim_way_522_THEN_cache_ram_word_ETC___d1591,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747,
-		 x__h11052,
-		 y__h11053,
-		 y__h11068,
-		 y__h23764;
-  wire [127 : 0] IF_NOT_cache_rg_lower_word64_full_553_554_AND__ETC___d1719,
-		 IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d913,
-		 IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d754,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d758,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d762,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d766,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d770,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d774,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d778,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d782,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d786,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d790,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d794,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d798,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d802,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d806,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d810,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d814,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d834,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d838,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d842,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d846,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d850,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d854,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d858,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d862,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d874,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d878,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d882,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d886,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d894,
-		 SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d898,
-		 _theResult___fst__h55497,
-		 b__h52211,
-		 new_st_val_128__h42794,
-		 new_st_val_128__h58140,
-		 result__h11002,
-		 result__h11004,
-		 result__h36478,
-		 result__h36516,
-		 result__h36549,
-		 result__h36582,
-		 result__h36615,
-		 result__h36648,
-		 result__h36681,
-		 result__h36714,
-		 result__h36747,
-		 result__h36780,
-		 result__h36813,
-		 result__h36846,
-		 result__h36879,
-		 result__h36912,
-		 result__h36945,
-		 result__h36978,
-		 result__h37033,
-		 result__h37066,
-		 result__h37099,
-		 result__h37132,
-		 result__h37165,
-		 result__h37198,
-		 result__h37231,
-		 result__h37264,
-		 result__h37311,
-		 result__h37344,
-		 result__h37377,
-		 result__h37410,
-		 result__h55499,
-		 result__h55537,
-		 result__h55573,
-		 result__h55606,
-		 result__h55639,
-		 result__h55672,
-		 result__h55705,
-		 result__h55738,
-		 result__h55771,
-		 result__h55834,
-		 result__h55867,
-		 result__h55900,
-		 result__h55933,
-		 result__h55984,
-		 result__h56017,
-		 result__h58348,
-		 result__h59045,
-		 result__h59077,
-		 result__h59109,
-		 result__h59141,
-		 result__h59173,
-		 result__h59205,
-		 result__h59237,
-		 result__h59269,
-		 result__h59301,
-		 result__h59333,
-		 result__h59365,
-		 result__h59397,
-		 result__h59429,
-		 result__h59461,
-		 result__h59493,
-		 result__h59547,
-		 result__h59579,
-		 result__h59611,
-		 result__h59643,
-		 result__h59675,
-		 result__h59707,
-		 result__h59739,
-		 result__h59771,
-		 result__h59817,
-		 result__h59849,
-		 result__h59881,
-		 result__h59913,
-		 result__h59967,
-		 result__h59996,
-		 word128__h55392,
-		 word128__h58273,
-		 x__h58134;
+      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d429,
+      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d439,
+      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d445,
+      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d322,
+      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d332,
+      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d338,
+      IF_cache_rg_width_code_84_EQ_0_85_OR_cache_rg__ETC___d367,
+      IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349,
+      IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456;
+  wire [128 : 0] IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1113,
+		 IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1222,
+		 IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1112,
+		 IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1221,
+		 IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d1233,
+		 IF_cache_rg_victim_way_504_THEN_cache_master_x_ETC___d1574,
+		 IF_cache_rg_victim_way_504_THEN_cache_ram_word_ETC___d1573,
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740,
+		 x__h10792,
+		 y__h10793,
+		 y__h10814,
+		 y__h23510;
+  wire [127 : 0] IF_NOT_cache_rg_lower_word64_full_535_536_AND__ETC___d1701,
+		 IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d906,
+		 IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d747,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d751,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d755,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d759,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d763,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d767,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d771,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d775,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d779,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d783,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d787,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d791,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d795,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d799,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d803,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d807,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d827,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d831,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d835,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d839,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d843,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d847,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d851,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d855,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d867,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d871,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d875,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d879,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d887,
+		 SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d891,
+		 _theResult___fst__h55126,
+		 b__h51840,
+		 new_st_val_128__h42479,
+		 new_st_val_128__h57769,
+		 result__h10738,
+		 result__h10740,
+		 result__h36224,
+		 result__h36262,
+		 result__h36295,
+		 result__h36328,
+		 result__h36361,
+		 result__h36394,
+		 result__h36427,
+		 result__h36460,
+		 result__h36493,
+		 result__h36526,
+		 result__h36559,
+		 result__h36592,
+		 result__h36625,
+		 result__h36658,
+		 result__h36691,
+		 result__h36724,
+		 result__h36779,
+		 result__h36812,
+		 result__h36845,
+		 result__h36878,
+		 result__h36911,
+		 result__h36944,
+		 result__h36977,
+		 result__h37010,
+		 result__h37057,
+		 result__h37090,
+		 result__h37123,
+		 result__h37156,
+		 result__h55128,
+		 result__h55166,
+		 result__h55202,
+		 result__h55235,
+		 result__h55268,
+		 result__h55301,
+		 result__h55334,
+		 result__h55367,
+		 result__h55400,
+		 result__h55463,
+		 result__h55496,
+		 result__h55529,
+		 result__h55562,
+		 result__h55613,
+		 result__h55646,
+		 result__h57977,
+		 result__h58674,
+		 result__h58706,
+		 result__h58738,
+		 result__h58770,
+		 result__h58802,
+		 result__h58834,
+		 result__h58866,
+		 result__h58898,
+		 result__h58930,
+		 result__h58962,
+		 result__h58994,
+		 result__h59026,
+		 result__h59058,
+		 result__h59090,
+		 result__h59122,
+		 result__h59176,
+		 result__h59208,
+		 result__h59240,
+		 result__h59272,
+		 result__h59304,
+		 result__h59336,
+		 result__h59368,
+		 result__h59400,
+		 result__h59446,
+		 result__h59478,
+		 result__h59510,
+		 result__h59542,
+		 result__h59596,
+		 result__h59625,
+		 word128__h55021,
+		 word128__h57902,
+		 x__h57763;
   wire [96 : 0] cache_master_xactor_shim_arff_rvport1__read_B_ETC__q52,
 		cache_master_xactor_shim_awff_rvport1__read_B_ETC__q2;
   wire [73 : 0] cache_master_xactor_shim_wff_rvport1__read_BI_ETC__q16;
-  wire [63 : 0] IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1127,
-		IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129,
-		IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1890,
-		_theResult___fst__h9372,
-		_theResult___fst__h9443,
-		_theResult___snd_fst__h9374,
-		_theResult___snd_fst__h9445,
-		_theResult___snd_fst__h9960,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q38,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q39,
-		cline_fabric_addr__h50788,
-		lev_0_pte_pa__h49567,
-		lev_0_pte_pa_w64_fa__h49569,
-		lev_1_PTN_pa__h48491,
-		lev_1_pte_pa__h48493,
-		lev_1_pte_pa_w64_fa__h48495,
-		lev_2_pte_pa__h47428,
-		lev_2_pte_pa_w64_fa__h47430,
-		new_st_val_64__h42799,
-		new_st_val_64__h42871,
-		new_st_val_64__h44017,
-		new_st_val_64__h44021,
-		new_st_val_64__h44025,
-		new_st_val_64__h44029,
-		new_st_val_64__h44034,
-		new_st_val_64__h44040,
-		new_st_val_64__h44045,
-		new_st_val_64__h58145,
-		new_st_val_64__h58217,
-		new_st_val_64__h60058,
-		new_st_val_64__h60062,
-		new_st_val_64__h60066,
-		new_st_val_64__h60070,
-		new_st_val_64__h60075,
-		new_st_val_64__h60081,
-		new_st_val_64__h60086,
-		pa___1__h9742,
-		pa___1__h9791,
-		pa___1__h9860,
-		pte___1__h10009,
-		pte___1__h10037,
-		pte___2__h9734,
-		satp_pa__h4622,
-		value__h10054,
-		vpn_0_pa__h49566,
-		vpn_1_pa__h48492,
-		vpn_2_pa__h47427,
-		w1___1__h42838,
-		w1___1__h58184,
-		w1__h42650,
-		w1__h58106,
-		w2__h42652,
-		word1288273_BITS_127_TO_64__q72,
-		word1288273_BITS_63_TO_0__q57,
-		word64__h6002,
-		x1_avValue_pa__h9283,
-		x__h42797,
-		x__h58143;
-  wire [55 : 0] x__h48588, x__h8097, x__h9745, x__h9794, x__h9863;
+  wire [63 : 0] IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1120,
+		IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122,
+		IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1872,
+		_theResult___fst__h9090,
+		_theResult___fst__h9161,
+		_theResult___snd_fst__h9092,
+		_theResult___snd_fst__h9163,
+		_theResult___snd_fst__h9696,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q38,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q39,
+		cline_fabric_addr__h50417,
+		lev_0_pte_pa__h49196,
+		lev_0_pte_pa_w64_fa__h49198,
+		lev_1_PTN_pa__h48120,
+		lev_1_pte_pa__h48122,
+		lev_1_pte_pa_w64_fa__h48124,
+		lev_2_pte_pa__h47057,
+		lev_2_pte_pa_w64_fa__h47059,
+		new_st_val_64__h42484,
+		new_st_val_64__h42556,
+		new_st_val_64__h43702,
+		new_st_val_64__h43706,
+		new_st_val_64__h43710,
+		new_st_val_64__h43714,
+		new_st_val_64__h43719,
+		new_st_val_64__h43725,
+		new_st_val_64__h43730,
+		new_st_val_64__h57774,
+		new_st_val_64__h57846,
+		new_st_val_64__h59687,
+		new_st_val_64__h59691,
+		new_st_val_64__h59695,
+		new_st_val_64__h59699,
+		new_st_val_64__h59704,
+		new_st_val_64__h59710,
+		new_st_val_64__h59715,
+		pa___1__h9478,
+		pa___1__h9527,
+		pa___1__h9596,
+		pte___1__h9745,
+		pte___1__h9773,
+		pte___2__h9470,
+		satp_pa__h4621,
+		value__h9790,
+		vpn_0_pa__h49195,
+		vpn_1_pa__h48121,
+		vpn_2_pa__h47056,
+		w1___1__h42523,
+		w1___1__h57813,
+		w1__h42335,
+		w1__h57735,
+		w2__h42337,
+		word1287902_BITS_127_TO_64__q72,
+		word1287902_BITS_63_TO_0__q57,
+		word64__h6001,
+		x1_avValue_pa__h9001,
+		x__h42482,
+		x__h57772;
+  wire [55 : 0] x__h48217, x__h7815, x__h9481, x__h9530, x__h9599;
   wire [31 : 0] cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q11,
 		cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q5,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q34,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q35,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q36,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q37,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q34,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q35,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q36,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q37,
 		cache_rg_st_amo_val_BITS_31_TO_0__q50,
-		q12643_BITS_31_TO_0__q49,
-		q18099_BITS_31_TO_0__q84,
-		word1288273_BITS_127_TO_96__q79,
-		word1288273_BITS_31_TO_0__q56,
-		word1288273_BITS_63_TO_32__q65,
-		word1288273_BITS_95_TO_64__q71;
+		q12328_BITS_31_TO_0__q49,
+		q17728_BITS_31_TO_0__q84,
+		word1287902_BITS_127_TO_96__q79,
+		word1287902_BITS_31_TO_0__q56,
+		word1287902_BITS_63_TO_32__q64,
+		word1287902_BITS_95_TO_64__q71;
   wire [15 : 0] cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q1,
 		cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q10,
 		cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q14,
 		cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q4,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q18,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q20,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q22,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q24,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q26,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q28,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q30,
-		cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q32,
-		word1288273_BITS_111_TO_96__q78,
-		word1288273_BITS_127_TO_112__q82,
-		word1288273_BITS_15_TO_0__q55,
-		word1288273_BITS_31_TO_16__q60,
-		word1288273_BITS_47_TO_32__q64,
-		word1288273_BITS_63_TO_48__q67,
-		word1288273_BITS_79_TO_64__q70,
-		word1288273_BITS_95_TO_80__q75;
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q18,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q20,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q22,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q24,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q26,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q28,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q30,
+		cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q32,
+		word1287902_BITS_111_TO_96__q78,
+		word1287902_BITS_127_TO_112__q81,
+		word1287902_BITS_15_TO_0__q55,
+		word1287902_BITS_31_TO_16__q60,
+		word1287902_BITS_47_TO_32__q63,
+		word1287902_BITS_63_TO_48__q67,
+		word1287902_BITS_79_TO_64__q70,
+		word1287902_BITS_95_TO_80__q75;
   wire [7 : 0] cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12,
 	       cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13,
 	       cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q15,
@@ -1397,170 +1387,165 @@ module mkMMU_DCache(CLK,
 	       cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q7,
 	       cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q8,
 	       cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q9,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q19,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q21,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q23,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q25,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q27,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q29,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q31,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q33,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q40,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q41,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q42,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q43,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q44,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q45,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q46,
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q47,
-	       mem_req_wr_addr_awlen__h5986,
-	       strobe64__h6003,
-	       strobe64__h6007,
-	       strobe64__h6011,
-	       strobe64__h6015,
-	       word1288273_BITS_103_TO_96__q77,
-	       word1288273_BITS_111_TO_104__q80,
-	       word1288273_BITS_119_TO_112__q81,
-	       word1288273_BITS_127_TO_120__q83,
-	       word1288273_BITS_15_TO_8__q58,
-	       word1288273_BITS_23_TO_16__q59,
-	       word1288273_BITS_31_TO_24__q61,
-	       word1288273_BITS_39_TO_32__q63,
-	       word1288273_BITS_47_TO_40__q66,
-	       word1288273_BITS_55_TO_48__q62,
-	       word1288273_BITS_63_TO_56__q68,
-	       word1288273_BITS_71_TO_64__q69,
-	       word1288273_BITS_79_TO_72__q73,
-	       word1288273_BITS_7_TO_0__q54,
-	       word1288273_BITS_87_TO_80__q74,
-	       word1288273_BITS_95_TO_88__q76;
-  wire [5 : 0] access_exc_code__h5354,
-	       exc_code___1__h9634,
-	       shift_bits__h5701,
-	       x1_avValue_exc_code__h9284;
-  wire [4 : 0] IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d560,
-	       IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d562,
-	       IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d561,
-	       IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d564,
-	       IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d565;
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q19,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q21,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q23,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q25,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q27,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q29,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q31,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q33,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q40,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q41,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q42,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q43,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q44,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q45,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q46,
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q47,
+	       mem_req_wr_addr_awlen__h5985,
+	       strobe64__h6002,
+	       strobe64__h6006,
+	       strobe64__h6010,
+	       strobe64__h6014,
+	       word1287902_BITS_103_TO_96__q77,
+	       word1287902_BITS_111_TO_104__q80,
+	       word1287902_BITS_119_TO_112__q82,
+	       word1287902_BITS_127_TO_120__q83,
+	       word1287902_BITS_15_TO_8__q58,
+	       word1287902_BITS_23_TO_16__q59,
+	       word1287902_BITS_31_TO_24__q61,
+	       word1287902_BITS_39_TO_32__q62,
+	       word1287902_BITS_47_TO_40__q65,
+	       word1287902_BITS_55_TO_48__q66,
+	       word1287902_BITS_63_TO_56__q68,
+	       word1287902_BITS_71_TO_64__q69,
+	       word1287902_BITS_79_TO_72__q73,
+	       word1287902_BITS_7_TO_0__q54,
+	       word1287902_BITS_87_TO_80__q74,
+	       word1287902_BITS_95_TO_88__q76;
+  wire [5 : 0] access_exc_code__h5353,
+	       exc_code___1__h9370,
+	       shift_bits__h5700,
+	       x1_avValue_exc_code__h9002;
+  wire [4 : 0] IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d553,
+	       IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d555,
+	       IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d554,
+	       IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d557,
+	       IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d558;
   wire [3 : 0] cache_ctr_wr_rsps_pending_inrg_read__2_MINUS_c_ETC___d54;
-  wire [1 : 0] tmp__h50960, tmp__h50961;
-  wire IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d452,
-       IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d345,
-       IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d468,
-       IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d467,
-       IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d471,
-       IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590,
-       IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d462,
-       NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d431,
-       NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d441,
-       NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d447,
-       NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d451,
-       NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532,
-       NOT_cache_f_reset_reqs_notEmpty__26_76_AND_cac_ETC___d1600,
-       NOT_cache_f_reset_reqs_notEmpty__26_76_AND_cac_ETC___d482,
-       NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1381,
-       NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1445,
-       NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1488,
-       NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1387,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d353,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d376,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d466,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d592,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d939,
-       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d947,
-       NOT_cache_rg_op_95_EQ_0_96_97_AND_NOT_cache_rg_ETC___d217,
-       NOT_cache_rg_op_95_EQ_0_96_97_AND_NOT_cache_rg_ETC___d554,
-       NOT_cache_rg_op_95_EQ_1_54_98_AND_NOT_cache_rg_ETC___d1003,
-       NOT_cache_rg_op_95_EQ_1_54_98_AND_cache_ram_st_ETC___d957,
-       NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1001,
-       NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1234,
-       NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1279,
-       NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1286,
-       NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1293,
-       NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d513,
-       NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d533,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1008,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1241,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1248,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1256,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1263,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1271,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1277,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1291,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1298,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1305,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1313,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1326,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1331,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1335,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d242,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d473,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d518,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d579,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d585,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d607,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d615,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d923,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d931,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d937,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d943,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d952,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956,
-       NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d962,
-       NOT_cache_tlb_lookup_cache_rg_satp_71_BITS_59__ETC___d224,
-       NOT_req_width_code_EQ_0b0_981_982_AND_NOT_req__ETC___d2001,
-       _0_OR_NOT_cache_ram_state_and_ctag_cset_b_read__ETC___d464,
-       _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607,
+  wire [1 : 0] tmp__h50589, tmp__h50590;
+  wire IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d449,
+       IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d342,
+       IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d465,
+       IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d464,
+       IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d468,
+       IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583,
+       IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d459,
+       NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d428,
+       NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d438,
+       NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d444,
+       NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d448,
+       NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514,
+       NOT_cache_f_reset_reqs_notEmpty__26_73_AND_cac_ETC___d1582,
+       NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1363,
+       NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1427,
+       NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1470,
+       NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1369,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d350,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d373,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d463,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d585,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d932,
+       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d940,
+       NOT_cache_rg_op_92_EQ_0_93_94_AND_NOT_cache_rg_ETC___d214,
+       NOT_cache_rg_op_92_EQ_0_93_94_AND_NOT_cache_rg_ETC___d547,
+       NOT_cache_rg_op_92_EQ_1_51_91_AND_NOT_cache_rg_ETC___d996,
+       NOT_cache_rg_op_92_EQ_1_51_91_AND_cache_ram_st_ETC___d950,
+       NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1261,
+       NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1268,
+       NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1275,
+       NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d994,
+       NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d506,
+       NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d526,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1001,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1230,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1238,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1245,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1253,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1259,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1273,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1280,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1287,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1295,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1308,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1313,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1317,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d239,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d470,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d511,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d572,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d578,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d600,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d608,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d916,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d924,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d930,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d936,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d945,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949,
+       NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d955,
+       NOT_cache_tlb_lookup_cache_rg_satp_68_BITS_59__ETC___d221,
+       NOT_req_width_code_EQ_0b0_963_964_AND_NOT_req__ETC___d1983,
+       _0_OR_NOT_cache_ram_state_and_ctag_cset_b_read__ETC___d461,
+       _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589,
        cache_cfg_verbosity_read__12_ULE_1___d113,
        cache_f_reset_reqs_i_notEmpty__25_AND_cache_f__ETC___d146,
-       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1420,
-       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1430,
-       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1432,
-       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1471,
-       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1477,
-       cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277,
-       cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283,
-       cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1233,
-       cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1321,
-       cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d589,
-       cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d600,
-       cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d919,
-       cache_rg_amo_funct5_00_EQ_0b10_01_AND_cache_ra_ETC___d927,
-       cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361,
-       cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d512,
-       cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d549,
-       cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d594,
-       cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d604,
-       cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d750,
-       cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1004,
-       cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1237,
-       cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1243,
-       cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d602,
-       cache_rg_op_95_EQ_2_98_AND_cache_rg_amo_funct5_ETC___d378,
-       cache_rg_priv_68_EQ_0b0_85_AND_NOT_cache_tlb_l_ETC___d218,
-       cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227,
-       cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d521,
-       cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540,
-       cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d558,
-       cache_rg_priv_68_ULE_0b1___d169,
-       cache_rg_width_code_87_EQ_0b100_46_OR_cache_rg_ETC___d454,
-       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d921,
-       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d941,
-       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d960,
-       cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d209,
-       cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d515,
-       lrsc_result__h37984,
-       mem_req_wr_second_data_wuser__h5813,
-       req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2017,
-       req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2022,
-       y__h9542;
+       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1402,
+       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1412,
+       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1414,
+       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1453,
+       cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1459,
+       cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274,
+       cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280,
+       cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d1303,
+       cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d582,
+       cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d593,
+       cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d912,
+       cache_rg_amo_funct5_97_EQ_0b10_98_AND_cache_ra_ETC___d920,
+       cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358,
+       cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d505,
+       cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d542,
+       cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d587,
+       cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d597,
+       cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d743,
+       cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d1225,
+       cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d595,
+       cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d997,
+       cache_rg_op_92_EQ_2_95_AND_cache_rg_amo_funct5_ETC___d375,
+       cache_rg_priv_65_EQ_0b0_82_AND_NOT_cache_tlb_l_ETC___d215,
+       cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224,
+       cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d514,
+       cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533,
+       cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d551,
+       cache_rg_priv_65_ULE_0b1___d166,
+       cache_rg_width_code_84_EQ_0b100_43_OR_cache_rg_ETC___d451,
+       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d914,
+       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d934,
+       cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d953,
+       cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d206,
+       cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d508,
+       lrsc_result__h37730,
+       mem_req_wr_second_data_wuser__h5812,
+       req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d1999,
+       req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d2004,
+       y__h9278;
 
   // action method set_verbosity
   assign RDY_set_verbosity = 1'd1 ;
@@ -1932,17 +1917,14 @@ module mkMMU_DCache(CLK,
 	     cache_rg_state == 5'd1 ;
   assign WILL_FIRE_RL_cache_rl_reset = CAN_FIRE_RL_cache_rl_reset ;
 
-  // rule RL_cache_rl_shift_sb_to_load_delay
-  assign CAN_FIRE_RL_cache_rl_shift_sb_to_load_delay = 1'd1 ;
-  assign WILL_FIRE_RL_cache_rl_shift_sb_to_load_delay = 1'd1 ;
-
   // rule RL_cache_rl_probe_and_immed_rsp
   assign CAN_FIRE_RL_cache_rl_probe_and_immed_rsp =
 	     (cache_cfg_verbosity_read__12_ULE_1___d113 ||
 	      cache_tlb$RDY_lookup) &&
 	     (!cache_crg_commit$port1__read ||
-	      NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d473) &&
-	     NOT_cache_f_reset_reqs_notEmpty__26_76_AND_cac_ETC___d482 ;
+	      NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d470) &&
+	     !cache_f_reset_reqs$EMPTY_N &&
+	     cache_rg_state == 5'd3 ;
   assign WILL_FIRE_RL_cache_rl_probe_and_immed_rsp =
 	     CAN_FIRE_RL_cache_rl_probe_and_immed_rsp ;
 
@@ -1972,7 +1954,7 @@ module mkMMU_DCache(CLK,
   assign CAN_FIRE_RL_cache_rl_io_read_req =
 	     !cache_master_xactor_clearing &&
 	     !cache_master_xactor_shim_arff_rv[97] &&
-	     NOT_cache_f_reset_reqs_notEmpty__26_76_AND_cac_ETC___d1600 &&
+	     NOT_cache_f_reset_reqs_notEmpty__26_73_AND_cac_ETC___d1582 &&
 	     cache_ctr_wr_rsps_pending_inrg_read__2_MINUS_c_ETC___d54 ==
 	     4'd0 ;
   assign WILL_FIRE_RL_cache_rl_io_read_req =
@@ -2096,7 +2078,7 @@ module mkMMU_DCache(CLK,
 
   // rule RL_cache_rl_ptw_level_2
   assign CAN_FIRE_RL_cache_rl_ptw_level_2 =
-	     NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1381 &&
+	     NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1363 &&
 	     cache_rg_state == 5'd6 ;
   assign WILL_FIRE_RL_cache_rl_ptw_level_2 =
 	     CAN_FIRE_RL_cache_rl_ptw_level_2 &&
@@ -2104,7 +2086,7 @@ module mkMMU_DCache(CLK,
 
   // rule RL_cache_rl_ptw_level_1
   assign CAN_FIRE_RL_cache_rl_ptw_level_1 =
-	     NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1445 &&
+	     NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1427 &&
 	     cache_rg_state == 5'd7 ;
   assign WILL_FIRE_RL_cache_rl_ptw_level_1 =
 	     CAN_FIRE_RL_cache_rl_ptw_level_1 &&
@@ -2112,7 +2094,7 @@ module mkMMU_DCache(CLK,
 
   // rule RL_cache_rl_ptw_level_0
   assign CAN_FIRE_RL_cache_rl_ptw_level_0 =
-	     NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1488 &&
+	     NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1470 &&
 	     cache_rg_state == 5'd8 ;
   assign WILL_FIRE_RL_cache_rl_ptw_level_0 =
 	     CAN_FIRE_RL_cache_rl_ptw_level_0 &&
@@ -2208,7 +2190,7 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_dw_output_ld_val$wset_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d615 ;
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d608 ;
   assign MUX_cache_dw_output_ld_val$wset_1__SEL_2 =
 	     WILL_FIRE_RL_cache_rl_io_read_rsp &&
 	     cache_master_xactor_shim_rff_rv$port1__read[1] &&
@@ -2224,7 +2206,7 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_f_fabric_write_reqs$enq_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1248 ;
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1230 ;
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -2249,12 +2231,12 @@ module mkMMU_DCache(CLK,
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 ;
   assign MUX_cache_ram_state_and_ctag_cset$b_put_1__SEL_1 =
 	     EN_req &&
-	     (req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2017 ||
+	     (req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d1999 ||
 	      req_width_code == 3'b100 && req_addr[3:0] == 4'b0) ;
   assign MUX_cache_ram_word128_set$a_put_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1008 ;
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1001 ;
   assign MUX_cache_ram_word128_set$b_put_1__SEL_2 =
 	     WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	     cache_rg_lower_word64_full &&
@@ -2264,7 +2246,7 @@ module mkMMU_DCache(CLK,
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ;
   assign MUX_cache_rg_exc_code$write_1__SEL_2 =
 	     EN_req &&
-	     NOT_req_width_code_EQ_0b0_981_982_AND_NOT_req__ETC___d2001 &&
+	     NOT_req_width_code_EQ_0b0_963_964_AND_NOT_req__ETC___d1983 &&
 	     (req_width_code != 3'b100 || req_addr[3:0] != 4'b0) ;
   assign MUX_cache_rg_exc_code$write_1__SEL_3 =
 	     WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
@@ -2292,15 +2274,15 @@ module mkMMU_DCache(CLK,
 	      cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0) ;
   assign MUX_cache_rg_exc_code$write_1__SEL_7 =
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
-	     NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1387 ;
+	     NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1369 ;
   assign MUX_cache_rg_exc_code$write_1__SEL_8 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
-	     (cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227 ||
+	     (cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224 ||
 	      !cache_crg_commit$port1__read) ;
   assign MUX_cache_rg_ld_val$write_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d962 ;
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d955 ;
   assign MUX_cache_rg_ld_val$write_1__SEL_2 =
 	     WILL_FIRE_RL_cache_rl_io_read_rsp &&
 	     (!cache_rg_lower_word64_full &&
@@ -2324,7 +2306,7 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_rg_lrsc_valid$write_1__SEL_2 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d607 ;
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d600 ;
   assign MUX_cache_rg_state$write_1__SEL_3 =
 	     WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	     cache_rg_lower_word64_full &&
@@ -2342,17 +2324,17 @@ module mkMMU_DCache(CLK,
 	      cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0) ;
   assign MUX_cache_rg_state$write_1__SEL_17 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
-	     (cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d558 ||
+	     (cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d551 ||
 	      !cache_crg_commit$port1__read) ;
   assign MUX_cache_rg_state$write_1__SEL_18 =
 	     WILL_FIRE_RL_cache_rl_reset && cache_rg_cset_in_cache == 6'd63 ;
   assign MUX_cache_tlb$insert_1__SEL_1 =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 ;
+	     cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 ;
   assign MUX_cache_tlb$insert_1__SEL_2 =
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
-	     cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1430 ;
+	     cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1412 ;
   assign MUX_cache_tlb$insert_1__SEL_3 =
 	     WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -2373,21 +2355,21 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_ctr_wr_rsps_pending_outrg$write_1__VAL_1 =
 	     cache_ctr_wr_rsps_pending_outrg + 4'd1 ;
   assign MUX_cache_dw_output_ld_val$wset_1__VAL_1 =
-	     { cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d750,
-	       IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d913 } ;
+	     { cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d743,
+	       IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d906 } ;
   assign MUX_cache_dw_output_ld_val$wset_1__VAL_2 =
 	     { 1'd0,
-	       IF_NOT_cache_rg_lower_word64_full_553_554_AND__ETC___d1719 } ;
-  assign MUX_cache_dw_output_ld_val$wset_1__VAL_3 = { 1'd0, q1__h58099 } ;
+	       IF_NOT_cache_rg_lower_word64_full_535_536_AND__ETC___d1701 } ;
+  assign MUX_cache_dw_output_ld_val$wset_1__VAL_3 = { 1'd0, q1__h57728 } ;
   assign MUX_cache_f_fabric_write_reqs$enq_1__VAL_1 =
 	     { cache_rg_width_code,
-	       x1_avValue_pa__h9283,
-	       IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d1251 } ;
+	       x1_avValue_pa__h9001,
+	       IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d1233 } ;
   assign MUX_cache_f_fabric_write_reqs$enq_1__VAL_2 =
 	     { cache_rg_width_code,
 	       cache_rg_pa,
 	       cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-	       x__h58134 } ;
+	       x__h57763 } ;
   assign MUX_cache_f_fabric_write_reqs$enq_1__VAL_3 =
 	     { 3'b011,
 	       cache_f_pte_writebacks$D_OUT[127:64],
@@ -2396,27 +2378,27 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_f_fabric_write_reqs$enq_1__VAL_4 =
 	     { cache_rg_width_code, cache_rg_pa, cache_rg_st_amo_val } ;
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__VAL_1 =
-	     { 5'd16, lev_1_pte_pa_w64_fa__h48495, 29'd851968 } ;
+	     { 5'd16, lev_1_pte_pa_w64_fa__h48124, 29'd851968 } ;
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__VAL_2 =
-	     { 5'd16, lev_0_pte_pa_w64_fa__h49569, 29'd851968 } ;
+	     { 5'd16, lev_0_pte_pa_w64_fa__h49198, 29'd851968 } ;
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__VAL_3 =
 	     { 5'd16,
 	       cache_rg_pa,
-	       _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 ?
-		 { 8'd0, size_val__h57314, 18'd65536 } :
+	       _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 ?
+		 { 8'd0, size_val__h56943, 18'd65536 } :
 		 29'd2949120 } ;
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__VAL_4 =
-	     { 5'd16, lev_2_pte_pa_w64_fa__h47430, 29'd851968 } ;
+	     { 5'd16, lev_2_pte_pa_w64_fa__h47059, 29'd851968 } ;
   assign MUX_cache_master_xactor_shim_arff_rv$port0__write_1__VAL_5 =
-	     { 5'd16, cline_fabric_addr__h50788, 29'd15532032 } ;
+	     { 5'd16, cline_fabric_addr__h50417, 29'd15532032 } ;
   assign MUX_cache_master_xactor_shim_wff_rv$port0__write_1__VAL_1 =
 	     { 1'd1, cache_f_fabric_second_write_reqs$D_OUT } ;
   assign MUX_cache_master_xactor_shim_wff_rv$port0__write_1__VAL_2 =
 	     { 1'd1,
-	       mem_req_wr_data_wdata__h6080,
-	       mem_req_wr_data_wstrb__h6081,
+	       mem_req_wr_data_wdata__h6079,
+	       mem_req_wr_data_wstrb__h6080,
 	       cache_f_fabric_write_reqs$D_OUT[195:193] != 3'b100,
-	       mem_req_wr_second_data_wuser__h5813 } ;
+	       mem_req_wr_second_data_wuser__h5812 } ;
   assign MUX_cache_ram_state_and_ctag_cset$a_put_3__VAL_1 =
 	     { cache_rg_victim_way || cache_ram_state_and_ctag_cset$DOB[105],
 	       cache_rg_victim_way ?
@@ -2429,10 +2411,10 @@ module mkMMU_DCache(CLK,
   assign MUX_cache_ram_word128_set$a_put_3__VAL_1 =
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) ?
-	       { IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1119,
-		 IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1120 } :
-	       { IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1228,
-		 IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1229 } ;
+	       { IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1112,
+		 IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1113 } :
+	       { IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1221,
+		 IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1222 } ;
   assign MUX_cache_ram_word128_set$a_put_3__VAL_2 =
 	     cache_rg_victim_way ?
 	       { cache_master_xactor_shim_rff_rv$port1__read[0],
@@ -2458,19 +2440,19 @@ module mkMMU_DCache(CLK,
 	     (req_op == 2'd0) ? 6'd4 : 6'd6 ;
   assign MUX_cache_rg_exc_code$write_1__VAL_5 =
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0) ?
-	       exc_code___1__h9634 :
-	       access_exc_code__h5354 ;
+	       exc_code___1__h9370 :
+	       access_exc_code__h5353 ;
   assign MUX_cache_rg_exc_code$write_1__VAL_8 =
 	     cache_crg_commit$port1__read ?
-	       x1_avValue_exc_code__h9284 :
+	       x1_avValue_exc_code__h9002 :
 	       6'd28 ;
   assign MUX_cache_rg_ld_val$write_1__VAL_1 =
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) ?
-	       { 128'd0, lrsc_result__h37984 } :
+	       { 128'd0, lrsc_result__h37730 } :
 	       { cache_rg_width_code == 3'b100 &&
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[128],
-		 q1__h42643 } ;
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[128],
+		 q1__h42328 } ;
   assign MUX_cache_rg_lower_word64_full$write_1__VAL_2 =
 	     !cache_rg_lower_word64_full &&
 	     !cache_master_xactor_shim_rff_rv$port1__read[1] ;
@@ -2478,30 +2460,30 @@ module mkMMU_DCache(CLK,
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ;
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ;
   assign MUX_cache_rg_pa$write_1__VAL_2 =
-	     (cache_rg_priv_68_ULE_0b1___d169 &&
+	     (cache_rg_priv_65_ULE_0b1___d166 &&
 	      cache_rg_satp[63:60] == 4'd8) ?
-	       _theResult___fst__h9372 :
+	       _theResult___fst__h9090 :
 	       cache_rg_addr ;
   assign MUX_cache_rg_pte_pa$write_1__VAL_1 =
-	     lev_1_PTN_pa__h48491 + vpn_1_pa__h48492 ;
+	     lev_1_PTN_pa__h48120 + vpn_1_pa__h48121 ;
   assign MUX_cache_rg_pte_pa$write_1__VAL_2 =
-	     lev_1_PTN_pa__h48491 + vpn_0_pa__h49566 ;
+	     lev_1_PTN_pa__h48120 + vpn_0_pa__h49195 ;
   assign MUX_cache_rg_pte_pa$write_1__VAL_3 =
-	     satp_pa__h4622 + vpn_2_pa__h47427 ;
+	     satp_pa__h4621 + vpn_2_pa__h47056 ;
   assign MUX_cache_rg_st_amo_val$write_1__VAL_2 =
 	     { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-	       IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157 } ;
+	       IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150 } ;
   assign MUX_cache_rg_state$write_1__VAL_3 =
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
 	      cache_rg_error_during_refill) ?
 	       5'd4 :
 	       5'd11 ;
   assign MUX_cache_rg_state$write_1__VAL_5 =
-	     (NOT_req_width_code_EQ_0b0_981_982_AND_NOT_req__ETC___d2001 &&
+	     (NOT_req_width_code_EQ_0b0_963_964_AND_NOT_req__ETC___d1983 &&
 	      (req_width_code != 3'b100 || req_addr[3:0] != 4'b0)) ?
 	       5'd4 :
 	       5'd3 ;
@@ -2558,12 +2540,12 @@ module mkMMU_DCache(CLK,
 	       5'd4 ;
   assign MUX_cache_rg_state$write_1__VAL_17 =
 	     cache_crg_commit$port1__read ?
-	       IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d565 :
+	       IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d558 :
 	       5'd4 ;
   assign MUX_cache_tlb$insert_3__VAL_1 =
-	     (cache_rg_priv_68_ULE_0b1___d169 &&
+	     (cache_rg_priv_65_ULE_0b1___d166 &&
 	      cache_rg_satp[63:60] == 4'd8) ?
-	       _theResult___snd_fst__h9374 :
+	       _theResult___snd_fst__h9092 :
 	       cache_tlb$lookup[129:66] ;
 
   // inlined wires
@@ -2582,7 +2564,7 @@ module mkMMU_DCache(CLK,
   assign cache_dw_valid$whas =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d615 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d608 ||
 	     WILL_FIRE_RL_cache_rl_io_read_rsp &&
 	     cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 ||
@@ -2636,8 +2618,8 @@ module mkMMU_DCache(CLK,
   assign cache_master_xactor_shim_awff_rv$port0__write_1 =
 	     { 5'd16,
 	       cache_f_fabric_write_reqs$D_OUT[192:129],
-	       mem_req_wr_addr_awlen__h5986,
-	       _theResult___snd_snd_fst_val__h6022,
+	       mem_req_wr_addr_awlen__h5985,
+	       _theResult___snd_snd_fst_val__h6021,
 	       18'd65536 } ;
   assign cache_master_xactor_shim_awff_rv$port1__read =
 	     WILL_FIRE_RL_cache_rl_fabric_send_write_req ?
@@ -2765,16 +2747,6 @@ module mkMMU_DCache(CLK,
 	     cache_master_xactor_clearing ?
 	       73'h0AAAAAAAAAAAAAAAAAA :
 	       cache_master_xactor_shim_rff_rv$port2__read ;
-  assign cache_crg_sb_to_load_delay$port0__write_1 =
-	     { 1'd0, cache_crg_sb_to_load_delay[10:1] } ;
-  assign cache_crg_sb_to_load_delay$EN_port1__write =
-	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
-	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1241 ;
-  assign cache_crg_sb_to_load_delay$port2__read =
-	     cache_crg_sb_to_load_delay$EN_port1__write ?
-	       11'd2047 :
-	       cache_crg_sb_to_load_delay$port0__write_1 ;
 
   // register cache_cfg_verbosity
   assign cache_cfg_verbosity$D_IN = set_verbosity_verbosity ;
@@ -2783,11 +2755,6 @@ module mkMMU_DCache(CLK,
   // register cache_crg_commit
   assign cache_crg_commit$D_IN = cache_crg_commit$port3__read ;
   assign cache_crg_commit$EN = 1'b1 ;
-
-  // register cache_crg_sb_to_load_delay
-  assign cache_crg_sb_to_load_delay$D_IN =
-	     cache_crg_sb_to_load_delay$port2__read ;
-  assign cache_crg_sb_to_load_delay$EN = 1'b1 ;
 
   // register cache_ctr_wr_rsps_pending_inrg
   assign cache_ctr_wr_rsps_pending_inrg$D_IN =
@@ -2896,13 +2863,13 @@ module mkMMU_DCache(CLK,
 	     WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
 	     EN_req &&
-	     NOT_req_width_code_EQ_0b0_981_982_AND_NOT_req__ETC___d2001 &&
+	     NOT_req_width_code_EQ_0b0_963_964_AND_NOT_req__ETC___d1983 &&
 	     (req_width_code != 3'b100 || req_addr[3:0] != 4'b0) ||
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
-	     (cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227 ||
+	     (cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224 ||
 	      !cache_crg_commit$port1__read) ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
-	     NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1387 ||
+	     NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1369 ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	     (!cache_master_xactor_shim_rff_rv$port1__read[4] ||
 	      !cache_master_xactor_shim_rff_rv$port1__read[5] &&
@@ -2950,7 +2917,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_ld_val$EN =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d962 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d955 ||
 	     WILL_FIRE_RL_cache_rl_io_read_rsp &&
 	     (!cache_rg_lower_word64_full &&
 	      cache_master_xactor_shim_rff_rv$port1__read[1] ||
@@ -3018,7 +2985,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_lrsc_pa$EN =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d931 ;
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d924 ;
 
   // register cache_rg_lrsc_valid
   assign cache_rg_lrsc_valid$D_IN =
@@ -3029,7 +2996,7 @@ module mkMMU_DCache(CLK,
 	     cache_rg_amo_funct5 == 5'b00010 ||
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d607 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d600 ||
 	     WILL_FIRE_RL_cache_rl_start_reset ;
 
   // register cache_rg_mstatus_MXR
@@ -3046,7 +3013,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_pa$EN =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d579 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d572 ||
 	     EN_req ;
 
   // register cache_rg_priv
@@ -3101,7 +3068,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_st_amo_val$EN =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1331 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1313 ||
 	     EN_req ;
 
   // register cache_rg_state
@@ -3162,7 +3129,7 @@ module mkMMU_DCache(CLK,
   assign cache_rg_state$EN =
 	     WILL_FIRE_RL_cache_rl_reset && cache_rg_cset_in_cache == 6'd63 ||
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
-	     (cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d558 ||
+	     (cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d551 ||
 	      !cache_crg_commit$port1__read) ||
 	     WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	     cache_rg_lower_word64_full &&
@@ -3191,7 +3158,7 @@ module mkMMU_DCache(CLK,
 	     WILL_FIRE_RL_cache_rl_io_AMO_op_req ;
 
   // register cache_rg_victim_way
-  assign cache_rg_victim_way$D_IN = tmp__h50961[0] ;
+  assign cache_rg_victim_way$D_IN = tmp__h50590[0] ;
   assign cache_rg_victim_way$EN = WILL_FIRE_RL_cache_rl_start_cache_refill ;
 
   // register cache_rg_width_code
@@ -3212,9 +3179,9 @@ module mkMMU_DCache(CLK,
   // submodule cache_f_fabric_second_write_reqs
   assign cache_f_fabric_second_write_reqs$D_IN =
 	     { cache_f_fabric_write_reqs$D_OUT[127:64],
-	       fabric_2_strb__h5678,
+	       fabric_2_strb__h5677,
 	       1'd1,
-	       mem_req_wr_second_data_wuser__h5813 } ;
+	       mem_req_wr_second_data_wuser__h5812 } ;
   assign cache_f_fabric_second_write_reqs$ENQ =
 	     WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	     cache_f_fabric_write_reqs$D_OUT[195:193] == 3'b100 ;
@@ -3252,7 +3219,7 @@ module mkMMU_DCache(CLK,
   assign cache_f_fabric_write_reqs$ENQ =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1248 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1230 ||
 	     WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	     (cache_rg_lower_word64_full ||
@@ -3265,7 +3232,7 @@ module mkMMU_DCache(CLK,
 
   // submodule cache_f_pte_writebacks
   assign cache_f_pte_writebacks$D_IN =
-	     { cache_tlb$lookup[63:0], value__h10054 } ;
+	     { cache_tlb$lookup[63:0], value__h9790 } ;
   assign cache_f_pte_writebacks$ENQ = MUX_cache_tlb$insert_1__SEL_1 ;
   assign cache_f_pte_writebacks$DEQ =
 	     WILL_FIRE_RL_cache_rl_writeback_updated_PTE ;
@@ -3391,7 +3358,7 @@ module mkMMU_DCache(CLK,
   assign cache_ram_word128_set$ENA =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1008 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1001 ||
 	     WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	     cache_rg_lower_word64_full &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 ;
@@ -3442,9 +3409,9 @@ module mkMMU_DCache(CLK,
   assign cache_tlb$EN_insert =
 	     WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	     cache_crg_commit$port1__read &&
-	     cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 ||
+	     cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_2 &&
-	     cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1430 ||
+	     cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1412 ||
 	     WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[4] &&
@@ -3462,166 +3429,161 @@ module mkMMU_DCache(CLK,
 	      cache_master_xactor_shim_rff_rv$port1__read[5]) ;
 
   // remaining internal signals
-  assign IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d452 =
-	     (x1_avValue_pa__h9283[3:0] == 4'h0) ?
+  assign IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d449 =
+	     (x1_avValue_pa__h9001[3:0] == 4'h0) ?
 	       CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 :
-	       NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d451 ;
-  assign IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1120 =
+	       NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d448 ;
+  assign IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1113 =
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ?
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ?
 	       { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-		 b__h38802 } :
+		 b__h38548 } :
 	       cache_ram_word128_set$DOB[128:0] ;
-  assign IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1229 =
+  assign IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1222 =
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ?
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ?
 	       { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-		 b__h42582 } :
+		 b__h42267 } :
 	       cache_ram_word128_set$DOB[128:0] ;
-  assign IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d560 =
+  assign IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d553 =
 	     ((!cache_ram_state_and_ctag_cset$DOB[52] ||
-	       !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	       !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	      (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	       !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283)) ?
+	       !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280)) ?
 	       5'd9 :
 	       5'd12 ;
-  assign IF_NOT_cache_rg_lower_word64_full_553_554_AND__ETC___d1719 =
+  assign IF_NOT_cache_rg_lower_word64_full_535_536_AND__ETC___d1701 =
 	     (!cache_rg_lower_word64_full &&
 	      cache_master_xactor_shim_rff_rv$port1__read[1]) ?
-	       x__h55526 :
-	       b__h52211 ;
-  assign IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1119 =
+	       x__h55155 :
+	       b__h51840 ;
+  assign IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1112 =
 	     (cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ?
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ?
 	       { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-		 b__h38802 } :
+		 b__h38548 } :
 	       cache_ram_word128_set$DOB[257:129] ;
-  assign IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1228 =
+  assign IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1221 =
 	     (cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ?
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ?
 	       { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-		 b__h42582 } :
+		 b__h42267 } :
 	       cache_ram_word128_set$DOB[257:129] ;
-  assign IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d345 =
+  assign IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d342 =
 	     (cache_rg_addr[3:0] == 4'h0) ?
-	       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-	       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320 :
+	       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+	       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317 :
 	       cache_rg_addr[3:0] != 4'h8 ||
-	       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-	       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320 ;
-  assign IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d468 =
+	       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+	       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317 ;
+  assign IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d465 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) ?
-	       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d353 :
-	       IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d467 ;
-  assign IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d562 =
+	       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d350 :
+	       IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d464 ;
+  assign IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d555 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) ?
 	       5'd9 :
-	       IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d561 ;
-  assign IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d913 =
+	       IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d554 ;
+  assign IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d906 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) ?
-	       x__h36467 :
-	       x__h41964 ;
-  assign IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d1251 =
+	       x__h36213 :
+	       x__h41649 ;
+  assign IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d1233 =
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) ?
 	       cache_rg_st_amo_val :
 	       { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-		 IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157 } ;
-  assign IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d467 =
+		 IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150 } ;
+  assign IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d464 =
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) ?
-	       cache_rg_op_95_EQ_2_98_AND_cache_rg_amo_funct5_ETC___d378 :
-	       NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d466 ;
-  assign IF_cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_ETC___d561 =
+	       cache_rg_op_92_EQ_2_95_AND_cache_rg_amo_funct5_ETC___d375 :
+	       NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d463 ;
+  assign IF_cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_ETC___d554 =
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) ?
 	       5'd12 :
-	       IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d560 ;
-  assign IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d471 =
-	     cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227 ?
+	       IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d553 ;
+  assign IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d468 =
+	     cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224 ?
 	       cache_tlb$RDY_lookup :
-	       (NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d242 ||
+	       (NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d239 ||
 		cache_tlb$RDY_lookup && cache_tlb$RDY_insert &&
 		cache_f_pte_writebacks$FULL_N) &&
 	       (!cache_soc_map$m_is_mem_addr ||
-		IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d468) ;
-  assign IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d564 =
-	     cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227 ?
+		IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d465) ;
+  assign IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d557 =
+	     cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224 ?
 	       5'd4 :
 	       (cache_soc_map$m_is_mem_addr ?
-		  IF_cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_ETC___d562 :
+		  IF_cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_ETC___d555 :
 		  5'd13) ;
-  assign IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d565 =
-	     (cache_rg_priv_68_ULE_0b1___d169 &&
+  assign IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d558 =
+	     (cache_rg_priv_65_ULE_0b1___d166 &&
 	      cache_rg_satp[63:60] == 4'd8 &&
 	      !cache_tlb$lookup[130]) ?
 	       5'd5 :
-	       IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d564 ;
-  assign IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 =
-	     x1_avValue_pa__h9283 == cache_rg_lrsc_pa ;
-  assign IF_cache_rg_victim_way_522_THEN_cache_master_x_ETC___d1592 =
+	       IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d557 ;
+  assign IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 =
+	     x1_avValue_pa__h9001 == cache_rg_lrsc_pa ;
+  assign IF_cache_rg_victim_way_504_THEN_cache_master_x_ETC___d1574 =
 	     cache_rg_victim_way ?
 	       { cache_master_xactor_shim_rff_rv$port1__read[0],
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_lower_word64 } :
 	       cache_ram_word128_set$DOB[257:129] ;
-  assign IF_cache_rg_victim_way_522_THEN_cache_ram_word_ETC___d1591 =
+  assign IF_cache_rg_victim_way_504_THEN_cache_ram_word_ETC___d1573 =
 	     cache_rg_victim_way ?
 	       cache_ram_word128_set$DOB[128:0] :
 	       { cache_master_xactor_shim_rff_rv$port1__read[0],
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_lower_word64 } ;
-  assign IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d462 =
-	     IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 &&
+  assign IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d459 =
+	     IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 &&
 	     (cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 ||
-	      IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459) ;
-  assign IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157 =
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 ||
+	      IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456) ;
+  assign IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150 =
 	     (cache_rg_width_code == 3'b100) ?
 	       cache_rg_st_amo_val[127:0] :
-	       new_st_val_128__h42794 ;
-  assign IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1127 =
+	       new_st_val_128__h42479 ;
+  assign IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1120 =
 	     (cache_rg_width_code == 3'b010) ?
-	       { {32{q12643_BITS_31_TO_0__q49[31]}},
-		 q12643_BITS_31_TO_0__q49 } :
-	       q1__h42643[63:0] ;
-  assign IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 =
+	       { {32{q12328_BITS_31_TO_0__q49[31]}},
+		 q12328_BITS_31_TO_0__q49 } :
+	       q1__h42328[63:0] ;
+  assign IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 =
 	     (cache_rg_width_code == 3'b010) ?
 	       { {32{cache_rg_st_amo_val_BITS_31_TO_0__q50[31]}},
 		 cache_rg_st_amo_val_BITS_31_TO_0__q50 } :
 	       cache_rg_st_amo_val[63:0] ;
-  assign IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1890 =
+  assign IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1872 =
 	     (cache_rg_width_code == 3'b010) ?
-	       { {32{q18099_BITS_31_TO_0__q84[31]}},
-		 q18099_BITS_31_TO_0__q84 } :
-	       q1__h58099[63:0] ;
-  assign NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d431 =
-	     x1_avValue_pa__h9283[3:0] != 4'hF ||
+	       { {32{q17728_BITS_31_TO_0__q84[31]}},
+		 q17728_BITS_31_TO_0__q84 } :
+	       q1__h57728[63:0] ;
+  assign NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d428 =
+	     x1_avValue_pa__h9001[3:0] != 4'hF ||
 	     CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 ;
-  assign NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d441 =
-	     x1_avValue_pa__h9283[3:0] != 4'hE ||
+  assign NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d438 =
+	     x1_avValue_pa__h9001[3:0] != 4'hE ||
 	     CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 ;
-  assign NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d447 =
-	     x1_avValue_pa__h9283[3:0] != 4'hC ||
+  assign NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d444 =
+	     x1_avValue_pa__h9001[3:0] != 4'hC ||
 	     CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 ;
-  assign NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d451 =
-	     x1_avValue_pa__h9283[3:0] != 4'h8 ||
+  assign NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d448 =
+	     x1_avValue_pa__h9001[3:0] != 4'h8 ||
 	     CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 ;
-  assign NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 =
+  assign NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 =
 	     cache_cfg_verbosity > 4'd2 ;
-  assign NOT_cache_f_reset_reqs_notEmpty__26_76_AND_cac_ETC___d1600 =
+  assign NOT_cache_f_reset_reqs_notEmpty__26_73_AND_cac_ETC___d1582 =
 	     !cache_f_reset_reqs$EMPTY_N && cache_rg_state == 5'd13 &&
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) ;
-  assign NOT_cache_f_reset_reqs_notEmpty__26_76_AND_cac_ETC___d482 =
-	     !cache_f_reset_reqs$EMPTY_N && cache_rg_state == 5'd3 &&
-	     (cache_rg_op != 2'd0 &&
-	      (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) ||
-	      cache_crg_sb_to_load_delay$port0__write_1 == 11'd0) ;
-  assign NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1381 =
+  assign NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1363 =
 	     !cache_master_xactor_clearing &&
 	     cache_master_xactor_shim_rff_rv$port1__read[72] &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
@@ -3634,7 +3596,7 @@ module mkMMU_DCache(CLK,
 		 cache_master_xactor_shim_rff_rv$port1__read[31:23] != 9'd0 ||
 		 cache_master_xactor_shim_rff_rv$port1__read[22:14] != 9'd0 ||
 		 cache_tlb$RDY_insert)) ;
-  assign NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1445 =
+  assign NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1427 =
 	     !cache_master_xactor_clearing &&
 	     cache_master_xactor_shim_rff_rv$port1__read[72] &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
@@ -3646,7 +3608,7 @@ module mkMMU_DCache(CLK,
 		 !cache_master_xactor_shim_arff_rv[97] :
 		 cache_master_xactor_shim_rff_rv$port1__read[22:14] != 9'd0 ||
 		 cache_tlb$RDY_insert)) ;
-  assign NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1488 =
+  assign NOT_cache_master_xactor_clearing_read__0_3_AND_ETC___d1470 =
 	     !cache_master_xactor_clearing &&
 	     cache_master_xactor_shim_rff_rv$port1__read[72] &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
@@ -3656,7 +3618,7 @@ module mkMMU_DCache(CLK,
 	      !cache_master_xactor_shim_rff_rv$port1__read[7] &&
 	      !cache_master_xactor_shim_rff_rv$port1__read[5] ||
 	      cache_tlb$RDY_insert) ;
-  assign NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1387 =
+  assign NOT_cache_master_xactor_shim_rff_rv_port1__rea_ETC___d1369 =
 	     !cache_master_xactor_shim_rff_rv$port1__read[4] ||
 	     !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	     cache_master_xactor_shim_rff_rv$port1__read[6] ||
@@ -3665,277 +3627,263 @@ module mkMMU_DCache(CLK,
 	     (cache_master_xactor_shim_rff_rv$port1__read[31:23] != 9'd0 ||
 	      cache_master_xactor_shim_rff_rv$port1__read[22:14] != 9'd0) ||
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 =
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 =
 	     !cache_ram_state_and_ctag_cset$DOB[52] ||
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     cache_tlb$RDY_lookup ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320 =
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317 =
 	     !cache_ram_state_and_ctag_cset$DOB[105] ||
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     cache_tlb$RDY_lookup ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d353 =
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d350 =
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ||
-	     IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d376 =
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ||
+	     IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 ;
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d373 =
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ||
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ||
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 ||
-	      IF_cache_rg_width_code_87_EQ_0_88_OR_cache_rg__ETC___d370) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 ||
+	      IF_cache_rg_width_code_84_EQ_0_85_OR_cache_rg__ETC___d367) &&
 	     (cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 ||
-	      IF_cache_rg_width_code_87_EQ_0_88_OR_cache_rg__ETC___d370) ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d466 =
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 ||
+	      IF_cache_rg_width_code_84_EQ_0_85_OR_cache_rg__ETC___d367) ;
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d463 =
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ||
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ||
 	     cache_f_fabric_write_reqs$FULL_N &&
-	     _0_OR_NOT_cache_ram_state_and_ctag_cset_b_read__ETC___d464 ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d592 =
+	     _0_OR_NOT_cache_ram_state_and_ctag_cset_b_read__ETC___d461 ;
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d585 =
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00010 &&
-	     IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d939 =
+	     IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 ;
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d932 =
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d947 =
+  assign NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d940 =
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
-	     IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
+	     IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_op_95_EQ_0_96_97_AND_NOT_cache_rg_ETC___d217 =
+  assign NOT_cache_rg_op_92_EQ_0_93_94_AND_NOT_cache_rg_ETC___d214 =
 	     (cache_rg_op != 2'd0 &&
 	      (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) ||
-	      !cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d209) &&
+	      !cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d206) &&
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010 ||
 	      !cache_tlb$lookup[68]) ;
-  assign NOT_cache_rg_op_95_EQ_0_96_97_AND_NOT_cache_rg_ETC___d554 =
+  assign NOT_cache_rg_op_92_EQ_0_93_94_AND_NOT_cache_rg_ETC___d547 =
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
 	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) ;
-  assign NOT_cache_rg_op_95_EQ_1_54_98_AND_NOT_cache_rg_ETC___d1003 =
+	      cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358) ;
+  assign NOT_cache_rg_op_92_EQ_1_51_91_AND_NOT_cache_rg_ETC___d996 =
 	     cache_rg_op != 2'd1 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011) &&
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ;
-  assign NOT_cache_rg_op_95_EQ_1_54_98_AND_cache_ram_st_ETC___d957 =
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ;
+  assign NOT_cache_rg_op_92_EQ_1_51_91_AND_cache_ram_st_ETC___d950 =
 	     cache_rg_op != 2'd1 &&
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ;
-  assign NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1001 =
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ;
+  assign NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1261 =
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
 	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) &&
-	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
-	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ;
-  assign NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1234 =
+	      cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358) &&
+	     cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d912 ;
+  assign NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1268 =
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
 	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1233 ;
-  assign NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1279 =
+	      cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358) &&
+	     NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d932 ;
+  assign NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1275 =
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
 	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d919 ;
-  assign NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1286 =
-	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
-	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) &&
-	     NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d939 ;
-  assign NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1293 =
-	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
-	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) &&
+	      cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358) &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d513 =
+  assign NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d994 =
+	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
+	      cache_rg_lrsc_valid &&
+	      cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358) &&
+	     (cache_ram_state_and_ctag_cset$DOB[52] &&
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
+	      cache_ram_state_and_ctag_cset$DOB[105] &&
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ;
+  assign NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d506 =
 	     (cache_rg_priv != 2'b0 || cache_tlb$lookup[70]) &&
 	     (cache_rg_priv != 2'b01 || !cache_tlb$lookup[70] ||
 	      cache_rg_sstatus_SUM) &&
-	     cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d512 ;
-  assign NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d533 =
+	     cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d505 ;
+  assign NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d526 =
 	     (cache_rg_priv != 2'b0 || cache_tlb$lookup[70]) &&
 	     (cache_rg_priv != 2'b01 || !cache_tlb$lookup[70] ||
 	      cache_rg_sstatus_SUM) &&
 	     cache_tlb$lookup[68] ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1008 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1001 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
-	     cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1004 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1241 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d997 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1230 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
-	     cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1237 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1248 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     (cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d1225 ||
+	      NOT_cache_rg_op_92_EQ_1_51_91_AND_NOT_cache_rg_ETC___d996) ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1238 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
-	     cache_soc_map$m_is_mem_addr &&
-	     cache_rg_op != 2'd0 &&
-	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
-	     (cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1243 ||
-	      NOT_cache_rg_op_95_EQ_1_54_98_AND_NOT_cache_rg_ETC___d1003) ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1256 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
-	      cache_rg_satp[63:60] != 4'd8 ||
-	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd1 &&
-	     IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 &&
+	     IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1263 =
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1245 =
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00011 &&
 	     cache_rg_lrsc_valid &&
-	     !cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361 &&
+	     !cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1271 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1253 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00011 &&
 	     !cache_rg_lrsc_valid &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1277 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1259 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00011 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
-	     NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1279 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1291 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1261 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1273 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
-	     NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1286 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1298 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1268 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1280 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
-	     NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1293 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1305 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d1275 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1287 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00011 &&
-	     lrsc_result__h37984 &&
+	     lrsc_result__h37730 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1313 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1295 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     cache_rg_op != 2'd1 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011) &&
-	     NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d939 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d932 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     cache_rg_op != 2'd1 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d919 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1326 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d912 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1308 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     cache_rg_op != 2'd1 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1321 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1331 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d1303 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1313 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
-	     NOT_cache_rg_op_95_EQ_1_54_98_AND_NOT_cache_rg_ETC___d1003 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1335 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_op_92_EQ_1_51_91_AND_NOT_cache_rg_ETC___d996 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1317 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571 &&
 	     !cache_soc_map$m_is_mem_addr &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d242 =
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d239 =
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     !cache_tlb$lookup[130] ||
 	     cache_rg_priv == 2'b0 && !cache_tlb$lookup[70] ||
@@ -3944,253 +3892,253 @@ module mkMMU_DCache(CLK,
 	     !cache_tlb$lookup[68] ||
 	     !cache_tlb$lookup[72] ||
 	     !cache_tlb$lookup[73] ||
-	     pte___2__h9734[7] ||
+	     pte___2__h9470[7] ||
 	     cache_rg_op == 2'd0 ||
 	     cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d473 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d470 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$RDY_lookup) &&
-	     (cache_rg_priv_68_ULE_0b1___d169 &&
+	     (cache_rg_priv_65_ULE_0b1___d166 &&
 	      cache_rg_satp[63:60] == 4'd8 &&
 	      !cache_tlb$lookup[130] ||
-	      IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d471) ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d518 =
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+	      IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d468) ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d511 =
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     cache_tlb$lookup[130] &&
-	     NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d513 &&
-	     cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d515 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578 =
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d506 &&
+	     cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d508 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571 =
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     !cache_tlb$lookup[130] ||
-	     NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d513 &&
-	     cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d515 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d579 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d506 &&
+	     cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d508 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d572 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d585 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d578 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_ram_state_and_ctag_cset$DOB[52] &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 &&
+	     cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 &&
 	     cache_ram_state_and_ctag_cset$DOB[105] &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d607 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d600 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571 &&
 	     cache_soc_map$m_is_mem_addr &&
-	     cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d604 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d615 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d597 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d608 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d578 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d571 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     (MUX_cache_rg_lrsc_valid$write_1__VAL_2 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011 &&
-	      lrsc_result__h37984) ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918 =
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+	      lrsc_result__h37730) ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911 =
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     !cache_tlb$lookup[130] ||
 	     (cache_rg_priv != 2'b0 || cache_tlb$lookup[70]) &&
 	     (cache_rg_priv != 2'b01 || !cache_tlb$lookup[70] ||
 	      cache_rg_sstatus_SUM) &&
-	     cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d209 &&
+	     cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d206 &&
 	     cache_tlb$lookup[72] ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d923 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d916 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918 &&
-	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d921 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d931 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911 &&
+	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d914 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d924 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd2 &&
-	     cache_rg_amo_funct5_00_EQ_0b10_01_AND_cache_ra_ETC___d927 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d937 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_rg_amo_funct5_97_EQ_0b10_98_AND_cache_ra_ETC___d920 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d930 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918 &&
-	     cache_soc_map$m_is_mem_addr &&
-	     cache_rg_op == 2'd2 &&
-	     cache_rg_amo_funct5 == 5'b00010 &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d919 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d943 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
-	      cache_rg_satp[63:60] != 4'd8 ||
-	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918 &&
-	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d941 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d952 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
-	      cache_rg_satp[63:60] != 4'd8 ||
-	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d918 &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911 &&
 	     cache_soc_map$m_is_mem_addr &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00010 &&
-	     NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d947 ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 =
-	     !cache_rg_priv_68_ULE_0b1___d169 ||
+	     cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d912 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d936 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
+	      cache_rg_satp[63:60] != 4'd8 ||
+	      cache_tlb$lookup[130]) &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911 &&
+	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d934 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d945 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
+	      cache_rg_satp[63:60] != 4'd8 ||
+	      cache_tlb$lookup[130]) &&
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d911 &&
+	     cache_soc_map$m_is_mem_addr &&
+	     cache_rg_op == 2'd2 &&
+	     cache_rg_amo_funct5 == 5'b00010 &&
+	     NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d940 ;
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 =
+	     !cache_rg_priv_65_ULE_0b1___d166 ||
 	     cache_rg_satp[63:60] != 4'd8 ||
 	     !cache_tlb$lookup[130] ||
-	     NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d533 &&
+	     NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d526 &&
 	     cache_tlb$lookup[72] &&
 	     cache_tlb$lookup[73] ;
-  assign NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d962 =
-	     (!cache_rg_priv_68_ULE_0b1___d169 ||
+  assign NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d955 =
+	     (!cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$lookup[130]) &&
-	     NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d956 &&
-	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d960 ;
-  assign NOT_cache_tlb_lookup_cache_rg_satp_71_BITS_59__ETC___d224 =
+	     NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d949 &&
+	     cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d953 ;
+  assign NOT_cache_tlb_lookup_cache_rg_satp_68_BITS_59__ETC___d221 =
 	     !cache_tlb$lookup[72] ||
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     !cache_tlb$lookup[73] ;
-  assign NOT_req_width_code_EQ_0b0_981_982_AND_NOT_req__ETC___d2001 =
+  assign NOT_req_width_code_EQ_0b0_963_964_AND_NOT_req__ETC___d1983 =
 	     req_width_code != 3'b0 &&
 	     (req_width_code != 3'b001 || req_addr[0]) &&
 	     (req_width_code != 3'b010 || req_addr[1:0] != 2'b0) &&
 	     (req_width_code != 3'b011 || req_addr[2:0] != 3'b0) ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d754 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q33[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q33 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d758 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q47[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q47 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d762 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q31[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q31 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d766 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q46[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q46 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d770 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q29[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q29 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d774 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q45[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q45 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d778 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q27[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q27 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d782 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q44[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q44 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d786 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q25[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q25 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d790 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q43[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q43 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d794 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q23[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q23 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d798 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q42[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q42 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d802 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q21[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q21 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d806 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q41[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q41 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d810 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q19[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q19 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d814 =
-	     { {120{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q40[7]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q40 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d834 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q32[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q32 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d838 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q30[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q30 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d842 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q28[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q28 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d846 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q26[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q26 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d850 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q24[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q24 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d854 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q22[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q22 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d858 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q20[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q20 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d862 =
-	     { {112{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q18[15]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q18 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d874 =
-	     { {96{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q37[31]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q37 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d878 =
-	     { {96{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q35[31]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q35 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d882 =
-	     { {96{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q36[31]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q36 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d886 =
-	     { {96{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q34[31]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q34 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d894 =
-	     { {64{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q39[63]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q39 } ;
-  assign SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d898 =
-	     { {64{cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q38[63]}},
-	       cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q38 } ;
-  assign _0_OR_NOT_cache_ram_state_and_ctag_cset_b_read__ETC___d464 =
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d747 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q33[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q33 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d751 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q46[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q46 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d755 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q31[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q31 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d759 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q47[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q47 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d763 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q29[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q29 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d767 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q45[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q45 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d771 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q27[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q27 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d775 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q44[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q44 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d779 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q25[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q25 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d783 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q43[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q43 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d787 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q23[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q23 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d791 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q42[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q42 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d795 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q21[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q21 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d799 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q41[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q41 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d803 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q19[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q19 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d807 =
+	     { {120{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q40[7]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q40 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d827 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q32[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q32 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d831 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q30[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q30 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d835 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q28[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q28 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d839 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q26[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q26 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d843 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q24[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q24 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d847 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q22[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q22 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d851 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q20[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q20 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d855 =
+	     { {112{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q18[15]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q18 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d867 =
+	     { {96{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q37[31]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q37 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d871 =
+	     { {96{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q36[31]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q36 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d875 =
+	     { {96{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q34[31]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q34 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d879 =
+	     { {96{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q35[31]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q35 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d887 =
+	     { {64{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q39[63]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q39 } ;
+  assign SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d891 =
+	     { {64{cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q38[63]}},
+	       cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q38 } ;
+  assign _0_OR_NOT_cache_ram_state_and_ctag_cset_b_read__ETC___d461 =
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 ||
-	      IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459) &&
-	     cache_rg_width_code_87_EQ_0b100_46_OR_cache_rg_ETC___d454 &&
-	     IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d462 ;
-  assign _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 =
-	     8'd1 << size_val__h57314 <= 8'd8 ;
-  assign _theResult___fst__h55497 =
-	     (cache_rg_addr[2:0] == 3'd0) ? result__h55499 : 128'd0 ;
-  assign _theResult___fst__h9372 =
-	     cache_tlb$lookup[130] ? _theResult___fst__h9443 : cache_rg_addr ;
-  assign _theResult___fst__h9443 =
-	     (cache_rg_priv_68_EQ_0b0_85_AND_NOT_cache_tlb_l_ETC___d218 ||
-	      NOT_cache_tlb_lookup_cache_rg_satp_71_BITS_59__ETC___d224) ?
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 ||
+	      IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456) &&
+	     cache_rg_width_code_84_EQ_0b100_43_OR_cache_rg_ETC___d451 &&
+	     IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d459 ;
+  assign _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 =
+	     8'd1 << size_val__h56943 <= 8'd8 ;
+  assign _theResult___fst__h55126 =
+	     (cache_rg_addr[2:0] == 3'd0) ? result__h55128 : 128'd0 ;
+  assign _theResult___fst__h9090 =
+	     cache_tlb$lookup[130] ? _theResult___fst__h9161 : cache_rg_addr ;
+  assign _theResult___fst__h9161 =
+	     (cache_rg_priv_65_EQ_0b0_82_AND_NOT_cache_tlb_l_ETC___d215 ||
+	      NOT_cache_tlb_lookup_cache_rg_satp_68_BITS_59__ETC___d221) ?
 	       cache_rg_addr :
-	       _theResult___fst__h9736 ;
-  assign _theResult___snd_fst__h9374 =
+	       _theResult___fst__h9472 ;
+  assign _theResult___snd_fst__h9092 =
 	     cache_tlb$lookup[130] ?
-	       _theResult___snd_fst__h9445 :
+	       _theResult___snd_fst__h9163 :
 	       cache_tlb$lookup[129:66] ;
-  assign _theResult___snd_fst__h9445 =
-	     (cache_rg_priv_68_EQ_0b0_85_AND_NOT_cache_tlb_l_ETC___d218 ||
-	      NOT_cache_tlb_lookup_cache_rg_satp_71_BITS_59__ETC___d224) ?
+  assign _theResult___snd_fst__h9163 =
+	     (cache_rg_priv_65_EQ_0b0_82_AND_NOT_cache_tlb_l_ETC___d215 ||
+	      NOT_cache_tlb_lookup_cache_rg_satp_68_BITS_59__ETC___d221) ?
 	       cache_tlb$lookup[129:66] :
-	       _theResult___snd_fst__h9960 ;
-  assign _theResult___snd_fst__h9960 =
-	     (!pte___2__h9734[7] && cache_rg_op != 2'd0 &&
+	       _theResult___snd_fst__h9696 ;
+  assign _theResult___snd_fst__h9696 =
+	     (!pte___2__h9470[7] && cache_rg_op != 2'd0 &&
 	      (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010)) ?
-	       pte___1__h10037 :
-	       pte___2__h9734 ;
-  assign access_exc_code__h5354 = MUX_cache_rg_exc_code$write_1__VAL_1 ;
-  assign b__h52211 =
+	       pte___1__h9773 :
+	       pte___2__h9470 ;
+  assign access_exc_code__h5353 = MUX_cache_rg_exc_code$write_1__VAL_1 ;
+  assign b__h51840 =
 	     { cache_master_xactor_shim_rff_rv$port1__read[67:4],
 	       cache_rg_lower_word64 } ;
   assign cache_cfg_verbosity_read__12_ULE_1___d113 =
@@ -4206,13 +4154,13 @@ module mkMMU_DCache(CLK,
 	     cache_master_xactor_shim_arff_rv$port1__read[96:0] ;
   assign cache_master_xactor_shim_awff_rvport1__read_B_ETC__q2 =
 	     cache_master_xactor_shim_awff_rv$port1__read[96:0] ;
-  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1420 =
+  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1402 =
 	     (cache_master_xactor_shim_rff_rv$port1__read[7] ||
 	      cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[31:23] != 9'd0 ||
 	      cache_master_xactor_shim_rff_rv$port1__read[22:14] != 9'd0) &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1430 =
+  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1412 =
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[5] ||
@@ -4221,13 +4169,13 @@ module mkMMU_DCache(CLK,
 	      cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	     cache_master_xactor_shim_rff_rv$port1__read[31:23] == 9'd0 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[22:14] == 9'd0 ;
-  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1432 =
+  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1414 =
 	     (cache_master_xactor_shim_rff_rv$port1__read[7] ||
 	      cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	     cache_master_xactor_shim_rff_rv$port1__read[31:23] == 9'd0 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[22:14] == 9'd0 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1471 =
+  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1453 =
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[5] ||
@@ -4236,7 +4184,7 @@ module mkMMU_DCache(CLK,
 	      cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	     cache_master_xactor_shim_rff_rv$port1__read[22:14] == 9'd0 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1477 =
+  assign cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1459 =
 	     cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	     cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	     (cache_master_xactor_shim_rff_rv$port1__read[5] ||
@@ -4275,846 +4223,833 @@ module mkMMU_DCache(CLK,
 	     cache_master_xactor_shim_rff_rv$port1__read[43:36] ;
   assign cache_master_xactor_shim_wff_rvport1__read_BI_ETC__q16 =
 	     cache_master_xactor_shim_wff_rv$port1__read[73:0] ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 =
+  assign cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 =
 	     cache_ram_state_and_ctag_cset$DOB[51:0] ==
-	     x1_avValue_pa__h9283[63:12] ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 =
+	     x1_avValue_pa__h9001[63:12] ;
+  assign cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 =
 	     cache_ram_state_and_ctag_cset$DOB[104:53] ==
-	     x1_avValue_pa__h9283[63:12] ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1233 =
+	     x1_avValue_pa__h9001[63:12] ;
+  assign cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d1303 =
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
-	     (cache_rg_width_code == 3'd0 || cache_rg_width_code == 3'd1) ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1321 =
-	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
-	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
-	     IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 &&
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
+	     IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d589 =
+  assign cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d582 =
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
 	     cache_rg_op == 2'd2 &&
 	     cache_rg_amo_funct5 == 5'b00010 ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d600 =
+  assign cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d593 =
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
-	     IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 ;
-  assign cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d919 =
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
+	     IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 ;
+  assign cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d912 =
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) &&
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747 =
-	     x__h11052 | y__h11053 ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q18 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:112] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q19 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[119:112] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q20 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[111:96] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q21 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[103:96] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q22 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[95:80] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q23 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[87:80] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q24 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[79:64] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q25 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[71:64] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q26 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:48] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q27 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[55:48] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q28 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[47:32] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q29 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[39:32] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q30 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[31:16] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q31 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[23:16] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q32 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[15:0] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q33 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[7:0] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q34 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:96] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q35 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:32] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q36 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[95:64] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q37 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[31:0] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q38 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:64] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q39 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:0] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q40 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:120] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q41 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[111:104] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q42 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[95:88] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q43 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[79:72] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q44 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:56] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q45 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[47:40] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q46 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[31:24] ;
-  assign cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC__q47 =
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[15:8] ;
-  assign cache_rg_amo_funct5_00_EQ_0b10_01_AND_cache_ra_ETC___d927 =
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740 =
+	     x__h10792 | y__h10793 ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q18 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:112] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q19 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[119:112] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q20 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[111:96] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q21 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[103:96] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q22 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[95:80] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q23 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[87:80] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q24 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[79:64] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q25 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[71:64] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q26 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:48] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q27 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[55:48] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q28 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[47:32] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q29 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[39:32] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q30 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[31:16] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q31 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[23:16] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q32 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[15:0] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q33 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[7:0] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q34 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[95:64] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q35 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:96] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q36 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:32] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q37 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[31:0] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q38 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:64] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q39 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:0] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q40 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:120] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q41 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[111:104] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q42 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[95:88] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q43 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[79:72] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q44 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:56] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q45 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[47:40] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q46 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[15:8] ;
+  assign cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC__q47 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[31:24] ;
+  assign cache_rg_amo_funct5_97_EQ_0b10_98_AND_cache_ra_ETC___d920 =
 	     cache_rg_amo_funct5 == 5'b00010 &&
 	     (cache_ram_state_and_ctag_cset$DOB[52] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277 ||
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274 ||
 	      cache_ram_state_and_ctag_cset$DOB[105] &&
-	      cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ;
-  assign cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361 =
-	     cache_rg_lrsc_pa == x1_avValue_pa__h9283 ;
-  assign cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d512 =
+	      cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ;
+  assign cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358 =
+	     cache_rg_lrsc_pa == x1_avValue_pa__h9001 ;
+  assign cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d505 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
-	     cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d209 ||
+	     cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d206 ||
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     cache_tlb$lookup[68] ;
-  assign cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d549 =
+  assign cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d542 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[52] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277) &&
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274) &&
 	     (!cache_ram_state_and_ctag_cset$DOB[105] ||
-	      !cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283) ;
-  assign cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d594 =
+	      !cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280) ;
+  assign cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d587 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
-	     (cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d589 ||
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d592) ;
-  assign cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d604 =
-	     cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d594 ||
+	     (cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d582 ||
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d585) ;
+  assign cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d597 =
+	     cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d587 ||
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
-	     cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d602 ;
-  assign cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d750 =
+	     cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d595 ;
+  assign cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d743 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
 	     cache_rg_width_code == 3'b100 &&
-	     cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[128] ;
-  assign cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1004 =
-	     (cache_rg_op == 2'd1 ||
-	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
-	     NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1001 ||
-	     NOT_cache_rg_op_95_EQ_1_54_98_AND_NOT_cache_rg_ETC___d1003 ;
-  assign cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1237 =
-	     (cache_rg_op == 2'd1 ||
-	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
-	     NOT_cache_rg_op_95_EQ_2_98_99_OR_NOT_cache_rg__ETC___d1234 ||
-	     cache_rg_op != 2'd1 &&
-	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d1233 ;
-  assign cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d1243 =
+	     cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[128] ;
+  assign cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d1225 =
 	     (cache_rg_op == 2'd1 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011 ||
 	      cache_rg_lrsc_valid &&
-	      cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361) ;
-  assign cache_rg_op_95_EQ_1_54_OR_cache_rg_op_95_EQ_2__ETC___d602 =
+	      cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358) ;
+  assign cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d595 =
 	     cache_rg_op == 2'd1 &&
-	     IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_sa_ETC___d590 ||
+	     IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_sa_ETC___d583 ||
 	     cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011 ||
 	     cache_rg_op != 2'd1 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00011) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d600 ;
-  assign cache_rg_op_95_EQ_2_98_AND_cache_rg_amo_funct5_ETC___d378 =
+	     cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d593 ;
+  assign cache_rg_op_92_EQ_1_51_OR_cache_rg_op_92_EQ_2__ETC___d997 =
+	     (cache_rg_op == 2'd1 ||
+	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011) &&
+	     NOT_cache_rg_op_92_EQ_2_95_96_OR_NOT_cache_rg__ETC___d994 ||
+	     NOT_cache_rg_op_92_EQ_1_51_91_AND_NOT_cache_rg_ETC___d996 ;
+  assign cache_rg_op_92_EQ_2_95_AND_cache_rg_amo_funct5_ETC___d375 =
 	     cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011 &&
-	     lrsc_result__h37984 ||
+	     lrsc_result__h37730 ||
 	     cache_f_fabric_write_reqs$FULL_N &&
-	     NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d376 ;
-  assign cache_rg_priv_68_EQ_0b0_85_AND_NOT_cache_tlb_l_ETC___d218 =
+	     NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d373 ;
+  assign cache_rg_priv_65_EQ_0b0_82_AND_NOT_cache_tlb_l_ETC___d215 =
 	     cache_rg_priv == 2'b0 && !cache_tlb$lookup[70] ||
 	     cache_rg_priv == 2'b01 && cache_tlb$lookup[70] &&
 	     !cache_rg_sstatus_SUM ||
-	     NOT_cache_rg_op_95_EQ_0_96_97_AND_NOT_cache_rg_ETC___d217 ;
-  assign cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227 =
-	     cache_rg_priv_68_ULE_0b1___d169 &&
+	     NOT_cache_rg_op_92_EQ_0_93_94_AND_NOT_cache_rg_ETC___d214 ;
+  assign cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224 =
+	     cache_rg_priv_65_ULE_0b1___d166 &&
 	     cache_rg_satp[63:60] == 4'd8 &&
 	     cache_tlb$lookup[130] &&
-	     (cache_rg_priv_68_EQ_0b0_85_AND_NOT_cache_tlb_l_ETC___d218 ||
-	      NOT_cache_tlb_lookup_cache_rg_satp_71_BITS_59__ETC___d224) ;
-  assign cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d521 =
-	     cache_rg_priv_68_ULE_0b1___d169 &&
+	     (cache_rg_priv_65_EQ_0b0_82_AND_NOT_cache_tlb_l_ETC___d215 ||
+	      NOT_cache_tlb_lookup_cache_rg_satp_68_BITS_59__ETC___d221) ;
+  assign cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d514 =
+	     cache_rg_priv_65_ULE_0b1___d166 &&
 	     cache_rg_satp[63:60] == 4'd8 &&
-	     (cache_rg_priv_68_EQ_0b0_85_AND_NOT_cache_tlb_l_ETC___d218 ||
-	      NOT_cache_tlb_lookup_cache_rg_satp_71_BITS_59__ETC___d224) &&
+	     (cache_rg_priv_65_EQ_0b0_82_AND_NOT_cache_tlb_l_ETC___d215 ||
+	      NOT_cache_tlb_lookup_cache_rg_satp_68_BITS_59__ETC___d221) &&
 	     cache_tlb$lookup[130] ;
-  assign cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 =
-	     cache_rg_priv_68_ULE_0b1___d169 &&
+  assign cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 =
+	     cache_rg_priv_65_ULE_0b1___d166 &&
 	     cache_rg_satp[63:60] == 4'd8 &&
 	     cache_tlb$lookup[130] &&
-	     NOT_cache_rg_priv_68_EQ_0b0_85_04_OR_cache_tlb_ETC___d533 &&
+	     NOT_cache_rg_priv_65_EQ_0b0_82_97_OR_cache_tlb_ETC___d526 &&
 	     cache_tlb$lookup[72] &&
 	     cache_tlb$lookup[73] &&
-	     !pte___2__h9734[7] &&
+	     !pte___2__h9470[7] &&
 	     cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) ;
-  assign cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d558 =
-	     cache_rg_priv_68_ULE_0b1___d169 &&
+  assign cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d551 =
+	     cache_rg_priv_65_ULE_0b1___d166 &&
 	     cache_rg_satp[63:60] == 4'd8 &&
 	     !cache_tlb$lookup[130] ||
-	     cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d227 ||
-	     cache_rg_op_95_EQ_0_96_OR_cache_rg_op_95_EQ_2__ETC___d549 ||
-	     NOT_cache_rg_op_95_EQ_0_96_97_AND_NOT_cache_rg_ETC___d554 ||
+	     cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d224 ||
+	     cache_rg_op_92_EQ_0_93_OR_cache_rg_op_92_EQ_2__ETC___d542 ||
+	     NOT_cache_rg_op_92_EQ_0_93_94_AND_NOT_cache_rg_ETC___d547 ||
 	     !cache_soc_map$m_is_mem_addr ;
-  assign cache_rg_priv_68_ULE_0b1___d169 = cache_rg_priv <= 2'b01 ;
+  assign cache_rg_priv_65_ULE_0b1___d166 = cache_rg_priv <= 2'b01 ;
   assign cache_rg_st_amo_val_BITS_31_TO_0__q50 = cache_rg_st_amo_val[31:0] ;
-  assign cache_rg_width_code_87_EQ_0b100_46_OR_cache_rg_ETC___d454 =
+  assign cache_rg_width_code_84_EQ_0b100_43_OR_cache_rg_ETC___d451 =
 	     cache_rg_width_code == 3'b100 ||
 	     CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 ;
-  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d921 =
+  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d914 =
 	     cache_soc_map$m_is_mem_addr &&
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
-	     cache_ram_state_and_ctag_cset_b_read__72_BIT_5_ETC___d919 ;
-  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d941 =
+	     cache_ram_state_and_ctag_cset_b_read__69_BIT_5_ETC___d912 ;
+  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d934 =
 	     cache_soc_map$m_is_mem_addr &&
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) &&
-	     NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d939 ;
-  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d960 =
+	     NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d932 ;
+  assign cache_soc_map_m_is_mem_addr_IF_cache_rg_priv_6_ETC___d953 =
 	     cache_soc_map$m_is_mem_addr && cache_rg_op != 2'd0 &&
 	     (cache_rg_op != 2'd2 || cache_rg_amo_funct5 != 5'b00010) &&
 	     (cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00011 ||
-	      NOT_cache_rg_op_95_EQ_1_54_98_AND_cache_ram_st_ETC___d957) ;
-  assign cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d209 =
-	     cache_tlb$lookup[67] | y__h9542 ;
-  assign cache_tlb_lookup_cache_rg_satp_71_BITS_59_TO_4_ETC___d515 =
+	      NOT_cache_rg_op_92_EQ_1_51_91_AND_cache_ram_st_ETC___d950) ;
+  assign cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d206 =
+	     cache_tlb$lookup[67] | y__h9278 ;
+  assign cache_tlb_lookup_cache_rg_satp_68_BITS_59_TO_4_ETC___d508 =
 	     cache_tlb$lookup[72] &&
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010 ||
 	      cache_tlb$lookup[73]) ;
-  assign cline_fabric_addr__h50788 = { cache_rg_pa[63:6], 6'd0 } ;
-  assign exc_code___1__h9634 = x1_avValue_exc_code__h9284 ;
-  assign lev_0_pte_pa__h49567 = MUX_cache_rg_pte_pa$write_1__VAL_2 ;
-  assign lev_0_pte_pa_w64_fa__h49569 = { lev_0_pte_pa__h49567[63:3], 3'b0 } ;
-  assign lev_1_PTN_pa__h48491 = { 8'd0, x__h48588 } ;
-  assign lev_1_pte_pa__h48493 = MUX_cache_rg_pte_pa$write_1__VAL_1 ;
-  assign lev_1_pte_pa_w64_fa__h48495 = { lev_1_pte_pa__h48493[63:3], 3'b0 } ;
-  assign lev_2_pte_pa__h47428 = MUX_cache_rg_pte_pa$write_1__VAL_3 ;
-  assign lev_2_pte_pa_w64_fa__h47430 = { lev_2_pte_pa__h47428[63:3], 3'b0 } ;
-  assign lrsc_result__h37984 =
+  assign cline_fabric_addr__h50417 = { cache_rg_pa[63:6], 6'd0 } ;
+  assign exc_code___1__h9370 = x1_avValue_exc_code__h9002 ;
+  assign lev_0_pte_pa__h49196 = MUX_cache_rg_pte_pa$write_1__VAL_2 ;
+  assign lev_0_pte_pa_w64_fa__h49198 = { lev_0_pte_pa__h49196[63:3], 3'b0 } ;
+  assign lev_1_PTN_pa__h48120 = { 8'd0, x__h48217 } ;
+  assign lev_1_pte_pa__h48122 = MUX_cache_rg_pte_pa$write_1__VAL_1 ;
+  assign lev_1_pte_pa_w64_fa__h48124 = { lev_1_pte_pa__h48122[63:3], 3'b0 } ;
+  assign lev_2_pte_pa__h47057 = MUX_cache_rg_pte_pa$write_1__VAL_3 ;
+  assign lev_2_pte_pa_w64_fa__h47059 = { lev_2_pte_pa__h47057[63:3], 3'b0 } ;
+  assign lrsc_result__h37730 =
 	     !cache_rg_lrsc_valid ||
-	     !cache_rg_lrsc_pa_60_EQ_IF_cache_rg_priv_68_ULE_ETC___d361 ;
-  assign mem_req_wr_addr_awlen__h5986 =
+	     !cache_rg_lrsc_pa_57_EQ_IF_cache_rg_priv_65_ULE_ETC___d358 ;
+  assign mem_req_wr_addr_awlen__h5985 =
 	     (cache_f_fabric_write_reqs$D_OUT[195:193] == 3'b100) ?
 	       8'd1 :
 	       8'd0 ;
-  assign mem_req_wr_second_data_wuser__h5813 =
+  assign mem_req_wr_second_data_wuser__h5812 =
 	     cache_f_fabric_write_reqs$D_OUT[195:193] == 3'b100 &&
 	     cache_f_fabric_write_reqs$D_OUT[128] ;
-  assign new_st_val_128__h42794 = { 64'd0, x__h42797 } ;
-  assign new_st_val_128__h58140 = { 64'd0, x__h58143 } ;
-  assign new_st_val_64__h42799 = { 32'd0, _theResult_____2__h42793[31:0] } ;
-  assign new_st_val_64__h42871 =
-	     IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1127 +
-	     IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 ;
-  assign new_st_val_64__h44017 = w1__h42650 ^ w2__h42652 ;
-  assign new_st_val_64__h44021 = w1__h42650 & w2__h42652 ;
-  assign new_st_val_64__h44025 = w1__h42650 | w2__h42652 ;
-  assign new_st_val_64__h44029 =
-	     (w1__h42650 < w2__h42652) ? w1__h42650 : w2__h42652 ;
-  assign new_st_val_64__h44034 =
-	     (w1__h42650 <= w2__h42652) ? w2__h42652 : w1__h42650 ;
-  assign new_st_val_64__h44040 =
-	     ((IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1127 ^
+  assign new_st_val_128__h42479 = { 64'd0, x__h42482 } ;
+  assign new_st_val_128__h57769 = { 64'd0, x__h57772 } ;
+  assign new_st_val_64__h42484 = { 32'd0, _theResult_____2__h42478[31:0] } ;
+  assign new_st_val_64__h42556 =
+	     IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1120 +
+	     IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 ;
+  assign new_st_val_64__h43702 = w1__h42335 ^ w2__h42337 ;
+  assign new_st_val_64__h43706 = w1__h42335 & w2__h42337 ;
+  assign new_st_val_64__h43710 = w1__h42335 | w2__h42337 ;
+  assign new_st_val_64__h43714 =
+	     (w1__h42335 < w2__h42337) ? w1__h42335 : w2__h42337 ;
+  assign new_st_val_64__h43719 =
+	     (w1__h42335 <= w2__h42337) ? w2__h42337 : w1__h42335 ;
+  assign new_st_val_64__h43725 =
+	     ((IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1120 ^
 	       64'h8000000000000000) <
-	      (IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 ^
+	      (IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 ^
 	       64'h8000000000000000)) ?
-	       w1__h42650 :
-	       w2__h42652 ;
-  assign new_st_val_64__h44045 =
-	     ((IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1127 ^
+	       w1__h42335 :
+	       w2__h42337 ;
+  assign new_st_val_64__h43730 =
+	     ((IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1120 ^
 	       64'h8000000000000000) <=
-	      (IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 ^
+	      (IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 ^
 	       64'h8000000000000000)) ?
-	       w2__h42652 :
-	       w1__h42650 ;
-  assign new_st_val_64__h58145 = { 32'd0, _theResult_____2__h58139[31:0] } ;
-  assign new_st_val_64__h58217 =
-	     IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1890 +
-	     IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 ;
-  assign new_st_val_64__h60058 = w1__h58106 ^ w2__h42652 ;
-  assign new_st_val_64__h60062 = w1__h58106 & w2__h42652 ;
-  assign new_st_val_64__h60066 = w1__h58106 | w2__h42652 ;
-  assign new_st_val_64__h60070 =
-	     (w1__h58106 < w2__h42652) ? w1__h58106 : w2__h42652 ;
-  assign new_st_val_64__h60075 =
-	     (w1__h58106 <= w2__h42652) ? w2__h42652 : w1__h58106 ;
-  assign new_st_val_64__h60081 =
-	     ((IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1890 ^
+	       w2__h42337 :
+	       w1__h42335 ;
+  assign new_st_val_64__h57774 = { 32'd0, _theResult_____2__h57768[31:0] } ;
+  assign new_st_val_64__h57846 =
+	     IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1872 +
+	     IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 ;
+  assign new_st_val_64__h59687 = w1__h57735 ^ w2__h42337 ;
+  assign new_st_val_64__h59691 = w1__h57735 & w2__h42337 ;
+  assign new_st_val_64__h59695 = w1__h57735 | w2__h42337 ;
+  assign new_st_val_64__h59699 =
+	     (w1__h57735 < w2__h42337) ? w1__h57735 : w2__h42337 ;
+  assign new_st_val_64__h59704 =
+	     (w1__h57735 <= w2__h42337) ? w2__h42337 : w1__h57735 ;
+  assign new_st_val_64__h59710 =
+	     ((IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1872 ^
 	       64'h8000000000000000) <
-	      (IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 ^
+	      (IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 ^
 	       64'h8000000000000000)) ?
-	       w1__h58106 :
-	       w2__h42652 ;
-  assign new_st_val_64__h60086 =
-	     ((IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1890 ^
+	       w1__h57735 :
+	       w2__h42337 ;
+  assign new_st_val_64__h59715 =
+	     ((IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1872 ^
 	       64'h8000000000000000) <=
-	      (IF_cache_rg_width_code_87_EQ_0b10_36_THEN_SEXT_ETC___d1129 ^
+	      (IF_cache_rg_width_code_84_EQ_0b10_33_THEN_SEXT_ETC___d1122 ^
 	       64'h8000000000000000)) ?
-	       w2__h42652 :
-	       w1__h58106 ;
-  assign pa___1__h9742 = { 8'd0, x__h9745 } ;
-  assign pa___1__h9791 = { 8'd0, x__h9794 } ;
-  assign pa___1__h9860 = { 8'd0, x__h9863 } ;
-  assign pte___1__h10009 =
+	       w2__h42337 :
+	       w1__h57735 ;
+  assign pa___1__h9478 = { 8'd0, x__h9481 } ;
+  assign pa___1__h9527 = { 8'd0, x__h9530 } ;
+  assign pa___1__h9596 = { 8'd0, x__h9599 } ;
+  assign pte___1__h9745 =
 	     { cache_tlb$lookup[129:73], 1'd1, cache_tlb$lookup[71:66] } ;
-  assign pte___1__h10037 =
-	     { pte___2__h9734[63:8], 1'd1, pte___2__h9734[6:0] } ;
-  assign pte___2__h9734 =
+  assign pte___1__h9773 =
+	     { pte___2__h9470[63:8], 1'd1, pte___2__h9470[6:0] } ;
+  assign pte___2__h9470 =
 	     cache_tlb$lookup[72] ?
 	       cache_tlb$lookup[129:66] :
-	       pte___1__h10009 ;
-  assign q12643_BITS_31_TO_0__q49 = q1__h42643[31:0] ;
-  assign q18099_BITS_31_TO_0__q84 = q1__h58099[31:0] ;
-  assign req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2017 =
+	       pte___1__h9745 ;
+  assign q12328_BITS_31_TO_0__q49 = q1__h42328[31:0] ;
+  assign q17728_BITS_31_TO_0__q84 = q1__h57728[31:0] ;
+  assign req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d1999 =
 	     req_width_code == 3'b0 ||
 	     req_width_code == 3'b001 && !req_addr[0] ||
 	     req_width_code == 3'b010 && req_addr[1:0] == 2'b0 ||
 	     req_width_code == 3'b011 && req_addr[2:0] == 3'b0 ;
-  assign req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2022 =
-	     (req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2017 ||
+  assign req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d2004 =
+	     (req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d1999 ||
 	      req_width_code == 3'b100 && req_addr[3:0] == 4'b0) &&
 	     !cache_cfg_verbosity_read__12_ULE_1___d113 ;
-  assign result__h11002 =
+  assign result__h10738 =
 	     cache_rg_is_unsigned ?
 	       { 64'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:0] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d894 ;
-  assign result__h11004 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:0] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d887 ;
+  assign result__h10740 =
 	     cache_rg_is_unsigned ?
 	       { 64'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:64] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d898 ;
-  assign result__h36478 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:64] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d891 ;
+  assign result__h36224 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[7:0] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d754 ;
-  assign result__h36516 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[7:0] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d747 ;
+  assign result__h36262 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[15:8] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d758 ;
-  assign result__h36549 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[15:8] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d751 ;
+  assign result__h36295 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[23:16] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d762 ;
-  assign result__h36582 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[23:16] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d755 ;
+  assign result__h36328 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[31:24] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d766 ;
-  assign result__h36615 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[31:24] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d759 ;
+  assign result__h36361 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[39:32] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d770 ;
-  assign result__h36648 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[39:32] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d763 ;
+  assign result__h36394 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[47:40] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d774 ;
-  assign result__h36681 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[47:40] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d767 ;
+  assign result__h36427 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[55:48] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d778 ;
-  assign result__h36714 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[55:48] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d771 ;
+  assign result__h36460 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:56] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d782 ;
-  assign result__h36747 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:56] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d775 ;
+  assign result__h36493 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[71:64] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d786 ;
-  assign result__h36780 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[71:64] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d779 ;
+  assign result__h36526 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[79:72] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d790 ;
-  assign result__h36813 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[79:72] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d783 ;
+  assign result__h36559 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[87:80] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d794 ;
-  assign result__h36846 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[87:80] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d787 ;
+  assign result__h36592 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[95:88] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d798 ;
-  assign result__h36879 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[95:88] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d791 ;
+  assign result__h36625 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[103:96] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d802 ;
-  assign result__h36912 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[103:96] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d795 ;
+  assign result__h36658 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[111:104] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d806 ;
-  assign result__h36945 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[111:104] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d799 ;
+  assign result__h36691 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[119:112] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d810 ;
-  assign result__h36978 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[119:112] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d803 ;
+  assign result__h36724 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:120] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d814 ;
-  assign result__h37033 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:120] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d807 ;
+  assign result__h36779 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[15:0] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d834 ;
-  assign result__h37066 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[15:0] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d827 ;
+  assign result__h36812 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[31:16] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d838 ;
-  assign result__h37099 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[31:16] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d831 ;
+  assign result__h36845 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[47:32] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d842 ;
-  assign result__h37132 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[47:32] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d835 ;
+  assign result__h36878 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:48] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d846 ;
-  assign result__h37165 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:48] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d839 ;
+  assign result__h36911 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[79:64] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d850 ;
-  assign result__h37198 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[79:64] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d843 ;
+  assign result__h36944 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[95:80] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d854 ;
-  assign result__h37231 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[95:80] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d847 ;
+  assign result__h36977 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[111:96] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d858 ;
-  assign result__h37264 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[111:96] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d851 ;
+  assign result__h37010 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:112] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d862 ;
-  assign result__h37311 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:112] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d855 ;
+  assign result__h37057 =
 	     cache_rg_is_unsigned ?
 	       { 96'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[31:0] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d874 ;
-  assign result__h37344 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[31:0] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d867 ;
+  assign result__h37090 =
 	     cache_rg_is_unsigned ?
 	       { 96'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[63:32] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d878 ;
-  assign result__h37377 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[63:32] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d871 ;
+  assign result__h37123 =
 	     cache_rg_is_unsigned ?
 	       { 96'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[95:64] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d882 ;
-  assign result__h37410 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[95:64] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d875 ;
+  assign result__h37156 =
 	     cache_rg_is_unsigned ?
 	       { 96'd0,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:96] } :
-	       SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d886 ;
-  assign result__h55499 =
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:96] } :
+	       SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d879 ;
+  assign result__h55128 =
 	     cache_rg_is_unsigned ?
-	       word128__h55392 :
+	       word128__h55021 :
 	       { {64{cache_rg_lower_word64$D_IN[63]}},
 		 cache_rg_lower_word64$D_IN } ;
-  assign result__h55537 =
+  assign result__h55166 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0, cache_master_xactor_shim_rff_rv$port1__read[11:4] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q3[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q3 } ;
-  assign result__h55573 =
+  assign result__h55202 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[19:12] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q6[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q6 } ;
-  assign result__h55606 =
+  assign result__h55235 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[27:20] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q7[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q7 } ;
-  assign result__h55639 =
+  assign result__h55268 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[35:28] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q8[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q8 } ;
-  assign result__h55672 =
+  assign result__h55301 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[43:36] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q9[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q9 } ;
-  assign result__h55705 =
+  assign result__h55334 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[51:44] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q12 } ;
-  assign result__h55738 =
+  assign result__h55367 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[59:52] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q13 } ;
-  assign result__h55771 =
+  assign result__h55400 =
 	     cache_rg_is_unsigned ?
 	       { 120'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:60] } :
 	       { {120{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q15[7]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q15 } ;
-  assign result__h55834 =
+  assign result__h55463 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0, cache_master_xactor_shim_rff_rv$port1__read[19:4] } :
 	       { {112{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q4[15]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q4 } ;
-  assign result__h55867 =
+  assign result__h55496 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[35:20] } :
 	       { {112{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q1[15]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q1 } ;
-  assign result__h55900 =
+  assign result__h55529 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[51:36] } :
 	       { {112{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q10[15]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q10 } ;
-  assign result__h55933 =
+  assign result__h55562 =
 	     cache_rg_is_unsigned ?
 	       { 112'd0,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:52] } :
 	       { {112{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q14[15]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q14 } ;
-  assign result__h55984 =
+  assign result__h55613 =
 	     cache_rg_is_unsigned ?
 	       { 96'd0, cache_master_xactor_shim_rff_rv$port1__read[35:4] } :
 	       { {96{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q5[31]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q5 } ;
-  assign result__h56017 =
+  assign result__h55646 =
 	     cache_rg_is_unsigned ?
 	       { 96'd0, cache_master_xactor_shim_rff_rv$port1__read[67:36] } :
 	       { {96{cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q11[31]}},
 		 cache_master_xactor_shim_rff_rvport1__read_BI_ETC__q11 } ;
-  assign result__h58348 =
-	     { {120{word1288273_BITS_7_TO_0__q54[7]}},
-	       word1288273_BITS_7_TO_0__q54 } ;
-  assign result__h59045 =
-	     { {120{word1288273_BITS_15_TO_8__q58[7]}},
-	       word1288273_BITS_15_TO_8__q58 } ;
-  assign result__h59077 =
-	     { {120{word1288273_BITS_23_TO_16__q59[7]}},
-	       word1288273_BITS_23_TO_16__q59 } ;
-  assign result__h59109 =
-	     { {120{word1288273_BITS_31_TO_24__q61[7]}},
-	       word1288273_BITS_31_TO_24__q61 } ;
-  assign result__h59141 =
-	     { {120{word1288273_BITS_39_TO_32__q63[7]}},
-	       word1288273_BITS_39_TO_32__q63 } ;
-  assign result__h59173 =
-	     { {120{word1288273_BITS_47_TO_40__q66[7]}},
-	       word1288273_BITS_47_TO_40__q66 } ;
-  assign result__h59205 =
-	     { {120{word1288273_BITS_55_TO_48__q62[7]}},
-	       word1288273_BITS_55_TO_48__q62 } ;
-  assign result__h59237 =
-	     { {120{word1288273_BITS_63_TO_56__q68[7]}},
-	       word1288273_BITS_63_TO_56__q68 } ;
-  assign result__h59269 =
-	     { {120{word1288273_BITS_71_TO_64__q69[7]}},
-	       word1288273_BITS_71_TO_64__q69 } ;
-  assign result__h59301 =
-	     { {120{word1288273_BITS_79_TO_72__q73[7]}},
-	       word1288273_BITS_79_TO_72__q73 } ;
-  assign result__h59333 =
-	     { {120{word1288273_BITS_87_TO_80__q74[7]}},
-	       word1288273_BITS_87_TO_80__q74 } ;
-  assign result__h59365 =
-	     { {120{word1288273_BITS_95_TO_88__q76[7]}},
-	       word1288273_BITS_95_TO_88__q76 } ;
-  assign result__h59397 =
-	     { {120{word1288273_BITS_103_TO_96__q77[7]}},
-	       word1288273_BITS_103_TO_96__q77 } ;
-  assign result__h59429 =
-	     { {120{word1288273_BITS_111_TO_104__q80[7]}},
-	       word1288273_BITS_111_TO_104__q80 } ;
-  assign result__h59461 =
-	     { {120{word1288273_BITS_119_TO_112__q81[7]}},
-	       word1288273_BITS_119_TO_112__q81 } ;
-  assign result__h59493 =
-	     { {120{word1288273_BITS_127_TO_120__q83[7]}},
-	       word1288273_BITS_127_TO_120__q83 } ;
-  assign result__h59547 =
-	     { {112{word1288273_BITS_15_TO_0__q55[15]}},
-	       word1288273_BITS_15_TO_0__q55 } ;
-  assign result__h59579 =
-	     { {112{word1288273_BITS_31_TO_16__q60[15]}},
-	       word1288273_BITS_31_TO_16__q60 } ;
-  assign result__h59611 =
-	     { {112{word1288273_BITS_47_TO_32__q64[15]}},
-	       word1288273_BITS_47_TO_32__q64 } ;
-  assign result__h59643 =
-	     { {112{word1288273_BITS_63_TO_48__q67[15]}},
-	       word1288273_BITS_63_TO_48__q67 } ;
-  assign result__h59675 =
-	     { {112{word1288273_BITS_79_TO_64__q70[15]}},
-	       word1288273_BITS_79_TO_64__q70 } ;
-  assign result__h59707 =
-	     { {112{word1288273_BITS_95_TO_80__q75[15]}},
-	       word1288273_BITS_95_TO_80__q75 } ;
-  assign result__h59739 =
-	     { {112{word1288273_BITS_111_TO_96__q78[15]}},
-	       word1288273_BITS_111_TO_96__q78 } ;
-  assign result__h59771 =
-	     { {112{word1288273_BITS_127_TO_112__q82[15]}},
-	       word1288273_BITS_127_TO_112__q82 } ;
-  assign result__h59817 =
-	     { {96{word1288273_BITS_31_TO_0__q56[31]}},
-	       word1288273_BITS_31_TO_0__q56 } ;
-  assign result__h59849 =
-	     { {96{word1288273_BITS_63_TO_32__q65[31]}},
-	       word1288273_BITS_63_TO_32__q65 } ;
-  assign result__h59881 =
-	     { {96{word1288273_BITS_95_TO_64__q71[31]}},
-	       word1288273_BITS_95_TO_64__q71 } ;
-  assign result__h59913 =
-	     { {96{word1288273_BITS_127_TO_96__q79[31]}},
-	       word1288273_BITS_127_TO_96__q79 } ;
-  assign result__h59967 =
-	     { {64{word1288273_BITS_63_TO_0__q57[63]}},
-	       word1288273_BITS_63_TO_0__q57 } ;
-  assign result__h59996 =
-	     { {64{word1288273_BITS_127_TO_64__q72[63]}},
-	       word1288273_BITS_127_TO_64__q72 } ;
-  assign satp_pa__h4622 = { 8'd0, x__h8097 } ;
-  assign shift_bits__h5701 =
+  assign result__h57977 =
+	     { {120{word1287902_BITS_7_TO_0__q54[7]}},
+	       word1287902_BITS_7_TO_0__q54 } ;
+  assign result__h58674 =
+	     { {120{word1287902_BITS_15_TO_8__q58[7]}},
+	       word1287902_BITS_15_TO_8__q58 } ;
+  assign result__h58706 =
+	     { {120{word1287902_BITS_23_TO_16__q59[7]}},
+	       word1287902_BITS_23_TO_16__q59 } ;
+  assign result__h58738 =
+	     { {120{word1287902_BITS_31_TO_24__q61[7]}},
+	       word1287902_BITS_31_TO_24__q61 } ;
+  assign result__h58770 =
+	     { {120{word1287902_BITS_39_TO_32__q62[7]}},
+	       word1287902_BITS_39_TO_32__q62 } ;
+  assign result__h58802 =
+	     { {120{word1287902_BITS_47_TO_40__q65[7]}},
+	       word1287902_BITS_47_TO_40__q65 } ;
+  assign result__h58834 =
+	     { {120{word1287902_BITS_55_TO_48__q66[7]}},
+	       word1287902_BITS_55_TO_48__q66 } ;
+  assign result__h58866 =
+	     { {120{word1287902_BITS_63_TO_56__q68[7]}},
+	       word1287902_BITS_63_TO_56__q68 } ;
+  assign result__h58898 =
+	     { {120{word1287902_BITS_71_TO_64__q69[7]}},
+	       word1287902_BITS_71_TO_64__q69 } ;
+  assign result__h58930 =
+	     { {120{word1287902_BITS_79_TO_72__q73[7]}},
+	       word1287902_BITS_79_TO_72__q73 } ;
+  assign result__h58962 =
+	     { {120{word1287902_BITS_87_TO_80__q74[7]}},
+	       word1287902_BITS_87_TO_80__q74 } ;
+  assign result__h58994 =
+	     { {120{word1287902_BITS_95_TO_88__q76[7]}},
+	       word1287902_BITS_95_TO_88__q76 } ;
+  assign result__h59026 =
+	     { {120{word1287902_BITS_103_TO_96__q77[7]}},
+	       word1287902_BITS_103_TO_96__q77 } ;
+  assign result__h59058 =
+	     { {120{word1287902_BITS_111_TO_104__q80[7]}},
+	       word1287902_BITS_111_TO_104__q80 } ;
+  assign result__h59090 =
+	     { {120{word1287902_BITS_119_TO_112__q82[7]}},
+	       word1287902_BITS_119_TO_112__q82 } ;
+  assign result__h59122 =
+	     { {120{word1287902_BITS_127_TO_120__q83[7]}},
+	       word1287902_BITS_127_TO_120__q83 } ;
+  assign result__h59176 =
+	     { {112{word1287902_BITS_15_TO_0__q55[15]}},
+	       word1287902_BITS_15_TO_0__q55 } ;
+  assign result__h59208 =
+	     { {112{word1287902_BITS_31_TO_16__q60[15]}},
+	       word1287902_BITS_31_TO_16__q60 } ;
+  assign result__h59240 =
+	     { {112{word1287902_BITS_47_TO_32__q63[15]}},
+	       word1287902_BITS_47_TO_32__q63 } ;
+  assign result__h59272 =
+	     { {112{word1287902_BITS_63_TO_48__q67[15]}},
+	       word1287902_BITS_63_TO_48__q67 } ;
+  assign result__h59304 =
+	     { {112{word1287902_BITS_79_TO_64__q70[15]}},
+	       word1287902_BITS_79_TO_64__q70 } ;
+  assign result__h59336 =
+	     { {112{word1287902_BITS_95_TO_80__q75[15]}},
+	       word1287902_BITS_95_TO_80__q75 } ;
+  assign result__h59368 =
+	     { {112{word1287902_BITS_111_TO_96__q78[15]}},
+	       word1287902_BITS_111_TO_96__q78 } ;
+  assign result__h59400 =
+	     { {112{word1287902_BITS_127_TO_112__q81[15]}},
+	       word1287902_BITS_127_TO_112__q81 } ;
+  assign result__h59446 =
+	     { {96{word1287902_BITS_31_TO_0__q56[31]}},
+	       word1287902_BITS_31_TO_0__q56 } ;
+  assign result__h59478 =
+	     { {96{word1287902_BITS_63_TO_32__q64[31]}},
+	       word1287902_BITS_63_TO_32__q64 } ;
+  assign result__h59510 =
+	     { {96{word1287902_BITS_95_TO_64__q71[31]}},
+	       word1287902_BITS_95_TO_64__q71 } ;
+  assign result__h59542 =
+	     { {96{word1287902_BITS_127_TO_96__q79[31]}},
+	       word1287902_BITS_127_TO_96__q79 } ;
+  assign result__h59596 =
+	     { {64{word1287902_BITS_63_TO_0__q57[63]}},
+	       word1287902_BITS_63_TO_0__q57 } ;
+  assign result__h59625 =
+	     { {64{word1287902_BITS_127_TO_64__q72[63]}},
+	       word1287902_BITS_127_TO_64__q72 } ;
+  assign satp_pa__h4621 = { 8'd0, x__h7815 } ;
+  assign shift_bits__h5700 =
 	     { cache_f_fabric_write_reqs$D_OUT[131:129], 3'b0 } ;
-  assign strobe64__h6003 =
+  assign strobe64__h6002 =
 	     8'b00000001 << cache_f_fabric_write_reqs$D_OUT[131:129] ;
-  assign strobe64__h6007 =
+  assign strobe64__h6006 =
 	     8'b00000011 << cache_f_fabric_write_reqs$D_OUT[131:129] ;
-  assign strobe64__h6011 =
+  assign strobe64__h6010 =
 	     8'b00001111 << cache_f_fabric_write_reqs$D_OUT[131:129] ;
-  assign strobe64__h6015 =
+  assign strobe64__h6014 =
 	     8'b11111111 << cache_f_fabric_write_reqs$D_OUT[131:129] ;
-  assign tmp__h50960 = { 1'd0, cache_rg_victim_way } ;
-  assign tmp__h50961 = tmp__h50960 + 2'd1 ;
-  assign value__h10054 = MUX_cache_tlb$insert_3__VAL_1 ;
-  assign vpn_0_pa__h49566 = { 52'd0, cache_rg_addr[20:12], 3'd0 } ;
-  assign vpn_1_pa__h48492 = { 52'd0, cache_rg_addr[29:21], 3'd0 } ;
-  assign vpn_2_pa__h47427 = { 52'd0, cache_rg_addr[38:30], 3'd0 } ;
-  assign w1___1__h42838 = { 32'd0, q1__h42643[31:0] } ;
-  assign w1___1__h58184 = { 32'd0, q1__h58099[31:0] } ;
-  assign w1__h42650 =
+  assign tmp__h50589 = { 1'd0, cache_rg_victim_way } ;
+  assign tmp__h50590 = tmp__h50589 + 2'd1 ;
+  assign value__h9790 = MUX_cache_tlb$insert_3__VAL_1 ;
+  assign vpn_0_pa__h49195 = { 52'd0, cache_rg_addr[20:12], 3'd0 } ;
+  assign vpn_1_pa__h48121 = { 52'd0, cache_rg_addr[29:21], 3'd0 } ;
+  assign vpn_2_pa__h47056 = { 52'd0, cache_rg_addr[38:30], 3'd0 } ;
+  assign w1___1__h42523 = { 32'd0, q1__h42328[31:0] } ;
+  assign w1___1__h57813 = { 32'd0, q1__h57728[31:0] } ;
+  assign w1__h42335 =
 	     (cache_rg_width_code == 3'b010) ?
-	       w1___1__h42838 :
-	       q1__h42643[63:0] ;
-  assign w1__h58106 =
+	       w1___1__h42523 :
+	       q1__h42328[63:0] ;
+  assign w1__h57735 =
 	     (cache_rg_width_code == 3'b010) ?
-	       w1___1__h58184 :
-	       q1__h58099[63:0] ;
-  assign w2__h42652 =
+	       w1___1__h57813 :
+	       q1__h57728[63:0] ;
+  assign w2__h42337 =
 	     (cache_rg_width_code == 3'b010) ?
 	       { 32'd0, cache_rg_st_amo_val[31:0] } :
 	       cache_rg_st_amo_val[63:0] ;
-  assign word1288273_BITS_103_TO_96__q77 = word128__h58273[103:96] ;
-  assign word1288273_BITS_111_TO_104__q80 = word128__h58273[111:104] ;
-  assign word1288273_BITS_111_TO_96__q78 = word128__h58273[111:96] ;
-  assign word1288273_BITS_119_TO_112__q81 = word128__h58273[119:112] ;
-  assign word1288273_BITS_127_TO_112__q82 = word128__h58273[127:112] ;
-  assign word1288273_BITS_127_TO_120__q83 = word128__h58273[127:120] ;
-  assign word1288273_BITS_127_TO_64__q72 = word128__h58273[127:64] ;
-  assign word1288273_BITS_127_TO_96__q79 = word128__h58273[127:96] ;
-  assign word1288273_BITS_15_TO_0__q55 = word128__h58273[15:0] ;
-  assign word1288273_BITS_15_TO_8__q58 = word128__h58273[15:8] ;
-  assign word1288273_BITS_23_TO_16__q59 = word128__h58273[23:16] ;
-  assign word1288273_BITS_31_TO_0__q56 = word128__h58273[31:0] ;
-  assign word1288273_BITS_31_TO_16__q60 = word128__h58273[31:16] ;
-  assign word1288273_BITS_31_TO_24__q61 = word128__h58273[31:24] ;
-  assign word1288273_BITS_39_TO_32__q63 = word128__h58273[39:32] ;
-  assign word1288273_BITS_47_TO_32__q64 = word128__h58273[47:32] ;
-  assign word1288273_BITS_47_TO_40__q66 = word128__h58273[47:40] ;
-  assign word1288273_BITS_55_TO_48__q62 = word128__h58273[55:48] ;
-  assign word1288273_BITS_63_TO_0__q57 = word128__h58273[63:0] ;
-  assign word1288273_BITS_63_TO_32__q65 = word128__h58273[63:32] ;
-  assign word1288273_BITS_63_TO_48__q67 = word128__h58273[63:48] ;
-  assign word1288273_BITS_63_TO_56__q68 = word128__h58273[63:56] ;
-  assign word1288273_BITS_71_TO_64__q69 = word128__h58273[71:64] ;
-  assign word1288273_BITS_79_TO_64__q70 = word128__h58273[79:64] ;
-  assign word1288273_BITS_79_TO_72__q73 = word128__h58273[79:72] ;
-  assign word1288273_BITS_7_TO_0__q54 = word128__h58273[7:0] ;
-  assign word1288273_BITS_87_TO_80__q74 = word128__h58273[87:80] ;
-  assign word1288273_BITS_95_TO_64__q71 = word128__h58273[95:64] ;
-  assign word1288273_BITS_95_TO_80__q75 = word128__h58273[95:80] ;
-  assign word1288273_BITS_95_TO_88__q76 = word128__h58273[95:88] ;
-  assign word128__h55392 =
+  assign word1287902_BITS_103_TO_96__q77 = word128__h57902[103:96] ;
+  assign word1287902_BITS_111_TO_104__q80 = word128__h57902[111:104] ;
+  assign word1287902_BITS_111_TO_96__q78 = word128__h57902[111:96] ;
+  assign word1287902_BITS_119_TO_112__q82 = word128__h57902[119:112] ;
+  assign word1287902_BITS_127_TO_112__q81 = word128__h57902[127:112] ;
+  assign word1287902_BITS_127_TO_120__q83 = word128__h57902[127:120] ;
+  assign word1287902_BITS_127_TO_64__q72 = word128__h57902[127:64] ;
+  assign word1287902_BITS_127_TO_96__q79 = word128__h57902[127:96] ;
+  assign word1287902_BITS_15_TO_0__q55 = word128__h57902[15:0] ;
+  assign word1287902_BITS_15_TO_8__q58 = word128__h57902[15:8] ;
+  assign word1287902_BITS_23_TO_16__q59 = word128__h57902[23:16] ;
+  assign word1287902_BITS_31_TO_0__q56 = word128__h57902[31:0] ;
+  assign word1287902_BITS_31_TO_16__q60 = word128__h57902[31:16] ;
+  assign word1287902_BITS_31_TO_24__q61 = word128__h57902[31:24] ;
+  assign word1287902_BITS_39_TO_32__q62 = word128__h57902[39:32] ;
+  assign word1287902_BITS_47_TO_32__q63 = word128__h57902[47:32] ;
+  assign word1287902_BITS_47_TO_40__q65 = word128__h57902[47:40] ;
+  assign word1287902_BITS_55_TO_48__q66 = word128__h57902[55:48] ;
+  assign word1287902_BITS_63_TO_0__q57 = word128__h57902[63:0] ;
+  assign word1287902_BITS_63_TO_32__q64 = word128__h57902[63:32] ;
+  assign word1287902_BITS_63_TO_48__q67 = word128__h57902[63:48] ;
+  assign word1287902_BITS_63_TO_56__q68 = word128__h57902[63:56] ;
+  assign word1287902_BITS_71_TO_64__q69 = word128__h57902[71:64] ;
+  assign word1287902_BITS_79_TO_64__q70 = word128__h57902[79:64] ;
+  assign word1287902_BITS_79_TO_72__q73 = word128__h57902[79:72] ;
+  assign word1287902_BITS_7_TO_0__q54 = word128__h57902[7:0] ;
+  assign word1287902_BITS_87_TO_80__q74 = word128__h57902[87:80] ;
+  assign word1287902_BITS_95_TO_64__q71 = word128__h57902[95:64] ;
+  assign word1287902_BITS_95_TO_80__q75 = word128__h57902[95:80] ;
+  assign word1287902_BITS_95_TO_88__q76 = word128__h57902[95:88] ;
+  assign word128__h55021 =
 	     { 64'd0, cache_master_xactor_shim_rff_rv$port1__read[67:4] } ;
-  assign word128__h58273 =
-	     cache_rg_lower_word64_full ? b__h52211 : x__h55526 ;
-  assign word64__h6002 =
-	     cache_f_fabric_write_reqs$D_OUT[63:0] << shift_bits__h5701 ;
-  assign x1_avValue_exc_code__h9284 =
+  assign word128__h57902 =
+	     cache_rg_lower_word64_full ? b__h51840 : x__h55155 ;
+  assign word64__h6001 =
+	     cache_f_fabric_write_reqs$D_OUT[63:0] << shift_bits__h5700 ;
+  assign x1_avValue_exc_code__h9002 =
 	     (cache_rg_op == 2'd0 ||
 	      cache_rg_op == 2'd2 && cache_rg_amo_funct5 == 5'b00010) ?
 	       6'd13 :
 	       6'd15 ;
-  assign x1_avValue_pa__h9283 = MUX_cache_rg_pa$write_1__VAL_2 ;
-  assign x__h11052 = cache_ram_word128_set$DOB[128:0] & y__h11068 ;
-  assign x__h42797 =
+  assign x1_avValue_pa__h9001 = MUX_cache_rg_pa$write_1__VAL_2 ;
+  assign x__h10792 = cache_ram_word128_set$DOB[128:0] & y__h10814 ;
+  assign x__h42482 =
 	     (cache_rg_width_code == 3'b010) ?
-	       new_st_val_64__h42799 :
-	       _theResult_____2__h42793 ;
-  assign x__h48588 =
+	       new_st_val_64__h42484 :
+	       _theResult_____2__h42478 ;
+  assign x__h48217 =
 	     { cache_master_xactor_shim_rff_rv$port1__read[57:14], 12'b0 } ;
-  assign x__h58134 =
+  assign x__h57763 =
 	     (cache_rg_width_code == 3'b100) ?
 	       cache_rg_st_amo_val[127:0] :
-	       new_st_val_128__h58140 ;
-  assign x__h58143 =
+	       new_st_val_128__h57769 ;
+  assign x__h57772 =
 	     (cache_rg_width_code == 3'b010) ?
-	       new_st_val_64__h58145 :
-	       _theResult_____2__h58139 ;
-  assign x__h8097 = { cache_rg_satp[43:0], 12'b0 } ;
-  assign x__h9745 = { cache_tlb$lookup[119:76], cache_rg_addr[11:0] } ;
-  assign x__h9794 = { cache_tlb$lookup[119:85], cache_rg_addr[20:0] } ;
-  assign x__h9863 = { cache_tlb$lookup[119:94], cache_rg_addr[29:0] } ;
-  assign y__h11053 = cache_ram_word128_set$DOB[257:129] & y__h23764 ;
-  assign y__h11068 =
+	       new_st_val_64__h57774 :
+	       _theResult_____2__h57768 ;
+  assign x__h7815 = { cache_rg_satp[43:0], 12'b0 } ;
+  assign x__h9481 = { cache_tlb$lookup[119:76], cache_rg_addr[11:0] } ;
+  assign x__h9530 = { cache_tlb$lookup[119:85], cache_rg_addr[20:0] } ;
+  assign x__h9599 = { cache_tlb$lookup[119:94], cache_rg_addr[29:0] } ;
+  assign y__h10793 = cache_ram_word128_set$DOB[257:129] & y__h23510 ;
+  assign y__h10814 =
 	     {129{cache_ram_state_and_ctag_cset$DOB[52] &&
-		  cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d277}} ;
-  assign y__h23764 =
+		  cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d274}} ;
+  assign y__h23510 =
 	     {129{cache_ram_state_and_ctag_cset$DOB[105] &&
-		  cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283}} ;
-  assign y__h9542 = cache_rg_mstatus_MXR & cache_tlb$lookup[69] ;
+		  cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280}} ;
+  assign y__h9278 = cache_rg_mstatus_MXR & cache_tlb$lookup[69] ;
   always@(cache_f_fabric_write_reqs$D_OUT)
   begin
     case (cache_f_fabric_write_reqs$D_OUT[195:193])
-      3'b0, 3'b001, 3'b010, 3'b011: fabric_2_strb__h5678 = 8'd0;
-      3'b100: fabric_2_strb__h5678 = 8'b11111111;
-      default: fabric_2_strb__h5678 = 8'd0;
+      3'b0, 3'b001, 3'b010, 3'b011: fabric_2_strb__h5677 = 8'd0;
+      3'b100: fabric_2_strb__h5677 = 8'b11111111;
+      default: fabric_2_strb__h5677 = 8'd0;
     endcase
   end
   always@(cache_rg_width_code)
   begin
     case (cache_rg_width_code)
-      3'd0, 3'd1, 3'b010, 3'd3, 3'b100: x__h41964 = 128'd1;
-      default: x__h41964 = 128'd0;
+      3'd0, 3'd1, 3'b010, 3'd3, 3'b100: x__h41649 = 128'd1;
+      default: x__h41649 = 128'd0;
     endcase
   end
   always@(cache_f_fabric_write_reqs$D_OUT)
   begin
     case (cache_f_fabric_write_reqs$D_OUT[195:193])
       3'b0, 3'b001, 3'b010:
-	  _theResult___snd_snd_fst_val__h6022 =
+	  _theResult___snd_snd_fst_val__h6021 =
 	      cache_f_fabric_write_reqs$D_OUT[195:193];
-      3'b011, 3'b100: _theResult___snd_snd_fst_val__h6022 = 3'b011;
-      default: _theResult___snd_snd_fst_val__h6022 = 3'b110;
+      3'b011, 3'b100: _theResult___snd_snd_fst_val__h6021 = 3'b011;
+      default: _theResult___snd_snd_fst_val__h6021 = 3'b110;
     endcase
   end
   always@(cache_rg_width_code)
   begin
     case (cache_rg_width_code)
-      3'd0, 3'd1, 3'b010, 3'd3: size_val__h57314 = cache_rg_width_code;
-      default: size_val__h57314 = 3'b100;
+      3'd0, 3'd1, 3'b010, 3'd3: size_val__h56943 = cache_rg_width_code;
+      default: size_val__h56943 = 3'b100;
     endcase
   end
   always@(cache_tlb$lookup or
-	  cache_rg_addr or pa___1__h9742 or pa___1__h9791 or pa___1__h9860)
+	  cache_rg_addr or pa___1__h9478 or pa___1__h9527 or pa___1__h9596)
   begin
     case (cache_tlb$lookup[65:64])
-      2'd0: _theResult___fst__h9736 = pa___1__h9742;
-      2'd1: _theResult___fst__h9736 = pa___1__h9791;
-      2'd2: _theResult___fst__h9736 = pa___1__h9860;
-      2'd3: _theResult___fst__h9736 = cache_rg_addr;
+      2'd0: _theResult___fst__h9472 = pa___1__h9478;
+      2'd1: _theResult___fst__h9472 = pa___1__h9527;
+      2'd2: _theResult___fst__h9472 = pa___1__h9596;
+      2'd3: _theResult___fst__h9472 = cache_rg_addr;
     endcase
   end
   always@(cache_f_fabric_write_reqs$D_OUT or
-	  strobe64__h6003 or
-	  strobe64__h6007 or strobe64__h6011 or strobe64__h6015)
+	  strobe64__h6002 or
+	  strobe64__h6006 or strobe64__h6010 or strobe64__h6014)
   begin
     case (cache_f_fabric_write_reqs$D_OUT[195:193])
-      3'b0: mem_req_wr_data_wstrb__h6081 = strobe64__h6003;
-      3'b001: mem_req_wr_data_wstrb__h6081 = strobe64__h6007;
-      3'b010: mem_req_wr_data_wstrb__h6081 = strobe64__h6011;
-      3'b011: mem_req_wr_data_wstrb__h6081 = strobe64__h6015;
-      3'b100: mem_req_wr_data_wstrb__h6081 = 8'b11111111;
-      default: mem_req_wr_data_wstrb__h6081 = 8'd0;
+      3'b0: mem_req_wr_data_wstrb__h6080 = strobe64__h6002;
+      3'b001: mem_req_wr_data_wstrb__h6080 = strobe64__h6006;
+      3'b010: mem_req_wr_data_wstrb__h6080 = strobe64__h6010;
+      3'b011: mem_req_wr_data_wstrb__h6080 = strobe64__h6014;
+      3'b100: mem_req_wr_data_wstrb__h6080 = 8'b11111111;
+      default: mem_req_wr_data_wstrb__h6080 = 8'd0;
     endcase
   end
-  always@(cache_f_fabric_write_reqs$D_OUT or word64__h6002)
+  always@(cache_f_fabric_write_reqs$D_OUT or word64__h6001)
   begin
     case (cache_f_fabric_write_reqs$D_OUT[195:193])
       3'b0, 3'b001, 3'b010, 3'b011:
-	  mem_req_wr_data_wdata__h6080 = word64__h6002;
-      default: mem_req_wr_data_wdata__h6080 =
+	  mem_req_wr_data_wdata__h6079 = word64__h6001;
+      default: mem_req_wr_data_wdata__h6079 =
 		   cache_f_fabric_write_reqs$D_OUT[63:0];
     endcase
   end
   always@(cache_ram_state_and_ctag_cset$DOB or
-	  cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283 or
+	  cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280 or
 	  cache_ram_word128_set$DOB)
   begin
     case (cache_ram_state_and_ctag_cset$DOB[105] &&
-	  cache_ram_state_and_ctag_cset_b_read__72_BITS__ETC___d283)
-      1'd0: new_word128__h38784 = cache_ram_word128_set$DOB[127:0];
-      1'd1: new_word128__h38784 = cache_ram_word128_set$DOB[256:129];
+	  cache_ram_state_and_ctag_cset_b_read__69_BITS__ETC___d280)
+      1'd0: new_word128__h38530 = cache_ram_word128_set$DOB[127:0];
+      1'd1: new_word128__h38530 = cache_ram_word128_set$DOB[256:129];
     endcase
   end
   always@(cache_rg_width_code or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320 or
-	  cache_rg_priv_68_ULE_0b1___d169 or
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317 or
+	  cache_rg_priv_65_ULE_0b1___d166 or
 	  cache_rg_satp or cache_tlb$RDY_lookup)
   begin
     case (cache_rg_width_code)
       3'd0, 3'd1, 3'b010, 3'd3:
-	  IF_cache_rg_width_code_87_EQ_0_88_OR_cache_rg__ETC___d370 =
-	      !cache_rg_priv_68_ULE_0b1___d169 ||
+	  IF_cache_rg_width_code_84_EQ_0_85_OR_cache_rg__ETC___d367 =
+	      !cache_rg_priv_65_ULE_0b1___d166 ||
 	      cache_rg_satp[63:60] != 4'd8 ||
 	      cache_tlb$RDY_lookup;
-      default: IF_cache_rg_width_code_87_EQ_0_88_OR_cache_rg__ETC___d370 =
+      default: IF_cache_rg_width_code_84_EQ_0_85_OR_cache_rg__ETC___d367 =
 		   cache_rg_width_code == 3'b100 ||
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
     endcase
   end
   always@(cache_rg_addr or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320)
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 or
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317)
   begin
     case (cache_rg_addr[3:0])
       4'h0,
@@ -5132,102 +5067,102 @@ module mkMMU_DCache(CLK,
       4'hC,
       4'hD,
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d325 =
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d322 =
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
       4'd15:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d325 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d322 =
 	      cache_rg_addr[3:0] != 4'hF ||
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
     endcase
   end
   always@(cache_rg_addr or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320)
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 or
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317)
   begin
     case (cache_rg_addr[3:0])
       4'h0, 4'h2, 4'h4, 4'h6, 4'h8, 4'hA, 4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d335 =
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d335 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d332 =
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d332 =
 		   cache_rg_addr[3:0] != 4'hE ||
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
     endcase
   end
   always@(cache_rg_addr or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320)
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 or
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317)
   begin
     case (cache_rg_addr[3:0])
       4'h0, 4'h4, 4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d341 =
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-	      NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d341 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d338 =
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+	      NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d338 =
 		   cache_rg_addr[3:0] != 4'hC ||
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
     endcase
   end
   always@(cache_rg_width_code or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d325 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d335 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d341 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d345)
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 or
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d322 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d332 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d338 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d342)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d325;
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d322;
       3'd1:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d335;
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d332;
       3'b010:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_O_ETC___d341;
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_O_ETC___d338;
       3'd3:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d345;
-      default: IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352 =
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d342;
+      default: IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349 =
 		   cache_rg_width_code != 3'b100 ||
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d319 &&
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d316 &&
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
     endcase
   end
   always@(cache_rg_amo_funct5 or
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352)
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349)
   begin
     case (cache_rg_amo_funct5)
       5'b0, 5'b00100, 5'b01000, 5'b01100, 5'b10000, 5'b11000, 5'b11100:
 	  CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 =
-	      IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352;
+	      IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349;
       default: CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17 =
 		   cache_rg_amo_funct5 != 5'b10100 ||
-		   IF_cache_rg_width_code_87_EQ_0_88_THEN_IF_cach_ETC___d352;
+		   IF_cache_rg_width_code_84_EQ_0_85_THEN_IF_cach_ETC___d349;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d441 or
+  always@(x1_avValue_pa__h9001 or
+	  NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d438 or
 	  CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0, 4'h2, 4'h4, 4'h6, 4'h8, 4'hA, 4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d442 =
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d439 =
 	      CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17;
-      default: IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d442 =
-		   NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d441;
+      default: IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d439 =
+		   NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d438;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d431 or
+  always@(x1_avValue_pa__h9001 or
+	  NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d428 or
 	  CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0,
       4'h1,
       4'h2,
@@ -5243,1065 +5178,1065 @@ module mkMMU_DCache(CLK,
       4'hC,
       4'hD,
       4'hE:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d432 =
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d429 =
 	      CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17;
       4'd15:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d432 =
-	      NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d431;
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d429 =
+	      NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d428;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d447 or
+  always@(x1_avValue_pa__h9001 or
+	  NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d444 or
 	  CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0, 4'h4, 4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d448 =
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d445 =
 	      CASE_cache_rg_amo_funct5_0b0_IF_cache_rg_width_ETC__q17;
-      default: IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d448 =
-		   NOT_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_r_ETC___d447;
+      default: IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d445 =
+		   NOT_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_r_ETC___d444;
     endcase
   end
   always@(cache_rg_width_code or
-	  NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320 or
-	  cache_rg_priv_68_ULE_0b1___d169 or
+	  NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317 or
+	  cache_rg_priv_65_ULE_0b1___d166 or
 	  cache_rg_satp or
 	  cache_tlb$RDY_lookup or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d432 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d442 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d448 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d452 or
-	  cache_rg_width_code_87_EQ_0b100_46_OR_cache_rg_ETC___d454)
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d429 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d439 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d445 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d449 or
+	  cache_rg_width_code_84_EQ_0b100_43_OR_cache_rg_ETC___d451)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459 =
-	      (!cache_rg_priv_68_ULE_0b1___d169 ||
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456 =
+	      (!cache_rg_priv_65_ULE_0b1___d166 ||
 	       cache_rg_satp[63:60] != 4'd8 ||
 	       cache_tlb$RDY_lookup) &&
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d432;
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d429;
       3'd1:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459 =
-	      (!cache_rg_priv_68_ULE_0b1___d169 ||
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456 =
+	      (!cache_rg_priv_65_ULE_0b1___d166 ||
 	       cache_rg_satp[63:60] != 4'd8 ||
 	       cache_tlb$RDY_lookup) &&
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d442;
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d439;
       3'b010:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459 =
-	      (!cache_rg_priv_68_ULE_0b1___d169 ||
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456 =
+	      (!cache_rg_priv_65_ULE_0b1___d166 ||
 	       cache_rg_satp[63:60] != 4'd8 ||
 	       cache_tlb$RDY_lookup) &&
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d448;
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d445;
       3'd3:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459 =
-	      (!cache_rg_priv_68_ULE_0b1___d169 ||
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456 =
+	      (!cache_rg_priv_65_ULE_0b1___d166 ||
 	       cache_rg_satp[63:60] != 4'd8 ||
 	       cache_tlb$RDY_lookup) &&
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d452;
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d449;
       3'b100:
-	  IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459 =
-	      cache_rg_width_code_87_EQ_0b100_46_OR_cache_rg_ETC___d454;
-      default: IF_cache_rg_width_code_87_EQ_0_88_THEN_NOT_cac_ETC___d459 =
-		   NOT_cache_ram_state_and_ctag_cset_b_read__72_B_ETC___d320;
+	  IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456 =
+	      cache_rg_width_code_84_EQ_0b100_43_OR_cache_rg_ETC___d451;
+      default: IF_cache_rg_width_code_84_EQ_0_85_THEN_NOT_cac_ETC___d456 =
+		   NOT_cache_ram_state_and_ctag_cset_b_read__69_B_ETC___d317;
     endcase
   end
   always@(cache_rg_addr or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d894 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d898)
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d887 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d891)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  _theResult___fst__h43926 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d894;
+	  _theResult___fst__h43611 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d887;
       4'h8:
-	  _theResult___fst__h43926 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d898;
-      default: _theResult___fst__h43926 = 128'd0;
+	  _theResult___fst__h43611 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d891;
+      default: _theResult___fst__h43611 = 128'd0;
     endcase
   end
-  always@(cache_rg_addr or result__h11002 or result__h11004)
+  always@(cache_rg_addr or result__h10738 or result__h10740)
   begin
     case (cache_rg_addr[3:0])
-      4'h0: _theResult___fst__h11000 = result__h11002;
-      4'h8: _theResult___fst__h11000 = result__h11004;
-      default: _theResult___fst__h11000 = 128'd0;
+      4'h0: _theResult___fst__h10736 = result__h10738;
+      4'h8: _theResult___fst__h10736 = result__h10740;
+      default: _theResult___fst__h10736 = 128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d874 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d878 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d882 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d886)
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d867 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d871 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d875 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d879)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d874;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d867;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d878;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d871;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d882;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d875;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d886;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d879;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h37311 or
-	  result__h37344 or result__h37377 or result__h37410)
+	  result__h37057 or
+	  result__h37090 or result__h37123 or result__h37156)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891 =
-	      result__h37311;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884 =
+	      result__h37057;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891 =
-	      result__h37344;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884 =
+	      result__h37090;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891 =
-	      result__h37377;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884 =
+	      result__h37123;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891 =
-	      result__h37410;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884 =
+	      result__h37156;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d834 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d838 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d842 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d846 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d850 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d854 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d858 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d862)
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d827 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d831 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d835 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d839 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d843 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d847 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d851 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d855)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d834;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d827;
       4'h2:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d838;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d831;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d842;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d835;
       4'h6:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d846;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d839;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d850;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d843;
       4'hA:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d854;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d847;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d858;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d851;
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d862;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d855;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h37033 or
-	  result__h37066 or
-	  result__h37099 or
-	  result__h37132 or
-	  result__h37165 or
-	  result__h37198 or result__h37231 or result__h37264)
+	  result__h36779 or
+	  result__h36812 or
+	  result__h36845 or
+	  result__h36878 or
+	  result__h36911 or
+	  result__h36944 or result__h36977 or result__h37010)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37033;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36779;
       4'h2:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37066;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36812;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37099;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36845;
       4'h6:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37132;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36878;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37165;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36911;
       4'hA:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37198;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36944;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37231;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h36977;
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
-	      result__h37264;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
+	      result__h37010;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d754 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d758 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d762 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d766 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d770 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d774 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d778 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d782 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d786 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d790 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d794 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d798 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d802 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d806 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d810 or
-	  SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d814)
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d747 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d751 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d755 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d759 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d763 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d767 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d771 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d775 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d779 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d783 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d787 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d791 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d795 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d799 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d803 or
+	  SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d807)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d754;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d747;
       4'h1:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d758;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d751;
       4'h2:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d762;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d755;
       4'h3:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d766;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d759;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d770;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d763;
       4'h5:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d774;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d767;
       4'h6:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d778;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d771;
       4'h7:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d782;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d775;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d786;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d779;
       4'h9:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d790;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d783;
       4'hA:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d794;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d787;
       4'hB:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d798;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d791;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d802;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d795;
       4'hD:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d806;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d799;
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d810;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d803;
       4'hF:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 =
-	      SEXT_cache_ram_word128_set_b_read__01_BITS_128_ETC___d814;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 =
+	      SEXT_cache_ram_word128_set_b_read__94_BITS_128_ETC___d807;
     endcase
   end
   always@(cache_rg_width_code or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992 or
-	  _theResult___fst__h43926 or
-	  cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747)
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985 or
+	  _theResult___fst__h43611 or
+	  cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  q1__h42643 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d980;
+	  q1__h42328 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d973;
       3'd1:
-	  q1__h42643 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d988;
+	  q1__h42328 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d981;
       3'b010:
-	  q1__h42643 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d992;
-      3'd3: q1__h42643 = _theResult___fst__h43926;
+	  q1__h42328 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d985;
+      3'd3: q1__h42328 = _theResult___fst__h43611;
       3'b100:
-	  q1__h42643 =
-	      cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:0];
-      default: q1__h42643 = 128'd0;
+	  q1__h42328 =
+	      cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:0];
+      default: q1__h42328 = 128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h36478 or
-	  result__h36516 or
-	  result__h36549 or
-	  result__h36582 or
-	  result__h36615 or
-	  result__h36648 or
-	  result__h36681 or
-	  result__h36714 or
-	  result__h36747 or
-	  result__h36780 or
-	  result__h36813 or
-	  result__h36846 or
-	  result__h36879 or
-	  result__h36912 or result__h36945 or result__h36978)
+	  result__h36224 or
+	  result__h36262 or
+	  result__h36295 or
+	  result__h36328 or
+	  result__h36361 or
+	  result__h36394 or
+	  result__h36427 or
+	  result__h36460 or
+	  result__h36493 or
+	  result__h36526 or
+	  result__h36559 or
+	  result__h36592 or
+	  result__h36625 or
+	  result__h36658 or result__h36691 or result__h36724)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36478;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36224;
       4'h1:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36516;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36262;
       4'h2:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36549;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36295;
       4'h3:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36582;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36328;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36615;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36361;
       4'h5:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36648;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36394;
       4'h6:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36681;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36427;
       4'h7:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36714;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36460;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36747;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36493;
       4'h9:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36780;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36526;
       4'hA:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36813;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36559;
       4'hB:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36846;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36592;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36879;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36625;
       4'hD:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36912;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36658;
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36945;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36691;
       4'hF:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 =
-	      result__h36978;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 =
+	      result__h36724;
     endcase
   end
   always@(cache_rg_width_code or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891 or
-	  _theResult___fst__h11000 or
-	  cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747)
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884 or
+	  _theResult___fst__h10736 or
+	  cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  x__h36467 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d831;
+	  x__h36213 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d824;
       3'd1:
-	  x__h36467 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d871;
+	  x__h36213 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d864;
       3'b010:
-	  x__h36467 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d891;
-      3'd3: x__h36467 = _theResult___fst__h11000;
+	  x__h36213 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d884;
+      3'd3: x__h36213 = _theResult___fst__h10736;
       3'b100:
-	  x__h36467 =
-	      cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747[127:0];
-      default: x__h36467 = 128'd0;
+	  x__h36213 =
+	      cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740[127:0];
+      default: x__h36213 = 128'd0;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or new_word128__h38784 or cache_rg_st_amo_val)
+  always@(x1_avValue_pa__h9001 or new_word128__h38530 or cache_rg_st_amo_val)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106 =
-	      { new_word128__h38784[127:32], cache_rg_st_amo_val[31:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099 =
+	      { new_word128__h38530[127:32], cache_rg_st_amo_val[31:0] };
       4'h4:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106 =
-	      { new_word128__h38784[127:64],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099 =
+	      { new_word128__h38530[127:64],
 		cache_rg_st_amo_val[31:0],
-		new_word128__h38784[31:0] };
+		new_word128__h38530[31:0] };
       4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106 =
-	      { new_word128__h38784[127:96],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099 =
+	      { new_word128__h38530[127:96],
 		cache_rg_st_amo_val[31:0],
-		new_word128__h38784[63:0] };
+		new_word128__h38530[63:0] };
       4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106 =
-	      { cache_rg_st_amo_val[31:0], new_word128__h38784[95:0] };
-      default: IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106 =
-		   new_word128__h38784;
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099 =
+	      { cache_rg_st_amo_val[31:0], new_word128__h38530[95:0] };
+      default: IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099 =
+		   new_word128__h38530;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or new_word128__h38784 or cache_rg_st_amo_val)
+  always@(x1_avValue_pa__h9001 or new_word128__h38530 or cache_rg_st_amo_val)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:16], cache_rg_st_amo_val[15:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:16], cache_rg_st_amo_val[15:0] };
       4'h2:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:32],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:32],
 		cache_rg_st_amo_val[15:0],
-		new_word128__h38784[15:0] };
+		new_word128__h38530[15:0] };
       4'h4:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:48],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:48],
 		cache_rg_st_amo_val[15:0],
-		new_word128__h38784[31:0] };
+		new_word128__h38530[31:0] };
       4'h6:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:64],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:64],
 		cache_rg_st_amo_val[15:0],
-		new_word128__h38784[47:0] };
+		new_word128__h38530[47:0] };
       4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:80],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:80],
 		cache_rg_st_amo_val[15:0],
-		new_word128__h38784[63:0] };
+		new_word128__h38530[63:0] };
       4'hA:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:96],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:96],
 		cache_rg_st_amo_val[15:0],
-		new_word128__h38784[79:0] };
+		new_word128__h38530[79:0] };
       4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { new_word128__h38784[127:112],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { new_word128__h38530[127:112],
 		cache_rg_st_amo_val[15:0],
-		new_word128__h38784[95:0] };
+		new_word128__h38530[95:0] };
       4'hE:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-	      { cache_rg_st_amo_val[15:0], new_word128__h38784[111:0] };
-      default: IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 =
-		   new_word128__h38784;
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+	      { cache_rg_st_amo_val[15:0], new_word128__h38530[111:0] };
+      default: IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 =
+		   new_word128__h38530;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or new_word128__h38784 or cache_rg_st_amo_val)
+  always@(x1_avValue_pa__h9001 or new_word128__h38530 or cache_rg_st_amo_val)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:8], cache_rg_st_amo_val[7:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:8], cache_rg_st_amo_val[7:0] };
       4'h1:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:16],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:16],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[7:0] };
+		new_word128__h38530[7:0] };
       4'h2:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:24],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:24],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[15:0] };
+		new_word128__h38530[15:0] };
       4'h3:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:32],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:32],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[23:0] };
+		new_word128__h38530[23:0] };
       4'h4:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:40],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:40],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[31:0] };
+		new_word128__h38530[31:0] };
       4'h5:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:48],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:48],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[39:0] };
+		new_word128__h38530[39:0] };
       4'h6:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:56],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:56],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[47:0] };
+		new_word128__h38530[47:0] };
       4'h7:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:64],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:64],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[55:0] };
+		new_word128__h38530[55:0] };
       4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:72],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:72],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[63:0] };
+		new_word128__h38530[63:0] };
       4'h9:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:80],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:80],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[71:0] };
+		new_word128__h38530[71:0] };
       4'hA:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:88],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:88],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[79:0] };
+		new_word128__h38530[79:0] };
       4'hB:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:96],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:96],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[87:0] };
+		new_word128__h38530[87:0] };
       4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:104],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:104],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[95:0] };
+		new_word128__h38530[95:0] };
       4'hD:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:112],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:112],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[103:0] };
+		new_word128__h38530[103:0] };
       4'hE:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { new_word128__h38784[127:120],
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { new_word128__h38530[127:120],
 		cache_rg_st_amo_val[7:0],
-		new_word128__h38784[111:0] };
+		new_word128__h38530[111:0] };
       4'hF:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 =
-	      { cache_rg_st_amo_val[7:0], new_word128__h38784[119:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 =
+	      { cache_rg_st_amo_val[7:0], new_word128__h38530[119:0] };
     endcase
   end
-  always@(x1_avValue_pa__h9283 or new_word128__h38784 or cache_rg_st_amo_val)
+  always@(x1_avValue_pa__h9001 or new_word128__h38530 or cache_rg_st_amo_val)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q48 =
-	      { new_word128__h38784[127:64], cache_rg_st_amo_val[63:0] };
+	  CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q48 =
+	      { new_word128__h38530[127:64], cache_rg_st_amo_val[63:0] };
       4'h8:
-	  CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q48 =
-	      { cache_rg_st_amo_val[63:0], new_word128__h38784[63:0] };
-      default: CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q48 =
-		   new_word128__h38784;
+	  CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q48 =
+	      { cache_rg_st_amo_val[63:0], new_word128__h38530[63:0] };
+      default: CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q48 =
+		   new_word128__h38530;
     endcase
   end
   always@(cache_rg_width_code or
-	  new_word128__h38784 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106 or
-	  CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q48 or
+	  new_word128__h38530 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099 or
+	  CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q48 or
 	  cache_rg_st_amo_val)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  b__h38802 =
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1080;
+	  b__h38548 =
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1073;
       3'd1:
-	  b__h38802 =
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1097;
+	  b__h38548 =
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1090;
       3'b010:
-	  b__h38802 =
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1106;
+	  b__h38548 =
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1099;
       3'd3:
-	  b__h38802 = CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q48;
-      3'b100: b__h38802 = cache_rg_st_amo_val[127:0];
-      default: b__h38802 = new_word128__h38784;
+	  b__h38548 = CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q48;
+      3'b100: b__h38548 = cache_rg_st_amo_val[127:0];
+      default: b__h38548 = new_word128__h38530;
     endcase
   end
   always@(cache_rg_amo_funct5 or
-	  new_st_val_64__h44045 or
-	  new_st_val_64__h42871 or
-	  w2__h42652 or
-	  new_st_val_64__h44017 or
-	  new_st_val_64__h44025 or
-	  new_st_val_64__h44021 or
-	  new_st_val_64__h44040 or
-	  new_st_val_64__h44029 or new_st_val_64__h44034)
+	  new_st_val_64__h43730 or
+	  new_st_val_64__h42556 or
+	  w2__h42337 or
+	  new_st_val_64__h43702 or
+	  new_st_val_64__h43710 or
+	  new_st_val_64__h43706 or
+	  new_st_val_64__h43725 or
+	  new_st_val_64__h43714 or new_st_val_64__h43719)
   begin
     case (cache_rg_amo_funct5)
-      5'b0: _theResult_____2__h42793 = new_st_val_64__h42871;
-      5'b00001: _theResult_____2__h42793 = w2__h42652;
-      5'b00100: _theResult_____2__h42793 = new_st_val_64__h44017;
-      5'b01000: _theResult_____2__h42793 = new_st_val_64__h44025;
-      5'b01100: _theResult_____2__h42793 = new_st_val_64__h44021;
-      5'b10000: _theResult_____2__h42793 = new_st_val_64__h44040;
-      5'b11000: _theResult_____2__h42793 = new_st_val_64__h44029;
-      5'b11100: _theResult_____2__h42793 = new_st_val_64__h44034;
-      default: _theResult_____2__h42793 = new_st_val_64__h44045;
+      5'b0: _theResult_____2__h42478 = new_st_val_64__h42556;
+      5'b00001: _theResult_____2__h42478 = w2__h42337;
+      5'b00100: _theResult_____2__h42478 = new_st_val_64__h43702;
+      5'b01000: _theResult_____2__h42478 = new_st_val_64__h43710;
+      5'b01100: _theResult_____2__h42478 = new_st_val_64__h43706;
+      5'b10000: _theResult_____2__h42478 = new_st_val_64__h43725;
+      5'b11000: _theResult_____2__h42478 = new_st_val_64__h43714;
+      5'b11100: _theResult_____2__h42478 = new_st_val_64__h43719;
+      default: _theResult_____2__h42478 = new_st_val_64__h43730;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  new_word128__h38784 or
-	  IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157)
+  always@(x1_avValue_pa__h9001 or
+	  new_word128__h38530 or
+	  IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216 =
-	      { new_word128__h38784[127:32],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[31:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209 =
+	      { new_word128__h38530[127:32],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[31:0] };
       4'h4:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216 =
-	      { new_word128__h38784[127:64],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[31:0],
-		new_word128__h38784[31:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209 =
+	      { new_word128__h38530[127:64],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[31:0],
+		new_word128__h38530[31:0] };
       4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216 =
-	      { new_word128__h38784[127:96],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[31:0],
-		new_word128__h38784[63:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209 =
+	      { new_word128__h38530[127:96],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[31:0],
+		new_word128__h38530[63:0] };
       4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216 =
-	      { IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[31:0],
-		new_word128__h38784[95:0] };
-      default: IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216 =
-		   new_word128__h38784;
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209 =
+	      { IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[31:0],
+		new_word128__h38530[95:0] };
+      default: IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209 =
+		   new_word128__h38530;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  new_word128__h38784 or
-	  IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157)
+  always@(x1_avValue_pa__h9001 or
+	  new_word128__h38530 or
+	  IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:16],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:16],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0] };
       4'h2:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:32],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[15:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:32],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[15:0] };
       4'h4:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:48],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[31:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:48],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[31:0] };
       4'h6:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:64],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[47:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:64],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[47:0] };
       4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:80],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[63:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:80],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[63:0] };
       4'hA:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:96],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[79:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:96],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[79:0] };
       4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { new_word128__h38784[127:112],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[95:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { new_word128__h38530[127:112],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[95:0] };
       4'hE:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-	      { IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[15:0],
-		new_word128__h38784[111:0] };
-      default: IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 =
-		   new_word128__h38784;
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+	      { IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[15:0],
+		new_word128__h38530[111:0] };
+      default: IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 =
+		   new_word128__h38530;
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  new_word128__h38784 or
-	  IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157)
+  always@(x1_avValue_pa__h9001 or
+	  new_word128__h38530 or
+	  IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:8],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:8],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0] };
       4'h1:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:16],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[7:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:16],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[7:0] };
       4'h2:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:24],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[15:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:24],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[15:0] };
       4'h3:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:32],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[23:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:32],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[23:0] };
       4'h4:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:40],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[31:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:40],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[31:0] };
       4'h5:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:48],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[39:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:48],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[39:0] };
       4'h6:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:56],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[47:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:56],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[47:0] };
       4'h7:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:64],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[55:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:64],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[55:0] };
       4'h8:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:72],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[63:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:72],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[63:0] };
       4'h9:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:80],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[71:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:80],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[71:0] };
       4'hA:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:88],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[79:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:88],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[79:0] };
       4'hB:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:96],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[87:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:96],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[87:0] };
       4'hC:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:104],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[95:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:104],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[95:0] };
       4'hD:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:112],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[103:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:112],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[103:0] };
       4'hE:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { new_word128__h38784[127:120],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[111:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { new_word128__h38530[127:120],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[111:0] };
       4'hF:
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 =
-	      { IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[7:0],
-		new_word128__h38784[119:0] };
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 =
+	      { IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[7:0],
+		new_word128__h38530[119:0] };
     endcase
   end
-  always@(x1_avValue_pa__h9283 or
-	  new_word128__h38784 or
-	  IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157)
+  always@(x1_avValue_pa__h9001 or
+	  new_word128__h38530 or
+	  IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150)
   begin
-    case (x1_avValue_pa__h9283[3:0])
+    case (x1_avValue_pa__h9001[3:0])
       4'h0:
-	  CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q51 =
-	      { new_word128__h38784[127:64],
-		IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[63:0] };
+	  CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q51 =
+	      { new_word128__h38530[127:64],
+		IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[63:0] };
       4'h8:
-	  CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q51 =
-	      { IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157[63:0],
-		new_word128__h38784[63:0] };
-      default: CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q51 =
-		   new_word128__h38784;
+	  CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q51 =
+	      { IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150[63:0],
+		new_word128__h38530[63:0] };
+      default: CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q51 =
+		   new_word128__h38530;
     endcase
   end
   always@(cache_rg_width_code or
-	  new_word128__h38784 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207 or
-	  IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216 or
-	  CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q51 or
-	  IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157)
+	  new_word128__h38530 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200 or
+	  IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209 or
+	  CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q51 or
+	  IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  b__h42582 =
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1190;
+	  b__h42267 =
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1183;
       3'd1:
-	  b__h42582 =
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1207;
+	  b__h42267 =
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1200;
       3'b010:
-	  b__h42582 =
-	      IF_IF_cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_ETC___d1216;
+	  b__h42267 =
+	      IF_IF_cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_ETC___d1209;
       3'd3:
-	  b__h42582 = CASE_x1_avValue_pa283_BITS_3_TO_0_0x0_new_word_ETC__q51;
+	  b__h42267 = CASE_x1_avValue_pa001_BITS_3_TO_0_0x0_new_word_ETC__q51;
       3'b100:
-	  b__h42582 =
-	      IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157;
-      default: b__h42582 = new_word128__h38784;
+	  b__h42267 =
+	      IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150;
+      default: b__h42267 = new_word128__h38530;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h55834 or
-	  result__h55867 or result__h55900 or result__h55933)
+	  result__h55166 or
+	  result__h55202 or
+	  result__h55235 or
+	  result__h55268 or
+	  result__h55301 or
+	  result__h55334 or result__h55367 or result__h55400)
   begin
     case (cache_rg_addr[2:0])
       3'd0:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698 =
-	      result__h55834;
-      3'd2:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698 =
-	      result__h55867;
-      3'd4:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698 =
-	      result__h55900;
-      3'd6:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698 =
-	      result__h55933;
-      default: IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698 =
-		   128'd0;
-    endcase
-  end
-  always@(cache_rg_addr or
-	  result__h55537 or
-	  result__h55573 or
-	  result__h55606 or
-	  result__h55639 or
-	  result__h55672 or
-	  result__h55705 or result__h55738 or result__h55771)
-  begin
-    case (cache_rg_addr[2:0])
-      3'd0:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55537;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55166;
       3'd1:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55573;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55202;
       3'd2:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55606;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55235;
       3'd3:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55639;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55268;
       3'd4:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55672;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55301;
       3'd5:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55705;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55334;
       3'd6:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55738;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55367;
       3'd7:
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 =
-	      result__h55771;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 =
+	      result__h55400;
     endcase
   end
-  always@(cache_rg_addr or result__h55984 or result__h56017)
+  always@(cache_rg_addr or
+	  result__h55463 or
+	  result__h55496 or result__h55529 or result__h55562)
   begin
     case (cache_rg_addr[2:0])
       3'd0:
-	  CASE_cache_rg_addr_BITS_2_TO_0_0_result5984_4__ETC__q53 =
-	      result__h55984;
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680 =
+	      result__h55463;
+      3'd2:
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680 =
+	      result__h55496;
       3'd4:
-	  CASE_cache_rg_addr_BITS_2_TO_0_0_result5984_4__ETC__q53 =
-	      result__h56017;
-      default: CASE_cache_rg_addr_BITS_2_TO_0_0_result5984_4__ETC__q53 =
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680 =
+	      result__h55529;
+      3'd6:
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680 =
+	      result__h55562;
+      default: IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680 =
+		   128'd0;
+    endcase
+  end
+  always@(cache_rg_addr or result__h55613 or result__h55646)
+  begin
+    case (cache_rg_addr[2:0])
+      3'd0:
+	  CASE_cache_rg_addr_BITS_2_TO_0_0_result5613_4__ETC__q53 =
+	      result__h55613;
+      3'd4:
+	  CASE_cache_rg_addr_BITS_2_TO_0_0_result5613_4__ETC__q53 =
+	      result__h55646;
+      default: CASE_cache_rg_addr_BITS_2_TO_0_0_result5613_4__ETC__q53 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_width_code or
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678 or
-	  IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698 or
-	  CASE_cache_rg_addr_BITS_2_TO_0_0_result5984_4__ETC__q53 or
-	  _theResult___fst__h55497 or word128__h55392)
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660 or
+	  IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680 or
+	  CASE_cache_rg_addr_BITS_2_TO_0_0_result5613_4__ETC__q53 or
+	  _theResult___fst__h55126 or word128__h55021)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  x__h55526 =
-	      IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1678;
+	  x__h55155 =
+	      IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1660;
       3'd1:
-	  x__h55526 =
-	      IF_cache_rg_addr_79_BITS_2_TO_0_630_EQ_0_631_T_ETC___d1698;
+	  x__h55155 =
+	      IF_cache_rg_addr_76_BITS_2_TO_0_612_EQ_0_613_T_ETC___d1680;
       3'b010:
-	  x__h55526 = CASE_cache_rg_addr_BITS_2_TO_0_0_result5984_4__ETC__q53;
-      3'd3: x__h55526 = _theResult___fst__h55497;
-      3'b100: x__h55526 = word128__h55392;
-      default: x__h55526 = 128'd0;
+	  x__h55155 = CASE_cache_rg_addr_BITS_2_TO_0_0_result5613_4__ETC__q53;
+      3'd3: x__h55155 = _theResult___fst__h55126;
+      3'b100: x__h55155 = word128__h55021;
+      default: x__h55155 = 128'd0;
     endcase
   end
-  always@(cache_rg_addr or result__h59967 or result__h59996)
+  always@(cache_rg_addr or result__h59596 or result__h59625)
   begin
     case (cache_rg_addr[3:0])
-      4'h0: _theResult___fst__h59965 = result__h59967;
-      4'h8: _theResult___fst__h59965 = result__h59996;
-      default: _theResult___fst__h59965 = 128'd0;
+      4'h0: _theResult___fst__h59594 = result__h59596;
+      4'h8: _theResult___fst__h59594 = result__h59625;
+      default: _theResult___fst__h59594 = 128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h59817 or
-	  result__h59849 or result__h59881 or result__h59913)
+	  result__h59446 or
+	  result__h59478 or result__h59510 or result__h59542)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875 =
-	      result__h59817;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857 =
+	      result__h59446;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875 =
-	      result__h59849;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857 =
+	      result__h59478;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875 =
-	      result__h59881;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857 =
+	      result__h59510;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875 =
-	      result__h59913;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857 =
+	      result__h59542;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h59547 or
-	  result__h59579 or
-	  result__h59611 or
-	  result__h59643 or
-	  result__h59675 or
-	  result__h59707 or result__h59739 or result__h59771)
+	  result__h59176 or
+	  result__h59208 or
+	  result__h59240 or
+	  result__h59272 or
+	  result__h59304 or
+	  result__h59336 or result__h59368 or result__h59400)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59547;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59176;
       4'h2:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59579;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59208;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59611;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59240;
       4'h6:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59643;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59272;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59675;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59304;
       4'hA:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59707;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59336;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59739;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59368;
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
-	      result__h59771;
-      default: IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 =
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
+	      result__h59400;
+      default: IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 =
 		   128'd0;
     endcase
   end
   always@(cache_rg_addr or
-	  result__h58348 or
-	  result__h59045 or
-	  result__h59077 or
-	  result__h59109 or
-	  result__h59141 or
-	  result__h59173 or
-	  result__h59205 or
-	  result__h59237 or
-	  result__h59269 or
-	  result__h59301 or
-	  result__h59333 or
-	  result__h59365 or
-	  result__h59397 or
-	  result__h59429 or result__h59461 or result__h59493)
+	  result__h57977 or
+	  result__h58674 or
+	  result__h58706 or
+	  result__h58738 or
+	  result__h58770 or
+	  result__h58802 or
+	  result__h58834 or
+	  result__h58866 or
+	  result__h58898 or
+	  result__h58930 or
+	  result__h58962 or
+	  result__h58994 or
+	  result__h59026 or
+	  result__h59058 or result__h59090 or result__h59122)
   begin
     case (cache_rg_addr[3:0])
       4'h0:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h58348;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h57977;
       4'h1:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59045;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58674;
       4'h2:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59077;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58706;
       4'h3:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59109;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58738;
       4'h4:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59141;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58770;
       4'h5:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59173;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58802;
       4'h6:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59205;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58834;
       4'h7:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59237;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58866;
       4'h8:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59269;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58898;
       4'h9:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59301;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58930;
       4'hA:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59333;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58962;
       4'hB:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59365;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h58994;
       4'hC:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59397;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h59026;
       4'hD:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59429;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h59058;
       4'hE:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59461;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h59090;
       4'hF:
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 =
-	      result__h59493;
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 =
+	      result__h59122;
     endcase
   end
   always@(cache_rg_width_code or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863 or
-	  IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875 or
-	  _theResult___fst__h59965 or word128__h58273)
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845 or
+	  IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857 or
+	  _theResult___fst__h59594 or word128__h57902)
   begin
     case (cache_rg_width_code)
       3'd0:
-	  q1__h58099 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1839;
+	  q1__h57728 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1821;
       3'd1:
-	  q1__h58099 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1863;
+	  q1__h57728 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1845;
       3'b010:
-	  q1__h58099 =
-	      IF_cache_rg_addr_79_BITS_3_TO_0_89_EQ_0x0_90_T_ETC___d1875;
-      3'd3: q1__h58099 = _theResult___fst__h59965;
-      3'b100: q1__h58099 = word128__h58273;
-      default: q1__h58099 = 128'd0;
+	  q1__h57728 =
+	      IF_cache_rg_addr_76_BITS_3_TO_0_86_EQ_0x0_87_T_ETC___d1857;
+      3'd3: q1__h57728 = _theResult___fst__h59594;
+      3'b100: q1__h57728 = word128__h57902;
+      default: q1__h57728 = 128'd0;
     endcase
   end
   always@(cache_rg_amo_funct5 or
-	  new_st_val_64__h60086 or
-	  new_st_val_64__h58217 or
-	  w2__h42652 or
-	  new_st_val_64__h60058 or
-	  new_st_val_64__h60066 or
-	  new_st_val_64__h60062 or
-	  new_st_val_64__h60081 or
-	  new_st_val_64__h60070 or new_st_val_64__h60075)
+	  new_st_val_64__h59715 or
+	  new_st_val_64__h57846 or
+	  w2__h42337 or
+	  new_st_val_64__h59687 or
+	  new_st_val_64__h59695 or
+	  new_st_val_64__h59691 or
+	  new_st_val_64__h59710 or
+	  new_st_val_64__h59699 or new_st_val_64__h59704)
   begin
     case (cache_rg_amo_funct5)
-      5'b0: _theResult_____2__h58139 = new_st_val_64__h58217;
-      5'b00001: _theResult_____2__h58139 = w2__h42652;
-      5'b00100: _theResult_____2__h58139 = new_st_val_64__h60058;
-      5'b01000: _theResult_____2__h58139 = new_st_val_64__h60066;
-      5'b01100: _theResult_____2__h58139 = new_st_val_64__h60062;
-      5'b10000: _theResult_____2__h58139 = new_st_val_64__h60081;
-      5'b11000: _theResult_____2__h58139 = new_st_val_64__h60070;
-      5'b11100: _theResult_____2__h58139 = new_st_val_64__h60075;
-      default: _theResult_____2__h58139 = new_st_val_64__h60086;
+      5'b0: _theResult_____2__h57768 = new_st_val_64__h57846;
+      5'b00001: _theResult_____2__h57768 = w2__h42337;
+      5'b00100: _theResult_____2__h57768 = new_st_val_64__h59687;
+      5'b01000: _theResult_____2__h57768 = new_st_val_64__h59695;
+      5'b01100: _theResult_____2__h57768 = new_st_val_64__h59691;
+      5'b10000: _theResult_____2__h57768 = new_st_val_64__h59710;
+      5'b11000: _theResult_____2__h57768 = new_st_val_64__h59699;
+      5'b11100: _theResult_____2__h57768 = new_st_val_64__h59704;
+      default: _theResult_____2__h57768 = new_st_val_64__h59715;
     endcase
   end
 
@@ -6313,7 +6248,6 @@ module mkMMU_DCache(CLK,
       begin
         cache_cfg_verbosity <= `BSV_ASSIGNMENT_DELAY 4'd0;
 	cache_crg_commit <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	cache_crg_sb_to_load_delay <= `BSV_ASSIGNMENT_DELAY 11'd0;
 	cache_ctr_wr_rsps_pending_inrg <= `BSV_ASSIGNMENT_DELAY 4'd0;
 	cache_ctr_wr_rsps_pending_outrg <= `BSV_ASSIGNMENT_DELAY 4'd0;
 	cache_master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
@@ -6338,9 +6272,6 @@ module mkMMU_DCache(CLK,
 	      cache_cfg_verbosity$D_IN;
 	if (cache_crg_commit$EN)
 	  cache_crg_commit <= `BSV_ASSIGNMENT_DELAY cache_crg_commit$D_IN;
-	if (cache_crg_sb_to_load_delay$EN)
-	  cache_crg_sb_to_load_delay <= `BSV_ASSIGNMENT_DELAY
-	      cache_crg_sb_to_load_delay$D_IN;
 	if (cache_ctr_wr_rsps_pending_inrg$EN)
 	  cache_ctr_wr_rsps_pending_inrg <= `BSV_ASSIGNMENT_DELAY
 	      cache_ctr_wr_rsps_pending_inrg$D_IN;
@@ -6425,7 +6356,6 @@ module mkMMU_DCache(CLK,
   begin
     cache_cfg_verbosity = 4'hA;
     cache_crg_commit = 1'h0;
-    cache_crg_sb_to_load_delay = 11'h2AA;
     cache_ctr_wr_rsps_pending_inrg = 4'hA;
     cache_ctr_wr_rsps_pending_outrg = 4'hA;
     cache_master_xactor_clearing = 1'h0;
@@ -6494,7 +6424,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", mem_req_wr_addr_awlen__h5986);
+	$write("'h%h", mem_req_wr_addr_awlen__h5985);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6506,7 +6436,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", _theResult___snd_snd_fst_val__h6022, " }");
+	$write("'h%h", _theResult___snd_snd_fst_val__h6021, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6578,7 +6508,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", mem_req_wr_data_wdata__h6080);
+	$write("'h%h", mem_req_wr_data_wdata__h6079);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6586,7 +6516,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", mem_req_wr_data_wstrb__h6081);
+	$write("'h%h", mem_req_wr_data_wstrb__h6080);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6608,7 +6538,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", mem_req_wr_second_data_wuser__h5813, " }");
+	$write("'h%h", mem_req_wr_second_data_wuser__h5812, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_fabric_send_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6618,16 +6548,16 @@ module mkMMU_DCache(CLK,
 	  cache_cfg_verbosity != 4'd0 &&
 	  !cache_f_reset_reqs$D_OUT)
 	begin
-	  v__h7444 = $stime;
+	  v__h7445 = $stime;
 	  #0;
 	end
-    v__h7438 = v__h7444 / 32'd10;
+    v__h7439 = v__h7445 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_reset && cache_rg_cset_in_cache == 6'd63 &&
 	  cache_cfg_verbosity != 4'd0 &&
 	  !cache_f_reset_reqs$D_OUT)
 	$display("%0d: %s.rl_reset: %0d sets x %0d ways: all tag states reset to CTAG_EMPTY",
-		 v__h7438,
+		 v__h7439,
 		 "D_MMU_Cache",
 		 $signed(32'd64),
 		 $signed(32'd2));
@@ -6636,28 +6566,28 @@ module mkMMU_DCache(CLK,
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
 	  cache_f_reset_reqs$D_OUT)
 	begin
-	  v__h7543 = $stime;
+	  v__h7544 = $stime;
 	  #0;
 	end
-    v__h7537 = v__h7543 / 32'd10;
+    v__h7538 = v__h7544 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_reset && cache_rg_cset_in_cache == 6'd63 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
 	  cache_f_reset_reqs$D_OUT)
-	$display("%0d: %s.rl_reset: Flushed", v__h7537, "D_MMU_Cache");
+	$display("%0d: %s.rl_reset: Flushed", v__h7538, "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h7977 = $stime;
+	  v__h7695 = $stime;
 	  #0;
 	end
-    v__h7971 = v__h7977 / 32'd10;
+    v__h7689 = v__h7695 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s: rl_probe_and_immed_rsp; eaddr %0h",
-		 v__h7971,
+		 v__h7689,
 		 "D_MMU_Cache",
 		 cache_rg_addr);
     if (RST_N != `BSV_RESET_VALUE)
@@ -6668,7 +6598,7 @@ module mkMMU_DCache(CLK,
 		 cache_rg_priv,
 		 cache_rg_satp[63:60],
 		 cache_rg_satp[59:44],
-		 satp_pa__h4622,
+		 satp_pa__h4621,
 		 cache_rg_addr[29:21],
 		 cache_rg_addr[20:12],
 		 cache_rg_addr[11:0]);
@@ -6773,17 +6703,17 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d518)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d511)
 	$write("VM_XLATE_OK");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d521)
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d514)
 	$write("VM_XLATE_EXCEPTION");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
-	  cache_rg_priv_68_ULE_0b1___d169 &&
+	  cache_rg_priv_65_ULE_0b1___d166 &&
 	  cache_rg_satp[63:60] == 4'd8 &&
 	  !cache_tlb$lookup[130])
 	$write("VM_XLATE_TLB_MISS");
@@ -6794,7 +6724,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", x1_avValue_pa__h9283);
+	$write("'h%h", x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6802,7 +6732,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", x1_avValue_exc_code__h9284);
+	$write("'h%h", x1_avValue_exc_code__h9002);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6810,12 +6740,12 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d242)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d239)
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113 &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540)
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533)
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
@@ -6824,7 +6754,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", value__h10054, " }");
+	$write("'h%h", value__h9790, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -6832,285 +6762,285 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$display("    fa_record_pte_A_D_updates:");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("      ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("TLB_Lookup_Result { ", "hit: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "pte: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("'h%h", cache_tlb$lookup[129:66]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "pte_level: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("'h%h", cache_tlb$lookup[65:64]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "pte_pa: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("'h%h", cache_tlb$lookup[63:0], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("      ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("VM_Xlate_Result { ", "outcome: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("VM_XLATE_OK");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "pa: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
-	$write("'h%h", x1_avValue_pa__h9283);
+	$write("'h%h", x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "exc_code: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
-	$write("'h%h", x1_avValue_exc_code__h9284);
+	$write("'h%h", x1_avValue_exc_code__h9002);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "pte_modified: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write(", ", "pte: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
-	$write("'h%h", value__h10054, " }");
+	$write("'h%h", value__h9790, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  cache_rg_priv_68_ULE_0b1_69_AND_cache_rg_satp__ETC___d540 &&
+	  cache_rg_priv_65_ULE_0b1_66_AND_cache_rg_satp__ETC___d533 &&
 	  cache_cfg_verbosity >= 4'd2)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d585)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d578)
 	$display("        ASSERTION ERROR: fn_test_cache_hit_or_miss: multiple hits in set at [%0d] and [%0d]",
 		 $signed(32'd1),
 		 1'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d923)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d916)
 	begin
-	  v__h37594 = $stime;
+	  v__h37340 = $stime;
 	  #0;
 	end
-    v__h37588 = v__h37594 / 32'd10;
+    v__h37334 = v__h37340 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d923)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d916)
 	$display("%0d: %s.drive_mem_rsp: addr 0x%0h ld_val 0x%0h st_amo_val 0x%0h",
-		 v__h37588,
+		 v__h37334,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747,
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740,
 		 129'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d937)
-	$display("        AMO LR: reserving PA 0x%0h", x1_avValue_pa__h9283);
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d930)
+	$display("        AMO LR: reserving PA 0x%0h", x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d923)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d916)
 	$display("        Read-hit: addr 0x%0h word128 0x%0h",
 		 cache_rg_addr,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747);
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d943)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d936)
 	$display("        Read Miss: -> CACHE_START_REFILL.");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d952)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d945)
 	$display("        AMO LR: cache refill: cancelling LR/SC reservation for PA 0x%0h",
 		 cache_rg_lrsc_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1256)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1238)
 	$display("        ST: cancelling LR/SC reservation for PA",
-		 x1_avValue_pa__h9283);
+		 x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  (!cache_rg_priv_68_ULE_0b1___d169 || cache_rg_satp[63:60] != 4'd8 ||
+	  (!cache_rg_priv_65_ULE_0b1___d166 || cache_rg_satp[63:60] != 4'd8 ||
 	   cache_tlb$lookup[130]) &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1263)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1245)
 	$display("        AMO SC: fail: reserved addr 0x%0h, this address 0x%0h",
 		 cache_rg_lrsc_pa,
-		 x1_avValue_pa__h9283);
+		 x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1271)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1253)
 	$display("        AMO SC: fail due to invalid LR/SC reservation");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1277)
-	$display("        AMO SC result = %0d", lrsc_result__h37984);
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1259)
+	$display("        AMO SC result = %0d", lrsc_result__h37730);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266)
 	$display("        Write-Cache-Hit: pa 0x%0h word128 0x%0h",
-		 x1_avValue_pa__h9283,
+		 x1_avValue_pa__h9001,
 		 cache_rg_st_amo_val);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266)
 	$write("        New Word128_Set:");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266)
 	$write("        CSet 0x%0x, Word128 0x%0x: ",
 	       cache_rg_addr[11:6],
 	       cache_rg_addr[5:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266)
 	$write(" 0x%0x",
-	       IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1120);
+	       IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1113);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266)
 	$write(" 0x%0x",
-	       IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1119);
+	       IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1112);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1284)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1266)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1291)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1273)
 	$display("        Write-Cache-Miss: pa 0x%0h word128 0x%0h",
-		 x1_avValue_pa__h9283,
+		 x1_avValue_pa__h9001,
 		 cache_rg_st_amo_val);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1298)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1280)
 	$display("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h",
 		 cache_rg_addr,
 		 cache_rg_st_amo_val);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1298)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1280)
 	$display("        => rl_write_response");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1305)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1287)
 	begin
-	  v__h42182 = $stime;
+	  v__h41867 = $stime;
 	  #0;
 	end
-    v__h42176 = v__h42182 / 32'd10;
+    v__h41861 = v__h41867 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1305)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1287)
 	$display("%0d: %s.drive_mem_rsp: addr 0x%0h ld_val 0x%0h st_amo_val 0x%0h",
-		 v__h42176,
+		 v__h41861,
 		 "D_MMU_Cache",
 		 64'd0,
 		 129'd1,
@@ -7118,18 +7048,18 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1305)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1287)
 	$display("        AMO SC: Fail response for addr 0x%0h",
 		 cache_rg_addr);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1313)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1295)
 	$display("        AMO Miss: -> CACHE_START_REFILL.");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$display("        AMO: addr 0x%0h amo_f5 0x%0h width_code %0d is_unsigned %0d rs2_val 0x%0h",
 		 cache_rg_addr,
 		 cache_rg_amo_funct5,
@@ -7139,90 +7069,90 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
-	$display("          PA 0x%0h ", x1_avValue_pa__h9283);
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
+	$display("          PA 0x%0h ", x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$display("          Cache word128 0x%0h, load-result 0x%0h",
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747);
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740,
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$display("          0x%0h  op  0x%0h -> 0x%0h",
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747,
-		 cache_ram_word128_set_b_read__01_BITS_128_TO_0_ETC___d747,
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740,
+		 cache_ram_word128_set_b_read__94_BITS_128_TO_0_ETC___d740,
 		 { cache_rg_width_code == 3'b100 && cache_rg_st_amo_val[128],
-		   IF_cache_rg_width_code_87_EQ_0b100_46_THEN_cac_ETC___d1157 });
+		   IF_cache_rg_width_code_84_EQ_0b100_43_THEN_cac_ETC___d1150 });
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$write("          New Word128_Set:");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$write("        CSet 0x%0x, Word128 0x%0x: ",
 	       cache_rg_addr[11:6],
 	       cache_rg_addr[5:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$write(" 0x%0x",
-	       IF_NOT_cache_ram_state_and_ctag_cset_b_read__7_ETC___d1229);
+	       IF_NOT_cache_ram_state_and_ctag_cset_b_read__6_ETC___d1222);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$write(" 0x%0x",
-	       IF_cache_ram_state_and_ctag_cset_b_read__72_BI_ETC___d1228);
+	       IF_cache_ram_state_and_ctag_cset_b_read__69_BI_ETC___d1221);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1319)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1301)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1326)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1308)
 	$display("        AMO_op: cancelling LR/SC reservation for PA",
-		 x1_avValue_pa__h9283);
+		 x1_avValue_pa__h9001);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_probe_and_immed_rsp &&
 	  cache_crg_commit$port1__read &&
-	  NOT_cache_rg_priv_68_ULE_0b1_69_70_OR_NOT_cach_ETC___d1335)
+	  NOT_cache_rg_priv_65_ULE_0b1_66_67_OR_NOT_cach_ETC___d1317)
 	$display("    => IO_REQ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h47375 = $stime;
+	  v__h47004 = $stime;
 	  #0;
 	end
-    v__h47369 = v__h47375 / 32'd10;
+    v__h46998 = v__h47004 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_start_tlb_refill for eaddr 0x%0h; req for level 2 PTE",
-		 v__h47369,
+		 v__h46998,
 		 "D_MMU_Cache",
 		 cache_rg_addr);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h47645 = $time;
+	  v__h47274 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h47645);
+	$write("%0t            To fabric: ", v__h47274);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -7238,7 +7168,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", lev_2_pte_pa_w64_fa__h47430);
+	$write("'h%h", lev_2_pte_pa_w64_fa__h47059);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_tlb_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -7322,14 +7252,14 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_reset)
 	begin
-	  v__h6909 = $stime;
+	  v__h6908 = $stime;
 	  #0;
 	end
-    v__h6903 = v__h6909 / 32'd10;
+    v__h6902 = v__h6908 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_reset)
 	$display("%0d: %s: cache size %0d KB, associativity %0d, line size %0d bytes (= %0d XLEN words)",
-		 v__h6903,
+		 v__h6902,
 		 "D_MMU_Cache",
 		 $signed(32'd8),
 		 $signed(32'd2),
@@ -7339,298 +7269,298 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h54614 = $stime;
+	  v__h54243 = $stime;
 	  #0;
 	end
-    v__h54608 = v__h54614 / 32'd10;
+    v__h54237 = v__h54243 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_read_req; width_code 0x%0h vaddr %0h  paddr %0h",
-		 v__h54608,
+		 v__h54237,
 		 "D_MMU_Cache",
 		 cache_rg_width_code,
 		 cache_rg_addr,
 		 cache_rg_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h54854 = $time;
+	  v__h54483 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h54854);
+	$write("%0t            To fabric: ", v__h54483);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", cache_rg_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 8'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", size_val__h57314, " }");
+	$write("'h%h", size_val__h56943, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'b0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 3'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h54974 = $time;
+	  v__h54603 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h54974);
+	$write("%0t            To fabric: ", v__h54603);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", cache_rg_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 8'd1);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 3'b011, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'b0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 3'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_maintain_io_read_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56682 = $stime;
+	  v__h56311 = $stime;
 	  #0;
 	end
-    v__h56676 = v__h56682 / 32'd10;
+    v__h56305 = v__h56311 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_maintain_io_read_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.drive_IO_read_rsp: addr 0x%0h ld_val 0x%0h",
-		 v__h56676,
+		 v__h56305,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_rg_ld_val);
@@ -7638,15 +7568,15 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_io_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56770 = $stime;
+	  v__h56399 = $stime;
 	  #0;
 	end
-    v__h56764 = v__h56770 / 32'd10;
+    v__h56393 = v__h56399 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_write_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s: rl_io_write_req; width_code 0x%0h  vaddr %0h  paddr %0h  word64 0x%0h",
-		 v__h56764,
+		 v__h56393,
 		 "D_MMU_Cache",
 		 cache_rg_width_code,
 		 cache_rg_addr,
@@ -7660,15 +7590,15 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_io_AMO_SC_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56988 = $stime;
+	  v__h56617 = $stime;
 	  #0;
 	end
-    v__h56982 = v__h56988 / 32'd10;
+    v__h56611 = v__h56617 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_SC_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s: rl_io_AMO_SC_req; width_code 0x%0h  vaddr %0h  paddr %0h  word64 0x%0h",
-		 v__h56982,
+		 v__h56611,
 		 "D_MMU_Cache",
 		 cache_rg_width_code,
 		 cache_rg_addr,
@@ -7686,283 +7616,283 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h57110 = $stime;
+	  v__h56739 = $stime;
 	  #0;
 	end
-    v__h57104 = v__h57110 / 32'd10;
+    v__h56733 = v__h56739 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_AMO_op_req; width_code 0x%0h vaddr %0h  paddr %0h",
-		 v__h57104,
+		 v__h56733,
 		 "D_MMU_Cache",
 		 cache_rg_width_code,
 		 cache_rg_addr,
 		 cache_rg_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h57341 = $time;
+	  v__h56970 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h57341);
+	$write("%0t            To fabric: ", v__h56970);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", cache_rg_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 8'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", size_val__h57314, " }");
+	$write("'h%h", size_val__h56943, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'b0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 3'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  _1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  _1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h57461 = $time;
+	  v__h57090 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h57461);
+	$write("%0t            To fabric: ", v__h57090);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", cache_rg_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 8'd1);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 3'b011, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'b0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 3'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 4'd0);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_op_req &&
-	  !_1_SL_IF_cache_rg_width_code_87_EQ_0_88_OR_cach_ETC___d1607 &&
+	  !_1_SL_IF_cache_rg_width_code_84_EQ_0_85_OR_cach_ETC___d1589 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
@@ -7978,15 +7908,15 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
 	  cache_ctr_wr_rsps_pending_inrg_read__2_MINUS_c_ETC___d54 == 4'd0)
 	begin
-	  v__h60527 = $stime;
+	  v__h60156 = $stime;
 	  #0;
 	end
-    v__h60521 = v__h60527 / 32'd10;
+    v__h60150 = v__h60156 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
 	  cache_ctr_wr_rsps_pending_inrg_read__2_MINUS_c_ETC___d54 == 4'd0)
 	$display("%0d: ERROR: %s.rl_discard_write_rsp: unexpected W response (ctr_wr_rsps_pending.value == 0)",
-		 v__h60521,
+		 v__h60150,
 		 "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
@@ -8047,16 +7977,16 @@ module mkMMU_DCache(CLK,
 	  cache_master_xactor_shim_bff_rv$port1__read[1:0] == 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h60774 = $stime;
+	  v__h60403 = $stime;
 	  #0;
 	end
-    v__h60768 = v__h60774 / 32'd10;
+    v__h60397 = v__h60403 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
 	  cache_master_xactor_shim_bff_rv$port1__read[1:0] == 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$write("%0d: %s.rl_discard_write_rsp: pending %0d ",
-	       v__h60768,
+	       v__h60397,
 	       "D_MMU_Cache",
 	       $unsigned(cache_ctr_wr_rsps_pending_inrg_read__2_MINUS_c_ETC___d54));
     if (RST_N != `BSV_RESET_VALUE)
@@ -8098,15 +8028,15 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
 	  cache_master_xactor_shim_bff_rv$port1__read[1:0] != 2'd0)
 	begin
-	  v__h60735 = $stime;
+	  v__h60364 = $stime;
 	  #0;
 	end
-    v__h60729 = v__h60735 / 32'd10;
+    v__h60358 = v__h60364 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
 	  cache_master_xactor_shim_bff_rv$port1__read[1:0] != 2'd0)
 	$display("%0d: %s.rl_discard_write_rsp: fabric response error: exit",
-		 v__h60729,
+		 v__h60358,
 		 "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_discard_write_rsp &&
@@ -8161,10 +8091,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[6]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h48461 = $stime;
+	  v__h48090 = $stime;
 	  #0;
 	end
-    v__h48455 = v__h48461 / 32'd10;
+    v__h48084 = v__h48090 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8173,12 +8103,12 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[6]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_2: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: Invalid PTE; page fault %0d",
-		 v__h48455,
+		 v__h48084,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_pte_pa,
-		 exc_code___1__h9634);
+		 exc_code___1__h9370);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8188,10 +8118,10 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h48218 = $stime;
+	  v__h47847 = $stime;
 	  #0;
 	end
-    v__h48212 = v__h48218 / 32'd10;
+    v__h47841 = v__h47847 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8201,7 +8131,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_rl_ptw_level_2: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: continue to level 1",
-		 v__h48212,
+		 v__h47841,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -8224,7 +8154,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h48639 = $time;
+	  v__h48268 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8235,7 +8165,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[7] &&
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h48639);
+	$write("%0t            To fabric: ", v__h48268);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8271,7 +8201,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[7] &&
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", lev_1_pte_pa_w64_fa__h48495);
+	$write("'h%h", lev_1_pte_pa_w64_fa__h48124);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8458,21 +8388,21 @@ module mkMMU_DCache(CLK,
 	  cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	  (cache_master_xactor_shim_rff_rv$port1__read[5] ||
 	   !cache_master_xactor_shim_rff_rv$port1__read[6]) &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1420)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1402)
 	begin
-	  v__h48784 = $stime;
+	  v__h48413 = $stime;
 	  #0;
 	end
-    v__h48778 = v__h48784 / 32'd10;
+    v__h48407 = v__h48413 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	  (cache_master_xactor_shim_rff_rv$port1__read[5] ||
 	   !cache_master_xactor_shim_rff_rv$port1__read[6]) &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1420)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1402)
 	$display("%0d: %s.rl_ptw_level_2: for eaddr 0x%0h: gigapage pte 0x%0h @ 0x%0h",
-		 v__h48778,
+		 v__h48407,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -8488,28 +8418,28 @@ module mkMMU_DCache(CLK,
 	  (cache_master_xactor_shim_rff_rv$port1__read[31:23] != 9'd0 ||
 	   cache_master_xactor_shim_rff_rv$port1__read[22:14] != 9'd0))
 	$display("    Invalid PTE: PPN[1] or PPN[0] is not zero; page fault %0d",
-		 exc_code___1__h9634);
+		 exc_code___1__h9370);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	  (cache_master_xactor_shim_rff_rv$port1__read[5] ||
 	   !cache_master_xactor_shim_rff_rv$port1__read[6]) &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1432)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1414)
 	begin
-	  v__h48896 = $stime;
+	  v__h48525 = $stime;
 	  #0;
 	end
-    v__h48890 = v__h48896 / 32'd10;
+    v__h48519 = v__h48525 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	  (cache_master_xactor_shim_rff_rv$port1__read[5] ||
 	   !cache_master_xactor_shim_rff_rv$port1__read[6]) &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1432)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1414)
 	$display("%0d: %s.rl_ptw_level_2: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: leaf PTE for gigapage",
-		 v__h48890,
+		 v__h48519,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -8520,27 +8450,27 @@ module mkMMU_DCache(CLK,
 	  cache_master_xactor_shim_rff_rv$port1__read[4] &&
 	  (cache_master_xactor_shim_rff_rv$port1__read[5] ||
 	   !cache_master_xactor_shim_rff_rv$port1__read[6]) &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1432)
-	$display("    Addr Space megapage pa: 0x%0h", lev_1_PTN_pa__h48491);
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1414)
+	$display("    Addr Space megapage pa: 0x%0h", lev_1_PTN_pa__h48120);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h48390 = $stime;
+	  v__h48019 = $stime;
 	  #0;
 	end
-    v__h48384 = v__h48390 / 32'd10;
+    v__h48013 = v__h48019 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_2 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_2: for eaddr 0x%0h: pte_pa 0x%0h: FABRIC_RSP_ERR: access exception %0d",
-		 v__h48384,
+		 v__h48013,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_rg_pte_pa,
-		 access_exc_code__h5354);
+		 access_exc_code__h5353);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8549,10 +8479,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[6]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h49535 = $stime;
+	  v__h49164 = $stime;
 	  #0;
 	end
-    v__h49529 = v__h49535 / 32'd10;
+    v__h49158 = v__h49164 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8561,12 +8491,12 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[6]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_1: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: Invalid PTE; page fault %0d",
-		 v__h49529,
+		 v__h49158,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_pte_pa,
-		 exc_code___1__h9634);
+		 exc_code___1__h9370);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8576,10 +8506,10 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h49295 = $stime;
+	  v__h48924 = $stime;
 	  #0;
 	end
-    v__h49289 = v__h49295 / 32'd10;
+    v__h48918 = v__h48924 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8589,7 +8519,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_rl_ptw_level_1: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: continue to level 0",
-		 v__h49289,
+		 v__h48918,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -8612,7 +8542,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h49713 = $time;
+	  v__h49342 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8623,7 +8553,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[7] &&
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h49713);
+	$write("%0t            To fabric: ", v__h49342);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8659,7 +8589,7 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[7] &&
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", lev_0_pte_pa_w64_fa__h49569);
+	$write("'h%h", lev_0_pte_pa_w64_fa__h49198);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8842,38 +8772,38 @@ module mkMMU_DCache(CLK,
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1471)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1453)
 	begin
-	  v__h49970 = $stime;
+	  v__h49599 = $stime;
 	  #0;
 	end
-    v__h49964 = v__h49970 / 32'd10;
+    v__h49593 = v__h49599 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1471)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1453)
 	$display("%0d: %s.rl_ptw_level_1: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: leaf PTE for megapage",
-		 v__h49964,
+		 v__h49593,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_pte_pa);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1471)
-	$display("    Addr Space megapage pa: 0x%0h", lev_1_PTN_pa__h48491);
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1453)
+	$display("    Addr Space megapage pa: 0x%0h", lev_1_PTN_pa__h48120);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1477)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1459)
 	begin
-	  v__h49858 = $stime;
+	  v__h49487 = $stime;
 	  #0;
 	end
-    v__h49852 = v__h49858 / 32'd10;
+    v__h49481 = v__h49487 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
-	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1477)
+	  cache_master_xactor_shim_rff_rv_port1__read__3_ETC___d1459)
 	$display("%0d: %s.rl_ptw_level_1: for eaddr 0x%0h: megapage pte 0x%0h @ 0x%0h",
-		 v__h49852,
+		 v__h49481,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -8888,26 +8818,26 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	  cache_master_xactor_shim_rff_rv$port1__read[22:14] != 9'd0)
 	$display("    Invalid PTE: PPN [0] is not zero; page fault %0d",
-		 exc_code___1__h9634);
+		 exc_code___1__h9370);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h49464 = $stime;
+	  v__h49093 = $stime;
 	  #0;
 	end
-    v__h49458 = v__h49464 / 32'd10;
+    v__h49087 = v__h49093 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_1: for eaddr 0x%0h: pte_pa 0x%0h: FABRIC_RSP_ERR: access exception %0d",
-		 v__h49458,
+		 v__h49087,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_rg_pte_pa,
-		 access_exc_code__h5354);
+		 access_exc_code__h5353);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8916,10 +8846,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[6]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h50447 = $stime;
+	  v__h50076 = $stime;
 	  #0;
 	end
-    v__h50441 = v__h50447 / 32'd10;
+    v__h50070 = v__h50076 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8928,12 +8858,12 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[6]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_0: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: Invalid PTE; page fault %0d",
-		 v__h50441,
+		 v__h50070,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_pte_pa,
-		 exc_code___1__h9634);
+		 exc_code___1__h9370);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8943,10 +8873,10 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h50518 = $stime;
+	  v__h50147 = $stime;
 	  #0;
 	end
-    v__h50512 = v__h50518 / 32'd10;
+    v__h50141 = v__h50147 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8956,12 +8886,12 @@ module mkMMU_DCache(CLK,
 	  !cache_master_xactor_shim_rff_rv$port1__read[5] &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_0: for eaddr 0x%0h: pte 0x%0h @ 0x50h: Not a leaf PTE; page fault %0d",
-		 v__h50512,
+		 v__h50141,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
 		 cache_rg_pte_pa,
-		 exc_code___1__h9634);
+		 exc_code___1__h9370);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8972,10 +8902,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h50600 = $stime;
+	  v__h50229 = $stime;
 	  #0;
 	end
-    v__h50594 = v__h50600 / 32'd10;
+    v__h50223 = v__h50229 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -8986,7 +8916,7 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_0: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: leaf PTE",
-		 v__h50594,
+		 v__h50223,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -9000,39 +8930,39 @@ module mkMMU_DCache(CLK,
 	  (cache_master_xactor_shim_rff_rv$port1__read[7] ||
 	   cache_master_xactor_shim_rff_rv$port1__read[5]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$display("    Addr Space page pa: 0x%0h", lev_1_PTN_pa__h48491);
+	$display("    Addr Space page pa: 0x%0h", lev_1_PTN_pa__h48120);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h50376 = $stime;
+	  v__h50005 = $stime;
 	  #0;
 	end
-    v__h50370 = v__h50376 / 32'd10;
+    v__h49999 = v__h50005 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_ptw_level_0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_ptw_level_0: for eaddr 0x%0h: pte_pa 0x%0h: FABRIC_RSP_ERR: access exception %0d",
-		 v__h50370,
+		 v__h49999,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_rg_pte_pa,
-		 access_exc_code__h5354);
+		 access_exc_code__h5353);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h55207 = $stime;
+	  v__h54836 = $stime;
 	  #0;
 	end
-    v__h55201 = v__h55207 / 32'd10;
+    v__h54830 = v__h54836 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_read_rsp: vaddr 0x%0h  paddr 0x%0h",
-		 v__h55201,
+		 v__h54830,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_rg_pa);
@@ -9114,37 +9044,37 @@ module mkMMU_DCache(CLK,
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56344 = $stime;
+	  v__h55973 = $stime;
 	  #0;
 	end
-    v__h56338 = v__h56344 / 32'd10;
+    v__h55967 = v__h55973 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && !cache_rg_lower_word64_full &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.drive_IO_read_rsp: addr 0x%0h ld_val 0x%0h",
-		 v__h56338,
+		 v__h55967,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
-		 { 1'd0, x__h55526 });
+		 { 1'd0, x__h55155 });
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && !cache_rg_lower_word64_full &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56458 = $stime;
+	  v__h56087 = $stime;
 	  #0;
 	end
-    v__h56452 = v__h56458 / 32'd10;
+    v__h56081 = v__h56087 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && !cache_rg_lower_word64_full &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_read_rsp: FABRIC_RSP_ERR: raising trap LOAD_ACCESS_FAULT",
-		 v__h56452,
+		 v__h56081,
 		 "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && cache_rg_lower_word64_full &&
@@ -9152,51 +9082,51 @@ module mkMMU_DCache(CLK,
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56182 = $stime;
+	  v__h55811 = $stime;
 	  #0;
 	end
-    v__h56176 = v__h56182 / 32'd10;
+    v__h55805 = v__h55811 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && cache_rg_lower_word64_full &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.drive_IO_read_rsp: addr 0x%0h ld_val 0x%0h",
-		 v__h56176,
+		 v__h55805,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
-		 { 1'd0, b__h52211 });
+		 { 1'd0, b__h51840 });
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && cache_rg_lower_word64_full &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h56569 = $stime;
+	  v__h56198 = $stime;
 	  #0;
 	end
-    v__h56563 = v__h56569 / 32'd10;
+    v__h56192 = v__h56198 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_read_rsp && cache_rg_lower_word64_full &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1] &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_read_rsp: FABRIC_RSP_ERR: raising trap LOAD_ACCESS_FAULT",
-		 v__h56563,
+		 v__h56192,
 		 "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h57638 = $stime;
+	  v__h57267 = $stime;
 	  #0;
 	end
-    v__h57632 = v__h57638 / 32'd10;
+    v__h57261 = v__h57267 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_AMO_read_rsp: vaddr 0x%0h  paddr 0x%0h",
-		 v__h57632,
+		 v__h57261,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
 		 cache_rg_pa);
@@ -9279,10 +9209,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[1]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h58006 = $stime;
+	  v__h57635 = $stime;
 	  #0;
 	end
-    v__h58000 = v__h58006 / 32'd10;
+    v__h57629 = v__h57635 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -9290,7 +9220,7 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[1]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s: rl_io_AMO_read_rsp; f3 0x%0h  vaddr %0h  paddr %0h  word128 0x%0h",
-		 v__h58000,
+		 v__h57629,
 		 "D_MMU_Cache",
 		 cache_rg_width_code,
 		 cache_rg_addr,
@@ -9303,10 +9233,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[1]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h60217 = $stime;
+	  v__h59846 = $stime;
 	  #0;
 	end
-    v__h60211 = v__h60217 / 32'd10;
+    v__h59840 = v__h59846 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -9314,10 +9244,10 @@ module mkMMU_DCache(CLK,
 	   cache_master_xactor_shim_rff_rv$port1__read[1]) &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.drive_IO_read_rsp: addr 0x%0h ld_val 0x%0h",
-		 v__h60211,
+		 v__h59840,
 		 "D_MMU_Cache",
 		 cache_rg_addr,
-		 { 1'd0, q1__h58099 });
+		 { 1'd0, q1__h57728 });
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0 &&
@@ -9330,27 +9260,27 @@ module mkMMU_DCache(CLK,
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h57934 = $stime;
+	  v__h57563 = $stime;
 	  #0;
 	end
-    v__h57928 = v__h57934 / 32'd10;
+    v__h57557 = v__h57563 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_io_AMO_read_rsp &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_io_AMO_read_rsp: FABRIC_RSP_ERR: raising trap STORE_AMO_ACCESS_FAULT",
-		 v__h57928,
+		 v__h57557,
 		 "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_req && !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h61165 = $stime;
+	  v__h60794 = $stime;
 	  #0;
 	end
-    v__h61159 = v__h61165 / 32'd10;
+    v__h60788 = v__h60794 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_req && !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0d: %m.req: op:", v__h61159);
+	$write("%0d: %m.req: op:", v__h60788);
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_req && !cache_cfg_verbosity_read__12_ULE_1___d113 &&
 	  req_op == 2'd0)
@@ -9404,7 +9334,7 @@ module mkMMU_DCache(CLK,
 	$display("    amo_funct5 = 0x%0h", req_amo_funct5);
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_req &&
-	  req_width_code_EQ_0b0_981_OR_req_width_code_EQ_ETC___d2022)
+	  req_width_code_EQ_0b0_963_OR_req_width_code_EQ_ETC___d2004)
 	$display("    fa_req_ram_B tagCSet [0x%0x] word128_set [0x%0d]",
 		 req_addr[11:6],
 		 req_addr[11:4]);
@@ -9412,25 +9342,25 @@ module mkMMU_DCache(CLK,
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h50735 = $stime;
+	  v__h50364 = $stime;
 	  #0;
 	end
-    v__h50729 = v__h50735 / 32'd10;
+    v__h50358 = v__h50364 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$display("%0d: %s.rl_start_cache_refill: ", v__h50729, "D_MMU_Cache");
+	$display("%0d: %s.rl_start_cache_refill: ", v__h50358, "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h50903 = $time;
+	  v__h50532 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("%0t            To fabric: ", v__h50903);
+	$write("%0t            To fabric: ", v__h50532);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -9446,7 +9376,7 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$write("'h%h", cline_fabric_addr__h50788);
+	$write("'h%h", cline_fabric_addr__h50417);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
@@ -9530,114 +9460,114 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_start_cache_refill &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$display("    Victim way %0d; => CACHE_REFILL", tmp__h50961[0]);
+	$display("    Victim way %0d; => CACHE_REFILL", tmp__h50590[0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	begin
-	  v__h51751 = $stime;
+	  v__h51380 = $stime;
 	  #0;
 	end
-    v__h51745 = v__h51751 / 32'd10;
+    v__h51374 = v__h51380 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$display("%0d: %s.rl_cache_refill_rsps_loop:",
-		 v__h51745,
+		 v__h51374,
 		 "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("        ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("AXI4_RFlit { ", "rid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("'h%h", cache_master_xactor_shim_rff_rv$port1__read[71:68]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(", ", "rdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("'h%h", cache_master_xactor_shim_rff_rv$port1__read[67:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(", ", "rresp: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 &&
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd0)
 	$write("OKAY");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 &&
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd1)
 	$write("EXOKAY");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 &&
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] == 2'd2)
 	$write("SLVERR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 &&
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd1 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd2)
 	$write("DECERR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(", ", "rlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 &&
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 &&
 	  cache_master_xactor_shim_rff_rv$port1__read[1])
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532 &&
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514 &&
 	  !cache_master_xactor_shim_rff_rv$port1__read[1])
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(", ", "ruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("'h%h", cache_master_xactor_shim_rff_rv$port1__read[0], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h51993 = $stime;
+	  v__h51622 = $stime;
 	  #0;
 	end
-    v__h51987 = v__h51993 / 32'd10;
+    v__h51616 = v__h51622 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
 	  !cache_cfg_verbosity_read__12_ULE_1___d113)
 	$display("%0d: %s.rl_cache_refill_rsps_loop: FABRIC_RSP_ERR: raising access exception %0d",
-		 v__h51987,
+		 v__h51616,
 		 "D_MMU_Cache",
-		 access_exc_code__h5354);
+		 access_exc_code__h5353);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$display("        64b fabric: concat with rg_lower_word64: new_word128 0x%0x",
 		 { cache_master_xactor_shim_rff_rv$port1__read[0],
 		   cache_master_xactor_shim_rff_rv$port1__read[67:4],
@@ -9661,60 +9591,60 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$display("        Updating Cache word128_set 0x%0h, word128_in_cline %0d) old => new",
 		 cache_rg_word128_set_in_cache,
 		 cache_rg_word128_set_in_cache[1:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("        CSet 0x%0x, Word128 0x%0x: ",
 	       cache_rg_word128_set_in_cache[7:2],
 	       cache_rg_word128_set_in_cache[1:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(" 0x%0x", cache_ram_word128_set$DOB[128:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(" 0x%0x", cache_ram_word128_set$DOB[257:129]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("        CSet 0x%0x, Word128 0x%0x: ",
 	       cache_rg_word128_set_in_cache[7:2],
 	       cache_rg_word128_set_in_cache[1:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(" 0x%0x",
-	       IF_cache_rg_victim_way_522_THEN_cache_ram_word_ETC___d1591);
+	       IF_cache_rg_victim_way_504_THEN_cache_ram_word_ETC___d1573);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write(" 0x%0x",
-	       IF_cache_rg_victim_way_522_THEN_cache_master_x_ETC___d1592);
+	       IF_cache_rg_victim_way_504_THEN_cache_master_x_ETC___d1574);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_cache_refill_rsps_loop &&
 	  !cache_rg_lower_word64_full &&
-	  NOT_cache_cfg_verbosity_read__12_ULE_2_531___d1532)
+	  NOT_cache_cfg_verbosity_read__12_ULE_2_513___d1514)
 	$display("        Recording rdata in rg_lower_word64");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_rl_rereq &&
@@ -9725,13 +9655,13 @@ module mkMMU_DCache(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_tlb_flush && !cache_cfg_verbosity_read__12_ULE_1___d113)
 	begin
-	  v__h62754 = $stime;
+	  v__h62383 = $stime;
 	  #0;
 	end
-    v__h62748 = v__h62754 / 32'd10;
+    v__h62377 = v__h62383 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_tlb_flush && !cache_cfg_verbosity_read__12_ULE_1___d113)
-	$display("%0d: %s.tlb_flush", v__h62748, "D_MMU_Cache");
+	$display("%0d: %s.tlb_flush", v__h62377, "D_MMU_Cache");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_cache_master_xactor_ug_master_u_ar_warnDoDrop)
 	$display("WARNING: dropping from Source that can't be dropped from");

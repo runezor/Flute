@@ -161,11 +161,23 @@ module mkCPU (CPU_IFC);
 `endif
 
    CSR_RegFile_IFC  csr_regfile  <- mkCSR_RegFile;
+
+   // ----------------
+   // Some commonly used CSR values
    let mcycle   = csr_regfile.read_csr_mcycle;
    let mstatus  = csr_regfile.read_mstatus;
    let misa     = csr_regfile.read_misa;
    let minstret = csr_regfile.read_csr_minstret;
 
+   // MSTATUS.MXR and SSTATUS.SUM for Virtual Memory access control
+   Bit #(1) mstatus_MXR = mstatus [19];
+`ifdef ISA_PRIV_S
+   Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
+`else
+   Bit #(1) sstatus_SUM = 0;
+`endif
+
+   // ----------------
    // Near mem (caches or TCM, for example)
    Near_Mem_IFC  near_mem <- mkNear_Mem;
 
@@ -393,7 +405,6 @@ module mkCPU (CPU_IFC);
    // Feed a new PC into StageF (instruction fetch)
 
    function Action fa_start_ifetch (Epoch epoch,
-				    Maybe #(WordXL)  m_old_fetch_addr,
 				    WordXL  fetch_addr,
                                     Bool refresh_pcc,
 				    Priv_Mode priv,
@@ -405,7 +416,6 @@ module mkCPU (CPU_IFC);
       action
 	 // Initiate the fetch
 	 stageF.enq (epoch,
-		     m_old_fetch_addr,
 		     fetch_addr,
                      refresh_pcc,
 		     priv,
@@ -430,18 +440,8 @@ module mkCPU (CPU_IFC);
 `endif
                                                 );
       action
-	 // MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-	 Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-	 Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-	 Bit #(1) sstatus_SUM = 0;
-`endif
-
 	 let new_epoch <- fav_update_epoch;
-	 Maybe #(WordXL) m_old_fetch_addr = tagged Invalid;
 	 fa_start_ifetch (new_epoch,
-			  m_old_fetch_addr,
                           getAddr(resume_pcc),
                           True,
 			  rg_cur_priv,
@@ -778,7 +778,15 @@ module mkCPU (CPU_IFC);
       Bool stageD_full = (stageD.out.ostatus != OSTATUS_EMPTY);
       Bool stageF_full = (stageF.out.ostatus != OSTATUS_EMPTY);
 
-      Maybe#(Tuple3#(Epoch,WordXL,WordXL)) redirect_F = Invalid;
+      // ----------------
+      // Signal from Stage1 back to StageF. Valid (e, pc2) says:
+      //  - re-start fetching from pc2, with new epoch e.
+
+`ifdef RVFI_DII
+      Maybe #(Tuple3 #(Epoch, PCC_T, SEQ_LEN)) redirect = tagged Invalid;
+`else
+      Maybe #(Tuple2 #(Epoch, PCC_T)) redirect = tagged Invalid;
+`endif
 
       // ----------------
       // Stage3 sink (does regfile writebacks)
@@ -833,9 +841,12 @@ module mkCPU (CPU_IFC);
 	       stage1.deq;                              stage1_full = False;
 
 	       if (stage1.out.redirect) begin
-		  let epoch <- fav_update_epoch;
-                  let old_fetch_addr = getAddr(stage1.out.data_to_stage2.pcc);
-                  redirect_F = Valid(tuple3(epoch, getAddr(stage1.out.next_pcc), old_fetch_addr));
+		  let new_epoch <- fav_update_epoch;
+`ifdef RVFI_DII
+                  redirect = Valid(tuple3(new_epoch, stage1.out.next_pcc, stage1.out.instr_seq + 1));
+`else
+                  redirect = Valid(tuple2(new_epoch, stage1.out.next_pcc));
+`endif
                end
 	    end
 	 end
@@ -863,51 +874,48 @@ module mkCPU (CPU_IFC);
       if (   (! stageF_full)
 	  && (stageF.out.ostatus == OSTATUS_PIPE))
 	 begin
-            Epoch epoch;
-            WordXL new_fetch_addr;
-            Maybe#(WordXL) m_old_fetch_addr;
+	    // No-redirect case (use current epoch, predicted PC)
+	    Epoch   epoch            = stageF.out.data_to_stageD.epoch;
+	    WordXL  next_fetch_addr  = stageF.out.data_to_stageD.pred_fetch_addr;
 `ifdef RVFI_DII
-            Dii_Id new_instr_seq;
+            Dii_Id new_instr_seq = stageF.out.data_to_stageD.instr_seq + 1;
 `endif
-            case (redirect_F) matches
-            tagged Valid {.e, .nfa, .ofa}: begin
-                rg_next_pcc <= stage1.out.next_pcc;
-                epoch = e;
-                new_fetch_addr = nfa;
-                m_old_fetch_addr = Valid(ofa);
-`ifdef RVFI_DII
-                new_instr_seq = stage1.out.data_to_stage2.instr_seq + 1;
-`endif
-            end
-            default: begin
-                epoch = stageF.out.data_to_stageD.epoch;
-                new_fetch_addr = stageF.out.data_to_stageD.pred_fetch_addr;
-                m_old_fetch_addr = Invalid;
-`ifdef RVFI_DII
-                new_instr_seq = stageF.out.data_to_stageD.instr_seq + 1;
-`endif
-            end
-            endcase
-	    // Straight-line case
 
-            // MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-            Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-            Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-            Bit #(1) sstatus_SUM = 0;
+	    // Override, if stage1 is redirecting
+	    if (redirect matches tagged Valid { .e, .pcc2
+`ifdef RVFI_DII
+                                                         , .inseq
 `endif
+
+                                                          }) begin
+	       epoch   = e;
+               rg_next_pcc <= pcc2;
+	       next_fetch_addr = getAddr(pcc2);
+`ifdef RVFI_DII
+               new_instr_seq = stage1.out.data_to_stage2.instr_seq;
+`endif
+	    end
+
+	    CF_Info cf_info = cf_info_none;
+	    if (   (stage1.out.ostatus == OSTATUS_PIPE)
+		&& (stage1.out.control != CONTROL_DISCARD))
+	       cf_info = stage1.out.cf_info;
 
 	    fa_start_ifetch (epoch,
-			     m_old_fetch_addr,
-                             new_fetch_addr,
-                             isValid(redirect_F),
+                             next_fetch_addr,
+                             isValid(redirect),
 			     rg_cur_priv,
 `ifdef RVFI_DII
                              new_instr_seq,
 `endif
 			     mstatus_MXR,
 			     sstatus_SUM);
+
+	    // Train the branch predictor
+	    stageF.bp_train (stageF.out.data_to_stageD.fetch_addr,
+			     stageF.out.data_to_stageD.is_i32_not_i16,
+			     stageF.out.data_to_stageD.instr,
+			     cf_info);
 	    stageF_full = True;
 	 end
 
@@ -1032,12 +1040,8 @@ module mkCPU (CPU_IFC);
 `endif
 
       // Note old MSTATUS.MXR and SSTATUS.SUM for initiating FETCH in next phase
-      rg_mstatus_MXR <= mstatus [19];
-`ifdef ISA_PRIV_S
-      rg_sstatus_SUM <= (csr_regfile.read_sstatus) [18];
-`else
-      rg_sstatus_SUM <= 0;
-`endif
+      rg_mstatus_MXR <= mstatus_MXR;
+      rg_sstatus_SUM <= sstatus_SUM;
 
       rg_state <= CPU_START_TRAP_HANDLER;
 
@@ -1531,18 +1535,8 @@ module mkCPU (CPU_IFC);
       let next_pc    = stage1.out.next_pc;
 `endif
       let new_epoch <- fav_update_epoch;
-      let m_old_fetch_addr   = tagged Invalid;
-
-      // MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-      Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-      Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-      Bit #(1) sstatus_SUM = 0;
-`endif
 
       fa_start_ifetch (new_epoch,
-		       m_old_fetch_addr,
 		       getAddr(next_pcc),
 `ifdef ISA_CHERI
                        True,
@@ -1600,13 +1594,9 @@ module mkCPU (CPU_IFC);
       rg_next_pc  <= next_pc;
 `endif
 
-      // Note MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-      rg_mstatus_MXR <= mstatus [19];
-`ifdef ISA_PRIV_S
-      rg_sstatus_SUM <= (csr_regfile.read_sstatus) [18];
-`else
-      rg_sstatus_SUM <= 0;
-`endif
+      // Note old MSTATUS.MXR and SSTATUS.SUM for initiating FETCH in next phase
+      rg_mstatus_MXR <= mstatus_MXR;
+      rg_sstatus_SUM <= sstatus_SUM;
 
 `ifdef RVFI_DII
       rg_next_seq <= stage1.out.data_to_stage2.instr_seq + 1;
@@ -1687,20 +1677,10 @@ module mkCPU (CPU_IFC);
       // Await mem system FENCE.I completion
       let dummy <- near_mem.server_fence_i.response.get;
 
-      // MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-      Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-      Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-      Bit #(1) sstatus_SUM = 0;
-`endif
-
       // Resume pipe
       rg_state <= CPU_RUNNING;
       let new_epoch <- fav_update_epoch;
-      let m_old_fetch_addr   = tagged Invalid;
       fa_start_ifetch (new_epoch,
-		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
                        True,
@@ -1769,20 +1749,10 @@ module mkCPU (CPU_IFC);
       // Await mem system FENCE completion
       let dummy <- near_mem.server_fence.response.get;
 
-      // MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-      Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-      Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-      Bit #(1) sstatus_SUM = 0;
-`endif
-
       // Resume pipe
       rg_state <= CPU_RUNNING;
       let new_epoch <- fav_update_epoch;
-      let m_old_fetch_addr   = tagged Invalid;
       fa_start_ifetch (new_epoch,
-		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
                        True,
@@ -1861,19 +1831,10 @@ module mkCPU (CPU_IFC);
 
       // Note: Await mem system SFENCE.VMA completion, if SFENCE.VMA becomes split-phase
 
-      Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-      Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-      Bit #(1) sstatus_SUM = 0;
-`endif
-
       // Resume pipe
       rg_state <= CPU_RUNNING;
       let new_epoch <- fav_update_epoch;
-      let m_old_fetch_addr   = tagged Invalid;
       fa_start_ifetch (new_epoch,
-		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
                        True,
@@ -1938,14 +1899,6 @@ module mkCPU (CPU_IFC);
 		       && (stageF.out.ostatus != OSTATUS_BUSY));
       if (cur_verbosity > 1) $display ("%0d: %m.rl_WFI_resume", mcycle);
 
-      // MSTATUS.MXR and SSTATUS.SUM for initiating FETCH
-      Bit #(1) mstatus_MXR = mstatus [19];
-`ifdef ISA_PRIV_S
-      Bit #(1) sstatus_SUM = (csr_regfile.read_sstatus) [18];
-`else
-      Bit #(1) sstatus_SUM = 0;
-`endif
-
       // Debug
       if (cur_verbosity >= 1)
 	 $display ("    WFI resume");
@@ -1960,9 +1913,7 @@ module mkCPU (CPU_IFC);
 `endif
 
       let new_epoch <- fav_update_epoch;
-      let m_old_fetch_addr   = tagged Invalid;
       fa_start_ifetch (new_epoch,
-		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
                        True,
@@ -1993,9 +1944,7 @@ module mkCPU (CPU_IFC);
 
    rule rl_trap_fetch (rg_state == CPU_START_TRAP_HANDLER);
       let new_epoch <- fav_update_epoch;
-      let m_old_fetch_addr   = tagged Invalid;
       fa_start_ifetch (new_epoch,
-		       m_old_fetch_addr,
                        getAddr(rg_next_pcc),
 `ifdef ISA_CHERI
                        True,

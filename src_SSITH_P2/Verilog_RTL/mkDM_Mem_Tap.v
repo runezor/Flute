@@ -47,7 +47,7 @@
 // master_arregion                O     4
 // master_arvalid                 O     1
 // master_rready                  O     1
-// trace_data_out_get             O   362 reg
+// trace_data_out_get             O   427 reg
 // RDY_trace_data_out_get         O     1 reg
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
@@ -889,11 +889,11 @@ module mkDM_Mem_Tap(CLK,
 
   // actionvalue method trace_data_out_get
   input  EN_trace_data_out_get;
-  output [361 : 0] trace_data_out_get;
+  output [426 : 0] trace_data_out_get;
   output RDY_trace_data_out_get;
 
   // signals for module outputs
-  wire [361 : 0] trace_data_out_get;
+  wire [426 : 0] trace_data_out_get;
   wire [63 : 0] master_araddr, master_awaddr, master_wdata, slave_rdata;
   wire [7 : 0] master_arlen, master_awlen, master_wstrb;
   wire [3 : 0] master_arcache,
@@ -1044,7 +1044,7 @@ module mkDM_Mem_Tap(CLK,
   wire slave_xactor_shim_wff_rv$EN;
 
   // ports of submodule f_trace_data
-  wire [361 : 0] f_trace_data$D_IN, f_trace_data$D_OUT;
+  wire [426 : 0] f_trace_data$D_IN, f_trace_data$D_OUT;
   wire f_trace_data$CLR,
        f_trace_data$DEQ,
        f_trace_data$EMPTY_N,
@@ -1138,10 +1138,13 @@ module mkDM_Mem_Tap(CLK,
        WILL_FIRE_trace_data_out_get;
 
   // remaining internal signals
-  wire [96 : 0] master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3,
-		master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1;
-  wire [73 : 0] master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q2;
-  wire [63 : 0] stval___1__h6720, x__h6715, y_avValue_snd__h6632;
+  reg [63 : 0] y__h7005;
+  reg [31 : 0] CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1;
+  reg [2 : 0] sz__h6839;
+  wire [96 : 0] master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4,
+		master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2;
+  wire [73 : 0] master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3;
+  wire [63 : 0] x__h6907, x__h6990, x__h7004;
 
   // action method slave_aw_awflit
   assign CAN_FIRE_slave_aw_awflit = 1'd1 ;
@@ -1201,43 +1204,43 @@ module mkDM_Mem_Tap(CLK,
 
   // value method master_aw_awid
   assign master_awid =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[96:93] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[96:93] ;
 
   // value method master_aw_awaddr
   assign master_awaddr =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[92:29] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[92:29] ;
 
   // value method master_aw_awlen
   assign master_awlen =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[28:21] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[28:21] ;
 
   // value method master_aw_awsize
   assign master_awsize =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[20:18] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[20:18] ;
 
   // value method master_aw_awburst
   assign master_awburst =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[17:16] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[17:16] ;
 
   // value method master_aw_awlock
   assign master_awlock =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[15] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[15] ;
 
   // value method master_aw_awcache
   assign master_awcache =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[14:11] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[14:11] ;
 
   // value method master_aw_awprot
   assign master_awprot =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[10:8] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[10:8] ;
 
   // value method master_aw_awqos
   assign master_awqos =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[7:4] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[7:4] ;
 
   // value method master_aw_awregion
   assign master_awregion =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1[3:0] ;
+	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[3:0] ;
 
   // value method master_aw_awvalid
   assign master_awvalid = CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek ;
@@ -1248,19 +1251,19 @@ module mkDM_Mem_Tap(CLK,
 
   // value method master_w_wdata
   assign master_wdata =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q2[73:10] ;
+	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[73:10] ;
 
   // value method master_w_wstrb
   assign master_wstrb =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q2[9:2] ;
+	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[9:2] ;
 
   // value method master_w_wlast
   assign master_wlast =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q2[1] ;
+	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[1] ;
 
   // value method master_w_wuser
   assign master_wuser =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q2[0] ;
+	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[0] ;
 
   // value method master_w_wvalid
   assign master_wvalid = CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek ;
@@ -1278,43 +1281,43 @@ module mkDM_Mem_Tap(CLK,
 
   // value method master_ar_arid
   assign master_arid =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[96:93] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[96:93] ;
 
   // value method master_ar_araddr
   assign master_araddr =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[92:29] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[92:29] ;
 
   // value method master_ar_arlen
   assign master_arlen =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[28:21] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[28:21] ;
 
   // value method master_ar_arsize
   assign master_arsize =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[20:18] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[20:18] ;
 
   // value method master_ar_arburst
   assign master_arburst =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[17:16] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[17:16] ;
 
   // value method master_ar_arlock
   assign master_arlock =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[15] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[15] ;
 
   // value method master_ar_arcache
   assign master_arcache =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[14:11] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[14:11] ;
 
   // value method master_ar_arprot
   assign master_arprot =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[10:8] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[10:8] ;
 
   // value method master_ar_arqos
   assign master_arqos =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[7:4] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[7:4] ;
 
   // value method master_ar_arregion
   assign master_arregion =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3[3:0] ;
+	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[3:0] ;
 
   // value method master_ar_arvalid
   assign master_arvalid = CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek ;
@@ -1337,7 +1340,7 @@ module mkDM_Mem_Tap(CLK,
   assign WILL_FIRE_trace_data_out_get = EN_trace_data_out_get ;
 
   // submodule f_trace_data
-  FIFO2 #(.width(32'd362), .guarded(32'd1)) f_trace_data(.RST(RST_N),
+  FIFO2 #(.width(32'd427), .guarded(32'd1)) f_trace_data(.RST(RST_N),
 							 .CLK(CLK),
 							 .D_IN(f_trace_data$D_IN),
 							 .ENQ(f_trace_data$ENQ),
@@ -1816,29 +1819,66 @@ module mkDM_Mem_Tap(CLK,
 
   // submodule f_trace_data
   assign f_trace_data$D_IN =
-	     { 170'h12AAAAAAAAAAAAAAA955555554A0000000000000002,
-	       x__h6715,
-	       slave_xactor_shim_awff_rv$port1__read[92:29],
-	       64'hAAAAAAAAAAAAAAAA } ;
+	     { 107'h12AAAAAAAAAAAAAAA955555554A,
+	       x__h6907,
+	       x__h6990,
+	       slave_xactor_shim_awff_rv$port1__read[92:0],
+	       99'h2AAAAAAAAAAAAAAAAAAAAAAAA } ;
   assign f_trace_data$ENQ = CAN_FIRE_RL_write_reqs ;
   assign f_trace_data$DEQ = EN_trace_data_out_get ;
   assign f_trace_data$CLR = 1'b0 ;
 
   // remaining internal signals
-  assign master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q3 =
+  assign master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4 =
 	     master_xactor_shim_arff_rv$port1__read[96:0] ;
-  assign master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q1 =
+  assign master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2 =
 	     master_xactor_shim_awff_rv$port1__read[96:0] ;
-  assign master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q2 =
+  assign master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3 =
 	     master_xactor_shim_wff_rv$port1__read[73:0] ;
-  assign stval___1__h6720 =
-	     { 32'd0, slave_xactor_shim_wff_rv$port1__read[41:10] } ;
-  assign x__h6715 =
-	     (slave_xactor_shim_wff_rv$port1__read[9:2] == 8'h0F) ?
-	       stval___1__h6720 :
-	       y_avValue_snd__h6632 ;
-  assign y_avValue_snd__h6632 =
-	     { 32'd0, slave_xactor_shim_wff_rv$port1__read[73:42] } ;
+  assign x__h6907 = { 61'd0, sz__h6839 } ;
+  assign x__h6990 = x__h7004 & y__h7005 ;
+  assign x__h7004 =
+	     slave_xactor_shim_wff_rv$port1__read[73:10] >>
+	     CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 ;
+  always@(slave_xactor_shim_wff_rv$port1__read)
+  begin
+    case (slave_xactor_shim_wff_rv$port1__read[9:2])
+      8'h03, 8'h0C, 8'h30, 8'hC0: sz__h6839 = 3'b001;
+      8'h0F, 8'hF0: sz__h6839 = 3'b010;
+      8'h10, 8'h20, 8'h40, 8'h80: sz__h6839 = 3'b0;
+      8'hFF: sz__h6839 = 3'b011;
+      default: sz__h6839 = 3'b0;
+    endcase
+  end
+  always@(slave_xactor_shim_wff_rv$port1__read)
+  begin
+    case (slave_xactor_shim_wff_rv$port1__read[9:2])
+      8'h02: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd8;
+      8'h03, 8'h0F, 8'hFF:
+	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd0;
+      8'h04, 8'h0C:
+	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd16;
+      8'h08: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd24;
+      8'h10, 8'h30, 8'hF0:
+	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd32;
+      8'h20: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd40;
+      8'h40, 8'hC0:
+	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd48;
+      8'h80: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd56;
+      default: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd0;
+    endcase
+  end
+  always@(slave_xactor_shim_wff_rv$port1__read)
+  begin
+    case (slave_xactor_shim_wff_rv$port1__read[9:2])
+      8'h01, 8'h02, 8'h04, 8'h08, 8'h10, 8'h20, 8'h40, 8'h80:
+	  y__h7005 = 64'h00000000000000FF;
+      8'h03, 8'h0C, 8'h30, 8'hC0: y__h7005 = 64'h000000000000FFFF;
+      8'h0F, 8'hF0: y__h7005 = 64'h00000000FFFFFFFF;
+      8'hFF: y__h7005 = 64'hFFFFFFFFFFFFFFFF;
+      default: y__h7005 = 64'd0;
+    endcase
+  end
 
   // handling of inlined registers
 
