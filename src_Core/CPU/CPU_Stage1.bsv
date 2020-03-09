@@ -242,7 +242,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                        pc_rdata:       getPC(rg_pcc),
                        pc_wdata:       getPC(next_pcc_local),
 `ifdef ISA_F
-                       mem_wdata:      alu_outputs.val2_flt_not_int ? alu_outputs.val2 : truncate(cap_val2),
+                       mem_wdata:      alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : truncate(cap_val2),
 `else
                        mem_wdata:      truncate(cap_val2),
 `endif

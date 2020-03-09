@@ -122,7 +122,12 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
    // Combinational output function
 
    function Output_StageF fv_out;
-      let pred_fetch_addr = branch_predictor.predict_rsp (imem.is_i32_not_i16, imem.instr);
+`ifdef RVFI_DII
+      let imem_instr = tpl_1(imem.instr);
+`else
+      let imem_instr = imem.instr;
+`endif
+      let pred_fetch_addr = branch_predictor.predict_rsp (imem.is_i32_not_i16, imem_instr);
       let d = Data_StageF_to_StageD {fetch_addr:      imem.pc,
 `ifdef ISA_CHERI
                                      refresh_pcc:     rg_refresh_pcc,
@@ -133,11 +138,9 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 				     exc:             imem.exc,
 				     exc_code:        imem.exc_code,
 				     tval:            imem.tval,
+				     instr:           imem_instr,
 `ifdef RVFI_DII
-				     instr:           tpl_1(imem.instr),
                                      instr_seq:       tpl_2(imem.instr),
-`else
-				     instr:           imem.instr,
 `endif
 				     pred_fetch_addr: pred_fetch_addr};
 

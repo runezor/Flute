@@ -790,7 +790,7 @@ module mkCPU (CPU_IFC);
       //  - re-start fetching from pc2, with new epoch e.
 
 `ifdef RVFI_DII
-      Maybe #(Tuple3 #(Epoch, PCC_T, SEQ_LEN)) redirect = tagged Invalid;
+      Maybe #(Tuple3 #(Epoch, PCC_T, Dii_Id)) redirect = tagged Invalid;
 `else
       Maybe #(Tuple2 #(Epoch, PCC_T)) redirect = tagged Invalid;
 `endif
@@ -852,7 +852,7 @@ module mkCPU (CPU_IFC);
 	          if (stage1.out.redirect) begin
 		  let new_epoch <- fav_update_epoch;
 `ifdef RVFI_DII
-                  redirect = Valid(tuple3(new_epoch, stage1.out.next_pcc, stage1.out.instr_seq + 1));
+                  redirect = Valid(tuple3(new_epoch, stage1.out.next_pcc, stage1.out.data_to_stage2.instr_seq + 1));
 `else
                   redirect = Valid(tuple2(new_epoch, stage1.out.next_pcc));
 `endif
