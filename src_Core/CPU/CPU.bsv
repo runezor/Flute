@@ -902,7 +902,7 @@ module mkCPU (CPU_IFC);
                rg_next_pcc <= toCapPipe(pcc2);
 	       next_fetch_addr = getAddr(toCapPipe(pcc2));
 `ifdef RVFI_DII
-               new_instr_seq = stage1.out.data_to_stage2.instr_seq;
+               new_instr_seq = inseq;
 `endif
 	    end
 
