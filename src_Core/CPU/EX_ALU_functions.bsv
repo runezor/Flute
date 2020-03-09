@@ -1542,7 +1542,6 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
             f7_cap_CCSeal: begin
                 check_cs1_tagged = True;
 
-                alu_outputs.check_enable = True;
                 alu_outputs.check_authority = cs2_val;
                 alu_outputs.check_authority_idx = {0,inputs.rs2_idx};
                 alu_outputs.check_address_low = getAddr(cs2_val);
@@ -1553,6 +1552,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL pcc_base, WordXL ddc_ba
                     alu_outputs.cap_val1 = cs1_val;
                     alu_outputs.val1_cap_not_int = True;
                 end else begin
+                    alu_outputs.check_enable = True;
                     check_cs1_not_sealed = True;
                     check_cs2_not_sealed = True;
                     check_cs2_addr_valid_type = True;
