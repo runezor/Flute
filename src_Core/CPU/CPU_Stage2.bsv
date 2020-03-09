@@ -758,7 +758,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef ISA_M
 	 // If MBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_M && valid) begin
+	 else if (x.op_stage2 == OP_Stage2_M) begin
             // Instr fields required for decode for F/D opcodes
 	    Bool is_OP_not_OP_32 = (x.instr [3] == 1'b0);
             mbox.req (is_OP_not_OP_32, funct3, x.val1_fast, x.val2_fast);
@@ -767,7 +767,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef ISA_F
 	 // If FBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_FD && valid) begin
+	 else if (x.op_stage2 == OP_Stage2_FD) begin
 	    // Instr fields required for decode for F/D opcodes
             let opcode = instr_opcode (x.instr);
 	    let funct7 = instr_funct7 (x.instr);
