@@ -492,6 +492,19 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 data_to_stage3.rd_valid = (ostatus == OSTATUS_PIPE);
 	 data_to_stage3.rd       = 0;
 
+`ifdef RVFI
+`ifdef ISA_CHERI
+	 data_to_stage3.rd_val   = embed_cap(nullCap);
+`else
+	 data_to_stage3.rd_val   = 0;
+`endif
+	 let info_RVFI_s2 = info_RVFI_s2_base;
+	 info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
+	 data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
+`else
+	 data_to_stage3.rd_val   = ?;
+`endif
+
 `ifdef INCLUDE_TANDEM_VERIF
 	 let trace_data   = rg_stage2.trace_data;
 `endif
