@@ -2645,8 +2645,8 @@ module mkCore(CLK,
        MUX_activeSource_1$write_1__VAL_1,
        MUX_activeSource_1_1_0$write_1__SEL_1,
        MUX_activeSource_1_1_0$write_1__SEL_2,
-       MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
+       MUX_activeSource_1_1_1_1$write_1__SEL_3,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
        MUX_activeSource_1_1_2$write_1__VAL_1,
        MUX_flitToSink_0$wset_1__SEL_1,
@@ -2868,7 +2868,6 @@ module mkCore(CLK,
        debug_module_master_ar_araddr__853_MINUS_soc_m_ETC___d1863,
        debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1856,
        debug_module_master_ar_araddr__853_ULT_soc_map_ETC___d1861,
-       plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399,
        reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587,
        reqWires_1_1_0_whas__227_AND_reqWires_1_1_0_wg_ETC___d2237,
        split_0_doPut_whas__95_AND_split_0_doPut_wget__ETC___d1002,
@@ -6041,17 +6040,20 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
+	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399 ;
+	     plic$RDY_server_reset_request_put &&
+	     f_reset_reqs$EMPTY_N &&
+	     f_reset_requestor$FULL_N ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
-	     near_mem_io$RDY_server_reset_request_put &&
-	     plic$RDY_server_reset_request_put &&
 	     debug_module$RDY_hart0_reset_client_request_get &&
 	     cpu$RDY_hart0_server_reset_request_put &&
+	     near_mem_io$RDY_server_reset_request_put &&
+	     plic$RDY_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
@@ -6060,9 +6062,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_complete
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_complete =
+	     cpu$RDY_hart0_server_reset_response_get &&
 	     near_mem_io$RDY_server_reset_response_get &&
 	     plic$RDY_server_reset_response_get &&
-	     cpu$RDY_hart0_server_reset_response_get &&
 	     f_reset_requestor$EMPTY_N &&
 	     (f_reset_requestor$D_OUT ||
 	      debug_module$RDY_hart0_reset_client_response_put) &&
@@ -6080,7 +6082,7 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_0$write_1__SEL_2 =
 	     WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
 	     !ifcs_1_1_rspBack$D_OUT[1] ;
-  assign MUX_activeSource_1_1_0$write_1__SEL_3 =
+  assign MUX_activeSource_1_1_1_1$write_1__SEL_3 =
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
   assign MUX_flitToSink_0$wset_1__SEL_1 =
@@ -7015,14 +7017,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_0$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_0$D_IN = MUX_activeSource_1_1_0$write_1__VAL_1;
       default: activeSource_1_1_0$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7043,14 +7045,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_1_1$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_1_1$D_IN = MUX_activeSource_1_1_1_1$write_1__VAL_1;
       default: activeSource_1_1_1_1$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7067,14 +7069,14 @@ module mkCore(CLK,
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
 	  MUX_activeSource_1_1_2$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
-	  MUX_activeSource_1_1_0$write_1__SEL_3)
+	  MUX_activeSource_1_1_1_1$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
-      MUX_activeSource_1_1_0$write_1__SEL_3:
+      MUX_activeSource_1_1_1_1$write_1__SEL_3:
 	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       default: activeSource_1_1_2$D_IN = 1'b0 /* unspecified value */ ;
     endcase
@@ -7617,9 +7619,7 @@ module mkCore(CLK,
   // submodule f_reset_reqs
   assign f_reset_reqs$D_IN = cpu_reset_server_request_put ;
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
-  assign f_reset_reqs$DEQ =
-	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399 ;
+  assign f_reset_reqs$DEQ = CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -8738,11 +8738,6 @@ module mkCore(CLK,
 	     debug_module$master_araddr < soc_map$m_plic_addr_range[127:64] ;
   assign fatReq_arid__h69731 = { 1'd0, cpu$dmem_master_arid } ;
   assign fatReq_arid__h72198 = { 1'd1, debug_module$master_arid } ;
-  assign plic_RDY_server_reset_request_put__93_AND_cpu__ETC___d399 =
-	     plic$RDY_server_reset_request_put &&
-	     cpu$RDY_hart0_server_reset_request_put &&
-	     f_reset_reqs$EMPTY_N &&
-	     f_reset_requestor$FULL_N ;
   assign reqWires_1_0_whas__577_AND_reqWires_1_0_wget___ETC___d1587 =
 	     CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget ||

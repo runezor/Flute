@@ -3,11 +3,13 @@ package JtagTap;
 
 import BUtils ::*;
 import Clocks ::*;
+import Connectable ::*;
 import DefaultValue ::*;
 import FIFOF ::*;
 import FIFOLevel ::*;
 import Reserved ::*;
 
+import ClockHacks ::*;
 import Giraffe_IFC ::*;
 
 typedef 6 ABITS;
@@ -16,6 +18,8 @@ typedef 6 ABITS;
 typedef 6 IR_LENGTH;
 `elsif XILINX_XCVU9P
 typedef 18 IR_LENGTH;
+`elsif XILINX_XC7K325T
+typedef 6 IR_LENGTH;
 `endif
 `else
 typedef 5 IR_LENGTH;
@@ -34,6 +38,9 @@ Bit#(IR_LENGTH) ir_dtmcs = 'b100010100100100100;    // USER3
                         // 'b000010100100100100;    USER1
 
 Bit#(IR_LENGTH) ir_dmi = 'b000011100100100100;
+`elsif XILINX_XC7K325T
+Bit#(IR_LENGTH) ir_dtmcs = 'h22;
+Bit#(IR_LENGTH) ir_dmi = 'h03;
 `endif
 `else
 Bit#(IR_LENGTH) ir_dtmcs = 'h10;
@@ -176,13 +183,10 @@ module mkJtagTap(JtagTap_IFC);
 
    Wire#(Bit#(1)) w_tck <- mkDWire(?);
 
-   let tck_clock <- mkUngatedClock(?);
-   let tck = tck_clock.new_clk;
-
-   (* no_implicit_conditions, fire_when_enabled *)
-   rule rl_tck;
-      tck_clock.setClockValue(w_tck);
-   endrule
+   let tck_clock <- unpackClock;
+   let tck = tck_clock.clk;
+   let w_tck_crossed <- mkNullCrossing(tck, w_tck);
+   mkConnection(w_tck_crossed, tck_clock.in);
 
    let rst_tck <- mkAsyncResetFromCR(4, tck);
 

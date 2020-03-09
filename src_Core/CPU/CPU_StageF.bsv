@@ -58,7 +58,6 @@ interface CPU_StageF_IFC;
    // ---- Input
    (* always_ready *)
    method Action enq (Epoch            epoch,
-		      Maybe #(WordXL)  m_old_fetch_addr,
 		      WordXL           fetch_addr,
 `ifdef ISA_CHERI
                       Bool             refresh_pcc,
@@ -72,8 +71,13 @@ interface CPU_StageF_IFC;
 		      WordXL           satp);
 
    (* always_ready *)
-   method Action set_full (Bool full);
+   method Action bp_train (WordXL   pc,
+			   Bool     is_i32_not_i16,
+			   Instr    instr,
+			   CF_Info  cf_info);
 
+   (* always_ready *)
+   method Action set_full (Bool full);
 endinterface
 
 // ================================================================
@@ -118,6 +122,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
    // Combinational output function
 
    function Output_StageF fv_out;
+      let pred_fetch_addr = branch_predictor.predict_rsp (imem.is_i32_not_i16, imem.instr);
       let d = Data_StageF_to_StageD {fetch_addr:      imem.pc,
 `ifdef ISA_CHERI
                                      refresh_pcc:     rg_refresh_pcc,
@@ -134,7 +139,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 `else
 				     instr:           imem.instr,
 `endif
-				     pred_fetch_addr: branch_predictor.predict_rsp};
+				     pred_fetch_addr: pred_fetch_addr};
 
       let ostatus = (  (! rg_full) ? OSTATUS_EMPTY
 		     : (  (! imem.valid) ? OSTATUS_BUSY
@@ -162,7 +167,6 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 
    // ---- Input
    method Action enq (Epoch            epoch,
-		      Maybe #(WordXL)  m_old_fetch_addr,
                       WordXL           fetch_addr,
 `ifdef ISA_CHERI
                       Bool             refresh_pcc,
@@ -175,23 +179,30 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 		      Bit #(1)         mstatus_MXR,
 		      WordXL           satp);
       if (verbosity > 1) begin
-	 $write   ("    CPU_StageF.enq:  fetch_addr:0x%0h  epoch:%0d  priv:%0d", fetch_addr, epoch, priv);
-	 $display ("  sstatus_SUM:%0d  mstatus_MXR:%0d  satp:0x%0h  m_old_addr:",
-		   sstatus_SUM, mstatus_MXR, satp, fshow (m_old_fetch_addr));
+	 $write ("    %m.enq:  fetch_addr:0x%0h  epoch:%0d  priv:%0d", fetch_addr, epoch, priv);
+	 $write ("  sstatus_SUM:%0d  mstatus_MXR:%0d  satp:0x%0h",
+		 sstatus_SUM, mstatus_MXR, satp);
+	 $display ("");
       end
-
       imem.req (f3_LW, fetch_addr, priv, sstatus_SUM, mstatus_MXR, satp
 `ifdef RVFI_DII
                                                                        , next_seq
 `endif
                                                                        );
-      branch_predictor.predict_req (fetch_addr, m_old_fetch_addr);    // TODO: ASID.VA vs PA?
+      branch_predictor.predict_req (fetch_addr);    // TODO: ASID.VA vs PA?
 
       rg_epoch <= epoch;
       rg_priv  <= priv;
 `ifdef ISA_CHERI
       rg_refresh_pcc <= refresh_pcc;
 `endif
+   endmethod
+
+   method Action bp_train (WordXL   pc,
+			   Bool     is_i32_not_i16,
+			   Instr    instr,
+			   CF_Info  cf_info);
+      branch_predictor.bp_train (pc, is_i32_not_i16, instr, cf_info);
    endmethod
 
    method Action set_full (Bool full);

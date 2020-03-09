@@ -47,7 +47,64 @@ deriving (Eq, Bits, FShow);
 // ================================================================
 // Branch-prediction info
 
+// ----------------
+// Epoch is a wrap-around counter that ticks every time there is a
+// control-flow redirection due (e.g., due to a mispredict).
+// Number of bits should be large enough to accommodate wrap-around.
+
 typedef Bit #(2)  Epoch;
+
+// ----------------
+// CF_Info ("control flow information") is sent from the execute stage
+// on all control-flow instructions and is used by the fetch stage to
+// improve branch prediction.
+
+// cf. RISC-V Unprivileged ISA Spec Section 2.5 on JAL/JALR for
+// interpretation of the 'link' fields below.
+
+typedef enum {CF_BR,
+	      CF_JAL,
+	      CF_JALR,
+	      // TODO: extend to ECALL/traps and xRET?
+	      CF_None
+   } CF_Op
+deriving (Eq, Bits, FShow);
+
+typedef struct {
+   CF_Op   cf_op;
+   WordXL  from_PC;
+   Bool    taken;            // Relevant for BR
+   WordXL  fallthru_PC;      // for BR; return-PC for JAL/JALR
+   WordXL  taken_PC;         // target PC for taken BR and for JAL/JALR
+   } CF_Info
+deriving (Bits);
+
+CF_Info cf_info_none = CF_Info{cf_op:       CF_None,
+			       from_PC:     ?,
+			       taken:       ?,
+			       fallthru_PC: ?,
+			       taken_PC:    ?};
+
+instance FShow #(CF_Info);
+   function Fmt fshow (CF_Info x);
+      Fmt fmt = $format ("{");
+
+      if (x.cf_op == CF_None)
+	 fmt = fmt + $format ("CF_None");
+      else if (x.cf_op == CF_BR) begin
+	 fmt = fmt + $format ("BR ");
+	 fmt = fmt + $format (x.taken ? "taken " : "fallthru ");
+	 fmt = fmt + $format ("[%h->%h %h]", x.from_PC, x.fallthru_PC, x.taken_PC);
+      end
+      else if (x.cf_op == CF_JAL)
+	 fmt = fmt + $format ("JAL [%h->%h/%h]", x.from_PC, x.taken_PC, x.fallthru_PC);
+      else if (x.cf_op == CF_JALR)
+	 fmt = fmt + $format ("JALR [%h->%h/%h]", x.from_PC, x.taken_PC, x.fallthru_PC);
+
+      fmt = fmt + $format ("}");
+      return fmt;
+   endfunction
+endinstance
 
 // ================================================================
 // Bypass information
@@ -395,6 +452,7 @@ typedef struct {
 `else
    WordXL                 next_pc;
 `endif
+   CF_Info                cf_info;
 
    // feedforward data
    Data_Stage1_to_Stage2  data_to_stage2;
@@ -419,8 +477,9 @@ instance FShow #(Output_Stage1);
 	    fmt = fmt + $format (" ", fshow (x.control));
 	    fmt = fmt + $format (" ", fshow (x.trap_info));
 	 end
-	 else
-	    fmt = fmt + $format (" PIPE: ", fshow (x.control), " ", fshow (x.data_to_stage2));
+	 else begin
+	    fmt = fmt + $format (" PIPE: ", fshow (x.control), " ", fshow (x.cf_info), fshow (x.data_to_stage2));
+	 end
 
 	 if (x.redirect)
 	    fmt = fmt + $format ("\n        redirect next_pc:%h", getPC(x.next_pcc));
@@ -465,66 +524,20 @@ deriving (Eq, Bits, FShow);
 
 typedef struct {
 `ifdef ISA_CHERI
-`ifdef ISA_D
-`ifdef RV32
-`define FLOAT_BIGGER_THAN_INT
-`endif
-`endif
-`ifdef FLOAT_BIGGER_THAN_INT
-    Either#(CapPipe, WordFL) val;
-`else
     CapPipe val;
-`endif
-`else
-`ifdef ISA_D
-    WordFL val;
 `else
     WordXL val;
 `endif
-`endif
    } Pipeline_Val deriving (Bits, FShow);
 
-`ifdef FLOAT_BIGGER_THAN_INT
-   instance FShow#(Either#(a,b)) provisos (FShow#(a), FShow#(b));
-       function fshow(x) = case (x) matches
-                             tagged Left  .l: return fshow(l);
-                             tagged Right .r: return fshow(r);
-                           endcase;
-   endinstance
-`endif
-
 `ifdef ISA_CHERI
-`ifdef FLOAT_BIGGER_THAN_INT
-    function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: Left(cap)};
-    function CapPipe extract_cap(Pipeline_Val val) =
-        case (val.val) matches
-            tagged Left .cap: return cap;
-            tagged Right .flt: return nullWithAddr(truncate(flt));
-        endcase;
-    function Pipeline_Val embed_flt(WordFL flt) = Pipeline_Val{val: Right(flt)};
-    function WordFL extract_flt(Pipeline_Val val) = val.val.Right;
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: Left(nullWithAddr(num))};
-    function WordXL extract_int(Pipeline_Val val) = getAddr(val.val.Left);
-`else
     function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: cap};
     function CapPipe extract_cap(Pipeline_Val val) = val.val;
-`ifdef ISA_F
-    function Pipeline_Val embed_flt(WordFL flt) = Pipeline_Val{val: nullWithAddr(zeroExtend(pack(flt)))};
-    function WordFL extract_flt(Pipeline_Val val) = unpack(truncate(getAddr(val.val)));
-`endif
     function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: nullWithAddr(num)};
     function WordXL extract_int(Pipeline_Val val) = getAddr(val.val);
-`endif
-`else
-`ifdef ISA_F
-    function Pipeline_Val embed_cap(CapPipe cap) = Pipeline_Val{val: cap};
-    function CapPipe extract_cap(Pipeline_Val val) = val.val;
-    function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: num};
-    function WordXL extract_int(Pipeline_Val val) = val.val;
 `else
     function Pipeline_Val embed_int(WordXL num) = Pipeline_Val{val: num};
     function WordXL extract_int(Pipeline_Val val) = val.val;
-`endif
 `endif
 
 typedef struct {
@@ -534,16 +547,15 @@ typedef struct {
 `else
    Addr       pc;
 `endif
-   Instr      instr;    // For debugging. Just funct3, funct7 are enough for
-                        // functionality.
+   Instr      instr;             // For debugging. Just funct3, funct7 are
+                                 // enough for functionality.
 `ifdef RVFI_DII
    Dii_Id instr_seq;
 `endif
    Op_Stage2  op_stage2;
    RegName    rd;
-   Addr       addr;     // Branch, jump: newPC
-                        // Mem ops and AMOs: mem addr
-
+   Addr       addr;              // Branch, jump: newPC
+                                 // Mem ops and AMOs: mem addr
    Pipeline_Val val1;  // OP_Stage2_ALU: rd_val
                        // OP_Stage2_M and OP_Stage2_FD: arg1
 
@@ -570,11 +582,14 @@ typedef struct {
    Bool       mem_unsigned;
 
 `ifdef ISA_F
-   Bool val1_flt_not_int;
-   Bool val2_flt_not_int;
-   WordFL     val3;     // OP_Stage2_FD: arg3
-   Bool       rd_in_fpr;// The rd should update into FPR
-   Bit #(3)   rounding_mode;    // rounding mode from fcsr_frm or instr.rm
+   // Floating point fields
+   WordFL     fval1;             // OP_Stage2_FD: arg1
+   WordFL     fval2;             // OP_Stage2_FD: arg2
+   WordFL     fval3;             // OP_Stage2_FD: arg3
+   Bool       rd_in_fpr;         // The rd should update into FPR
+   Bool       rs_frm_fpr;        // The rs is from FPR (FP stores)
+   Bool       val1_frm_gpr;      // The val1 is from GPR for a FP instruction
+   Bit #(3)   rounding_mode;     // rounding mode from fcsr_frm or instr.rm
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -623,12 +638,12 @@ instance FShow #(Data_Stage1_to_Stage2);
 `endif
       Fmt fmt =   $format ("data_to_Stage 2 {pc:%h  instr:%h  priv:%0d\n", pc, x.instr, x.priv);
       fmt = fmt + $format ("            op_stage2:", fshow (x.op_stage2), "  rd:%0d\n", x.rd);
-`ifdef ISA_F
-      fmt = fmt + $format ("            addr:%h  val1:%h  val2:%h  val3:%h}",
-			   x.addr, x.val1, x.val2, x.val3);
-`else
       fmt = fmt + $format ("            addr:%h  val1:%h  val2:%h}",
 			   x.addr, x.val1, x.val2);
+`ifdef ISA_F
+      fmt = fmt + $format ("\n");
+      fmt = fmt + $format ("            fval1:%h  fval2:%h  fval3:%h}",
+			   x.fval1, x.fval2, x.fval3);
 `endif
       return fmt;
    endfunction
@@ -654,8 +669,9 @@ typedef struct {
 
    // feedforward data
    Data_Stage2_to_Stage3  data_to_stage3;
-
+`ifdef INCLUDE_TANDEM_VERIF
    Trace_Data             trace_data;
+`endif
    } Output_Stage2
 deriving (Bits);
 
@@ -689,6 +705,7 @@ typedef struct {
 
    Bool      rd_valid;
    RegName   rd;
+   Pipeline_Val rd_val;
 
 `ifdef RVFI
    Data_RVFI_Stage2 info_RVFI_s2;
@@ -698,8 +715,7 @@ typedef struct {
    Bool      upd_flags;
    Bool      rd_in_fpr;
    Bit #(5)  fpr_flags;
-`endif
-   Pipeline_Val rd_val;
+   WordFL    frd_val;
    } Data_Stage2_to_Stage3
 deriving (Bits);
 
@@ -727,7 +743,7 @@ instance FShow #(Data_Stage2_to_Stage3);
          fmt = fmt + $format ("  fflags: %05b", fshow (x.fpr_flags));
 
       if (x.rd_in_fpr)
-         fmt = fmt + $format ("  frd:%0d  rd_val:%h\n", x.rd, x.rd_val);
+         fmt = fmt + $format ("  frd:%0d  rd_val:%h\n", x.rd, x.frd_val);
       else
 `endif
          fmt = fmt + $format ("  grd:%0d  rd_val:\n", x.rd, fshow(x.rd_val));

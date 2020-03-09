@@ -201,7 +201,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 				frs1_val       : frs1_val_bypassed,
 				frs2_val       : frs2_val_bypassed,
 				frs3_val       : frs3_val_bypassed,
-				fcsr_frm       : csr_regfile.read_frm,
+				frm            : csr_regfile.read_frm,
+`ifdef INCLUDE_TANDEM_VERIF
+                                fflags         : csr_regfile.read_fflags,
+`endif
 `endif
 				mstatus        : csr_regfile.read_mstatus,
 				misa           : csr_regfile.read_misa };
@@ -268,25 +271,19 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                mem_unsigned  : alu_outputs.mem_unsigned,
 `ifdef ISA_CHERI
                                                mem_allow_cap : alu_outputs.mem_allow_cap,
-                                               val1          : alu_outputs.val1_cap_not_int ? embed_cap(alu_outputs.cap_val1)
-`ifdef ISA_F
-                                                                                            : alu_outputs.val1_flt_not_int ? embed_flt(truncate(alu_outputs.val1))
-`endif
-                                                                                            : embed_int(alu_outputs.val1),
-                                               val2          : alu_outputs.val2_cap_not_int ? embed_cap(alu_outputs.cap_val2)
-`ifdef ISA_F
-                                                                                            : alu_outputs.val2_flt_not_int ? embed_flt(truncate(alu_outputs.val2))
-`endif
-                                                                                            : embed_int(alu_outputs.val2),
+                                               val1          : alu_outputs.val1_cap_not_int ? embed_cap(alu_outputs.cap_val1): embed_int(alu_outputs.val1),
+                                               val2          : alu_outputs.val2_cap_not_int ? embed_cap(alu_outputs.cap_val2): embed_int(alu_outputs.val2),
 `else
                                                val1          : alu_outputs.val1,
                                                val2          : alu_outputs.val2,
 `endif
 `ifdef ISA_F
-                                               val1_flt_not_int: alu_outputs.val1_flt_not_int,
-                                               val2_flt_not_int: alu_outputs.val2_flt_not_int,
-					       val3          : alu_outputs.val3,
+					       fval1         : alu_outputs.fval1,
+					       fval2         : alu_outputs.fval2,
+					       fval3         : alu_outputs.fval3,
 					       rd_in_fpr     : alu_outputs.rd_in_fpr,
+					       rs_frm_fpr    : alu_outputs.rs_frm_fpr,
+					       val1_frm_gpr  : alu_outputs.val1_frm_gpr,
 					       rounding_mode : alu_outputs.rm,
 `endif
 `ifdef ISA_CHERI
@@ -342,8 +339,12 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 						     val1:      ?,
 						     val2:      ?,
 `ifdef ISA_F
-						     val3            : ?,
+						     fval1           : ?,
+						     fval2           : ?,
+						     fval3           : ?,
 						     rd_in_fpr       : ?,
+					             rs_frm_fpr      : ?,
+					             val1_frm_gpr    : ?,
 						     rounding_mode   : ?,
 `endif
                                                      mem_unsigned  : ?,
@@ -422,7 +423,9 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	 if (alu_outputs.exc_code == exc_code_ILLEGAL_INSTRUCTION) begin
 	    // The instruction
 `ifdef ISA_C
-	    tval = (rg_stage_input.is_i32_not_i16 ? zeroExtend (rg_stage_input.instr) : zeroExtend (rg_stage_input.instr_C));
+	    tval = (rg_stage_input.is_i32_not_i16
+		    ? zeroExtend (rg_stage_input.instr)
+		    : zeroExtend (rg_stage_input.instr_C));
 `else
 	    tval = zeroExtend (rg_stage_input.instr);
 `endif
@@ -452,6 +455,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `else
 	 output_stage1.next_pc        = next_pc_local;
 `endif
+	 output_stage1.cf_info        = alu_outputs.cf_info;
 	 output_stage1.data_to_stage2 = data_to_stage2;
       end
 

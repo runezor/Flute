@@ -656,7 +656,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	    hit     = hit || hit_at_way;
 	    if (hit_at_way) way_hit = fromInteger (way);
-	    word128  = (word128 | (pack(word128_at_way) & pack (replicate (hit_at_way))));
+	    word128  = unpack(pack(word128) | (pack(word128_at_way) & pack (replicate (hit_at_way))));
 	 end
 
 	 return tuple3 (hit, way_hit, unpack(word128));
@@ -886,38 +886,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    endrule
 
    // ----------------------------------------------------------------
-   // 2019-03-14: Temporary work-around based on mysterious behavior
-   // where, after consecutive SBs/SHs (which hit in the cache), a
-   // subsequent LW got stale data.  Experiments showed that insertion
-   // of 11 no-ops after the last SB/SH made it work.  This is
-   // probably a Xilinx synthesis issue, but we don't know for sure.
-
-   // Workdaround: after an SB or SW, hold off any subsequent loads
-   // for at least 11 cycles.  On an SB/SW, we load the following
-   // register with all 1's.  On every cycle, we shift it right by 1
-   // (so it becomes 0 and remains 0 after 11 cycles) We add a
-   // condition to rl_probe_and_immed_rsp to stall it if the request
-   // is a load and this register is non-zero.
-
-   Reg #(Bit #(11)) crg_sb_to_load_delay [2] <- mkCReg (2, 0);
-
-   (* no_implicit_conditions, fire_when_enabled *)
-   rule rl_shift_sb_to_load_delay;
-      crg_sb_to_load_delay [0] <= (crg_sb_to_load_delay [0] >> 1);
-   endrule
-
-   Bool load_stall = (   ((rg_op == CACHE_LD) || is_AMO_LR)
-		      && (crg_sb_to_load_delay [1] != 0));
-
-   function Action fa_arm_the_load_stall (Bit #(3) width_code);
-      action
-	 if ((width_code == 3'b000) || (width_code == 3'b001))
-         //TODO now that we have scaled things up, will this bug include SW?
-	    crg_sb_to_load_delay [1] <= '1;
-      endaction
-   endfunction
-
-   // ----------------------------------------------------------------
    // This rule probes the MMU and provides an immediate response for
    // memory (non-IO) requests, if possible, i.e., if
    //     VM off, LD or AMO_LR, cache hit
@@ -929,7 +897,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    (* descending_urgency = "rl_probe_and_immed_rsp, rl_writeback_updated_PTE" *)
 `endif
 
-   rule rl_probe_and_immed_rsp (!resetting && (rg_state == MODULE_RUNNING) && (! load_stall));
+   rule rl_probe_and_immed_rsp (!resetting && (rg_state == MODULE_RUNNING));
 
       // Print some initial information for debugging
       if (cfg_verbosity > 1) begin
@@ -1096,7 +1064,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		     // Update cache line in cache
 		    let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
 		     ram_word128_set.a.put (bram_cmd_write, word128_set_in_cache, new_word128_set);
-		     fa_arm_the_load_stall (rg_width_code);
 
 		     if (cfg_verbosity > 1) begin
 			$display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
@@ -1156,7 +1123,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		  // Update cache line in cache
 		  let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, new_st_val);
 		  ram_word128_set.a.put (bram_cmd_write, word128_set_in_cache, new_word128_set);
-		  fa_arm_the_load_stall (rg_width_code);
 
 		  if (cfg_verbosity > 1) begin
 		     $display ("          0x%0h  op  0x%0h -> 0x%0h", word128, word128, new_st_val);
