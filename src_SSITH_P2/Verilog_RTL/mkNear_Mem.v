@@ -145,20 +145,6 @@
 //    imem_master_rresp,
 //    imem_master_rlast,
 //    imem_master_ruser,
-//    EN_imem_commit,
-//    imem_master_rvalid) -> imem_valid
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    EN_imem_commit,
-//    imem_master_rvalid) -> imem_instr
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
 //    imem_master_rvalid) -> imem_master_arid
 //   (imem_master_rid,
 //    imem_master_rdata,
@@ -319,6 +305,8 @@
 //    dmem_master_rlast,
 //    dmem_master_ruser,
 //    dmem_master_rvalid) -> dmem_master_arvalid
+//   EN_imem_commit -> imem_valid
+//   EN_imem_commit -> imem_instr
 //   EN_dmem_commit -> dmem_st_amo_val
 //
 //
