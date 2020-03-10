@@ -1855,9 +1855,6 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         let result = setBounds(cs1_val, alu_outputs.internal_op2);
         alu_outputs.cap_val1 = result.value;
         alu_outputs.val1_cap_not_int = True;
-        if (alu_outputs.internal_op_flag && !result.exact) begin
-            alu_outputs = fv_CHERI_exc(alu_outputs, alu_outputs.check_authority_idx, exc_code_CHERI_Precision);
-        end
 
         alu_outputs.check_enable = True;
         alu_outputs.check_authority = cs1_val;

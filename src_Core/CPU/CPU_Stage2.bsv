@@ -218,14 +218,6 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 				    tval:     0 };
 `endif
 
-`ifdef ISA_CHERI
-   let  trap_info_capbounds = Trap_Info_Pipe {epcc:    rg_stage2.pcc,
-                       exc_code: exc_code_CHERI,
-                       cheri_exc_code: exc_code_CHERI_Length,
-                       cheri_exc_reg: rg_stage2.check_authority_idx,
-                       tval: rg_stage2.check_address_low };
-`endif
-
    // ----------------------------------------------------------------
    // BEHAVIOR
 
@@ -671,8 +663,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       end
 `endif
 `ifdef ISA_CHERI
+      let  trap_info_capbounds = Trap_Info_Pipe {epcc:    rg_stage2.pcc,
+                                                 exc_code: exc_code_CHERI,
+                                                 cheri_exc_code: check_success ? exc_code_CHERI_Precision : exc_code_CHERI_Length,
+                                                 cheri_exc_reg: rg_stage2.check_authority_idx,
+                                                 tval: rg_stage2.check_address_low };
       output_stage2.check_success = check_enable && check_success;
-      if (check_enable && !check_success) begin
+      if ((check_enable && !check_success) || (rg_stage2.check_exact_enable && !rg_stage2.check_exact_success)) begin
          output_stage2.ostatus = OSTATUS_NONPIPE;
          output_stage2.trap_info = trap_info_capbounds;
       end
