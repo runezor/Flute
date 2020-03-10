@@ -806,7 +806,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       fa_enq (x, valid);
 
       if (verbosity > 1 && valid)
-	 $display ("%0t    CPU_Stage2.enq (Data_Stage1_to_Stage2) ", fshow(x), $time);
+	 $display ("%0t    CPU_Stage2.enq (Data_Stage1_to_Stage2) ", $time, fshow(x));
    endmethod
 
    method Action set_full (Bool full);
