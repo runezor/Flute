@@ -782,6 +782,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 		      , val1
 		      , extend (x.fval2)
 		      , extend (x.fval3)
+		      , valid
 		     );
          end
 `endif

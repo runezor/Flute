@@ -59,6 +59,7 @@ interface FBox_Core_IFC;
       , Bit #(64)                   v1
       , Bit #(64)                   v2
       , Bit #(64)                   v3
+      , Bool                        valid
    );
 
    // FBox response
@@ -140,14 +141,15 @@ module mkFBox_Core #(Bit #(4) verbosity) (FBox_Core_IFC);
 
    Reg   #(FBoxState)      stateR               <- mkReg (FBOX_RST);
 
-   Reg   #(Maybe #(Tuple7 #(
+   Reg   #(Tuple7 #(
         Opcode
       , Bit #(7)
-      , RegName 
+      , RegName
       , Bit #(3)
       , Bit #(64)
       , Bit #(64)
-      , Bit #(64))))       requestR             <- mkRegU;
+      , Bit #(64)))        requestR             <- mkRegU;
+   Reg   #(Bool)           requestR_valid       <- mkRegU;
 
    Reg   #(Bool)           dw_valid             <- mkDWire (False);
    Reg   #(Tuple2 #(
@@ -157,7 +159,7 @@ module mkFBox_Core #(Bit #(4) verbosity) (FBox_Core_IFC);
    Reg   #(Maybe #(Tuple2 #(
         Bit #(64)
       , Bit #(5))))        resultR              <- mkRegU;
-   
+
    FPU_IFC                 fpu                  <- mkFPU;
 
    // =============================================================
@@ -171,7 +173,7 @@ module mkFBox_Core #(Bit #(4) verbosity) (FBox_Core_IFC);
 
    // =============================================================
    // Decode sub-opcodes (a direct lift from the spec)
-   match {.opc, .f7, .rs2, .rm, .v1, .v2, .v3} = requestR.Valid;
+   match {.opc, .f7, .rs2, .rm, .v1, .v2, .v3} = requestR;
    Bit #(2) f2 = f7[1:0];
 `ifdef ISA_D
    let isFMADD_D     = (opc == op_FMADD)  && (f2 == 1);
@@ -275,7 +277,7 @@ module mkFBox_Core #(Bit #(4) verbosity) (FBox_Core_IFC);
       resetReqsF.deq;
       frmFpuF.clear;
 
-      requestR <= tagged Invalid;
+      requestR_valid <= False;
       resultR  <= tagged Invalid;
       stateR   <= FBOX_RST;
 
@@ -291,7 +293,7 @@ module mkFBox_Core #(Bit #(4) verbosity) (FBox_Core_IFC);
 
    // These rules execute the operations, either dispatch to the FPU/PNU or
    // locally here in the F-Box
-   Bool validReq = isValid (requestR) && (stateR == FBOX_REQ) ;
+   Bool validReq = requestR_valid && (stateR == FBOX_REQ) ;
 
    // Single precision operations
    let cmpres_s = compareFP ( sV1, sV2 );
@@ -1257,10 +1259,11 @@ module mkFBox_Core #(Bit #(4) verbosity) (FBox_Core_IFC);
       , Bit #(64) val1
       , Bit #(64) val2
       , Bit #(64) val3
+      , Bool      valid
    );
       // Legal instruction
-      requestR <= tagged Valid (
-         tuple7 (opcode, funct7, rs2_name, rounding_mode, val1, val2, val3));
+      requestR <= tuple7 (opcode, funct7, rs2_name, rounding_mode, val1, val2, val3);
+      requestR_valid <= valid;
 
       // Start processing the instruction
       resultR  <= tagged Invalid;
