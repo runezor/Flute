@@ -748,7 +748,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       f_fabric_second_write_reqs.deq;
    endrule
 
-   rule rl_fabric_send_write_req (dmem_not_imem);
+   rule rl_fabric_send_write_req;
       match { .f3, .pa, .st_val } <- pop (f_fabric_write_reqs);
 
       match {.fabric_addr,
@@ -1853,7 +1853,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Discard write-responses from the fabric
    // NOTE: assuming in-order responses from fabric
 
-   rule rl_discard_write_rsp (dmem_not_imem);
+   rule rl_discard_write_rsp;
       let wr_resp <- get(master_xactor.slave.b);
 
       if (ctr_wr_rsps_pending.value == 0) begin
