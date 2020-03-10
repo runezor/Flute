@@ -370,11 +370,20 @@ function ALU_Outputs fv_BRANCH (ALU_Inputs inputs);
       exc_code = exc_code_INSTR_ADDR_MISALIGNED;
    end
 
+`ifdef ISA_CHERI
+   let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+   let cf_info   = CF_Info {cf_op       : CF_BR,
+			    from_PC     : pcc_addr,
+			    taken       : branch_taken,
+			    fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+			    taken_PC    : pack(unpack(pcc_addr) + offset) };
+`else
    let cf_info   = CF_Info {cf_op       : CF_BR,
 			    from_PC     : inputs.pc,
 			    taken       : branch_taken,
 			    fallthru_PC : fall_through_pc (inputs),
 			    taken_PC    : branch_target };
+`endif
 
    let alu_outputs = alu_outputs_base;
    let next_pc     = (branch_taken ? branch_target : fall_through_pc (inputs));
@@ -416,11 +425,20 @@ function ALU_Outputs fv_JAL (ALU_Inputs inputs);
    misaligned_target = False;
 `endif
 
+`ifdef ISA_CHERI
+   let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+   let cf_info   = CF_Info {cf_op       : CF_JAL,
+			    from_PC     : pcc_addr,
+			    taken       : True,
+			    fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+			    taken_PC    : pack(unpack(pcc_addr) + offset) };
+`else
    let cf_info   = CF_Info {cf_op       : CF_JAL,
 			    from_PC     : inputs.pc,
 			    taken       : True,
 			    fallthru_PC : ret_pc,
 			    taken_PC    : next_pc };
+`endif
 
    let alu_outputs = alu_outputs_base;
    alu_outputs.control   = (misaligned_target ? CONTROL_TRAP : CONTROL_BRANCH);
@@ -468,11 +486,21 @@ function ALU_Outputs fv_JALR (ALU_Inputs inputs);
    misaligned_target = False;
 `endif
 
+`ifdef ISA_CHERI
+   let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+   let target_addr = getPCCBase(inputs.pcc) + next_pc;
+   let cf_info   = CF_Info {cf_op       : CF_JALR,
+			    from_PC     : pcc_addr,
+			    taken       : True,
+			    fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+			    taken_PC    : target_addr };
+`else
    let cf_info   = CF_Info {cf_op       : CF_JALR,
 			    from_PC     : inputs.pc,
 			    taken       : True,
 			    fallthru_PC : ret_pc,
 			    taken_PC    : next_pc };
+`endif
 
    let alu_outputs = alu_outputs_base;
    alu_outputs.control   = (misaligned_target ? CONTROL_TRAP : CONTROL_BRANCH);
@@ -484,7 +512,7 @@ function ALU_Outputs fv_JALR (ALU_Inputs inputs);
    alu_outputs.cf_info   = cf_info;
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
+   alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, target_addr);
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -1783,9 +1811,18 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                     let maskedTarget = maskAddr(cs1_val, signExtend(2'b10));
 
+                    let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+                    let target_addr = getPCCBase(inputs.pcc) + next_pc;
+                    let cf_info   = CF_Info {cf_op       : CF_JALR,
+                                             from_PC     : pcc_addr,
+                                             taken       : True,
+                                             fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+                                             taken_PC    : getAddr(maskedTarget) };
+
                     next_pc[0] = 1'b0;
 
                     alu_outputs.control   = CONTROL_CAPBRANCH;
+                    alu_outputs.cf_info   = cf_info;
 
                     alu_outputs.addr      = next_pc;
                     alu_outputs.pcc       = fromCapPipe(maskedTarget);

@@ -127,6 +127,13 @@ function Tuple3 #(Bool, Bool, WordXL) fn_ras_actions (WordXL  pc,
    Bool   instr_is_JAL  = (instr_opcode (instr) == op_JAL);
    Bool   instr_is_JALR = (instr_opcode (instr) == op_JALR);
 
+`ifdef ISA_CHERI
+   instr_is_JALR = instr_is_JALR || (   (instr_opcode(instr) == op_cap_Manip)
+                                     && (instr_funct3(instr) == f3_cap_ThreeOp)
+                                     && (instr_funct7(instr) == f7_cap_TwoOp)
+                                     && (instr_cap_funct5rs2(instr) == f5rs2_cap_CJALR));
+`endif
+
 `ifdef ISA_C
    // Classify instr, for 16-bit instructions ('C' extension)
    if (! (is_i32_not_i16)) begin
