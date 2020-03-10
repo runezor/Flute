@@ -1717,12 +1717,6 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 alu_outputs.check_address_high = cs2_top;
                 alu_outputs.check_inclusive = True;
 
-                if (zeroExtend(cs2_base) > cs2_top) begin
-                    alu_outputs = fv_CHERI_exc(alu_outputs, zeroExtend(inputs.rs2_idx), exc_code_CHERI_Length);
-                end
-                //TODO representability check? Should be unneccessary because arg is already represented so must be representable.
-                //Only question is whether there are representations that are usually unreachable, and whether cbuildcap should
-                //allow these.
                 let result = setValidCap(cs2_val, True);
                 alu_outputs.cap_val1 = setType(result, -1);
                 alu_outputs.val1_cap_not_int = True;
