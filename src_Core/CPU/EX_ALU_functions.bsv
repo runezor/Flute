@@ -1565,7 +1565,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                         alu_outputs.val1_cap_not_int = True;
                         alu_outputs.cap_val1 = setType(cs2_val, -1);
                         alu_outputs.rd = cCallRD;
-                        alu_outputs.pcc = fromCapPipe(setType(cs1_val, -1));
+                        alu_outputs.pcc = fromCapPipe(maskAddr(setType(cs1_val, -1), signExtend(2'b10)));
                         alu_outputs.control = CONTROL_CAPBRANCH;
                         let target = {truncateLSB(getAddr(cs1_val)), 1'b0};
                         alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, zeroExtend(inputs.rs1_idx), target);
