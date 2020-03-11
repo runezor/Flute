@@ -1061,24 +1061,24 @@ module mkMMU_ICache(CLK,
 		word64__h5957;
   wire [55 : 0] x__h38978, x__h7826, x__h9474, x__h9523, x__h9592;
   wire [51 : 0] x__h42575, x__h42643;
-  wire [31 : 0] cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11,
+  wire [31 : 0] cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10,
 		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q17,
-		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23,
+		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24,
 		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q3;
-  wire [15 : 0] cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14,
-		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18,
+  wire [15 : 0] cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13,
+		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15,
 		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q2,
 		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q20,
-		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24,
+		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23,
 		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q27,
-		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6,
+		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7,
 		cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q9;
   wire [7 : 0] cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q1,
-	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10,
+	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q12,
-	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13,
-	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15,
+	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q16,
+	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q19,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q21,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22,
@@ -1087,7 +1087,7 @@ module mkMMU_ICache(CLK,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q28,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q4,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q5,
-	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7,
+	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6,
 	       cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q8,
 	       mem_req_wr_addr_awlen__h5941,
 	       strobe64__h5958,
@@ -2375,7 +2375,7 @@ module mkMMU_ICache(CLK,
   assign cache_f_reset_rsps$D_IN = cache_f_reset_reqs$D_OUT ;
   assign cache_f_reset_rsps$ENQ = MUX_cache_rg_state$write_1__SEL_11 ;
   assign cache_f_reset_rsps$DEQ =
-	     EN_server_reset_response_get || EN_server_flush_response_get ;
+	     EN_server_flush_response_get || EN_server_reset_response_get ;
   assign cache_f_reset_rsps$CLR = 1'b0 ;
 
   // submodule cache_ram_state_and_ctag_cset
@@ -2710,23 +2710,23 @@ module mkMMU_ICache(CLK,
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q1 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[7:0] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10 =
-	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[47:40] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[63:32] ;
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11 =
+	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[47:40] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q12 =
-	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[79:72] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[55:48] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14 =
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[63:48] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15 =
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[63:56] ;
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15 =
+	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[79:64] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q16 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[71:64] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q17 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[95:64] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18 =
-	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[79:64] ;
+	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[79:72] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q19 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[87:80] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q2 =
@@ -2734,13 +2734,13 @@ module mkMMU_ICache(CLK,
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q20 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[95:80] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q21 =
-	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[95:88] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[103:96] ;
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22 =
+	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[95:88] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23 =
-	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[127:96] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[111:96] ;
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24 =
+	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[127:96] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q25 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[111:104] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q26 =
@@ -2756,9 +2756,9 @@ module mkMMU_ICache(CLK,
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q5 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[23:16] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6 =
-	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[31:16] ;
-  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[31:24] ;
+  assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7 =
+	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[31:16] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q8 =
 	     cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[39:32] ;
   assign cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q9 =
@@ -2833,8 +2833,8 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[31:24] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6 } ;
   assign result_lo__h36268 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
@@ -2845,20 +2845,20 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[47:40] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11 } ;
   assign result_lo__h36334 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[55:48] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q12[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q12 } ;
   assign result_lo__h36367 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[63:56] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14 } ;
   assign result_lo__h36400 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
@@ -2869,8 +2869,8 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[79:72] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q12[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q12 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18 } ;
   assign result_lo__h36466 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
@@ -2881,14 +2881,14 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[95:88] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q21[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q21 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22 } ;
   assign result_lo__h36532 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[103:96] } :
-	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22[7]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q22 } ;
+	       { {56{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q21[7]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q21 } ;
   assign result_lo__h36565 =
 	     cache_rg_is_unsigned ?
 	       { 56'd0,
@@ -2917,8 +2917,8 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[31:16] } :
-	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6[15]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q6 } ;
+	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7[15]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q7 } ;
   assign result_lo__h36752 =
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
@@ -2929,14 +2929,14 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[63:48] } :
-	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14[15]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q14 } ;
+	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13[15]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q13 } ;
   assign result_lo__h36818 =
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[79:64] } :
-	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18[15]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q18 } ;
+	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15[15]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q15 } ;
   assign result_lo__h36851 =
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
@@ -2947,8 +2947,8 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[111:96] } :
-	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24[15]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24 } ;
+	       { {48{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23[15]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23 } ;
   assign result_lo__h36917 =
 	     cache_rg_is_unsigned ?
 	       { 48'd0,
@@ -2965,8 +2965,8 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 32'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[63:32] } :
-	       { {32{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11[31]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q11 } ;
+	       { {32{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10[31]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q10 } ;
   assign result_lo__h37030 =
 	     cache_rg_is_unsigned ?
 	       { 32'd0,
@@ -2977,8 +2977,8 @@ module mkMMU_ICache(CLK,
 	     cache_rg_is_unsigned ?
 	       { 32'd0,
 		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC___d437[127:96] } :
-	       { {32{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23[31]}},
-		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q23 } ;
+	       { {32{cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24[31]}},
+		 cache_ram_word128_set_b_read__32_BITS_128_TO_0_ETC__q24 } ;
   assign satp_pa__h4568 = { 8'd0, x__h7826 } ;
   assign shift_bits__h5646 =
 	     { cache_f_fabric_write_reqs$D_OUT[131:129], 3'b0 } ;
