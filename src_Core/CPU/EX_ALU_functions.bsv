@@ -980,6 +980,11 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
 
    alu_outputs.val2      = inputs.rs2_val;
 
+`ifdef ISA_CHERI
+   alu_outputs.cap_val2      = inputs.cap_rs2_val;
+   alu_outputs.val2_cap_not_int = width_code == w_SIZE_CAP;
+`endif
+
 `ifdef ISA_F
    alu_outputs.fval2     = inputs.frs2_val;
 `endif
