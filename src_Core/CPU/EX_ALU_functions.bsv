@@ -1715,6 +1715,10 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     check_cs2_perm_subset_cs1 = True;
                 end
 
+                if (!isDerivable(cs2_val)) begin
+                    alu_outputs = fv_CHERI_exc(alu_outputs, zeroExtend(inputs.rs2_idx), exc_code_CHERI_Length);
+                end
+
                 alu_outputs.check_enable = True;
                 alu_outputs.check_authority = inputs.rs1_idx == 0 ? inputs.ddc : cs1_val;
                 alu_outputs.check_authority_idx = {0,inputs.rs1_idx};
