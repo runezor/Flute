@@ -127,6 +127,13 @@ function Tuple3 #(Bool, Bool, WordXL) fn_ras_actions (WordXL  pc,
    Bool   instr_is_JAL  = (instr_opcode (instr) == op_JAL);
    Bool   instr_is_JALR = (instr_opcode (instr) == op_JALR);
 
+`ifdef ISA_CHERI
+   instr_is_JALR = instr_is_JALR || (   (instr_opcode(instr) == op_cap_Manip)
+                                     && (instr_funct3(instr) == f3_cap_ThreeOp)
+                                     && (instr_funct7(instr) == f7_cap_TwoOp)
+                                     && (instr_cap_funct5rs2(instr) == f5rs2_cap_CJALR));
+`endif
+
 `ifdef ISA_C
    // Classify instr, for 16-bit instructions ('C' extension)
    if (! (is_i32_not_i16)) begin
@@ -193,7 +200,6 @@ endfunction
 module mkBranch_Predictor (Branch_Predictor_IFC);
 
    Integer verbosity = 0;
-   WordXL  bogus_PC  = '1;
 
    // Branch Target Table (BTB)
    Bool bram_has_output_reg = False;
@@ -210,7 +216,7 @@ module mkBranch_Predictor (Branch_Predictor_IFC);
    RegFile #(BTB_Index, Bit #(2)) rf_btb_fsms <- mkRegFileFull;
 
    // Return Address Stack (RAS). Top of stack is always at [0]. Push/pop by shifting.
-   Reg #(Vector #(RAS_Capacity, WordXL)) rg_ras  <- mkReg (replicate (bogus_PC));
+   Reg #(Vector #(RAS_Capacity, Maybe#(WordXL))) rg_ras  <- mkReg (replicate (Invalid));
 
    // This reg holds the PC being predicted (currently probing the btb)
    Reg #(WordXL)  rg_pc <- mkRegU;
@@ -268,24 +274,20 @@ module mkBranch_Predictor (Branch_Predictor_IFC);
    // fall-through PC if no prediction.
 
    method WordXL  predict_rsp (Bool is_i32_not_i16, Instr instr);
-      WordXL pred_pc   = bogus_PC;    // default: no prediction, invalid PC
+      WordXL pred_pc = rg_pc + (is_i32_not_i16 ? 4 : 2);
       let    btb_entry = btb_bramcore2.a.read;
 
       // Check if prediction is from RAS pop (JALR returns)
-      match { .do_pop, .*, .* } = fn_ras_actions (bogus_PC, is_i32_not_i16, instr);
-      if (do_pop)
-	 pred_pc = rg_ras [0];    // Top of RAS (will be popped in bp_train())
-
+      match { .do_pop, .*, .* } = fn_ras_actions (?, is_i32_not_i16, instr);
+      if (do_pop && isValid(rg_ras[0])) begin
+	 pred_pc = rg_ras[0].Valid;    // Top of RAS (will be popped in bp_train())
+      end
       // Look for BTB hit if no result from RAS
-      if (   (pred_pc == bogus_PC)
-	  && (btb_entry.valid)
+      else
+      if (   (btb_entry.valid)
 	  && (btb_entry.pc_tag == fn_pc_to_tag (rg_pc))) begin
 	 pred_pc = { btb_entry.predicted_pc, 1'b0 };
       end
-
-      // Default prediction: fallthrough
-      if (pred_pc == bogus_PC)
-	 pred_pc = rg_pc + (is_i32_not_i16 ? 4 : 2);
 
       return pred_pc;
    endmethod
@@ -309,15 +311,16 @@ module mkBranch_Predictor (Branch_Predictor_IFC);
 
       match { .do_pop, .do_push, .ret_pc } = fn_ras_actions (pc, is_i32_not_i16, instr);
       let ras_val  = rg_ras;
-      if (do_pop)  ras_val = shiftInAtN (ras_val, bogus_PC);
-      if (do_push) ras_val = shiftInAt0 (ras_val, ret_pc);
+      if (do_pop)  ras_val = shiftInAtN (ras_val, Invalid);
+      if (do_push) ras_val = shiftInAt0 (ras_val, Valid (ret_pc));
       rg_ras       <= ras_val;
 
       // ----------------
       // BTB training using cf_info which is feedback from downpipe
       // exec stage (several instructions earlier)
 
-      WordXL    pred_PC = bogus_PC;
+      WordXL    pred_PC = ?;
+      Bool      pred_PC_valid = False;
       BTB_Index index_b = fn_pc_to_index (cf_info.from_PC);
       Bit #(2)  fsm_val = rf_btb_fsms.sub (index_b);
 
@@ -336,12 +339,14 @@ module mkBranch_Predictor (Branch_Predictor_IFC);
 	       2'b10: begin fsm_val = 2'b01; pred_PC  = cf_info.fallthru_PC; end
 	       2'b11: begin fsm_val = 2'b10; pred_PC  = cf_info.taken_PC;    end
 	    endcase
+         pred_PC_valid = True;
       end
       else if ((cf_info.cf_op == CF_JAL) || (cf_info.cf_op == CF_JALR)) begin
 	 fsm_val = 2'b11;    // strong taken
 	 pred_PC = cf_info.taken_PC;
+         pred_PC_valid = True;
       end
-      if (pred_PC != bogus_PC) begin
+      if (pred_PC_valid) begin
 	 rf_btb_fsms.upd (index_b, fsm_val);
 	 let btb_entry = BTB_Entry {valid:        True,
 				    pc_tag:       fn_pc_to_tag (cf_info.from_PC),

@@ -218,14 +218,6 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 				    tval:     0 };
 `endif
 
-`ifdef ISA_CHERI
-   let  trap_info_capbounds = Trap_Info_Pipe {epcc:    rg_stage2.pcc,
-                       exc_code: exc_code_CHERI,
-                       cheri_exc_code: exc_code_CHERI_Length,
-                       cheri_exc_reg: rg_stage2.check_authority_idx,
-                       tval: rg_stage2.check_address_low };
-`endif
-
    // ----------------------------------------------------------------
    // BEHAVIOR
 
@@ -684,8 +676,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       end
 `endif
 `ifdef ISA_CHERI
+      let  trap_info_capbounds = Trap_Info_Pipe {epcc:    rg_stage2.pcc,
+                                                 exc_code: exc_code_CHERI,
+                                                 cheri_exc_code: check_success ? exc_code_CHERI_Precision : exc_code_CHERI_Length,
+                                                 cheri_exc_reg: rg_stage2.check_authority_idx,
+                                                 tval: rg_stage2.check_address_low };
       output_stage2.check_success = check_enable && check_success;
-      if (check_enable && !check_success) begin
+      if ((check_enable && !check_success) || (rg_stage2.check_exact_enable && !rg_stage2.check_exact_success)) begin
          output_stage2.ostatus = OSTATUS_NONPIPE;
          output_stage2.trap_info = trap_info_capbounds;
       end
@@ -771,7 +768,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef ISA_M
 	 // If MBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_M && valid) begin
+	 else if (x.op_stage2 == OP_Stage2_M) begin
             // Instr fields required for decode for F/D opcodes
 	    Bool is_OP_not_OP_32 = (x.instr [3] == 1'b0);
             mbox.req (is_OP_not_OP_32, funct3, x.val1_fast, x.val2_fast);
@@ -780,7 +777,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 
 `ifdef ISA_F
 	 // If FBox op, initiate it
-	 else if (x.op_stage2 == OP_Stage2_FD && valid) begin
+	 else if (x.op_stage2 == OP_Stage2_FD) begin
 	    // Instr fields required for decode for F/D opcodes
             let opcode = instr_opcode (x.instr);
 	    let funct7 = instr_funct7 (x.instr);
@@ -795,6 +792,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 		      , val1
 		      , extend (x.fval2)
 		      , extend (x.fval3)
+		      , valid
 		     );
          end
 `endif
@@ -821,7 +819,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       fa_enq (x, valid);
 
       if (verbosity > 1 && valid)
-	 $display ("%0t    CPU_Stage2.enq (Data_Stage1_to_Stage2) ", fshow(x), $time);
+	 $display ("%0t    CPU_Stage2.enq (Data_Stage1_to_Stage2) ", $time, fshow(x));
    endmethod
 
    method Action set_full (Bool full);

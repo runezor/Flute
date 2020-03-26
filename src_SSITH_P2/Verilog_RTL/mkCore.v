@@ -2793,10 +2793,10 @@ module mkCore(CLK,
 	       SEXT_arbiter_1_1_lastSelect_1__q21,
 	       SEXT_arbiter_1_1_lastSelect__q20,
 	       SEXT_arbiter_1_firstHot_1__q15,
-	       SEXT_arbiter_1_firstHot__q10,
+	       SEXT_arbiter_1_firstHot__q9,
 	       SEXT_arbiter_1_lastSelect_1__q11,
 	       SEXT_arbiter_1_lastSelect_2__q16,
-	       SEXT_arbiter_1_lastSelect__q9,
+	       SEXT_arbiter_1_lastSelect__q10,
 	       SEXT_arbiter_firstHot__q5,
 	       SEXT_arbiter_lastSelect__q6,
 	       SEXT_x1666__q18,
@@ -8793,7 +8793,7 @@ module mkCore(CLK,
   assign SEXT_arbiter_1_firstHot_1__q15 = {2{arbiter_1_firstHot_1}} ;
   assign SEXT_arbiter_1_firstHot_638_639_BIT_0_640_AND__ETC___d1654 =
 	     x__h61667 | y__h61668 ;
-  assign SEXT_arbiter_1_firstHot__q10 = {2{arbiter_1_firstHot}} ;
+  assign SEXT_arbiter_1_firstHot__q9 = {2{arbiter_1_firstHot}} ;
   assign SEXT_arbiter_1_lastSelect_1_633_634_BIT_0_635__ETC___d1648 =
 	     x__h61531 | y__h61532 ;
   assign SEXT_arbiter_1_lastSelect_1__q11 = {2{arbiter_1_lastSelect_1}} ;
@@ -8802,7 +8802,7 @@ module mkCore(CLK,
   assign SEXT_arbiter_1_lastSelect_2__q16 = {2{arbiter_1_lastSelect_2}} ;
   assign SEXT_arbiter_1_lastSelect_629_630_BIT_0_631_AN_ETC___d1642 =
 	     x__h61380 | y__h61381 ;
-  assign SEXT_arbiter_1_lastSelect__q9 = {2{arbiter_1_lastSelect}} ;
+  assign SEXT_arbiter_1_lastSelect__q10 = {2{arbiter_1_lastSelect}} ;
   assign SEXT_arbiter_firstHot_443_444_BIT_0_445_AND_re_ETC___d1451 =
 	     x__h47291 | y__h47292 ;
   assign SEXT_arbiter_firstHot__q5 = {2{arbiter_firstHot}} ;
@@ -9064,7 +9064,7 @@ module mkCore(CLK,
   assign x__h47797 = SEXT_x7715__q8[0] & arbiter_firstHot ;
   assign x__h61380 = x__h61382 | y__h61383 ;
   assign x__h61382 =
-	     SEXT_arbiter_1_lastSelect__q9[0] &
+	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
   assign x__h61531 = x__h61533 | y__h61534 ;
   assign x__h61533 =
@@ -9072,7 +9072,7 @@ module mkCore(CLK,
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
   assign x__h61667 = x__h61669 | y__h61670 ;
   assign x__h61669 =
-	     SEXT_arbiter_1_firstHot__q10[0] &
+	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
   assign x__h62139 = x__h62141 | y__h62142 ;
   assign x__h62141 =
@@ -9175,22 +9175,22 @@ module mkCore(CLK,
 	     SEXT_SEXT_arbiter_firstHot_443_444_BIT_0_445_A_ETC__q7[0] &
 	     arbiter_lastSelect ;
   assign y__h61381 =
-	     SEXT_arbiter_1_firstHot__q10[0] &
+	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
   assign y__h61383 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
   assign y__h61532 =
-	     SEXT_arbiter_1_lastSelect__q9[0] &
+	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
   assign y__h61534 =
-	     SEXT_arbiter_1_firstHot__q10[0] &
+	     SEXT_arbiter_1_firstHot__q9[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
   assign y__h61668 =
 	     SEXT_arbiter_1_lastSelect_1__q11[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
   assign y__h61670 =
-	     SEXT_arbiter_1_lastSelect__q9[0] &
+	     SEXT_arbiter_1_lastSelect__q10[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
   assign y__h62140 = SEXT_x2235__q14[0] & arbiter_1_lastSelect ;
   assign y__h62142 = SEXT_x2201__q13[0] & arbiter_1_lastSelect_1 ;

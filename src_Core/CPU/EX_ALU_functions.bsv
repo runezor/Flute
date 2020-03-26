@@ -370,11 +370,20 @@ function ALU_Outputs fv_BRANCH (ALU_Inputs inputs);
       exc_code = exc_code_INSTR_ADDR_MISALIGNED;
    end
 
+`ifdef ISA_CHERI
+   let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+   let cf_info   = CF_Info {cf_op       : CF_BR,
+			    from_PC     : pcc_addr,
+			    taken       : branch_taken,
+			    fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+			    taken_PC    : pack(unpack(pcc_addr) + offset) };
+`else
    let cf_info   = CF_Info {cf_op       : CF_BR,
 			    from_PC     : inputs.pc,
 			    taken       : branch_taken,
 			    fallthru_PC : fall_through_pc (inputs),
 			    taken_PC    : branch_target };
+`endif
 
    let alu_outputs = alu_outputs_base;
    let next_pc     = (branch_taken ? branch_target : fall_through_pc (inputs));
@@ -416,11 +425,20 @@ function ALU_Outputs fv_JAL (ALU_Inputs inputs);
    misaligned_target = False;
 `endif
 
+`ifdef ISA_CHERI
+   let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+   let cf_info   = CF_Info {cf_op       : CF_JAL,
+			    from_PC     : pcc_addr,
+			    taken       : True,
+			    fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+			    taken_PC    : pack(unpack(pcc_addr) + offset) };
+`else
    let cf_info   = CF_Info {cf_op       : CF_JAL,
 			    from_PC     : inputs.pc,
 			    taken       : True,
 			    fallthru_PC : ret_pc,
 			    taken_PC    : next_pc };
+`endif
 
    let alu_outputs = alu_outputs_base;
    alu_outputs.control   = (misaligned_target ? CONTROL_TRAP : CONTROL_BRANCH);
@@ -468,11 +486,21 @@ function ALU_Outputs fv_JALR (ALU_Inputs inputs);
    misaligned_target = False;
 `endif
 
+`ifdef ISA_CHERI
+   let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+   let target_addr = getPCCBase(inputs.pcc) + next_pc;
+   let cf_info   = CF_Info {cf_op       : CF_JALR,
+			    from_PC     : pcc_addr,
+			    taken       : True,
+			    fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+			    taken_PC    : target_addr };
+`else
    let cf_info   = CF_Info {cf_op       : CF_JALR,
 			    from_PC     : inputs.pc,
 			    taken       : True,
 			    fallthru_PC : ret_pc,
 			    taken_PC    : next_pc };
+`endif
 
    let alu_outputs = alu_outputs_base;
    alu_outputs.control   = (misaligned_target ? CONTROL_TRAP : CONTROL_BRANCH);
@@ -484,7 +512,7 @@ function ALU_Outputs fv_JALR (ALU_Inputs inputs);
    alu_outputs.cf_info   = cf_info;
 
 `ifdef ISA_CHERI
-   alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
+   alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, target_addr);
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -951,6 +979,11 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
 `endif
 
    alu_outputs.val2      = inputs.rs2_val;
+
+`ifdef ISA_CHERI
+   alu_outputs.cap_val2      = inputs.cap_rs2_val;
+   alu_outputs.val2_cap_not_int = width_code == w_SIZE_CAP;
+`endif
 
 `ifdef ISA_F
    alu_outputs.fval2     = inputs.frs2_val;
@@ -1682,6 +1715,10 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     check_cs2_perm_subset_cs1 = True;
                 end
 
+                if (!isDerivable(cs2_val)) begin
+                    alu_outputs = fv_CHERI_exc(alu_outputs, zeroExtend(inputs.rs2_idx), exc_code_CHERI_Length);
+                end
+
                 alu_outputs.check_enable = True;
                 alu_outputs.check_authority = inputs.rs1_idx == 0 ? inputs.ddc : cs1_val;
                 alu_outputs.check_authority_idx = {0,inputs.rs1_idx};
@@ -1689,12 +1726,6 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 alu_outputs.check_address_high = cs2_top;
                 alu_outputs.check_inclusive = True;
 
-                if (zeroExtend(cs2_base) > cs2_top) begin
-                    alu_outputs = fv_CHERI_exc(alu_outputs, zeroExtend(inputs.rs2_idx), exc_code_CHERI_Length);
-                end
-                //TODO representability check? Should be unneccessary because arg is already represented so must be representable.
-                //Only question is whether there are representations that are usually unreachable, and whether cbuildcap should
-                //allow these.
                 let result = setValidCap(cs2_val, True);
                 alu_outputs.cap_val1 = setType(result, -1);
                 alu_outputs.val1_cap_not_int = True;
@@ -1783,9 +1814,18 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                     let maskedTarget = maskAddr(cs1_val, signExtend(2'b10));
 
+                    let pcc_addr = getAddr(toCapPipe(inputs.pcc));
+                    let target_addr = getPCCBase(inputs.pcc) + next_pc;
+                    let cf_info   = CF_Info {cf_op       : CF_JALR,
+                                             from_PC     : pcc_addr,
+                                             taken       : True,
+                                             fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+                                             taken_PC    : getAddr(maskedTarget) };
+
                     next_pc[0] = 1'b0;
 
                     alu_outputs.control   = CONTROL_CAPBRANCH;
+                    alu_outputs.cf_info   = cf_info;
 
                     alu_outputs.addr      = next_pc;
                     alu_outputs.pcc       = fromCapPipe(maskedTarget);
@@ -1818,9 +1858,6 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         let result = setBounds(cs1_val, alu_outputs.internal_op2);
         alu_outputs.cap_val1 = result.value;
         alu_outputs.val1_cap_not_int = True;
-        if (alu_outputs.internal_op_flag && !result.exact) begin
-            alu_outputs = fv_CHERI_exc(alu_outputs, alu_outputs.check_authority_idx, exc_code_CHERI_Precision);
-        end
 
         alu_outputs.check_enable = True;
         alu_outputs.check_authority = cs1_val;
