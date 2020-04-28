@@ -152,9 +152,8 @@ module mkP2_Core (P2_Core_IFC);
 
 `ifdef INCLUDE_GDB_CONTROL
       // Respond to Debug module if this is an ndm-reset
-      if (rg_ndm_reset matches tagged Valid .x) begin
+      if (rg_ndm_reset matches tagged Valid .x)
 	 core.ndm_reset_client.response.put (running);
-      end
       rg_ndm_reset <= tagged Invalid;
 `endif
    endrule
