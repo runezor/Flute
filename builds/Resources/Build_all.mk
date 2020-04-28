@@ -25,24 +25,24 @@ help:
 
 .PHONY: build_all_bluesim
 build_all_bluesim:
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32AIMU     SIM=bluesim    build_and_test
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32ADFIMSU  SIM=bluesim    build_and_test
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64AIMU     SIM=bluesim    build_and_test
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64ADFIMSU  SIM=bluesim    build_and_test
+	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64AIMUxCHERI     SIM=bluesim    build_and_test
+	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64ADFIMSUxCHERI  SIM=bluesim    build_and_test
+#	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32AIMUxCHERI     SIM=bluesim    build_and_test
+#	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32ADFIMSUxCHERI  SIM=bluesim    build_and_test
 
 .PHONY: build_all_verilator
 build_all_verilator:
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32AIMU     SIM=verilator  build_and_test
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32ADFIMSU  SIM=verilator  build_and_test
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64AIMU     SIM=verilator  build_and_test
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64ADFIMSU  SIM=verilator  build_and_test
+	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64AIMUxCHERI     SIM=verilator  build_and_test
+	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64ADFIMSUxCHERI  SIM=verilator  build_and_test
+#	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32AIMUxCHERI     SIM=verilator  build_and_test
+#	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32ADFIMSUxCHERI  SIM=verilator  build_and_test
 
 .PHONY: build_all_iverilog
 build_all_iverilog:
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32AIMU     SIM=iverilog   build_and_test_iverilog
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32ADFIMSU  SIM=iverilog   build_and_test_iverilog
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64AIMU     SIM=iverilog   build_and_test_iverilog
-	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64ADFIMSU  SIM=iverilog   build_and_test_iverilog
+	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64AIMUxCHERI     SIM=iverilog   build_and_test_iverilog
+	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV64ADFIMSUxCHERI  SIM=iverilog   build_and_test_iverilog
+#	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32AIMUxCHERI     SIM=iverilog   build_and_test_iverilog
+#	make  -f $(REPO)/builds/Resources/Build_all.mk  ARCH=RV32ADFIMSUxCHERI  SIM=iverilog   build_and_test_iverilog
 
 .PHONY: build
 build:

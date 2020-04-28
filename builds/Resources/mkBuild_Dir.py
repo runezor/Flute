@@ -129,9 +129,19 @@ def main (argv = None):
         arch_std = arch_std.replace("_RVFI_DII","")
         rvfi_dii = "_RVFI_DII"
 
+    cheri = False
+
     for ext in arch_split:
         if ("RVFI_DII" in ext):
             rvfi_dii = "_RVFI_DII"
+        if ("CHERI" in ext):
+            cheri = True
+
+    if (not(cheri)):
+        sys.stdout.write ("Error in command-line arg 1 (<arch>='{0}')\n".format (arch_std))
+        sys.stdout.write ("    Should contain 'xCHERI'\n")
+        sys.stdout.write (usage_line.replace ("CMD", argv [0]))
+        sys.stdout.write ("\n")
 
     arch_split = list(map ((lambda x : x.replace("_RVFI_DII", "")), arch_split))
 

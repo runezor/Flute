@@ -18,6 +18,13 @@ The three repo structures are nearly identical, and the ways to build
 and run are identical.  This README is identical--please substitute
 "Piccolo" or "Flute" or "Basoon" below wherever you see <CPU>.
 
+### About the CHERI modifications
+
+This repository contains the CHERI-modified versions of the Flute processor.
+All builds must have xCHERI following the usual architecture string.
+In addition, the processor currently only supports 64-bits with the CHERI modifications.
+
+More information about the extensions can be found [here](cheri-cpu.org).
 
 ### About the source codes (in BSV and Verilog)
 
@@ -28,24 +35,18 @@ adequate to boot a Linux kernel.
 
 The pre-generated synthesizable Verilog RTL source files in this
 repository are for a few specific configurations:
+(NOTE: the CHERI version of the repository does not have the prebuilt directories.
+They can be built with the bluespec compiler - see  the later section on what is
+possible with the Bluespec compiler)
 
-1. RV32ACIMU:    **(DARPA SSITH users: this is the "P1" processor)**
-    - RV32I: base RV32 integer instructions
-    - 'A' extension: atomic memory ops
-    - 'C' extension: compressed instructions
-    - 'M' extension: integer multiply/divide instructions
-    - Privilege levels M (machine) and U (user)
-    - Supports external, timer, software and non-maskable interrupts
-    - Passes all riscv-isa tests for RV32ACIMU
-    - Boots FreeRTOS
-
-2. RV64ACDFIMSU
+1. RV64ACDFIMSUxCHERI
     - RV64I: base RV64 integer instructions
     - 'A' extension: atomic memory ops
     - 'C' extension: compressed instructions
     - 'D' extension: double-precision floating point instructions
     - 'F' extension: single-precision floating point instructions
     - 'M' extension: integer multiply/divide instructions
+    - 'xCHERI' extension: capability-based security extensions
     - Privilege levels M (machine), S (Supervisor) and U (user)
     - Supports external, timer, software and non-maskable interrupts
     - Passes all riscv-isa tests for RV64ACDFIMSU
@@ -57,8 +58,9 @@ academia and for non-profit research].
 
 The BSV source code supports:
 
-- RV32I or RV64I
+- RV64I
 - Optional 'A', 'C', 'D', 'F' and 'M' extensions
+- Mandatory 'xCHERI' extension
 - Privilege level options M, MU and MSU
 - For privilege S, virtual memory schemes Sv32 (RV32) and Sv39 (RV64)
 
@@ -233,7 +235,7 @@ You can regenerate the Verilog RTL in any of the
 `build/<ARCH>_<CPU>_verilator/` or `build/<ARCH>_<CPU>_iverilog/`
 directories.  Example:
 
-        $ cd  builds/RV32ACIMU_<CPU>_verilator
+        $ cd  builds/RV32ACIMUxCHERI_<CPU>_verilator
         $ make compile
 
 #### Creating a new architecture configuration
@@ -242,14 +244,14 @@ In the `builds/` directory, you can create a new sub-directory to
 build a new configuration of interest.  For example:
 
         $ cd  builds
-	$ Resources/mkBuild_Dir.py  ..  RV32CI  bluesim
+	$ Resources/mkBuild_Dir.py  ..  RV32CIxCHERI  bluesim
 
 will create a new directory: `builds\RV32CIU_<CPU>_bluesim`
 populated with a `Makefile` to compile and link a bluesim simulation
 for an RV32 CPU with 'I' and 'C' ISA options.  You can build and run
 that simulator as usual:
 
-        $ cd  builds/RV32CIU_<CPU>_bluesim
+        $ cd  builds/RV32CIUxCHERI_<CPU>_bluesim
         $ make compile simulator test isa_tests
 
 ----------------------------------------------------------------
