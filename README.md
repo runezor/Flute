@@ -246,7 +246,7 @@ build a new configuration of interest.  For example:
         $ cd  builds
 	$ Resources/mkBuild_Dir.py  ..  RV32CIxCHERI  bluesim
 
-will create a new directory: `builds\RV32CIU_<CPU>_bluesim`
+will create a new directory: `builds\RV32CIUxCHERI_<CPU>_bluesim`
 populated with a `Makefile` to compile and link a bluesim simulation
 for an RV32 CPU with 'I' and 'C' ISA options.  You can build and run
 that simulator as usual:
