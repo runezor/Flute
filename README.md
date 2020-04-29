@@ -248,8 +248,8 @@ build a new configuration of interest.  For example:
 
 will create a new directory: `builds\RV32CIUxCHERI_<CPU>_bluesim`
 populated with a `Makefile` to compile and link a bluesim simulation
-for an RV32 CPU with 'I' and 'C' ISA options.  You can build and run
-that simulator as usual:
+for an RV32 CPU with 'I', 'C' and 'xCHERI' ISA options.  You can build
+and run that simulator as usual:
 
         $ cd  builds/RV32CIUxCHERI_<CPU>_bluesim
         $ make compile simulator test isa_tests
