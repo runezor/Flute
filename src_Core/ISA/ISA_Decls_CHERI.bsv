@@ -108,7 +108,7 @@ SCR_Addr scr_addr_MEPCC = 31;
 function CapPipe update_scr_via_csr (CapPipe old_scr, WordXL new_csr);
     let new_scr = setOffset(old_scr, new_csr);
     let ret = new_scr.value;
-    if (!new_scr.exact || isSealed(old_scr)) begin
+    if (!new_scr.exact || getKind(old_scr) != UNSEALED) begin // TODO this needs changing for EPCC and Sentries (should only detag if a change was actually made)
         ret = setValidCap(ret, False);
     end
     return ret;
@@ -195,7 +195,8 @@ Bit #(5) f5rs2_cap_CClearReg   = 5'h0d;
 // 5'h0e unused
 Bit #(5) f5rs2_cap_CGetAddr    = 5'h0f;
 Bit #(5) f5rs2_cap_CClearFPReg = 5'h10;
-// 5'h11-5'h1f unused (5'h1f reserved for 1-reg instructions
+Bit #(5) f5rs2_cap_CSealEntry  = 5'h11;
+// 5'h12-5'h1f unused (5'h1f reserved for 1-reg instructions)
 
 // ================================================================
 // f7_cap_{Load, Store} opcode subdivision
@@ -228,5 +229,11 @@ Bit #(3) w_SIZE_MAX = w_SIZE_D;
 `endif
 
 Bit #(3) f3_AMO_CAP = w_SIZE_CAP;
+
+// Special cases of Otypes that are extended to XLEN
+Bit #(XLEN) otype_unsealed_ext = -1;
+Bit #(XLEN) otype_sentry_ext = -2;
+Bit #(XLEN) otype_res0_ext = -3;
+Bit #(XLEN) otype_res1_ext = -4;
 
 `endif
