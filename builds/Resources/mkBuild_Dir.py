@@ -303,14 +303,16 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv, rvfi_dii):
         arch_flags = arch_flags + "  -D ISA_A"
         arch_flags = arch_flags + "  -D ISA_F"
         arch_flags = arch_flags + "  -D ISA_D"
-        arch_flags = arch_flags + "  -D ISA_FD_DIV"
+        arch_flags = arch_flags + "  -D INCLUDE_FDIV"
+        arch_flags = arch_flags + "  -D INCLUDE_FSQRT"
     else:
         if ("I" in arch_std): arch_flags = arch_flags + "  -D ISA_I"
         if ("M" in arch_std): arch_flags = arch_flags + "  -D ISA_M"
         if ("A" in arch_std): arch_flags = arch_flags + "  -D ISA_A"
         if ("F" in arch_std): arch_flags = arch_flags + "  -D ISA_F"
         if ("D" in arch_std): arch_flags = arch_flags + "  -D ISA_D"
-        if (("F" in arch_std) or ("D" in arch_std)): arch_flags = arch_flags + "  -D ISA_FD_DIV"
+        if (("F" in arch_std) or ("D" in arch_std)): arch_flags = arch_flags + "  -D INCLUDE_FDIV"
+        if (("F" in arch_std) or ("D" in arch_std)): arch_flags = arch_flags + "  -D INCLUDE_FSQRT"
     if ("C" in arch_std): arch_flags = arch_flags + "  -D ISA_C"
     arch_flags += "".join(["  -D ISA_" + non_std_ext for non_std_ext in arch_split[1:]])
     fo.write ("\t{0}  \\\n".format (arch_flags.lstrip()))
