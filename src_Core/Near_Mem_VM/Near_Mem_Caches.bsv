@@ -55,6 +55,11 @@ import Near_Mem_IFC :: *;
 import MMU_Cache    :: *;
 import Fabric_Defs  :: *;
 
+`ifdef INCLUDE_DMEM_SLAVE
+import MMU_Cache_Arbiter           :: *;
+import AXI4_Lite_MMU_Cache_Adapter :: *;
+`endif
+
 // System address map and pc_reset value
 import SoC_Map :: *;
 
@@ -85,6 +90,12 @@ module mkNear_Mem (Near_Mem_IFC);
 
    MMU_ICache_IFC  icache <- mkMMU_ICache;
    MMU_DCache_IFC  dcache <- mkMMU_DCache;
+`ifdef INCLUDE_DMEM_SLAVE
+   MMU_Cache_Arbiter_IFC #(2, Wd_MId_2x3) dcache_arbiter <- mkMMU_Cache_Arbiter (dcache);
+   dcache = dcache_arbiter.v_from_masters [0];
+
+   AXI4_Lite_MMU_Cache_Adapter_IFC dmem_slave_adapter <- mkAXI4_Lite_MMU_Cache_Adapter(dcache_arbiter.v_from_masters [1]);
+`endif
 
    // ----------------------------------------------------------------
    // BEHAVIOR
@@ -227,6 +238,10 @@ module mkNear_Mem (Near_Mem_IFC);
 
    // Fabric side
    interface dmem_master = dcache.mem_master;
+
+`ifdef INCLUDE_DMEM_SLAVE
+   interface dmem_slave = dmem_slave_adapter.from_master;
+`endif
 
    // ----------------
    // FENCE.I: flush both ICache and DCache

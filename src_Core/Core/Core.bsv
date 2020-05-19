@@ -44,6 +44,11 @@ import Cur_Cycle  :: *;
 import GetPut_Aux :: *;
 import Routable   :: *;
 import AXI4       :: *;
+
+`ifdef INCLUDE_DMEM_SLAVE
+import AXI4Lite :: *;
+`endif
+
 `ifdef ISA_CHERI
 import TagControllerAXI :: *;
 `endif
@@ -268,7 +273,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       f_trace_data_merged.enq (tmp);
    endrule
 
-`ifdef ISA_F_OR_D
+`ifdef ISA_F
    // Create a tap for DM's FPR writes to the CPU, and merge-in the trace data.
    DM_FPR_Tap_IFC  dm_fpr_tap_ifc <- mkDM_FPR_Tap;
    mkConnection (debug_module.hart0_fpr_mem_client, dm_fpr_tap_ifc.server);
@@ -279,14 +284,13 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       f_trace_data_merged.enq (tmp);
    endrule
 `endif
-   // for ifdef ISA_F_OR_D
 
    // Create a tap for DM's CSR writes, and merge-in the trace data.
    DM_CSR_Tap_IFC  dm_csr_tap <- mkDM_CSR_Tap;
    mkConnection(debug_module.hart0_csr_mem_client, dm_csr_tap.server);
    mkConnection(dm_csr_tap.client, cpu.hart0_csr_mem_server);
 
-`ifdef ISA_F_OR_D
+`ifdef ISA_F
    (* descending_urgency = "merge_dm_fpr_trace_data, merge_dm_gpr_trace_data" *)
 `endif
    (* descending_urgency = "merge_dm_gpr_trace_data, merge_dm_csr_trace_data" *)
@@ -306,7 +310,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Connect DM's GPR interface directly to CPU
    mkConnection (debug_module.hart0_gpr_mem_client, cpu.hart0_gpr_mem_server);
 
-`ifdef ISA_F_OR_D
+`ifdef ISA_F
    // Connect DM's FPR interface directly to CPU
    mkConnection (debug_module.hart0_fpr_mem_client, cpu.hart0_fpr_mem_server);
 `endif
@@ -430,6 +434,13 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    interface cpu_dmem_master = toAXI4_Master_Synth(tagController.master);
 `else
    interface cpu_dmem_master = toAXI4_Master_Synth(ug_shim);
+`endif
+
+   // ----------------------------------------------------------------
+   // Optional AXI4-Lite D-cache slave interface
+
+`ifdef INCLUDE_DMEM_SLAVE
+   interface AXI4Lite_Slave_Synth  cpu_dmem_slave = cpu.dmem_slave;
 `endif
 
    // ----------------------------------------------------------------

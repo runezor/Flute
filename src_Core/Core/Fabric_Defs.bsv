@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 Bluespec, Inc. All Rights Reserved
+// Copyright (c) 2018-2020 Bluespec, Inc. All Rights Reserved
 
 //-
 // AXI (user fields) + CHERI modifications:
@@ -51,7 +51,9 @@ typedef Wd_SId_2x3 Wd_MId;
 // Width of fabric 'addr' buses
 `ifdef FABRIC64
 typedef 64   Wd_Addr;
-`else
+`endif
+
+`ifdef FABRIC32
 typedef 32   Wd_Addr;
 `endif
 
@@ -100,6 +102,12 @@ typedef 0    Wd_R_User_Periph;
 typedef  Bit #(Wd_Data_Periph)             Fabric_Data_Periph;
 typedef  Bit #(TDiv #(Wd_Data_Periph, 8))  Fabric_Strb_Periph;
 typedef  TDiv #(Wd_Data_Periph, 8)         Bytes_per_Fabric_Data_Periph;
+
+// ----------------
+// Number of zero LSBs in a fabric address aligned to the fabric data width
+
+typedef  TLog #(Bytes_per_Fabric_Data)  ZLSBs_Aligned_Fabric_Addr;
+Integer  zlsbs_aligned_fabric_addr = valueOf (ZLSBs_Aligned_Fabric_Addr);
 
 // ================================================================
 // AXI4 defaults for this project

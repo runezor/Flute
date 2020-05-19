@@ -27,6 +27,10 @@ BSC_C_FLAGS += \
 	-Xl -v \
 	-Xc -O3 -Xc++ -O3 \
 
+# You may have to remove this line above
+# for Bluespec_2019.05.beta2-debian9stretch-amd64
+#	-Xc++  -D_GLIBCXX_USE_CXX11_ABI=0 \
+
 .PHONY: simulator
 simulator: compile
 	@echo "INFO: linking bsc-compiled objects into Bluesim executable"

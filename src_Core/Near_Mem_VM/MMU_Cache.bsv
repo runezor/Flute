@@ -488,7 +488,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    FIFOF #(Requestor) f_reset_rsps <- mkFIFOF;
 
    RWire #(Requestor) rw_reset_req <- mkRWire;
-   PulseWire pw_tlb_flush_req <- mkPulseWire;
+   PulseWire pw_tlb_flush_req <- mkPulseWireOR;
 
    // Fabric request/response
    AXI4_Master_Xactor#(mID, Wd_Addr, Wd_Data,
@@ -1340,7 +1340,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 PA           lev_0_pte_pa        = lev_0_PTN_pa + vpn_0_pa;
 	 PA           lev_0_pte_pa_w64    = { lev_0_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
 	 Fabric_Addr  lev_0_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_0_pte_pa_w64);
-`ifdef Sv32
+`ifdef SV32
 	 AXI4_Size    axi4_size           = 4;
 `else
 	 AXI4_Size    axi4_size           = 8;
