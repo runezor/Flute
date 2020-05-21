@@ -138,7 +138,7 @@ module mkBoot_ROM (Boot_ROM_IFC);
 			                                       rdata: rdata,
 			                                       rresp: rresp,
 			                                       rlast: True,
-			                                       ruser: ?};
+			                                       ruser: 0};
       slave_xactor.master.r.put(rdr);
 
       if (verbosity > 0) begin
@@ -164,7 +164,7 @@ module mkBoot_ROM (Boot_ROM_IFC);
 
       AXI4_BFlit#(Wd_SId, 0) wrr = AXI4_BFlit {bid:   wra.awid,
 			                       bresp: bresp,
-			                       buser: ?};
+			                       buser: 0};
       slave_xactor.master.b.put(wrr);
 
       if (verbosity > 0) begin

@@ -501,7 +501,7 @@ module mkMem_Controller (Mem_Controller_IFC);
                     rdata: rdata,
                     rresp: OKAY,
                     rlast: True,
-                    ruser: ?};
+                    ruser: 0};
       slave_xactor.master.r.put(rdr);
       f_reqs.deq;
 
@@ -543,7 +543,7 @@ module mkMem_Controller (Mem_Controller_IFC);
 
       AXI4_BFlit#(Wd_SId, 0) wrr = AXI4_BFlit {bid:   f_reqs.first.id,
                                                bresp: OKAY,
-                                               buser: ?};
+                                               buser: 0};
       slave_xactor.master.b.put(wrr);
       f_reqs.deq;
 
