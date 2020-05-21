@@ -62,19 +62,14 @@ import SoC_Map     :: *;
 interface Boot_ROM_IFC;
    // set_addr_map should be called after this module's reset
    method Action set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim);
-
    // Main Fabric Reqs/Rsps
-   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data,
-                                Wd_AW_User, Wd_W_User, Wd_B_User,
-                                Wd_AR_User, Wd_R_User) slave;
+   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0) slave;
 endinterface
 
 // ================================================================
 
 (* synthesize *)
 module mkBoot_ROM (Boot_ROM_IFC);
-// XXX This module seems to assume the following constraints:
-// provisos(Add #(Wd_AW_User, 0, Wd_B_User), Add #(Wd_AR_User, 0, Wd_R_User));
 
    // Verbosity: 0: quiet; 1: reads/writes
    Integer verbosity = 0;
@@ -87,9 +82,8 @@ module mkBoot_ROM (Boot_ROM_IFC);
    // ----------------
    // Connector to fabric
 
-   AXI4_Slave_Width_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, Wd_Data,
-                              Wd_AW_User_Periph, Wd_W_User_Periph, Wd_B_User_Periph, Wd_AR_User_Periph, Wd_R_User_Periph,
-                              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) slave_xactor <- mkAXI4_Slave_Zeroing_Xactor;
+   AXI4_Slave_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
+     slave_xactor <- mkAXI4_Slave_Xactor;
 
    // ----------------
 
@@ -134,17 +128,17 @@ module mkBoot_ROM (Boot_ROM_IFC);
 	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr + 4);
 	 data64 = { d1, d0 };
       end
-      else begin    // ((valueOf (Wd_Data) == 32) && (rda.addr [1:0] == 2'b_00))
+      else begin    // ((valueOf (Wd_Data_Periph) == 32) && (rda.addr [1:0] == 2'b_00))
 	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr);
 	 data64 = { 0, d1 };
       end
-	 
+
       Bit #(Wd_Data_Periph) rdata  = truncate (data64);
-      let rdr = AXI4_RFlit {rid:   rda.arid,
-			    rdata: rdata,
-			    rresp: rresp,
-			    rlast: True,
-			    ruser: rda.aruser}; // XXX This requires that Wd_AR_User == Wd_R_User
+      AXI4_RFlit#(Wd_SId, Wd_Data_Periph, 0) rdr = AXI4_RFlit {rid:   rda.arid,
+			                                       rdata: rdata,
+			                                       rresp: rresp,
+			                                       rlast: True,
+			                                       ruser: ?};
       slave_xactor.master.r.put(rdr);
 
       if (verbosity > 0) begin
@@ -168,9 +162,9 @@ module mkBoot_ROM (Boot_ROM_IFC);
 	 $display ("    ", fshow (wra));
       end
 
-      let wrr = AXI4_BFlit {bid:   wra.awid,
-			    bresp: bresp,
-			    buser: wra.awuser}; // XXX This requires that Wd_AW_User == Wd_B_User
+      AXI4_BFlit#(Wd_SId, 0) wrr = AXI4_BFlit {bid:   wra.awid,
+			                       bresp: bresp,
+			                       buser: ?};
       slave_xactor.master.b.put(wrr);
 
       if (verbosity > 0) begin
@@ -186,7 +180,7 @@ module mkBoot_ROM (Boot_ROM_IFC);
 
    // set_addr_map should be called after this module's reset
    method Action  set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim);
-      if (valueOf (Wd_Data) == 32) begin
+      if (valueOf (Wd_Data_Periph) == 32) begin
 	 if (addr_base [1:0] != 0)
 	    $display ("%0d: WARNING: Boot_ROM.set_addr_map: addr_base 0x%0h is not 4-Byte-aligned",
 		      cur_cycle, addr_base);
@@ -195,7 +189,7 @@ module mkBoot_ROM (Boot_ROM_IFC);
 	    $display ("%0d: WARNING: Boot_ROM.set_addr_map: addr_lim 0x%0h is not 4-Byte-aligned",
 		      cur_cycle, addr_lim);
       end
-      else if (valueOf (Wd_Data) == 64) begin
+      else if (valueOf (Wd_Data_Periph) == 64) begin
 	 if (addr_base [2:0] != 0)
 	    $display ("%0d: WARNING: Boot_ROM.set_addr_map: addr_base 0x%0h is not 4-Byte-aligned",
 		      cur_cycle, addr_base);

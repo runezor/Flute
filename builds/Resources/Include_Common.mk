@@ -18,7 +18,7 @@ help:
 	@echo '                           For Verilog simulation: generates RTL'
 	@echo '    make  simulator    Compiles and links intermediate files/RTL to create simulation executable'
 	@echo '                           (Bluesim, verilator or iverilog)'
-	@echo '    make  tagsparams   Generates the CHERI tag controller parameters source file
+	@echo '    make  tagsparams   Generates the CHERI tag controller parameters source file'
 	@echo '    make  all          = make  compile  simulator'
 	@echo ''
 	@echo '    make  run_example  Runs simulation executable on ELF given by EXAMPLE'

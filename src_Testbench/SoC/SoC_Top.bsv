@@ -148,15 +148,13 @@ module mkSoC_Top (SoC_Top_IFC);
    // SoC Boot ROM
    Boot_ROM_IFC  boot_rom <- mkBoot_ROM;
    // AXI4 Deburster in front of Boot_ROM
-   AXI4_Shim#(Wd_SId, Wd_Addr, Wd_Data,
-              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User)
+   AXI4_Shim#(Wd_SId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
               boot_rom_axi4_deburster <- mkBurstToNoBurst;
 
    // SoC Memory
    Mem_Controller_IFC  mem0_controller <- mkMem_Controller;
    // AXI4 Deburster in front of SoC Memory
-   AXI4_Shim#(Wd_SId, Wd_Addr, Wd_Data,
-              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User)
+   AXI4_Shim#(Wd_SId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
               mem0_controller_axi4_deburster <- mkBurstToNoBurst;
 
    // SoC IPs
