@@ -56,14 +56,14 @@ import Cur_Cycle  :: *;
 import GetPut_Aux :: *;
 import Semi_FIFOF :: *;
 import ByteLane   :: *;
+import SourceSink :: *;
+import AXI4       :: *;
 
 // ================================================================
 // Project imports
 
 // Main fabric
-import AXI4_Types   :: *;
-import AXI4_Fabric  :: *;
-import Fabric_Defs  :: *;    // for Wd_Id, Wd_Addr, Wd_Data, Wd_User
+import Fabric_Defs :: *;    // for Wd_Id, Wd_Addr, Wd_Data, Wd_User
 
 // ================================================================
 // Local constants and types
@@ -83,7 +83,8 @@ interface Near_Mem_IO_AXI4_IFC;
    method Action set_addr_map (Bit #(64) addr_base, Bit #(64) addr_lim);
 
    // Memory-mapped access
-   interface AXI4_Slave_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) axi4_slave;
+   interface AXI4_Slave_Synth #(Wd_SId_2x3, Wd_Addr, Wd_Data,
+                                Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) axi4_slave;
 
    // Timer interrupt
    // True/False = set/clear interrupt-pending in CPU's MTIP
@@ -116,7 +117,9 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
    Reg #(Bit #(64)) rg_addr_lim  <- mkRegU;
 
    // Connector to AXI4 fabric
-   AXI4_Slave_Xactor_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) slave_xactor <- mkAXI4_Slave_Xactor;
+   AXI4_Slave_Xactor #(Wd_SId_2x3, Wd_Addr, Wd_Data,
+                       Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User)
+      slave_xactor <- mkAXI4_Slave_Xactor;
 
    // ----------------
    // Timer registers
@@ -146,7 +149,7 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
    rule rl_reset (rg_state == MODULE_STATE_START);
       f_reset_reqs.deq;
 
-      slave_xactor.reset;
+      slave_xactor.clear;
       f_timer_interrupt_req.clear;
       f_sw_interrupt_req.clear;
 
@@ -199,7 +202,7 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
    rule rl_process_rd_req (   (rg_state == MODULE_STATE_READY)
 			   && (! f_reset_reqs.notEmpty));
 
-      let rda <- pop_o (slave_xactor.o_rd_addr);
+      let rda <- get (slave_xactor.master.ar);
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: Near_Mem_IO_AXI4.rl_process_rd_req: rg_mtip = %0d", cur_cycle, rg_mtip);
 	 $display ("    ", fshow (rda));
@@ -207,12 +210,12 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
 
       let        byte_addr = rda.araddr - rg_addr_base;
       Bit #(64)  rdata = 0;
-      AXI4_Resp  rresp = axi4_resp_okay;
+      AXI4_Resp  rresp = OKAY;
 
       if (rda.araddr < rg_addr_base) begin
 	 $display ("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_rd_req: unrecognized addr", cur_cycle);
 	 $display ("            ", fshow (rda));
-	 rresp = axi4_resp_decerr;
+	 rresp = DECERR;
       end
 
       else if (byte_addr == 'h_0000)
@@ -249,21 +252,21 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
       end
 
       else
-	 rresp = axi4_resp_decerr;
+	 rresp = DECERR;
 
-      if (rresp != axi4_resp_okay) begin
+      if (rresp != OKAY) begin
 	 $display ("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_rd_req: unrecognized addr", cur_cycle);
 	 $display ("            ", fshow (rda));
       end
 
       // Send read-response to bus
       Fabric_Data x = truncate (rdata);
-      let rdr = AXI4_Rd_Data {rid:   rda.arid,
-			      rdata: x,
-			      rresp: rresp,
-			      rlast: True,
-			      ruser: rda.aruser};
-      slave_xactor.i_rd_data.enq (rdr);
+      let rdr = AXI4_RFlit {rid:   rda.arid,
+			    rdata: x,
+			    rresp: rresp,
+			    rlast: True,
+			    ruser: rda.aruser};
+      slave_xactor.master.r.put (rdr);
 
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: Near_Mem_IO_AXI4.rl_process_rd_req", cur_cycle);
@@ -278,8 +281,8 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
    rule rl_process_wr_req (   (rg_state == MODULE_STATE_READY)
 			   && (! f_reset_reqs.notEmpty));
 
-      let wra <- pop_o (slave_xactor.o_wr_addr);
-      let wrd <- pop_o (slave_xactor.o_wr_data);
+      let wra <- get (slave_xactor.master.aw);
+      let wrd <- get (slave_xactor.master.w);
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: Near_Mem_IO_AXI4.rl_process_wr_req: rg_mtip = %0d", cur_cycle, rg_mtip);
 	 $display ("    ", fshow (wra));
@@ -291,13 +294,13 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
       Bit #(8)  data_byte = wdata [7:0];
 
       let        byte_addr = wra.awaddr - rg_addr_base;
-      AXI4_Resp  bresp     = axi4_resp_okay;
+      AXI4_Resp  bresp     = OKAY;
 
       if (wra.awaddr < rg_addr_base) begin
 	 $display ("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_wr_req: unrecognized addr", cur_cycle);
 	 $display ("            ", fshow (wra));
 	 $display ("            ", fshow (wrd));
-	 bresp = axi4_resp_decerr;
+	 bresp = DECERR;
       end
 
       else if (byte_addr == 'h_0000) begin
@@ -390,19 +393,19 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
       end
 
       else
-	 bresp = axi4_resp_decerr;
+	 bresp = DECERR;
 
-      if (bresp != axi4_resp_okay) begin
+      if (bresp != OKAY) begin
 	 $display ("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_wr_req: unrecognized addr", cur_cycle);
 	 $display ("            ", fshow (wra));
 	 $display ("            ", fshow (wrd));
       end
 
       // Send write-response to bus
-      let wrr = AXI4_Wr_Resp {bid:   wra.awid,
-			      bresp: bresp,
-			      buser: wra.awuser};
-      slave_xactor.i_wr_resp.enq (wrr);
+      let wrr = AXI4_BFlit {bid:   wra.awid,
+			    bresp: bresp,
+			    buser: wra.awuser};
+      slave_xactor.master.b.put (wrr);
 
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: Near_Mem_IO.AXI4.rl_process_wr_req", cur_cycle);
@@ -435,7 +438,7 @@ module mkNear_Mem_IO_AXI4 (Near_Mem_IO_AXI4_IFC);
    endmethod
 
    // Memory-mapped access
-   interface  axi4_slave = slave_xactor.axi_side;
+   interface  axi4_slave = slave_xactor.slaveSynth;
 
    // Timer interrupt
    interface Get get_timer_interrupt_req;

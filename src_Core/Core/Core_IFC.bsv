@@ -6,7 +6,6 @@ package Core_IFC;
 // This package defines the interface of a Core module which
 // contains:
 //     - mkCPU (the RISC-V CPU)
-//     - mkFabric_2x3
 //     - mkNear_Mem_IO_AXI4
 //     - mkPLIC_16_2_7
 //     - mkTV_Encode          (Tandem-Verification logic, optional: INCLUDE_TANDEM_VERIF)
@@ -23,22 +22,22 @@ import ClientServer  :: *;
 // Project imports
 
 // Main fabric
-import AXI4_Types   :: *;
-import Fabric_Defs  :: *;
+import AXI4        :: *;
+import Fabric_Defs :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
-import AXI4_Lite_Types :: *;
+import AXI4Lite :: *;
 `endif
 
 // External interrupt request interface
-import PLIC  :: *;
+import PLIC :: *;
 
 `ifdef INCLUDE_TANDEM_VERIF
-import TV_Info  :: *;
+import TV_Info :: *;
 `endif
 
 `ifdef INCLUDE_GDB_CONTROL
-import Debug_Module  :: *;
+import Debug_Module :: *;
 `endif
 
 // ================================================================
@@ -61,16 +60,21 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    // AXI4 Fabric interfaces
 
    // CPU IMem to Fabric master interface
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) cpu_imem_master;
+   interface AXI4_Master_Synth #(TAdd#(Wd_MId,1), Wd_Addr, Wd_Data,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User)
+      cpu_imem_master;
 
    // CPU DMem to Fabric master interface
-   interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) cpu_dmem_master;
+   interface AXI4_Master_Synth #(TAdd#(Wd_MId,1), Wd_Addr, Wd_Data,
+                                 Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User)
+      cpu_dmem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
 
 `ifdef INCLUDE_DMEM_SLAVE
-   interface AXI4_Lite_Slave_IFC #(Wd_Addr, Wd_Data, Wd_User) cpu_dmem_slave;
+   interface AXI4_Lite_Slave_Synth #(Wd_Addr, Wd_Data,
+                                     Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) cpu_dmem_slave;
 `endif
 
    // ----------------------------------------------------------------

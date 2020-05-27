@@ -33,6 +33,7 @@ import Connectable  :: *;
 
 import Cur_Cycle  :: *;
 import GetPut_Aux :: *;
+import AXI4       :: *;
 
 // ================================================================
 // Project imports
@@ -40,7 +41,6 @@ import GetPut_Aux :: *;
 import ISA_Decls    :: *;
 import Near_Mem_IFC :: *;
 import MMU_Cache    :: *;
-import AXI4_Types   :: *;
 import Fabric_Defs  :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
@@ -76,8 +76,8 @@ module mkNear_Mem (Near_Mem_IFC);
    // Reset response queue
    FIFOF #(Token) f_reset_rsps <- mkFIFOF;
 
-   MMU_Cache_IFC  icache <- mkMMU_Cache (False);
-   MMU_Cache_IFC  dcache <- mkMMU_Cache (True);
+   MMU_ICache_IFC icache <- mkMMU_ICache;
+   MMU_DCache_IFC dcache <- mkMMU_DCache;
 `ifdef INCLUDE_DMEM_SLAVE
    MMU_Cache_Arbiter_IFC #(2) dcache_arbiter <- mkMMU_Cache_Arbiter (dcache);
    dcache = dcache_arbiter.v_from_masters [0];

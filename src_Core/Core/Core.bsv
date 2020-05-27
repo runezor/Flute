@@ -9,7 +9,6 @@ package Core;
 //
 // mkCore instantiates:
 //     - mkCPU (the RISC-V CPU)
-//     - mkFabric_2x3
 //     - mkNear_Mem_IO_AXI4
 //     - mkPLIC_16_2_7
 //     - mkTV_Encode          (Tandem-Verification logic, optional: INCLUDE_TANDEM_VERIF)
@@ -35,13 +34,13 @@ import GetPut_Aux :: *;
 // Project imports
 
 // Main fabric
-import AXI4_Types   :: *;
-import AXI4_Fabric  :: *;
-import Fabric_Defs  :: *;    // for Wd_Id, Wd_Addr, Wd_Data, Wd_User
-import SoC_Map      :: *;
+import AXI4        :: *;
+import Routable    :: *;
+import Fabric_Defs :: *;    // for Wd_Id, Wd_Addr, Wd_Data, Wd_User
+import SoC_Map     :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
-import AXI4_Lite_Types :: *;
+import AXI4Lite    :: *;
 `endif
 
 `ifdef INCLUDE_GDB_CONTROL
@@ -51,8 +50,6 @@ import Debug_Module     :: *;
 import Core_IFC          :: *;
 import CPU_IFC           :: *;
 import CPU               :: *;
-
-import Fabric_2x3        :: *;
 
 import Near_Mem_IO_AXI4  :: *;
 import PLIC              :: *;
@@ -84,9 +81,15 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
    // The CPU
    CPU_IFC  cpu <- mkCPU;
+   let cpu_imem <- fromAXI4_Master_Synth (cpu.imem_master);
+   AXI4_Shim #(Wd_MId, Wd_Addr, Wd_Data,
+               Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User)
+      delay_shim <- mkAXI4ShimSizedFIFOF4; // Prevent a combinatorial path after the icache
+   mkConnection (delay_shim.slave, cpu_imem);
+   let cpu_imem_ug <- toUnguarded_AXI4_Master (delay_shim.master);
 
-   // A 2x3 fabric for connecting {CPU, Debug_Module} to {Fabric, Near_Mem_IO, PLIC}
-   Fabric_2x3_IFC  fabric_2x3 <- mkFabric_2x3;
+   let shim <- mkAXI4Shim;
+   let ug_shim <- toUnguarded_AXI4_Master (extendIDFields (shim.master, 1'b0));
 
    // Near_Mem_IO
    Near_Mem_IO_AXI4_IFC  near_mem_io <- mkNear_Mem_IO_AXI4;
@@ -131,7 +134,6 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       cpu.hart0_server_reset.request.put (running);    // CPU
       near_mem_io.server_reset.request.put (?);        // Near_Mem_IO
       plic.server_reset.request.put (?);               // PLIC
-      fabric_2x3.reset;                                // Local 2x3 Fabric
 
 `ifdef INCLUDE_GDB_CONTROL
       // Remember the requestor, so we can respond to it
@@ -148,7 +150,6 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       cpu.hart0_server_reset.request.put (running);    // CPU
       near_mem_io.server_reset.request.put (?);        // Near_Mem_IO
       plic.server_reset.request.put (?);               // PLIC
-      fabric_2x3.reset;                                // Local 2x3 fabric
 
       // Remember the requestor, so we can respond to it
       f_reset_requestor.enq (reset_requestor_dm);
@@ -161,11 +162,11 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       let rsp2    <- near_mem_io.server_reset.response.get;    // Near_Mem_IO
       let rsp3    <- plic.server_reset.response.get;           // PLIC
 
-      near_mem_io.set_addr_map (zeroExtend (soc_map.m_near_mem_io_addr_base),
-				zeroExtend (soc_map.m_near_mem_io_addr_lim));
+      near_mem_io.set_addr_map (rangeBase (soc_map.m_near_mem_io_addr_range),
+                                rangeTop (soc_map.m_near_mem_io_addr_range));
 
-      plic.set_addr_map (zeroExtend (soc_map.m_plic_addr_base),
-			 zeroExtend (soc_map.m_plic_addr_lim));
+      plic.set_addr_map (rangeBase (soc_map.m_plic_addr_range),
+                         rangeTop (soc_map.m_plic_addr_range));
 
       Bit #(1) requestor = reset_requestor_soc;
 `ifdef INCLUDE_GDB_CONTROL
@@ -249,8 +250,8 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
    // Create a tap for DM's CSR writes, and merge-in the trace data.
    DM_CSR_Tap_IFC  dm_csr_tap <- mkDM_CSR_Tap;
-   mkConnection(debug_module.hart0_csr_mem_client, dm_csr_tap.server);
-   mkConnection(dm_csr_tap.client, cpu.hart0_csr_mem_server);
+   mkConnection (debug_module.hart0_csr_mem_client, dm_csr_tap.server);
+   mkConnection (dm_csr_tap.client, cpu.hart0_csr_mem_server);
 
 `ifdef ISA_F
    (* descending_urgency = "merge_dm_fpr_trace_data, merge_dm_gpr_trace_data" *)
@@ -260,7 +261,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    (* descending_urgency = "merge_dm_mem_trace_data, merge_cpu_trace_data"    *)
    rule merge_dm_csr_trace_data;
       let tmp <- dm_csr_tap.trace_data_out.get;
-      f_trace_data_merged.enq(tmp);
+      f_trace_data_merged.enq (tmp);
    endrule
 
    // END SECTION: GDB and TV
@@ -292,8 +293,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // BEGIN SECTION: no GDB
 
    // No DM, so 'DM bus master' is dummy
-   AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User)
-   dm_master_local = dummy_AXI4_Master_ifc;
+   let dm_master_local = culDeSac;
 
 `ifdef INCLUDE_TANDEM_VERIF
    // ----------------------------------------------------------------
@@ -310,13 +310,37 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Connect the local 2x3 fabric
 
    // Masters on the local 2x3 fabric
-   mkConnection (cpu.dmem_master,  fabric_2x3.v_from_masters [cpu_dmem_master_num]);
-   mkConnection (dm_master_local, fabric_2x3.v_from_masters [debug_module_sba_master_num]);
+   Vector #(Num_Masters_2x3,
+            AXI4_Master_Synth #(Wd_MId_2x3, Wd_Addr, Wd_Data,
+                                Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User))
+      master_vector = newVector;
+   master_vector[cpu_dmem_master_num]         = cpu.dmem_master;
+   master_vector[debug_module_sba_master_num] = dm_master_local;
 
    // Slaves on the local 2x3 fabric
-   // default slave is taken out directly to the Core interface
-   mkConnection (fabric_2x3.v_to_slaves [near_mem_io_slave_num], near_mem_io.axi4_slave);
-   mkConnection (fabric_2x3.v_to_slaves [plic_slave_num],        plic.axi4_slave);
+   // default slave is forwarded out directly to the Core interface
+   Vector #(Num_Slaves_2x3,
+            AXI4_Slave_Synth #(Wd_SId_2x3, Wd_Addr, Wd_Data,
+                               Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User))
+      slave_vector = newVector;
+   slave_vector[default_slave_num]     = toAXI4_Slave_Synth (shim.slave);
+   slave_vector[near_mem_io_slave_num] = near_mem_io.axi4_slave;
+   slave_vector[plic_slave_num]        = plic.axi4_slave;
+
+   function Vector #(Num_Slaves_2x3, Bool) route_2x3 (Bit #(Wd_Addr) addr);
+      Vector #(Num_Slaves_2x3, Bool) res = replicate (False);
+      if (inRange (soc_map.m_near_mem_io_addr_range, addr))
+         res[near_mem_io_slave_num] = True;
+      else if (inRange (soc_map.m_plic_addr_range, addr))
+         res[plic_slave_num] = True;
+      else
+         res[default_slave_num] = True;
+      Bit #(24) topBits = truncateLSB (addr);
+      if (topBits != 0) res = replicate (False);
+         return res;
+   endfunction
+
+   mkAXI4Bus_Synth (route_2x3, master_vector, slave_vector);
 
    // ================================================================
    // Connect interrupt lines from near_mem_io and PLIC to CPU
@@ -363,10 +387,10 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // AXI4 Fabric interfaces
 
    // IMem to Fabric master interface
-   interface AXI4_Master_IFC  cpu_imem_master = cpu.imem_master;
+   interface AXI4_Master_IFC  cpu_imem_master = toAXI4_Master_Synth (extendIDFields (zeroMasterUserFields (cpu_imem_ug), 0));
 
    // DMem to Fabric master interface
-   interface AXI4_Master_IFC  cpu_dmem_master = fabric_2x3.v_to_slaves [default_slave_num];
+   interface AXI4_Master_IFC  cpu_dmem_master = toAXI4_Master_Synth (ug_shim);
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
@@ -392,7 +416,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
 `ifdef INCLUDE_TANDEM_VERIF
    interface Get tv_verifier_info_get;
-      method ActionValue #(Info_CPU_to_Verifier) get();
+      method ActionValue #(Info_CPU_to_Verifier) get;
          match { .n, .v } <- tv_encode.tv_vb_out.get;
          return (Info_CPU_to_Verifier { num_bytes: n, vec_bytes: v });
       endmethod
@@ -416,5 +440,22 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `endif
 
 endmodule: mkCore
+
+// ================================================================
+// 2x3 Fabric for this Core
+// Masters: CPU DMem, Debug Module System Bus Access, External access
+
+// ----------------
+// Fabric port numbers for masters
+
+Master_Num_2x3  cpu_dmem_master_num         = 0;
+Master_Num_2x3  debug_module_sba_master_num = 1;
+
+// ----------------
+// Fabric port numbers for slaves
+
+Slave_Num_2x3  default_slave_num     = 0;
+Slave_Num_2x3  near_mem_io_slave_num = 1;
+Slave_Num_2x3  plic_slave_num        = 2;
 
 endpackage
