@@ -50,7 +50,9 @@ import AXI4Lite :: *;
 `endif
 
 `ifdef ISA_CHERI
+`ifndef NO_TAG_CACHE
 import TagControllerAXI :: *;
+`endif
 `endif
 
 // ================================================================
@@ -101,12 +103,24 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    mkConnection(delay_shim.slave, cpu_imem);
    let cpu_imem_ug <- toUnguarded_AXI4_Master(delay_shim.master);
 
+   // set the appropriate axi4_dmem_shim_{master, slave} ifc
 `ifdef ISA_CHERI
-   // AXI4 tagController
-   let tagController <- mkTagControllerAXI;
+`ifdef NO_TAG_CACHE
+   // CHERI, export the tags on the interface
+   let axi4_dmem_shim <- mkAXI4Shim;
+   let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
+   let axi4_dmem_shim_master <- toUnguarded_AXI4_Master(axi4_dmem_shim.master);
 `else
-   let shim <- mkAXI4Shim;
-   let ug_shim <- toUnguarded_AXI4_Master(extendIDFields(shim.master, 1'b0));
+   // CHERI, handle tags internally with a tagController
+   let axi4_dmem_shim <- mkTagControllerAXI;
+   let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
+   let axi4_dmem_shim_master = axi4_dmem_shim.master;
+`endif
+`else
+   // No CHERI, no tags
+   let axi4_dmem_shim <- mkAXI4Shim;
+   let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
+   let axi4_dmem_shim_master <- toUnguarded_AXI4_Master(axi4_dmem_shim.master);
 `endif
 
    // Near_Mem_IO
@@ -160,10 +174,15 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       cpu.hart0_server_reset.request.put (running);    // CPU
       near_mem_io.server_reset.request.put (?);        // Near_Mem_IO
       plic.server_reset.request.put (?);               // PLIC
+
 `ifdef ISA_CHERI
-      //tagController.clear(); XXX Temporarily do not clear the tag cache to avoid hanging on pending transactions
+`ifdef NO_TAG_CACHE
+   axi4_dmem_shim.clear;
 `else
-      shim.clear();
+   //axi4_dmem_shim.clear; XXX Temporarily do not clear the tag cache to avoid hanging on pending transactions
+`endif
+`else
+   axi4_dmem_shim.clear;
 `endif
 
       soc_reset_fired.send();
@@ -359,11 +378,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
                               Wd_AW_User, Wd_W_User, Wd_B_User,
                               Wd_AR_User, Wd_R_User))
                               slave_vector = newVector;
-`ifdef ISA_CHERI
-   slave_vector[default_slave_num]     = toAXI4_Slave_Synth(tagController.slave);
-`else
-   slave_vector[default_slave_num]     = toAXI4_Slave_Synth(shim.slave);
-`endif
+   slave_vector[default_slave_num]     = toAXI4_Slave_Synth(axi4_dmem_shim_slave);
    slave_vector[near_mem_io_slave_num] = near_mem_io.axi4_slave;
    slave_vector[plic_slave_num]        = plic.axi4_slave;
 
@@ -430,11 +445,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    interface cpu_imem_master = toAXI4_Master_Synth(extendIDFields(zeroMasterUserFields(cpu_imem_ug), 0));
 
    // DMem to Fabric master interface
-`ifdef ISA_CHERI
-   interface cpu_dmem_master = toAXI4_Master_Synth(tagController.master);
-`else
-   interface cpu_dmem_master = toAXI4_Master_Synth(ug_shim);
-`endif
+   interface cpu_dmem_master = toAXI4_Master_Synth(axi4_dmem_shim_master);
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface

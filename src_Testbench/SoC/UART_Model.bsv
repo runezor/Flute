@@ -129,9 +129,8 @@ interface UART_IFC;
    method Action set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim);
 
    // Main Fabric Reqs/Rsps
-   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data,
-                                Wd_AW_User, Wd_W_User, Wd_B_User,
-                                Wd_AR_User, Wd_R_User) slave;
+   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
+      slave;
 
    // To external console
    interface Get #(Bit #(8))  get_to_console;
@@ -205,8 +204,6 @@ endfunction
 
 (* synthesize *)
 module mkUART (UART_IFC);
-// XXX This module seems to assume the following constraints:
-// provisos(Add #(Wd_AW_User, 0, Wd_B_User), Add #(Wd_AR_User, 0, Wd_R_User));
 
    Reg #(Bit #(8)) cfg_verbosity <- mkConfigReg (0);
 
@@ -222,9 +219,8 @@ module mkUART (UART_IFC);
    // ----------------
    // Connector to AXI4 fabric
 
-   AXI4_Slave_Width_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, Wd_Data,
-                              Wd_AW_User_Periph, Wd_W_User_Periph, Wd_B_User_Periph, Wd_AR_User_Periph, Wd_R_User_Periph,
-                              Wd_AW_User, Wd_W_User, Wd_B_User, Wd_AR_User, Wd_R_User) slave_xactor <- mkAXI4_Slave_Zeroing_Xactor;
+   AXI4_Slave_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
+      slave_xactor <- mkAXI4_Slave_Xactor;
 
    // ----------------
    // character queues to and from external circuitry for the console
@@ -377,11 +373,11 @@ module mkUART (UART_IFC);
 	 rdata = rdata << 32;
 
       // Send read-response to bus
-      let rdr = AXI4_RFlit {rid:   rda.arid,
-			    rdata: rdata,
-			    rresp: rresp,
-			    rlast: True,
-			    ruser: rda.aruser}; // XXX This requires that Wd_AR_User == Wd_R_User
+      AXI4_RFlit#(Wd_SId, Wd_Data_Periph, 0) rdr = AXI4_RFlit {rid:   rda.arid,
+			                                       rdata: rdata,
+			                                       rresp: rresp,
+			                                       rlast: True,
+			                                       ruser: 0};
       slave_xactor.master.r.put(rdr);
 
       if (cfg_verbosity > 1) begin
@@ -463,9 +459,9 @@ module mkUART (UART_IFC);
       end
 
       // Send write-response to bus
-      let wrr = AXI4_BFlit {bid:   wra.awid,
-			    bresp: bresp,
-			    buser: wra.awuser}; // XXX This requires that Wd_AW_User == Wd_B_User
+      AXI4_BFlit#(Wd_SId, 0) wrr = AXI4_BFlit {bid:   wra.awid,
+			                       bresp: bresp,
+			                       buser: 0};
       slave_xactor.master.b.put(wrr);
 
       if (cfg_verbosity > 1) begin

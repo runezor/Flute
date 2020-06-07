@@ -46,6 +46,15 @@ typedef Bit#(TLog #(Num_Slaves_2x3))  Slave_Num_2x3;
 typedef 4 Wd_MId_2x3;
 typedef TAdd#(Wd_MId_2x3, TLog#(Num_Masters_2x3)) Wd_SId_2x3;
 typedef Wd_SId_2x3 Wd_MId;
+`ifdef ISA_CHERI
+`ifdef NO_TAG_CACHE
+typedef Wd_MId Wd_MId_ext;
+`else
+typedef TAdd#(Wd_MId, 1) Wd_MId_ext;
+`endif
+`else
+typedef Wd_MId Wd_MId_ext;
+`endif
 
 // ----------------
 // Width of fabric 'addr' buses
@@ -74,14 +83,26 @@ typedef 64  Wd_Data;
 // ----------------
 // Width of fabric 'user' datapaths. Carry capability tags on data lines.
 typedef 0 Wd_AW_User;
+typedef Wd_AW_User Wd_AW_User_ext;
 typedef 0 Wd_B_User;
+typedef Wd_B_User Wd_B_User_ext;
 typedef 0 Wd_AR_User;
+typedef Wd_AR_User Wd_AR_User_ext;
 `ifdef ISA_CHERI
 typedef TMax#(TDiv#(Wd_Data, CLEN),1) Wd_W_User;
 typedef TMax#(TDiv#(Wd_Data, CLEN),1) Wd_R_User;
+`ifdef NO_TAG_CACHE
+typedef Wd_W_User Wd_W_User_ext;
+typedef Wd_R_User Wd_R_User_ext;
+`else
+typedef 0 Wd_W_User_ext;
+typedef 0 Wd_R_User_ext;
+`endif
 `else
 typedef 0 Wd_W_User;
+typedef Wd_W_User Wd_W_User_ext;
 typedef 0 Wd_R_User;
+typedef Wd_R_User Wd_R_User_ext;
 `endif
 
 typedef  TDiv #(Wd_Data, 8)         Bytes_per_Fabric_Data;

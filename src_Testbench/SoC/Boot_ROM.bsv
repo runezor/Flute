@@ -63,7 +63,8 @@ interface Boot_ROM_IFC;
    // set_addr_map should be called after this module's reset
    method Action set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim);
    // Main Fabric Reqs/Rsps
-   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0) slave;
+   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
+      slave;
 endinterface
 
 // ================================================================
@@ -83,7 +84,7 @@ module mkBoot_ROM (Boot_ROM_IFC);
    // Connector to fabric
 
    AXI4_Slave_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
-     slave_xactor <- mkAXI4_Slave_Xactor;
+      slave_xactor <- mkAXI4_Slave_Xactor;
 
    // ----------------
 

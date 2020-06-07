@@ -174,7 +174,8 @@ module mkSoC_Top (SoC_Top_IFC);
                                             master_vector = newVector;
 
    // CPU IMem master to fabric
-   master_vector[imem_master_num] = core.cpu_imem_master;
+   let imem <- fromAXI4_Master_Synth(core.cpu_imem_master);
+   master_vector[imem_master_num] = toAXI4_Master_Synth(zeroMasterUserFields(extendIDFields(imem, 0)));
 
    // CPU DMem master to fabric
    master_vector[dmem_master_num] = core.cpu_dmem_master;
