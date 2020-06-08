@@ -315,7 +315,7 @@ Integer accel0_slave_num          = 3;
 
 // ================================================================
 // Width of fabric 'id' buses
-typedef TAdd#(TAdd#(Wd_MId, TLog#(Num_Masters)),1) Wd_SId;
+typedef TAdd#(Wd_MId_ext, TLog#(Num_Masters)) Wd_SId;
 
 // ================================================================
 // Interrupt request numbers (== index in to vector of

@@ -148,14 +148,16 @@ module mkSoC_Top (SoC_Top_IFC);
    // SoC Boot ROM
    Boot_ROM_IFC  boot_rom <- mkBoot_ROM;
    // AXI4 Deburster in front of Boot_ROM
-   AXI4_Shim#(Wd_SId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
-              boot_rom_axi4_deburster <- mkBurstToNoBurst;
+   AXI4_Shim#( Wd_SId, Wd_Addr, Wd_Data
+             , 0, 0, 0, 0, 0)
+      boot_rom_axi4_deburster <- mkBurstToNoBurst;
 
    // SoC Memory
    Mem_Controller_IFC  mem0_controller <- mkMem_Controller;
    // AXI4 Deburster in front of SoC Memory
-   AXI4_Shim#(Wd_SId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
-              mem0_controller_axi4_deburster <- mkBurstToNoBurst;
+   AXI4_Shim#( Wd_SId, Wd_Addr, Wd_Data
+             , 0, 0, 0, 0, 0)
+      mem0_controller_axi4_deburster <- mkBurstToNoBurst;
 
    // SoC IPs
    UART_IFC   uart0  <- mkUART;
@@ -169,9 +171,10 @@ module mkSoC_Top (SoC_Top_IFC);
    // SoC fabric master connections
    // Note: see 'SoC_Map' for 'master_num' definitions
 
-   Vector#(Num_Masters, AXI4_Master_Synth #(TAdd#(Wd_MId,1), Wd_Addr, Wd_Data,
-                                            0, 0, 0, 0, 0))
-                                            master_vector = newVector;
+   Vector#(Num_Masters, AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
+                                           , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
+                                           , Wd_AR_User_ext, Wd_R_User_ext))
+      master_vector = newVector;
 
    // CPU IMem master to fabric
    let imem <- fromAXI4_Master_Synth(core.cpu_imem_master);
@@ -184,9 +187,10 @@ module mkSoC_Top (SoC_Top_IFC);
    // SoC fabric slave connections
    // Note: see 'SoC_Map' for 'slave_num' definitions
 
-   Vector#(Num_Slaves, AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data,
-                                          0, 0, 0, 0, 0))
-                                          slave_vector = newVector;
+   Vector#(Num_Slaves, AXI4_Slave_Synth #( Wd_SId, Wd_Addr, Wd_Data
+                                         , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
+                                         , Wd_AR_User_ext, Wd_R_User_ext))
+      slave_vector = newVector;
    Vector#(Num_Slaves, Range#(Wd_Addr))   route_vector = newVector;
 
    // Fabric to Boot ROM
