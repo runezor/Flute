@@ -178,7 +178,7 @@ module mkSoC_Top (SoC_Top_IFC);
 
    // CPU IMem master to fabric
    let imem <- fromAXI4_Master_Synth(core.cpu_imem_master);
-   master_vector[imem_master_num] = toAXI4_Master_Synth(zeroMasterUserFields(extendIDFields(imem, 0)));
+   master_vector[imem_master_num] <- toAXI4_Master_Synth(zeroMasterUserFields(extendIDFields(imem, 0)));
 
    // CPU DMem master to fabric
    master_vector[dmem_master_num] = core.cpu_dmem_master;
@@ -197,19 +197,19 @@ module mkSoC_Top (SoC_Top_IFC);
    let br <- fromAXI4_Slave_Synth(boot_rom.slave);
    mkConnection(boot_rom_axi4_deburster.master, br);
    let ug_boot_rom_slave <- toUnguarded_AXI4_Slave(boot_rom_axi4_deburster.slave);
-   slave_vector[boot_rom_slave_num] = toAXI4_Slave_Synth(zeroSlaveUserFields(ug_boot_rom_slave));
+   slave_vector[boot_rom_slave_num] <- toAXI4_Slave_Synth(zeroSlaveUserFields(ug_boot_rom_slave));
    route_vector[boot_rom_slave_num] = soc_map.m_boot_rom_addr_range;
 
    // Fabric to Mem Controller
    let mem <- fromAXI4_Slave_Synth(mem0_controller.slave);
    mkConnection(mem0_controller_axi4_deburster.master, mem);
    let ug_mem0_slave <- toUnguarded_AXI4_Slave(mem0_controller_axi4_deburster.slave);
-   slave_vector[mem0_controller_slave_num] = toAXI4_Slave_Synth(zeroSlaveUserFields(ug_mem0_slave));
+   slave_vector[mem0_controller_slave_num] <- toAXI4_Slave_Synth(zeroSlaveUserFields(ug_mem0_slave));
    route_vector[mem0_controller_slave_num] = soc_map.m_mem0_controller_addr_range;
 
    // Fabric to UART0
    let uart0_slave <- fromAXI4_Slave_Synth(uart0.slave);
-   slave_vector[uart0_slave_num] = toAXI4_Slave_Synth(zeroSlaveUserFields(uart0_slave));
+   slave_vector[uart0_slave_num] <- toAXI4_Slave_Synth(zeroSlaveUserFields(uart0_slave));
    route_vector[uart0_slave_num] = soc_map.m_uart0_addr_range;
 
 `ifdef HTIF_MEMORY

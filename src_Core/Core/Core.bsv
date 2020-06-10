@@ -101,7 +101,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    let cpu_imem <- fromAXI4_Master_Synth(cpu.imem_master);
    AXI4_Shim#(5,64,64,0,1,0,0,1) delay_shim <- mkAXI4ShimSizedFIFOF4; // Prevent a combinatorial path after the icache
    mkConnection(delay_shim.slave, cpu_imem);
-   let cpu_imem_ug <- toUnguarded_AXI4_Master(delay_shim.master);
+   let imem_master <- toAXI4_Master_Synth(extendIDFields(zeroMasterUserFields(delay_shim.master), 0));
 
    // set the appropriate axi4_dmem_shim_{master, slave} ifc
 `ifdef ISA_CHERI
@@ -109,18 +109,18 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // CHERI, export the tags on the interface
    let axi4_dmem_shim <- mkAXI4Shim;
    let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
-   let axi4_dmem_shim_master <- toUnguarded_AXI4_Master(axi4_dmem_shim.master);
+   let axi4_dmem_shim_master <- toAXI4_Master_Synth(axi4_dmem_shim.master);
 `else
    // CHERI, handle tags internally with a tagController
    let axi4_dmem_shim <- mkTagControllerAXI;
    let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
-   let axi4_dmem_shim_master = axi4_dmem_shim.master;
+   let axi4_dmem_shim_master <- toAXI4_Master_Synth(axi4_dmem_shim.master);
 `endif
 `else
    // No CHERI, no tags
    let axi4_dmem_shim <- mkAXI4Shim;
    let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
-   let axi4_dmem_shim_master <- toUnguarded_AXI4_Master(axi4_dmem_shim.master);
+   let axi4_dmem_shim_master <- toAXI4_Master_Synth(axi4_dmem_shim.master);
 `endif
 
    // Near_Mem_IO
@@ -378,7 +378,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
                               Wd_AW_User, Wd_W_User, Wd_B_User,
                               Wd_AR_User, Wd_R_User))
                               slave_vector = newVector;
-   slave_vector[default_slave_num]     = toAXI4_Slave_Synth(axi4_dmem_shim_slave);
+   slave_vector[default_slave_num]     <- toAXI4_Slave_Synth(axi4_dmem_shim_slave);
    slave_vector[near_mem_io_slave_num] = near_mem_io.axi4_slave;
    slave_vector[plic_slave_num]        = plic.axi4_slave;
 
@@ -442,10 +442,10 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // AXI4 Fabric interfaces
 
    // IMem to Fabric master interface
-   interface cpu_imem_master = toAXI4_Master_Synth(extendIDFields(zeroMasterUserFields(cpu_imem_ug), 0));
+   interface cpu_imem_master = imem_master;
 
    // DMem to Fabric master interface
-   interface cpu_dmem_master = toAXI4_Master_Synth(axi4_dmem_shim_master);
+   interface cpu_dmem_master = axi4_dmem_shim_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
