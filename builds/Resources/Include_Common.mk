@@ -64,7 +64,9 @@ TOPMODULE ?= mkTop_HW_Side
 #   Unrecognized flag: -no-show-timestamps
 # XXX
 BSC_COMPILATION_FLAGS += \
-	-D MEM64 -D RISCV -D BLUESIM \
+	-D CheriBusBytes=8 \
+	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
+	-D RISCV -D BLUESIM \
 	-keep-fires -aggressive-conditions -no-warn-action-shadowing -check-assert \
 	-suppress-warnings G0020    \
 	+RTS -K128M -RTS  -show-range-conflict

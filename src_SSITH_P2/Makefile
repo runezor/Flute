@@ -25,8 +25,8 @@ BSC_COMPILATION_FLAGS += \
 	-D RV64 \
 	-D SV39 \
 	-D RISCV \
-	-D CAP128 \
-	-D MEM64 -D RISCV \
+	-D CapWidth=128 -D CheriBusBytes=64 \
+	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
 	-D ISA_CHERI \
 	-D ISA_PRIV_M  -D ISA_PRIV_S  -D ISA_PRIV_U  \
 	-D ISA_I  -D ISA_M  -D ISA_A  -D ISA_C  \
