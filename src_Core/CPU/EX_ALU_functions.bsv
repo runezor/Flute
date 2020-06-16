@@ -164,7 +164,9 @@ typedef struct {
    Bool       val1_cap_not_int;
    Bool       val2_cap_not_int;
 
-   Bool       internal_op_flag;
+   Bool       internal_offset_inc_not_set;
+   Bool       internal_bounds_exact;
+   Bool       internal_crrl_not_cram;
    CapPipe    internal_op1;
    WordXL     internal_op2;
    Output_Select val1_source;
@@ -222,7 +224,9 @@ ALU_Outputs alu_outputs_base
                val1_cap_not_int: False,
                val2_cap_not_int: False,
 
-               internal_op_flag : ?,
+               internal_offset_inc_not_set : ?,
+               internal_bounds_exact       : ?,
+               internal_crrl_not_cram      : ?,
                internal_op1 : ?,
                internal_op2 : ?,
                val1_source : LITERAL,
@@ -807,7 +811,7 @@ function ALU_Outputs fv_AUIPC (ALU_Inputs inputs);
        alu_outputs.val1_source = SET_OFFSET;
        alu_outputs.internal_op1 = toCapPipe(inputs.pcc);
        alu_outputs.internal_op2 = pack(iv);
-       alu_outputs.internal_op_flag = True;
+       alu_outputs.internal_offset_inc_not_set = True;
    end else
 `endif
    begin
@@ -1455,7 +1459,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
              alu_outputs.val1_source = SET_OFFSET;
              alu_outputs.internal_op1 = cs1_val;
              alu_outputs.internal_op2 = signExtend(inputs.decoded_instr.imm12_I);
-             alu_outputs.internal_op_flag = True;
+             alu_outputs.internal_offset_inc_not_set = True;
         end
         f3_cap_CSetBoundsImmediate: begin
             check_cs1_tagged = True;
@@ -1463,7 +1467,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
             alu_outputs.val1_source = SET_BOUNDS;
             alu_outputs.internal_op2 = zeroExtend(inputs.decoded_instr.imm12_I);
-            alu_outputs.internal_op_flag = False;
+            alu_outputs.internal_bounds_exact = False;
             alu_outputs.check_authority_idx  = zeroExtend(inputs.rs1_idx);
         end
         f3_cap_ThreeOp: begin
@@ -1489,7 +1493,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                 alu_outputs.val1_source = SET_BOUNDS;
                 alu_outputs.internal_op2 = rs2_val;
-                alu_outputs.internal_op_flag = False;
+                alu_outputs.internal_offset_inc_not_set = False;
                 alu_outputs.check_authority_idx  = zeroExtend(inputs.rs1_idx);
             end
             f7_cap_CSetBoundsExact: begin
@@ -1498,7 +1502,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                 alu_outputs.val1_source = SET_BOUNDS;
                 alu_outputs.internal_op2 = rs2_val;
-                alu_outputs.internal_op_flag = True;
+                alu_outputs.internal_bounds_exact = True;
                 alu_outputs.check_authority_idx  = zeroExtend(inputs.rs1_idx);
             end
             f7_cap_CSetOffset: begin
@@ -1507,7 +1511,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 alu_outputs.val1_source = SET_OFFSET;
                 alu_outputs.internal_op1 = cs1_val;
                 alu_outputs.internal_op2 = rs2_val;
-                alu_outputs.internal_op_flag = False;
+                alu_outputs.internal_offset_inc_not_set = False;
             end
             f7_cap_CSetAddr: begin
                 check_cs1_unsealed = True;
@@ -1521,7 +1525,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 alu_outputs.val1_source = SET_OFFSET;
                 alu_outputs.internal_op1 = cs1_val;
                 alu_outputs.internal_op2 = rs2_val;
-                alu_outputs.internal_op_flag = True;
+                alu_outputs.internal_offset_inc_not_set = True;
             end
             f7_cap_CSeal: begin
                 check_cs1_tagged = True;
@@ -1695,7 +1699,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     alu_outputs.val1_source = SET_OFFSET;
                     alu_outputs.internal_op1 = inputs.rs1_idx == 0 ? inputs.ddc : cs1_val;
                     alu_outputs.internal_op2 = rs2_val;
-                    alu_outputs.internal_op_flag = False;
+                    alu_outputs.internal_offset_inc_not_set = False;
                 end
             end
             f7_cap_CSub: begin
@@ -1775,11 +1779,11 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 end
                 f5rs2_cap_CRRL: begin
                     alu_outputs.val1_source = GET_PRECISION;
-                    alu_outputs.internal_op_flag = True;
+                    alu_outputs.internal_crrl_not_cram = True;
                 end
                 f5rs2_cap_CRAM: begin
                     alu_outputs.val1_source = GET_PRECISION;
-                    alu_outputs.internal_op_flag = False;
+                    alu_outputs.internal_crrl_not_cram = False;
                 end
                 f5rs2_cap_CMove: begin
                     alu_outputs.cap_val1 = cs1_val;
@@ -1836,7 +1840,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     alu_outputs.val1_source = SET_OFFSET;
                     alu_outputs.internal_op1 = toCapPipe(inputs.pcc);
                     alu_outputs.internal_op2 = fall_through_pc_inc(inputs);
-                    alu_outputs.internal_op_flag = True;
+                    alu_outputs.internal_offset_inc_not_set = True;
                     alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, {0,inputs.rs1_idx}, getAddr(maskedTarget));
                 end
                 f5rs2_cap_CGetType: begin
@@ -1870,7 +1874,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
     case(alu_outputs.val1_source)
     SET_OFFSET: begin
-        let result = modifyOffset(alu_outputs.internal_op1, alu_outputs.internal_op2, alu_outputs.internal_op_flag);
+        let result = modifyOffset(alu_outputs.internal_op1, alu_outputs.internal_op2, alu_outputs.internal_offset_inc_not_set);
         alu_outputs.cap_val1 = result.value;
         alu_outputs.val1_cap_not_int = True;
     end
@@ -1884,13 +1888,13 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         alu_outputs.check_inclusive = True;
         alu_outputs.check_address_low = getAddr(cs1_val);
         alu_outputs.check_address_high = zeroExtend(getAddr(cs1_val)) + zeroExtend(alu_outputs.internal_op2);
-        alu_outputs.check_exact_enable = alu_outputs.internal_op_flag;
+        alu_outputs.check_exact_enable = alu_outputs.internal_bounds_exact;
         alu_outputs.check_exact_success = result.exact;
     end
     GET_PRECISION: begin
         CapReg nullCapReg = nullCap;
         let result = getRepresentableAlignmentMask(nullCapReg, inputs.rs1_val);
-        if (alu_outputs.internal_op_flag) begin
+        if (alu_outputs.internal_crrl_not_cram) begin
             result = (inputs.rs1_val + ~result) & result;
         end
         alu_outputs.val1 = result;
