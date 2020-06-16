@@ -1495,7 +1495,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                 alu_outputs.val1_source = SET_BOUNDS;
                 alu_outputs.internal_op2 = rs2_val;
-                alu_outputs.internal_offset_inc_not_set = False;
+                alu_outputs.internal_bounds_exact = False;
                 alu_outputs.check_authority_idx  = zeroExtend(inputs.rs1_idx);
             end
             f7_cap_CSetBoundsExact: begin
