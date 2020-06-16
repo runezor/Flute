@@ -1838,7 +1838,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     alu_outputs.cf_info   = cf_info;
 
                     alu_outputs.addr      = next_pc;
-                    alu_outputs.pcc       = fromCapPipe(maskedTarget);
+                    alu_outputs.pcc       = fromCapPipe(setKind(maskedTarget, UNSEALED));
                     alu_outputs.val1_source = SET_OFFSET;
                     alu_outputs.internal_op1 = toCapPipe(inputs.pcc);
                     alu_outputs.internal_op2 = fall_through_pc_inc(inputs);
