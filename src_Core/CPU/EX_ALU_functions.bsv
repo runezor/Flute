@@ -167,6 +167,7 @@ typedef struct {
    Bool       internal_offset_inc_not_set;
    Bool       internal_bounds_exact;
    Bool       internal_crrl_not_cram;
+   Bool       internal_seal_entry;
    CapPipe    internal_op1;
    WordXL     internal_op2;
    Output_Select val1_source;
@@ -227,6 +228,7 @@ ALU_Outputs alu_outputs_base
                internal_offset_inc_not_set : ?,
                internal_bounds_exact       : ?,
                internal_crrl_not_cram      : ?,
+               internal_seal_entry         : ?,
                internal_op1 : ?,
                internal_op2 : ?,
                val1_source : LITERAL,
@@ -1841,6 +1843,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     alu_outputs.internal_op1 = toCapPipe(inputs.pcc);
                     alu_outputs.internal_op2 = fall_through_pc_inc(inputs);
                     alu_outputs.internal_offset_inc_not_set = True;
+                    alu_outputs.internal_seal_entry = True;
                     alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, {0,inputs.rs1_idx}, getAddr(maskedTarget));
                 end
                 f5rs2_cap_CGetType: begin
@@ -1875,6 +1878,9 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
     case(alu_outputs.val1_source)
     SET_OFFSET: begin
         let result = modifyOffset(alu_outputs.internal_op1, alu_outputs.internal_op2, alu_outputs.internal_offset_inc_not_set);
+        if (alu_outputs.internal_seal_entry) begin
+            result.value = setKind(result.value, SENTRY);
+        end
         alu_outputs.cap_val1 = result.value;
         alu_outputs.val1_cap_not_int = True;
     end
