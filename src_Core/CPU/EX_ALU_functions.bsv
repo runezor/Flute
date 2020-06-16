@@ -228,7 +228,7 @@ ALU_Outputs alu_outputs_base
                internal_offset_inc_not_set : ?,
                internal_bounds_exact       : ?,
                internal_crrl_not_cram      : ?,
-               internal_seal_entry         : ?,
+               internal_seal_entry         : False,
                internal_op1 : ?,
                internal_op2 : ?,
                val1_source : LITERAL,
