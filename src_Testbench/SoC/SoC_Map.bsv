@@ -73,6 +73,10 @@ import CHERICap     :: *;
 import CHERICC_Fat  :: *;
 `endif
 
+`ifdef RVFI_DII
+import RVFI_DII     :: *;
+`endif
+
 import ISA_Decls :: *;
 
 // ================================================================
@@ -188,17 +192,13 @@ module mkSoC_Map (SoC_Map_IFC);
 `ifdef RVFI_DII
   let rvfi_cached = Range {
       base: 'h_8000_0000,
-      size: 'h_0040_0000
+      size: fromInteger(valueOf(RVFI_DII_Mem_Size))
    };
    function Bool fn_is_mem_addr (Fabric_Addr addr);
        return (inRange(rvfi_cached, addr));
    endfunction
-   let rvfi_uncached = Range {
-      base: 'h_8040_0000,
-      size: 'h_0040_0000
-   };
    function Bool fn_is_IO_addr (Fabric_Addr addr);
-       return (inRange(rvfi_uncached, addr));
+       return False;
    endfunction
 `else
    // ----------------------------------------------------------------
