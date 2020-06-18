@@ -105,10 +105,10 @@ SCR_Addr scr_addr_MTDC = 29;
 SCR_Addr scr_addr_MScratchC = 30;
 SCR_Addr scr_addr_MEPCC = 31;
 
-function CapPipe update_scr_via_csr (CapPipe old_scr, WordXL new_csr);
+function CapPipe update_scr_via_csr (CapPipe old_scr, WordXL new_csr, Bool allow_sealed);
     let new_scr = setOffset(old_scr, new_csr);
     let ret = new_scr.value;
-    if (!new_scr.exact || getKind(old_scr) != UNSEALED) begin // TODO this needs changing for EPCC and Sentries (should only detag if a change was actually made)
+    if (!new_scr.exact || (getKind(old_scr) != UNSEALED && !allow_sealed)) begin
         ret = setValidCap(ret, False);
     end
     return ret;

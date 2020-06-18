@@ -1021,7 +1021,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       let stvec     = word_to_mtvec (wordxl);
 				       new_csr_value = mtvec_to_word (stvec);
 `ifdef ISA_CHERI
-				       rg_stcc      <= cast(update_scr_via_csr(rg_stcc_unpacked, new_csr_value));
+				       rg_stcc      <= cast(update_scr_via_csr(rg_stcc_unpacked, new_csr_value, False));
 `else
 				       rg_stvec     <= stvec;
 `endif
@@ -1039,7 +1039,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       new_csr_value = (wordxl & (~ 3));    // sepc [1:0] always zero
 `endif
 `ifdef ISA_CHERI
-				       rg_sepcc     <= cast(update_scr_via_csr(rg_sepcc_unpacked, new_csr_value));
+				       rg_sepcc     <= cast(update_scr_via_csr(rg_sepcc_unpacked, new_csr_value, False));
 `else
 				       rg_sepc      <= new_csr_value;
 `endif
@@ -1088,7 +1088,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       let mtvec     = word_to_mtvec (wordxl);
 				       new_csr_value = mtvec_to_word (mtvec);
 `ifdef ISA_CHERI
-				       rg_mtcc      <= cast(update_scr_via_csr(rg_mtcc_unpacked, new_csr_value));
+				       rg_mtcc      <= cast(update_scr_via_csr(rg_mtcc_unpacked, new_csr_value, False));
 `else
 				       rg_mtvec     <= mtvec;
 `endif
@@ -1109,7 +1109,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       new_csr_value = (wordxl & (~ 3));    // mepc [1:0] always zero
 `endif
 `ifdef ISA_CHERI
-				       rg_mepcc     <= cast(update_scr_via_csr(rg_mepcc_unpacked, new_csr_value));
+				       rg_mepcc     <= cast(update_scr_via_csr(rg_mepcc_unpacked, new_csr_value, False));
 `else
 				       rg_mepc      <= new_csr_value;
 `endif
@@ -1254,7 +1254,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    case (scr_addr)
 `ifdef ISA_PRIV_S
          scr_addr_STCC: begin
-             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))));
+             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))), False);
              // This can be done much more efficiently by breaking into the compressed cap format
              if (getBaseAlignment(capUnpacked) == 0) begin
                 rg_stcc <= cast(capUnpacked);
@@ -1268,11 +1268,13 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
          scr_addr_SEPCC: begin
              let newOffset = getOffset(capUnpacked);
 `ifdef ISA_C
+             Bool changeMade = newOffset[0] != 1'b0;
              newOffset[0] = 1'b0;
 `else
+             Bool changeMade = newOffset[1:0] != 2'b0;
              newOffset[1:0] = 2'b0;
 `endif
-             capUnpacked = update_scr_via_csr(capUnpacked, newOffset);
+             capUnpacked = update_scr_via_csr(capUnpacked, newOffset, !changeMade);
              rg_sepcc <= cast(capUnpacked);
              result = cast(capUnpacked);
          end
@@ -1282,7 +1284,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
          end
 `endif
          scr_addr_MTCC: begin
-             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))));
+             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))), False);
              // This can be done much more efficiently by breaking into the compressed cap format
              if (getBaseAlignment(capUnpacked) == 0) begin
                 rg_mtcc <= cast(capUnpacked);
@@ -1296,11 +1298,13 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
          scr_addr_MEPCC: begin
              let newOffset = getOffset(capUnpacked);
 `ifdef ISA_C
+             Bool changeMade = newOffset[0] != 1'b0;
              newOffset[0] = 1'b0;
 `else
+             Bool changeMade = newOffset[1:0] != 2'b0;
              newOffset[1:0] = 2'b0;
 `endif
-             capUnpacked = update_scr_via_csr(capUnpacked, newOffset);
+             capUnpacked = update_scr_via_csr(capUnpacked, newOffset, !changeMade);
              rg_mepcc <= cast(capUnpacked);
              result = cast(capUnpacked);
          end
@@ -1656,6 +1660,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `endif
       if (misa.c == 1'b0)
 	 next_pcc = maskAddr(next_pcc, signExtend(3'b100));
+      if (getKind(next_pcc) == SENTRY)
+         next_pcc = setKind(next_pcc, UNSEALED);
       return tuple3 (
 `ifdef ISA_CHERI
 		     next_pcc,
