@@ -1658,8 +1658,6 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       if (from_priv != m_Priv_Mode)
 	 next_pcc = rg_sepcc_unpacked;
 `endif
-      if (misa.c == 1'b0)
-	 next_pcc = maskAddr(next_pcc, signExtend(3'b100));
       if (getKind(next_pcc) == SENTRY)
          next_pcc = setKind(next_pcc, UNSEALED);
       return tuple3 (
