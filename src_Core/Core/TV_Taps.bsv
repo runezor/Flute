@@ -54,12 +54,12 @@ import Fabric_Defs  :: *;
 // DM-to-memory tap
 
 interface DM_Mem_Tap_IFC;
-   interface AXI4_Slave_Synth #(Wd_MId_2x3, Wd_Addr, Wd_Data_Periph,
-                                Wd_AW_User, Wd_W_User, Wd_B_User,
-                                Wd_AR_User, Wd_R_User) slave;
-   interface AXI4_Master_Synth #(Wd_MId_2x3, Wd_Addr, Wd_Data_Periph,
-                                 Wd_AW_User, Wd_W_User, Wd_B_User,
-                                 Wd_AR_User, Wd_R_User) master;
+   interface AXI4_Slave #( Wd_MId_2x3, Wd_Addr, Wd_Data_Periph
+                         , Wd_AW_User, Wd_W_User, Wd_B_User
+                         , Wd_AR_User, Wd_R_User) slave;
+   interface AXI4_Master #( Wd_MId_2x3, Wd_Addr, Wd_Data_Periph
+                          , Wd_AW_User, Wd_W_User, Wd_B_User
+                          , Wd_AR_User, Wd_R_User) master;
    interface Get #(Trace_Data) trace_data_out;
 endinterface
 
@@ -67,10 +67,10 @@ endinterface
 module mkDM_Mem_Tap (DM_Mem_Tap_IFC);
 
    // Transactor facing DM
-   let slave_xactor  <- mkAXI4_Slave_Xactor;
+   let slavePortShim  <- mkAXI4ShimFF;
 
    // Transactor facing memory bus
-   let master_xactor <- mkAXI4_Master_Xactor;
+   let masterPortShim <- mkAXI4ShimFF;
 
    // Tap output
    FIFOF #(Trace_Data)  f_trace_data <- mkFIFOF;
@@ -80,12 +80,12 @@ module mkDM_Mem_Tap (DM_Mem_Tap_IFC);
 
    // Snoop write requests
    rule write_reqs;
-      let wr_addr <- get(slave_xactor.master.aw);
-      let wr_data <- get(slave_xactor.master.w);
+      let wr_addr <- get(slavePortShim.master.aw);
+      let wr_data <- get(slavePortShim.master.w);
 
       // Pass-through
-      master_xactor.slave.aw.put(wr_addr);
-      master_xactor.slave.w.put(wr_data);
+      masterPortShim.slave.aw.put(wr_addr);
+      masterPortShim.slave.w.put(wr_data);
 
       // Tap
       Bit #(64)    paddr = ?;
@@ -121,17 +121,17 @@ module mkDM_Mem_Tap (DM_Mem_Tap_IFC);
    endrule
 
    // Read requests, write responses and read responses are not snooped
-   mkConnection (slave_xactor.master.ar, master_xactor.slave.ar);
-   mkConnection (slave_xactor.master.b, master_xactor.slave.b);
-   mkConnection (slave_xactor.master.r, master_xactor.slave.r);
+   mkConnection (slavePortShim.master.ar, masterPortShim.slave.ar);
+   mkConnection (slavePortShim.master.b, masterPortShim.slave.b);
+   mkConnection (slavePortShim.master.r, masterPortShim.slave.r);
 
    // ================================================================
    // INTERFACE
 
    // Facing DM
-   interface slave  = slave_xactor.slaveSynth;
+   interface slave  = slavePortShim.slave;
    // Facing bus
-   interface master = master_xactor.masterSynth;
+   interface master = masterPortShim.master;
    // Tap towards verifier
    interface Get trace_data_out = toGet (f_trace_data);
 

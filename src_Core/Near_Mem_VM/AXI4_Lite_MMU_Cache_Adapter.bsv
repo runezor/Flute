@@ -47,7 +47,7 @@ typedef union tagged {
 // Interface
 
 interface AXI4_Lite_MMU_Cache_Adapter_IFC;
-   interface AXI4Lite_Slave_Synth #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) from_master;
+   interface AXI4Lite_Slave #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) from_master;
 endinterface
 
 // ================================================================
@@ -56,7 +56,7 @@ endinterface
 module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 				     (AXI4_Lite_MMU_Cache_Adapter_IFC);
 
-   AXI4Lite_Slave_Xactor #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) xactor_from_master <- mkAXI4Lite_Slave_Xactor;
+   let slavePortShim <- mkAXI4LiteShimFIFOF;
 
    // Stores information associated with the outstanding request. We
    // want all the properties of a pipeline FIFO, namely that there is
@@ -71,8 +71,8 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 
    (* descending_urgency = "rl_rd_xaction, rl_wr_xaction" *)
    rule rl_wr_xaction;
-      AXI4Lite_AWFlit #(Wd_Addr, 0) wra <- get (xactor_from_master.master.aw);
-      AXI4Lite_WFlit  #(Wd_Data, 0) wrd <- get (xactor_from_master.master.w);
+      AXI4Lite_AWFlit #(Wd_Addr, 0) wra <- get (slavePortShim.master.aw);
+      AXI4Lite_WFlit  #(Wd_Data, 0) wrd <- get (slavePortShim.master.w);
 
       Bit #(ZLSBs_Aligned_Fabric_Addr) offset = 0;
       Fabric_Data mask    = 'hFF;
@@ -129,7 +129,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 	    bresp: cache.exc ? SLVERR : OKAY,
 	    buser: 0
       };
-      xactor_from_master.master.b.put (wrr);
+      slavePortShim.master.b.put (wrr);
       f_req.deq;
    endrule
 
@@ -138,7 +138,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 	    bresp: OKAY,
 	    buser: 0
       };
-      xactor_from_master.master.b.put (wrr);
+      slavePortShim.master.b.put (wrr);
       f_req.deq;
    endrule
 
@@ -156,7 +156,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 	       bresp: bresp,
 	       buser: 0
 	 };
-	 xactor_from_master.master.b.put (wrr);
+	 slavePortShim.master.b.put (wrr);
 	 rg_unnatural_last_offset <= 0;
 	 rg_unnatural_bresp <= OKAY;
 	 f_req.deq;
@@ -186,7 +186,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
    endrule
 
    rule rl_rd_xaction;
-      AXI4Lite_ARFlit #(Wd_Addr, 0) rda <- get (xactor_from_master.master.ar);
+      AXI4Lite_ARFlit #(Wd_Addr, 0) rda <- get (slavePortShim.master.ar);
 
 `ifdef FABRIC32
       Bit #(3) width_code = w_SIZE_W;
@@ -218,7 +218,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 	    rdata: truncate (tpl_2 (cache.word128)),
 	    ruser: 0
       };
-      xactor_from_master.master.r.put (rdr);
+      slavePortShim.master.r.put (rdr);
       f_req.deq;
    endrule
 
@@ -228,7 +228,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
    endrule
 `endif
 
-   interface from_master = xactor_from_master.slaveSynth;
+   interface from_master = slavePortShim.slave;
 endmodule
 
 endpackage : AXI4_Lite_MMU_Cache_Adapter

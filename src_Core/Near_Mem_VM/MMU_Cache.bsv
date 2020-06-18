@@ -151,9 +151,9 @@ interface MMU_Cache_IFC#(numeric type mID);
    method Action tlb_flush;
 
    // Fabric master interface
-   interface AXI4_Master_Synth #(mID, Wd_Addr, Wd_Data,
-                                 Wd_AW_User, Wd_W_User, Wd_B_User,
-                                 Wd_AR_User, Wd_R_User) mem_master;
+   interface AXI4_Master #( mID, Wd_Addr, Wd_Data
+                          , Wd_AW_User, Wd_W_User, Wd_B_User
+                          , Wd_AR_User, Wd_R_User) mem_master;
 endinterface
 
 typedef MMU_Cache_IFC#(Wd_MId_2x3) MMU_DCache_IFC;
@@ -491,10 +491,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    PulseWire pw_tlb_flush_req <- mkPulseWireOR;
 
    // Fabric request/response
-   AXI4_Master_Xactor#(mID, Wd_Addr, Wd_Data,
-                       Wd_AW_User, Wd_W_User, Wd_B_User,
-                       Wd_AR_User, Wd_R_User)
-                       master_xactor <- mkAXI4_Master_Xactor;
+   let masterPortShim <- mkAXI4ShimFF;
 
 `ifdef ISA_PRIV_S
    // The TLB
@@ -724,7 +721,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 					    arregion: fabric_default_region,
 					    aruser:   fabric_default_aruser};
 
-	 master_xactor.slave.ar.put(mem_req_rd_addr);
+	 masterPortShim.slave.ar.put(mem_req_rd_addr);
 
 	 // Debugging
 	 if (cfg_verbosity > 1)
@@ -744,7 +741,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    (* descending_urgency = "rl_fabric_send_second_write_req, rl_fabric_send_write_req" *)
    rule rl_fabric_send_second_write_req (dmem_not_imem);
-      master_xactor.slave.w.put(f_fabric_second_write_reqs.first);
+      masterPortShim.slave.w.put(f_fabric_second_write_reqs.first);
       f_fabric_second_write_reqs.deq;
    endrule
 
@@ -786,8 +783,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       if (fabric_2_strb != 0) f_fabric_second_write_reqs.enq(mem_req_wr_second_data);
 
-      master_xactor.slave.aw.put (mem_req_wr_addr);
-      master_xactor.slave.w.put (mem_req_wr_data);
+      masterPortShim.slave.aw.put (mem_req_wr_addr);
+      masterPortShim.slave.w.put (mem_req_wr_data);
 
       // Expect a fabric response
       ctr_wr_rsps_pending.incr;
@@ -869,7 +866,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       let state_and_ctag = State_and_CTag { state: CTAG_EMPTY, ctag: ? };
       ram_state_and_ctag_cset.a.put (bram_cmd_write, rg_cset_in_cache, replicate (state_and_ctag));
 
-      if (f_reset_reqs.first == REQUESTOR_RESET_IFC) master_xactor.clear;
+      if (f_reset_reqs.first == REQUESTOR_RESET_IFC) masterPortShim.clear;
 
       if (rg_cset_in_cache == fromInteger (csets_per_cache - 1)) begin
 	 // This is the last cset; exit the loop
@@ -1217,7 +1214,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    //TODO change the widths in this
    rule rl_ptw_level_2 (rg_state == PTW_LEVEL_2);
       // Memory read-response is a level 1 PTE
-      let mem_rsp <- get(master_xactor.slave.r);
+      let mem_rsp <- get(masterPortShim.slave.r);
 
       Bit #(64) x64 = mem_rsp.rdata;
       WordXL pte;
@@ -1301,7 +1298,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    rule rl_ptw_level_1 (rg_state == PTW_LEVEL_1);
       // Memory read-response is a level 1 PTE
-      let mem_rsp <- get(master_xactor.slave.r);
+      let mem_rsp <- get(masterPortShim.slave.r);
 
       Bit #(64) x64 = mem_rsp.rdata;
       WordXL pte;
@@ -1389,7 +1386,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    rule rl_ptw_level_0 (rg_state == PTW_LEVEL_0);
       // Memory read-response is a level 0 PTE
-      let mem_rsp <- get(master_xactor.slave.r);
+      let mem_rsp <- get(masterPortShim.slave.r);
 
       Bit #(64) x64 = mem_rsp.rdata;
       WordXL pte;
@@ -1536,7 +1533,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    //         (for set read-modify-write; not relevant for direct-mapped)
 
    rule rl_cache_refill_rsps_loop (!resetting && rg_state == CACHE_REFILL);
-      let mem_rsp <- get(master_xactor.slave.r);
+      let mem_rsp <- get(masterPortShim.slave.r);
       if (cfg_verbosity > 2) begin
 	 $display ("%0d: %s.rl_cache_refill_rsps_loop:", cur_cycle, d_or_i);
 	 $display ("        ", fshow (mem_rsp));
@@ -1674,7 +1671,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    rule rl_io_read_rsp (!resetting && (rg_state == IO_AWAITING_READ_RSP) && dmem_not_imem);
 
-      let rd_data <- get(master_xactor.slave.r);
+      let rd_data <- get(masterPortShim.slave.r);
 
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %s.rl_io_read_rsp: vaddr 0x%0h  paddr 0x%0h", cur_cycle, d_or_i, rg_addr, rg_pa);
@@ -1799,7 +1796,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
 
    rule rl_io_AMO_read_rsp (!resetting && rg_state == IO_AWAITING_AMO_READ_RSP && dmem_not_imem);
-      let rd_data <- get(master_xactor.slave.r);
+      let rd_data <- get(masterPortShim.slave.r);
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %s.rl_io_AMO_read_rsp: vaddr 0x%0h  paddr 0x%0h", cur_cycle, d_or_i, rg_addr, rg_pa);
 	 $display ("    ", fshow (rd_data));
@@ -1854,7 +1851,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // NOTE: assuming in-order responses from fabric
 
    rule rl_discard_write_rsp;
-      let wr_resp <- get(master_xactor.slave.b);
+      let wr_resp <- get(masterPortShim.slave.b);
 
       if (ctr_wr_rsps_pending.value == 0) begin
 	 $display ("%0d: ERROR: %s.rl_discard_write_rsp: unexpected W response (ctr_wr_rsps_pending.value == 0)",
@@ -2083,7 +2080,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    endmethod
 
    // Fabric interface
-   interface mem_master = master_xactor.masterSynth;
+   interface mem_master = masterPortShim.master;
 endmodule: mkMMU_Cache
 
 // ================================================================

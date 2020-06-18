@@ -113,7 +113,7 @@ endinterface
 module mkNear_Mem_IO (Near_Mem_IO_IFC);
 
    // Verbosity: 0: quiet; 1: reset; 2: timer interrupts, all reads and writes
-   Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (1);
+   Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (2);
 
    Reg #(Module_State) rg_state     <- mkReg (MODULE_STATE_START);
 

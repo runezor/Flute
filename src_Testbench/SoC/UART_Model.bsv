@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 Bluespec, Inc. All Rights Reserved
+// copyright (c) 2016-2020 bluespec, inc. all rights reserved
 
 //-
 // AXI (user fields) modifications:
@@ -129,7 +129,7 @@ interface UART_IFC;
    method Action set_addr_map (Fabric_Addr addr_base, Fabric_Addr addr_lim);
 
    // Main Fabric Reqs/Rsps
-   interface AXI4_Slave_Synth #(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
+   interface AXI4_Slave #(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
       slave;
 
    // To external console
@@ -219,8 +219,7 @@ module mkUART (UART_IFC);
    // ----------------
    // Connector to AXI4 fabric
 
-   AXI4_Slave_Xactor#(Wd_SId, Wd_Addr, Wd_Data_Periph, 0, 0, 0, 0, 0)
-      slave_xactor <- mkAXI4_Slave_Xactor;
+   let slavePortShim <- mkAXI4ShimFF;
 
    // ----------------
    // character queues to and from external circuitry for the console
@@ -292,7 +291,7 @@ module mkUART (UART_IFC);
       rg_msr <= 0;
       rg_scr <= 0;
 
-      slave_xactor.clear;
+      slavePortShim.clear;
       rg_state <= STATE_READY;
 
       f_reset_rsps.enq (?);
@@ -305,7 +304,7 @@ module mkUART (UART_IFC);
    // Handle fabric read requests
 
    rule rl_process_rd_req (rg_state == STATE_READY);
-      let rda <- get(slave_xactor.master.ar);
+      let rda <- get(slavePortShim.master.ar);
 
       let byte_addr = rda.araddr - rg_addr_base;
       match { .offset, .lsbs } = split_addr (zeroExtend (byte_addr));
@@ -378,7 +377,7 @@ module mkUART (UART_IFC);
 			                                       rresp: rresp,
 			                                       rlast: True,
 			                                       ruser: 0};
-      slave_xactor.master.r.put(rdr);
+      slavePortShim.master.r.put(rdr);
 
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %m.rl_process_rd_req", cur_cycle);
@@ -391,8 +390,8 @@ module mkUART (UART_IFC);
    // Handle fabric write requests
 
    rule rl_process_wr_req (rg_state == STATE_READY);
-      let wra <- get(slave_xactor.master.aw);
-      let wrd <- get(slave_xactor.master.w);
+      let wra <- get(slavePortShim.master.aw);
+      let wrd <- get(slavePortShim.master.w);
 
       Bit #(64) wdata     = zeroExtend (wrd.wdata);
       Bit #(8)  wstrb     = zeroExtend (wrd.wstrb);
@@ -462,7 +461,7 @@ module mkUART (UART_IFC);
       AXI4_BFlit#(Wd_SId, 0) wrr = AXI4_BFlit {bid:   wra.awid,
 			                       bresp: bresp,
 			                       buser: 0};
-      slave_xactor.master.b.put(wrr);
+      slavePortShim.master.b.put(wrr);
 
       if (cfg_verbosity > 1) begin
 	 $display ("%0d: %m.rl_process_wr_req", cur_cycle);
@@ -512,7 +511,7 @@ module mkUART (UART_IFC);
    endmethod
 
    // Main Fabric Reqs/Rsps
-   interface  slave = slave_xactor.slaveSynth;
+   interface  slave = slavePortShim.slave;
 
    // To external console
    interface  put_from_console = toPut (f_from_console);

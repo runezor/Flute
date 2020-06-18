@@ -171,14 +171,13 @@ module mkSoC_Top (SoC_Top_IFC);
    // SoC fabric master connections
    // Note: see 'SoC_Map' for 'master_num' definitions
 
-   Vector#(Num_Masters, AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
-                                           , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
-                                           , Wd_AR_User_ext, Wd_R_User_ext))
+   Vector#(Num_Masters, AXI4_Master #( Wd_MId_ext, Wd_Addr, Wd_Data
+                                     , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
+                                     , Wd_AR_User_ext, Wd_R_User_ext))
       master_vector = newVector;
 
    // CPU IMem master to fabric
-   let imem <- fromAXI4_Master_Synth(core.cpu_imem_master);
-   master_vector[imem_master_num] <- toAXI4_Master_Synth(zeroMasterUserFields(extendIDFields(imem, 0)));
+   master_vector[imem_master_num] = zeroMasterUserFields(extendIDFields(core.cpu_imem_master, 0));
 
    // CPU DMem master to fabric
    master_vector[dmem_master_num] = core.cpu_dmem_master;
@@ -187,29 +186,24 @@ module mkSoC_Top (SoC_Top_IFC);
    // SoC fabric slave connections
    // Note: see 'SoC_Map' for 'slave_num' definitions
 
-   Vector#(Num_Slaves, AXI4_Slave_Synth #( Wd_SId, Wd_Addr, Wd_Data
-                                         , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
-                                         , Wd_AR_User_ext, Wd_R_User_ext))
+   Vector#(Num_Slaves, AXI4_Slave #( Wd_SId, Wd_Addr, Wd_Data
+                                   , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
+                                   , Wd_AR_User_ext, Wd_R_User_ext))
       slave_vector = newVector;
    Vector#(Num_Slaves, Range#(Wd_Addr))   route_vector = newVector;
 
    // Fabric to Boot ROM
-   let br <- fromAXI4_Slave_Synth(boot_rom.slave);
-   mkConnection(boot_rom_axi4_deburster.master, br);
-   let ug_boot_rom_slave <- toUnguarded_AXI4_Slave(boot_rom_axi4_deburster.slave);
-   slave_vector[boot_rom_slave_num] <- toAXI4_Slave_Synth(zeroSlaveUserFields(ug_boot_rom_slave));
+   mkConnection(boot_rom_axi4_deburster.master, boot_rom.slave);
+   slave_vector[boot_rom_slave_num] = zeroSlaveUserFields(boot_rom_axi4_deburster.slave);
    route_vector[boot_rom_slave_num] = soc_map.m_boot_rom_addr_range;
 
    // Fabric to Mem Controller
-   let mem <- fromAXI4_Slave_Synth(mem0_controller.slave);
-   mkConnection(mem0_controller_axi4_deburster.master, mem);
-   let ug_mem0_slave <- toUnguarded_AXI4_Slave(mem0_controller_axi4_deburster.slave);
-   slave_vector[mem0_controller_slave_num] <- toAXI4_Slave_Synth(zeroSlaveUserFields(ug_mem0_slave));
+   mkConnection(mem0_controller_axi4_deburster.master, mem0_controller.slave);
+   slave_vector[mem0_controller_slave_num] = zeroSlaveUserFields(mem0_controller_axi4_deburster.slave);
    route_vector[mem0_controller_slave_num] = soc_map.m_mem0_controller_addr_range;
 
    // Fabric to UART0
-   let uart0_slave <- fromAXI4_Slave_Synth(uart0.slave);
-   slave_vector[uart0_slave_num] <- toAXI4_Slave_Synth(zeroSlaveUserFields(uart0_slave));
+   slave_vector[uart0_slave_num] = zeroSlaveUserFields(uart0.slave);
    route_vector[uart0_slave_num] = soc_map.m_uart0_addr_range;
 
 `ifdef HTIF_MEMORY
@@ -220,8 +214,8 @@ module mkSoC_Top (SoC_Top_IFC);
 `endif
 
    // SoC Fabric
-   let bus <- mkAXI4Bus_Synth (routeFromMappingTable(route_vector),
-                               master_vector, slave_vector);
+   let bus <- mkAXI4Bus ( routeFromMappingTable(route_vector)
+                        , master_vector, slave_vector);
 
    // ----------------
    // Connect interrupt sources for CPU external interrupt request inputs.

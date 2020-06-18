@@ -84,26 +84,28 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    // AXI4 Fabric interfaces
 
    // CPU IMem to Fabric master interface
-   interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data,
-                                 0, 0, 0, 0, 0) cpu_imem_master;
+   interface AXI4_Master #(Wd_MId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
+      cpu_imem_master;
 
    // CPU DMem to Fabric master interface
-   interface AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
-                                , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
-                                , Wd_AR_User_ext, Wd_R_User_ext)
-             cpu_dmem_master;
+   interface AXI4_Master #( Wd_MId_ext, Wd_Addr, Wd_Data
+                          , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
+                          , Wd_AR_User_ext, Wd_R_User_ext)
+      cpu_dmem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
 
 `ifdef INCLUDE_DMEM_SLAVE
-   interface AXI4Lite_Slave_Synth #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) cpu_dmem_slave;
+   interface AXI4Lite_Slave #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
+      cpu_dmem_slave;
 `endif
 
    // ----------------------------------------------------------------
    // External interrupt sources
 
-   interface Vector #(t_n_interrupt_sources, PLIC_Source_IFC)  core_external_interrupt_sources;
+   interface Vector #(t_n_interrupt_sources, PLIC_Source_IFC)
+      core_external_interrupt_sources;
 
    // ----------------------------------------------------------------
    // Non-maskable interrupt request
@@ -136,6 +138,39 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    // Non-Debug-Module Reset (reset all except DM)
    // Bool indicates 'running' hart state.
 
+   interface Client #(Bool, Bool) ndm_reset_client;
+`endif
+endinterface
+
+// ================================================================
+
+// ================================================================
+// The Synthesizable Core interface (same with Synth AXI)
+
+interface Core_IFC_Synth #(numeric type t_n_interrupt_sources);
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+   interface Server #(Bool, Bool)  cpu_reset_server;
+   interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
+      cpu_imem_master;
+   interface AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
+                                , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
+                                , Wd_AR_User_ext, Wd_R_User_ext)
+      cpu_dmem_master;
+`ifdef INCLUDE_DMEM_SLAVE
+   interface AXI4Lite_Slave_Synth #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
+      cpu_dmem_slave;
+`endif
+   interface Vector #(t_n_interrupt_sources, PLIC_Source_IFC)
+      core_external_interrupt_sources;
+   (* always_ready, always_enabled *)
+   method Action nmi_req (Bool set_not_clear);
+`ifdef INCLUDE_TANDEM_VERIF
+   interface Get #(Info_CPU_to_Verifier)  tv_verifier_info_get;
+`elsif RVFI_DII
+   interface Flute_RVFI_DII_Server rvfi_dii_server;
+`endif
+`ifdef INCLUDE_GDB_CONTROL
+   interface DMI dm_dmi;
    interface Client #(Bool, Bool) ndm_reset_client;
 `endif
 endinterface
