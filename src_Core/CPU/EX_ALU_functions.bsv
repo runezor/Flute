@@ -1558,9 +1558,6 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                 if (   (! isValidCap(cs2_val))
                     || (getAddr(cs2_val) == otype_unsealed_ext)
-                    || (getAddr(cs2_val) == otype_sentry_ext)
-                    || (getAddr(cs2_val) == otype_res0_ext)
-                    || (getAddr(cs2_val) == otype_res1_ext)
                     || (getKind(cs1_val) != UNSEALED)) begin
                     alu_outputs.cap_val1 = cs1_val;
                     alu_outputs.val1_cap_not_int = True;
