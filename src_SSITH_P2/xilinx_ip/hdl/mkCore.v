@@ -1981,7 +1981,7 @@ module mkCore(CLK,
        MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
-       MUX_activeSource_1_1_2$write_1__VAL_1,
+       MUX_activeSource_1_1_2$write_1__VAL_2,
        MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1,
        MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2,
        MUX_flitToSink_0$wset_1__SEL_1,
@@ -2194,6 +2194,7 @@ module mkCore(CLK,
        debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1351,
        debug_module_master_ar_peek__340_BITS_92_TO_69_ETC___d1355,
        debug_module_master_ar_peek__340_BITS_92_TO_69_ETC___d1365,
+       plic_RDY_server_reset_request_put__89_AND_cpu__ETC___d295,
        reqWires_1_0_whas__056_AND_reqWires_1_0_wget___ETC___d1066,
        reqWires_1_1_0_whas__720_AND_reqWires_1_1_0_wg_ETC___d1730,
        split_0_doPut_whas__43_AND_split_0_doPut_wget__ETC___d454,
@@ -3655,7 +3656,7 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_source_selected_9 =
 	     (!ifcs_2_1_routeBack$EMPTY_N || ifcs_2_1_rspBack$EMPTY_N) &&
 	     !state_1_1_1 &&
-	     MUX_activeSource_1_1_2$write_1__VAL_1 ;
+	     MUX_activeSource_1_1_2$write_1__VAL_2 ;
   assign WILL_FIRE_RL_source_selected_9 = CAN_FIRE_RL_source_selected_9 ;
 
   // rule RL_burst_9
@@ -3983,8 +3984,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_firstFlit_1
   assign CAN_FIRE_RL_ifcs_1_firstFlit_1 =
-	     near_mem_io$RDY_axi4_slave_b_peek &&
 	     near_mem_io$RDY_axi4_slave_b_drop &&
+	     near_mem_io$RDY_axi4_slave_b_peek &&
 	     near_mem_io$axi4_slave_b_canPeek &&
 	     ifcs_1_rspBack$FULL_N &&
 	     ifcs_1_routeBack$FULL_N &&
@@ -3993,8 +3994,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_followFlits_1
   assign CAN_FIRE_RL_ifcs_1_followFlits_1 =
-	     near_mem_io$RDY_axi4_slave_b_peek &&
 	     near_mem_io$RDY_axi4_slave_b_drop &&
+	     near_mem_io$RDY_axi4_slave_b_peek &&
 	     near_mem_io$axi4_slave_b_canPeek &&
 	     ifcs_1_rspBack$FULL_N &&
 	     ifcs_1_state_1 ;
@@ -4007,7 +4008,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_2_firstFlit
   assign CAN_FIRE_RL_ifcs_2_firstFlit =
-	     plic$RDY_axi4_slave_b_peek && plic$RDY_axi4_slave_b_drop &&
+	     plic$RDY_axi4_slave_b_drop && plic$RDY_axi4_slave_b_peek &&
 	     plic$axi4_slave_b_canPeek &&
 	     ifcs_2_rspBack$FULL_N &&
 	     ifcs_2_routeBack$FULL_N &&
@@ -4016,7 +4017,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_2_followFlits
   assign CAN_FIRE_RL_ifcs_2_followFlits =
-	     plic$RDY_axi4_slave_b_peek && plic$RDY_axi4_slave_b_drop &&
+	     plic$RDY_axi4_slave_b_drop && plic$RDY_axi4_slave_b_peek &&
 	     plic$axi4_slave_b_canPeek &&
 	     ifcs_2_rspBack$FULL_N &&
 	     ifcs_2_state ;
@@ -4132,13 +4133,13 @@ module mkCore(CLK,
 
   // rule RL_merged_0_awFlit
   assign CAN_FIRE_RL_merged_0_awFlit =
-	     cpu$RDY_dmem_master_aw_peek && cpu$RDY_dmem_master_aw_drop &&
+	     cpu$RDY_dmem_master_aw_drop && cpu$RDY_dmem_master_aw_peek &&
 	     merged_0_awff$FULL_N ;
   assign WILL_FIRE_RL_merged_0_awFlit = CAN_FIRE_RL_merged_0_awFlit ;
 
   // rule RL_merged_0_wFlit
   assign CAN_FIRE_RL_merged_0_wFlit =
-	     cpu$RDY_dmem_master_w_peek && cpu$RDY_dmem_master_w_drop &&
+	     cpu$RDY_dmem_master_w_drop && cpu$RDY_dmem_master_w_peek &&
 	     merged_0_wff$FULL_N ;
   assign WILL_FIRE_RL_merged_0_wFlit = CAN_FIRE_RL_merged_0_wFlit ;
 
@@ -4207,15 +4208,15 @@ module mkCore(CLK,
 
   // rule RL_merged_1_awFlit
   assign CAN_FIRE_RL_merged_1_awFlit =
-	     debug_module$RDY_master_aw_peek &&
 	     debug_module$RDY_master_aw_drop &&
+	     debug_module$RDY_master_aw_peek &&
 	     merged_1_awff$FULL_N ;
   assign WILL_FIRE_RL_merged_1_awFlit = CAN_FIRE_RL_merged_1_awFlit ;
 
   // rule RL_merged_1_wFlit
   assign CAN_FIRE_RL_merged_1_wFlit =
-	     debug_module$RDY_master_w_peek &&
 	     debug_module$RDY_master_w_drop &&
+	     debug_module$RDY_master_w_peek &&
 	     merged_1_wff$FULL_N ;
   assign WILL_FIRE_RL_merged_1_wFlit = CAN_FIRE_RL_merged_1_wFlit ;
 
@@ -4240,7 +4241,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_firstFlit
   assign CAN_FIRE_RL_ifcs_0_1_firstFlit =
-	     cpu$RDY_dmem_master_ar_peek && cpu$RDY_dmem_master_ar_drop &&
+	     cpu$RDY_dmem_master_ar_drop && cpu$RDY_dmem_master_ar_peek &&
 	     ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_innerRoute$FULL_N &&
 	     ifcs_0_1_state == 2'd0 &&
@@ -4251,7 +4252,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_followFlits
   assign CAN_FIRE_RL_ifcs_0_1_followFlits =
-	     cpu$RDY_dmem_master_ar_peek && cpu$RDY_dmem_master_ar_drop &&
+	     cpu$RDY_dmem_master_ar_drop && cpu$RDY_dmem_master_ar_peek &&
 	     ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_state == 2'd1 &&
 	     cpu$dmem_master_ar_canPeek ;
@@ -4280,8 +4281,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_1_firstFlit
   assign CAN_FIRE_RL_ifcs_1_1_firstFlit =
-	     debug_module$RDY_master_ar_peek &&
 	     debug_module$RDY_master_ar_drop &&
+	     debug_module$RDY_master_ar_peek &&
 	     ifcs_1_1_innerReq$FULL_N &&
 	     ifcs_1_1_innerRoute$FULL_N &&
 	     ifcs_1_1_state == 2'd0 &&
@@ -4292,8 +4293,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_1_followFlits
   assign CAN_FIRE_RL_ifcs_1_1_followFlits =
-	     debug_module$RDY_master_ar_peek &&
 	     debug_module$RDY_master_ar_drop &&
+	     debug_module$RDY_master_ar_peek &&
 	     ifcs_1_1_innerReq$FULL_N &&
 	     ifcs_1_1_state == 2'd1 &&
 	     debug_module$master_ar_canPeek ;
@@ -4343,8 +4344,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_1_firstFlit_1
   assign CAN_FIRE_RL_ifcs_1_1_firstFlit_1 =
-	     near_mem_io$RDY_axi4_slave_r_peek &&
 	     near_mem_io$RDY_axi4_slave_r_drop &&
+	     near_mem_io$RDY_axi4_slave_r_peek &&
 	     near_mem_io$axi4_slave_r_canPeek &&
 	     ifcs_1_1_rspBack$FULL_N &&
 	     ifcs_1_1_routeBack$FULL_N &&
@@ -4354,8 +4355,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_1_followFlits_1
   assign CAN_FIRE_RL_ifcs_1_1_followFlits_1 =
-	     near_mem_io$RDY_axi4_slave_r_peek &&
 	     near_mem_io$RDY_axi4_slave_r_drop &&
+	     near_mem_io$RDY_axi4_slave_r_peek &&
 	     near_mem_io$axi4_slave_r_canPeek &&
 	     ifcs_1_1_rspBack$FULL_N &&
 	     ifcs_1_1_state_1 ;
@@ -4368,7 +4369,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_2_1_firstFlit
   assign CAN_FIRE_RL_ifcs_2_1_firstFlit =
-	     plic$RDY_axi4_slave_r_peek && plic$RDY_axi4_slave_r_drop &&
+	     plic$RDY_axi4_slave_r_drop && plic$RDY_axi4_slave_r_peek &&
 	     plic$axi4_slave_r_canPeek &&
 	     ifcs_2_1_rspBack$FULL_N &&
 	     ifcs_2_1_routeBack$FULL_N &&
@@ -4377,7 +4378,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_2_1_followFlits
   assign CAN_FIRE_RL_ifcs_2_1_followFlits =
-	     plic$RDY_axi4_slave_r_peek && plic$RDY_axi4_slave_r_drop &&
+	     plic$RDY_axi4_slave_r_drop && plic$RDY_axi4_slave_r_peek &&
 	     plic$axi4_slave_r_canPeek &&
 	     ifcs_2_1_rspBack$FULL_N &&
 	     ifcs_2_1_state ;
@@ -4527,20 +4528,17 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
-	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic$RDY_server_reset_request_put &&
-	     f_reset_reqs$EMPTY_N &&
-	     f_reset_requestor$FULL_N ;
+	     plic_RDY_server_reset_request_put__89_AND_cpu__ETC___d295 ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
 	     debug_module$RDY_hart0_reset_client_request_get &&
-	     cpu$RDY_hart0_server_reset_request_put &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
+	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N &&
 	     !CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
@@ -4549,9 +4547,9 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_complete
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_complete =
-	     cpu$RDY_hart0_server_reset_response_get &&
 	     near_mem_io$RDY_server_reset_response_get &&
 	     plic$RDY_server_reset_response_get &&
+	     cpu$RDY_hart0_server_reset_response_get &&
 	     f_reset_requestor$EMPTY_N &&
 	     (f_reset_requestor$D_OUT ||
 	      debug_module$RDY_hart0_reset_client_response_put) &&
@@ -4801,7 +4799,7 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_1_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
 	     IF_SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_7_ETC___d1784 ;
-  assign MUX_activeSource_1_1_2$write_1__VAL_1 =
+  assign MUX_activeSource_1_1_2$write_1__VAL_2 =
 	     WILL_FIRE_RL_arbitrate_3 &&
 	     IF_SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_7_ETC___d1790 ;
   assign MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 =
@@ -5503,17 +5501,17 @@ module mkCore(CLK,
 
   // register activeSource_1_1_2
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
-	  MUX_activeSource_1_1_2$write_1__VAL_1 or
+	  MUX_activeSource_1_1_2$write_1__VAL_2 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
 	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
-	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
+	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_2;
       MUX_activeSource_1_1_0$write_1__SEL_2:
-	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
+	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_2;
       MUX_activeSource_1_1_0$write_1__SEL_3:
-	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
+	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_2;
       default: activeSource_1_1_2$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
@@ -6049,7 +6047,9 @@ module mkCore(CLK,
   // submodule f_reset_reqs
   assign f_reset_reqs$D_IN = cpu_reset_server_request_put ;
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
-  assign f_reset_reqs$DEQ = CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
+  assign f_reset_reqs$DEQ =
+	     near_mem_io$RDY_server_reset_request_put &&
+	     plic_RDY_server_reset_request_put__89_AND_cpu__ETC___d295 ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -6780,6 +6780,11 @@ module mkCore(CLK,
 	     merged_0_outflit$wget[166:103] ;
   assign merged_1_outflitwget_BITS_166_TO_103__q2 =
 	     merged_1_outflit$wget[166:103] ;
+  assign plic_RDY_server_reset_request_put__89_AND_cpu__ETC___d295 =
+	     plic$RDY_server_reset_request_put &&
+	     cpu$RDY_hart0_server_reset_request_put &&
+	     f_reset_reqs$EMPTY_N &&
+	     f_reset_requestor$FULL_N ;
   assign reqWires_1_0_whas__056_AND_reqWires_1_0_wget___ETC___d1066 =
 	     CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget ||
 	     CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget ||
@@ -6796,12 +6801,12 @@ module mkCore(CLK,
   assign split_1_doPut_whas__78_AND_split_1_doPut_wget__ETC___d485 =
 	     CAN_FIRE_RL_sinks_1_doPut &&
 	     (split_1_doPut$wget[172] ||
-	      near_mem_io$RDY_axi4_slave_aw_put &&
-	      near_mem_io$RDY_axi4_slave_w_put) ;
+	      near_mem_io$RDY_axi4_slave_w_put &&
+	      near_mem_io$RDY_axi4_slave_aw_put) ;
   assign split_2_doPut_whas__07_AND_split_2_doPut_wget__ETC___d514 =
 	     CAN_FIRE_RL_sinks_2_doPut &&
 	     (split_2_doPut$wget[172] ||
-	      plic$RDY_axi4_slave_aw_put && plic$RDY_axi4_slave_w_put) ;
+	      plic$RDY_axi4_slave_w_put && plic$RDY_axi4_slave_aw_put) ;
   assign state_1_067_AND_activeSource_1_0_155_156_AND_i_ETC___d1158 =
 	     state_1 && activeSource_1_0 && ifcs_0_routeBack$EMPTY_N &&
 	     ((!ifcs_0_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
