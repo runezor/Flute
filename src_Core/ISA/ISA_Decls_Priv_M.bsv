@@ -548,6 +548,13 @@ endfunction
 
 `ifdef ISA_CHERI
 typedef Bit #(6) Exc_Code;
+
+// These only exist on RV64 due to a lack of spare PTE bits in SV32.
+`ifdef RV64
+Exc_Code  exc_code_LOAD_CAP_PAGE_FAULT           = 26;
+Exc_Code  exc_code_STORE_AMO_CAP_PAGE_FAULT      = 27;
+`endif
+
 Exc_Code  exc_code_CHERI                         = 28;
 `else
 typedef Bit #(4) Exc_Code;

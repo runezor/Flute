@@ -1061,7 +1061,15 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       rg_satp      <= new_csr_value;
 				    end
 	       csr_addr_medeleg:    begin
-				       new_csr_value = (wordxl & 'h_1000B3FF);  // 16 bits relevant and some are 0, plus CHERI exception at bit 28
+				       WordXL mask   = 'h_B3FF;  // 16 bits relevant and some are 0
+`ifdef ISA_CHERI
+`ifdef RV64
+				       mask          = (mask | (1 << exc_code_LOAD_CAP_PAGE_FAULT));
+				       mask          = (mask | (1 << exc_code_STORE_AMO_CAP_PAGE_FAULT));
+`endif
+				       mask          = (mask | (1 << exc_code_CHERI));
+`endif
+				       new_csr_value = (wordxl & mask);
 				       rg_medeleg   <= truncate (new_csr_value);
 				    end
 	       csr_addr_mideleg:    begin
