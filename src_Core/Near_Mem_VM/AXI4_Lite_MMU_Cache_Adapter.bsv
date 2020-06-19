@@ -56,7 +56,7 @@ endinterface
 module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 				     (AXI4_Lite_MMU_Cache_Adapter_IFC);
 
-   let slavePortShim <- mkAXI4LiteShimFIFOF;
+   let slavePortShim <- mkAXI4LiteShimFF;
 
    // Stores information associated with the outstanding request. We
    // want all the properties of a pipeline FIFO, namely that there is
