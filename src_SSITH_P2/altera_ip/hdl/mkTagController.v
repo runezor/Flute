@@ -143,21 +143,16 @@ module mkTagController(CLK,
   wire [41 : 0] tagLookup_tagCache_orderer_mastLines_insertItem$wget,
 		tagLookup_tagCache_orderer_slaveAddrs_insertItem$wget;
   wire [35 : 0] tagLookup_tagCache_orderer_slaveAddrs_removeItem$wget;
-  wire [17 : 0] lookupRsp_insertItem$wget;
-  wire [15 : 0] addrFrame_insertItem$wget,
-		tagLookup_tagCache_req_commits_rf$port0__write_1,
+  wire [15 : 0] tagLookup_tagCache_req_commits_rf$port0__write_1,
 		tagLookup_tagCache_req_commits_rf$port1__read;
   wire [12 : 0] tagLookup_tagCache_orderer_slaveDeps_insertItem$wget,
 		tagLookup_tagCache_orderer_slaveDeps_updateItem$wget;
-  wire [6 : 0] lookupRsp_removeItem$wget,
-	       tagLookup_tagCache_orderer_mastReqs_removeItem$wget,
+  wire [6 : 0] tagLookup_tagCache_orderer_mastReqs_removeItem$wget,
 	       tagLookup_tagCache_retryReqs_removeItem$wget;
   wire [4 : 0] tagLookup_tagCache_req_commits_level$port0__write_1,
 	       tagLookup_tagCache_req_commits_level$port1__write_1,
 	       tagLookup_tagCache_req_commits_level$port2__read;
-  wire addrFrame_insertItem$whas,
-       lookupRsp_removeItem$whas,
-       tagLookup_getReq$whas,
+  wire tagLookup_getReq$whas,
        tagLookup_readReqs_ff_full$EN_port1__write,
        tagLookup_readReqs_ff_full$port1__read,
        tagLookup_readReqs_ff_full$port2__read,
@@ -168,45 +163,115 @@ module mkTagController(CLK,
        tagLookup_tagCache_orderer_slaveDeps_updateItem$whas,
        tagLookup_tagCache_respsReady$wget;
 
-  // register addrFrame_bag
-  reg [63 : 0] addrFrame_bag;
-  wire [63 : 0] addrFrame_bag$D_IN;
-  wire addrFrame_bag$EN;
+  // register addrFrame_fifos_0_lhead
+  reg [2 : 0] addrFrame_fifos_0_lhead;
+  wire [2 : 0] addrFrame_fifos_0_lhead$D_IN;
+  wire addrFrame_fifos_0_lhead$EN;
 
-  // register addrFrame_nextValidKeyReg
-  reg [1 : 0] addrFrame_nextValidKeyReg;
-  wire [1 : 0] addrFrame_nextValidKeyReg$D_IN;
-  wire addrFrame_nextValidKeyReg$EN;
+  // register addrFrame_fifos_0_ltail
+  reg [2 : 0] addrFrame_fifos_0_ltail;
+  wire [2 : 0] addrFrame_fifos_0_ltail$D_IN;
+  wire addrFrame_fifos_0_ltail$EN;
 
-  // register frame
-  reg [2 : 0] frame;
-  wire [2 : 0] frame$D_IN;
-  wire frame$EN;
+  // register addrFrame_fifos_1_lhead
+  reg [2 : 0] addrFrame_fifos_1_lhead;
+  wire [2 : 0] addrFrame_fifos_1_lhead$D_IN;
+  wire addrFrame_fifos_1_lhead$EN;
 
-  // register halfWrite
-  reg [141 : 0] halfWrite;
-  wire [141 : 0] halfWrite$D_IN;
-  wire halfWrite$EN;
+  // register addrFrame_fifos_1_ltail
+  reg [2 : 0] addrFrame_fifos_1_ltail;
+  wire [2 : 0] addrFrame_fifos_1_ltail$D_IN;
+  wire addrFrame_fifos_1_ltail$EN;
 
-  // register lookupRsp_bag
-  reg [71 : 0] lookupRsp_bag;
-  wire [71 : 0] lookupRsp_bag$D_IN;
-  wire lookupRsp_bag$EN;
+  // register addrFrame_fifos_2_lhead
+  reg [2 : 0] addrFrame_fifos_2_lhead;
+  wire [2 : 0] addrFrame_fifos_2_lhead$D_IN;
+  wire addrFrame_fifos_2_lhead$EN;
 
-  // register lookupRsp_nextValidKeyReg
-  reg [1 : 0] lookupRsp_nextValidKeyReg;
-  wire [1 : 0] lookupRsp_nextValidKeyReg$D_IN;
-  wire lookupRsp_nextValidKeyReg$EN;
+  // register addrFrame_fifos_2_ltail
+  reg [2 : 0] addrFrame_fifos_2_ltail;
+  wire [2 : 0] addrFrame_fifos_2_ltail$D_IN;
+  wire addrFrame_fifos_2_ltail$EN;
 
-  // register mReqs_ff_lhead
-  reg [1 : 0] mReqs_ff_lhead;
-  wire [1 : 0] mReqs_ff_lhead$D_IN;
-  wire mReqs_ff_lhead$EN;
+  // register addrFrame_fifos_3_lhead
+  reg [2 : 0] addrFrame_fifos_3_lhead;
+  wire [2 : 0] addrFrame_fifos_3_lhead$D_IN;
+  wire addrFrame_fifos_3_lhead$EN;
 
-  // register mReqs_ff_ltail
-  reg [1 : 0] mReqs_ff_ltail;
-  wire [1 : 0] mReqs_ff_ltail$D_IN;
-  wire mReqs_ff_ltail$EN;
+  // register addrFrame_fifos_3_ltail
+  reg [2 : 0] addrFrame_fifos_3_ltail;
+  wire [2 : 0] addrFrame_fifos_3_ltail$D_IN;
+  wire addrFrame_fifos_3_ltail$EN;
+
+  // register lookupId_ff_lhead
+  reg [1 : 0] lookupId_ff_lhead;
+  wire [1 : 0] lookupId_ff_lhead$D_IN;
+  wire lookupId_ff_lhead$EN;
+
+  // register lookupId_ff_ltail
+  reg [1 : 0] lookupId_ff_ltail;
+  wire [1 : 0] lookupId_ff_ltail$D_IN;
+  wire lookupId_ff_ltail$EN;
+
+  // register lookupRsp_fifos_0_lhead
+  reg [2 : 0] lookupRsp_fifos_0_lhead;
+  wire [2 : 0] lookupRsp_fifos_0_lhead$D_IN;
+  wire lookupRsp_fifos_0_lhead$EN;
+
+  // register lookupRsp_fifos_0_ltail
+  reg [2 : 0] lookupRsp_fifos_0_ltail;
+  wire [2 : 0] lookupRsp_fifos_0_ltail$D_IN;
+  wire lookupRsp_fifos_0_ltail$EN;
+
+  // register lookupRsp_fifos_1_lhead
+  reg [2 : 0] lookupRsp_fifos_1_lhead;
+  wire [2 : 0] lookupRsp_fifos_1_lhead$D_IN;
+  wire lookupRsp_fifos_1_lhead$EN;
+
+  // register lookupRsp_fifos_1_ltail
+  reg [2 : 0] lookupRsp_fifos_1_ltail;
+  wire [2 : 0] lookupRsp_fifos_1_ltail$D_IN;
+  wire lookupRsp_fifos_1_ltail$EN;
+
+  // register lookupRsp_fifos_2_lhead
+  reg [2 : 0] lookupRsp_fifos_2_lhead;
+  wire [2 : 0] lookupRsp_fifos_2_lhead$D_IN;
+  wire lookupRsp_fifos_2_lhead$EN;
+
+  // register lookupRsp_fifos_2_ltail
+  reg [2 : 0] lookupRsp_fifos_2_ltail;
+  wire [2 : 0] lookupRsp_fifos_2_ltail$D_IN;
+  wire lookupRsp_fifos_2_ltail$EN;
+
+  // register lookupRsp_fifos_3_lhead
+  reg [2 : 0] lookupRsp_fifos_3_lhead;
+  wire [2 : 0] lookupRsp_fifos_3_lhead$D_IN;
+  wire lookupRsp_fifos_3_lhead$EN;
+
+  // register lookupRsp_fifos_3_ltail
+  reg [2 : 0] lookupRsp_fifos_3_ltail;
+  wire [2 : 0] lookupRsp_fifos_3_ltail$D_IN;
+  wire lookupRsp_fifos_3_ltail$EN;
+
+  // register mReqBurst_lhead
+  reg [2 : 0] mReqBurst_lhead;
+  wire [2 : 0] mReqBurst_lhead$D_IN;
+  wire mReqBurst_lhead$EN;
+
+  // register mReqBurst_ltail
+  reg [2 : 0] mReqBurst_ltail;
+  wire [2 : 0] mReqBurst_ltail$D_IN;
+  wire mReqBurst_ltail$EN;
+
+  // register mReqs_lhead
+  reg [4 : 0] mReqs_lhead;
+  wire [4 : 0] mReqs_lhead$D_IN;
+  wire mReqs_lhead$EN;
+
+  // register mReqs_ltail
+  reg [4 : 0] mReqs_ltail;
+  wire [4 : 0] mReqs_ltail$D_IN;
+  wire mReqs_ltail$EN;
 
   // register mRsps_ff_lhead
   reg [5 : 0] mRsps_ff_lhead;
@@ -217,6 +282,11 @@ module mkTagController(CLK,
   reg [5 : 0] mRsps_ff_ltail;
   wire [5 : 0] mRsps_ff_ltail$D_IN;
   wire mRsps_ff_ltail$EN;
+
+  // register memoryResponseFrame
+  reg [2 : 0] memoryResponseFrame;
+  wire [2 : 0] memoryResponseFrame$D_IN;
+  wire memoryResponseFrame$EN;
 
   // register tagLookup_currentDepth
   reg [1 : 0] tagLookup_currentDepth;
@@ -267,8 +337,9 @@ module mkTagController(CLK,
   wire tagLookup_oldTags_1$EN;
 
   // register tagLookup_pendingCapEnable
-  reg tagLookup_pendingCapEnable;
-  wire tagLookup_pendingCapEnable$D_IN, tagLookup_pendingCapEnable$EN;
+  reg [3 : 0] tagLookup_pendingCapEnable;
+  wire [3 : 0] tagLookup_pendingCapEnable$D_IN;
+  wire tagLookup_pendingCapEnable$EN;
 
   // register tagLookup_pendingCapNumber
   reg [35 : 0] tagLookup_pendingCapNumber;
@@ -276,8 +347,9 @@ module mkTagController(CLK,
   wire tagLookup_pendingCapNumber$EN;
 
   // register tagLookup_pendingTags
-  reg tagLookup_pendingTags;
-  wire tagLookup_pendingTags$D_IN, tagLookup_pendingTags$EN;
+  reg [3 : 0] tagLookup_pendingTags;
+  wire [3 : 0] tagLookup_pendingTags$D_IN;
+  wire tagLookup_pendingTags$EN;
 
   // register tagLookup_readReqs_ff_dataReg
   reg tagLookup_readReqs_ff_dataReg;
@@ -286,11 +358,6 @@ module mkTagController(CLK,
   // register tagLookup_readReqs_ff_full
   reg tagLookup_readReqs_ff_full;
   wire tagLookup_readReqs_ff_full$D_IN, tagLookup_readReqs_ff_full$EN;
-
-  // register tagLookup_reqeustId
-  reg [5 : 0] tagLookup_reqeustId;
-  wire [5 : 0] tagLookup_reqeustId$D_IN;
-  wire tagLookup_reqeustId$EN;
 
   // register tagLookup_state
   reg [2 : 0] tagLookup_state;
@@ -598,16 +665,110 @@ module mkTagController(CLK,
   wire [2 : 0] tagOnlyReads_ltail$D_IN;
   wire tagOnlyReads_ltail$EN;
 
-  // ports of submodule mReqs_ff_rf
-  reg [140 : 0] mReqs_ff_rf$D_IN;
-  wire [140 : 0] mReqs_ff_rf$D_OUT_1;
-  wire mReqs_ff_rf$ADDR_1,
-       mReqs_ff_rf$ADDR_2,
-       mReqs_ff_rf$ADDR_3,
-       mReqs_ff_rf$ADDR_4,
-       mReqs_ff_rf$ADDR_5,
-       mReqs_ff_rf$ADDR_IN,
-       mReqs_ff_rf$WE;
+  // register tagWrite
+  reg [7 : 0] tagWrite;
+  wire [7 : 0] tagWrite$D_IN;
+  wire tagWrite$EN;
+
+  // ports of submodule addrFrame_fifos_0_rf
+  wire [14 : 0] addrFrame_fifos_0_rf$D_IN, addrFrame_fifos_0_rf$D_OUT_1;
+  wire [1 : 0] addrFrame_fifos_0_rf$ADDR_1,
+	       addrFrame_fifos_0_rf$ADDR_2,
+	       addrFrame_fifos_0_rf$ADDR_3,
+	       addrFrame_fifos_0_rf$ADDR_4,
+	       addrFrame_fifos_0_rf$ADDR_5,
+	       addrFrame_fifos_0_rf$ADDR_IN;
+  wire addrFrame_fifos_0_rf$WE;
+
+  // ports of submodule addrFrame_fifos_1_rf
+  wire [14 : 0] addrFrame_fifos_1_rf$D_IN, addrFrame_fifos_1_rf$D_OUT_1;
+  wire [1 : 0] addrFrame_fifos_1_rf$ADDR_1,
+	       addrFrame_fifos_1_rf$ADDR_2,
+	       addrFrame_fifos_1_rf$ADDR_3,
+	       addrFrame_fifos_1_rf$ADDR_4,
+	       addrFrame_fifos_1_rf$ADDR_5,
+	       addrFrame_fifos_1_rf$ADDR_IN;
+  wire addrFrame_fifos_1_rf$WE;
+
+  // ports of submodule addrFrame_fifos_2_rf
+  wire [14 : 0] addrFrame_fifos_2_rf$D_IN, addrFrame_fifos_2_rf$D_OUT_1;
+  wire [1 : 0] addrFrame_fifos_2_rf$ADDR_1,
+	       addrFrame_fifos_2_rf$ADDR_2,
+	       addrFrame_fifos_2_rf$ADDR_3,
+	       addrFrame_fifos_2_rf$ADDR_4,
+	       addrFrame_fifos_2_rf$ADDR_5,
+	       addrFrame_fifos_2_rf$ADDR_IN;
+  wire addrFrame_fifos_2_rf$WE;
+
+  // ports of submodule addrFrame_fifos_3_rf
+  wire [14 : 0] addrFrame_fifos_3_rf$D_IN, addrFrame_fifos_3_rf$D_OUT_1;
+  wire [1 : 0] addrFrame_fifos_3_rf$ADDR_1,
+	       addrFrame_fifos_3_rf$ADDR_2,
+	       addrFrame_fifos_3_rf$ADDR_3,
+	       addrFrame_fifos_3_rf$ADDR_4,
+	       addrFrame_fifos_3_rf$ADDR_5,
+	       addrFrame_fifos_3_rf$ADDR_IN;
+  wire addrFrame_fifos_3_rf$WE;
+
+  // ports of submodule lookupId_ff_rf
+  wire [5 : 0] lookupId_ff_rf$D_IN, lookupId_ff_rf$D_OUT_1;
+  wire lookupId_ff_rf$ADDR_1,
+       lookupId_ff_rf$ADDR_2,
+       lookupId_ff_rf$ADDR_3,
+       lookupId_ff_rf$ADDR_4,
+       lookupId_ff_rf$ADDR_5,
+       lookupId_ff_rf$ADDR_IN,
+       lookupId_ff_rf$WE;
+
+  // ports of submodule lookupRsp_fifos_0_rf
+  wire [10 : 0] lookupRsp_fifos_0_rf$D_IN, lookupRsp_fifos_0_rf$D_OUT_1;
+  wire [1 : 0] lookupRsp_fifos_0_rf$ADDR_1,
+	       lookupRsp_fifos_0_rf$ADDR_2,
+	       lookupRsp_fifos_0_rf$ADDR_3,
+	       lookupRsp_fifos_0_rf$ADDR_4,
+	       lookupRsp_fifos_0_rf$ADDR_5,
+	       lookupRsp_fifos_0_rf$ADDR_IN;
+  wire lookupRsp_fifos_0_rf$WE;
+
+  // ports of submodule lookupRsp_fifos_1_rf
+  wire [10 : 0] lookupRsp_fifos_1_rf$D_IN, lookupRsp_fifos_1_rf$D_OUT_1;
+  wire [1 : 0] lookupRsp_fifos_1_rf$ADDR_1,
+	       lookupRsp_fifos_1_rf$ADDR_2,
+	       lookupRsp_fifos_1_rf$ADDR_3,
+	       lookupRsp_fifos_1_rf$ADDR_4,
+	       lookupRsp_fifos_1_rf$ADDR_5,
+	       lookupRsp_fifos_1_rf$ADDR_IN;
+  wire lookupRsp_fifos_1_rf$WE;
+
+  // ports of submodule lookupRsp_fifos_2_rf
+  wire [10 : 0] lookupRsp_fifos_2_rf$D_IN, lookupRsp_fifos_2_rf$D_OUT_1;
+  wire [1 : 0] lookupRsp_fifos_2_rf$ADDR_1,
+	       lookupRsp_fifos_2_rf$ADDR_2,
+	       lookupRsp_fifos_2_rf$ADDR_3,
+	       lookupRsp_fifos_2_rf$ADDR_4,
+	       lookupRsp_fifos_2_rf$ADDR_5,
+	       lookupRsp_fifos_2_rf$ADDR_IN;
+  wire lookupRsp_fifos_2_rf$WE;
+
+  // ports of submodule lookupRsp_fifos_3_rf
+  wire [10 : 0] lookupRsp_fifos_3_rf$D_IN, lookupRsp_fifos_3_rf$D_OUT_1;
+  wire [1 : 0] lookupRsp_fifos_3_rf$ADDR_1,
+	       lookupRsp_fifos_3_rf$ADDR_2,
+	       lookupRsp_fifos_3_rf$ADDR_3,
+	       lookupRsp_fifos_3_rf$ADDR_4,
+	       lookupRsp_fifos_3_rf$ADDR_5,
+	       lookupRsp_fifos_3_rf$ADDR_IN;
+  wire lookupRsp_fifos_3_rf$WE;
+
+  // ports of submodule mReqs_rf
+  wire [140 : 0] mReqs_rf$D_IN, mReqs_rf$D_OUT_1;
+  wire [3 : 0] mReqs_rf$ADDR_1,
+	       mReqs_rf$ADDR_2,
+	       mReqs_rf$ADDR_3,
+	       mReqs_rf$ADDR_4,
+	       mReqs_rf$ADDR_5,
+	       mReqs_rf$ADDR_IN;
+  wire mReqs_rf$WE;
 
   // ports of submodule mRsps_ff_rf
   wire [76 : 0] mRsps_ff_rf$D_IN, mRsps_ff_rf$D_OUT_1;
@@ -789,15 +950,21 @@ module mkTagController(CLK,
   wire tagOnlyReads_rf$WE;
 
   // rule scheduling signals
-  wire CAN_FIRE_RL_addrFrame_updateBag,
-       CAN_FIRE_RL_forwardLookupReqs,
+  wire CAN_FIRE_RL_addrFrame_fifos_0_doDisplayPanic,
+       CAN_FIRE_RL_addrFrame_fifos_1_doDisplayPanic,
+       CAN_FIRE_RL_addrFrame_fifos_2_doDisplayPanic,
+       CAN_FIRE_RL_addrFrame_fifos_3_doDisplayPanic,
        CAN_FIRE_RL_getTagLookupResponse,
-       CAN_FIRE_RL_lookupRsp_updateBag,
-       CAN_FIRE_RL_mReqs_ff_doDisplayPanic,
+       CAN_FIRE_RL_lookupId_ff_doDisplayPanic,
+       CAN_FIRE_RL_lookupRsp_fifos_0_doDisplayPanic,
+       CAN_FIRE_RL_lookupRsp_fifos_1_doDisplayPanic,
+       CAN_FIRE_RL_lookupRsp_fifos_2_doDisplayPanic,
+       CAN_FIRE_RL_lookupRsp_fifos_3_doDisplayPanic,
+       CAN_FIRE_RL_mReqBurst_doDisplayPanic,
+       CAN_FIRE_RL_mReqs_doDisplayPanic,
        CAN_FIRE_RL_mRsps_displayDeqPanic,
        CAN_FIRE_RL_mRsps_displayEnqPanic,
        CAN_FIRE_RL_mRsps_ff_doDisplayPanic,
-       CAN_FIRE_RL_sendSecondHalfWrite,
        CAN_FIRE_RL_tagLookup_doLookup,
        CAN_FIRE_RL_tagLookup_drainMemRsp,
        CAN_FIRE_RL_tagLookup_feedTagCache,
@@ -851,15 +1018,21 @@ module mkTagController(CLK,
        CAN_FIRE_cache_response_get,
        CAN_FIRE_memory_request_get,
        CAN_FIRE_memory_response_put,
-       WILL_FIRE_RL_addrFrame_updateBag,
-       WILL_FIRE_RL_forwardLookupReqs,
+       WILL_FIRE_RL_addrFrame_fifos_0_doDisplayPanic,
+       WILL_FIRE_RL_addrFrame_fifos_1_doDisplayPanic,
+       WILL_FIRE_RL_addrFrame_fifos_2_doDisplayPanic,
+       WILL_FIRE_RL_addrFrame_fifos_3_doDisplayPanic,
        WILL_FIRE_RL_getTagLookupResponse,
-       WILL_FIRE_RL_lookupRsp_updateBag,
-       WILL_FIRE_RL_mReqs_ff_doDisplayPanic,
+       WILL_FIRE_RL_lookupId_ff_doDisplayPanic,
+       WILL_FIRE_RL_lookupRsp_fifos_0_doDisplayPanic,
+       WILL_FIRE_RL_lookupRsp_fifos_1_doDisplayPanic,
+       WILL_FIRE_RL_lookupRsp_fifos_2_doDisplayPanic,
+       WILL_FIRE_RL_lookupRsp_fifos_3_doDisplayPanic,
+       WILL_FIRE_RL_mReqBurst_doDisplayPanic,
+       WILL_FIRE_RL_mReqs_doDisplayPanic,
        WILL_FIRE_RL_mRsps_displayDeqPanic,
        WILL_FIRE_RL_mRsps_displayEnqPanic,
        WILL_FIRE_RL_mRsps_ff_doDisplayPanic,
-       WILL_FIRE_RL_sendSecondHalfWrite,
        WILL_FIRE_RL_tagLookup_doLookup,
        WILL_FIRE_RL_tagLookup_drainMemRsp,
        WILL_FIRE_RL_tagLookup_feedTagCache,
@@ -916,107 +1089,93 @@ module mkTagController(CLK,
 
   // inputs to muxes for submodule ports
   reg [7 : 0] MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1;
-  reg [2 : 0] MUX_tagLookup_state$write_1__VAL_3;
-  wire [141 : 0] MUX_halfWrite$write_1__VAL_1, MUX_halfWrite$write_1__VAL_2;
-  wire [140 : 0] MUX_mReqs_ff_rf$upd_2__VAL_1,
-		 MUX_mReqs_ff_rf$upd_2__VAL_2,
-		 MUX_mReqs_ff_rf$upd_2__VAL_3,
-		 MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_1,
+  wire [140 : 0] MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_1,
 		 MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_2,
 		 MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_3;
   wire [40 : 0] MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_3__VAL_1;
   wire [7 : 0] MUX_tagLookup_tagCache_writeResps_ff_rf$upd_2__VAL_1;
   wire [4 : 0] MUX_tagLookup_transNum$write_1__VAL_1;
   wire [2 : 0] MUX_tagLookup_state$write_1__VAL_2,
+	       MUX_tagLookup_state$write_1__VAL_3,
 	       MUX_tagLookup_useNextRsp_ff_lhead$write_1__VAL_1;
-  wire [1 : 0] MUX_mReqs_ff_lhead$write_1__VAL_1,
-	       MUX_tagLookup_currentDepth$write_1__VAL_1,
-	       MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_2;
-  wire MUX_halfWrite$write_1__SEL_1,
-       MUX_mReqs_ff_lhead$write_1__SEL_1,
-       MUX_tagLookup_currentDepth$write_1__SEL_1,
+  wire [1 : 0] MUX_tagLookup_currentDepth$write_1__VAL_1,
+	       MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_1;
+  wire MUX_tagLookup_currentDepth$write_1__SEL_1,
        MUX_tagLookup_currentDepth$write_1__SEL_2,
        MUX_tagLookup_state$write_1__SEL_1,
        MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_1,
        MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_2,
-       MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_1,
+       MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_2,
        MUX_tagLookup_tagCache_missedResp$wset_1__SEL_1,
        MUX_tagLookup_tagCache_missedResp$wset_1__VAL_1,
        MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_1__SEL_1,
-       MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1,
+       MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1,
        MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__SEL_1,
        MUX_tagLookup_useNextRsp_ff_rf$upd_2__VAL_2;
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [63 : 0] v__h87524;
-  reg [63 : 0] v__h90844;
-  reg [63 : 0] v__h93101;
-  reg [63 : 0] v__h94581;
-  reg [63 : 0] v__h95972;
-  reg [63 : 0] v__h97473;
-  reg [63 : 0] v__h99939;
+  reg [63 : 0] v__h87493;
+  reg [63 : 0] v__h90815;
+  reg [63 : 0] v__h93075;
+  reg [63 : 0] v__h94556;
+  reg [63 : 0] v__h95948;
+  reg [63 : 0] v__h97450;
+  reg [63 : 0] v__h99917;
   // synopsys translate_on
 
   // remaining internal signals
-  reg [93 : 0] IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6508;
-  reg [63 : 0] CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q16,
-	       cacheResp_data_data__h284963;
+  reg [93 : 0] IF_cache_request_put_val_BITS_93_TO_92_035_EQ__ETC___d6090;
+  reg [63 : 0] CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19,
+	       cacheResp_data_data__h284943;
   reg [36 : 0] CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12,
-	       CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q14;
-  reg [31 : 0] CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q3,
-	       CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q2,
-	       CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q13;
-  reg [26 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q34,
-	       x_addr_tag__h102719;
-  reg [12 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24;
-  reg [7 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4490,
-	      x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278781;
-  reg [5 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27,
-	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29,
-	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q22,
-	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q33;
-  reg [4 : 0] x__h284334;
-  reg [3 : 0] CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q41,
-	      IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4642;
-  reg [2 : 0] CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q38,
-	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26;
-  reg [1 : 0] CASE_halfWrite_BITS_93_TO_92_0_halfWrite_BITS__ETC__q17,
-	      CASE_mReqs_ff_rfD_OUT_1_BITS_93_TO_92_0_mReqs_ETC__q1,
-	      CASE_tagLookup_mReqs_ff_rfD_OUT_1_BITS_93_TO__ETC__q18,
-	      CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q19,
-	      CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q36,
-	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32;
-  reg CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42,
-      CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43,
-      CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44,
-      CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45,
-      CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q15,
-      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q21,
-      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q23,
-      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28,
-      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30,
+	       CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q13;
+  reg [31 : 0] CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2,
+	       CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q1,
+	       CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11;
+  reg [26 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35,
+	       x_addr_tag__h102698;
+  reg [12 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25;
+  reg [7 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4491,
+	      x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278761;
+  reg [5 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28,
+	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30,
+	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q23,
+	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q34;
+  reg [4 : 0] x__h284314;
+  reg [3 : 0] CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q42,
+	      IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643;
+  reg [2 : 0] CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q39,
+	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27;
+  reg [1 : 0] CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q20,
+	      CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q37,
+	      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q33,
+	      SEL_ARR_addrFrame_fifos_0_rf_sub_addrFrame_fif_ETC___d6619;
+  reg CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43,
+      CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44,
+      CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45,
+      CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46,
+      CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q18,
+      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q22,
+      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24,
+      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29,
       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31,
-      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35,
-      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q46,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q10,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q11,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q5,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q6,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q7,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q8,
-      CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q9,
-      SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504,
-      SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319,
-      SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325,
-      SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331,
-      SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334,
-      SEL_ARR_IF_lookupRsp_bag_741_BIT_71_796_AND_lo_ETC___d6745,
-      SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046,
-      SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052,
-      SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058,
-      SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061,
+      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32,
+      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q36,
+      CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q47,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q10,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q4,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q5,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q6,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q7,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q8,
+      CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q9,
+      CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14,
+      CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15,
+      CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16,
+      CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17,
+      SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506,
       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2226,
       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2232,
       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2238,
@@ -1052,70 +1211,74 @@ module mkTagController(CLK,
       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488,
       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496,
       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080,
-      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081,
+      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539,
       SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455,
-      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540,
-      SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6305,
-      SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6346,
-      SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6036,
-      SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6073,
+      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541,
+      SEL_ARR_NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_ETC___d6636,
       SEL_ARR_NOT_tagLookup_tagCache_orderer_mastLin_ETC___d2200,
       SEL_ARR_NOT_tagLookup_tagCache_orderer_mastLin_ETC___d2337,
       SEL_ARR_NOT_tagLookup_tagCache_orderer_mastReq_ETC___d1029,
       SEL_ARR_NOT_tagLookup_tagCache_orderer_mastReq_ETC___d1166,
       SEL_ARR_NOT_tagLookup_tagCache_req_commits_rf__ETC___d3395,
       SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d3614,
-      SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4542,
-      SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6300,
-      SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6344,
-      SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6031,
-      SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6071,
+      SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4543,
+      SEL_ARR_SEL_ARR_lookupRsp_fifos_0_rf_sub_looku_ETC___d6630,
+      SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6526,
+      SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6532,
+      SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6538,
+      SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6545,
+      SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6551,
+      SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6581,
       SEL_ARR_tagLookup_tagCache_orderer_mastLines_r_ETC___d2195,
       SEL_ARR_tagLookup_tagCache_orderer_mastLines_r_ETC___d2335,
       SEL_ARR_tagLookup_tagCache_orderer_mastReqs_re_ETC___d1024,
       SEL_ARR_tagLookup_tagCache_orderer_mastReqs_re_ETC___d1164,
-      x__h121270,
-      x__h284312;
+      x__h121250,
+      x__h284292;
   wire [140 : 0] IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3048;
-  wire [99 : 0] IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3047;
+  wire [99 : 0] IF_mReqBurst_lhead_read__991_MINUS_mReqBurst_l_ETC___d6789,
+		IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3047,
+		tagLookup_transNum_220_CONCAT_IF_cache_request_ETC___d6376;
   wire [93 : 0] IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d3752,
+		IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6372,
+		IF_IF_mReqBurst_lhead_read__991_MINUS_mReqBurs_ETC___d6787,
+		IF_IF_mReqBurst_lhead_read__991_MINUS_mReqBurs_ETC___d6788,
 		IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d3045,
 		IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d3046,
-		IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6564,
-		IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5700,
+		IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5752,
 		IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d3753,
 		_0_CONCAT_DONTCARE_CONCAT_IF_tagLookup_tagCache_ETC___d3035,
 		_1_CONCAT_IF_tagLookup_tagCache_newReq_whas__78_ETC___d3040,
 		_2_CONCAT_DONTCARE_CONCAT_IF_tagLookup_tagCache_ETC___d3044;
   wire [79 : 0] IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3130;
-  wire [64 : 0] IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6757,
-		IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5036;
-  wire [63 : 0] IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5696,
-		IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5695,
-		_theResult___snd_snd_fst_data_data__h341153,
-		_theResult___snd_snd_fst_data_data__h341155,
-		data_data__h307592,
-		maskedWrite_data__h117935,
-		tagLookup_tagCache_respswget_BITS_219_TO_156__q37,
-		wdata_data__h307590,
-		wdata_data__h307594,
-		wdata_data__h307596,
-		wdata_data__h339636,
-		x1_avValue_data__h86312,
-		x1_avValue_data__h86371;
+  wire [64 : 0] IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6641,
+		IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5037;
+  wire [63 : 0] IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5748,
+		IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5747,
+		_theResult___snd_snd_fst_data_data__h338372,
+		_theResult___snd_snd_fst_data_data__h338374,
+		data_data__h308923,
+		maskedWrite_data__h117915,
+		tagLookup_tagCache_respswget_BITS_219_TO_156__q38,
+		wdata_data__h308921,
+		wdata_data__h308925,
+		wdata_data__h308927,
+		wdata_data__h332659,
+		x1_avValue_data__h86280,
+		x1_avValue_data__h86339;
   wire [58 : 0] IF_NOT_tagLookup_tagCache_orderer_mastReqs_rem_ETC___d492,
 		IF_NOT_tagLookup_tagCache_orderer_mastReqs_rem_ETC___d516,
 		IF_NOT_tagLookup_tagCache_orderer_mastReqs_rem_ETC___d540,
@@ -1147,10 +1310,10 @@ module mkTagController(CLK,
 		IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d957,
 		IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d961,
 		IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d964;
-  wire [57 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4944;
+  wire [57 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4945;
   wire [51 : 0] tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3769;
-  wire [50 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4943;
-  wire [43 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4942;
+  wire [50 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4944;
+  wire [43 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4943;
   wire [41 : 0] IF_NOT_tagLookup_tagCache_orderer_mastLines_re_ETC___d1663,
 		IF_NOT_tagLookup_tagCache_orderer_mastLines_re_ETC___d1687,
 		IF_NOT_tagLookup_tagCache_orderer_mastLines_re_ETC___d1711,
@@ -1183,29 +1346,26 @@ module mkTagController(CLK,
 		IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2132,
 		IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2135;
   wire [40 : 0] IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d3127;
-  wire [39 : 0] IF_NOT_tagLookup_currentDepth_338_EQ_0_339_363_ETC___d5495,
+  wire [39 : 0] IF_NOT_tagLookup_currentDepth_339_EQ_0_340_364_ETC___d5496,
 		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3689,
-		IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5498,
-		IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5497,
-		IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5496,
+		IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5499,
+		IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5498,
+		IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5497,
 		IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3054,
 		IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d3055,
-		_0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537,
-		_0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493,
-		_0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354,
-		_0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490,
-		cache_request_put_val_BITS_140_TO_101_471_MINU_ETC___d6525,
-		tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20;
-  wire [36 : 0] x1_avValue_snd_addr_lineNumber__h114872,
-		x__h117046,
-		x_lineNumber__h292966,
-		y_avValue_snd_addr_lineNumber__h114870;
-  wire [35 : 0] lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5912,
-		x__h303702,
-		x__h303813;
-  wire [31 : 0] IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292,
-		IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023,
-		IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2175,
+		_0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314,
+		_0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494,
+		_0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355,
+		_0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491,
+		cache_request_put_val_BITS_140_TO_107_272_CONC_ETC___d6289,
+		tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21;
+  wire [36 : 0] tagReq_addr_lineNumber__h329799,
+		x1_avValue_snd_addr_lineNumber__h114851,
+		x__h117026,
+		x_lineNumber__h293649,
+		y_avValue_snd_addr_lineNumber__h114849;
+  wire [35 : 0] x__h304465, x__h304576;
+  wire [31 : 0] IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2175,
 		IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2177,
 		IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2179,
 		IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2181,
@@ -1219,162 +1379,149 @@ module mkTagController(CLK,
 		IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1012,
 		IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1014,
 		IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016;
-  wire [26 : 0] IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4296,
-		IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4302,
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4265,
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4267,
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4783,
-		IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4286,
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4295,
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4301,
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4786,
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4293,
-		IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4304,
-		IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4283,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4284,
+  wire [26 : 0] IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4297,
+		IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4303,
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4266,
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4268,
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4784,
+		IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4287,
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4296,
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4302,
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4787,
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4294,
+		IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4305,
+		IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4284,
 		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4285,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4294,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4306,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4785,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4788,
-		IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4299,
-		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4263,
-		_theResult_____1_tag__h121549,
-		x1_avValue_snd_addr_tag__h74940,
-		x1_avValue_snd_writebackTag_tag__h81267,
-		x1_avValue_tag__h84377,
-		x1_avValue_tag__h84437,
-		y_avValue_snd_snd_fst_newTag_tag__h121563;
-  wire [17 : 0] IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5962;
-  wire [16 : 0] IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5911,
-		IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6008;
-  wire [15 : 0] IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6218,
-		IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6242,
-		IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6261,
-		IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6266,
-		IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6269,
-		IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6273,
-		IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6276;
-  wire [14 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5078;
-  wire [13 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4811;
-  wire [12 : 0] IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4800,
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801,
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4805,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4804,
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4807,
-		IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4286,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4295,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4307,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4786,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4789,
+		IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4300,
+		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4264,
+		_theResult_____1_tag__h121529,
+		x1_avValue_snd_addr_tag__h74908,
+		x1_avValue_snd_writebackTag_tag__h81235,
+		x1_avValue_tag__h84345,
+		x1_avValue_tag__h84405,
+		y_avValue_snd_snd_fst_newTag_tag__h121543;
+  wire [14 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5079;
+  wire [13 : 0] IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4812;
+  wire [12 : 0] IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801,
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4802,
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4806,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4805,
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4808,
+		IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4644,
 		NOT_tagLookup_tagCache_orderer_slaveDeps_remov_ETC___d264;
-  wire [10 : 0] IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3767,
-		IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5961;
-  wire [9 : 0] IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3980,
+  wire [10 : 0] IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3767;
+  wire [9 : 0] IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3981,
 	       IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d2892,
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3979,
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3980,
 	       IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d2893,
-	       memReqFifoSpace__h2402;
+	       memReqFifoSpace__h2368;
   wire [8 : 0] IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d3739,
 	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3740;
-  wire [7 : 0] IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4384,
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4385,
-	       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4486,
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4484,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4482,
-	       IF_tagLookup_currentDepth_338_EQ_1_466_THEN_0__ETC___d5647,
-	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4387,
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5665,
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5664,
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5681,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4481,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4483,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4487,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5077,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_217_18_ETC___d4187,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_218_17_ETC___d4180,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_219_16_ETC___d4172,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_220_15_ETC___d4165,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_221_15_ETC___d4157,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_222_14_ETC___d4150,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_223_13_ETC___d4142,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_224_12_ETC___d4135,
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4386,
-	       _1_SL_tagLookup_pendingCapNumber_343_BITS_2_TO__ETC___d5670,
-	       _theResult_____1_fst__h307204,
-	       _theResult_____1_fst__h307355,
-	       _theResult_____3_snd_snd_snd_snd_snd_d_key__h278741,
-	       bitEnable__h303971,
-	       bitEnable__h303983,
-	       bitEnable__h303991,
-	       wbitE__h303268,
-	       x1_avValue_snd_addr_key__h74941,
-	       x1_avValue_snd_fst_key__h121150,
-	       x1_avValue_snd_snd_snd_d_key__h278378,
-	       x1_avValue_snd_snd_snd_snd_d_key__h278634,
-	       x1_avValue_snd_snd_snd_snd_snd_d_key__h278770,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278643,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278652,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_dataKey_key__h98515,
-	       x__h118911,
-	       x__h119244,
-	       x__h119383,
-	       x__h119522,
-	       x__h119661,
-	       x__h119800,
-	       x__h119939,
-	       x__h120078,
-	       x__h306916,
-	       x__h307115,
-	       x__h308248,
-	       x__h333963,
-	       x__h339486,
-	       x__h339699,
-	       x__h72110,
-	       y__h118912,
-	       y__h119137,
-	       y__h119245,
-	       y__h119384,
-	       y__h119523,
-	       y__h119662,
-	       y__h119801,
-	       y__h119940,
-	       y__h120079,
-	       y__h307070,
-	       y_avValue_snd_fst_key__h121125;
+  wire [7 : 0] IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4385,
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4386,
+	       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4487,
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4485,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4483,
+	       IF_tagLookup_currentDepth_339_EQ_1_467_THEN_0__ETC___d5649,
+	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4388,
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5667,
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5666,
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5717,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4482,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4484,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4488,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5078,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_217_18_ETC___d4188,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_218_17_ETC___d4181,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_219_16_ETC___d4173,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_220_16_ETC___d4166,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_221_15_ETC___d4158,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_222_14_ETC___d4151,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_223_13_ETC___d4143,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_224_12_ETC___d4136,
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4387,
+	       _1_SL_tagLookup_pendingCapNumber_344_BITS_2_TO__ETC___d5679,
+	       _theResult_____1_fst__h308319,
+	       _theResult_____1_fst__h308686,
+	       _theResult_____3_snd_snd_snd_snd_snd_d_key__h278721,
+	       bitEnable__h304734,
+	       bitEnable__h304746,
+	       bitEnable__h304754,
+	       w__h307739,
+	       w__h307900,
+	       w__h307963,
+	       w__h308425,
+	       w__h308464,
+	       w__h308503,
+	       w__h310014,
+	       w__h310165,
+	       w__h310220,
+	       wbitE__h304031,
+	       x1_avValue_snd_addr_key__h74909,
+	       x1_avValue_snd_fst_key__h121130,
+	       x1_avValue_snd_snd_snd_d_key__h278358,
+	       x1_avValue_snd_snd_snd_snd_d_key__h278614,
+	       x1_avValue_snd_snd_snd_snd_snd_d_key__h278750,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278623,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278632,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_dataKey_key__h98493,
+	       x__h118891,
+	       x__h119224,
+	       x__h119363,
+	       x__h119502,
+	       x__h119641,
+	       x__h119780,
+	       x__h119919,
+	       x__h120058,
+	       x__h307679,
+	       x__h308230,
+	       x__h308429,
+	       x__h308468,
+	       x__h308507,
+	       x__h310012,
+	       x__h325129,
+	       x__h332509,
+	       x__h332722,
+	       x__h72077,
+	       y__h118892,
+	       y__h119117,
+	       y__h119225,
+	       y__h119364,
+	       y__h119503,
+	       y__h119642,
+	       y__h119781,
+	       y__h119920,
+	       y__h120059,
+	       y__h308110,
+	       y__h308626,
+	       y__h308651,
+	       y__h308676,
+	       y_avValue_snd_fst_key__h121105;
   wire [5 : 0] IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d3737,
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4687,
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4769,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5882,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5891,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5933,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5942,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5979,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5988,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5043,
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4688,
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4770,
 	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5044,
-	       IF_NOT_tagOnlyReads_lhead_read__435_MINUS_tagO_ETC___d6773,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5808,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5809,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5827,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5828,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5883,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5892,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5934,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5943,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5980,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5989,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4686,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4689,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4768,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4771,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5045,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4687,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4690,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4769,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4772,
 	       IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3349,
 	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2829,
 	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2873,
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5042,
-	       i__h301908,
-	       idx__h296158,
-	       level__h326233,
-	       x__h308226,
-	       x__h308367,
-	       x__h308606,
-	       x__h339837;
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5043,
+	       i__h302671,
+	       idx__h296842,
+	       level__h316619,
+	       x__h309990,
+	       x__h310431,
+	       x__h310670,
+	       x__h333100;
   wire [4 : 0] IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2639,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2643,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2648,
@@ -1391,26 +1538,26 @@ module mkTagController(CLK,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2697,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2702,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2706,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4718,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5910,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6007,
-	       _theResult___snd_snd_fst_transactionID__h340915,
-	       newHead___1__h49393,
-	       newHead___1__h49406,
-	       newHead__h48715,
-	       x1_avValue_snd_snd_snd_snd_d_inId_transactionID__h278680,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278682,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278684,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_transactionID__h98350,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_transactionID__h278688,
-	       x__h340927,
-	       x__h78978,
-	       x_mastReqsSpaces__h53161,
-	       x_port1__read__h92293,
-	       x_remaining__h53144;
-  wire [3 : 0] IF_IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff__ETC___d6666,
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4527,
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4530,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4719,
+	       _theResult___snd_snd_fst_transactionID__h338134,
+	       level__h316126,
+	       newHead___1__h49360,
+	       newHead___1__h49373,
+	       newHead__h48682,
+	       x1_avValue_snd_snd_snd_snd_d_inId_transactionID__h278660,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278662,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278664,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_transactionID__h98328,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_transactionID__h278668,
+	       x__h338146,
+	       x__h343903,
+	       x__h78946,
+	       x_mastReqsSpaces__h53128,
+	       x_port1__read__h92267,
+	       x_remaining__h53111;
+  wire [3 : 0] IF_IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff__ETC___d6495,
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4528,
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4531,
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2317,
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2318,
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2319,
@@ -1439,97 +1586,103 @@ module mkTagController(CLK,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1157,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1158,
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1159,
-	       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4638,
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4636,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5906,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5957,
-	       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d6003,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4634,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5033,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4590,
-	       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6675,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5858,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5859,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5907,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5958,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6004,
-	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4532,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4633,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4635,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4640,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5032,
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4531,
-	       _theResult_____1__h31533,
-	       _theResult_____1__h43322,
-	       idx__h31675,
-	       idx__h31791,
-	       idx__h31907,
-	       idx__h32023,
-	       idx__h32139,
-	       idx__h32255,
-	       idx__h32371,
-	       idx__h32487,
-	       idx__h32603,
-	       idx__h32719,
-	       idx__h32835,
-	       idx__h32951,
-	       idx__h33067,
-	       idx__h33183,
-	       idx__h33299,
-	       idx__h43464,
-	       idx__h43580,
-	       idx__h43696,
-	       idx__h43812,
-	       idx__h43928,
-	       idx__h44044,
-	       idx__h44160,
-	       idx__h44276,
-	       idx__h44392,
-	       idx__h44508,
-	       idx__h44624,
-	       idx__h44740,
-	       idx__h44856,
-	       idx__h44972,
-	       idx__h45088,
-	       level__h1011,
-	       x__h102651,
-	       x__h342707;
-  wire [2 : 0] IF_CAN_FIRE_RL_tagLookup_feedTagCache_AND_tagL_ETC__q39,
-	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4937,
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4864,
+	       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4639,
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4637,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4635,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5034,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4591,
+	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4533,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4634,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4636,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4641,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5033,
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4532,
+	       _theResult_____1__h31500,
+	       _theResult_____1__h43289,
+	       idx__h31642,
+	       idx__h31758,
+	       idx__h31874,
+	       idx__h31990,
+	       idx__h32106,
+	       idx__h32222,
+	       idx__h32338,
+	       idx__h32454,
+	       idx__h32570,
+	       idx__h32686,
+	       idx__h32802,
+	       idx__h32918,
+	       idx__h33034,
+	       idx__h33150,
+	       idx__h33266,
+	       idx__h43431,
+	       idx__h43547,
+	       idx__h43663,
+	       idx__h43779,
+	       idx__h43895,
+	       idx__h44011,
+	       idx__h44127,
+	       idx__h44243,
+	       idx__h44359,
+	       idx__h44475,
+	       idx__h44591,
+	       idx__h44707,
+	       idx__h44823,
+	       idx__h44939,
+	       idx__h45055,
+	       level__h977,
+	       x__h102630,
+	       x__h340389;
+  wire [2 : 0] IF_CAN_FIRE_RL_tagLookup_feedTagCache_AND_tagL_ETC__q40,
+	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4938,
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4865,
 	       IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d3762,
-	       IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6570,
-	       IF_NOT_tagLookup_currentDepth_338_EQ_0_339_363_ETC___d5730,
+	       IF_NOT_tagLookup_currentDepth_339_EQ_0_340_364_ETC___d5782,
 	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3763,
-	       IF_SEL_ARR_tagLookup_oldTags_0_713_tagLookup_o_ETC___d5732,
-	       IF_tagLookup_currentDepth_338_EQ_0_339_THEN_1__ETC___d5725,
-	       IF_tagLookup_currentDepth_338_EQ_0_339_THEN_IF_ETC___d5729,
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5735,
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5734,
-	       IF_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_E_ETC__q40,
-	       IF_tagLookup_tagCache_cts_BITS_229_TO_228_EQ_0_ETC__q4,
-	       level__h1912,
-	       level__h325540,
-	       nodeOffset__h304385,
-	       nodeOffset__h304821,
-	       x__h344283,
-	       y__h304732;
-  wire [1 : 0] IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6338,
-	       IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6339,
-	       IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6065,
-	       IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6066,
-	       IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d2980,
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4935,
+	       IF_SEL_ARR_tagLookup_oldTags_0_765_tagLookup_o_ETC___d5784,
+	       IF_tagLookup_currentDepth_339_EQ_0_340_THEN_1__ETC___d5777,
+	       IF_tagLookup_currentDepth_339_EQ_0_340_THEN_IF_ETC___d5781,
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5787,
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5786,
+	       IF_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_E_ETC__q41,
+	       IF_tagLookup_tagCache_cts_BITS_229_TO_228_EQ_0_ETC__q3,
+	       level__h1878,
+	       level__h311828,
+	       level__h312114,
+	       level__h312400,
+	       level__h312686,
+	       level__h313184,
+	       level__h313470,
+	       level__h313756,
+	       level__h314042,
+	       level__h314722,
+	       level__h316294,
+	       nodeOffset__h305148,
+	       nodeOffset__h305584,
+	       x__h308605,
+	       x__h308630,
+	       x__h308655,
+	       x__h319788,
+	       x__h320223,
+	       x__h320658,
+	       x__h321093,
+	       x__h327624,
+	       x__h327667,
+	       x__h327710,
+	       x__h327753,
+	       x__h343468,
+	       y__h305495;
+  wire [1 : 0] IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d2980,
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4936,
 	       IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d3019,
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4996,
-	       IF_NOT_tagLookup_tagCache_orderer_slaveReqs_ba_ETC___d5004,
-	       IF_SEL_ARR_tagLookup_oldTags_0_713_tagLookup_o_ETC___d5720,
-	       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6648,
-	       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6657,
-	       IF_tagLookup_currentDepth_338_EQ_0_339_THEN_IF_ETC___d5712,
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5722,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4934,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4994,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4997,
+	       IF_NOT_tagLookup_tagCache_orderer_slaveReqs_ba_ETC___d5005,
+	       IF_SEL_ARR_tagLookup_oldTags_0_765_tagLookup_o_ETC___d5772,
+	       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6477,
+	       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6486,
+	       IF_tagLookup_currentDepth_339_EQ_0_340_THEN_IF_ETC___d5764,
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5774,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4935,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4995,
 	       IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3020,
 	       IF_tagLookup_tagCache_newReq_whas__787_THEN_ta_ETC___d2826,
 	       IF_tagLookup_tagCache_orderer_lookupState_read_ETC___d2857,
@@ -1569,32 +1722,27 @@ module mkTagController(CLK,
 	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2855,
 	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2865,
 	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2869,
-	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5005,
+	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5006,
 	       IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d2856,
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4363,
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4511,
-	       _theResult_____1__h321004,
-	       _theResult_____1__h324635,
-	       idx__h321062,
-	       idx__h321106,
-	       idx__h321150,
-	       idx__h324693,
-	       idx__h324737,
-	       idx__h324781,
-	       level__h1462,
-	       level__h325899,
-	       level__h8615,
-	       tagLookup_currentDepth_338_MINUS_1___d5481,
-	       x__h122840,
-	       x__h135286,
-	       x__h341433;
-  wire IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6320,
-       IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6326,
-       IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6332,
-       IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6047,
-       IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6053,
-       IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6059,
-       IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2227,
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4364,
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4512,
+	       level__h1428,
+	       level__h314395,
+	       level__h8582,
+	       tagLookup_currentDepth_339_MINUS_1___d5482,
+	       x__h122820,
+	       x__h135266,
+	       x__h318041,
+	       x__h318728,
+	       x__h326448,
+	       x__h327135,
+	       x__h337988,
+	       x__h338546,
+	       x__h338753,
+	       x__h339467,
+	       x__h342476,
+	       x__h343315;
+  wire IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2227,
        IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2233,
        IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2239,
        IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2245,
@@ -1624,29 +1772,27 @@ module mkTagController(CLK,
        IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1128,
        IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1134,
        IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1140,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4849,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4851,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4853,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4855,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4857,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4859,
-       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4861,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4246,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4337,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4503,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4571,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4576,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4582,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4587,
-       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4729,
-       IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6362,
-       IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6371,
-       IF_IF_lookupRsp_bag_741_BIT_71_796_AND_lookupR_ETC___d6754,
-       IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6089,
-       IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6098,
-       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4494,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4850,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4852,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4854,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4856,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4858,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4860,
+       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4862,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4247,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4338,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4504,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4572,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4577,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4583,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4588,
+       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4730,
+       IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6360,
+       IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6362,
+       IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6364,
+       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4495,
        IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d3728,
        IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d3067,
        IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2479,
@@ -1669,213 +1815,198 @@ module mkTagController(CLK,
        IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1418,
        IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1451,
        IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1455,
-       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4339,
-       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4505,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4218,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4245,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4336,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4396,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4406,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4417,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4427,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4438,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4448,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4459,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4469,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4502,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4570,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4575,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4581,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4586,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4597,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4606,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4616,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4625,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4668,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4757,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4777,
-       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4793,
-       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5876,
-       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5896,
-       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5927,
-       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5947,
-       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5973,
-       IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5993,
-       IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4775,
+       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4340,
+       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4506,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4219,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4246,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4337,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4397,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4407,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4418,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4428,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4439,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4449,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4460,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4470,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4503,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4571,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4576,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4582,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4587,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4598,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4607,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4617,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4626,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4669,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4758,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4778,
+       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4794,
+       IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4776,
        IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568,
        IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607,
        IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640,
        IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643,
        IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3724,
        IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3749,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4105,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4115,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4233,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4334,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4394,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4398,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4404,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4408,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4415,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4419,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4425,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4429,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4436,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4440,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4446,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4450,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4457,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4461,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4467,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4471,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4500,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4595,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4599,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4604,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4608,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4614,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4618,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4623,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4627,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4715,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4723,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4727,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4959,
-       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5017,
-       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4210,
-       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4924,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4106,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4116,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4234,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4335,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4395,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4399,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4405,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4409,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4416,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4420,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4426,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4430,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4437,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4441,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4447,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4451,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4458,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4462,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4468,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4472,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4501,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4596,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4600,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4605,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4609,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4615,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4619,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4624,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4628,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4716,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4724,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4728,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4960,
+       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5018,
+       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4211,
        IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4925,
        IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4926,
        IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4927,
        IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4928,
        IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4929,
        IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4930,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6306,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6336,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6347,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6354,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6356,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6361,
-       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6366,
-       IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523,
-       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6684,
-       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6692,
-       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6700,
-       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6708,
-       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6716,
-       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6752,
-       IF_lookupRsp_bag_741_BIT_71_796_AND_lookupRsp__ETC___d6672,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5834,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5835,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5897,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5948,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5994,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6037,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6063,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6074,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6081,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6083,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6088,
-       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6093,
-       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6637,
-       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6650,
-       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6663,
-       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6765,
-       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6766,
-       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6771,
-       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971,
-       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193,
-       IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5367,
-       IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477,
-       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5366,
-       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5476,
-       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5705,
-       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5365,
-       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5475,
-       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4547,
-       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4551,
-       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4556,
-       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4560,
+       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4931,
+       IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6170,
+       IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6182,
+       IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6191,
+       IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6200,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6259,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6262,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6265,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6268,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6271,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6293,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6295,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6298,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6300,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6306,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6316,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6318,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6320,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6322,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6325,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6329,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6332,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6335,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6341,
+       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6378,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6466,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6492,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6680,
+       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6726,
+       IF_mRsps_ff_rf_sub_mRsps_ff_ltail_read__408_BI_ETC___d6639,
+       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972,
+       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194,
+       IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5368,
+       IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478,
+       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5367,
+       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5477,
+       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5757,
+       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5366,
+       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5476,
+       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4548,
+       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4552,
+       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4557,
+       IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4561,
        IF_tagLookup_tagCache_cts_read__795_BITS_143_T_ETC___d3628,
-       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4544,
+       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4545,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3604,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3637,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3639,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4102,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4104,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4112,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4217,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4230,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4238,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4241,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4243,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4322,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4335,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4391,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4393,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4395,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4401,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4403,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4405,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4412,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4414,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4416,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4422,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4424,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4426,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4433,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4435,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4437,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4443,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4445,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4447,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4454,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4456,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4458,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4464,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4466,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4468,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4497,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4103,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4105,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4113,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4218,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4231,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4239,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4242,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4244,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4323,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4336,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4392,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4394,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4396,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4402,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4404,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4406,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4413,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4415,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4417,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4423,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4425,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4427,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4434,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4436,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4438,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4444,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4446,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4448,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4455,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4457,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4459,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4465,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4467,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4469,
        IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4501,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4592,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4594,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4596,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4601,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4603,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4605,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4611,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4613,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4615,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4620,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4622,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4624,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4670,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4739,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4759,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4776,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4779,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4792,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4795,
-       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d5000,
-       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5052,
-       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4567,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4499,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4502,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4593,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4595,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4597,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4602,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4604,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4606,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4612,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4614,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4616,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4621,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4623,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4625,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4671,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4740,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4760,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4777,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4780,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4793,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4796,
+       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d5001,
+       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5053,
        IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568,
-       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4573,
-       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4579,
-       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4584,
+       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4569,
+       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4574,
+       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4580,
+       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4585,
        IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d2975,
        IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2201,
        IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209,
@@ -1957,109 +2088,114 @@ module mkTagController(CLK,
        IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1450,
        IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3266,
        IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3272,
-       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4762,
-       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5022,
-       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5028,
+       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4763,
+       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5023,
+       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5029,
        IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3274,
        IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3503,
        IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561,
        IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3599,
        IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3744,
-       IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4248,
-       IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4658,
-       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3970,
-       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4192,
-       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4311,
-       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4665,
-       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4710,
-       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5013,
+       IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4249,
+       IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4659,
+       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3971,
+       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4193,
+       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4312,
+       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4666,
+       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4711,
+       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5014,
        IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3465,
        IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3468,
        IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3471,
        IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3474,
-       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4050,
-       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4058,
-       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4067,
-       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4075,
+       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4051,
+       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4059,
+       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4068,
+       IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4076,
        IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3431,
        IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3434,
        IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3437,
        IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3440,
-       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4053,
-       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4061,
-       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4070,
-       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4078,
-       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358,
-       NOT_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead__ETC___d4007,
-       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4092,
-       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4107,
-       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4676,
-       NOT_NOT_cache_request_put_val_BITS_93_TO_92_44_ETC___d6521,
+       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4054,
+       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4062,
+       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4071,
+       IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4079,
+       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359,
+       NOT_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead__ETC___d4008,
+       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4093,
+       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4108,
+       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4677,
        NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d3563,
-       NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d4234,
-       NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4094,
-       NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4124,
-       NOT_addrFrame_bag_105_BIT_46_117_EQ_IF_addrFra_ETC___d6139,
-       NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285,
-       NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287,
-       NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289,
-       NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303,
-       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195,
-       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209,
-       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233,
-       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252,
-       NOT_cache_request_put_val_BITS_93_TO_92_442_EQ_ETC___d6539,
-       NOT_lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupR_ETC___d5775,
-       NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016,
-       NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018,
-       NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020,
-       NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034,
-       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797,
-       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875,
-       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926,
-       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5972,
+       NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d4235,
+       NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4095,
+       NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4125,
+       NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6025,
+       NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167,
+       NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6177,
+       NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6208,
+       NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6210,
+       NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6248,
+       NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6251,
+       NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160,
+       NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6195,
+       NOT_addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_ETC___d6229,
+       NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6310,
+       NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6382,
+       NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902,
+       NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5912,
+       NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d6428,
+       NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d6454,
+       NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5942,
+       NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5946,
+       NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5979,
+       NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5982,
+       NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896,
+       NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5930,
+       NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d6437,
+       NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d6463,
+       NOT_lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_ETC___d5962,
        NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3151,
-       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964,
-       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4203,
-       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698,
+       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965,
+       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4204,
+       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699,
        NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3297,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3953,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4354,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4356,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4359,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4361,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4368,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4372,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4377,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4381,
-       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4661,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3954,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4355,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4357,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4360,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4362,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4369,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4373,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4378,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4382,
+       NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4662,
        NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3522,
        NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3534,
        NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3537,
        NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3548,
        NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d3627,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4951,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4952,
        NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3492,
        NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3516,
        NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4010,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4013,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4017,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4214,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4250,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4324,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4712,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4756,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4991,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5015,
-       NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4011,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4014,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4018,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4215,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4251,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4325,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4713,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4757,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4992,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5016,
+       NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254,
        NOT_tagLookup_tagCache_cts_read__795_BIT_136_0_ETC___d3625,
-       NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4121,
-       NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5095,
-       NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5111,
-       NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5137,
+       NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4122,
+       NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5096,
+       NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5112,
+       NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5138,
        NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d1580,
        NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d1582,
        NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d1584,
@@ -2071,10 +2207,10 @@ module mkTagController(CLK,
        NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d2955,
        NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d2959,
        NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d2961,
-       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5058,
-       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5060,
-       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5064,
-       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5066,
+       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5059,
+       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5061,
+       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5065,
+       NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5067,
        NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2144,
        NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2146,
        NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2148,
@@ -2208,108 +2344,118 @@ module mkTagController(CLK,
        NOT_tagLookup_tagCache_orderer_mastReqs_remove_ETC___d888,
        NOT_tagLookup_tagCache_orderer_mastReqs_remove_ETC___d898,
        NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d3016,
-       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4279,
-       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5021,
-       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5176,
+       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4280,
+       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5022,
+       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5177,
        NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3284,
-       NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960,
-       NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d4954,
-       NOT_tagLookup_tagCache_respsReady_whas__145_31_ETC___d5317,
+       NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961,
+       NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d4955,
+       NOT_tagLookup_tagCache_respsReady_whas__146_31_ETC___d5318,
        NOT_tagLookup_tagCache_writebacks_i_notEmpty___ETC___d3076,
        SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3601,
        SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3746,
        _0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553,
        _0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617,
-       _0_CONCAT_addrFrame_nextValidKeyReg_279_280_EQ__ETC___d6293,
-       _0_CONCAT_lookupRsp_nextValidKeyReg_010_011_EQ__ETC___d6024,
        _0_CONCAT_tagLookup_tagCache_orderer_mastLines__ETC___d2188,
        _0_CONCAT_tagLookup_tagCache_orderer_mastReqs_n_ETC___d1017,
-       _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4563,
-       _0_OR_cache_request_put_val_BITS_93_TO_92_442_E_ETC___d6531,
+       _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4564,
        _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557,
        _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619,
+       _dand2tagLookup_tagCacheReq_ff_displayPanic$EN_wset,
+       _dand2tagLookup_useNextRsp_enqPanic$EN_wset,
+       _dand2tagLookup_useNextRsp_ff_displayPanic$EN_wset,
        _dfoo1,
+       _dfoo17,
+       _dfoo22,
+       _dfoo23,
+       _dfoo28,
+       _dfoo29,
+       _dfoo34,
+       _dfoo35,
+       _dfoo40,
+       _dfoo46,
+       _dfoo52,
+       _dfoo58,
+       _dfoo64,
        _dfoo9,
-       _theResult_____21__h86421,
-       _theResult_____23__h86224,
-       _theResult_____3_way__h74738,
-       _theResult___snd_snd_fst_masterID__h340914,
-       addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135,
-       addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6247,
-       addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128,
-       addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6221,
-       addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121,
-       addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6197,
-       addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114,
-       addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6151,
-       addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132,
-       addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_r_ETC___d6245,
-       addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125,
-       addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_r_ETC___d6220,
-       addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118,
-       addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_r_ETC___d6196,
-       addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109,
-       addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_r_ETC___d6148,
-       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141,
-       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6357,
-       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6360,
-       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6365,
-       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6369,
-       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156,
-       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202,
-       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226,
-       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298,
-       cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472,
-       cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473,
-       cache_request_put_val_BITS_93_TO_92_442_EQ_1_4_ETC___d6464,
-       cache_request_put_val_BIT_72_528_AND_NOT_NOT_c_ETC___d6556,
-       lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771,
-       lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5967,
-       lookupRsp_bag_741_BITS_15_TO_11_770_EQ_mRsps_f_ETC___d6630,
-       lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764,
-       lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5914,
-       lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757,
-       lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5864,
-       lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750,
-       lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5792,
-       lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768,
-       lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_r_ETC___d5965,
-       lookupRsp_bag_741_BIT_16_767_EQ_mRsps_ff_rf_su_ETC___d6629,
-       lookupRsp_bag_741_BIT_17_971_AND_lookupRsp_bag_ETC___d6606,
-       lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761,
-       lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_r_ETC___d5913,
-       lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6602,
-       lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628,
-       lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754,
-       lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_r_ETC___d5863,
-       lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6598,
-       lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624,
-       lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745,
-       lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_r_ETC___d5788,
-       lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6594,
-       lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620,
-       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777,
-       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6084,
-       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6087,
-       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6092,
-       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6096,
-       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804,
-       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869,
-       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919,
-       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029,
-       mRsps_ff_rf_sub_mRsps_ff_ltail_read__579_BITS__ETC___d6636,
-       newCt_way__h74803,
-       tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320,
+       _theResult_____21__h86389,
+       _theResult_____23__h86192,
+       _theResult_____3_way__h74706,
+       _theResult___snd_snd_fst_masterID__h338133,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6032,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6121,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6220,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6223,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6232,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6241,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6593,
+       addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6704,
+       addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103,
+       addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107,
+       addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6153,
+       addrFrame_fifos_1_lhead_read__008_MINUS_addrFr_ETC___d6710,
+       addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114,
+       addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117,
+       addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6142,
+       addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6238,
+       addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6717,
+       addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125,
+       addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128,
+       addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6186,
+       addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135,
+       addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138,
+       cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054,
+       cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055,
+       cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288,
+       cache_request_put_val_BIT_91_093_AND_IF_cache__ETC___d6285,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5849,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5951,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5954,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5957,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5965,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5973,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6511,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6566,
+       lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6658,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5889,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6419,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6421,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6445,
+       lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6447,
+       lookupRsp_fifos_1_lhead_read__835_MINUS_lookup_ETC___d6664,
+       lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842,
+       lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845,
+       lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6424,
+       lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6425,
+       lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6450,
+       lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6451,
+       lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5878,
+       lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5970,
+       lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d6671,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5921,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6429,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6430,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6455,
+       lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6456,
+       lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871,
+       lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874,
+       newCt_way__h74771,
+       tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321,
        tagLookup_mRsps_ff_lhead_read__894_MINUS_tagLo_ETC___d2965,
        tagLookup_mRsps_ff_lhead_read__894_MINUS_tagLo_ETC___d3074,
-       tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3946,
-       tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4662,
-       tagLookup_state_read__216_EQ_1_370_AND_NOT_tag_ETC___d6434,
-       tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5381,
-       tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5382,
-       tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471,
-       tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5499,
-       tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181,
+       tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3947,
+       tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4663,
+       tagLookup_state_read__217_EQ_1_371_AND_NOT_tag_ETC___d5996,
+       tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5382,
+       tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5383,
+       tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472,
+       tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5500,
+       tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182,
        tagLookup_tagCache_cts_read__795_BITS_100_TO_9_ETC___d3499,
        tagLookup_tagCache_cts_read__795_BITS_100_TO_9_ETC___d3501,
        tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427,
@@ -2320,38 +2466,38 @@ module mkTagController(CLK,
        tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3583,
        tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632,
        tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676,
-       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4288,
-       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326,
-       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4733,
-       tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d3991,
-       tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693,
+       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4289,
+       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327,
+       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4734,
+       tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d3992,
+       tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694,
        tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3582,
        tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3681,
        tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3683,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3997,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4000,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4120,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4212,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4229,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4232,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4667,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4956,
-       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4958,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3998,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4001,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4121,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4213,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4230,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4233,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4668,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4957,
+       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4959,
        tagLookup_tagCache_cts_read__795_BITS_235_TO_2_ETC___d2845,
        tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3290,
        tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3292,
        tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3303,
        tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3668,
        tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3858,
-       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974,
-       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984,
-       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d4983,
-       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d5072,
+       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975,
+       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985,
+       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d4984,
+       tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d5073,
        tagLookup_tagCache_cts_read__795_BIT_136_060_O_ETC___d3609,
        tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d2843,
-       tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d4760,
+       tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d4761,
        tagLookup_tagCache_newReq_whas__787_AND_tagLoo_ETC___d2799,
        tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d1466,
        tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d1471,
@@ -2545,7 +2691,7 @@ module mkTagController(CLK,
        tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d378,
        tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d382,
        tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d385,
-       tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3938,
+       tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3939,
        tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d410,
        tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d413,
        tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d470,
@@ -2632,58 +2778,61 @@ module mkTagController(CLK,
        tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3268,
        tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3269,
        tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3511,
-       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4086,
-       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348,
-       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708,
-       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724,
-       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4732,
-       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4740,
+       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4087,
+       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349,
+       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709,
+       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725,
+       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4733,
+       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4741,
        tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145,
        tagLookup_tagCache_readReqReg_read__136_BITS_5_ETC___d3164,
        tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141,
        tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3283,
        tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3299,
-       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942,
-       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948,
-       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956,
-       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d4989,
+       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943,
+       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949,
+       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957,
+       tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d4990,
        tagLookup_tagCache_readReqReg_read__136_BIT_57_ETC___d3162,
-       tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155,
-       tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334,
-       tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5377,
+       tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156,
+       tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335,
+       tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5378,
        tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403,
        tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413,
-       tagLookup_zeroAddr_211_ULT_4286574718___d5212,
-       way__h98148,
-       x1_avValue_snd_fst_way__h121152,
-       x1_avValue_snd_fst_way__h121229,
-       x1_avValue_snd_snd_snd_snd_d_inId_masterID__h278679,
-       x1_avValue_snd_snd_snd_snd_d_oldWay__h278640,
-       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278681,
-       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278683,
-       x1_avValue_snd_snd_snd_snd_snd_snd_d_oldWay__h278649,
-       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_masterID__h98349,
-       x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_masterID__h278687,
-       x1_avValue_snd_way__h121211,
-       x1_avValue_way__h74756,
-       x__h340832,
-       x__h78975,
-       y_avValue_snd_fst_way__h121127,
-       y_avValue_snd_snd_fst__h98187;
+       tagLookup_zeroAddr_212_ULT_4286574718___d5213,
+       way__h98128,
+       x1_avValue_snd_fst_way__h121132,
+       x1_avValue_snd_fst_way__h121209,
+       x1_avValue_snd_snd_snd_snd_d_inId_masterID__h278659,
+       x1_avValue_snd_snd_snd_snd_d_oldWay__h278620,
+       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278661,
+       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278663,
+       x1_avValue_snd_snd_snd_snd_snd_snd_d_oldWay__h278629,
+       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_masterID__h98327,
+       x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_masterID__h278667,
+       x1_avValue_snd_way__h121191,
+       x1_avValue_way__h74724,
+       x__h337805,
+       x__h343894,
+       x__h78943,
+       y_avValue_snd_fst_way__h121107,
+       y_avValue_snd_snd_snd_fst__h98170;
 
   // value method cache_request_canPut
   assign cache_request_canPut =
-	     tagLookup_state_read__216_EQ_1_370_AND_NOT_tag_ETC___d6434 &&
-	     level__h325540 != 3'd4 &&
-	     (!halfWrite[141] || halfWrite[93:92] == 2'd1 && !halfWrite[91]) ;
+	     tagLookup_state_read__217_EQ_1_371_AND_NOT_tag_ETC___d5996 &&
+	     level__h314722 != 3'd4 &&
+	     NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6025 &&
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6032 ;
 
   // action method cache_request_put
   assign RDY_cache_request_put =
-	     tagLookup_state_read__216_EQ_1_370_AND_NOT_tag_ETC___d6434 &&
-	     level__h325540 != 3'd4 &&
-	     (!halfWrite[141] ||
-	      halfWrite[93:92] == 2'd1 && !halfWrite[91]) &&
-	     !tagLookup_readReqs_ff_full$port1__read ;
+	     tagLookup_state_read__217_EQ_1_371_AND_NOT_tag_ETC___d5996 &&
+	     level__h314722 != 3'd4 &&
+	     NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6025 &&
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6032 &&
+	     !tagLookup_readReqs_ff_full$port1__read &&
+	     level__h314395 != 2'd2 ;
   assign CAN_FIRE_cache_request_put = RDY_cache_request_put ;
   assign WILL_FIRE_cache_request_put = EN_cache_request_put ;
 
@@ -2696,63 +2845,234 @@ module mkTagController(CLK,
 
   // actionvalue method cache_response_get
   assign cache_response_get =
-	     { x__h340832,
-	       x__h340927,
-	       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6648,
-	       IF_IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff__ETC___d6666,
-	       IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6757 } ;
+	     { x__h337805,
+	       x__h338146,
+	       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6477,
+	       IF_IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff__ETC___d6495,
+	       IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6641 } ;
   assign RDY_cache_response_get =
-	     IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6637 ||
-	     level__h326233 != 6'd0 && mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ;
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6466 ||
+	     level__h316619 != 6'd0 && mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ;
   assign CAN_FIRE_cache_response_get = RDY_cache_response_get ;
   assign WILL_FIRE_cache_response_get = EN_cache_response_get ;
 
   // value method memory_request_canGet
-  assign memory_request_canGet = level__h325899 != 2'd0 ;
+  assign memory_request_canGet = RDY_memory_request_get ;
 
   // value method memory_request_peek
-  assign memory_request_peek =
-	     { mReqs_ff_rf$D_OUT_1[140:94],
-	       CASE_mReqs_ff_rfD_OUT_1_BITS_93_TO_92_0_mReqs_ETC__q1,
-	       mReqs_ff_rf$D_OUT_1[91:0] } ;
-  assign RDY_memory_request_peek = level__h325899 != 2'd0 ;
+  assign memory_request_peek = memory_request_get ;
+  assign RDY_memory_request_peek = RDY_memory_request_get ;
 
   // actionvalue method memory_request_get
   assign memory_request_get =
-	     { mReqs_ff_rf$D_OUT_1[140:94],
-	       CASE_mReqs_ff_rfD_OUT_1_BITS_93_TO_92_0_mReqs_ETC__q1,
-	       mReqs_ff_rf$D_OUT_1[91:0] } ;
-  assign RDY_memory_request_get = level__h325899 != 2'd0 ;
-  assign CAN_FIRE_memory_request_get = level__h325899 != 2'd0 ;
+	     { (level__h316294 == 3'd0) ?
+		 tagLookup_mReqs_ff_rf$D_OUT_1[140:101] :
+		 mReqs_rf$D_OUT_1[140:101],
+	       x__h343894,
+	       IF_mReqBurst_lhead_read__991_MINUS_mReqBurst_l_ETC___d6789 } ;
+  assign RDY_memory_request_get =
+	     level__h316294 != 3'd0 || level__h977 != 4'd0 ;
+  assign CAN_FIRE_memory_request_get = RDY_memory_request_get ;
   assign WILL_FIRE_memory_request_get = EN_memory_request_get ;
 
   // value method memory_response_canPut
   assign memory_response_canPut =
-	     level__h326233 != 6'd32 && level__h1462 != 2'd2 ;
+	     level__h316619 != 6'd32 && level__h1428 != 2'd2 ;
 
   // action method memory_response_put
-  assign RDY_memory_response_put = level__h1462 != 2'd2 ;
-  assign CAN_FIRE_memory_response_put = level__h1462 != 2'd2 ;
+  assign RDY_memory_response_put = level__h1428 != 2'd2 ;
+  assign CAN_FIRE_memory_response_put = level__h1428 != 2'd2 ;
   assign WILL_FIRE_memory_response_put = EN_memory_response_put ;
 
-  // submodule mReqs_ff_rf
+  // submodule addrFrame_fifos_0_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd15),
+	    .lo(2'h0),
+	    .hi(2'd3)) addrFrame_fifos_0_rf(.CLK(CLK),
+					    .ADDR_1(addrFrame_fifos_0_rf$ADDR_1),
+					    .ADDR_2(addrFrame_fifos_0_rf$ADDR_2),
+					    .ADDR_3(addrFrame_fifos_0_rf$ADDR_3),
+					    .ADDR_4(addrFrame_fifos_0_rf$ADDR_4),
+					    .ADDR_5(addrFrame_fifos_0_rf$ADDR_5),
+					    .ADDR_IN(addrFrame_fifos_0_rf$ADDR_IN),
+					    .D_IN(addrFrame_fifos_0_rf$D_IN),
+					    .WE(addrFrame_fifos_0_rf$WE),
+					    .D_OUT_1(addrFrame_fifos_0_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule addrFrame_fifos_1_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd15),
+	    .lo(2'h0),
+	    .hi(2'd3)) addrFrame_fifos_1_rf(.CLK(CLK),
+					    .ADDR_1(addrFrame_fifos_1_rf$ADDR_1),
+					    .ADDR_2(addrFrame_fifos_1_rf$ADDR_2),
+					    .ADDR_3(addrFrame_fifos_1_rf$ADDR_3),
+					    .ADDR_4(addrFrame_fifos_1_rf$ADDR_4),
+					    .ADDR_5(addrFrame_fifos_1_rf$ADDR_5),
+					    .ADDR_IN(addrFrame_fifos_1_rf$ADDR_IN),
+					    .D_IN(addrFrame_fifos_1_rf$D_IN),
+					    .WE(addrFrame_fifos_1_rf$WE),
+					    .D_OUT_1(addrFrame_fifos_1_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule addrFrame_fifos_2_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd15),
+	    .lo(2'h0),
+	    .hi(2'd3)) addrFrame_fifos_2_rf(.CLK(CLK),
+					    .ADDR_1(addrFrame_fifos_2_rf$ADDR_1),
+					    .ADDR_2(addrFrame_fifos_2_rf$ADDR_2),
+					    .ADDR_3(addrFrame_fifos_2_rf$ADDR_3),
+					    .ADDR_4(addrFrame_fifos_2_rf$ADDR_4),
+					    .ADDR_5(addrFrame_fifos_2_rf$ADDR_5),
+					    .ADDR_IN(addrFrame_fifos_2_rf$ADDR_IN),
+					    .D_IN(addrFrame_fifos_2_rf$D_IN),
+					    .WE(addrFrame_fifos_2_rf$WE),
+					    .D_OUT_1(addrFrame_fifos_2_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule addrFrame_fifos_3_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd15),
+	    .lo(2'h0),
+	    .hi(2'd3)) addrFrame_fifos_3_rf(.CLK(CLK),
+					    .ADDR_1(addrFrame_fifos_3_rf$ADDR_1),
+					    .ADDR_2(addrFrame_fifos_3_rf$ADDR_2),
+					    .ADDR_3(addrFrame_fifos_3_rf$ADDR_3),
+					    .ADDR_4(addrFrame_fifos_3_rf$ADDR_4),
+					    .ADDR_5(addrFrame_fifos_3_rf$ADDR_5),
+					    .ADDR_IN(addrFrame_fifos_3_rf$ADDR_IN),
+					    .D_IN(addrFrame_fifos_3_rf$D_IN),
+					    .WE(addrFrame_fifos_3_rf$WE),
+					    .D_OUT_1(addrFrame_fifos_3_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule lookupId_ff_rf
   RegFile #(.addr_width(32'd1),
-	    .data_width(32'd141),
+	    .data_width(32'd6),
 	    .lo(1'h0),
-	    .hi(1'd1)) mReqs_ff_rf(.CLK(CLK),
-				   .ADDR_1(mReqs_ff_rf$ADDR_1),
-				   .ADDR_2(mReqs_ff_rf$ADDR_2),
-				   .ADDR_3(mReqs_ff_rf$ADDR_3),
-				   .ADDR_4(mReqs_ff_rf$ADDR_4),
-				   .ADDR_5(mReqs_ff_rf$ADDR_5),
-				   .ADDR_IN(mReqs_ff_rf$ADDR_IN),
-				   .D_IN(mReqs_ff_rf$D_IN),
-				   .WE(mReqs_ff_rf$WE),
-				   .D_OUT_1(mReqs_ff_rf$D_OUT_1),
-				   .D_OUT_2(),
-				   .D_OUT_3(),
-				   .D_OUT_4(),
-				   .D_OUT_5());
+	    .hi(1'd1)) lookupId_ff_rf(.CLK(CLK),
+				      .ADDR_1(lookupId_ff_rf$ADDR_1),
+				      .ADDR_2(lookupId_ff_rf$ADDR_2),
+				      .ADDR_3(lookupId_ff_rf$ADDR_3),
+				      .ADDR_4(lookupId_ff_rf$ADDR_4),
+				      .ADDR_5(lookupId_ff_rf$ADDR_5),
+				      .ADDR_IN(lookupId_ff_rf$ADDR_IN),
+				      .D_IN(lookupId_ff_rf$D_IN),
+				      .WE(lookupId_ff_rf$WE),
+				      .D_OUT_1(lookupId_ff_rf$D_OUT_1),
+				      .D_OUT_2(),
+				      .D_OUT_3(),
+				      .D_OUT_4(),
+				      .D_OUT_5());
+
+  // submodule lookupRsp_fifos_0_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd11),
+	    .lo(2'h0),
+	    .hi(2'd3)) lookupRsp_fifos_0_rf(.CLK(CLK),
+					    .ADDR_1(lookupRsp_fifos_0_rf$ADDR_1),
+					    .ADDR_2(lookupRsp_fifos_0_rf$ADDR_2),
+					    .ADDR_3(lookupRsp_fifos_0_rf$ADDR_3),
+					    .ADDR_4(lookupRsp_fifos_0_rf$ADDR_4),
+					    .ADDR_5(lookupRsp_fifos_0_rf$ADDR_5),
+					    .ADDR_IN(lookupRsp_fifos_0_rf$ADDR_IN),
+					    .D_IN(lookupRsp_fifos_0_rf$D_IN),
+					    .WE(lookupRsp_fifos_0_rf$WE),
+					    .D_OUT_1(lookupRsp_fifos_0_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule lookupRsp_fifos_1_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd11),
+	    .lo(2'h0),
+	    .hi(2'd3)) lookupRsp_fifos_1_rf(.CLK(CLK),
+					    .ADDR_1(lookupRsp_fifos_1_rf$ADDR_1),
+					    .ADDR_2(lookupRsp_fifos_1_rf$ADDR_2),
+					    .ADDR_3(lookupRsp_fifos_1_rf$ADDR_3),
+					    .ADDR_4(lookupRsp_fifos_1_rf$ADDR_4),
+					    .ADDR_5(lookupRsp_fifos_1_rf$ADDR_5),
+					    .ADDR_IN(lookupRsp_fifos_1_rf$ADDR_IN),
+					    .D_IN(lookupRsp_fifos_1_rf$D_IN),
+					    .WE(lookupRsp_fifos_1_rf$WE),
+					    .D_OUT_1(lookupRsp_fifos_1_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule lookupRsp_fifos_2_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd11),
+	    .lo(2'h0),
+	    .hi(2'd3)) lookupRsp_fifos_2_rf(.CLK(CLK),
+					    .ADDR_1(lookupRsp_fifos_2_rf$ADDR_1),
+					    .ADDR_2(lookupRsp_fifos_2_rf$ADDR_2),
+					    .ADDR_3(lookupRsp_fifos_2_rf$ADDR_3),
+					    .ADDR_4(lookupRsp_fifos_2_rf$ADDR_4),
+					    .ADDR_5(lookupRsp_fifos_2_rf$ADDR_5),
+					    .ADDR_IN(lookupRsp_fifos_2_rf$ADDR_IN),
+					    .D_IN(lookupRsp_fifos_2_rf$D_IN),
+					    .WE(lookupRsp_fifos_2_rf$WE),
+					    .D_OUT_1(lookupRsp_fifos_2_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule lookupRsp_fifos_3_rf
+  RegFile #(.addr_width(32'd2),
+	    .data_width(32'd11),
+	    .lo(2'h0),
+	    .hi(2'd3)) lookupRsp_fifos_3_rf(.CLK(CLK),
+					    .ADDR_1(lookupRsp_fifos_3_rf$ADDR_1),
+					    .ADDR_2(lookupRsp_fifos_3_rf$ADDR_2),
+					    .ADDR_3(lookupRsp_fifos_3_rf$ADDR_3),
+					    .ADDR_4(lookupRsp_fifos_3_rf$ADDR_4),
+					    .ADDR_5(lookupRsp_fifos_3_rf$ADDR_5),
+					    .ADDR_IN(lookupRsp_fifos_3_rf$ADDR_IN),
+					    .D_IN(lookupRsp_fifos_3_rf$D_IN),
+					    .WE(lookupRsp_fifos_3_rf$WE),
+					    .D_OUT_1(lookupRsp_fifos_3_rf$D_OUT_1),
+					    .D_OUT_2(),
+					    .D_OUT_3(),
+					    .D_OUT_4(),
+					    .D_OUT_5());
+
+  // submodule mReqs_rf
+  RegFile #(.addr_width(32'd4),
+	    .data_width(32'd141),
+	    .lo(4'h0),
+	    .hi(4'd15)) mReqs_rf(.CLK(CLK),
+				 .ADDR_1(mReqs_rf$ADDR_1),
+				 .ADDR_2(mReqs_rf$ADDR_2),
+				 .ADDR_3(mReqs_rf$ADDR_3),
+				 .ADDR_4(mReqs_rf$ADDR_4),
+				 .ADDR_5(mReqs_rf$ADDR_5),
+				 .ADDR_IN(mReqs_rf$ADDR_IN),
+				 .D_IN(mReqs_rf$D_IN),
+				 .WE(mReqs_rf$WE),
+				 .D_OUT_1(mReqs_rf$D_OUT_1),
+				 .D_OUT_2(),
+				 .D_OUT_3(),
+				 .D_OUT_4(),
+				 .D_OUT_5());
 
   // submodule mRsps_ff_rf
   RegFile #(.addr_width(32'd5),
@@ -3070,30 +3390,19 @@ module mkTagController(CLK,
 				       .D_OUT_4(),
 				       .D_OUT_5());
 
-  // rule RL_forwardLookupReqs
-  assign CAN_FIRE_RL_forwardLookupReqs =
-	     level__h1011 != 4'd0 && level__h325899 != 2'd2 &&
-	     (!halfWrite[141] || halfWrite[93:92] == 2'd1 && !halfWrite[91]) ;
-  assign WILL_FIRE_RL_forwardLookupReqs = CAN_FIRE_RL_forwardLookupReqs ;
-
   // rule RL_getTagLookupResponse
   assign CAN_FIRE_RL_getTagLookupResponse =
+	     tagLookup_readReqs_ff_full &&
 	     (!tagLookup_readReqs_ff_dataReg ||
-	      tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) &&
-	     tagLookup_readReqs_ff_full ;
+	      tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) &&
+	     level__h314395 != 2'd0 ;
   assign WILL_FIRE_RL_getTagLookupResponse =
 	     CAN_FIRE_RL_getTagLookupResponse ;
 
-  // rule RL_sendSecondHalfWrite
-  assign CAN_FIRE_RL_sendSecondHalfWrite =
-	     level__h325899 != 2'd2 && halfWrite[141] &&
-	     (halfWrite[93:92] != 2'd1 || halfWrite[91]) ;
-  assign WILL_FIRE_RL_sendSecondHalfWrite = CAN_FIRE_RL_sendSecondHalfWrite ;
-
   // rule RL_tagLookup_initialise
   assign CAN_FIRE_RL_tagLookup_initialise =
-	     (!tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
-	      !tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181) &&
+	     (!tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
+	      !tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182) &&
 	     tagLookup_state == 3'd0 ;
   assign WILL_FIRE_RL_tagLookup_initialise =
 	     CAN_FIRE_RL_tagLookup_initialise ;
@@ -3117,8 +3426,11 @@ module mkTagController(CLK,
   assign WILL_FIRE_RL_tagLookup_lookupRsp_ff_doDisplayPanic = 1'b0 ;
 
   // rule RL_tagLookup_mReqs_displayDeqPanic
-  assign CAN_FIRE_RL_tagLookup_mReqs_displayDeqPanic = 1'b0 ;
-  assign WILL_FIRE_RL_tagLookup_mReqs_displayDeqPanic = 1'b0 ;
+  assign CAN_FIRE_RL_tagLookup_mReqs_displayDeqPanic =
+	     EN_memory_request_get && level__h316294 == 3'd0 &&
+	     level__h977 == 4'd0 ;
+  assign WILL_FIRE_RL_tagLookup_mReqs_displayDeqPanic =
+	     CAN_FIRE_RL_tagLookup_mReqs_displayDeqPanic ;
 
   // rule RL_tagLookup_mRsps_displayEnqPanic
   assign CAN_FIRE_RL_tagLookup_mRsps_displayEnqPanic =
@@ -3133,33 +3445,25 @@ module mkTagController(CLK,
   // rule RL_tagLookup_mRsps_ff_doDisplayPanic
   assign CAN_FIRE_RL_tagLookup_mRsps_ff_doDisplayPanic =
 	     EN_memory_response_put && memory_response_put_val[76] &&
-	     level__h1462 == 2'd2 ;
+	     level__h1428 == 2'd2 ;
   assign WILL_FIRE_RL_tagLookup_mRsps_ff_doDisplayPanic =
 	     CAN_FIRE_RL_tagLookup_mRsps_ff_doDisplayPanic ;
 
   // rule RL_tagLookup_useNextRsp_displayEnqPanic
   assign CAN_FIRE_RL_tagLookup_useNextRsp_displayEnqPanic =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 &&
-	     level__h1912 == 3'd4 ||
-	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 &&
-	     level__h1912 == 3'd4 ;
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 &&
+	     level__h1878 == 3'd4 ||
+	     _dand2tagLookup_useNextRsp_enqPanic$EN_wset ;
   assign WILL_FIRE_RL_tagLookup_useNextRsp_displayEnqPanic =
 	     CAN_FIRE_RL_tagLookup_useNextRsp_displayEnqPanic ;
 
   // rule RL_tagLookup_useNextRsp_ff_doDisplayPanic
   assign CAN_FIRE_RL_tagLookup_useNextRsp_ff_doDisplayPanic =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 &&
-	     level__h1912 == 3'd4 ||
-	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 &&
-	     level__h1912 == 3'd4 ;
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 &&
+	     level__h1878 == 3'd4 ||
+	     _dand2tagLookup_useNextRsp_ff_displayPanic$EN_wset ;
   assign WILL_FIRE_RL_tagLookup_useNextRsp_ff_doDisplayPanic =
 	     CAN_FIRE_RL_tagLookup_useNextRsp_ff_doDisplayPanic ;
 
@@ -3182,47 +3486,47 @@ module mkTagController(CLK,
   // rule RL_tagLookup_doLookup
   assign CAN_FIRE_RL_tagLookup_doLookup =
 	     ((tagLookup_state != 3'd2 ||
-	       NOT_tagLookup_tagCache_respsReady_whas__145_31_ETC___d5317 ||
-	       tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) &&
+	       NOT_tagLookup_tagCache_respsReady_whas__146_31_ETC___d5318 ||
+	       tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) &&
 	      (tagLookup_state != 3'd3 ||
-	       NOT_tagLookup_tagCache_respsReady_whas__145_31_ETC___d5317) &&
+	       NOT_tagLookup_tagCache_respsReady_whas__146_31_ETC___d5318) &&
 	      (tagLookup_state != 3'd4 ||
-	       NOT_tagLookup_tagCache_respsReady_whas__145_31_ETC___d5317) &&
+	       NOT_tagLookup_tagCache_respsReady_whas__146_31_ETC___d5318) &&
 	      tagLookup_state != 3'd5 ||
-	      IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5367 ||
-	      !tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181) &&
+	      IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5368 ||
+	      !tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182) &&
 	     tagLookup_state != 3'd1 &&
 	     tagLookup_state != 3'd0 &&
-	     level__h1912 != 3'd4 ;
+	     level__h1878 != 3'd4 ;
   assign WILL_FIRE_RL_tagLookup_doLookup = CAN_FIRE_RL_tagLookup_doLookup ;
 
   // rule RL_tagLookup_drainMemRsp
   assign CAN_FIRE_RL_tagLookup_drainMemRsp =
 	     (tagLookup_tagCache_cacheState &&
 	      tagLookup_tagCache_respsReady$wget ||
-	      level__h8615 != 2'd0) &&
+	      level__h8582 != 2'd0) &&
 	     (tagLookup_getReq$whas || !tagLookup_useNextRsp_ff_rf$D_OUT_1) ;
   assign WILL_FIRE_RL_tagLookup_drainMemRsp =
 	     CAN_FIRE_RL_tagLookup_drainMemRsp ;
 
   // rule RL_tagLookup_mReqs_displayEnqPanic
   assign CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic =
-	     CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic ;
+	     tagLookup_tagCache_cacheState &&
+	     (tagLookup_tagCache_cts[278:277] == 2'd1 &&
+	      level__h977 == 4'd8 ||
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3668) ;
   assign WILL_FIRE_RL_tagLookup_mReqs_displayEnqPanic =
-	     CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic ;
+	     CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic ;
 
   // rule RL_tagLookup_mReqs_ff_doDisplayPanic
   assign CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic =
-	     tagLookup_tagCache_cacheState &&
-	     (tagLookup_tagCache_cts[278:277] == 2'd1 &&
-	      level__h1011 == 4'd8 ||
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3668) ;
+	     CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic ;
   assign WILL_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic =
-	     CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic ;
+	     CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic ;
 
   // rule RL_tagLookup_useNextRsp_displayDeqPanic
   assign CAN_FIRE_RL_tagLookup_useNextRsp_displayDeqPanic =
-	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h1912 == 3'd0 ;
+	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h1878 == 3'd0 ;
   assign WILL_FIRE_RL_tagLookup_useNextRsp_displayDeqPanic =
 	     CAN_FIRE_RL_tagLookup_useNextRsp_displayDeqPanic ;
 
@@ -3239,10 +3543,10 @@ module mkTagController(CLK,
 
   // rule RL_tagLookup_feedTagCache
   assign CAN_FIRE_RL_tagLookup_feedTagCache =
-	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5176 &&
+	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5177 &&
 	     !tagLookup_tagCache_writebacks$EMPTY_N &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
-	     tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181 ;
+	     tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182 ;
   assign WILL_FIRE_RL_tagLookup_feedTagCache =
 	     CAN_FIRE_RL_tagLookup_feedTagCache ;
 
@@ -3255,14 +3559,10 @@ module mkTagController(CLK,
   // rule RL_tagLookup_tagCacheReq_ff_doDisplayPanic
   assign CAN_FIRE_RL_tagLookup_tagCacheReq_ff_doDisplayPanic =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 &&
-	     tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181 ||
-	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 &&
-	     tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181 ;
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 &&
+	     tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182 ||
+	     _dand2tagLookup_tagCacheReq_ff_displayPanic$EN_wset ;
   assign WILL_FIRE_RL_tagLookup_tagCacheReq_ff_doDisplayPanic =
 	     CAN_FIRE_RL_tagLookup_tagCacheReq_ff_doDisplayPanic ;
 
@@ -3383,142 +3683,161 @@ module mkTagController(CLK,
   assign CAN_FIRE_RL_tagLookup_tagCache_readReqs_updateBag = 1'd1 ;
   assign WILL_FIRE_RL_tagLookup_tagCache_readReqs_updateBag = 1'd1 ;
 
-  // rule RL_lookupRsp_updateBag
-  assign CAN_FIRE_RL_lookupRsp_updateBag = 1'd1 ;
-  assign WILL_FIRE_RL_lookupRsp_updateBag = 1'd1 ;
+  // rule RL_lookupRsp_fifos_0_doDisplayPanic
+  assign CAN_FIRE_RL_lookupRsp_fifos_0_doDisplayPanic =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo40 ;
+  assign WILL_FIRE_RL_lookupRsp_fifos_0_doDisplayPanic =
+	     CAN_FIRE_RL_lookupRsp_fifos_0_doDisplayPanic ;
 
-  // rule RL_addrFrame_updateBag
-  assign CAN_FIRE_RL_addrFrame_updateBag = 1'd1 ;
-  assign WILL_FIRE_RL_addrFrame_updateBag = 1'd1 ;
+  // rule RL_lookupRsp_fifos_1_doDisplayPanic
+  assign CAN_FIRE_RL_lookupRsp_fifos_1_doDisplayPanic =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo34 ;
+  assign WILL_FIRE_RL_lookupRsp_fifos_1_doDisplayPanic =
+	     CAN_FIRE_RL_lookupRsp_fifos_1_doDisplayPanic ;
+
+  // rule RL_lookupRsp_fifos_2_doDisplayPanic
+  assign CAN_FIRE_RL_lookupRsp_fifos_2_doDisplayPanic =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo28 ;
+  assign WILL_FIRE_RL_lookupRsp_fifos_2_doDisplayPanic =
+	     CAN_FIRE_RL_lookupRsp_fifos_2_doDisplayPanic ;
+
+  // rule RL_lookupRsp_fifos_3_doDisplayPanic
+  assign CAN_FIRE_RL_lookupRsp_fifos_3_doDisplayPanic =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo22 ;
+  assign WILL_FIRE_RL_lookupRsp_fifos_3_doDisplayPanic =
+	     CAN_FIRE_RL_lookupRsp_fifos_3_doDisplayPanic ;
+
+  // rule RL_addrFrame_fifos_0_doDisplayPanic
+  assign CAN_FIRE_RL_addrFrame_fifos_0_doDisplayPanic =
+	     EN_cache_request_put && _dfoo64 ;
+  assign WILL_FIRE_RL_addrFrame_fifos_0_doDisplayPanic =
+	     CAN_FIRE_RL_addrFrame_fifos_0_doDisplayPanic ;
+
+  // rule RL_addrFrame_fifos_1_doDisplayPanic
+  assign CAN_FIRE_RL_addrFrame_fifos_1_doDisplayPanic =
+	     EN_cache_request_put && _dfoo58 ;
+  assign WILL_FIRE_RL_addrFrame_fifos_1_doDisplayPanic =
+	     CAN_FIRE_RL_addrFrame_fifos_1_doDisplayPanic ;
+
+  // rule RL_addrFrame_fifos_2_doDisplayPanic
+  assign CAN_FIRE_RL_addrFrame_fifos_2_doDisplayPanic =
+	     EN_cache_request_put && _dfoo52 ;
+  assign WILL_FIRE_RL_addrFrame_fifos_2_doDisplayPanic =
+	     CAN_FIRE_RL_addrFrame_fifos_2_doDisplayPanic ;
+
+  // rule RL_addrFrame_fifos_3_doDisplayPanic
+  assign CAN_FIRE_RL_addrFrame_fifos_3_doDisplayPanic =
+	     EN_cache_request_put && _dfoo46 ;
+  assign WILL_FIRE_RL_addrFrame_fifos_3_doDisplayPanic =
+	     CAN_FIRE_RL_addrFrame_fifos_3_doDisplayPanic ;
+
+  // rule RL_lookupId_ff_doDisplayPanic
+  assign CAN_FIRE_RL_lookupId_ff_doDisplayPanic =
+	     EN_cache_request_put && cache_request_put_val[93:92] != 2'd1 &&
+	     level__h314395 == 2'd2 ;
+  assign WILL_FIRE_RL_lookupId_ff_doDisplayPanic =
+	     CAN_FIRE_RL_lookupId_ff_doDisplayPanic ;
 
   // rule RL_tagOnlyReads_doDisplayPanic
   assign CAN_FIRE_RL_tagOnlyReads_doDisplayPanic =
 	     EN_cache_request_put && cache_request_put_val[93:92] == 2'd0 &&
 	     cache_request_put_val[6] &&
-	     level__h325540 == 3'd4 ;
+	     level__h314722 == 3'd4 ;
   assign WILL_FIRE_RL_tagOnlyReads_doDisplayPanic =
 	     CAN_FIRE_RL_tagOnlyReads_doDisplayPanic ;
 
-  // rule RL_mReqs_ff_doDisplayPanic
-  assign CAN_FIRE_RL_mReqs_ff_doDisplayPanic =
+  // rule RL_mReqs_doDisplayPanic
+  assign CAN_FIRE_RL_mReqs_doDisplayPanic =
 	     EN_cache_request_put &&
-	     cache_request_put_val_BITS_93_TO_92_442_EQ_1_4_ETC___d6464 ;
-  assign WILL_FIRE_RL_mReqs_ff_doDisplayPanic =
-	     CAN_FIRE_RL_mReqs_ff_doDisplayPanic ;
+	     (cache_request_put_val[93:92] != 2'd0 ||
+	      !cache_request_put_val[6]) &&
+	     level__h316126 == 5'd16 ;
+  assign WILL_FIRE_RL_mReqs_doDisplayPanic =
+	     CAN_FIRE_RL_mReqs_doDisplayPanic ;
+
+  // rule RL_mReqBurst_doDisplayPanic
+  assign CAN_FIRE_RL_mReqBurst_doDisplayPanic =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] != 2'd0 ||
+	      !cache_request_put_val[6]) &&
+	     (cache_request_put_val[93:92] != 2'd1 ||
+	      cache_request_put_val[91]) &&
+	     level__h316294 == 3'd4 ;
+  assign WILL_FIRE_RL_mReqBurst_doDisplayPanic =
+	     CAN_FIRE_RL_mReqBurst_doDisplayPanic ;
 
   // rule RL_mRsps_displayEnqPanic
   assign CAN_FIRE_RL_mRsps_displayEnqPanic =
-	     CAN_FIRE_RL_mRsps_ff_doDisplayPanic ;
+	     EN_memory_response_put && !memory_response_put_val[76] &&
+	     level__h316619 == 6'd32 ;
   assign WILL_FIRE_RL_mRsps_displayEnqPanic =
-	     CAN_FIRE_RL_mRsps_ff_doDisplayPanic ;
+	     CAN_FIRE_RL_mRsps_displayEnqPanic ;
 
   // rule RL_mRsps_displayDeqPanic
   assign CAN_FIRE_RL_mRsps_displayDeqPanic =
 	     EN_cache_response_get &&
-	     (level__h325540 == 3'd0 || frame != 3'd0) &&
-	     level__h326233 == 6'd0 ;
+	     (level__h314722 == 3'd0 || memoryResponseFrame != 3'd0) &&
+	     level__h316619 == 6'd0 ;
   assign WILL_FIRE_RL_mRsps_displayDeqPanic =
 	     CAN_FIRE_RL_mRsps_displayDeqPanic ;
 
   // rule RL_mRsps_ff_doDisplayPanic
   assign CAN_FIRE_RL_mRsps_ff_doDisplayPanic =
-	     EN_memory_response_put && !memory_response_put_val[76] &&
-	     level__h326233 == 6'd32 ;
+	     CAN_FIRE_RL_mRsps_displayEnqPanic ;
   assign WILL_FIRE_RL_mRsps_ff_doDisplayPanic =
-	     CAN_FIRE_RL_mRsps_ff_doDisplayPanic ;
+	     CAN_FIRE_RL_mRsps_displayEnqPanic ;
 
   // inputs to muxes for submodule ports
-  assign MUX_halfWrite$write_1__SEL_1 =
-	     EN_cache_request_put && cache_request_put_val[93:92] == 2'd1 &&
-	     cache_request_put_val[7:0] != 8'd0 ;
-  assign MUX_mReqs_ff_lhead$write_1__SEL_1 =
-	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] == 2'd1 &&
-	      cache_request_put_val[7:0] != 8'd0 &&
-	      halfWrite[141] ||
-	      (cache_request_put_val[93:92] != 2'd1 ||
-	       cache_request_put_val[7:0] == 8'd0) &&
-	      (cache_request_put_val[93:92] != 2'd0 ||
-	       !cache_request_put_val[6])) ;
   assign MUX_tagLookup_currentDepth$write_1__SEL_1 =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 ;
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 ;
   assign MUX_tagLookup_currentDepth$write_1__SEL_2 =
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
   assign MUX_tagLookup_state$write_1__SEL_1 =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     !tagLookup_zeroAddr_211_ULT_4286574718___d5212 ;
+	     !tagLookup_zeroAddr_212_ULT_4286574718___d5213 ;
   assign MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_1 =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 ;
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 ;
   assign MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_2 =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 ;
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 ;
   assign MUX_tagLookup_tagCache_missedResp$wset_1__SEL_1 =
-	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8615 != 2'd0 ;
+	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8582 != 2'd0 ;
   assign MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_1__SEL_1 =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd0 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ;
-  assign MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd1 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ;
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd0 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ;
+  assign MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 =
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd1 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ;
   assign MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__SEL_1 =
 	     WILL_FIRE_RL_tagLookup_tagCache_catchResponse &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155 ;
-  assign MUX_halfWrite$write_1__VAL_1 =
-	     { 1'd1,
-	       cache_request_put_val[140:94],
-	       IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6508 } ;
-  assign MUX_halfWrite$write_1__VAL_2 =
-	     { 1'd0,
-	       141'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign MUX_mReqs_ff_lhead$write_1__VAL_1 = mReqs_ff_lhead + 2'd1 ;
-  assign MUX_mReqs_ff_rf$upd_2__VAL_1 =
-	     (cache_request_put_val[93:92] == 2'd1 &&
-	      cache_request_put_val[7:0] != 8'd0) ?
-	       { halfWrite[140:94],
-		 CASE_halfWrite_BITS_93_TO_92_0_halfWrite_BITS__ETC__q17,
-		 halfWrite[91:0] } :
-	       { cache_request_put_val[140:94],
-		 IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6508 } ;
-  assign MUX_mReqs_ff_rf$upd_2__VAL_2 =
-	     { halfWrite[140:94],
-	       CASE_halfWrite_BITS_93_TO_92_0_halfWrite_BITS__ETC__q17,
-	       halfWrite[91:0] } ;
-  assign MUX_mReqs_ff_rf$upd_2__VAL_3 =
-	     { tagLookup_mReqs_ff_rf$D_OUT_1[140:94],
-	       CASE_tagLookup_mReqs_ff_rfD_OUT_1_BITS_93_TO__ETC__q18,
-	       tagLookup_mReqs_ff_rf$D_OUT_1[91:0] } ;
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156 ;
   assign MUX_tagLookup_currentDepth$write_1__VAL_1 =
 	     (tagLookup_state == 3'd2 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	      !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320 ||
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	      !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321 ||
 	      tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       tagLookup_currentDepth_338_MINUS_1___d5481 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5722 ;
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       tagLookup_currentDepth_339_MINUS_1___d5482 :
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5774 ;
   assign MUX_tagLookup_state$write_1__VAL_2 =
 	     (tagLookup_state == 3'd2 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	      !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) ?
-	       IF_tagLookup_currentDepth_338_EQ_0_339_THEN_1__ETC___d5725 :
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5735 ;
-  always@(cache_request_put_val or
-	  IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6570)
-  begin
-    case (cache_request_put_val[93:92])
-      2'd0: MUX_tagLookup_state$write_1__VAL_3 = 3'd2;
-      2'd1:
-	  MUX_tagLookup_state$write_1__VAL_3 =
-	      IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6570;
-      default: MUX_tagLookup_state$write_1__VAL_3 = 3'd1;
-    endcase
-  end
-  assign MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_1 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	      !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) ?
+	       IF_tagLookup_currentDepth_339_EQ_0_340_THEN_1__ETC___d5777 :
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5787 ;
+  assign MUX_tagLookup_state$write_1__VAL_3 =
+	     (cache_request_put_val[93:92] == 2'd1) ?
+	       (IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6325 ?
+		  3'd1 :
+		  (IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6341 ?
+		     3'd4 :
+		     3'd3)) :
+	       3'd2 ;
+  assign MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_2 =
 	     tagLookup_tagCacheReq_ff_lhead + 1'd1 ;
   assign MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_1 =
 	     { tagLookup_zeroAddr,
@@ -3527,28 +3846,26 @@ module mkTagController(CLK,
 	       87'h19FFFE0000000000000000,
 	       8'bxxxxxxxx /* unspecified value */  } ;
   assign MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_2 =
-	     { IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5498,
+	     { IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5499,
 	       1'd1,
 	       tagLookup_transNum,
 	       1'd0,
-	       IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5700 } ;
+	       IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5752 } ;
   assign MUX_tagLookup_tagCacheReq_ff_rf$write_1__VAL_3 =
-	     { _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537,
+	     { _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314,
 	       1'd1,
-	       tagLookup_transNum,
-	       1'd0,
-	       IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6564 } ;
+	       tagLookup_transNum_220_CONCAT_IF_cache_request_ETC___d6376 } ;
   assign MUX_tagLookup_tagCache_missedResp$wset_1__VAL_1 =
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_respsReady$wget &&
 	     (!tagLookup_tagCache_cacheState ||
 	      tagLookup_tagCache_resps$wget[224:223] != 2'd1 ||
-	      level__h8615 == 2'd2) &&
+	      level__h8582 == 2'd2) &&
 	     (!tagLookup_tagCache_cacheState ||
 	      tagLookup_tagCache_resps$wget[224:223] == 2'd0 ||
 	      tagLookup_tagCache_resps$wget[224:223] == 2'd1 ||
-	      level__h8615 == 2'd2) ;
-  always@(tagLookup_tagCache_cts or x1_avValue_snd_fst_key__h121150)
+	      level__h8582 == 2'd2) ;
+  always@(tagLookup_tagCache_cts or x1_avValue_snd_fst_key__h121130)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd1:
@@ -3556,16 +3873,16 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts[108:101];
       2'd2:
 	  MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 =
-	      x1_avValue_snd_fst_key__h121150;
+	      x1_avValue_snd_fst_key__h121130;
       default: MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 =
 		   tagLookup_tagCache_cts[108:101];
     endcase
   end
   assign MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_3__VAL_1 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q34,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643 } ;
-  assign MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_2 =
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q36,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4644 } ;
+  assign MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_1 =
 	     tagLookup_tagCache_writeResps_ff_lhead + 2'd1 ;
   assign MUX_tagLookup_tagCache_writeResps_ff_rf$upd_2__VAL_1 =
 	     { tagLookup_tagCache_resps$wget[232:227],
@@ -3577,39 +3894,39 @@ module mkTagController(CLK,
 	     tagLookup_useNextRsp_ff_lhead + 3'd1 ;
   assign MUX_tagLookup_useNextRsp_ff_rf$upd_2__VAL_2 =
 	     (tagLookup_state == 3'd2 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	      !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	      !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) ?
 	       tagLookup_currentDepth != 2'd0 &&
-	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 :
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5705 ;
+	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 :
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5757 ;
 
   // inlined wires
   assign tagLookup_tagCache_newReq$wget =
 	     { 1'd1,
 	       tagLookup_tagCacheReq_ff_rf[140:94],
-	       CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q19,
+	       CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q20,
 	       tagLookup_tagCacheReq_ff_rf[91:0] } ;
   assign tagLookup_tagCache_retryReqs_removeItem$wget =
 	     { 1'd1, tagLookup_tagCache_resps$wget[14:9] } ;
   assign tagLookup_tagCache_resps$wget =
-	     { x__h284312,
-	       x__h284334,
+	     { x__h284292,
+	       x__h284314,
 	       tagLookup_tagCache_cts[1:0],
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5033,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5036,
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5034,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5037,
 	       tagLookup_tagCache_cts[276:230],
-	       CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q36,
+	       CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q37,
 	       tagLookup_tagCache_cts[227:136],
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5078 } ;
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5079 } ;
   assign tagLookup_tagCache_respsReady$wget =
 	     tagLookup_tagCache_cts[278:277] != 2'd1 &&
-	     IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5052 ;
+	     IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5053 ;
   assign tagLookup_tagCache_missedResp$wget =
 	     MUX_tagLookup_tagCache_missedResp$wset_1__SEL_1 ?
 	       MUX_tagLookup_tagCache_missedResp$wset_1__VAL_1 :
 	       MUX_tagLookup_tagCache_missedResp$wset_1__VAL_1 ;
   assign tagLookup_tagCache_missedResp$whas =
-	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8615 != 2'd0 ||
+	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8582 != 2'd0 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_catchResponse ;
   assign tagLookup_tagCache_orderer_slaveReqs_insertItem$wget =
 	     { 1'd1,
@@ -3617,7 +3934,7 @@ module mkTagController(CLK,
 	       tagLookup_tagCacheReq_ff_rf[100:95],
 	       tagLookup_tagCacheReq_ff_rf[140:104],
 	       tagLookup_tagCacheReq_ff_rf[105:104] +
-	       IF_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_E_ETC__q40[1:0],
+	       IF_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_E_ETC__q41[1:0],
 	       tagLookup_tagCache_orderer_slaveAddrs_bag[41] &&
 	       tagLookup_tagCache_orderer_slaveAddrs_bag[40:6] ==
 	       tagLookup_tagCacheReq_ff_rf[140:106],
@@ -3651,7 +3968,7 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts[278:277] == 2'd0 &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3516 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 &&
-	      x__h102651 != 4'd0 &&
+	      x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ;
   assign tagLookup_tagCache_orderer_mastReqs_removeItem$wget =
@@ -3670,47 +3987,25 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_orderer_mastReqIds_rf[4:0],
 	       (tagLookup_tagCache_cts[278:277] == 2'd1) ?
 		 tagLookup_tagCache_cts[135:101] :
-		 x__h117046[36:2] } ;
-  assign lookupRsp_insertItem$wget =
-	     { 1'd1,
-	       tagLookup_reqeustId,
-	       tagLookup_reqeustId,
-	       tagLookup_readReqs_ff_dataReg,
-	       tagLookup_lookupRsp_ff_rf } ;
-  assign lookupRsp_removeItem$wget =
-	     { 1'd1,
-	       (level__h326233 == 6'd0) ?
-		 IF_NOT_tagOnlyReads_lhead_read__435_MINUS_tagO_ETC___d6773 :
-		 mRsps_ff_rf$D_OUT_1[76:71] } ;
-  assign lookupRsp_removeItem$whas =
-	     EN_cache_response_get &&
-	     IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6771 ;
-  assign addrFrame_insertItem$wget =
-	     { 1'd1,
-	       cache_request_put_val[100:95],
-	       cache_request_put_val[6],
-	       cache_request_put_val[105:104],
-	       cache_request_put_val[100:95] } ;
-  assign addrFrame_insertItem$whas =
-	     EN_cache_request_put && cache_request_put_val[93:92] == 2'd0 ;
+		 x__h117026[36:2] } ;
   assign tagLookup_getReq$whas =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5381 ;
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5382 ;
   assign tagLookup_readReqs_ff_full$port1__read =
 	     !CAN_FIRE_RL_getTagLookupResponse && tagLookup_readReqs_ff_full ;
   assign tagLookup_readReqs_ff_full$EN_port1__write =
-	     EN_cache_request_put && cache_request_put_val[93:92] == 2'd0 ;
+	     EN_cache_request_put && cache_request_put_val[93:92] != 2'd1 ;
   assign tagLookup_readReqs_ff_full$port2__read =
 	     tagLookup_readReqs_ff_full$EN_port1__write ||
 	     tagLookup_readReqs_ff_full$port1__read ;
   assign tagLookup_tagCache_req_commits_level$port0__write_1 =
 	     tagLookup_tagCache_req_commits_level + 5'd1 ;
   assign tagLookup_tagCache_req_commits_level$port1__write_1 =
-	     x_port1__read__h92293 - 5'd1 ;
+	     x_port1__read__h92267 - 5'd1 ;
   assign tagLookup_tagCache_req_commits_level$port2__read =
-	     NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5137 ?
+	     NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5138 ?
 	       tagLookup_tagCache_req_commits_level$port1__write_1 :
-	       x_port1__read__h92293 ;
+	       x_port1__read__h92267 ;
   assign tagLookup_tagCache_req_commits_rf$port0__write_1 =
 	     { tagLookup_tagCache_req_commits_head == 4'd15 ||
 	       tagLookup_tagCache_req_commits_rf[15],
@@ -3749,77 +4044,156 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_req_commits_rf$port0__write_1 :
 	       tagLookup_tagCache_req_commits_rf ;
 
-  // register addrFrame_bag
-  assign addrFrame_bag$D_IN =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       { 1'd1,
-		 addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156 ?
-		   addrFrame_insertItem$wget[14:0] :
-		   addrFrame_bag[62:48],
-		 IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6218,
-		 IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6242,
-		 IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6261 } :
-	       { IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6266,
-		 IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6269,
-		 IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6273,
-		 IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6276 } ;
-  assign addrFrame_bag$EN = 1'd1 ;
+  // register addrFrame_fifos_0_lhead
+  assign addrFrame_fifos_0_lhead$D_IN = x__h327624 ;
+  assign addrFrame_fifos_0_lhead$EN =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6170 ||
+	      x__h327135 == 2'd0 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
 
-  // register addrFrame_nextValidKeyReg
-  assign addrFrame_nextValidKeyReg$D_IN = _theResult_____1__h324635 ;
-  assign addrFrame_nextValidKeyReg$EN =
-	     IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6306 ;
+  // register addrFrame_fifos_0_ltail
+  assign addrFrame_fifos_0_ltail$D_IN = addrFrame_fifos_0_ltail + 3'd1 ;
+  assign addrFrame_fifos_0_ltail$EN =
+	     EN_cache_response_get && x__h343315 == 2'd0 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
 
-  // register frame
-  assign frame$D_IN =
-	     (IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6650 &&
-	      (level__h326233 == 6'd0 ||
-	       mRsps_ff_rf$D_OUT_1[68:67] == 2'd0)) ?
-	       ((IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6765 ||
-		 IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6766) ?
-		  3'd0 :
-		  x__h344283) :
-	       3'd0 ;
-  assign frame$EN = EN_cache_response_get ;
+  // register addrFrame_fifos_1_lhead
+  assign addrFrame_fifos_1_lhead$D_IN = x__h327667 ;
+  assign addrFrame_fifos_1_lhead$EN =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6182 ||
+	      x__h327135 == 2'd1 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
 
-  // register halfWrite
-  assign halfWrite$D_IN =
-	     MUX_halfWrite$write_1__SEL_1 ?
-	       MUX_halfWrite$write_1__VAL_1 :
-	       MUX_halfWrite$write_1__VAL_2 ;
-  assign halfWrite$EN =
-	     EN_cache_request_put && cache_request_put_val[93:92] == 2'd1 &&
-	     cache_request_put_val[7:0] != 8'd0 ||
-	     WILL_FIRE_RL_sendSecondHalfWrite ;
+  // register addrFrame_fifos_1_ltail
+  assign addrFrame_fifos_1_ltail$D_IN = addrFrame_fifos_1_ltail + 3'd1 ;
+  assign addrFrame_fifos_1_ltail$EN =
+	     EN_cache_response_get && x__h343315 == 2'd1 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
 
-  // register lookupRsp_bag
-  assign lookupRsp_bag$D_IN =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5912,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5962,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5973 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6008 } ;
-  assign lookupRsp_bag$EN = 1'd1 ;
+  // register addrFrame_fifos_2_lhead
+  assign addrFrame_fifos_2_lhead$D_IN = x__h327710 ;
+  assign addrFrame_fifos_2_lhead$EN =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6191 ||
+	      x__h327135 == 2'd2 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
 
-  // register lookupRsp_nextValidKeyReg
-  assign lookupRsp_nextValidKeyReg$D_IN = _theResult_____1__h321004 ;
-  assign lookupRsp_nextValidKeyReg$EN =
-	     IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6037 ;
+  // register addrFrame_fifos_2_ltail
+  assign addrFrame_fifos_2_ltail$D_IN = addrFrame_fifos_2_ltail + 3'd1 ;
+  assign addrFrame_fifos_2_ltail$EN =
+	     EN_cache_response_get && x__h343315 == 2'd2 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
 
-  // register mReqs_ff_lhead
-  assign mReqs_ff_lhead$D_IN =
-	     MUX_mReqs_ff_lhead$write_1__SEL_1 ?
-	       MUX_mReqs_ff_lhead$write_1__VAL_1 :
-	       MUX_mReqs_ff_lhead$write_1__VAL_1 ;
-  assign mReqs_ff_lhead$EN =
-	     MUX_mReqs_ff_lhead$write_1__SEL_1 ||
-	     WILL_FIRE_RL_sendSecondHalfWrite ||
-	     WILL_FIRE_RL_forwardLookupReqs ;
+  // register addrFrame_fifos_3_lhead
+  assign addrFrame_fifos_3_lhead$D_IN = x__h327753 ;
+  assign addrFrame_fifos_3_lhead$EN =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6200 ||
+	      x__h327135 == 2'd3 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
 
-  // register mReqs_ff_ltail
-  assign mReqs_ff_ltail$D_IN = mReqs_ff_ltail + 2'd1 ;
-  assign mReqs_ff_ltail$EN = EN_memory_request_get ;
+  // register addrFrame_fifos_3_ltail
+  assign addrFrame_fifos_3_ltail$D_IN = addrFrame_fifos_3_ltail + 3'd1 ;
+  assign addrFrame_fifos_3_ltail$EN =
+	     EN_cache_response_get && x__h343315 == 2'd3 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
+
+  // register lookupId_ff_lhead
+  assign lookupId_ff_lhead$D_IN = lookupId_ff_lhead + 2'd1 ;
+  assign lookupId_ff_lhead$EN =
+	     EN_cache_request_put && cache_request_put_val[93:92] != 2'd1 ;
+
+  // register lookupId_ff_ltail
+  assign lookupId_ff_ltail$D_IN = lookupId_ff_ltail + 2'd1 ;
+  assign lookupId_ff_ltail$EN = CAN_FIRE_RL_getTagLookupResponse ;
+
+  // register lookupRsp_fifos_0_lhead
+  assign lookupRsp_fifos_0_lhead$D_IN = x__h319788 ;
+  assign lookupRsp_fifos_0_lhead$EN =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo35 ;
+
+  // register lookupRsp_fifos_0_ltail
+  assign lookupRsp_fifos_0_ltail$D_IN = lookupRsp_fifos_0_ltail + 3'd1 ;
+  assign lookupRsp_fifos_0_ltail$EN =
+	     EN_cache_response_get && x__h342476 == 2'd0 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
+
+  // register lookupRsp_fifos_1_lhead
+  assign lookupRsp_fifos_1_lhead$D_IN = x__h320223 ;
+  assign lookupRsp_fifos_1_lhead$EN =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo29 ;
+
+  // register lookupRsp_fifos_1_ltail
+  assign lookupRsp_fifos_1_ltail$D_IN = lookupRsp_fifos_1_ltail + 3'd1 ;
+  assign lookupRsp_fifos_1_ltail$EN =
+	     EN_cache_response_get && x__h342476 == 2'd1 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
+
+  // register lookupRsp_fifos_2_lhead
+  assign lookupRsp_fifos_2_lhead$D_IN = x__h320658 ;
+  assign lookupRsp_fifos_2_lhead$EN =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo23 ;
+
+  // register lookupRsp_fifos_2_ltail
+  assign lookupRsp_fifos_2_ltail$D_IN = lookupRsp_fifos_2_ltail + 3'd1 ;
+  assign lookupRsp_fifos_2_ltail$EN =
+	     EN_cache_response_get && x__h342476 == 2'd2 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
+
+  // register lookupRsp_fifos_3_lhead
+  assign lookupRsp_fifos_3_lhead$D_IN = x__h321093 ;
+  assign lookupRsp_fifos_3_lhead$EN =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo17 ;
+
+  // register lookupRsp_fifos_3_ltail
+  assign lookupRsp_fifos_3_ltail$D_IN = lookupRsp_fifos_3_ltail + 3'd1 ;
+  assign lookupRsp_fifos_3_ltail$EN =
+	     EN_cache_response_get && x__h342476 == 2'd3 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ;
+
+  // register mReqBurst_lhead
+  assign mReqBurst_lhead$D_IN = mReqBurst_lhead + 3'd1 ;
+  assign mReqBurst_lhead$EN =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] != 2'd0 ||
+	      !cache_request_put_val[6]) &&
+	     (cache_request_put_val[93:92] != 2'd1 ||
+	      cache_request_put_val[91]) ;
+
+  // register mReqBurst_ltail
+  assign mReqBurst_ltail$D_IN = mReqBurst_ltail + 3'd1 ;
+  assign mReqBurst_ltail$EN =
+	     EN_memory_request_get && level__h316294 != 3'd0 &&
+	     (mReqs_rf$D_OUT_1[93:92] != 2'd1 || mReqs_rf$D_OUT_1[91]) ;
+
+  // register mReqs_lhead
+  assign mReqs_lhead$D_IN = mReqs_lhead + 5'd1 ;
+  assign mReqs_lhead$EN =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] != 2'd0 ||
+	      !cache_request_put_val[6]) ;
+
+  // register mReqs_ltail
+  assign mReqs_ltail$D_IN = mReqs_ltail + 5'd1 ;
+  assign mReqs_ltail$EN = EN_memory_request_get && level__h316294 != 3'd0 ;
 
   // register mRsps_ff_lhead
   assign mRsps_ff_lhead$D_IN = mRsps_ff_lhead + 6'd1 ;
@@ -3830,8 +4204,18 @@ module mkTagController(CLK,
   assign mRsps_ff_ltail$D_IN = mRsps_ff_ltail + 6'd1 ;
   assign mRsps_ff_ltail$EN =
 	     EN_cache_response_get &&
-	     (level__h326233 != 6'd0 || level__h325540 == 3'd0 ||
-	      frame != 3'd0) ;
+	     (level__h316619 != 6'd0 || level__h314722 == 3'd0 ||
+	      memoryResponseFrame != 3'd0) ;
+
+  // register memoryResponseFrame
+  assign memoryResponseFrame$D_IN =
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 ?
+	       ((IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+		 IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) ?
+		  3'd0 :
+		  x__h343468) :
+	       3'd0 ;
+  assign memoryResponseFrame$EN = EN_cache_response_get ;
 
   // register tagLookup_currentDepth
   assign tagLookup_currentDepth$D_IN =
@@ -3840,18 +4224,16 @@ module mkTagController(CLK,
 	       2'd1 ;
   assign tagLookup_currentDepth$EN =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // register tagLookup_lookupRsp_ff_lhead
   assign tagLookup_lookupRsp_ff_lhead$D_IN =
 	     tagLookup_lookupRsp_ff_lhead + 1'd1 ;
   assign tagLookup_lookupRsp_ff_lhead$EN =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5382 ;
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5383 ;
 
   // register tagLookup_lookupRsp_ff_ltail
   assign tagLookup_lookupRsp_ff_ltail$D_IN =
@@ -3863,14 +4245,14 @@ module mkTagController(CLK,
   // register tagLookup_lookupRsp_ff_rf
   assign tagLookup_lookupRsp_ff_rf$D_IN =
 	     (tagLookup_currentDepth == 2'd0) ?
-	       { CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42,
-		 CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43,
-		 CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44,
-		 CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 } :
+	       { CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43,
+		 CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44,
+		 CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45,
+		 CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 } :
 	       4'd0 ;
   assign tagLookup_lookupRsp_ff_rf$EN =
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5382 ;
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5383 ;
 
   // register tagLookup_mReqs_ff_lhead
   assign tagLookup_mReqs_ff_lhead$D_IN = tagLookup_mReqs_ff_lhead + 4'd1 ;
@@ -3879,7 +4261,8 @@ module mkTagController(CLK,
 
   // register tagLookup_mReqs_ff_ltail
   assign tagLookup_mReqs_ff_ltail$D_IN = tagLookup_mReqs_ff_ltail + 4'd1 ;
-  assign tagLookup_mReqs_ff_ltail$EN = CAN_FIRE_RL_forwardLookupReqs ;
+  assign tagLookup_mReqs_ff_ltail$EN =
+	     EN_memory_request_get && level__h316294 == 3'd0 ;
 
   // register tagLookup_mRsps_ff_lhead
   assign tagLookup_mRsps_ff_lhead$D_IN = tagLookup_mRsps_ff_lhead + 2'd1 ;
@@ -3918,48 +4301,50 @@ module mkTagController(CLK,
 	     WILL_FIRE_RL_tagLookup_doLookup &&
 	     tagLookup_currentDepth == 2'd1 &&
 	     tagLookup_state == 3'd4 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	     IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ;
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	     IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ;
 
   // register tagLookup_pendingCapEnable
   assign tagLookup_pendingCapEnable$D_IN =
-	     cache_request_put_val[93:92] != 2'd0 &&
-	     _0_OR_cache_request_put_val_BITS_93_TO_92_442_E_ETC___d6531 ;
+	     (cache_request_put_val[93:92] == 2'd1) ?
+	       { IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6268,
+		 IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6265,
+		 IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6262,
+		 IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6259 } :
+	       4'd0 ;
   assign tagLookup_pendingCapEnable$EN =
 	     MUX_tagLookup_currentDepth$write_1__SEL_2 ;
 
   // register tagLookup_pendingCapNumber
   assign tagLookup_pendingCapNumber$D_IN =
-	     cache_request_put_val_BITS_140_TO_101_471_MINU_ETC___d6525[39:4] ;
+	     cache_request_put_val_BITS_140_TO_107_272_CONC_ETC___d6289[39:4] ;
   assign tagLookup_pendingCapNumber$EN =
 	     MUX_tagLookup_currentDepth$write_1__SEL_2 ;
 
   // register tagLookup_pendingTags
   assign tagLookup_pendingTags$D_IN =
-	     cache_request_put_val[93:92] == 2'd1 &&
-	     cache_request_put_val[72] ;
+	     (cache_request_put_val[93:92] == 2'd1) ?
+	       { IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6293,
+		 IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6295,
+		 IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6298,
+		 IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6300 } :
+	       4'd0 ;
   assign tagLookup_pendingTags$EN =
 	     MUX_tagLookup_currentDepth$write_1__SEL_2 ;
 
   // register tagLookup_readReqs_ff_dataReg
   assign tagLookup_readReqs_ff_dataReg$D_IN =
-	     (cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-	      !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	     cache_request_put_val[140:101] >= 40'h00C0000000 &&
-	     cache_request_put_val[140:101] < 40'h00FFFFC000 ;
-  assign tagLookup_readReqs_ff_dataReg$EN = addrFrame_insertItem$whas ;
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 ;
+  assign tagLookup_readReqs_ff_dataReg$EN =
+	     EN_cache_request_put && cache_request_put_val[93:92] != 2'd1 ;
 
   // register tagLookup_readReqs_ff_full
   assign tagLookup_readReqs_ff_full$D_IN =
 	     tagLookup_readReqs_ff_full$port2__read ;
   assign tagLookup_readReqs_ff_full$EN = 1'b1 ;
-
-  // register tagLookup_reqeustId
-  assign tagLookup_reqeustId$D_IN = cache_request_put_val[100:95] ;
-  assign tagLookup_reqeustId$EN =
-	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) ;
 
   // register tagLookup_state
   always@(MUX_tagLookup_state$write_1__SEL_1 or
@@ -3979,44 +4364,40 @@ module mkTagController(CLK,
   end
   assign tagLookup_state$EN =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     !tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
+	     !tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // register tagLookup_tagCacheReq_ff_lhead
   always@(MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_1 or
-	  MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_1 or
+	  MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_2 or
 	  MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_2 or
 	  MUX_tagLookup_currentDepth$write_1__SEL_2)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_1:
 	  tagLookup_tagCacheReq_ff_lhead$D_IN =
-	      MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_1;
+	      MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_2;
       MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_2:
 	  tagLookup_tagCacheReq_ff_lhead$D_IN =
-	      MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_1;
+	      MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_2;
       MUX_tagLookup_currentDepth$write_1__SEL_2:
 	  tagLookup_tagCacheReq_ff_lhead$D_IN =
-	      MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_1;
+	      MUX_tagLookup_tagCacheReq_ff_lhead$write_1__VAL_2;
       default: tagLookup_tagCacheReq_ff_lhead$D_IN =
 		   1'bx /* unspecified value */ ;
     endcase
   end
   assign tagLookup_tagCacheReq_ff_lhead$EN =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // register tagLookup_tagCacheReq_ff_ltail
   assign tagLookup_tagCacheReq_ff_ltail$D_IN =
@@ -4048,14 +4429,12 @@ module mkTagController(CLK,
   end
   assign tagLookup_tagCacheReq_ff_rf$EN =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // register tagLookup_tagCache_cacheState
   assign tagLookup_tagCache_cacheState$D_IN = 1'd1 ;
@@ -4072,7 +4451,7 @@ module mkTagController(CLK,
 	       IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d3055,
 	       tagLookup_tagCache_cts[95:93],
 	       IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d2893,
-	       newCt_way__h74803,
+	       newCt_way__h74771,
 	       !tagLookup_tagCache_writebacks$EMPTY_N ||
 	       tagLookup_tagCache_writebackWriteBank == 2'd3,
 	       NOT_tagLookup_tagCache_writebacks_i_notEmpty___ETC___d3076,
@@ -4087,19 +4466,19 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_data_0_writeAddr
   assign tagLookup_tagCache_data_0_writeAddr$D_IN =
-	     (way__h98148 == 1'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
-	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3980 :
+	     (way__h98128 == 1'd0 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
+	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3981 :
 	       tagLookup_tagCache_cts[108:99] ;
   assign tagLookup_tagCache_data_0_writeAddr$EN =
 	     tagLookup_tagCache_cacheState && _dfoo9 ;
 
   // register tagLookup_tagCache_data_0_writeData
   assign tagLookup_tagCache_data_0_writeData$D_IN =
-	     (way__h98148 == 1'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
+	     (way__h98128 == 1'd0 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[63:0] :
-	       maskedWrite_data__h117935 ;
+	       maskedWrite_data__h117915 ;
   assign tagLookup_tagCache_data_0_writeData$EN =
 	     tagLookup_tagCache_cacheState && _dfoo9 ;
 
@@ -4111,19 +4490,19 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_data_1_writeAddr
   assign tagLookup_tagCache_data_1_writeAddr$D_IN =
-	     (way__h98148 == 1'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
-	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3980 :
+	     (way__h98128 == 1'd1 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
+	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3981 :
 	       tagLookup_tagCache_cts[108:99] ;
   assign tagLookup_tagCache_data_1_writeAddr$EN =
 	     tagLookup_tagCache_cacheState && _dfoo1 ;
 
   // register tagLookup_tagCache_data_1_writeData
   assign tagLookup_tagCache_data_1_writeData$D_IN =
-	     (way__h98148 == 1'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
+	     (way__h98128 == 1'd1 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[63:0] :
-	       maskedWrite_data__h117935 ;
+	       maskedWrite_data__h117915 ;
   assign tagLookup_tagCache_data_1_writeData$EN =
 	     tagLookup_tagCache_cacheState && _dfoo1 ;
 
@@ -4137,7 +4516,7 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_initCount
   assign tagLookup_tagCache_initCount$D_IN =
-	     (tagLookup_tagCache_initCount == 8'd255) ? 8'd0 : x__h72110 ;
+	     (tagLookup_tagCache_initCount == 8'd255) ? 8'd0 : x__h72077 ;
   assign tagLookup_tagCache_initCount$EN =
 	     CAN_FIRE_RL_tagLookup_tagCache_initialize ;
 
@@ -4171,13 +4550,13 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_nextWay$EN =
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	     NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4094 ;
+	     NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4095 ;
 
   // register tagLookup_tagCache_orderer_lookupState
   assign tagLookup_tagCache_orderer_lookupState$D_IN =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
-	       { tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[4:3] !=
+	       { tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[4:3] !=
 		 IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2820,
 		 tagLookup_tagCache_newReq$wget[100:95],
 		 IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2829 } :
@@ -4231,15 +4610,15 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_orderer_mastLines_nextValidKeyReg
   assign tagLookup_tagCache_orderer_mastLines_nextValidKeyReg$D_IN =
-	     _theResult_____1__h43322 ;
+	     _theResult_____1__h43289 ;
   assign tagLookup_tagCache_orderer_mastLines_nextValidKeyReg$EN =
 	     IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2201 ;
 
   // register tagLookup_tagCache_orderer_mastReqIds_lhead
   assign tagLookup_tagCache_orderer_mastReqIds_lhead$D_IN =
 	     tagLookup_tagCache_orderer_mastReqs_removeItem$whas ?
-	       newHead___1__h49393 :
-	       newHead__h48715 ;
+	       newHead___1__h49360 :
+	       newHead__h48682 ;
   assign tagLookup_tagCache_orderer_mastReqIds_lhead$EN = 1'd1 ;
 
   // register tagLookup_tagCache_orderer_mastReqIds_rf
@@ -4308,7 +4687,7 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg
   assign tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg$D_IN =
-	     _theResult_____1__h31533 ;
+	     _theResult_____1__h31500 ;
   assign tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg$EN =
 	     IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1030 ;
 
@@ -4328,7 +4707,7 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_orderer_slaveAddrs_bag$D_IN =
 	     { CAN_FIRE_RL_tagLookup_feedTagCache &&
 	       tagLookup_tagCache_orderer_slaveAddrs_insertItem$wget[41] ||
-	       (!NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5111 ||
+	       (!NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5112 ||
 		!tagLookup_tagCache_orderer_slaveAddrs_removeItem$wget[35] ||
 		tagLookup_tagCache_orderer_slaveAddrs_bag[40:6] !=
 		tagLookup_tagCache_orderer_slaveAddrs_removeItem$wget[34:0]) &&
@@ -4354,7 +4733,7 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_orderer_slaveReqs_insertItem$wget[58]) ?
 	       { CAN_FIRE_RL_tagLookup_feedTagCache,
 		 tagLookup_tagCache_orderer_slaveReqs_insertItem$wget[57:0] } :
-	       { (!NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5095 ||
+	       { (!NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5096 ||
 		  !tagLookup_tagCache_retryReqs_removeItem$wget[6] ||
 		  tagLookup_tagCache_orderer_slaveReqs_bag[57] !=
 		  tagLookup_tagCache_retryReqs_removeItem$wget[5] ||
@@ -4397,9 +4776,9 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_readReqReg
   assign tagLookup_tagCache_readReqReg$D_IN =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q46,
-	       x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278781,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4944 } ;
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q47,
+	       x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278761,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4945 } ;
   assign tagLookup_tagCache_readReqReg$EN = tagLookup_tagCache_cacheState ;
 
   // register tagLookup_tagCache_readReqs_bag
@@ -4427,11 +4806,11 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_req_commits_tail$D_IN =
 	     tagLookup_tagCache_req_commits_tail + 4'd1 ;
   assign tagLookup_tagCache_req_commits_tail$EN =
-	     NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5137 ;
+	     NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5138 ;
 
   // register tagLookup_tagCache_retryReqs_bag
   assign tagLookup_tagCache_retryReqs_bag$D_IN =
-	     { (!NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5095 ||
+	     { (!NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5096 ||
 		!tagLookup_tagCache_retryReqs_removeItem$wget[6] ||
 		tagLookup_tagCache_retryReqs_bag[146] !=
 		tagLookup_tagCache_retryReqs_removeItem$wget[5] ||
@@ -4466,8 +4845,8 @@ module mkTagController(CLK,
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 :
 	       tagLookup_tagCache_initCount ;
   assign tagLookup_tagCache_tags_0_writeAddr$EN =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd0 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd0 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // register tagLookup_tagCache_tags_0_writeData
@@ -4476,8 +4855,8 @@ module mkTagController(CLK,
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_3__VAL_1 :
 	       41'd0 ;
   assign tagLookup_tagCache_tags_0_writeData$EN =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd0 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd0 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // register tagLookup_tagCache_tags_1_readAddr
@@ -4492,34 +4871,34 @@ module mkTagController(CLK,
 
   // register tagLookup_tagCache_tags_1_writeAddr
   assign tagLookup_tagCache_tags_1_writeAddr$D_IN =
-	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 ?
+	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 :
 	       tagLookup_tagCache_initCount ;
   assign tagLookup_tagCache_tags_1_writeAddr$EN =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd1 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd1 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // register tagLookup_tagCache_tags_1_writeData
   assign tagLookup_tagCache_tags_1_writeData$D_IN =
-	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 ?
+	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_3__VAL_1 :
 	       41'd0 ;
   assign tagLookup_tagCache_tags_1_writeData$EN =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd1 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd1 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // register tagLookup_tagCache_writeResps_ff_lhead
   assign tagLookup_tagCache_writeResps_ff_lhead$D_IN =
 	     MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__SEL_1 ?
-	       MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_2 :
-	       MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_2 ;
+	       MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_1 :
+	       MUX_tagLookup_tagCache_writeResps_ff_lhead$write_1__VAL_1 ;
   assign tagLookup_tagCache_writeResps_ff_lhead$EN =
 	     WILL_FIRE_RL_tagLookup_tagCache_catchResponse &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155 ||
-	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8615 != 2'd0 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155 ;
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156 ||
+	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8582 != 2'd0 &&
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156 ;
 
   // register tagLookup_tagCache_writeResps_ff_ltail
   assign tagLookup_tagCache_writeResps_ff_ltail$D_IN =
@@ -4562,14 +4941,12 @@ module mkTagController(CLK,
   end
   assign tagLookup_transNum$EN =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // register tagLookup_useNextRsp_ff_lhead
   always@(MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_1 or
@@ -4593,14 +4970,12 @@ module mkTagController(CLK,
   end
   assign tagLookup_useNextRsp_ff_lhead$EN =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // register tagLookup_useNextRsp_ff_ltail
   assign tagLookup_useNextRsp_ff_ltail$D_IN =
@@ -4610,7 +4985,7 @@ module mkTagController(CLK,
 
   // register tagLookup_zeroAddr
   assign tagLookup_zeroAddr$D_IN =
-	     { x_lineNumber__h292966, tagLookup_zeroAddr[2:0] } ;
+	     { x_lineNumber__h293649, tagLookup_zeroAddr[2:0] } ;
   assign tagLookup_zeroAddr$EN =
 	     MUX_tagLookup_tagCacheReq_ff_lhead$write_1__SEL_1 ;
 
@@ -4624,38 +4999,162 @@ module mkTagController(CLK,
   assign tagOnlyReads_ltail$D_IN = tagOnlyReads_ltail + 3'd1 ;
   assign tagOnlyReads_ltail$EN =
 	     EN_cache_response_get &&
-	     IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6650 &&
-	     (level__h326233 == 6'd0 || mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) &&
-	     IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6766 ;
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648 ;
 
-  // submodule mReqs_ff_rf
-  assign mReqs_ff_rf$ADDR_1 = mReqs_ff_ltail[0] ;
-  assign mReqs_ff_rf$ADDR_2 = 1'b0 ;
-  assign mReqs_ff_rf$ADDR_3 = 1'b0 ;
-  assign mReqs_ff_rf$ADDR_4 = 1'b0 ;
-  assign mReqs_ff_rf$ADDR_5 = 1'b0 ;
-  assign mReqs_ff_rf$ADDR_IN = mReqs_ff_lhead[0] ;
-  always@(MUX_mReqs_ff_lhead$write_1__SEL_1 or
-	  MUX_mReqs_ff_rf$upd_2__VAL_1 or
-	  WILL_FIRE_RL_sendSecondHalfWrite or
-	  MUX_mReqs_ff_rf$upd_2__VAL_2 or
-	  WILL_FIRE_RL_forwardLookupReqs or MUX_mReqs_ff_rf$upd_2__VAL_3)
-  begin
-    case (1'b1) // synopsys parallel_case
-      MUX_mReqs_ff_lhead$write_1__SEL_1:
-	  mReqs_ff_rf$D_IN = MUX_mReqs_ff_rf$upd_2__VAL_1;
-      WILL_FIRE_RL_sendSecondHalfWrite:
-	  mReqs_ff_rf$D_IN = MUX_mReqs_ff_rf$upd_2__VAL_2;
-      WILL_FIRE_RL_forwardLookupReqs:
-	  mReqs_ff_rf$D_IN = MUX_mReqs_ff_rf$upd_2__VAL_3;
-      default: mReqs_ff_rf$D_IN =
-		   141'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
-    endcase
-  end
-  assign mReqs_ff_rf$WE =
-	     MUX_mReqs_ff_lhead$write_1__SEL_1 ||
-	     WILL_FIRE_RL_sendSecondHalfWrite ||
-	     WILL_FIRE_RL_forwardLookupReqs ;
+  // register tagWrite
+  assign tagWrite$D_IN =
+	     { !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6293,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6295,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6298,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6300,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6268,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6265,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6262,
+	       !cache_request_put_val[91] &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6259 } ;
+  assign tagWrite$EN =
+	     EN_cache_request_put && cache_request_put_val[93:92] == 2'd1 ;
+
+  // submodule addrFrame_fifos_0_rf
+  assign addrFrame_fifos_0_rf$ADDR_1 = addrFrame_fifos_0_ltail[1:0] ;
+  assign addrFrame_fifos_0_rf$ADDR_2 = 2'h0 ;
+  assign addrFrame_fifos_0_rf$ADDR_3 = 2'h0 ;
+  assign addrFrame_fifos_0_rf$ADDR_4 = 2'h0 ;
+  assign addrFrame_fifos_0_rf$ADDR_5 = 2'h0 ;
+  assign addrFrame_fifos_0_rf$ADDR_IN = addrFrame_fifos_0_lhead[1:0] ;
+  assign addrFrame_fifos_0_rf$D_IN =
+	     { cache_request_put_val[100:95],
+	       cache_request_put_val[6],
+	       cache_request_put_val[105:104],
+	       cache_request_put_val[100:95] } ;
+  assign addrFrame_fifos_0_rf$WE =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6170 ||
+	      x__h327135 == 2'd0 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
+
+  // submodule addrFrame_fifos_1_rf
+  assign addrFrame_fifos_1_rf$ADDR_1 = addrFrame_fifos_1_ltail[1:0] ;
+  assign addrFrame_fifos_1_rf$ADDR_2 = 2'h0 ;
+  assign addrFrame_fifos_1_rf$ADDR_3 = 2'h0 ;
+  assign addrFrame_fifos_1_rf$ADDR_4 = 2'h0 ;
+  assign addrFrame_fifos_1_rf$ADDR_5 = 2'h0 ;
+  assign addrFrame_fifos_1_rf$ADDR_IN = addrFrame_fifos_1_lhead[1:0] ;
+  assign addrFrame_fifos_1_rf$D_IN = addrFrame_fifos_0_rf$D_IN ;
+  assign addrFrame_fifos_1_rf$WE =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6182 ||
+	      x__h327135 == 2'd1 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
+
+  // submodule addrFrame_fifos_2_rf
+  assign addrFrame_fifos_2_rf$ADDR_1 = addrFrame_fifos_2_ltail[1:0] ;
+  assign addrFrame_fifos_2_rf$ADDR_2 = 2'h0 ;
+  assign addrFrame_fifos_2_rf$ADDR_3 = 2'h0 ;
+  assign addrFrame_fifos_2_rf$ADDR_4 = 2'h0 ;
+  assign addrFrame_fifos_2_rf$ADDR_5 = 2'h0 ;
+  assign addrFrame_fifos_2_rf$ADDR_IN = addrFrame_fifos_2_lhead[1:0] ;
+  assign addrFrame_fifos_2_rf$D_IN = addrFrame_fifos_0_rf$D_IN ;
+  assign addrFrame_fifos_2_rf$WE =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6191 ||
+	      x__h327135 == 2'd2 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
+
+  // submodule addrFrame_fifos_3_rf
+  assign addrFrame_fifos_3_rf$ADDR_1 = addrFrame_fifos_3_ltail[1:0] ;
+  assign addrFrame_fifos_3_rf$ADDR_2 = 2'h0 ;
+  assign addrFrame_fifos_3_rf$ADDR_3 = 2'h0 ;
+  assign addrFrame_fifos_3_rf$ADDR_4 = 2'h0 ;
+  assign addrFrame_fifos_3_rf$ADDR_5 = 2'h0 ;
+  assign addrFrame_fifos_3_rf$ADDR_IN = addrFrame_fifos_3_lhead[1:0] ;
+  assign addrFrame_fifos_3_rf$D_IN = addrFrame_fifos_0_rf$D_IN ;
+  assign addrFrame_fifos_3_rf$WE =
+	     EN_cache_request_put &&
+	     (IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6200 ||
+	      x__h327135 == 2'd3 && cache_request_put_val[93:92] == 2'd0 &&
+	      addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216) ;
+
+  // submodule lookupId_ff_rf
+  assign lookupId_ff_rf$ADDR_1 = lookupId_ff_ltail[0] ;
+  assign lookupId_ff_rf$ADDR_2 = 1'b0 ;
+  assign lookupId_ff_rf$ADDR_3 = 1'b0 ;
+  assign lookupId_ff_rf$ADDR_4 = 1'b0 ;
+  assign lookupId_ff_rf$ADDR_5 = 1'b0 ;
+  assign lookupId_ff_rf$ADDR_IN = lookupId_ff_lhead[0] ;
+  assign lookupId_ff_rf$D_IN = cache_request_put_val[100:95] ;
+  assign lookupId_ff_rf$WE =
+	     EN_cache_request_put && cache_request_put_val[93:92] != 2'd1 ;
+
+  // submodule lookupRsp_fifos_0_rf
+  assign lookupRsp_fifos_0_rf$ADDR_1 = lookupRsp_fifos_0_ltail[1:0] ;
+  assign lookupRsp_fifos_0_rf$ADDR_2 = 2'h0 ;
+  assign lookupRsp_fifos_0_rf$ADDR_3 = 2'h0 ;
+  assign lookupRsp_fifos_0_rf$ADDR_4 = 2'h0 ;
+  assign lookupRsp_fifos_0_rf$ADDR_5 = 2'h0 ;
+  assign lookupRsp_fifos_0_rf$ADDR_IN = lookupRsp_fifos_0_lhead[1:0] ;
+  assign lookupRsp_fifos_0_rf$D_IN =
+	     { lookupId_ff_rf$D_OUT_1,
+	       tagLookup_readReqs_ff_dataReg,
+	       tagLookup_lookupRsp_ff_rf } ;
+  assign lookupRsp_fifos_0_rf$WE =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo35 ;
+
+  // submodule lookupRsp_fifos_1_rf
+  assign lookupRsp_fifos_1_rf$ADDR_1 = lookupRsp_fifos_1_ltail[1:0] ;
+  assign lookupRsp_fifos_1_rf$ADDR_2 = 2'h0 ;
+  assign lookupRsp_fifos_1_rf$ADDR_3 = 2'h0 ;
+  assign lookupRsp_fifos_1_rf$ADDR_4 = 2'h0 ;
+  assign lookupRsp_fifos_1_rf$ADDR_5 = 2'h0 ;
+  assign lookupRsp_fifos_1_rf$ADDR_IN = lookupRsp_fifos_1_lhead[1:0] ;
+  assign lookupRsp_fifos_1_rf$D_IN = lookupRsp_fifos_0_rf$D_IN ;
+  assign lookupRsp_fifos_1_rf$WE =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo29 ;
+
+  // submodule lookupRsp_fifos_2_rf
+  assign lookupRsp_fifos_2_rf$ADDR_1 = lookupRsp_fifos_2_ltail[1:0] ;
+  assign lookupRsp_fifos_2_rf$ADDR_2 = 2'h0 ;
+  assign lookupRsp_fifos_2_rf$ADDR_3 = 2'h0 ;
+  assign lookupRsp_fifos_2_rf$ADDR_4 = 2'h0 ;
+  assign lookupRsp_fifos_2_rf$ADDR_5 = 2'h0 ;
+  assign lookupRsp_fifos_2_rf$ADDR_IN = lookupRsp_fifos_2_lhead[1:0] ;
+  assign lookupRsp_fifos_2_rf$D_IN = lookupRsp_fifos_0_rf$D_IN ;
+  assign lookupRsp_fifos_2_rf$WE =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo23 ;
+
+  // submodule lookupRsp_fifos_3_rf
+  assign lookupRsp_fifos_3_rf$ADDR_1 = lookupRsp_fifos_3_ltail[1:0] ;
+  assign lookupRsp_fifos_3_rf$ADDR_2 = 2'h0 ;
+  assign lookupRsp_fifos_3_rf$ADDR_3 = 2'h0 ;
+  assign lookupRsp_fifos_3_rf$ADDR_4 = 2'h0 ;
+  assign lookupRsp_fifos_3_rf$ADDR_5 = 2'h0 ;
+  assign lookupRsp_fifos_3_rf$ADDR_IN = lookupRsp_fifos_3_lhead[1:0] ;
+  assign lookupRsp_fifos_3_rf$D_IN = lookupRsp_fifos_0_rf$D_IN ;
+  assign lookupRsp_fifos_3_rf$WE =
+	     WILL_FIRE_RL_getTagLookupResponse && _dfoo17 ;
+
+  // submodule mReqs_rf
+  assign mReqs_rf$ADDR_1 = mReqs_ltail[3:0] ;
+  assign mReqs_rf$ADDR_2 = 4'h0 ;
+  assign mReqs_rf$ADDR_3 = 4'h0 ;
+  assign mReqs_rf$ADDR_4 = 4'h0 ;
+  assign mReqs_rf$ADDR_5 = 4'h0 ;
+  assign mReqs_rf$ADDR_IN = mReqs_lhead[3:0] ;
+  assign mReqs_rf$D_IN =
+	     { cache_request_put_val[140:94],
+	       IF_cache_request_put_val_BITS_93_TO_92_035_EQ__ETC___d6090 } ;
+  assign mReqs_rf$WE =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] != 2'd0 ||
+	      !cache_request_put_val[6]) ;
 
   // submodule mRsps_ff_rf
   assign mRsps_ff_rf$ADDR_1 = mRsps_ff_ltail[4:0] ;
@@ -4666,7 +5165,7 @@ module mkTagController(CLK,
   assign mRsps_ff_rf$ADDR_IN = mRsps_ff_lhead[4:0] ;
   assign mRsps_ff_rf$D_IN =
 	     { memory_response_put_val[76:69],
-	       CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q41,
+	       CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q42,
 	       memory_response_put_val[64:0] } ;
   assign mRsps_ff_rf$WE =
 	     EN_memory_response_put && !memory_response_put_val[76] ;
@@ -4699,7 +5198,7 @@ module mkTagController(CLK,
   assign tagLookup_mRsps_ff_rf$ADDR_IN = tagLookup_mRsps_ff_lhead[0] ;
   assign tagLookup_mRsps_ff_rf$D_IN =
 	     { memory_response_put_val[76:69],
-	       CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q41,
+	       CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q42,
 	       memory_response_put_val[64:0] } ;
   assign tagLookup_mRsps_ff_rf$WE =
 	     EN_memory_response_put && memory_response_put_val[76] ;
@@ -4708,17 +5207,17 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_data_0_bram_bram$ADDRA =
 	     IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d2893 ;
   assign tagLookup_tagCache_data_0_bram_bram$ADDRB =
-	     (way__h98148 == 1'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
-	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3980 :
+	     (way__h98128 == 1'd0 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
+	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3981 :
 	       tagLookup_tagCache_cts[108:99] ;
   assign tagLookup_tagCache_data_0_bram_bram$DIA =
 	     64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
   assign tagLookup_tagCache_data_0_bram_bram$DIB =
-	     (way__h98148 == 1'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
+	     (way__h98128 == 1'd0 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[63:0] :
-	       maskedWrite_data__h117935 ;
+	       maskedWrite_data__h117915 ;
   assign tagLookup_tagCache_data_0_bram_bram$WEA = 1'd0 ;
   assign tagLookup_tagCache_data_0_bram_bram$WEB = 1'd1 ;
   assign tagLookup_tagCache_data_0_bram_bram$ENA =
@@ -4730,17 +5229,17 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_data_1_bram_bram$ADDRA =
 	     IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d2893 ;
   assign tagLookup_tagCache_data_1_bram_bram$ADDRB =
-	     (way__h98148 == 1'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
-	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3980 :
+	     (way__h98128 == 1'd1 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
+	       IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3981 :
 	       tagLookup_tagCache_cts[108:99] ;
   assign tagLookup_tagCache_data_1_bram_bram$DIA =
 	     64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
   assign tagLookup_tagCache_data_1_bram_bram$DIB =
-	     (way__h98148 == 1'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974) ?
+	     (way__h98128 == 1'd1 &&
+	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[63:0] :
-	       maskedWrite_data__h117935 ;
+	       maskedWrite_data__h117915 ;
   assign tagLookup_tagCache_data_1_bram_bram$WEA = 1'd0 ;
   assign tagLookup_tagCache_data_1_bram_bram$WEB = 1'd1 ;
   assign tagLookup_tagCache_data_1_bram_bram$ENA =
@@ -4798,7 +5297,7 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_tags_0_bramA_bram$ADDRA =
 	     tagLookup_tagCache_writebacks$EMPTY_N ?
 	       tagLookup_tagCache_writebacks$D_OUT[61:54] :
-	       x1_avValue_snd_addr_key__h74941 ;
+	       x1_avValue_snd_addr_key__h74909 ;
   assign tagLookup_tagCache_tags_0_bramA_bram$ADDRB =
 	     MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_1__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 :
@@ -4814,8 +5313,8 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_tags_0_bramA_bram$ENA =
 	     tagLookup_tagCache_cacheState ;
   assign tagLookup_tagCache_tags_0_bramA_bram$ENB =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd0 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd0 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // submodule tagLookup_tagCache_tags_0_bramB_bram
@@ -4833,21 +5332,21 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_tags_0_bramB_bram$WEB = 1'd1 ;
   assign tagLookup_tagCache_tags_0_bramB_bram$ENA = 1'b0 ;
   assign tagLookup_tagCache_tags_0_bramB_bram$ENB =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd0 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd0 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // submodule tagLookup_tagCache_tags_1_bramA_bram
   assign tagLookup_tagCache_tags_1_bramA_bram$ADDRA =
 	     tagLookup_tagCache_tags_0_bramA_bram$ADDRA ;
   assign tagLookup_tagCache_tags_1_bramA_bram$ADDRB =
-	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 ?
+	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 :
 	       tagLookup_tagCache_initCount ;
   assign tagLookup_tagCache_tags_1_bramA_bram$DIA =
 	     41'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
   assign tagLookup_tagCache_tags_1_bramA_bram$DIB =
-	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 ?
+	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_3__VAL_1 :
 	       41'd0 ;
   assign tagLookup_tagCache_tags_1_bramA_bram$WEA = 1'd0 ;
@@ -4855,27 +5354,27 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_tags_1_bramA_bram$ENA =
 	     tagLookup_tagCache_cacheState ;
   assign tagLookup_tagCache_tags_1_bramA_bram$ENB =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd1 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd1 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // submodule tagLookup_tagCache_tags_1_bramB_bram
   assign tagLookup_tagCache_tags_1_bramB_bram$ADDRA = 8'h0 ;
   assign tagLookup_tagCache_tags_1_bramB_bram$ADDRB =
-	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 ?
+	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_2__VAL_1 :
 	       tagLookup_tagCache_initCount ;
   assign tagLookup_tagCache_tags_1_bramB_bram$DIA = 41'h0 ;
   assign tagLookup_tagCache_tags_1_bramB_bram$DIB =
-	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_1__SEL_1 ?
+	     MUX_tagLookup_tagCache_tags_1_bramA_bram$b_put_3__SEL_1 ?
 	       MUX_tagLookup_tagCache_tags_0_bramA_bram$b_put_3__VAL_1 :
 	       41'd0 ;
   assign tagLookup_tagCache_tags_1_bramB_bram$WEA = 1'b0 ;
   assign tagLookup_tagCache_tags_1_bramB_bram$WEB = 1'd1 ;
   assign tagLookup_tagCache_tags_1_bramB_bram$ENA = 1'b0 ;
   assign tagLookup_tagCache_tags_1_bramB_bram$ENB =
-	     tagLookup_tagCache_cacheState && x__h121270 == 1'd1 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 ||
+	     tagLookup_tagCache_cacheState && x__h121250 == 1'd1 &&
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 ||
 	     WILL_FIRE_RL_tagLookup_tagCache_initialize ;
 
   // submodule tagLookup_tagCache_writeResps_ff_rf
@@ -4892,38 +5391,38 @@ module mkTagController(CLK,
 	       MUX_tagLookup_tagCache_writeResps_ff_rf$upd_2__VAL_1 ;
   assign tagLookup_tagCache_writeResps_ff_rf$WE =
 	     WILL_FIRE_RL_tagLookup_tagCache_catchResponse &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155 ||
-	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8615 != 2'd0 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155 ;
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156 ||
+	     WILL_FIRE_RL_tagLookup_drainMemRsp && level__h8582 != 2'd0 &&
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156 ;
 
   // submodule tagLookup_tagCache_writebacks
   assign tagLookup_tagCache_writebacks$D_IN =
-	     { x_addr_tag__h102719,
+	     { x_addr_tag__h102698,
 	       tagLookup_tagCache_cts[108:99],
 	       3'd0,
-	       x_addr_tag__h102719,
+	       x_addr_tag__h102698,
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080,
-	       _theResult_____21__h86421,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081,
+	       _theResult_____21__h86389,
 	       1'd1,
 	       tagLookup_tagCache_cts[236:231] } ;
   assign tagLookup_tagCache_writebacks$ENQ =
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
 	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3516 &&
-	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4017 ;
+	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4018 ;
   assign tagLookup_tagCache_writebacks$DEQ =
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_writebacks$EMPTY_N &&
@@ -4958,14 +5457,12 @@ module mkTagController(CLK,
   end
   assign tagLookup_useNextRsp_ff_rf$WE =
 	     WILL_FIRE_RL_tagLookup_initialise &&
-	     tagLookup_zeroAddr_211_ULT_4286574718___d5212 ||
+	     tagLookup_zeroAddr_212_ULT_4286574718___d5213 ||
 	     WILL_FIRE_RL_tagLookup_doLookup &&
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 &&
-	     IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 ||
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 &&
+	     IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 ||
 	     EN_cache_request_put &&
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[91]) &&
-	     IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 ;
+	     cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 ;
 
   // submodule tagOnlyReads_rf
   assign tagOnlyReads_rf$ADDR_1 = tagOnlyReads_ltail[1:0] ;
@@ -4980,273 +5477,243 @@ module mkTagController(CLK,
 	     cache_request_put_val[6] ;
 
   // remaining internal signals
-  assign IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6320 =
-	     ({ 30'd0, idx__h324693 } ==
-	      IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292) ?
-	       addrFrame_insertItem$whas :
-	       SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319 ;
-  assign IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6326 =
-	     ({ 30'd0, idx__h324737 } ==
-	      IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292) ?
-	       addrFrame_insertItem$whas :
-	       SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325 ;
-  assign IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6332 =
-	     ({ 30'd0, idx__h324781 } ==
-	      IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292) ?
-	       addrFrame_insertItem$whas :
-	       SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331 ;
-  assign IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6047 =
-	     ({ 30'd0, idx__h321062 } ==
-	      IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023) ?
-	       CAN_FIRE_RL_getTagLookupResponse :
-	       SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046 ;
-  assign IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6053 =
-	     ({ 30'd0, idx__h321106 } ==
-	      IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023) ?
-	       CAN_FIRE_RL_getTagLookupResponse :
-	       SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052 ;
-  assign IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6059 =
-	     ({ 30'd0, idx__h321150 } ==
-	      IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023) ?
-	       CAN_FIRE_RL_getTagLookupResponse :
-	       SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2227 =
-	     ({ 28'd0, idx__h43464 } ==
+	     ({ 28'd0, idx__h43431 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2226 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2233 =
-	     ({ 28'd0, idx__h43580 } ==
+	     ({ 28'd0, idx__h43547 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2232 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2239 =
-	     ({ 28'd0, idx__h43696 } ==
+	     ({ 28'd0, idx__h43663 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2238 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2245 =
-	     ({ 28'd0, idx__h43812 } ==
+	     ({ 28'd0, idx__h43779 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2244 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2251 =
-	     ({ 28'd0, idx__h43928 } ==
+	     ({ 28'd0, idx__h43895 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2257 =
-	     ({ 28'd0, idx__h44044 } ==
+	     ({ 28'd0, idx__h44011 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2256 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2263 =
-	     ({ 28'd0, idx__h44160 } ==
+	     ({ 28'd0, idx__h44127 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2262 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2269 =
-	     ({ 28'd0, idx__h44276 } ==
+	     ({ 28'd0, idx__h44243 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2268 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2275 =
-	     ({ 28'd0, idx__h44392 } ==
+	     ({ 28'd0, idx__h44359 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2274 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2281 =
-	     ({ 28'd0, idx__h44508 } ==
+	     ({ 28'd0, idx__h44475 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2280 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2287 =
-	     ({ 28'd0, idx__h44624 } ==
+	     ({ 28'd0, idx__h44591 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2286 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2293 =
-	     ({ 28'd0, idx__h44740 } ==
+	     ({ 28'd0, idx__h44707 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2292 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2299 =
-	     ({ 28'd0, idx__h44856 } ==
+	     ({ 28'd0, idx__h44823 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2298 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2305 =
-	     ({ 28'd0, idx__h44972 } ==
+	     ({ 28'd0, idx__h44939 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2311 =
-	     ({ 28'd0, idx__h45088 } ==
+	     ({ 28'd0, idx__h45055 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2310 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1056 =
-	     ({ 28'd0, idx__h31675 } ==
+	     ({ 28'd0, idx__h31642 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1055 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1062 =
-	     ({ 28'd0, idx__h31791 } ==
+	     ({ 28'd0, idx__h31758 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1061 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1068 =
-	     ({ 28'd0, idx__h31907 } ==
+	     ({ 28'd0, idx__h31874 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1067 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1074 =
-	     ({ 28'd0, idx__h32023 } ==
+	     ({ 28'd0, idx__h31990 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1073 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1080 =
-	     ({ 28'd0, idx__h32139 } ==
+	     ({ 28'd0, idx__h32106 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1086 =
-	     ({ 28'd0, idx__h32255 } ==
+	     ({ 28'd0, idx__h32222 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1085 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1092 =
-	     ({ 28'd0, idx__h32371 } ==
+	     ({ 28'd0, idx__h32338 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1091 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1098 =
-	     ({ 28'd0, idx__h32487 } ==
+	     ({ 28'd0, idx__h32454 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1097 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1104 =
-	     ({ 28'd0, idx__h32603 } ==
+	     ({ 28'd0, idx__h32570 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1103 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1110 =
-	     ({ 28'd0, idx__h32719 } ==
+	     ({ 28'd0, idx__h32686 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1109 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1116 =
-	     ({ 28'd0, idx__h32835 } ==
+	     ({ 28'd0, idx__h32802 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1115 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1122 =
-	     ({ 28'd0, idx__h32951 } ==
+	     ({ 28'd0, idx__h32918 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1121 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1128 =
-	     ({ 28'd0, idx__h33067 } ==
+	     ({ 28'd0, idx__h33034 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1134 =
-	     ({ 28'd0, idx__h33183 } ==
+	     ({ 28'd0, idx__h33150 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1133 ;
   assign IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1140 =
-	     ({ 28'd0, idx__h33299 } ==
+	     ({ 28'd0, idx__h33266 } ==
 	      IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016) ?
 	       tagLookup_tagCache_orderer_mastReqs_insertItem$whas :
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1139 ;
-  assign IF_CAN_FIRE_RL_tagLookup_feedTagCache_AND_tagL_ETC__q39 =
+  assign IF_CAN_FIRE_RL_tagLookup_feedTagCache_AND_tagL_ETC__q40 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[93:92] == 2'd0) ?
 	       tagLookup_tagCache_newReq$wget[5:3] :
 	       3'd0 ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4849 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4850 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
 		!tagLookup_tagCache_readReqReg[14] :
 		!tagLookup_tagCache_readReqReg[14]) ?
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4354 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4355 :
 		  tagLookup_tagCache_readReqReg[15]) :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4356 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4357 :
 		  tagLookup_tagCache_readReqReg[14]) ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4851 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4852 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
 		!tagLookup_tagCache_readReqReg[13] :
 		!tagLookup_tagCache_readReqReg[13]) ?
-	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4849 :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4359 :
+	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4850 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4360 :
 		  tagLookup_tagCache_readReqReg[13]) ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4853 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4854 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
 		!tagLookup_tagCache_readReqReg[12] :
 		!tagLookup_tagCache_readReqReg[12]) ?
-	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4851 :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4361 :
+	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4852 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4362 :
 		  tagLookup_tagCache_readReqReg[12]) ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4855 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4856 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
-		x__h122840 != 2'd3 &&
+		x__h122820 != 2'd3 &&
 		!tagLookup_tagCache_readReqReg[11] :
 		!tagLookup_tagCache_readReqReg[11]) ?
-	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4853 :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4368 :
+	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4854 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4369 :
 		  tagLookup_tagCache_readReqReg[11]) ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4857 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4858 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
-		x__h122840 != 2'd2 &&
+		x__h122820 != 2'd2 &&
 		!tagLookup_tagCache_readReqReg[10] :
 		!tagLookup_tagCache_readReqReg[10]) ?
-	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4855 :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4372 :
+	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4856 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4373 :
 		  tagLookup_tagCache_readReqReg[10]) ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4859 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4860 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
-		x__h122840 != 2'd1 &&
+		x__h122820 != 2'd1 &&
 		!tagLookup_tagCache_readReqReg[9] :
 		!tagLookup_tagCache_readReqReg[9]) ?
-	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4857 :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4377 :
+	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4858 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4378 :
 		  tagLookup_tagCache_readReqReg[9]) ;
-  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4861 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+  assign IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4862 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[70:69] == 2'd0 &&
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ==
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ==
 		tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
-		x__h122840 != 2'd0 &&
+		x__h122820 != 2'd0 &&
 		!tagLookup_tagCache_readReqReg[8] :
 		!tagLookup_tagCache_readReqReg[8]) ?
-	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4859 :
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4381 :
+	       IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4860 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4382 :
 		  tagLookup_tagCache_readReqReg[8]) ;
   assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d3752 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3724 ?
@@ -5257,250 +5724,238 @@ module mkTagController(CLK,
 		   2'd1 :
 		   2'd2,
 		 tagLookup_tagCache_cts[227:136] } ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 =
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 =
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640) ?
-	       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4107 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4115 &&
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4105 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219 =
+	       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4108 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4116 &&
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4106 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4218 :
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4219 :
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1) &&
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4214 &&
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4212 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4246 =
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4215 &&
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4213 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4247 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4245 :
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4246 :
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4238 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4296 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4239 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4297 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4295 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4293 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4302 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4296 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4294 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4303 =
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640) ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4301 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4299 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4337 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4302 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4300 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4338 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4336 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4334 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4503 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4337 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4335 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4504 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4502 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4500 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4571 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4503 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4501 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4572 =
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640) ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4570 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4576 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4571 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4569 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4577 =
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640) ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4575 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4573 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4582 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4576 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4574 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4583 =
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640) ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4581 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4579 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4587 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4582 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4580 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4588 =
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640) ?
-	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4586 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4584 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4729 =
+	       IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4587 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4585 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4730 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4107 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4727 &&
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4105 ;
-  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4937 =
+	       NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4108 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4728 &&
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4106 ;
+  assign IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4938 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       { x1_avValue_snd_snd_snd_snd_snd_snd_d_oldWay__h278649,
-		 IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4935 } :
+	       { x1_avValue_snd_snd_snd_snd_snd_snd_d_oldWay__h278629,
+		 IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4936 } :
 	       tagLookup_tagCache_readReqReg[2:0] ;
-  assign IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6338 =
-	     (addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-		IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6332 :
-		SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331) ?
-	       idx__h324781 :
-	       (IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6336 ?
-		  addrFrame_nextValidKeyReg :
-		  2'd0) ;
-  assign IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6339 =
-	     (addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-		IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6326 :
-		SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325) ?
-	       idx__h324737 :
-	       IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6338 ;
-  assign IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6362 =
-	     IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6356 ?
-	       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ||
-	       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6357 :
-	       IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6361 ;
-  assign IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6371 =
-	     (addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-		(addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156 ||
-		 addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202 ||
-		 addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226) &&
-		addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298 :
-		NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303) ?
-	       (IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6354 ?
-		  IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6362 :
-		  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6366) :
-	       (addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-		  NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 &&
-		  NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 &&
-		  NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233 ||
-		  NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252 :
-		  addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6369) ;
-  assign IF_IF_lookupRsp_bag_741_BIT_71_796_AND_lookupR_ETC___d6754 =
-	     (lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ?
-		lookupRsp_bag[58] :
-		IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6684) ?
-	       SEL_ARR_IF_lookupRsp_bag_741_BIT_71_796_AND_lo_ETC___d6745 :
-	       (lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ?
-		  lookupRsp_bag[58] :
-		  IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6752) ;
-  assign IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6065 =
-	     (lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6059 :
-		SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058) ?
-	       idx__h321150 :
-	       (IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6063 ?
-		  lookupRsp_nextValidKeyReg :
-		  2'd0) ;
-  assign IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6066 =
-	     (lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6053 :
-		SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052) ?
-	       idx__h321106 :
-	       IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6065 ;
-  assign IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6089 =
-	     IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6083 ?
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ||
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6084 :
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6088 ;
-  assign IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6098 =
-	     (lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		(lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ||
-		 lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869 ||
-		 lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919) &&
-		lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029 :
-		NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034) ?
-	       (IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6081 ?
-		  IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6089 :
-		  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6093) :
-	       (lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		  NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-		  NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-		  NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926 ||
-		  NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5972 :
-		  lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6096) ;
-  assign IF_IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff__ETC___d6666 =
-	     IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6650 ?
+  assign IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6360 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6335 ?
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6293 &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6268 :
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6295 &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6265 ;
+  assign IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6362 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6332 ?
+	       IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6360 :
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6298 &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6262 ;
+  assign IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6364 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6329 ?
+	       IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6362 :
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6300 &&
+	       IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6259 ;
+  assign IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6372 =
+	     (IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6325 ||
+	      IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6341) ?
 	       { 2'd0,
-		 IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6657 } :
-	       (IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6663 ?
+		 83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		 9'd3 } :
+	       { 5'd12,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd7,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd6,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd5,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd4,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd3,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd2,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd1,
+		 _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0] ==
+		 3'd0,
+		 x__h332509,
+		 1'd0,
+		 wdata_data__h332659,
+		 8'd0 } ;
+  assign IF_IF_mReqBurst_lhead_read__991_MINUS_mReqBurs_ETC___d6787 =
+	     ((level__h316294 == 3'd0) ?
+		tagLookup_mReqs_ff_rf$D_OUT_1[93:92] == 2'd1 :
+		mReqs_rf$D_OUT_1[93:92] == 2'd1) ?
+	       { 2'd1,
+		 (level__h316294 == 3'd0) ?
+		   tagLookup_mReqs_ff_rf$D_OUT_1[91:0] :
+		   mReqs_rf$D_OUT_1[91:0] } :
+	       { 2'd2,
+		 84'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		 (level__h316294 == 3'd0) ?
+		   tagLookup_mReqs_ff_rf$D_OUT_1[7:0] :
+		   mReqs_rf$D_OUT_1[7:0] } ;
+  assign IF_IF_mReqBurst_lhead_read__991_MINUS_mReqBurs_ETC___d6788 =
+	     ((level__h316294 == 3'd0) ?
+		tagLookup_mReqs_ff_rf$D_OUT_1[93:92] == 2'd0 :
+		mReqs_rf$D_OUT_1[93:92] == 2'd0) ?
+	       { 2'd0,
+		 83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		 (level__h316294 == 3'd0) ?
+		   tagLookup_mReqs_ff_rf$D_OUT_1[8:0] :
+		   mReqs_rf$D_OUT_1[8:0] } :
+	       IF_IF_mReqBurst_lhead_read__991_MINUS_mReqBurs_ETC___d6787 ;
+  assign IF_IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff__ETC___d6495 =
+	     IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 ?
+	       { 2'd0,
+		 IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6486 } :
+	       (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6492 ?
 		  { 2'd1, 2'bxx /* unspecified value */  } :
 		  { 2'd2, mRsps_ff_rf$D_OUT_1[66:65] }) ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4265 =
-	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-	       _theResult_____1_tag__h121549 :
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4266 =
+	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+	       _theResult_____1_tag__h121529 :
 	       tagLookup_tagCache_readReqReg[43:17] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4267 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4268 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4265 :
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4266 :
 	       ((tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
 		  tagLookup_tagCache_readReqReg[43:17] :
-		  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4265) ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4384 =
-	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-	       { NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4354,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4356,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4359,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4361,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4368,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4372,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4377,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4381 } :
-	       tagLookup_tagCache_readReqReg[15:8] ;
+		  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4266) ;
   assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4385 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
-	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4384 :
+	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+	       { NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4355,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4357,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4360,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4362,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4369,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4373,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4378,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4382 } :
 	       tagLookup_tagCache_readReqReg[15:8] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4494 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4386 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4385 :
+	       tagLookup_tagCache_readReqReg[15:8] ;
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4495 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
+	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
 		  !tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
 		  tagLookup_tagCache_readReqReg[7] :
 		  tagLookup_tagCache_readReqReg[7]) :
 	       tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 &&
 	       tagLookup_tagCache_readReqReg[7] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4527 =
-	     { (x__h135286 == 2'd3) ?
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4528 =
+	     { (x__h135266 == 2'd3) ?
 		 tagLookup_mRsps_ff_rf$D_OUT_1[64] :
 		 tagLookup_tagCache_readReqReg[6],
-	       (x__h135286 == 2'd2) ?
+	       (x__h135266 == 2'd2) ?
 		 tagLookup_mRsps_ff_rf$D_OUT_1[64] :
 		 tagLookup_tagCache_readReqReg[5],
-	       (x__h135286 == 2'd1) ?
+	       (x__h135266 == 2'd1) ?
 		 tagLookup_mRsps_ff_rf$D_OUT_1[64] :
 		 tagLookup_tagCache_readReqReg[4],
-	       (x__h135286 == 2'd0) ?
+	       (x__h135266 == 2'd0) ?
 		 tagLookup_mRsps_ff_rf$D_OUT_1[64] :
 		 tagLookup_tagCache_readReqReg[3] } ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4530 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4531 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-		  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4527 :
+	       (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+		  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4528 :
 		  tagLookup_tagCache_readReqReg[6:3]) :
 	       tagLookup_tagCache_readReqReg[6:3] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4783 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4784 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4265 :
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4266 :
 	       tagLookup_tagCache_readReqReg[43:17] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4800 =
-	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-	       { NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4354,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4356,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4359,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4361,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4368,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4372,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4377,
-		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4381,
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801 =
+	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+	       { NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4355,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4357,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4360,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4362,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4369,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4373,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4378,
+		 NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4382,
 		 !tagLookup_mRsps_ff_rf$D_OUT_1[66] &&
 		 tagLookup_tagCache_readReqReg[7],
-		 IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4527 } :
+		 IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4528 } :
 	       tagLookup_tagCache_readReqReg[15:3] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4802 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4800 :
+	       IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801 :
 	       tagLookup_tagCache_readReqReg[15:3] ;
-  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4864 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4865 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       { way__h98148,
+	       { way__h98128,
 		 tagLookup_tagCache_readReqReg[16] &&
-		 IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4861,
+		 IF_IF_IF_tagLookup_mRsps_ff_lhead_read__894_MI_ETC___d4862,
 		 tagLookup_tagCache_readReqReg[0] } :
 	       tagLookup_tagCache_readReqReg[2:0] ;
   assign IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d3728 =
@@ -5536,10 +5991,10 @@ module mkTagController(CLK,
 		  3'd3 :
 		  3'd0) :
 	       tagLookup_tagCache_cts[141:139] ;
-  assign IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4286 =
+  assign IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4287 =
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ?
 	       tagLookup_tagCache_cts[135:109] :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4285 ;
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4286 ;
   assign IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d2980 =
 	     (((CAN_FIRE_RL_tagLookup_feedTagCache &&
 		tagLookup_tagCache_newReq$wget[141]) ?
@@ -5567,13 +6022,13 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_newReq$wget[141]) ?
 		tagLookup_tagCache_newReq$wget[0] :
 		tagLookup_tagCache_cts[136]) ?
-	       x1_avValue_snd_addr_tag__h74940[0] :
+	       x1_avValue_snd_addr_tag__h74908[0] :
 	       tagLookup_tagCache_nextWay ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2317 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2311 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2310) ?
-	       idx__h45088 :
+	       idx__h45055 :
 	       (IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2315 ?
 		  tagLookup_tagCache_orderer_mastLines_nextValidKeyReg :
 		  4'd0) ;
@@ -5581,79 +6036,79 @@ module mkTagController(CLK,
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2305 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304) ?
-	       idx__h44972 :
+	       idx__h44939 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2317 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2319 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2299 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2298) ?
-	       idx__h44856 :
+	       idx__h44823 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2318 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2320 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2293 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2292) ?
-	       idx__h44740 :
+	       idx__h44707 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2319 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2321 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2287 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2286) ?
-	       idx__h44624 :
+	       idx__h44591 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2320 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2322 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2281 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2280) ?
-	       idx__h44508 :
+	       idx__h44475 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2321 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2323 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2275 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2274) ?
-	       idx__h44392 :
+	       idx__h44359 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2322 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2324 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2269 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2268) ?
-	       idx__h44276 :
+	       idx__h44243 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2323 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2325 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2263 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2262) ?
-	       idx__h44160 :
+	       idx__h44127 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2324 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2326 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2257 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2256) ?
-	       idx__h44044 :
+	       idx__h44011 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2325 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2327 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2251 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250) ?
-	       idx__h43928 :
+	       idx__h43895 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2326 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2328 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2245 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2244) ?
-	       idx__h43812 :
+	       idx__h43779 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2327 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2329 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2239 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2238) ?
-	       idx__h43696 :
+	       idx__h43663 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2328 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2330 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2233 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2232) ?
-	       idx__h43580 :
+	       idx__h43547 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2329 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2479 =
 	     IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2473 ?
@@ -5745,97 +6200,97 @@ module mkTagController(CLK,
 		  NOT_tagLookup_tagCache_orderer_mastLines_remov_ETC___d2069 :
 		  tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d2624) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2639 =
-	     (newHead__h48715 == 5'd15) ?
+	     (newHead__h48682 == 5'd15) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  5'd0 :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[79:75]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2643 =
-	     (newHead__h48715 == 5'd14) ?
+	     (newHead__h48682 == 5'd14) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[79:75] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[74:70]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2648 =
-	     (newHead__h48715 == 5'd13) ?
+	     (newHead__h48682 == 5'd13) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[74:70] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[69:65]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2652 =
-	     (newHead__h48715 == 5'd12) ?
+	     (newHead__h48682 == 5'd12) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[69:65] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[64:60]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2657 =
-	     (newHead__h48715 == 5'd11) ?
+	     (newHead__h48682 == 5'd11) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[64:60] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[59:55]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2661 =
-	     (newHead__h48715 == 5'd10) ?
+	     (newHead__h48682 == 5'd10) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[59:55] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[54:50]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2666 =
-	     (newHead__h48715 == 5'd9) ?
+	     (newHead__h48682 == 5'd9) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[54:50] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[49:45]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2670 =
-	     (newHead__h48715 == 5'd8) ?
+	     (newHead__h48682 == 5'd8) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[49:45] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[44:40]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2675 =
-	     (newHead__h48715 == 5'd7) ?
+	     (newHead__h48682 == 5'd7) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[44:40] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[39:35]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2679 =
-	     (newHead__h48715 == 5'd6) ?
+	     (newHead__h48682 == 5'd6) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[39:35] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[34:30]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2684 =
-	     (newHead__h48715 == 5'd5) ?
+	     (newHead__h48682 == 5'd5) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[34:30] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[29:25]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2688 =
-	     (newHead__h48715 == 5'd4) ?
+	     (newHead__h48682 == 5'd4) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[29:25] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[24:20]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2693 =
-	     (newHead__h48715 == 5'd3) ?
+	     (newHead__h48682 == 5'd3) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[24:20] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[19:15]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2697 =
-	     (newHead__h48715 == 5'd2) ?
+	     (newHead__h48682 == 5'd2) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[19:15] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[14:10]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2702 =
-	     (newHead__h48715 == 5'd1) ?
+	     (newHead__h48682 == 5'd1) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[14:10] :
 		  tagLookup_tagCache_orderer_mastReqIds_rf[9:5]) ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqIds_de_ETC___d2706 =
-	     (newHead__h48715 == 5'd0) ?
+	     (newHead__h48682 == 5'd0) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[75:71] :
 	       (tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
 		  tagLookup_tagCache_orderer_mastReqIds_rf[9:5] :
@@ -5844,7 +6299,7 @@ module mkTagController(CLK,
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1140 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1139) ?
-	       idx__h33299 :
+	       idx__h33266 :
 	       (IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1144 ?
 		  tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg :
 		  4'd0) ;
@@ -5852,79 +6307,79 @@ module mkTagController(CLK,
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1134 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1133) ?
-	       idx__h33183 :
+	       idx__h33150 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1146 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1148 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1128 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127) ?
-	       idx__h33067 :
+	       idx__h33034 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1147 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1149 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1122 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1121) ?
-	       idx__h32951 :
+	       idx__h32918 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1148 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1150 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1116 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1115) ?
-	       idx__h32835 :
+	       idx__h32802 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1149 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1151 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1110 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1109) ?
-	       idx__h32719 :
+	       idx__h32686 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1150 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1152 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1104 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1103) ?
-	       idx__h32603 :
+	       idx__h32570 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1151 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1153 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1098 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1097) ?
-	       idx__h32487 :
+	       idx__h32454 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1152 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1154 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1092 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1091) ?
-	       idx__h32371 :
+	       idx__h32338 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1153 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1155 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1086 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1085) ?
-	       idx__h32255 :
+	       idx__h32222 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1154 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1156 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1080 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079) ?
-	       idx__h32139 :
+	       idx__h32106 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1155 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1157 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1074 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1073) ?
-	       idx__h32023 :
+	       idx__h31990 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1156 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1158 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1068 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1067) ?
-	       idx__h31907 :
+	       idx__h31874 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1157 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1159 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1062 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1061) ?
-	       idx__h31791 :
+	       idx__h31758 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1158 ;
   assign IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1308 =
 	     IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1302 ?
@@ -6015,468 +6470,278 @@ module mkTagController(CLK,
 		  NOT_tagLookup_tagCache_orderer_mastReqs_remove_ETC___d888 ||
 		  NOT_tagLookup_tagCache_orderer_mastReqs_remove_ETC___d898 :
 		  tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d1453) ;
-  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4339 =
+  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4340 =
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219) ?
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
-	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4337 :
-	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4337 ;
-  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4486 =
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220) ?
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
+	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4338 :
+	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4338 ;
+  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4487 =
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219) ?
-	       { IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4398,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4408,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4419,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4429,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4440,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4450,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4461,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4471 } :
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220) ?
+	       { IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4399,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4409,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4420,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4430,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4441,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4451,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4462,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4472 } :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4484 :
-		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4482) ;
-  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4505 =
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4485 :
+		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4483) ;
+  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4506 =
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219) ?
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
-	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4503 :
-	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4503 ;
-  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4638 =
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220) ?
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
+	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4504 :
+	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4504 ;
+  assign IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4639 =
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219) ?
-	       { IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4599,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4608,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4618,
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4627 } :
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220) ?
+	       { IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4600,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4609,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4619,
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4628 } :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4636 :
-		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4634) ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4218 =
-	     (x__h102651 != 4'd0 &&
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4637 :
+		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4635) ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4219 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4217 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4218 :
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1) &&
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4214 &&
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4212 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4245 =
-	     (x__h102651 != 4'd0 &&
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4215 &&
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4213 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4246 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4241 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4243 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4242 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4244 &&
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4238 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4295 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4239 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4296 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4294 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4293 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4301 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4295 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4294 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4302 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
 	       (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566 ?
 		  tagLookup_tagCache_cts[135:109] :
-		  IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4299) :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4299 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4336 =
-	     (x__h102651 != 4'd0 &&
+		  IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4300) :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4300 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4337 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4335 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4334 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4396 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4336 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4335 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4397 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4395 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4394 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4406 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4396 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4395 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4407 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4405 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4404 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4417 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4406 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4405 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4418 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4416 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4415 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4427 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4417 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4416 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4428 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4426 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4425 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4438 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4427 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4426 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4439 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4437 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4436 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4448 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4438 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4437 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4449 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4447 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4446 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4459 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4448 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4447 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4460 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4458 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4457 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4469 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4459 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4458 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4470 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4468 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4467 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4484 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4469 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4468 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4485 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4483 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4482 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4502 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4484 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4483 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4503 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4501 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4500 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4570 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4502 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4501 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4571 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4567 &&
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4575 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4569 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4569 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4576 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4567 &&
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4573 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4573 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4581 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4574 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4574 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4582 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4567 &&
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4579 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4579 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4586 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4580 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4580 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4587 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4567 &&
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4584 :
-	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4584 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4597 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 &&
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4585 :
+	       IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4585 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4598 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4596 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4595 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4606 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4597 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4596 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4607 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4605 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4604 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4616 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4606 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4605 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4617 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4615 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4614 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4625 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4616 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4615 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4626 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4624 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4623 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4636 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4625 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4624 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4637 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4635 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4634 ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4668 =
-	     (x__h102651 != 4'd0 &&
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4636 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4635 ;
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4669 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4667 :
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4668 :
 	       tagLookup_tagCache_readReqReg[66] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4687 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4688 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4686 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4687 :
 	       tagLookup_tagCache_readReqReg[57:52] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4757 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4758 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4756 :
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4757 :
 	       tagLookup_tagCache_readReqReg[51] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4769 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4770 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4768 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4769 :
 	       tagLookup_tagCache_readReqReg[50:45] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4777 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4778 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4776 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4777 :
 	       tagLookup_tagCache_readReqReg[44] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4786 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4787 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4785 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4786 :
 	       tagLookup_tagCache_readReqReg[43:17] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4793 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4794 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4792 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4793 :
 	       tagLookup_tagCache_readReqReg[16] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4805 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4806 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4804 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4805 :
 	       tagLookup_tagCache_readReqReg[15:3] ;
-  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4935 =
-	     (x__h102651 != 4'd0 &&
+  assign IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4936 =
+	     (x__h102630 != 4'd0 &&
 	      NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	      tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4934 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4935 :
 	       tagLookup_tagCache_readReqReg[1:0] ;
-  assign IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292 =
-	     NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285 ?
-	       32'd3 :
-	       (NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287 ?
-		  32'd2 :
-		  (NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289 ?
-		     32'd1 :
-		     32'd0)) ;
-  assign IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6218 =
-	     (NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 &&
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209,
-		 addrFrame_bag[46:32] } ;
-  assign IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6242 =
-	     (NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 &&
-	      NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 &&
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233,
-		 addrFrame_bag[30:16] } ;
-  assign IF_NOT_addrFrame_removeItem_whas__142_188_OR_N_ETC___d6261 =
-	     (NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 &&
-	      NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 &&
-	      NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252,
-		 addrFrame_bag[14:0] } ;
-  assign IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6564 =
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      NOT_cache_request_put_val_BITS_93_TO_92_442_EQ_ETC___d6539) ?
-	       { 2'd0,
-		 83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
-		 9'd3 } :
-	       { 5'd12,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd7,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd6,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd5,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd4,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd3,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd2,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd1,
-		 _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0] ==
-		 3'd0,
-		 x__h339486,
-		 1'd0,
-		 wdata_data__h339636,
-		 8'd0 } ;
-  assign IF_NOT_cache_request_put_val_BITS_93_TO_92_442_ETC___d6570 =
-	     ({ (cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[88],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[87],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[86],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[85],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[84],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[83],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[82],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[81] } ==
-	      8'd0) ?
-	       3'd1 :
-	       (cache_request_put_val[72] ? 3'd3 : 3'd4) ;
-  assign IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023 =
-	     NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016 ?
-	       32'd3 :
-	       (NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018 ?
-		  32'd2 :
-		  (NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020 ?
-		     32'd1 :
-		     32'd0)) ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5876 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5882 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[52:47] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5891 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[46:41] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5896 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[40] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5906 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[39:36] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5927 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926 ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5933 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[34:29] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5942 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[28:23] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5947 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[22] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5957 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[21:18] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5973 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5972 ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5979 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[16:11] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5988 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[10:5] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5993 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[4] ;
-  assign IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d6003 =
-	     (NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 &&
-	      NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[3:0] ;
-  assign IF_NOT_tagLookup_currentDepth_338_EQ_0_339_363_ETC___d5495 =
+  assign IF_NOT_tagLookup_currentDepth_339_EQ_0_340_364_ETC___d5496 =
 	     (tagLookup_currentDepth != 2'd0 &&
-	      IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358) ?
-	       _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490 :
-	       _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493 ;
-  assign IF_NOT_tagLookup_currentDepth_338_EQ_0_339_363_ETC___d5730 =
+	      IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359) ?
+	       _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491 :
+	       _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494 ;
+  assign IF_NOT_tagLookup_currentDepth_339_EQ_0_340_364_ETC___d5782 =
 	     (tagLookup_currentDepth != 2'd0 &&
-	      IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358) ?
+	      IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359) ?
 	       tagLookup_state :
-	       IF_tagLookup_currentDepth_338_EQ_0_339_THEN_IF_ETC___d5729 ;
+	       IF_tagLookup_currentDepth_339_EQ_0_340_THEN_IF_ETC___d5781 ;
   assign IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d3019 =
-	     (level__h1462 != 2'd0 &&
+	     (level__h1428 != 2'd0 &&
 	      !tagLookup_tagCache_orderer_slaveRespState[12] ||
 	      NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d3016) ?
 	       2'd2 :
 	       tagLookup_tagCache_cts[278:277] ;
-  assign IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4775 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-	       ((IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4776 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+	       ((IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 		 tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-		  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 :
+		  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 :
 		  tagLookup_tagCache_readReqReg[44]) :
 	       tagLookup_tagCache_readReqReg[44] ;
   assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3568 =
@@ -6512,7 +6777,7 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3683) ?
 	       tagLookup_tagCache_cts[276:237] :
 	       (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ?
-		  { y_avValue_snd_addr_lineNumber__h114870, 3'd0 } :
+		  { y_avValue_snd_addr_lineNumber__h114849, 3'd0 } :
 		  tagLookup_tagCache_cts[276:237]) ;
   assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3724 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
@@ -6549,36 +6814,36 @@ module mkTagController(CLK,
 		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3763[1:0] :
 		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3689[4:3],
 	       7'bxxxxxxx /* unspecified value */  } ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4105 =
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4106 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1) ?
 	       tagLookup_tagCache_cts[139:137] != 3'd4 ||
 	       tagLookup_tagCache_cts[143:140] == 4'd0 &&
 	       tagLookup_tagCache_cts_read__795_BIT_136_060_O_ETC___d3609 ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_143_T_ETC___d3628 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4104 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4115 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4105 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4116 =
 	     ((tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	       tagLookup_tagCache_cts[229:228] != 2'd1) ?
 		tagLookup_tagCache_cts[139:137] == 3'd4 :
 		tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3582 ||
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4112) ||
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4113) ||
 	     !tagLookup_tagCache_readReqReg[66] ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4233 =
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4234 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1) ?
 	       tagLookup_tagCache_cts[139:137] == 3'd4 &&
 	       (tagLookup_tagCache_cts[143:140] == 4'd0 ||
 		tagLookup_tagCache_cts[143:140] == 4'd1) &&
 	       tagLookup_tagCache_cts_read__795_BIT_136_060_O_ETC___d3609 :
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4232 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4293 =
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4233 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4294 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       x_addr_tag__h102719 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4284 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       x_addr_tag__h102698 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4285 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1) ?
 	       tagLookup_tagCache_cts[139:137] != 3'd4 ||
@@ -6586,11 +6851,11 @@ module mkTagController(CLK,
 		NOT_tagLookup_tagCache_cts_read__795_BIT_136_0_ETC___d3625) &&
 	       (tagLookup_tagCache_cts[143:140] != 4'd1 ||
 		NOT_tagLookup_tagCache_cts_read__795_BIT_136_0_ETC___d3625) :
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4324 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4334 =
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4325 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4335 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291 ||
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
@@ -6599,264 +6864,264 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676 &&
 	       !tagLookup_tagCache_cts[225] ||
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4394 =
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4395 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4393 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4398 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4394 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4399 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4396 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4394) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4404 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4397 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4395) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4405 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4403 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4408 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4404 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4409 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4406 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4404) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4415 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4407 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4405) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4416 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4414 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4419 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4415 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4420 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4417 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4415) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4425 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4418 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4416) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4426 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4424 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4429 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4425 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4430 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4427 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4425) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4436 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4428 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4426) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4437 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4435 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4440 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4436 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4441 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4438 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4436) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4446 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4439 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4437) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4447 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4445 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4450 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4446 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4451 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4448 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4446) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4457 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4449 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4447) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4458 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4456 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4461 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4457 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4462 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4459 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4457) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4467 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4460 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4458) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4468 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4466 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4471 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4467 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4472 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4469 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4467) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4482 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4470 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4468) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4483 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 } :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4481 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4500 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 } :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4482 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4501 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4497 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4595 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4596 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4594 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4599 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4595 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4600 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4597 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4595) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4604 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4598 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4596) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4605 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4603 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4608 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4604 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4609 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4606 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4604) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4614 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4607 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4605) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4615 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4613 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4618 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4614 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4619 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4616 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4614) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4623 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4617 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4615) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4624 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4622 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4627 =
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4325 &&
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4623 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4628 =
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4326 &&
 	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4625 :
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4623) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4634 =
+		IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4626 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4624) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4635 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291) ?
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 } :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4633 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4715 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292) ?
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 } :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4634 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4716 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	      level__h1462 == 2'd0) ?
+	      tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	      level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[236] :
-	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_masterID__h98349 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4718 =
+	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_masterID__h98327 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4719 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	      level__h1462 == 2'd0) ?
+	      tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	      level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[235:231] :
-	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_transactionID__h98350 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4723 =
-	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697 ||
-	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705) ?
-	       (NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4712 ?
-		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4715 ==
+	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_transactionID__h98328 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4724 =
+	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698 ||
+	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706) ?
+	       (NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4713 ?
+		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4716 ==
 		  tagLookup_tagCache_readReqReg[57] &&
-		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4718 ==
+		  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4719 ==
 		  tagLookup_tagCache_readReqReg[56:52] ||
 		  tagLookup_tagCache_readReqReg[51] :
 		  tagLookup_tagCache_readReqReg[51]) :
 	       tagLookup_tagCache_readReqReg[51] ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4727 =
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4728 =
 	     ((tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	       tagLookup_tagCache_cts[229:228] != 2'd1) ?
 		tagLookup_tagCache_cts[139:137] == 3'd4 :
 		tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3582 ||
-		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4243) ||
+		IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4244) ||
 	     !tagLookup_tagCache_readReqReg[66] ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4959 =
-	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697 ||
-	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705) ?
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4958 :
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4960 =
+	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698 ||
+	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706) ?
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4959 :
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1 ||
-		NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4951) &&
+		NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4952) &&
 	       tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4996 =
-	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697 ||
-	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4994 :
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4997 =
+	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698 ||
+	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706) ?
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4995 :
 	       tagLookup_mRsps_ff_rf$D_OUT_1[66:65] ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5017 =
-	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697 ||
-	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705) ?
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4991 &&
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5015 :
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5015 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5033 =
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5018 =
+	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698 ||
+	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706) ?
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4992 &&
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5016 :
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5016 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5034 =
 	     (tagLookup_tagCache_cts[278:277] != 2'd1 &&
 	      ((tagLookup_tagCache_cts[278:277] == 2'd2) ?
-		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4959 :
-		 tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d4983)) ?
+		 IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4960 :
+		 tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d4984)) ?
 	       { 2'd0,
-		 CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 } :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5032 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5043 =
+		 CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q33 } :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5033 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5044 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	      tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	      level__h1462 == 2'd0) ?
+	      tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	      level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[236:231] :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5042 ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5044 =
-	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697 ||
-	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705) ?
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5043 :
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5043 ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5045 =
+	     ((NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698 ||
+	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706) ?
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5044 :
 	       tagLookup_tagCache_cts[236:231] ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4304 =
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4305 =
 	     (!tagLookup_tagCache_cts[225] &&
-	      NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4121) ?
-	       y_avValue_snd_snd_fst_newTag_tag__h121563 :
-	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4233 ?
+	      NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4122) ?
+	       y_avValue_snd_snd_fst_newTag_tag__h121543 :
+	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4234 ?
 		  27'd0 :
-		  IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4302) ;
-  assign IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4590 =
+		  IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4303) ;
+  assign IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4591 =
 	     (!tagLookup_tagCache_cts[225] &&
-	      NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4121) ?
-	       { IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4547,
-		 IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4551,
-		 IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4556,
-		 IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4560 } :
-	       { _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4563 &&
-		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4571,
-		 _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4563 &&
-		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4576,
-		 _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4563 &&
-		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4582,
-		 _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4563 &&
-		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4587 } ;
+	      NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4122) ?
+	       { IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4548,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4552,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4557,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4561 } :
+	       { _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4564 &&
+		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4572,
+		 _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4564 &&
+		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4577,
+		 _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4564 &&
+		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4583,
+		 _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4564 &&
+		 IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4588 } ;
   assign IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2175 =
 	     NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2168 ?
 	       32'd3 :
@@ -7225,21 +7490,17 @@ module mkTagController(CLK,
 		 tagLookup_tagCache_orderer_mastReqs_insertItem$wget[57:0] } :
 	       { NOT_tagLookup_tagCache_orderer_mastReqs_remove_ETC___d898,
 		 tagLookup_tagCache_orderer_mastReqs_bag[57:0] } ;
-  assign IF_NOT_tagLookup_tagCache_orderer_slaveReqs_ba_ETC___d5004 =
-	     (NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4279 ||
+  assign IF_NOT_tagLookup_tagCache_orderer_slaveReqs_ba_ETC___d5005 =
+	     (NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4280 ||
 	      tagLookup_tagCache_writebacks$EMPTY_N ||
 	      tagLookup_tagCache_invalidateWritebacks$EMPTY_N) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[66:65] :
-	       { IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d5000,
+	       { IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d5001,
 		 (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 		  NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3534 ||
 		  tagLookup_tagCache_cts[143]) &&
 		 tagLookup_mRsps_ff_rf$D_OUT_1[65] } ;
-  assign IF_NOT_tagOnlyReads_lhead_read__435_MINUS_tagO_ETC___d6773 =
-	     (level__h325540 != 3'd0 && frame == 3'd0) ?
-	       tagOnlyReads_rf$D_OUT_1 :
-	       mRsps_ff_rf$D_OUT_1[76:71] ;
-  assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4210 =
+  assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4211 =
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ?
 	       !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	       !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 :
@@ -7247,887 +7508,862 @@ module mkTagController(CLK,
 	       SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488 ;
-  assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4283 =
+  assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4284 =
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ?
-	       x_addr_tag__h102719 :
+	       x_addr_tag__h102698 :
 	       27'd0 ;
-  assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4924 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q5 ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 ;
   assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4925 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q6 ?
-	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4924 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 ;
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q4 ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 ;
   assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4926 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q7 ?
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q5 ?
 	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4925 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 ;
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 ;
   assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4927 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q8 ?
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q6 ?
 	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4926 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 ;
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 ;
   assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4928 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q9 ?
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q7 ?
 	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4927 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 ;
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 ;
   assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4929 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q10 ?
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q8 ?
 	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4928 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 ;
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 ;
   assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4930 =
-	     CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q11 ?
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q9 ?
 	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4929 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 ;
-  assign IF_SEL_ARR_tagLookup_oldTags_0_713_tagLookup_o_ETC___d5720 =
-	     (CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q16 ==
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 ;
+  assign IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4931 =
+	     CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q10 ?
+	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4930 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 ;
+  assign IF_SEL_ARR_tagLookup_oldTags_0_765_tagLookup_o_ETC___d5772 =
+	     (CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19 ==
 	      64'd0 &&
 	      tagLookup_currentDepth == 2'd0) ?
 	       tagLookup_currentDepth + 2'd1 :
-	       tagLookup_currentDepth_338_MINUS_1___d5481 ;
-  assign IF_SEL_ARR_tagLookup_oldTags_0_713_tagLookup_o_ETC___d5732 =
-	     (CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q16 ==
+	       tagLookup_currentDepth_339_MINUS_1___d5482 ;
+  assign IF_SEL_ARR_tagLookup_oldTags_0_765_tagLookup_o_ETC___d5784 =
+	     (CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19 ==
 	      64'd0 &&
 	      tagLookup_currentDepth == 2'd0) ?
 	       3'd5 :
 	       3'd1 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6266 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109 &&
-	      addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195,
-		 addrFrame_bag[62:48] } ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6269 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118 &&
-	      addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209,
-		 addrFrame_bag[46:32] } ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6273 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125 &&
-	      addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233,
-		 addrFrame_bag[30:16] } ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6276 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132 &&
-	      addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135) ?
-	       { addrFrame_insertItem$whas && addrFrame_insertItem$wget[15],
-		 addrFrame_insertItem$wget[14:0] } :
-	       { NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252,
-		 addrFrame_bag[14:0] } ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6306 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       !_0_CONCAT_addrFrame_nextValidKeyReg_279_280_EQ__ETC___d6293 &&
-	       SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6300 :
-	       SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6305 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132 &&
-	      addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135) ?
-	       addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] :
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125 &&
-	      addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128) ?
-	       addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] :
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118 &&
-	      addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121) ?
-	       addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] :
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317 =
-	     (addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	      addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109 &&
-	      addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114) ?
-	       addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] :
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6336 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       (_0_CONCAT_addrFrame_nextValidKeyReg_279_280_EQ__ETC___d6293 ?
-		  addrFrame_insertItem$whas :
-		  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334) :
-	       SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6347 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       { 30'd0, _theResult_____1__h324635 } !=
-	       IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292 &&
-	       SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6344 :
-	       SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6346 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6354 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       (addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156 ||
-		addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202) &&
-	       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226 :
-	       NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6356 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156 &&
-	       addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202 :
-	       NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6361 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 ||
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 :
-	       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6360 ;
-  assign IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6366 =
-	     addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 &&
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 ||
-	       NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233 :
-	       addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6365 ;
-  assign IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6523 =
-	     (cache_request_put_val[93:92] == 2'd0) ?
-	       (cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[140:101] >= 40'h00C0000000 &&
-	       cache_request_put_val[140:101] < 40'h00FFFFC000 :
-	       cache_request_put_val[93:92] == 2'd1 &&
-	       NOT_NOT_cache_request_put_val_BITS_93_TO_92_44_ETC___d6521 ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6675 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6598 ?
-	       lookupRsp_bag[39:36] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6602 ?
-		  lookupRsp_bag[21:18] :
-		  lookupRsp_bag[3:0]) ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6684 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ?
-	       lookupRsp_bag[40] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ?
-		  lookupRsp_bag[22] :
-		  lookupRsp_bag[17] &&
-		  lookupRsp_bag_741_BIT_16_767_EQ_mRsps_ff_rf_su_ETC___d6629 &&
-		  lookupRsp_bag_741_BITS_15_TO_11_770_EQ_mRsps_f_ETC___d6630 &&
-		  lookupRsp_bag[4]) ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6692 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ?
-	       lookupRsp_bag[36] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ?
-		  lookupRsp_bag[18] :
-		  lookupRsp_bag[0]) ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6700 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ?
-	       lookupRsp_bag[37] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ?
-		  lookupRsp_bag[19] :
-		  lookupRsp_bag[1]) ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6708 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ?
-	       lookupRsp_bag[38] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ?
-		  lookupRsp_bag[20] :
-		  lookupRsp_bag[2]) ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6716 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ?
-	       lookupRsp_bag[39] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ?
-		  lookupRsp_bag[21] :
-		  lookupRsp_bag[3]) ;
-  assign IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6752 =
-	     lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ?
-	       lookupRsp_bag[40] :
-	       (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ?
-		  lookupRsp_bag[22] :
-		  !lookupRsp_bag[17] ||
-		  !lookupRsp_bag_741_BIT_16_767_EQ_mRsps_ff_rf_su_ETC___d6629 ||
-		  !lookupRsp_bag_741_BITS_15_TO_11_770_EQ_mRsps_f_ETC___d6630 ||
-		  lookupRsp_bag[4]) ;
-  assign IF_lookupRsp_bag_741_BIT_71_796_AND_lookupRsp__ETC___d6672 =
-	     lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6594 ?
-	       lookupRsp_bag[58] :
-	       (lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6598 ?
-		  lookupRsp_bag[40] :
-		  (lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6602 ?
-		     lookupRsp_bag[22] :
-		     lookupRsp_bag_741_BIT_17_971_AND_lookupRsp_bag_ETC___d6606 &&
-		     lookupRsp_bag[4])) ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 &&
-	      lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5808 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 &&
-	      lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[70:65] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5809 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       (lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ?
-		  lookupRsp_insertItem$wget[16:11] :
-		  lookupRsp_bag[70:65]) :
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5808 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5827 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 &&
-	      lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[64:59] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5828 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       (lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ?
-		  lookupRsp_insertItem$wget[10:5] :
-		  lookupRsp_bag[64:59]) :
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5827 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5834 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 &&
-	      lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[58] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5835 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       (lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ?
-		  lookupRsp_insertItem$wget[4] :
-		  lookupRsp_bag[58]) :
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5834 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5858 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 &&
-	      lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[57:54] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5859 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       (lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ?
-		  lookupRsp_insertItem$wget[3:0] :
-		  lookupRsp_bag[57:54]) :
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5858 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 &&
-	      lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5883 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 &&
-	      lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[52:47] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5892 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 &&
-	      lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[46:41] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5897 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 &&
-	      lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[40] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5907 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 &&
-	      lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[39:36] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5910 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5896 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5897,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5906 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5907 } ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5911 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5882 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5883,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5891 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5892,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5910 } ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 &&
-	      lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5934 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 &&
-	      lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[34:29] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5943 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 &&
-	      lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[28:23] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5948 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 &&
-	      lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[22] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5958 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 &&
-	      lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[21:18] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5961 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5942 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5943,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5947 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5948,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5957 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5958 } ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5962 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5927 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5933 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5934,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5961 } ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 &&
-	      lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) ?
-	       CAN_FIRE_RL_getTagLookupResponse &&
-	       lookupRsp_insertItem$wget[17] :
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5972 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5980 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 &&
-	      lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) ?
-	       lookupRsp_insertItem$wget[16:11] :
-	       lookupRsp_bag[16:11] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5989 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 &&
-	      lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) ?
-	       lookupRsp_insertItem$wget[10:5] :
-	       lookupRsp_bag[10:5] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5994 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 &&
-	      lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) ?
-	       lookupRsp_insertItem$wget[4] :
-	       lookupRsp_bag[4] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6004 =
-	     (CAN_FIRE_RL_getTagLookupResponse &&
-	      lookupRsp_insertItem$wget[17] &&
-	      lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 &&
-	      lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) ?
-	       lookupRsp_insertItem$wget[3:0] :
-	       lookupRsp_bag[3:0] ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6007 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5993 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5994,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d6003 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6004 } ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6008 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5979 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5980,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5988 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5989,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6007 } ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6037 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       !_0_CONCAT_lookupRsp_nextValidKeyReg_010_011_EQ__ETC___d6024 &&
-	       SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6031 :
-	       SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6036 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6063 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       (_0_CONCAT_lookupRsp_nextValidKeyReg_010_011_EQ__ETC___d6024 ?
-		  CAN_FIRE_RL_getTagLookupResponse :
-		  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061) :
-	       SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6074 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       { 30'd0, _theResult_____1__h321004 } !=
-	       IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023 &&
-	       SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6071 :
-	       SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6073 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6081 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       (lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ||
-		lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869) &&
-	       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919 :
-	       NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6083 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 &&
-	       lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869 :
-	       NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6088 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 ||
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 :
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6087 ;
-  assign IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6093 =
-	     lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 &&
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 ||
-	       NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926 :
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6092 ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6637 =
-	     (level__h326233 == 6'd0) ?
-	       level__h325540 != 3'd0 && frame == 3'd0 &&
-	       (lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6594 ||
-		lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6598 ||
-		lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6602 ||
-		lookupRsp_bag_741_BIT_17_971_AND_lookupRsp_bag_ETC___d6606) :
-	       mRsps_ff_rf_sub_mRsps_ff_ltail_read__579_BITS__ETC___d6636 ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6648 =
-	     (level__h326233 == 6'd0) ?
-	       ((level__h325540 != 3'd0 && frame == 3'd0) ?
+  assign IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6170 =
+	     x__h326448 == 2'd0 && cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160) ;
+  assign IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6182 =
+	     x__h326448 == 2'd1 && cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160) ;
+  assign IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6191 =
+	     x__h326448 == 2'd2 && cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160) ;
+  assign IF_addrFrame_fifos_0_lhead_read__003_MINUS_add_ETC___d6200 =
+	     x__h326448 == 2'd3 && cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160) ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6259 =
+	     (cache_request_put_val[106:105] == 2'd0) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } !=
+	       8'd0 :
+	       tagWrite[0] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6262 =
+	     (cache_request_put_val[106:105] == 2'd1) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } !=
+	       8'd0 :
+	       tagWrite[1] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6265 =
+	     (cache_request_put_val[106:105] == 2'd2) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } !=
+	       8'd0 :
+	       tagWrite[2] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6268 =
+	     (cache_request_put_val[106:105] == 2'd3) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } !=
+	       8'd0 :
+	       tagWrite[3] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6271 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6259 ||
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6262 ||
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6265 ||
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6268 ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6293 =
+	     (cache_request_put_val[106:105] == 2'd3) ?
+	       cache_request_put_val[72] :
+	       tagWrite[7] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6295 =
+	     (cache_request_put_val[106:105] == 2'd2) ?
+	       cache_request_put_val[72] :
+	       tagWrite[6] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6298 =
+	     (cache_request_put_val[106:105] == 2'd1) ?
+	       cache_request_put_val[72] :
+	       tagWrite[5] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6300 =
+	     (cache_request_put_val[106:105] == 2'd0) ?
+	       cache_request_put_val[72] :
+	       tagWrite[4] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6306 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6271 &&
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 &&
+	     tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182 ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6316 =
+	     (cache_request_put_val[106:105] == 2'd0) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } ==
+	       8'd0 :
+	       !tagWrite[0] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6318 =
+	     (cache_request_put_val[106:105] == 2'd1) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } ==
+	       8'd0 :
+	       !tagWrite[1] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6320 =
+	     (cache_request_put_val[106:105] == 2'd2) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } ==
+	       8'd0 :
+	       !tagWrite[2] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6322 =
+	     (cache_request_put_val[106:105] == 2'd3) ?
+	       { (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[88],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[87],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[86],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[85],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[84],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[83],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[82],
+		 (cache_request_put_val[93:92] != 2'd1 ||
+		  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		  !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		 cache_request_put_val[81] } ==
+	       8'd0 :
+	       !tagWrite[3] ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6325 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6316 &&
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6318 &&
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6320 &&
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6322 ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6329 =
+	     ((cache_request_put_val[106:105] == 2'd0) ?
+		!cache_request_put_val[72] :
+		!tagWrite[4]) ||
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6316 ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6332 =
+	     ((cache_request_put_val[106:105] == 2'd1) ?
+		!cache_request_put_val[72] :
+		!tagWrite[5]) ||
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6318 ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6335 =
+	     ((cache_request_put_val[106:105] == 2'd2) ?
+		!cache_request_put_val[72] :
+		!tagWrite[6]) ||
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6320 ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6341 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6329 &&
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6332 &&
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6335 &&
+	     (((cache_request_put_val[106:105] == 2'd3) ?
+		 !cache_request_put_val[72] :
+		 !tagWrite[7]) ||
+	      IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6322) ;
+  assign IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6378 =
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6271 &&
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 &&
+	     level__h1878 == 3'd4 ;
+  assign IF_mReqBurst_lhead_read__991_MINUS_mReqBurst_l_ETC___d6789 =
+	     { x__h343903,
+	       (level__h316294 == 3'd0) ?
+		 tagLookup_mReqs_ff_rf$D_OUT_1[94] :
+		 mReqs_rf$D_OUT_1[94],
+	       IF_IF_mReqBurst_lhead_read__991_MINUS_mReqBurs_ETC___d6788 } ;
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6466 =
+	     (level__h316619 == 6'd0) ?
+	       level__h314722 != 3'd0 && memoryResponseFrame == 3'd0 &&
+	       (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d6428 ||
+		NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d6437) :
+	       mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 &&
+	       (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d6454 ||
+		NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d6463) ;
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6477 =
+	     (level__h316619 == 6'd0) ?
+	       ((level__h314722 != 3'd0 && memoryResponseFrame == 3'd0) ?
 		  2'd0 :
 		  mRsps_ff_rf$D_OUT_1[70:69]) :
 	       mRsps_ff_rf$D_OUT_1[70:69] ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6650 =
-	     (level__h326233 == 6'd0) ?
-	       level__h325540 != 3'd0 && frame == 3'd0 ||
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 =
+	     (level__h316619 == 6'd0) ?
+	       level__h314722 != 3'd0 && memoryResponseFrame == 3'd0 ||
 	       mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 :
 	       mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6657 =
-	     (level__h326233 == 6'd0) ?
-	       { level__h325540 != 3'd0 && frame == 3'd0 ||
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6486 =
+	     (level__h316619 == 6'd0) ?
+	       { level__h314722 != 3'd0 && memoryResponseFrame == 3'd0 ||
 		 mRsps_ff_rf$D_OUT_1[66],
-		 level__h325540 != 3'd0 && frame == 3'd0 ||
+		 level__h314722 != 3'd0 && memoryResponseFrame == 3'd0 ||
 		 mRsps_ff_rf$D_OUT_1[65] } :
 	       mRsps_ff_rf$D_OUT_1[66:65] ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6663 =
-	     (level__h326233 == 6'd0) ?
-	       (level__h325540 == 3'd0 || frame != 3'd0) &&
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6492 =
+	     (level__h316619 == 6'd0) ?
+	       (level__h314722 == 3'd0 || memoryResponseFrame != 3'd0) &&
 	       mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 :
 	       mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6757 =
-	     (level__h326233 == 6'd0) ?
-	       { (level__h325540 == 3'd0 || frame != 3'd0) &&
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6641 =
+	     (level__h316619 == 6'd0) ?
+	       { (level__h314722 == 3'd0 || memoryResponseFrame != 3'd0) &&
 		 mRsps_ff_rf$D_OUT_1[64],
-		 _theResult___snd_snd_fst_data_data__h341155 } :
-	       { (mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-		   IF_IF_lookupRsp_bag_741_BIT_71_796_AND_lookupR_ETC___d6754 :
-		   mRsps_ff_rf$D_OUT_1[64],
+		 _theResult___snd_snd_fst_data_data__h338374 } :
+	       { IF_mRsps_ff_rf_sub_mRsps_ff_ltail_read__408_BI_ETC___d6639,
 		 mRsps_ff_rf$D_OUT_1[63:0] } ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6765 =
-	     (level__h326233 == 6'd0) ?
-	       level__h325540 != 3'd0 && frame == 3'd0 ||
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 =
+	     (level__h316619 == 6'd0) ?
+	       level__h314722 != 3'd0 && memoryResponseFrame == 3'd0 ||
 	       mRsps_ff_rf$D_OUT_1[66] :
 	       mRsps_ff_rf$D_OUT_1[66] ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6766 =
-	     (level__h326233 == 6'd0) ?
-	       level__h325540 != 3'd0 && frame == 3'd0 ||
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648 =
+	     (level__h316619 == 6'd0) ?
+	       level__h314722 != 3'd0 && memoryResponseFrame == 3'd0 ||
 	       mRsps_ff_rf$D_OUT_1[65] :
 	       mRsps_ff_rf$D_OUT_1[65] ;
-  assign IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6771 =
-	     IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6650 &&
-	     (level__h326233 == 6'd0 || mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) &&
-	     (IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6765 ||
-	      IF_mRsps_ff_lhead_read__578_MINUS_mRsps_ff_lta_ETC___d6766) ;
-  assign IF_tagLookup_currentDepth_338_EQ_0_339_THEN_1__ETC___d5725 =
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6680 =
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6658 &&
+	     lookupRsp_fifos_1_lhead_read__835_MINUS_lookup_ETC___d6664 &&
+	     lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d6671 &&
+	     (level__h312686 == 3'd0 ||
+	      lookupRsp_fifos_3_rf$D_OUT_1[10] != x__h337805 ||
+	      lookupRsp_fifos_3_rf$D_OUT_1[9:5] != x__h338146) ;
+  assign IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6726 =
+	     (IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6647 ||
+	      IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6648) &&
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6704 &&
+	     addrFrame_fifos_1_lhead_read__008_MINUS_addrFr_ETC___d6710 &&
+	     addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6717 &&
+	     (level__h314042 == 3'd0 ||
+	      addrFrame_fifos_3_rf$D_OUT_1[14] != x__h337805 ||
+	      addrFrame_fifos_3_rf$D_OUT_1[13:9] != x__h338146) ;
+  assign IF_mRsps_ff_rf_sub_mRsps_ff_ltail_read__408_BI_ETC___d6639 =
+	     (mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
+	       (SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6581 ?
+		  SEL_ARR_SEL_ARR_lookupRsp_fifos_0_rf_sub_looku_ETC___d6630 :
+		  !SEL_ARR_NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_ETC___d6636) :
+	       mRsps_ff_rf$D_OUT_1[64] ;
+  assign IF_tagLookup_currentDepth_339_EQ_0_340_THEN_1__ETC___d5777 =
 	     (tagLookup_currentDepth == 2'd0) ?
 	       3'd1 :
-	       (IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ?
+	       (IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ?
 		  tagLookup_state :
 		  3'd1) ;
-  assign IF_tagLookup_currentDepth_338_EQ_0_339_THEN_IF_ETC___d5712 =
+  assign IF_tagLookup_currentDepth_339_EQ_0_340_THEN_IF_ETC___d5764 =
 	     (tagLookup_currentDepth == 2'd0) ?
 	       ((tagLookup_tagCache_resps$wget[219:156] == 64'd0 &&
-		 !tagLookup_pendingTags) ?
+		 tagLookup_pendingTags == 4'd0) ?
 		  2'd1 :
-		  tagLookup_currentDepth_338_MINUS_1___d5481) :
-	       tagLookup_currentDepth_338_MINUS_1___d5481 ;
-  assign IF_tagLookup_currentDepth_338_EQ_0_339_THEN_IF_ETC___d5729 =
+		  tagLookup_currentDepth_339_MINUS_1___d5482) :
+	       tagLookup_currentDepth_339_MINUS_1___d5482 ;
+  assign IF_tagLookup_currentDepth_339_EQ_0_340_THEN_IF_ETC___d5781 =
 	     (tagLookup_currentDepth == 2'd0) ?
 	       ((tagLookup_tagCache_resps$wget[219:156] == 64'd0 &&
-		 !tagLookup_pendingTags) ?
+		 tagLookup_pendingTags == 4'd0) ?
 		  3'd5 :
 		  3'd1) :
 	       tagLookup_state ;
-  assign IF_tagLookup_currentDepth_338_EQ_1_466_THEN_0__ETC___d5647 =
+  assign IF_tagLookup_currentDepth_339_EQ_1_467_THEN_0__ETC___d5649 =
 	     (tagLookup_currentDepth == 2'd1) ?
-	       { _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+	       { _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd7 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd4 ||
-		  nodeOffset__h304385 == 3'd5 ||
-		  nodeOffset__h304385 == 3'd6 ||
-		  nodeOffset__h304385 == 3'd7),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd4 ||
+		  nodeOffset__h305148 == 3'd5 ||
+		  nodeOffset__h305148 == 3'd6 ||
+		  nodeOffset__h305148 == 3'd7),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd6 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd3 ||
-		  nodeOffset__h304385 == 3'd4 ||
-		  nodeOffset__h304385 == 3'd5 ||
-		  nodeOffset__h304385 == 3'd6),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd3 ||
+		  nodeOffset__h305148 == 3'd4 ||
+		  nodeOffset__h305148 == 3'd5 ||
+		  nodeOffset__h305148 == 3'd6),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd5 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd2 ||
-		  nodeOffset__h304385 == 3'd3 ||
-		  nodeOffset__h304385 == 3'd4 ||
-		  nodeOffset__h304385 == 3'd5),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd2 ||
+		  nodeOffset__h305148 == 3'd3 ||
+		  nodeOffset__h305148 == 3'd4 ||
+		  nodeOffset__h305148 == 3'd5),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd4 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd1 ||
-		  nodeOffset__h304385 == 3'd2 ||
-		  nodeOffset__h304385 == 3'd3 ||
-		  nodeOffset__h304385 == 3'd4),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd1 ||
+		  nodeOffset__h305148 == 3'd2 ||
+		  nodeOffset__h305148 == 3'd3 ||
+		  nodeOffset__h305148 == 3'd4),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd3 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd0 ||
-		  nodeOffset__h304385 == 3'd1 ||
-		  nodeOffset__h304385 == 3'd2 ||
-		  nodeOffset__h304385 == 3'd3),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd0 ||
+		  nodeOffset__h305148 == 3'd1 ||
+		  nodeOffset__h305148 == 3'd2 ||
+		  nodeOffset__h305148 == 3'd3),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd2 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd7 ||
-		  nodeOffset__h304385 == 3'd0 ||
-		  nodeOffset__h304385 == 3'd1 ||
-		  nodeOffset__h304385 == 3'd2),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd7 ||
+		  nodeOffset__h305148 == 3'd0 ||
+		  nodeOffset__h305148 == 3'd1 ||
+		  nodeOffset__h305148 == 3'd2),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd1 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd6 ||
-		  nodeOffset__h304385 == 3'd7 ||
-		  nodeOffset__h304385 == 3'd0 ||
-		  nodeOffset__h304385 == 3'd1),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd6 ||
+		  nodeOffset__h305148 == 3'd7 ||
+		  nodeOffset__h305148 == 3'd0 ||
+		  nodeOffset__h305148 == 3'd1),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd0 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304385 == 3'd5 ||
-		  nodeOffset__h304385 == 3'd6 ||
-		  nodeOffset__h304385 == 3'd7 ||
-		  nodeOffset__h304385 == 3'd0) } :
-	       { _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305148 == 3'd5 ||
+		  nodeOffset__h305148 == 3'd6 ||
+		  nodeOffset__h305148 == 3'd7 ||
+		  nodeOffset__h305148 == 3'd0) } :
+	       { _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd7 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd4 ||
-		  nodeOffset__h304821 == 3'd5 ||
-		  nodeOffset__h304821 == 3'd6 ||
-		  nodeOffset__h304821 == 3'd7),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd4 ||
+		  nodeOffset__h305584 == 3'd5 ||
+		  nodeOffset__h305584 == 3'd6 ||
+		  nodeOffset__h305584 == 3'd7),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd6 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd3 ||
-		  nodeOffset__h304821 == 3'd4 ||
-		  nodeOffset__h304821 == 3'd5 ||
-		  nodeOffset__h304821 == 3'd6),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd3 ||
+		  nodeOffset__h305584 == 3'd4 ||
+		  nodeOffset__h305584 == 3'd5 ||
+		  nodeOffset__h305584 == 3'd6),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd5 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd2 ||
-		  nodeOffset__h304821 == 3'd3 ||
-		  nodeOffset__h304821 == 3'd4 ||
-		  nodeOffset__h304821 == 3'd5),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd2 ||
+		  nodeOffset__h305584 == 3'd3 ||
+		  nodeOffset__h305584 == 3'd4 ||
+		  nodeOffset__h305584 == 3'd5),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd4 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd1 ||
-		  nodeOffset__h304821 == 3'd2 ||
-		  nodeOffset__h304821 == 3'd3 ||
-		  nodeOffset__h304821 == 3'd4),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd1 ||
+		  nodeOffset__h305584 == 3'd2 ||
+		  nodeOffset__h305584 == 3'd3 ||
+		  nodeOffset__h305584 == 3'd4),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd3 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd0 ||
-		  nodeOffset__h304821 == 3'd1 ||
-		  nodeOffset__h304821 == 3'd2 ||
-		  nodeOffset__h304821 == 3'd3),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd0 ||
+		  nodeOffset__h305584 == 3'd1 ||
+		  nodeOffset__h305584 == 3'd2 ||
+		  nodeOffset__h305584 == 3'd3),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd2 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd7 ||
-		  nodeOffset__h304821 == 3'd0 ||
-		  nodeOffset__h304821 == 3'd1 ||
-		  nodeOffset__h304821 == 3'd2),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd7 ||
+		  nodeOffset__h305584 == 3'd0 ||
+		  nodeOffset__h305584 == 3'd1 ||
+		  nodeOffset__h305584 == 3'd2),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd1 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd6 ||
-		  nodeOffset__h304821 == 3'd7 ||
-		  nodeOffset__h304821 == 3'd0 ||
-		  nodeOffset__h304821 == 3'd1),
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] ==
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd6 ||
+		  nodeOffset__h305584 == 3'd7 ||
+		  nodeOffset__h305584 == 3'd0 ||
+		  nodeOffset__h305584 == 3'd1),
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] ==
 		 3'd0 ||
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 &&
-		 SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 &&
-		 (nodeOffset__h304821 == 3'd5 ||
-		  nodeOffset__h304821 == 3'd6 ||
-		  nodeOffset__h304821 == 3'd7 ||
-		  nodeOffset__h304821 == 3'd0) } ;
-  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 =
-	     (level__h1462 == 2'd0) ?
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 &&
+		 SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 &&
+		 (nodeOffset__h305584 == 3'd5 ||
+		  nodeOffset__h305584 == 3'd6 ||
+		  nodeOffset__h305584 == 3'd7 ||
+		  nodeOffset__h305584 == 3'd0) } ;
+  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 =
+	     (level__h1428 == 2'd0) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3970 ;
-  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3980 =
-	     (level__h1462 == 2'd0) ?
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3971 ;
+  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3981 =
+	     (level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[92:83] :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3979 ;
-  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 =
-	     (level__h1462 == 2'd0) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4192 ;
-  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4387 =
-	     (level__h1462 == 2'd0) ?
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 } :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4386 ;
-  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4532 =
-	     (level__h1462 == 2'd0) ?
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 } :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4531 ;
-  assign IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5367 =
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3980 ;
+  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 =
+	     (level__h1428 == 2'd0) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 :
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4193 ;
+  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4388 =
+	     (level__h1428 == 2'd0) ?
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 } :
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4387 ;
+  assign IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4533 =
+	     (level__h1428 == 2'd0) ?
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 } :
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4532 ;
+  assign IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5368 =
 	     (tagLookup_state == 3'd2 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	      !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	      !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) ?
 	       tagLookup_currentDepth == 2'd0 ||
-	       !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 :
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5366 ;
-  assign IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5477 =
+	       !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 :
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5367 ;
+  assign IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5478 =
 	     (tagLookup_state == 3'd2 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	      !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	      !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) ?
 	       tagLookup_currentDepth != 2'd0 &&
-	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 :
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5476 ;
-  assign IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5498 =
+	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 :
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5477 ;
+  assign IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5499 =
 	     (tagLookup_state == 3'd2 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	      !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320) ?
-	       _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490 :
-	       IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5497 ;
-  assign IF_tagLookup_state_read__216_EQ_2_311_AND_tagL_ETC___d5700 =
-	     tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5499 ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	      !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321) ?
+	       _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491 :
+	       IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5498 ;
+  assign IF_tagLookup_state_read__217_EQ_2_312_AND_tagL_ETC___d5752 =
+	     tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5500 ?
 	       { 2'd0,
 		 83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 		 9'd3 } :
 	       { 5'd12,
-		 IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5665,
-		 x__h306916,
+		 IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5667,
+		 x__h307679,
 		 1'd0,
-		 IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5696,
+		 IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5748,
 		 8'd0 } ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5366 =
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5367 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
 	       tagLookup_currentDepth == 2'd0 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5365 ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5476 =
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5366 ;
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5477 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
 	       tagLookup_currentDepth != 2'd0 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5475 ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5497 =
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5476 ;
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5498 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
 	       ((tagLookup_currentDepth == 2'd1) ?
-		  _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493 :
-		  _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490) :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5496 ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5665 =
+		  _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494 :
+		  _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491) :
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5497 ;
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5667 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       IF_tagLookup_currentDepth_338_EQ_1_466_THEN_0__ETC___d5647 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5664 ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5696 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       IF_tagLookup_currentDepth_339_EQ_1_467_THEN_0__ETC___d5649 :
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5666 ;
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5748 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       data_data__h307592 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5695 ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5705 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       data_data__h308923 :
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5747 ;
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5757 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
 	       tagLookup_currentDepth != 2'd0 &&
 	       tagLookup_currentDepth != 2'd1 :
 	       tagLookup_state == 3'd4 &&
-	       tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
+	       tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
 	       tagLookup_currentDepth != 2'd0 &&
-	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ;
-  assign IF_tagLookup_state_read__216_EQ_3_323_AND_tagL_ETC___d5735 =
+	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ;
+  assign IF_tagLookup_state_read__217_EQ_3_324_AND_tagL_ETC___d5787 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q38 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5734 ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5365 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q39 :
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5786 ;
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5366 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
 	       tagLookup_currentDepth != 2'd0 &&
-	       !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 :
+	       !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 :
 	       tagLookup_state != 3'd5 ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5475 =
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5476 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ||
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ||
 	       tagLookup_currentDepth == 2'd0 :
 	       tagLookup_state == 3'd5 ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5496 =
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5497 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       IF_NOT_tagLookup_currentDepth_338_EQ_0_339_363_ETC___d5495 :
-	       _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354 ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5664 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       IF_NOT_tagLookup_currentDepth_339_EQ_0_340_364_ETC___d5496 :
+	       _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355 ;
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5666 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       { _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       { _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd7,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd6,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd5,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd4,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd3,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd2,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd1,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] ==
 		 3'd0 } :
-	       { _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+	       { _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd7,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd6,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd5,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd4,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd3,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd2,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd1,
-		 _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0] ==
+		 _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0] ==
 		 3'd0 } ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5681 =
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5717 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       bitEnable__h303991 :
-	       _theResult_____1_fst__h307355 ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5695 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       bitEnable__h304754 :
+	       _theResult_____1_fst__h308686 ;
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5747 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       wdata_data__h307594 :
-	       wdata_data__h307596 ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5722 =
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       wdata_data__h308925 :
+	       wdata_data__h308927 ;
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5774 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       IF_tagLookup_currentDepth_338_EQ_0_339_THEN_IF_ETC___d5712 :
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       IF_tagLookup_currentDepth_339_EQ_0_340_THEN_IF_ETC___d5764 :
 	       ((tagLookup_state == 3'd5) ?
-		  IF_SEL_ARR_tagLookup_oldTags_0_713_tagLookup_o_ETC___d5720 :
-		  tagLookup_currentDepth_338_MINUS_1___d5481) ;
-  assign IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5734 =
+		  IF_SEL_ARR_tagLookup_oldTags_0_765_tagLookup_o_ETC___d5772 :
+		  tagLookup_currentDepth_339_MINUS_1___d5482) ;
+  assign IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5786 =
 	     (tagLookup_state == 3'd4 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
 	       ((tagLookup_currentDepth != 2'd0 &&
-		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358) ?
+		 !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359) ?
 		  3'd1 :
-		  IF_NOT_tagLookup_currentDepth_338_EQ_0_339_363_ETC___d5730) :
+		  IF_NOT_tagLookup_currentDepth_339_EQ_0_340_364_ETC___d5782) :
 	       ((tagLookup_state == 3'd5) ?
-		  IF_SEL_ARR_tagLookup_oldTags_0_713_tagLookup_o_ETC___d5732 :
+		  IF_SEL_ARR_tagLookup_oldTags_0_765_tagLookup_o_ETC___d5784 :
 		  tagLookup_state) ;
-  assign IF_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_E_ETC__q40 =
+  assign IF_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_E_ETC__q41 =
 	     (tagLookup_tagCacheReq_ff_rf[93:92] == 2'd0) ?
 	       tagLookup_tagCacheReq_ff_rf[5:3] :
 	       3'd0 ;
-  assign IF_tagLookup_tagCache_cts_BITS_229_TO_228_EQ_0_ETC__q4 =
+  assign IF_tagLookup_tagCache_cts_BITS_229_TO_228_EQ_0_ETC__q3 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0) ?
 	       tagLookup_tagCache_cts[141:139] :
 	       3'd0 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4547 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4548 =
 	     (tagLookup_tagCache_cts[100:99] == 2'd3) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4544 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4545 :
 	       (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4551 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4552 =
 	     (tagLookup_tagCache_cts[100:99] == 2'd2) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4544 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4545 :
 	       (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4556 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4557 =
 	     (tagLookup_tagCache_cts[100:99] == 2'd1) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4544 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4545 :
 	       (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4560 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_100_T_ETC___d4561 =
 	     (tagLookup_tagCache_cts[100:99] == 2'd0) ?
-	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4544 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4545 :
 	       (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080) ;
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081) ;
   assign IF_tagLookup_tagCache_cts_read__795_BITS_143_T_ETC___d3628 =
 	     (tagLookup_tagCache_cts[143:140] == 4'd1 &&
 	      tagLookup_tagCache_cts_read__795_BIT_136_060_O_ETC___d3609) ?
@@ -8136,9 +8372,9 @@ module mkTagController(CLK,
 	       !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	       !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 :
 	       NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d3627 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4544 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_224_T_ETC___d4545 =
 	     (tagLookup_tagCache_cts[224:217] == 8'd0) ?
-	       SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4542 :
+	       SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4543 :
 	       tagLookup_tagCache_cts[208] ;
   assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0) ?
@@ -8194,7 +8430,7 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3575 &&
 	       !tagLookup_tagCache_cts[143] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3637 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4102 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4103 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	      !tagLookup_tagCache_cts[143] ||
@@ -8209,7 +8445,7 @@ module mkTagController(CLK,
 	       !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	       !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553 &&
 	       !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4104 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4105 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3572 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530) ?
@@ -8219,8 +8455,8 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3575 &&
 	       !tagLookup_tagCache_cts[143] ||
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4102 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4112 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4103 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4113 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
@@ -8232,45 +8468,45 @@ module mkTagController(CLK,
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
 	       (_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553 ||
 		_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4217 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4218 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ||
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4212 :
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4213 :
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1) &&
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4214 &&
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4212 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4230 =
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4215 &&
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4213 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4231 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	      !tagLookup_tagCache_cts[143]) ?
 	       !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	       !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	       !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 :
-	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4229 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4238 =
+	       tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4230 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4239 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
-	       NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d4234 :
+	       NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d4235 :
 	       tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676 &&
 	       !tagLookup_tagCache_cts[225] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4241 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4242 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ||
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4238 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4239 :
 	       (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 		tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4238 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4243 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4239 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4244 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
@@ -8280,32 +8516,32 @@ module mkTagController(CLK,
 	       !tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 &&
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3746 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4284 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4285 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
-	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4283 :
-	       x_addr_tag__h102719 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4285 =
+	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4284 :
+	       x_addr_tag__h102698 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4286 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	      !tagLookup_tagCache_cts[143]) ?
-	       x_addr_tag__h102719 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4284 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4294 =
+	       x_addr_tag__h102698 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4285 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4295 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
-	       IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4286 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4293 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4306 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
-	       x_addr_tag__h102719 :
-	       (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4120 ?
-		  IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4304 :
-		  y_avValue_snd_snd_fst_newTag_tag__h121563) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4322 =
+	       IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4287 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4294 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4307 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
+	       x_addr_tag__h102698 :
+	       (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4121 ?
+		  IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4305 :
+		  y_avValue_snd_snd_fst_newTag_tag__h121543) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4323 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	      !tagLookup_tagCache_cts[143]) ?
@@ -8317,447 +8553,447 @@ module mkTagController(CLK,
 	       !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	       _0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 ||
 	       _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4335 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4336 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4334 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4391 =
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4335 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4392 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4393 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4394 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4395 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4396 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4391 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4394 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4401 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4392 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4395 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4402 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4403 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4404 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4405 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4406 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4401 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4404 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4412 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4402 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4405 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4413 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4414 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4415 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4416 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4417 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4412 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4415 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4422 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4413 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4416 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4423 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4424 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4425 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4426 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4427 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4422 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4425 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4433 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4423 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4426 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4434 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4435 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4436 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4437 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4438 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4433 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4436 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4443 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4434 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4437 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4444 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4445 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4446 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4447 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4448 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4443 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4446 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4454 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4444 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4447 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4455 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4456 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4457 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4458 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4459 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4454 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4457 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4464 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4455 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4458 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4465 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4466 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4467 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4468 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4469 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4464 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4467 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4481 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4465 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4468 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4482 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 } :
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4483 =
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 } :
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4484 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       { IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4391,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4392,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4401,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4402,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4412,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4413,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4422,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4423,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4433,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4434,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4443,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4444,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4454,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4455,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4464 } :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4482 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4487 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 } :
-	       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4486 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4497 =
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4465 } :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4483 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4488 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 } :
+	       IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4487 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       (SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ?
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 :
 		  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509) :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4499 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	      !tagLookup_tagCache_cts[143]) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4497 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4501 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4502 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ||
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4500 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4592 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4499 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4501 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4593 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4594 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4595 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4596 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4597 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4592 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4595 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4601 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4593 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4596 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4602 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4603 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4604 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4605 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4606 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4601 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4604 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4611 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4602 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4605 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4612 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4613 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4614 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4615 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4616 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4611 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4614 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4620 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4612 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4615 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4621 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326) ?
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 :
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327) ?
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 :
 	       ((tagLookup_tagCache_cts[229:228] == 2'd1) ?
 		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 :
-		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4622 =
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 :
+		  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4623 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4624 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4625 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4620 :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4623 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4633 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4621 :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4624 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4634 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	      (tagLookup_tagCache_cts[225] ||
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544)) ?
 	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
 		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 } :
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4635 =
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 } :
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4636 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       { IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4592,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4593,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4601,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4602,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4611,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4612,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4620 } :
-	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4634 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4640 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 } :
-	       (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4120 ?
-		  IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4590 :
-		  IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4638) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4670 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4621 } :
+	       IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4635 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4641 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 } :
+	       (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4121 ?
+		  IF_NOT_tagLookup_tagCache_cts_read__795_BIT_22_ETC___d4591 :
+		  IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4639) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4671 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[66] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4668 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4669 :
 		  tagLookup_tagCache_readReqReg[66]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4686 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4687 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       tagLookup_tagCache_cts[236:231] :
 	       tagLookup_tagCache_readReqReg[57:52] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4689 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4690 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[57:52] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4687 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4688 :
 		  tagLookup_tagCache_readReqReg[57:52]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4739 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4120 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4740 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4121 ?
 	       !tagLookup_tagCache_cts[225] && !tagLookup_tagCache_cts[226] &&
-	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4733 :
+	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4734 :
 	       tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676 &&
 	       !tagLookup_tagCache_cts[143] ||
 	       tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	       tagLookup_tagCache_cts[229:228] != 2'd1 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4759 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4760 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[51] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4757 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4758 :
 		  tagLookup_tagCache_readReqReg[51]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4768 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4769 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
@@ -8765,39 +9001,39 @@ module mkTagController(CLK,
 	       { tagLookup_tagCache_cts[236],
 		 tagLookup_tagCache_orderer_mastReqIds_rf[4:0] } :
 	       tagLookup_tagCache_readReqReg[50:45] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4771 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4772 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[50:45] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4769 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4770 :
 		  tagLookup_tagCache_readReqReg[50:45]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4776 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4777 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 :
 	       tagLookup_tagCache_readReqReg[44] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4779 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4780 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[44] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4777 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4778 :
 		  tagLookup_tagCache_readReqReg[44]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4785 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4786 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
-	       IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4286 :
+	       IF_IF_tagLookup_tagCache_cts_read__795_BITS_22_ETC___d4287 :
 	       tagLookup_tagCache_readReqReg[43:17] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4788 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4789 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[43:17] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4786 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4787 :
 		  tagLookup_tagCache_readReqReg[43:17]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4792 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4793 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
@@ -8805,175 +9041,175 @@ module mkTagController(CLK,
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 :
 	       tagLookup_tagCache_readReqReg[16] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4795 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4796 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[16] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4793 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4794 :
 		  tagLookup_tagCache_readReqReg[16]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4804 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4805 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       { IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4391,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4392,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4401,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4402,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4412,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4413,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4422,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4423,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4433,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4434,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4443,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4444,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4454,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4455,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4464,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4465,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ||
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4498,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4499,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4592,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4593,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4601,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4602,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4611,
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4612,
 		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 &&
-		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4620 } :
+		 IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4621 } :
 	       tagLookup_tagCache_readReqReg[15:3] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4807 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4808 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[15:3] :
 	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4805 :
+		  IF_NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read___ETC___d4806 :
 		  tagLookup_tagCache_readReqReg[15:3]) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4934 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4935 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-		 IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4930,
+		 IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4931,
 		 tagLookup_tagCache_cts[229:228] == 2'd1 } :
 	       tagLookup_tagCache_readReqReg[1:0] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4994 =
-	     { tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4956 ?
-		 NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4712 :
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4995 =
+	     { tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4957 ?
+		 NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4713 :
 		 tagLookup_mRsps_ff_rf$D_OUT_1[66],
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4991 &&
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4992 &&
 	       tagLookup_mRsps_ff_rf$D_OUT_1[65] } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d5000 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d5001 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676 &&
 	      !tagLookup_tagCache_cts[143]) ?
-	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 :
+	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 :
 	       tagLookup_mRsps_ff_rf$D_OUT_1[66] ;
   assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d3753 =
 	     (tagLookup_tagCache_cts[278:277] == 2'd1) ?
 	       { 21'd851967,
-		 CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q15,
-		 cacheResp_data_data__h284963,
+		 CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q18,
+		 cacheResp_data_data__h284943,
 		 8'd0 } :
 	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d3752 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643 =
-	     { IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4490,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q21,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4642 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4811 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q23,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4942 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4811,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4644 =
+	     { IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4491,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q22,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4812 =
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 } ;
   assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4943 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4942 } ;
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4812,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27 } ;
   assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4944 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29,
-	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30,
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29,
 	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4943 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5032 =
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4945 =
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30,
+	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4944 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5033 =
 	     ((tagLookup_tagCache_cts[278:277] == 2'd2) ?
-		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5017 :
+		IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5018 :
 		tagLookup_tagCache_cts[278:277] != 2'd0 ||
-		IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5022) ?
+		IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5023) ?
 	       { 2'd1, 2'bxx /* unspecified value */  } :
 	       { 2'd2,
 		 1'bx /* unspecified value */ ,
-		 CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5036 =
+		 CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5037 =
 	     (tagLookup_tagCache_cts[278:277] == 2'd2) ?
 	       tagLookup_mRsps_ff_rf$D_OUT_1[64:0] :
-	       { SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4542,
-		 cacheResp_data_data__h284963 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5052 =
+	       { SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4543,
+		 cacheResp_data_data__h284943 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5053 =
 	     (tagLookup_tagCache_cts[278:277] == 2'd2) ?
-	       (NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4991 ||
-		NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705 :
+	       (NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4992 ||
+		NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706 :
 	       tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4732 &&
-	       (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ||
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4740) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5077 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q22,
+	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4733 &&
+	       (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ||
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4741) ;
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5078 =
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q23,
 	       tagLookup_tagCache_cts[278:277] != 2'd1 &&
 	       ((tagLookup_tagCache_cts[278:277] == 2'd2) ?
-		  (NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4991 ||
-		   NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698) &&
-		  NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705 &&
-		  NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4712 :
-		  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d5072),
+		  (NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4992 ||
+		   NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699) &&
+		  NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706 &&
+		  NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4713 :
+		  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d5073),
 	       tagLookup_tagCache_cts[80] &&
 	       tagLookup_tagCache_cts[276:237] ==
 	       tagLookup_tagCache_cts[135:96] } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5078 =
-	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q33,
+  assign IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5079 =
+	     { CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q34,
 	       tagLookup_tagCache_cts[278:277] != 2'd1 &&
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5052,
-	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5077 } ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_217_18_ETC___d4187 =
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5053,
+	       IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d5078 } ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_217_18_ETC___d4188 =
 	     tagLookup_tagCache_cts[217] ?
-	       x__h120078 | y__h120079 :
-	       cacheResp_data_data__h284963[7:0] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_218_17_ETC___d4180 =
+	       x__h120058 | y__h120059 :
+	       cacheResp_data_data__h284943[7:0] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_218_17_ETC___d4181 =
 	     tagLookup_tagCache_cts[218] ?
-	       x__h119939 | y__h119940 :
-	       cacheResp_data_data__h284963[15:8] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_219_16_ETC___d4172 =
+	       x__h119919 | y__h119920 :
+	       cacheResp_data_data__h284943[15:8] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_219_16_ETC___d4173 =
 	     tagLookup_tagCache_cts[219] ?
-	       x__h119800 | y__h119801 :
-	       cacheResp_data_data__h284963[23:16] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_220_15_ETC___d4165 =
+	       x__h119780 | y__h119781 :
+	       cacheResp_data_data__h284943[23:16] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_220_16_ETC___d4166 =
 	     tagLookup_tagCache_cts[220] ?
-	       x__h119661 | y__h119662 :
-	       cacheResp_data_data__h284963[31:24] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_221_15_ETC___d4157 =
+	       x__h119641 | y__h119642 :
+	       cacheResp_data_data__h284943[31:24] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_221_15_ETC___d4158 =
 	     tagLookup_tagCache_cts[221] ?
-	       x__h119522 | y__h119523 :
-	       cacheResp_data_data__h284963[39:32] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_222_14_ETC___d4150 =
+	       x__h119502 | y__h119503 :
+	       cacheResp_data_data__h284943[39:32] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_222_14_ETC___d4151 =
 	     tagLookup_tagCache_cts[222] ?
-	       x__h119383 | y__h119384 :
-	       cacheResp_data_data__h284963[47:40] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_223_13_ETC___d4142 =
+	       x__h119363 | y__h119364 :
+	       cacheResp_data_data__h284943[47:40] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_223_13_ETC___d4143 =
 	     tagLookup_tagCache_cts[223] ?
-	       x__h119244 | y__h119245 :
-	       cacheResp_data_data__h284963[55:48] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_224_12_ETC___d4135 =
+	       x__h119224 | y__h119225 :
+	       cacheResp_data_data__h284943[55:48] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_224_12_ETC___d4136 =
 	     tagLookup_tagCache_cts[224] ?
-	       x__h118911 | y__h118912 :
-	       cacheResp_data_data__h284963[63:56] ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4299 =
+	       x__h118891 | y__h118892 :
+	       cacheResp_data_data__h284943[63:56] ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4300 =
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ?
-	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4283 :
-	       x_addr_tag__h102719 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4567 =
+	       IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4284 :
+	       x_addr_tag__h102698 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 =
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 :
@@ -8982,34 +9218,34 @@ module mkTagController(CLK,
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
 	       (_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553 ||
 		_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557) ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4568 =
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4569 =
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4573 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4574 =
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4579 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4580 =
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 ;
-  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4584 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 ;
+  assign IF_tagLookup_tagCache_cts_read__795_BIT_225_54_ETC___d4585 =
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ?
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 ;
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 :
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 ;
   assign IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d2892 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
-	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[12:3] :
+	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[12:3] :
 	       { tagLookup_tagCache_cts[249:242],
 		 IF_tagLookup_tagCache_orderer_lookupState_read_ETC___d2890 } ;
   assign IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d2975 =
@@ -9028,7 +9264,7 @@ module mkTagController(CLK,
 		  2'd0) :
 	       IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d3019 ;
   assign IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3047 =
-	     { x__h78978,
+	     { x__h78946,
 	       (CAN_FIRE_RL_tagLookup_feedTagCache &&
 		tagLookup_tagCache_newReq$wget[141]) ?
 		 tagLookup_tagCache_newReq$wget[94] :
@@ -9039,7 +9275,7 @@ module mkTagController(CLK,
 		tagLookup_tagCache_newReq$wget[141]) ?
 		 tagLookup_tagCache_newReq$wget[140:101] :
 		 tagLookup_tagCache_cts[276:237],
-	       x__h78975,
+	       x__h78943,
 	       IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3047 } ;
   assign IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d3054 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
@@ -9059,7 +9295,7 @@ module mkTagController(CLK,
 		 2'd0 :
 		 tagLookup_tagCache_cts[1:0] } ;
   assign IF_tagLookup_tagCache_newReq_whas__787_THEN_ta_ETC___d2826 =
-	     tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[4:3] + 2'd1 ;
+	     tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[4:3] + 2'd1 ;
   assign IF_tagLookup_tagCache_orderer_lookupState_read_ETC___d2857 =
 	     (tagLookup_tagCache_orderer_lookupState[12] &&
 	      tagLookup_tagCache_cts[236] ==
@@ -9378,7 +9614,7 @@ module mkTagController(CLK,
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2313 ;
   assign IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2338 =
 	     tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
-	       { 28'd0, _theResult_____1__h43322 } !=
+	       { 28'd0, _theResult_____1__h43289 } !=
 	       IF_NOT_tagLookup_tagCache_orderer_mastLines_in_ETC___d2187 &&
 	       SEL_ARR_tagLookup_tagCache_orderer_mastLines_r_ETC___d2335 :
 	       SEL_ARR_NOT_tagLookup_tagCache_orderer_mastLin_ETC___d2337 ;
@@ -9833,7 +10069,7 @@ module mkTagController(CLK,
 	       SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1142 ;
   assign IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1167 =
 	     tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
-	       { 28'd0, _theResult_____1__h31533 } !=
+	       { 28'd0, _theResult_____1__h31500 } !=
 	       IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016 &&
 	       SEL_ARR_tagLookup_tagCache_orderer_mastReqs_re_ETC___d1164 :
 	       SEL_ARR_NOT_tagLookup_tagCache_orderer_mastReq_ETC___d1166 ;
@@ -10153,12 +10389,12 @@ module mkTagController(CLK,
   assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2820 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2810 ?
 	       tagLookup_tagCache_orderer_slaveReqs_bag[8:7] :
-	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[4:3] +
-	       IF_CAN_FIRE_RL_tagLookup_feedTagCache_AND_tagL_ETC__q39[1:0] ;
+	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[4:3] +
+	       IF_CAN_FIRE_RL_tagLookup_feedTagCache_AND_tagL_ETC__q40[1:0] ;
   assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2825 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2810 ?
 	       tagLookup_tagCache_orderer_slaveReqs_bag[10:9] :
-	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[4:3] ;
+	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[4:3] ;
   assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2829 =
 	     { IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2825,
 	       IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2820,
@@ -10178,7 +10414,7 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2850) ?
 	       tagLookup_tagCache_orderer_slaveReqs_bag[8:7] :
 	       IF_tagLookup_tagCache_orderer_lookupState_read_ETC___d2857 +
-	       IF_tagLookup_tagCache_cts_BITS_229_TO_228_EQ_0_ETC__q4[1:0] ;
+	       IF_tagLookup_tagCache_cts_BITS_229_TO_228_EQ_0_ETC__q3[1:0] ;
   assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2869 =
 	     (tagLookup_tagCache_orderer_slaveReqs_bag[58] &&
 	      tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2849 &&
@@ -10192,30 +10428,30 @@ module mkTagController(CLK,
 		IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2865) ?
 		 IF_tagLookup_tagCache_orderer_lookupState_read_ETC___d2870 :
 		 IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d2869 } ;
-  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4762 =
-	     (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4732 &&
-	      (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ||
-	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4740)) ?
-	       (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 ?
-		  tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d4760 :
-		  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4759) :
-	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4759 ;
-  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5005 =
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ?
+  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4763 =
+	     (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4733 &&
+	      (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ||
+	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4741)) ?
+	       (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 ?
+		  tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d4761 :
+		  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4760) :
+	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4760 ;
+  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5006 =
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ?
 	       { (tagLookup_tagCache_cts[229:228] == 2'd0) ?
-		   tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 :
+		   tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 :
 		   tagLookup_mRsps_ff_rf$D_OUT_1[66],
 		 tagLookup_tagCache_cts[229:228] != 2'd0 &&
 		 tagLookup_mRsps_ff_rf$D_OUT_1[65] } :
-	       IF_NOT_tagLookup_tagCache_orderer_slaveReqs_ba_ETC___d5004 ;
-  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5022 =
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ?
+	       IF_NOT_tagLookup_tagCache_orderer_slaveReqs_ba_ETC___d5005 ;
+  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5023 =
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ?
 	       tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	       (tagLookup_tagCache_cts[229:228] != 2'd1 ||
 		!tagLookup_tagCache_cts[225]) :
-	       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5021 ;
-  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5028 =
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ?
+	       NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5022 ;
+  assign IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5029 =
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ?
 	       (tagLookup_tagCache_cts[229:228] != 2'd1 ||
 		!tagLookup_tagCache_cts[225]) &&
 	       tagLookup_mRsps_ff_rf$D_OUT_1[65] :
@@ -10269,13 +10505,13 @@ module mkTagController(CLK,
 	       !tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2849 ||
 	       !tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2850 ||
 	       !tagLookup_tagCache_cts_read__795_BITS_100_TO_9_ETC___d3501 ;
-  assign IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4248 =
+  assign IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4249 =
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219) &&
-	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4233 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4246) ;
-  assign IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4658 =
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220) &&
+	     (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4234 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4247) ;
+  assign IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4659 =
 	     tagLookup_tagCache_orderer_slaveRespState[12] ?
 	       !tagLookup_tagCache_readReqReg_read__136_BIT_57_ETC___d3162 ||
 	       !tagLookup_tagCache_readReqReg_read__136_BITS_5_ETC___d3164 ||
@@ -10284,99 +10520,99 @@ module mkTagController(CLK,
 	       !tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3268 ||
 	       !tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3269 ||
 	       !IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3272 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3970 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3971 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       tagLookup_tagCache_readReqReg[44] :
 	       IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3979 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d3980 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       { tagLookup_tagCache_readReqReg[65:58],
 		 IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3265 } :
 	       tagLookup_tagCache_cts[92:83] ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4192 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4193 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       tagLookup_tagCache_readReqReg[7] :
-	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4263 =
+	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 ;
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4264 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       tagLookup_tagCache_readReqReg[43:17] :
-	       x_addr_tag__h102719 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4311 =
+	       x_addr_tag__h102698 ;
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4312 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       tagLookup_tagCache_readReqReg[16] :
 	       SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4363 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4364 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3265 :
 	       tagLookup_tagCache_cts[100:99] ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4386 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4387 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       tagLookup_tagCache_readReqReg[15:8] :
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 } ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4511 =
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 } ;
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4512 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3265 :
 	       tagLookup_tagCache_cts[84:83] ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4531 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4532 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       tagLookup_tagCache_readReqReg[6:3] :
-	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 } ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4665 =
+	       { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+		 SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 } ;
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4666 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       ((tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
 		  !tagLookup_mRsps_ff_rf$D_OUT_1[66] :
-		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4661 &&
-		  tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4662) :
+		  NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4662 &&
+		  tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4663) :
 	       tagLookup_tagCache_readReqReg[66] ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4710 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4711 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
-	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 ||
+	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 ||
 	       tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	       tagLookup_mRsps_ff_rf$D_OUT_1[66] :
-	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5013 =
+	       tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 ;
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5014 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
 	       ((tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ||
-		 tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3946) ?
+		 tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3947) ?
 		  tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 :
-		  tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4662 &&
+		  tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4663 &&
 		  tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1) :
 	       tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 ;
-  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5042 =
+  assign IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5043 =
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	      tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	      tagLookup_tagCache_readReqReg[66]) ?
@@ -10398,19 +10634,19 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 	       tagLookup_tagCache_tags_0_writeData[8] :
 	       tagLookup_tagCache_tags_0_bramA_bram$DOA[8] ;
-  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4050 =
+  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4051 =
 	     tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 	       tagLookup_tagCache_tags_0_writeData[3] :
 	       tagLookup_tagCache_tags_0_bramA_bram$DOA[3] ;
-  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4058 =
+  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4059 =
 	     tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 	       tagLookup_tagCache_tags_0_writeData[2] :
 	       tagLookup_tagCache_tags_0_bramA_bram$DOA[2] ;
-  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4067 =
+  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4068 =
 	     tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 	       tagLookup_tagCache_tags_0_writeData[1] :
 	       tagLookup_tagCache_tags_0_bramA_bram$DOA[1] ;
-  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4075 =
+  assign IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4076 =
 	     tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 	       tagLookup_tagCache_tags_0_writeData[0] :
 	       tagLookup_tagCache_tags_0_bramA_bram$DOA[0] ;
@@ -10430,24 +10666,24 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 	       tagLookup_tagCache_tags_1_writeData[8] :
 	       tagLookup_tagCache_tags_1_bramA_bram$DOA[8] ;
-  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4053 =
+  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4054 =
 	     tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 	       tagLookup_tagCache_tags_1_writeData[3] :
 	       tagLookup_tagCache_tags_1_bramA_bram$DOA[3] ;
-  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4061 =
+  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4062 =
 	     tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 	       tagLookup_tagCache_tags_1_writeData[2] :
 	       tagLookup_tagCache_tags_1_bramA_bram$DOA[2] ;
-  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4070 =
+  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4071 =
 	     tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 	       tagLookup_tagCache_tags_1_writeData[1] :
 	       tagLookup_tagCache_tags_1_bramA_bram$DOA[1] ;
-  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4078 =
+  assign IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4079 =
 	     tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 	       tagLookup_tagCache_tags_1_writeData[0] :
 	       tagLookup_tagCache_tags_1_bramA_bram$DOA[0] ;
-  assign IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 =
-	     tagLookup_tagCache_respswget_BITS_219_TO_156__q37[i__h301908] ;
+  assign IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 =
+	     tagLookup_tagCache_respswget_BITS_219_TO_156__q38[i__h302671] ;
   assign IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d2893 =
 	     tagLookup_tagCache_writebacks$EMPTY_N ?
 	       { tagLookup_tagCache_writebacks$D_OUT[61:54],
@@ -10462,7 +10698,7 @@ module mkTagController(CLK,
   assign IF_tagLookup_tagCache_writebacks_i_notEmpty__8_ETC___d3127 =
 	     tagLookup_tagCache_writebacks$EMPTY_N ?
 	       tagLookup_tagCache_writebacks$D_OUT[48:8] :
-	       { x1_avValue_snd_writebackTag_tag__h81267,
+	       { x1_avValue_snd_writebackTag_tag__h81235,
 		 (!CAN_FIRE_RL_tagLookup_feedTagCache ||
 		  !tagLookup_tagCache_newReq$wget[141]) &&
 		 tagLookup_tagCache_cts[15],
@@ -10505,15 +10741,15 @@ module mkTagController(CLK,
 		 (!CAN_FIRE_RL_tagLookup_feedTagCache ||
 		  !tagLookup_tagCache_newReq$wget[141]) &&
 		 tagLookup_tagCache_cts[2] } ;
-  assign NOT_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead__ETC___d4007 =
+  assign NOT_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead__ETC___d4008 =
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
 	     SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d3614 &&
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4092 =
-	     x__h102651 != 4'd0 &&
+  assign NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4093 =
+	     x__h102630 != 4'd0 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	     tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0 &&
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
@@ -10521,306 +10757,298 @@ module mkTagController(CLK,
 	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566 &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ;
-  assign NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4107 =
-	     x__h102651 != 4'd0 &&
+  assign NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4108 =
+	     x__h102630 != 4'd0 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	     tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0 &&
 	     !tagLookup_tagCache_readReqReg[66] &&
-	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4105 ;
-  assign NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4676 =
-	     x__h102651 != 4'd0 &&
+	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4106 ;
+  assign NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4677 =
+	     x__h102630 != 4'd0 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	     tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0 &&
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd0) &&
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3607 &&
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3640 ;
-  assign NOT_NOT_cache_request_put_val_BITS_93_TO_92_44_ETC___d6521 =
-	     { (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[88],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[87],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[86],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[85],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[84],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[83],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[82],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[81] } !=
-	     8'd0 &&
-	     (cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-	      !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	     cache_request_put_val[140:101] >= 40'h00C0000000 &&
-	     cache_request_put_val[140:101] < 40'h00FFFFC000 ;
   assign NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d3563 =
 	     !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 ;
-  assign NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d4234 =
+  assign NOT_SEL_ARR_IF_tagLookup_tagCache_tags_0_readA_ETC___d4235 =
 	     !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) ;
-  assign NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4094 =
+  assign NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4095 =
 	     !SEL_ARR_NOT_tagLookup_tagCache_req_commits_rf__ETC___d3395 &&
 	     !tagLookup_tagCache_cts[230] &&
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4086 &&
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4087 &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 &&
-	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4092 ;
-  assign NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4124 =
+	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4093 ;
+  assign NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4125 =
 	     !SEL_ARR_NOT_tagLookup_tagCache_req_commits_rf__ETC___d3395 &&
 	     !tagLookup_tagCache_cts[230] &&
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4086 &&
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4087 &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4120 &&
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4121 &&
 	     !tagLookup_tagCache_cts[225] &&
-	     NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4121 ;
-  assign NOT_addrFrame_bag_105_BIT_46_117_EQ_IF_addrFra_ETC___d6139 =
-	     (!addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118 ||
-	      !addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121) &&
-	     (!addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125 ||
-	      !addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128) &&
-	     (!addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132 ||
-	      !addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135) ;
-  assign NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285 =
-	     (!addrFrame_insertItem$whas || !addrFrame_insertItem$wget[15] ||
-	      !addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109 ||
-	      !addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114) &&
-	     addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156 ;
-  assign NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287 =
-	     (!addrFrame_insertItem$whas || !addrFrame_insertItem$wget[15] ||
-	      !addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118 ||
-	      !addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121) &&
-	     addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202 ;
-  assign NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289 =
-	     (!addrFrame_insertItem$whas || !addrFrame_insertItem$wget[15] ||
-	      !addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125 ||
-	      !addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128) &&
-	     addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226 ;
-  assign NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303 =
-	     (!addrFrame_insertItem$whas || !addrFrame_insertItem$wget[15] ||
-	      !addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132 ||
-	      !addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135) &&
-	     addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298 ;
-  assign NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_r_ETC___d6148 ||
-	      !addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6151) &&
-	     addrFrame_bag[63] ;
-  assign NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_r_ETC___d6196 ||
-	      !addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6197) &&
-	     addrFrame_bag[47] ;
-  assign NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_r_ETC___d6220 ||
-	      !addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6221) &&
-	     addrFrame_bag[31] ;
-  assign NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_r_ETC___d6245 ||
-	      !addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6247) &&
-	     addrFrame_bag[15] ;
-  assign NOT_cache_request_put_val_BITS_93_TO_92_442_EQ_ETC___d6539 =
-	     { (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[88],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[87],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[86],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[85],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[84],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[83],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[82],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[81] } ==
-	     8'd0 ||
-	     !cache_request_put_val[72] ;
-  assign NOT_lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupR_ETC___d5775 =
-	     (!lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 ||
-	      !lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) &&
-	     (!lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 ||
-	      !lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) &&
-	     (!lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 ||
-	      !lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) ;
-  assign NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016 =
-	     (!CAN_FIRE_RL_getTagLookupResponse ||
-	      !lookupRsp_insertItem$wget[17] ||
-	      !lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 ||
-	      !lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) &&
-	     lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 ;
-  assign NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018 =
-	     (!CAN_FIRE_RL_getTagLookupResponse ||
-	      !lookupRsp_insertItem$wget[17] ||
-	      !lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 ||
-	      !lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757) &&
-	     lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869 ;
-  assign NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020 =
-	     (!CAN_FIRE_RL_getTagLookupResponse ||
-	      !lookupRsp_insertItem$wget[17] ||
-	      !lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 ||
-	      !lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764) &&
-	     lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919 ;
-  assign NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034 =
-	     (!CAN_FIRE_RL_getTagLookupResponse ||
-	      !lookupRsp_insertItem$wget[17] ||
-	      !lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 ||
-	      !lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771) &&
-	     lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029 ;
-  assign NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_r_ETC___d5788 ||
-	      !lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5792) &&
-	     lookupRsp_bag[71] ;
-  assign NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_r_ETC___d5863 ||
-	      !lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5864) &&
-	     lookupRsp_bag[53] ;
-  assign NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_r_ETC___d5913 ||
-	      !lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5914) &&
-	     lookupRsp_bag[35] ;
-  assign NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5972 =
-	     (!lookupRsp_removeItem$whas || !lookupRsp_removeItem$wget[6] ||
-	      !lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_r_ETC___d5965 ||
-	      !lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5967) &&
-	     lookupRsp_bag[17] ;
+	     NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4122 ;
+  assign NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6025 =
+	     level__h313184 != 3'd4 && level__h313470 != 3'd4 &&
+	     level__h313756 != 3'd4 &&
+	     level__h314042 != 3'd4 ;
+  assign NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 =
+	     level__h313184 != 3'd0 &&
+	     addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 &&
+	     addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107 ||
+	     level__h313470 != 3'd0 &&
+	     addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 &&
+	     addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117 ;
+  assign NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6177 =
+	     level__h313184 != 3'd0 &&
+	     addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 &&
+	     addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107 ||
+	     addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 &&
+	     addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117 ;
+  assign NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6208 =
+	     (!addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 ||
+	      !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107) &&
+	     (level__h313470 == 3'd0 ||
+	      !addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 ||
+	      !addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117) ;
+  assign NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6210 =
+	     NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6208 &&
+	     addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6142 &&
+	     (level__h313470 == 3'd0 || level__h313756 == 3'd0 ||
+	      level__h314042 == 3'd0) ;
+  assign NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6248 =
+	     (!addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 ||
+	      !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107) &&
+	     (!addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 ||
+	      !addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117) &&
+	     (!addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 ||
+	      !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128) &&
+	     (!addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 ||
+	      !addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138) ;
+  assign NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6251 =
+	     NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6248 &&
+	     level__h313184 != 3'd0 &&
+	     level__h313470 != 3'd0 &&
+	     level__h313756 != 3'd0 &&
+	     level__h314042 != 3'd0 ;
+  assign NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160 =
+	     level__h313756 != 3'd0 &&
+	     addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 &&
+	     addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128 ||
+	     level__h314042 != 3'd0 &&
+	     addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 &&
+	     addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138 ;
+  assign NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6195 =
+	     level__h313756 != 3'd0 &&
+	     addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 &&
+	     addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128 ||
+	     addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 &&
+	     addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138 ;
+  assign NOT_addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_ETC___d6229 =
+	     (!addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 ||
+	      !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128) &&
+	     (level__h314042 == 3'd0 ||
+	      !addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 ||
+	      !addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138) ;
+  assign NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6310 =
+	     cache_request_put_val[93:92] != 2'd1 &&
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 &&
+	     tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182 ;
+  assign NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6382 =
+	     cache_request_put_val[93:92] != 2'd1 &&
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 &&
+	     level__h1878 == 3'd4 ;
+  assign NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 =
+	     level__h311828 != 3'd0 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831 ||
+	     level__h312114 != 3'd0 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845 ;
+  assign NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5912 =
+	     level__h311828 != 3'd0 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831 ||
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845 ;
+  assign NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d6428 =
+	     level__h311828 != 3'd0 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6419 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6421 ||
+	     level__h312114 != 3'd0 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6424 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6425 ;
+  assign NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d6454 =
+	     level__h311828 != 3'd0 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6445 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6447 ||
+	     level__h312114 != 3'd0 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6450 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6451 ;
+  assign NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5942 =
+	     (!lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831) &&
+	     (level__h312114 == 3'd0 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845) ;
+  assign NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5946 =
+	     NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5942 &&
+	     lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5878 &&
+	     (level__h312114 == 3'd0 || level__h312400 == 3'd0 ||
+	      level__h312686 == 3'd0) ;
+  assign NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5979 =
+	     (!lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831) &&
+	     (!lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845) &&
+	     (!lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 ||
+	      !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860) &&
+	     (!lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 ||
+	      !lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874) ;
+  assign NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5982 =
+	     NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5979 &&
+	     level__h311828 != 3'd0 &&
+	     level__h312114 != 3'd0 &&
+	     level__h312400 != 3'd0 &&
+	     level__h312686 != 3'd0 ;
+  assign NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896 =
+	     level__h312400 != 3'd0 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860 ||
+	     level__h312686 != 3'd0 &&
+	     lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 &&
+	     lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874 ;
+  assign NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5930 =
+	     level__h312400 != 3'd0 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860 ||
+	     lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 &&
+	     lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874 ;
+  assign NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d6437 =
+	     level__h312400 != 3'd0 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6429 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6430 ||
+	     level__h312686 != 3'd0 &&
+	     lookupRsp_fifos_3_rf$D_OUT_1[10] == tagOnlyReads_rf$D_OUT_1[5] &&
+	     lookupRsp_fifos_3_rf$D_OUT_1[9:5] ==
+	     tagOnlyReads_rf$D_OUT_1[4:0] ;
+  assign NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d6463 =
+	     level__h312400 != 3'd0 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6455 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6456 ||
+	     level__h312686 != 3'd0 &&
+	     lookupRsp_fifos_3_rf$D_OUT_1[10] == mRsps_ff_rf$D_OUT_1[76] &&
+	     lookupRsp_fifos_3_rf$D_OUT_1[9:5] == mRsps_ff_rf$D_OUT_1[75:71] ;
+  assign NOT_lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_ETC___d5962 =
+	     (!lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 ||
+	      !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860) &&
+	     (level__h312686 == 3'd0 ||
+	      !lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 ||
+	      !lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874) ;
   assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3151 =
-	     level__h1462 != 2'd0 &&
+	     level__h1428 != 2'd0 &&
 	     (!tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 ||
 	      !tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 ||
 	      !tagLookup_tagCache_readReqReg[66]) ;
-  assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 =
-	     level__h1462 != 2'd0 &&
+  assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 =
+	     level__h1428 != 2'd0 &&
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	     tagLookup_tagCache_readReqReg[66] ;
-  assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4203 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 &&
-	     ((IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+  assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4204 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 &&
+	     ((IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	       tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 :
+		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 :
 		tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 &&
-		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193) ;
-  assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4698 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 &&
+		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194) ;
+  assign NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4699 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3274 &&
 	     !tagLookup_tagCache_readReqReg[51] &&
-	     x_port1__read__h92293 != 5'd0 ;
+	     x_port1__read__h92267 != 5'd0 ;
   assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3297 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3274 &&
 	     !tagLookup_tagCache_readReqReg[51] &&
-	     x_port1__read__h92293 != 5'd0 ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3953 =
+	     x_port1__read__h92267 != 5'd0 ;
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3954 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd1 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3274 &&
 	     !tagLookup_tagCache_readReqReg[51] &&
-	     x_port1__read__h92293 != 5'd0 ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4354 =
+	     x_port1__read__h92267 != 5'd0 ;
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4355 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
 	     tagLookup_tagCache_readReqReg[15] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4356 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4357 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
 	     tagLookup_tagCache_readReqReg[14] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4359 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4360 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
 	     tagLookup_tagCache_readReqReg[13] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4361 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4362 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
 	     tagLookup_tagCache_readReqReg[12] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4368 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4369 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
-	     x__h122840 == 2'd3 ||
+	     x__h122820 == 2'd3 ||
 	     tagLookup_tagCache_readReqReg[11] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4372 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4373 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
-	     x__h122840 == 2'd2 ||
+	     x__h122820 == 2'd2 ||
 	     tagLookup_tagCache_readReqReg[10] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4377 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4378 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
-	     x__h122840 == 2'd1 ||
+	     x__h122820 == 2'd1 ||
 	     tagLookup_tagCache_readReqReg[9] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4381 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4382 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[70:69] != 2'd0 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 !=
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 !=
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66]) ||
-	     x__h122840 == 2'd0 ||
+	     x__h122820 == 2'd0 ||
 	     tagLookup_tagCache_readReqReg[8] ;
-  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4661 =
+  assign NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4662 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd1 ||
-	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4658 ||
+	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4659 ||
 	     tagLookup_tagCache_readReqReg[51] ||
-	     x_port1__read__h92293 == 5'd0 ;
+	     x_port1__read__h92267 == 5'd0 ;
   assign NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3522 =
 	     (!tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 ||
 	      !SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455) &&
@@ -10852,11 +11080,11 @@ module mkTagController(CLK,
 	     !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4951 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4952 =
 	     tagLookup_tagCache_cts[143:140] != 4'd8 ||
 	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d3016 ||
 	     !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 ||
-	     x_port1__read__h92293 == 5'd0 ;
+	     x_port1__read__h92267 == 5'd0 ;
   assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3492 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
@@ -10887,46 +11115,46 @@ module mkTagController(CLK,
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3537 ||
 	      tagLookup_tagCache_cts[143]) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4010 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4011 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd1 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3548 ||
 	      tagLookup_tagCache_cts[225]) &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
-	     NOT_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead__ETC___d4007 ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4013 =
+	     NOT_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead__ETC___d4008 ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4014 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3534 ||
 	      tagLookup_tagCache_cts[143]) &&
-	     (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4000 ||
+	     (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4001 ||
 	      (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	       NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3537 ||
 	       tagLookup_tagCache_cts[143]) &&
 	      (tagLookup_tagCache_cts[229:228] != 2'd1 ||
 	       !tagLookup_tagCache_cts[225] &&
 	       !tagLookup_tagCache_cts[226]) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4010) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4017 =
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4011) ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4018 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
 	     tagLookup_tagCache_cts[139:137] == 3'd4 &&
 	     tagLookup_tagCache_cts[143:140] != 4'd0 &&
-	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d3991 ||
+	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d3992 ||
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1) &&
-	     (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3997 ||
+	     (tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3998 ||
 	      (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	       NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3522 ||
 	       !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530) &&
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4013) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4214 =
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4014) ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4215 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3522 ||
 	      !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530) &&
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3534 ||
 	      tagLookup_tagCache_cts[143]) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4250 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4251 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 &&
 	      tagLookup_tagCache_cts[143:140] == 4'd3 ||
@@ -10938,85 +11166,85 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3511 &&
 	     !tagLookup_tagCache_writebacks$EMPTY_N &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
-	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4248 ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4324 =
+	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4249 ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4325 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3522 ||
 	      !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530) &&
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3575 &&
 	      !tagLookup_tagCache_cts[143] ||
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4322) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4697 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4323) ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4698 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	     level__h1462 != 2'd0 &&
+	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	     level__h1428 != 2'd0 &&
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	     tagLookup_tagCache_readReqReg[66] &&
 	     NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3297 ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4705 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4706 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	     level__h1462 == 2'd0 ||
+	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	     level__h1428 == 2'd0 ||
 	     !tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 ||
 	     !tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 ||
 	     !tagLookup_tagCache_readReqReg[66] ||
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 ||
 	     !tagLookup_tagCache_readReqReg[0] ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4712 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4713 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	     ((level__h1462 == 2'd0) ?
-		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 :
-		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4710) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4756 =
+	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	     ((level__h1428 == 2'd0) ?
+		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 :
+		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4711) ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4757 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
 	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3582 ||
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4243) &&
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4244) &&
 	     tagLookup_tagCache_readReqReg[51] ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4991 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4992 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	     level__h1462 != 2'd0 &&
-	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d4989 ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5015 =
+	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	     level__h1428 != 2'd0 &&
+	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d4990 ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d5016 =
 	     tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	     tagLookup_tagCache_cts[229:228] != 2'd1 &&
-	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 ||
-	     ((level__h1462 == 2'd0) ?
+	     tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 ||
+	     ((level__h1428 == 2'd0) ?
 		tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 :
-		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5013) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4253 =
+		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5014) ;
+  assign NOT_tagLookup_tagCache_cts_read__795_BITS_278__ETC___d4254 =
 	     (tagLookup_tagCache_cts[278:277] == 2'd2) ?
-	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4203 :
+	       NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d4204 :
 	       tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4250 ;
+	       NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d4251 ;
   assign NOT_tagLookup_tagCache_cts_read__795_BIT_136_0_ETC___d3625 =
 	     !tagLookup_tagCache_cts[136] &&
 	     (!tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 ||
 	      !SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455) &&
 	     (!tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 ||
 	      !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) ;
-  assign NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4121 =
+  assign NOT_tagLookup_tagCache_cts_read__795_BIT_226_5_ETC___d4122 =
 	     !tagLookup_tagCache_cts[226] &&
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) ;
-  assign NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5095 =
+  assign NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5096 =
 	     (!tagLookup_tagCache_missedResp$whas ||
 	      !tagLookup_tagCache_missedResp$wget) &&
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_resps$wget[8] &&
 	     (tagLookup_tagCache_resps$wget[224:223] != 2'd0 ||
 	      tagLookup_tagCache_resps$wget[222]) ;
-  assign NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5111 =
+  assign NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5112 =
 	     (!tagLookup_tagCache_missedResp$whas ||
 	      !tagLookup_tagCache_missedResp$wget) &&
 	     tagLookup_tagCache_cacheState &&
@@ -11028,12 +11256,12 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_resps$wget[14] &&
 	     tagLookup_tagCache_orderer_slaveAddrs_bag[4:0] ==
 	     tagLookup_tagCache_resps$wget[13:9] ;
-  assign NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5137 =
+  assign NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5138 =
 	     (!tagLookup_tagCache_missedResp$whas ||
 	      !tagLookup_tagCache_missedResp$wget) &&
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_resps$wget[1] &&
-	     x_port1__read__h92293 != 5'd0 ;
+	     x_port1__read__h92267 != 5'd0 ;
   assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d1580 =
 	     (!tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d1559 ||
 	      !tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d1562) &&
@@ -11114,14 +11342,14 @@ module mkTagController(CLK,
 	     (!tagLookup_tagCache_orderer_mastLines_bag[587] ||
 	      !tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d2906) &&
 	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d2959 ;
-  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5058 =
+  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5059 =
 	     (!tagLookup_tagCache_orderer_mastLines_bag[671] ||
 	      !tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d2900) &&
 	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d2961 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 ;
-  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5060 =
-	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5058 &&
-	     x_port1__read__h92293 != 5'd0 &&
+  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5061 =
+	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5059 &&
+	     x_port1__read__h92267 != 5'd0 &&
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1 ||
 	      tagLookup_tagCache_cts[143:140] != 4'd3) &&
@@ -11130,17 +11358,17 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts[143:140] != 4'd2) &&
 	     (SEL_ARR_NOT_tagLookup_tagCache_req_commits_rf__ETC___d3395 ||
 	      tagLookup_tagCache_cts[230]) ;
-  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5064 =
-	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5060 ||
-	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5058 &&
-	     x_port1__read__h92293 != 5'd0 &&
+  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5065 =
+	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5061 ||
+	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5059 &&
+	     x_port1__read__h92267 != 5'd0 &&
 	     !tagLookup_tagCache_writebacks$EMPTY_N &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3503 &&
-	     IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4729 ;
-  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5066 =
-	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5058 &&
-	     x_port1__read__h92293 != 5'd0 &&
+	     IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4730 ;
+  assign NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5067 =
+	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5059 &&
+	     x_port1__read__h92267 != 5'd0 &&
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3503 ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509) &&
 	     !tagLookup_tagCache_writebacks$EMPTY_N ;
@@ -12070,7 +12298,7 @@ module mkTagController(CLK,
 	      !tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d893) &&
 	     tagLookup_tagCache_orderer_mastReqs_bag[58] ;
   assign NOT_tagLookup_tagCache_orderer_slaveDeps_remov_ETC___d264 =
-	     { (!NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5095 ||
+	     { (!NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5096 ||
 		!tagLookup_tagCache_retryReqs_removeItem$wget[6] ||
 		tagLookup_tagCache_orderer_slaveDeps_bag[11] !=
 		tagLookup_tagCache_retryReqs_removeItem$wget[5] ||
@@ -12095,22 +12323,22 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_orderer_mastLines_bag[587] &&
 	     tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d2906 ||
 	     tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d3012 ;
-  assign NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4279 =
+  assign NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4280 =
 	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d3016 ||
 	     !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 ||
-	     x_port1__read__h92293 == 5'd0 ||
+	     x_port1__read__h92267 == 5'd0 ||
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3599 &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544 ;
-  assign NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5021 =
-	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4279 ||
+  assign NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5022 =
+	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4280 ||
 	     tagLookup_tagCache_writebacks$EMPTY_N ||
 	     tagLookup_tagCache_invalidateWritebacks$EMPTY_N ||
 	     tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	     NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3534 ||
 	     tagLookup_tagCache_cts[143] ;
-  assign NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5176 =
+  assign NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d5177 =
 	     (!tagLookup_tagCache_orderer_slaveReqs_bag[58] ||
-	      NOT_tagLookup_tagCache_missedResp_whas__080_08_ETC___d5095 &&
+	      NOT_tagLookup_tagCache_missedResp_whas__081_08_ETC___d5096 &&
 	      tagLookup_tagCache_retryReqs_removeItem$wget[6]) &&
 	     tagLookup_tagCache_cacheState ;
   assign NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3284 =
@@ -12118,23 +12346,23 @@ module mkTagController(CLK,
 	      !tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 ||
 	      !tagLookup_tagCache_readReqReg[66]) &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 ;
-  assign NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960 =
+  assign NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961 =
 	     (!tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 ||
 	      !tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 ||
 	      !tagLookup_tagCache_readReqReg[66]) &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3855 ;
-  assign NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d4954 =
+  assign NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d4955 =
 	     !tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 ||
 	     !tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 ||
 	     !tagLookup_tagCache_readReqReg[66] ||
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ||
-	     NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4661 &&
-	     tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4662 ;
-  assign NOT_tagLookup_tagCache_respsReady_whas__145_31_ETC___d5317 =
+	     NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d4662 &&
+	     tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4663 ;
+  assign NOT_tagLookup_tagCache_respsReady_whas__146_31_ETC___d5318 =
 	     (!tagLookup_tagCache_cacheState ||
 	      !tagLookup_tagCache_respsReady$wget) &&
-	     level__h8615 == 2'd0 ||
+	     level__h8582 == 2'd0 ||
 	     !tagLookup_useNextRsp_ff_rf$D_OUT_1 ;
   assign NOT_tagLookup_tagCache_writebacks_i_notEmpty___ETC___d3076 =
 	     !tagLookup_tagCache_writebacks$EMPTY_N &&
@@ -12152,9 +12380,9 @@ module mkTagController(CLK,
 	      _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557 ||
 	      IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3744) ;
   assign _0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3553 =
-	     memReqFifoSpace__h2402 < 10'd5 ;
+	     memReqFifoSpace__h2368 < 10'd5 ;
   assign _0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 =
-	     memReqFifoSpace__h2402 < 10'd4 ;
+	     memReqFifoSpace__h2368 < 10'd4 ;
   assign _0_CONCAT_DONTCARE_CONCAT_IF_tagLookup_tagCache_ETC___d3035 =
 	     { 2'd0,
 	       83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
@@ -12162,25 +12390,19 @@ module mkTagController(CLK,
 		tagLookup_tagCache_newReq$wget[141]) ?
 		 tagLookup_tagCache_newReq$wget[8:0] :
 		 tagLookup_tagCache_cts[144:136] } ;
-  assign _0_CONCAT_addrFrame_nextValidKeyReg_279_280_EQ__ETC___d6293 =
-	     { 30'd0, addrFrame_nextValidKeyReg } ==
-	     IF_NOT_addrFrame_insertItem_whas__101_281_OR_N_ETC___d6292 ;
-  assign _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537 =
+  assign _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314 =
 	     { 13'd0,
-	       cache_request_put_val_BITS_140_TO_101_471_MINU_ETC___d6525[39:13] } +
+	       cache_request_put_val_BITS_140_TO_107_272_CONC_ETC___d6289[39:13] } +
 	     40'h00FF7DF080 ;
-  assign _0_CONCAT_lookupRsp_nextValidKeyReg_010_011_EQ__ETC___d6024 =
-	     { 30'd0, lookupRsp_nextValidKeyReg } ==
-	     IF_NOT_lookupRsp_insertItem_whas__737_012_OR_N_ETC___d6023 ;
-  assign _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493 =
+  assign _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494 =
 	     { 7'd0, tagLookup_pendingCapNumber[35:3] } + 40'h00FF7FF080 ;
-  assign _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354 =
-	     { 7'd0, x__h303813[35:3] } +
+  assign _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355 =
+	     { 7'd0, x__h304576[35:3] } +
 	     { CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12,
 	       3'd0 } ;
-  assign _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490 =
-	     { 7'd0, x__h303702[35:3] } +
-	     { CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q14,
+  assign _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491 =
+	     { 7'd0, x__h304465[35:3] } +
+	     { CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q13,
 	       3'd0 } ;
   assign _0_CONCAT_tagLookup_tagCache_orderer_mastLines__ETC___d2188 =
 	     { 28'd0,
@@ -12189,57 +12411,22 @@ module mkTagController(CLK,
   assign _0_CONCAT_tagLookup_tagCache_orderer_mastReqs_n_ETC___d1017 =
 	     { 28'd0, tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg } ==
 	     IF_NOT_tagLookup_tagCache_orderer_mastReqs_ins_ETC___d1016 ;
-  assign _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4563 =
+  assign _0_OR_NOT_tagLookup_tagCache_cts_read__795_BIT__ETC___d4564 =
 	     !tagLookup_tagCache_cts[225] && !tagLookup_tagCache_cts[226] ||
 	     !SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	     _0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 ||
 	     _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign _0_OR_cache_request_put_val_BITS_93_TO_92_442_E_ETC___d6531 =
-	     cache_request_put_val[93:92] == 2'd1 &&
-	     { (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[88],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[87],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[86],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[85],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[84],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[83],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[82],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[81] } !=
-	     8'd0 ;
   assign _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3557 =
-	     x_mastReqsSpaces__h53161 < 5'd5 ;
+	     x_mastReqsSpaces__h53128 < 5'd5 ;
   assign _16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 =
-	     x_mastReqsSpaces__h53161 < 5'd4 ;
+	     x_mastReqsSpaces__h53128 < 5'd4 ;
   assign _1_CONCAT_IF_tagLookup_tagCache_newReq_whas__78_ETC___d3040 =
 	     { 2'd1,
 	       (CAN_FIRE_RL_tagLookup_feedTagCache &&
 		tagLookup_tagCache_newReq$wget[141]) ?
 		 tagLookup_tagCache_newReq$wget[91:0] :
 		 tagLookup_tagCache_cts[227:136] } ;
-  assign _1_SL_tagLookup_pendingCapNumber_343_BITS_2_TO__ETC___d5670 =
+  assign _1_SL_tagLookup_pendingCapNumber_344_BITS_2_TO__ETC___d5679 =
 	     8'd1 << tagLookup_pendingCapNumber[2:0] ;
   assign _2_CONCAT_DONTCARE_CONCAT_IF_tagLookup_tagCache_ETC___d3044 =
 	     { 2'd2,
@@ -12248,54 +12435,140 @@ module mkTagController(CLK,
 		tagLookup_tagCache_newReq$wget[141]) ?
 		 tagLookup_tagCache_newReq$wget[7:0] :
 		 tagLookup_tagCache_cts[143:136] } ;
+  assign _dand2tagLookup_tagCacheReq_ff_displayPanic$EN_wset =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] == 2'd1 &&
+	      cache_request_put_val[91] &&
+	      IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6306 ||
+	      NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6310) ;
+  assign _dand2tagLookup_useNextRsp_enqPanic$EN_wset =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] == 2'd1 &&
+	      cache_request_put_val[91] &&
+	      IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6378 ||
+	      NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6382) ;
+  assign _dand2tagLookup_useNextRsp_ff_displayPanic$EN_wset =
+	     EN_cache_request_put &&
+	     (cache_request_put_val[93:92] == 2'd1 &&
+	      cache_request_put_val[91] &&
+	      IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6378 ||
+	      NOT_cache_request_put_val_BITS_93_TO_92_035_EQ_ETC___d6382) ;
   assign _dfoo1 =
-	     way__h98148 == 1'd1 &&
-	     tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974 ||
-	     _theResult_____21__h86421 == 1'd1 &&
+	     way__h98128 == 1'd1 &&
+	     tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975 ||
+	     _theResult_____21__h86389 == 1'd1 &&
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	     NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4124 ;
+	     NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4125 ;
+  assign _dfoo17 =
+	     x__h318041 == 2'd3 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896) ||
+	     x__h318728 == 2'd3 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5951 ;
+  assign _dfoo22 =
+	     level__h312686 == 3'd4 && x__h318041 == 2'd3 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5930) ||
+	     level__h312686 == 3'd4 && x__h318728 == 2'd3 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5973 ;
+  assign _dfoo23 =
+	     x__h318041 == 2'd2 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896) ||
+	     x__h318728 == 2'd2 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5951 ;
+  assign _dfoo28 =
+	     level__h312400 == 3'd4 && x__h318041 == 2'd2 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 ||
+	      lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5921) ||
+	     level__h312400 == 3'd4 && x__h318728 == 2'd2 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5965 ;
+  assign _dfoo29 =
+	     x__h318041 == 2'd1 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896) ||
+	     x__h318728 == 2'd1 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5951 ;
+  assign _dfoo34 =
+	     level__h312114 == 3'd4 && x__h318041 == 2'd1 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5912 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896) ||
+	     level__h312114 == 3'd4 && x__h318728 == 2'd1 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5957 ;
+  assign _dfoo35 =
+	     x__h318041 == 2'd0 &&
+	     (NOT_lookupRsp_fifos_0_lhead_read__816_MINUS_lo_ETC___d5902 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896) ||
+	     x__h318728 == 2'd0 &&
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5951 ;
+  assign _dfoo40 =
+	     level__h311828 == 3'd4 && x__h318041 == 2'd0 &&
+	     (lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5889 ||
+	      NOT_lookupRsp_fifos_2_lhead_read__850_MINUS_lo_ETC___d5896) ||
+	     level__h311828 == 3'd4 && x__h318728 == 2'd0 &&
+	     NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5946 ;
+  assign _dfoo46 =
+	     level__h314042 == 3'd4 && x__h326448 == 2'd3 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6195) ||
+	     level__h314042 == 3'd4 && x__h327135 == 2'd3 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6241 ;
+  assign _dfoo52 =
+	     level__h313756 == 3'd4 && x__h326448 == 2'd2 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6167 ||
+	      addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6186) ||
+	     level__h313756 == 3'd4 && x__h327135 == 2'd2 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6232 ;
+  assign _dfoo58 =
+	     level__h313470 == 3'd4 && x__h326448 == 2'd1 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     (NOT_addrFrame_fifos_0_lhead_read__003_MINUS_ad_ETC___d6177 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160) ||
+	     level__h313470 == 3'd4 && x__h327135 == 2'd1 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6223 ;
+  assign _dfoo64 =
+	     level__h313184 == 3'd4 && x__h326448 == 2'd0 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     (addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6153 ||
+	      NOT_addrFrame_fifos_2_lhead_read__013_MINUS_ad_ETC___d6160) ||
+	     level__h313184 == 3'd4 && x__h327135 == 2'd0 &&
+	     cache_request_put_val[93:92] == 2'd0 &&
+	     NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6210 ;
   assign _dfoo9 =
-	     way__h98148 == 1'd0 &&
-	     tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974 ||
-	     _theResult_____21__h86421 == 1'd0 &&
+	     way__h98128 == 1'd0 &&
+	     tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975 ||
+	     _theResult_____21__h86389 == 1'd0 &&
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	     NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4124 ;
-  assign _theResult_____1__h31533 =
+	     NOT_SEL_ARR_NOT_tagLookup_tagCache_req_commits_ETC___d4125 ;
+  assign _theResult_____1__h31500 =
 	     (tagLookup_tagCache_orderer_mastReqs_insertItem_ETC___d403 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastReq_ETC___d1056 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1055) ?
-	       idx__h31675 :
+	       idx__h31642 :
 	       IF_IF_tagLookup_tagCache_orderer_mastReqs_inse_ETC___d1159 ;
-  assign _theResult_____1__h321004 =
-	     (lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		IF_0_CONCAT_lookupRsp_nextValidKeyReg_010_PLUS_ETC___d6047 :
-		SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046) ?
-	       idx__h321062 :
-	       IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6066 ;
-  assign _theResult_____1__h324635 =
-	     (addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 ?
-		IF_0_CONCAT_addrFrame_nextValidKeyReg_279_PLUS_ETC___d6320 :
-		SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319) ?
-	       idx__h324693 :
-	       IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6339 ;
-  assign _theResult_____1__h43322 =
+  assign _theResult_____1__h43289 =
 	     (tagLookup_tagCache_orderer_mastLines_insertIte_ETC___d1594 ?
 		IF_0_CONCAT_tagLookup_tagCache_orderer_mastLin_ETC___d2227 :
 		SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2226) ?
-	       idx__h43464 :
+	       idx__h43431 :
 	       IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2330 ;
-  assign _theResult_____1_fst__h307204 = wbitE__h303268 | x__h307115 ;
-  assign _theResult_____1_fst__h307355 = 8'd1 << x__h303813[2:0] ;
-  assign _theResult_____1_tag__h121549 =
-	     (level__h1462 == 2'd0) ?
-	       x_addr_tag__h102719 :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4263 ;
-  assign _theResult_____21__h86421 =
+  assign _theResult_____1_fst__h308319 = wbitE__h304031 | x__h308230 ;
+  assign _theResult_____1_fst__h308686 = 8'd1 << x__h304576[2:0] ;
+  assign _theResult_____1_tag__h121529 =
+	     (level__h1428 == 2'd0) ?
+	       x_addr_tag__h102698 :
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4264 ;
+  assign _theResult_____21__h86389 =
 	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3492 ?
 	       tagLookup_tagCache_cts[82] :
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	       SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ;
-  assign _theResult_____23__h86224 =
+  assign _theResult_____23__h86192 =
 	     ((!tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 ||
 	       !SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455) &&
 	      (!tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 ||
@@ -12303,485 +12576,480 @@ module mkTagController(CLK,
 	       tagLookup_tagCache_cts[82] :
 	       tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	       SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ;
-  assign _theResult_____3_snd_snd_snd_snd_snd_d_key__h278741 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-	       x1_avValue_snd_snd_snd_d_key__h278378 :
+  assign _theResult_____3_snd_snd_snd_snd_snd_d_key__h278721 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+	       x1_avValue_snd_snd_snd_d_key__h278358 :
 	       tagLookup_tagCache_readReqReg[65:58] ;
-  assign _theResult_____3_way__h74738 =
+  assign _theResult_____3_way__h74706 =
 	     IF_tagLookup_tagCache_newReq_whas__787_AND_tag_ETC___d2975 ?
 	       IF_IF_tagLookup_tagCache_newReq_whas__787_AND__ETC___d3067 :
 	       tagLookup_tagCache_nextWay ;
-  assign _theResult___snd_snd_fst_data_data__h341153 =
-	     IF_lookupRsp_bag_741_BIT_71_796_AND_lookupRsp__ETC___d6672 ?
-	       { 60'd0, x__h342707 } :
+  assign _theResult___snd_snd_fst_data_data__h338372 =
+	     SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6526 ?
+	       { 60'd0, x__h340389 } :
 	       64'd0 ;
-  assign _theResult___snd_snd_fst_data_data__h341155 =
-	     (level__h325540 != 3'd0 && frame == 3'd0) ?
-	       _theResult___snd_snd_fst_data_data__h341153 :
+  assign _theResult___snd_snd_fst_data_data__h338374 =
+	     (level__h314722 != 3'd0 && memoryResponseFrame == 3'd0) ?
+	       _theResult___snd_snd_fst_data_data__h338372 :
 	       mRsps_ff_rf$D_OUT_1[63:0] ;
-  assign _theResult___snd_snd_fst_masterID__h340914 =
-	     (level__h325540 != 3'd0 && frame == 3'd0) ?
+  assign _theResult___snd_snd_fst_masterID__h338133 =
+	     (level__h314722 != 3'd0 && memoryResponseFrame == 3'd0) ?
 	       tagOnlyReads_rf$D_OUT_1[5] :
 	       mRsps_ff_rf$D_OUT_1[76] ;
-  assign _theResult___snd_snd_fst_transactionID__h340915 =
-	     (level__h325540 != 3'd0 && frame == 3'd0) ?
+  assign _theResult___snd_snd_fst_transactionID__h338134 =
+	     (level__h314722 != 3'd0 && memoryResponseFrame == 3'd0) ?
 	       tagOnlyReads_rf$D_OUT_1[4:0] :
 	       mRsps_ff_rf$D_OUT_1[75:71] ;
-  assign addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135 =
-	     addrFrame_bag[13:9] == addrFrame_insertItem$wget[13:9] ;
-  assign addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6247 =
-	     addrFrame_bag[13:9] == lookupRsp_removeItem$wget[4:0] ;
-  assign addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128 =
-	     addrFrame_bag[29:25] == addrFrame_insertItem$wget[13:9] ;
-  assign addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6221 =
-	     addrFrame_bag[29:25] == lookupRsp_removeItem$wget[4:0] ;
-  assign addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121 =
-	     addrFrame_bag[45:41] == addrFrame_insertItem$wget[13:9] ;
-  assign addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6197 =
-	     addrFrame_bag[45:41] == lookupRsp_removeItem$wget[4:0] ;
-  assign addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114 =
-	     addrFrame_bag[61:57] == addrFrame_insertItem$wget[13:9] ;
-  assign addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6151 =
-	     addrFrame_bag[61:57] == lookupRsp_removeItem$wget[4:0] ;
-  assign addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132 =
-	     addrFrame_bag[14] == addrFrame_insertItem$wget[14] ;
-  assign addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_r_ETC___d6245 =
-	     addrFrame_bag[14] == lookupRsp_removeItem$wget[5] ;
-  assign addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125 =
-	     addrFrame_bag[30] == addrFrame_insertItem$wget[14] ;
-  assign addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_r_ETC___d6220 =
-	     addrFrame_bag[30] == lookupRsp_removeItem$wget[5] ;
-  assign addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118 =
-	     addrFrame_bag[46] == addrFrame_insertItem$wget[14] ;
-  assign addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_r_ETC___d6196 =
-	     addrFrame_bag[46] == lookupRsp_removeItem$wget[5] ;
-  assign addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109 =
-	     addrFrame_bag[62] == addrFrame_insertItem$wget[14] ;
-  assign addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_r_ETC___d6148 =
-	     addrFrame_bag[62] == lookupRsp_removeItem$wget[5] ;
-  assign addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6141 =
-	     addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	     (!addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109 ||
-	      !addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114) &&
-	     NOT_addrFrame_bag_105_BIT_46_117_EQ_IF_addrFra_ETC___d6139 ;
-  assign addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6357 =
-	     addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	     addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_i_ETC___d6109 &&
-	     addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6114 ||
-	     NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6195 ;
-  assign addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6360 =
-	     addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	     addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_i_ETC___d6118 &&
-	     addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6121 ||
-	     NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6209 ;
-  assign addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6365 =
-	     addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	     addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_i_ETC___d6125 &&
-	     addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6128 ||
-	     NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6233 ;
-  assign addrFrame_insertItem_whas__101_AND_addrFrame_i_ETC___d6369 =
-	     addrFrame_insertItem$whas && addrFrame_insertItem$wget[15] &&
-	     addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_i_ETC___d6132 &&
-	     addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6135 ||
-	     NOT_addrFrame_removeItem_whas__142_188_OR_NOT__ETC___d6252 ;
-  assign addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     addrFrame_bag_105_BIT_62_106_EQ_IF_addrFrame_r_ETC___d6148 &&
-	     addrFrame_bag_105_BITS_61_TO_57_111_EQ_IF_addr_ETC___d6151 ||
-	     !addrFrame_bag[63] ;
-  assign addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     addrFrame_bag_105_BIT_46_117_EQ_IF_addrFrame_r_ETC___d6196 &&
-	     addrFrame_bag_105_BITS_45_TO_41_120_EQ_IF_addr_ETC___d6197 ||
-	     !addrFrame_bag[47] ;
-  assign addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     addrFrame_bag_105_BIT_30_124_EQ_IF_addrFrame_r_ETC___d6220 &&
-	     addrFrame_bag_105_BITS_29_TO_25_127_EQ_IF_addr_ETC___d6221 ||
-	     !addrFrame_bag[31] ;
-  assign addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     addrFrame_bag_105_BIT_14_131_EQ_IF_addrFrame_r_ETC___d6245 &&
-	     addrFrame_bag_105_BITS_13_TO_9_134_EQ_IF_addrF_ETC___d6247 ||
-	     !addrFrame_bag[15] ;
-  assign bitEnable__h303971 =
-	     (!IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ||
-	      tagLookup_pendingCapEnable) ?
-	       wbitE__h303268 |
-	       _1_SL_tagLookup_pendingCapNumber_343_BITS_2_TO__ETC___d5670 :
-	       wbitE__h303268 & y__h307070 ;
-  assign bitEnable__h303983 =
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6032 =
+	     level__h313184 == 3'd0 || level__h313470 == 3'd0 ||
+	     level__h313756 == 3'd0 ||
+	     level__h314042 == 3'd0 ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6121 =
+	     (level__h313184 == 3'd0 ||
+	      !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 ||
+	      !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107) &&
+	     (level__h313470 == 3'd0 ||
+	      !addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 ||
+	      !addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117) ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6216 =
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6121 &&
+	     addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6142 &&
+	     (level__h313184 == 3'd0 || level__h313470 == 3'd0 ||
+	      level__h313756 == 3'd0 ||
+	      level__h314042 == 3'd0) ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6220 =
+	     (level__h313184 == 3'd0 ||
+	      !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 ||
+	      !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107) &&
+	     (!addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 ||
+	      !addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117) ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6223 =
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6220 &&
+	     addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6142 &&
+	     (level__h313184 == 3'd0 || level__h313756 == 3'd0 ||
+	      level__h314042 == 3'd0) ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6232 =
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6121 &&
+	     NOT_addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_ETC___d6229 &&
+	     (level__h313184 == 3'd0 || level__h313470 == 3'd0 ||
+	      level__h314042 == 3'd0) ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6241 =
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6121 &&
+	     addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6238 &&
+	     (level__h313184 == 3'd0 || level__h313470 == 3'd0 ||
+	      level__h313756 == 3'd0) ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6593 =
+	     level__h313184 == 3'd0 ||
+	     addrFrame_fifos_0_rf$D_OUT_1[14] != mRsps_ff_rf$D_OUT_1[76] ||
+	     addrFrame_fifos_0_rf$D_OUT_1[13:9] !=
+	     mRsps_ff_rf$D_OUT_1[75:71] ;
+  assign addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6704 =
+	     level__h313184 == 3'd0 ||
+	     addrFrame_fifos_0_rf$D_OUT_1[14] != x__h337805 ||
+	     addrFrame_fifos_0_rf$D_OUT_1[13:9] != x__h338146 ;
+  assign addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 =
+	     addrFrame_fifos_0_rf$D_OUT_1[14] == cache_request_put_val[100] ;
+  assign addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107 =
+	     addrFrame_fifos_0_rf$D_OUT_1[13:9] ==
+	     cache_request_put_val[99:95] ;
+  assign addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6153 =
+	     addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 &&
+	     addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107 ||
+	     level__h313470 != 3'd0 &&
+	     addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 &&
+	     addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117 ;
+  assign addrFrame_fifos_1_lhead_read__008_MINUS_addrFr_ETC___d6710 =
+	     level__h313470 == 3'd0 ||
+	     addrFrame_fifos_1_rf$D_OUT_1[14] != x__h337805 ||
+	     addrFrame_fifos_1_rf$D_OUT_1[13:9] != x__h338146 ;
+  assign addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6114 =
+	     addrFrame_fifos_1_rf$D_OUT_1[14] == cache_request_put_val[100] ;
+  assign addrFrame_fifos_1_rf_sub_addrFrame_fifos_1_lta_ETC___d6117 =
+	     addrFrame_fifos_1_rf$D_OUT_1[13:9] ==
+	     cache_request_put_val[99:95] ;
+  assign addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6142 =
+	     (level__h313756 == 3'd0 ||
+	      !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 ||
+	      !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128) &&
+	     (level__h314042 == 3'd0 ||
+	      !addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 ||
+	      !addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138) ;
+  assign addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6238 =
+	     (level__h313756 == 3'd0 ||
+	      !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 ||
+	      !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128) &&
+	     (!addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 ||
+	      !addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138) ;
+  assign addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6717 =
+	     level__h313756 == 3'd0 ||
+	     addrFrame_fifos_2_rf$D_OUT_1[14] != x__h337805 ||
+	     addrFrame_fifos_2_rf$D_OUT_1[13:9] != x__h338146 ;
+  assign addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 =
+	     addrFrame_fifos_2_rf$D_OUT_1[14] == cache_request_put_val[100] ;
+  assign addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128 =
+	     addrFrame_fifos_2_rf$D_OUT_1[13:9] ==
+	     cache_request_put_val[99:95] ;
+  assign addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6186 =
+	     addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 &&
+	     addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128 ||
+	     level__h314042 != 3'd0 &&
+	     addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 &&
+	     addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138 ;
+  assign addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6135 =
+	     addrFrame_fifos_3_rf$D_OUT_1[14] == cache_request_put_val[100] ;
+  assign addrFrame_fifos_3_rf_sub_addrFrame_fifos_3_lta_ETC___d6138 =
+	     addrFrame_fifos_3_rf$D_OUT_1[13:9] ==
+	     cache_request_put_val[99:95] ;
+  assign bitEnable__h304734 =
+	     (!IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ||
+	      tagLookup_pendingCapEnable[3]) ?
+	       w__h307739 | x__h308429 :
+	       w__h307739 & y__h308676 ;
+  assign bitEnable__h304746 =
 	     (tagLookup_currentDepth == 2'd1) ?
-	       bitEnable__h303971 :
-	       _theResult_____1_fst__h307204 ;
-  assign bitEnable__h303991 =
-	     tagLookup_pendingCapEnable ?
-	       _1_SL_tagLookup_pendingCapNumber_343_BITS_2_TO__ETC___d5670 :
-	       8'd0 ;
-  assign cache_request_put_val_BITS_140_TO_101_471_MINU_ETC___d6525 =
-	     cache_request_put_val[140:101] - 40'h00C0000000 ;
-  assign cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 =
+	       bitEnable__h304734 :
+	       _theResult_____1_fst__h308319 ;
+  assign bitEnable__h304754 =
+	     tagLookup_pendingCapEnable[3] ?
+	       w__h308425 | x__h308429 :
+	       w__h308425 & y__h308676 ;
+  assign cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 =
 	     cache_request_put_val[140:101] < 40'h00FF7DF080 ;
-  assign cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473 =
+  assign cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055 =
 	     cache_request_put_val[140:101] < 40'h00FFFFF000 ;
-  assign cache_request_put_val_BITS_93_TO_92_442_EQ_1_4_ETC___d6464 =
+  assign cache_request_put_val_BITS_140_TO_107_272_CONC_ETC___d6289 =
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } - 40'h00C0000000 ;
+  assign cache_request_put_val_BITS_93_TO_92_035_EQ_1_0_ETC___d6288 =
 	     cache_request_put_val[93:92] == 2'd1 &&
-	     cache_request_put_val[7:0] != 8'd0 &&
-	     halfWrite[141] &&
-	     level__h325899 == 2'd2 ||
-	     (cache_request_put_val[93:92] != 2'd1 ||
-	      cache_request_put_val[7:0] == 8'd0) &&
-	     (cache_request_put_val[93:92] != 2'd0 ||
-	      !cache_request_put_val[6]) &&
-	     level__h325899 == 2'd2 ;
-  assign cache_request_put_val_BIT_72_528_AND_NOT_NOT_c_ETC___d6556 =
-	     cache_request_put_val[72] &&
-	     { (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[88],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[87],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[86],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[85],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[84],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[83],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[82],
-	       (cache_request_put_val[93:92] != 2'd1 ||
-		cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		!cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-	       cache_request_put_val[81] } !=
-	     8'd0 ;
-  assign data_data__h307592 =
+	     cache_request_put_val_BIT_91_093_AND_IF_cache__ETC___d6285 ||
+	     cache_request_put_val[93:92] != 2'd1 &&
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 ;
+  assign cache_request_put_val_BIT_91_093_AND_IF_cache__ETC___d6285 =
+	     cache_request_put_val[91] &&
+	     IF_cache_request_put_val_BITS_106_TO_105_253_E_ETC___d6271 &&
+	     ({ tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FF7DF080 ||
+	      { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00FFFFF000) &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } >= 40'h00C0000000 &&
+	     { tagReq_addr_lineNumber__h329799, 3'd0 } < 40'h00FFFFC000 ;
+  assign data_data__h308923 =
 	     (tagLookup_currentDepth == 2'd1) ?
-	       wdata_data__h307594 :
-	       wdata_data__h307590 ;
-  assign i__h301908 =
-	     { _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0],
-	       x__h303813[2:0] } ;
-  assign idx__h296158 =
+	       wdata_data__h308925 :
+	       wdata_data__h308921 ;
+  assign i__h302671 =
+	     { _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0],
+	       x__h304576[2:0] } ;
+  assign idx__h296842 =
 	     { 2'd0,
-	       _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0],
-	       x__h303813[2] } ;
-  assign idx__h31675 =
+	       _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0],
+	       x__h304576[2] } ;
+  assign idx__h31642 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd15 ;
-  assign idx__h31791 =
+  assign idx__h31758 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd14 ;
-  assign idx__h31907 =
+  assign idx__h31874 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd13 ;
-  assign idx__h32023 =
+  assign idx__h31990 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd12 ;
-  assign idx__h321062 = lookupRsp_nextValidKeyReg + 2'd3 ;
-  assign idx__h321106 = lookupRsp_nextValidKeyReg + 2'd2 ;
-  assign idx__h321150 = lookupRsp_nextValidKeyReg + 2'd1 ;
-  assign idx__h32139 =
+  assign idx__h32106 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd11 ;
-  assign idx__h32255 =
+  assign idx__h32222 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd10 ;
-  assign idx__h32371 =
+  assign idx__h32338 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd9 ;
-  assign idx__h324693 = addrFrame_nextValidKeyReg + 2'd3 ;
-  assign idx__h324737 = addrFrame_nextValidKeyReg + 2'd2 ;
-  assign idx__h324781 = addrFrame_nextValidKeyReg + 2'd1 ;
-  assign idx__h32487 =
+  assign idx__h32454 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd8 ;
-  assign idx__h32603 =
+  assign idx__h32570 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd7 ;
-  assign idx__h32719 =
+  assign idx__h32686 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd6 ;
-  assign idx__h32835 =
+  assign idx__h32802 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd5 ;
-  assign idx__h32951 =
+  assign idx__h32918 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd4 ;
-  assign idx__h33067 =
+  assign idx__h33034 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd3 ;
-  assign idx__h33183 =
+  assign idx__h33150 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd2 ;
-  assign idx__h33299 =
+  assign idx__h33266 =
 	     tagLookup_tagCache_orderer_mastReqs_nextValidKeyReg + 4'd1 ;
-  assign idx__h43464 =
+  assign idx__h43431 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd15 ;
-  assign idx__h43580 =
+  assign idx__h43547 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd14 ;
-  assign idx__h43696 =
+  assign idx__h43663 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd13 ;
-  assign idx__h43812 =
+  assign idx__h43779 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd12 ;
-  assign idx__h43928 =
+  assign idx__h43895 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd11 ;
-  assign idx__h44044 =
+  assign idx__h44011 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd10 ;
-  assign idx__h44160 =
+  assign idx__h44127 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd9 ;
-  assign idx__h44276 =
+  assign idx__h44243 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd8 ;
-  assign idx__h44392 =
+  assign idx__h44359 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd7 ;
-  assign idx__h44508 =
+  assign idx__h44475 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd6 ;
-  assign idx__h44624 =
+  assign idx__h44591 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd5 ;
-  assign idx__h44740 =
+  assign idx__h44707 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd4 ;
-  assign idx__h44856 =
+  assign idx__h44823 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd3 ;
-  assign idx__h44972 =
+  assign idx__h44939 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd2 ;
-  assign idx__h45088 =
+  assign idx__h45055 =
 	     tagLookup_tagCache_orderer_mastLines_nextValidKeyReg + 4'd1 ;
-  assign level__h1011 = tagLookup_mReqs_ff_lhead - tagLookup_mReqs_ff_ltail ;
-  assign level__h1462 = tagLookup_mRsps_ff_lhead - tagLookup_mRsps_ff_ltail ;
-  assign level__h1912 =
+  assign level__h1428 = tagLookup_mRsps_ff_lhead - tagLookup_mRsps_ff_ltail ;
+  assign level__h1878 =
 	     tagLookup_useNextRsp_ff_lhead - tagLookup_useNextRsp_ff_ltail ;
-  assign level__h325540 = tagOnlyReads_lhead - tagOnlyReads_ltail ;
-  assign level__h325899 = mReqs_ff_lhead - mReqs_ff_ltail ;
-  assign level__h326233 = mRsps_ff_lhead - mRsps_ff_ltail ;
-  assign level__h8615 =
+  assign level__h311828 = lookupRsp_fifos_0_lhead - lookupRsp_fifos_0_ltail ;
+  assign level__h312114 = lookupRsp_fifos_1_lhead - lookupRsp_fifos_1_ltail ;
+  assign level__h312400 = lookupRsp_fifos_2_lhead - lookupRsp_fifos_2_ltail ;
+  assign level__h312686 = lookupRsp_fifos_3_lhead - lookupRsp_fifos_3_ltail ;
+  assign level__h313184 = addrFrame_fifos_0_lhead - addrFrame_fifos_0_ltail ;
+  assign level__h313470 = addrFrame_fifos_1_lhead - addrFrame_fifos_1_ltail ;
+  assign level__h313756 = addrFrame_fifos_2_lhead - addrFrame_fifos_2_ltail ;
+  assign level__h314042 = addrFrame_fifos_3_lhead - addrFrame_fifos_3_ltail ;
+  assign level__h314395 = lookupId_ff_lhead - lookupId_ff_ltail ;
+  assign level__h314722 = tagOnlyReads_lhead - tagOnlyReads_ltail ;
+  assign level__h316126 = mReqs_lhead - mReqs_ltail ;
+  assign level__h316294 = mReqBurst_lhead - mReqBurst_ltail ;
+  assign level__h316619 = mRsps_ff_lhead - mRsps_ff_ltail ;
+  assign level__h8582 =
 	     tagLookup_tagCache_writeResps_ff_lhead -
 	     tagLookup_tagCache_writeResps_ff_ltail ;
-  assign lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771 =
-	     lookupRsp_bag[15:11] == lookupRsp_insertItem$wget[15:11] ;
-  assign lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5967 =
-	     lookupRsp_bag[15:11] == lookupRsp_removeItem$wget[4:0] ;
-  assign lookupRsp_bag_741_BITS_15_TO_11_770_EQ_mRsps_f_ETC___d6630 =
-	     lookupRsp_bag[15:11] == mRsps_ff_rf$D_OUT_1[75:71] ;
-  assign lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764 =
-	     lookupRsp_bag[33:29] == lookupRsp_insertItem$wget[15:11] ;
-  assign lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5914 =
-	     lookupRsp_bag[33:29] == lookupRsp_removeItem$wget[4:0] ;
-  assign lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757 =
-	     lookupRsp_bag[51:47] == lookupRsp_insertItem$wget[15:11] ;
-  assign lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5864 =
-	     lookupRsp_bag[51:47] == lookupRsp_removeItem$wget[4:0] ;
-  assign lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750 =
-	     lookupRsp_bag[69:65] == lookupRsp_insertItem$wget[15:11] ;
-  assign lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5792 =
-	     lookupRsp_bag[69:65] == lookupRsp_removeItem$wget[4:0] ;
-  assign lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 =
-	     lookupRsp_bag[16] == lookupRsp_insertItem$wget[16] ;
-  assign lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_r_ETC___d5965 =
-	     lookupRsp_bag[16] == lookupRsp_removeItem$wget[5] ;
-  assign lookupRsp_bag_741_BIT_16_767_EQ_mRsps_ff_rf_su_ETC___d6629 =
-	     lookupRsp_bag[16] == mRsps_ff_rf$D_OUT_1[76] ;
-  assign lookupRsp_bag_741_BIT_17_971_AND_lookupRsp_bag_ETC___d6606 =
-	     lookupRsp_bag[17] &&
-	     lookupRsp_bag[16] == tagOnlyReads_rf$D_OUT_1[5] &&
-	     lookupRsp_bag[15:11] == tagOnlyReads_rf$D_OUT_1[4:0] ;
-  assign lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 =
-	     lookupRsp_bag[34] == lookupRsp_insertItem$wget[16] ;
-  assign lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_r_ETC___d5913 =
-	     lookupRsp_bag[34] == lookupRsp_removeItem$wget[5] ;
-  assign lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6602 =
-	     lookupRsp_bag[35] &&
-	     lookupRsp_bag[34] == tagOnlyReads_rf$D_OUT_1[5] &&
-	     lookupRsp_bag[33:29] == tagOnlyReads_rf$D_OUT_1[4:0] ;
-  assign lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 =
-	     lookupRsp_bag[35] &&
-	     lookupRsp_bag[34] == mRsps_ff_rf$D_OUT_1[76] &&
-	     lookupRsp_bag[33:29] == mRsps_ff_rf$D_OUT_1[75:71] ;
-  assign lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 =
-	     lookupRsp_bag[52] == lookupRsp_insertItem$wget[16] ;
-  assign lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_r_ETC___d5863 =
-	     lookupRsp_bag[52] == lookupRsp_removeItem$wget[5] ;
-  assign lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6598 =
-	     lookupRsp_bag[53] &&
-	     lookupRsp_bag[52] == tagOnlyReads_rf$D_OUT_1[5] &&
-	     lookupRsp_bag[51:47] == tagOnlyReads_rf$D_OUT_1[4:0] ;
-  assign lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 =
-	     lookupRsp_bag[53] &&
-	     lookupRsp_bag[52] == mRsps_ff_rf$D_OUT_1[76] &&
-	     lookupRsp_bag[51:47] == mRsps_ff_rf$D_OUT_1[75:71] ;
-  assign lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 =
-	     lookupRsp_bag[70] == lookupRsp_insertItem$wget[16] ;
-  assign lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_r_ETC___d5788 =
-	     lookupRsp_bag[70] == lookupRsp_removeItem$wget[5] ;
-  assign lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6594 =
-	     lookupRsp_bag[71] &&
-	     lookupRsp_bag[70] == tagOnlyReads_rf$D_OUT_1[5] &&
-	     lookupRsp_bag[69:65] == tagOnlyReads_rf$D_OUT_1[4:0] ;
-  assign lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 =
-	     lookupRsp_bag[71] &&
-	     lookupRsp_bag[70] == mRsps_ff_rf$D_OUT_1[76] &&
-	     lookupRsp_bag[69:65] == mRsps_ff_rf$D_OUT_1[75:71] ;
-  assign lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 =
-	     CAN_FIRE_RL_getTagLookupResponse &&
-	     lookupRsp_insertItem$wget[17] &&
-	     (!lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 ||
-	      !lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750) &&
-	     NOT_lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupR_ETC___d5775 ;
-  assign lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5912 =
-	     { lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ||
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5809,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5828,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5835,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5859,
-	       lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d5777 ?
-		 IF_NOT_lookupRsp_removeItem_whas__780_781_OR_N_ETC___d5876 :
-		 IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879,
-	       IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5911 } ;
-  assign lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6084 =
-	     CAN_FIRE_RL_getTagLookupResponse &&
-	     lookupRsp_insertItem$wget[17] &&
-	     lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_i_ETC___d5745 &&
-	     lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5750 ||
-	     NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5797 ;
-  assign lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6087 =
-	     CAN_FIRE_RL_getTagLookupResponse &&
-	     lookupRsp_insertItem$wget[17] &&
-	     lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_i_ETC___d5754 &&
-	     lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5757 ||
-	     NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5875 ;
-  assign lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6092 =
-	     CAN_FIRE_RL_getTagLookupResponse &&
-	     lookupRsp_insertItem$wget[17] &&
-	     lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_i_ETC___d5761 &&
-	     lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5764 ||
-	     NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5926 ;
-  assign lookupRsp_insertItem_whas__737_AND_lookupRsp_i_ETC___d6096 =
-	     CAN_FIRE_RL_getTagLookupResponse &&
-	     lookupRsp_insertItem$wget[17] &&
-	     lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_i_ETC___d5768 &&
-	     lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5771 ||
-	     NOT_lookupRsp_removeItem_whas__780_781_OR_NOT__ETC___d5972 ;
-  assign lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     lookupRsp_bag_741_BIT_70_742_EQ_IF_lookupRsp_r_ETC___d5788 &&
-	     lookupRsp_bag_741_BITS_69_TO_65_747_EQ_IF_look_ETC___d5792 ||
-	     !lookupRsp_bag[71] ;
-  assign lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     lookupRsp_bag_741_BIT_52_753_EQ_IF_lookupRsp_r_ETC___d5863 &&
-	     lookupRsp_bag_741_BITS_51_TO_47_756_EQ_IF_look_ETC___d5864 ||
-	     !lookupRsp_bag[53] ;
-  assign lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     lookupRsp_bag_741_BIT_34_760_EQ_IF_lookupRsp_r_ETC___d5913 &&
-	     lookupRsp_bag_741_BITS_33_TO_29_763_EQ_IF_look_ETC___d5914 ||
-	     !lookupRsp_bag[35] ;
-  assign lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029 =
-	     lookupRsp_removeItem$whas && lookupRsp_removeItem$wget[6] &&
-	     lookupRsp_bag_741_BIT_16_767_EQ_IF_lookupRsp_r_ETC___d5965 &&
-	     lookupRsp_bag_741_BITS_15_TO_11_770_EQ_IF_look_ETC___d5967 ||
-	     !lookupRsp_bag[17] ;
-  assign mRsps_ff_rf_sub_mRsps_ff_ltail_read__579_BITS__ETC___d6636 =
-	     mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 &&
-	     (lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ||
-	      lookupRsp_bag_741_BIT_53_867_AND_lookupRsp_bag_ETC___d6624 ||
-	      lookupRsp_bag_741_BIT_35_917_AND_lookupRsp_bag_ETC___d6628 ||
-	      lookupRsp_bag[17] &&
-	      lookupRsp_bag_741_BIT_16_767_EQ_mRsps_ff_rf_su_ETC___d6629 &&
-	      lookupRsp_bag_741_BITS_15_TO_11_770_EQ_mRsps_f_ETC___d6630) ;
-  assign maskedWrite_data__h117935 =
-	     { IF_tagLookup_tagCache_cts_read__795_BIT_224_12_ETC___d4135,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_223_13_ETC___d4142,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_222_14_ETC___d4150,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_221_15_ETC___d4157,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_220_15_ETC___d4165,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_219_16_ETC___d4172,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_218_17_ETC___d4180,
-	       IF_tagLookup_tagCache_cts_read__795_BIT_217_18_ETC___d4187 } ;
-  assign memReqFifoSpace__h2402 = { 6'd0, x__h102651 } ;
-  assign newCt_way__h74803 =
+  assign level__h977 = tagLookup_mReqs_ff_lhead - tagLookup_mReqs_ff_ltail ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5849 =
+	     (level__h311828 == 3'd0 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831) &&
+	     (level__h312114 == 3'd0 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5951 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5849 &&
+	     lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5878 &&
+	     (level__h311828 == 3'd0 || level__h312114 == 3'd0 ||
+	      level__h312400 == 3'd0 ||
+	      level__h312686 == 3'd0) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5954 =
+	     (level__h311828 == 3'd0 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831) &&
+	     (!lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5957 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5954 &&
+	     lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5878 &&
+	     (level__h311828 == 3'd0 || level__h312400 == 3'd0 ||
+	      level__h312686 == 3'd0) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5965 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5849 &&
+	     NOT_lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_ETC___d5962 &&
+	     (level__h311828 == 3'd0 || level__h312114 == 3'd0 ||
+	      level__h312686 == 3'd0) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5973 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5849 &&
+	     lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5970 &&
+	     (level__h311828 == 3'd0 || level__h312114 == 3'd0 ||
+	      level__h312400 == 3'd0) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6511 =
+	     (level__h311828 == 3'd0 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6419 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6421) &&
+	     (level__h312114 == 3'd0 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6424 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6425) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6566 =
+	     (level__h311828 == 3'd0 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6445 ||
+	      !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6447) &&
+	     (level__h312114 == 3'd0 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6450 ||
+	      !lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6451) ;
+  assign lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6658 =
+	     level__h311828 == 3'd0 ||
+	     lookupRsp_fifos_0_rf$D_OUT_1[10] != x__h337805 ||
+	     lookupRsp_fifos_0_rf$D_OUT_1[9:5] != x__h338146 ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 =
+	     lookupRsp_fifos_0_rf$D_OUT_1[10] == lookupId_ff_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831 =
+	     lookupRsp_fifos_0_rf$D_OUT_1[9:5] ==
+	     lookupId_ff_rf$D_OUT_1[4:0] ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5889 =
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 &&
+	     lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831 ||
+	     level__h312114 != 3'd0 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 &&
+	     lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845 ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6419 =
+	     lookupRsp_fifos_0_rf$D_OUT_1[10] == tagOnlyReads_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6421 =
+	     lookupRsp_fifos_0_rf$D_OUT_1[9:5] ==
+	     tagOnlyReads_rf$D_OUT_1[4:0] ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6445 =
+	     lookupRsp_fifos_0_rf$D_OUT_1[10] == mRsps_ff_rf$D_OUT_1[76] ;
+  assign lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6447 =
+	     lookupRsp_fifos_0_rf$D_OUT_1[9:5] == mRsps_ff_rf$D_OUT_1[75:71] ;
+  assign lookupRsp_fifos_1_lhead_read__835_MINUS_lookup_ETC___d6664 =
+	     level__h312114 == 3'd0 ||
+	     lookupRsp_fifos_1_rf$D_OUT_1[10] != x__h337805 ||
+	     lookupRsp_fifos_1_rf$D_OUT_1[9:5] != x__h338146 ;
+  assign lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5842 =
+	     lookupRsp_fifos_1_rf$D_OUT_1[10] == lookupId_ff_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d5845 =
+	     lookupRsp_fifos_1_rf$D_OUT_1[9:5] ==
+	     lookupId_ff_rf$D_OUT_1[4:0] ;
+  assign lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6424 =
+	     lookupRsp_fifos_1_rf$D_OUT_1[10] == tagOnlyReads_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6425 =
+	     lookupRsp_fifos_1_rf$D_OUT_1[9:5] ==
+	     tagOnlyReads_rf$D_OUT_1[4:0] ;
+  assign lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6450 =
+	     lookupRsp_fifos_1_rf$D_OUT_1[10] == mRsps_ff_rf$D_OUT_1[76] ;
+  assign lookupRsp_fifos_1_rf_sub_lookupRsp_fifos_1_lta_ETC___d6451 =
+	     lookupRsp_fifos_1_rf$D_OUT_1[9:5] == mRsps_ff_rf$D_OUT_1[75:71] ;
+  assign lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5878 =
+	     (level__h312400 == 3'd0 ||
+	      !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 ||
+	      !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860) &&
+	     (level__h312686 == 3'd0 ||
+	      !lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 ||
+	      !lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874) ;
+  assign lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d5970 =
+	     (level__h312400 == 3'd0 ||
+	      !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 ||
+	      !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860) &&
+	     (!lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 ||
+	      !lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874) ;
+  assign lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d6671 =
+	     level__h312400 == 3'd0 ||
+	     lookupRsp_fifos_2_rf$D_OUT_1[10] != x__h337805 ||
+	     lookupRsp_fifos_2_rf$D_OUT_1[9:5] != x__h338146 ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 =
+	     lookupRsp_fifos_2_rf$D_OUT_1[10] == lookupId_ff_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860 =
+	     lookupRsp_fifos_2_rf$D_OUT_1[9:5] ==
+	     lookupId_ff_rf$D_OUT_1[4:0] ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5921 =
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 &&
+	     lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860 ||
+	     level__h312686 != 3'd0 &&
+	     lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 &&
+	     lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874 ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6429 =
+	     lookupRsp_fifos_2_rf$D_OUT_1[10] == tagOnlyReads_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6430 =
+	     lookupRsp_fifos_2_rf$D_OUT_1[9:5] ==
+	     tagOnlyReads_rf$D_OUT_1[4:0] ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6455 =
+	     lookupRsp_fifos_2_rf$D_OUT_1[10] == mRsps_ff_rf$D_OUT_1[76] ;
+  assign lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6456 =
+	     lookupRsp_fifos_2_rf$D_OUT_1[9:5] == mRsps_ff_rf$D_OUT_1[75:71] ;
+  assign lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5871 =
+	     lookupRsp_fifos_3_rf$D_OUT_1[10] == lookupId_ff_rf$D_OUT_1[5] ;
+  assign lookupRsp_fifos_3_rf_sub_lookupRsp_fifos_3_lta_ETC___d5874 =
+	     lookupRsp_fifos_3_rf$D_OUT_1[9:5] ==
+	     lookupId_ff_rf$D_OUT_1[4:0] ;
+  assign maskedWrite_data__h117915 =
+	     { IF_tagLookup_tagCache_cts_read__795_BIT_224_12_ETC___d4136,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_223_13_ETC___d4143,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_222_14_ETC___d4151,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_221_15_ETC___d4158,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_220_16_ETC___d4166,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_219_16_ETC___d4173,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_218_17_ETC___d4181,
+	       IF_tagLookup_tagCache_cts_read__795_BIT_217_18_ETC___d4188 } ;
+  assign memReqFifoSpace__h2368 = { 6'd0, x__h102630 } ;
+  assign newCt_way__h74771 =
 	     tagLookup_tagCache_writebacks$EMPTY_N ?
 	       tagLookup_tagCache_writebacks$D_OUT[7] :
-	       x1_avValue_way__h74756 ;
-  assign newHead___1__h49393 = newHead__h48715 + 5'd1 ;
-  assign newHead___1__h49406 =
+	       x1_avValue_way__h74724 ;
+  assign newHead___1__h49360 = newHead__h48682 + 5'd1 ;
+  assign newHead___1__h49373 =
 	     tagLookup_tagCache_orderer_mastReqIds_lhead - 5'd1 ;
-  assign newHead__h48715 =
+  assign newHead__h48682 =
 	     tagLookup_tagCache_orderer_mastReqs_insertItem$whas ?
-	       newHead___1__h49406 :
+	       newHead___1__h49373 :
 	       tagLookup_tagCache_orderer_mastReqIds_lhead ;
-  assign nodeOffset__h304385 =
-	     _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0] &
-	     y__h304732 ;
-  assign nodeOffset__h304821 =
-	     _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0] &
-	     y__h304732 ;
-  assign tagLookup_currentDepth_338_MINUS_1___d5481 =
+  assign nodeOffset__h305148 =
+	     _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0] &
+	     y__h305495 ;
+  assign nodeOffset__h305584 =
+	     _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0] &
+	     y__h305495 ;
+  assign tagLookup_currentDepth_339_MINUS_1___d5482 =
 	     tagLookup_currentDepth - 2'd1 ;
-  assign tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320 =
+  assign tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321 =
 	     tagLookup_lookupRsp_ff_lhead - tagLookup_lookupRsp_ff_ltail ;
   assign tagLookup_mRsps_ff_lhead_read__894_MINUS_tagLo_ETC___d2965 =
-	     (level__h1462 == 2'd0 ||
+	     (level__h1428 == 2'd0 ||
 	      tagLookup_tagCache_orderer_slaveRespState[12]) &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2963 &&
 	     (tagLookup_tagCache_orderer_lookupState[12] ||
 	      !tagLookup_tagCache_nextEmpty ||
 	      tagLookup_tagCache_cts[80]) ;
   assign tagLookup_mRsps_ff_lhead_read__894_MINUS_tagLo_ETC___d3074 =
-	     (level__h1462 == 2'd0 ||
+	     (level__h1428 == 2'd0 ||
 	      tagLookup_tagCache_orderer_slaveRespState[12]) &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2963 &&
 	     tagLookup_tagCache_orderer_lookupState[12] &&
 	     tagLookup_tagCache_cts[80] ;
-  assign tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3946 =
+  assign tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3947 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3274 &&
 	     !tagLookup_tagCache_readReqReg[51] &&
-	     x_port1__read__h92293 != 5'd0 ;
-  assign tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4662 =
+	     x_port1__read__h92267 != 5'd0 ;
+  assign tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d4663 =
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 ||
-	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4658 ||
+	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d4659 ||
 	     tagLookup_tagCache_readReqReg[51] ||
-	     x_port1__read__h92293 == 5'd0 ;
-  assign tagLookup_state_read__216_EQ_1_370_AND_NOT_tag_ETC___d6434 =
+	     x_port1__read__h92267 == 5'd0 ;
+  assign tagLookup_state_read__217_EQ_1_371_AND_NOT_tag_ETC___d5996 =
 	     tagLookup_state == 3'd1 &&
-	     !tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181 &&
-	     level__h1011 == 4'd0 &&
-	     level__h325899 != 2'd2 ;
-  assign tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5381 =
+	     !tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182 &&
+	     level__h316126 != 5'd16 &&
+	     level__h316294 != 3'd4 ;
+  assign tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5382 =
 	     tagLookup_state == 3'd2 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	     !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	     !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321 ||
 	     tagLookup_state == 3'd3 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 ||
 	     tagLookup_state == 3'd4 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 ||
 	     tagLookup_state != 3'd5 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5377 ;
-  assign tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5382 =
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5378 ;
+  assign tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5383 =
 	     tagLookup_state == 3'd2 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	     !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320 &&
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	     !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321 &&
 	     (tagLookup_currentDepth == 2'd0 ||
-	      !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358) ;
-  assign tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5471 =
+	      !IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359) ;
+  assign tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5472 =
 	     tagLookup_state == 3'd2 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	     !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	     !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321 ||
 	     tagLookup_state == 3'd3 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 ||
 	     tagLookup_state == 3'd4 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 ||
 	     tagLookup_state == 3'd5 ;
-  assign tagLookup_state_read__216_EQ_2_311_AND_tagLook_ETC___d5499 =
+  assign tagLookup_state_read__217_EQ_2_312_AND_tagLook_ETC___d5500 =
 	     tagLookup_state == 3'd2 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
-	     !tagLookup_lookupRsp_ff_lhead_read__318_MINUS_t_ETC___d5320 ||
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
+	     !tagLookup_lookupRsp_ff_lhead_read__319_MINUS_t_ETC___d5321 ||
 	     tagLookup_state == 3'd4 &&
-	     tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 &&
+	     tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 &&
 	     tagLookup_currentDepth != 2'd0 &&
-	     IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ;
-  assign tagLookup_tagCacheReq_ff_lhead_read__179_MINUS_ETC___d5181 =
+	     IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ;
+  assign tagLookup_tagCacheReq_ff_lhead_read__180_MINUS_ETC___d5182 =
 	     tagLookup_tagCacheReq_ff_lhead - tagLookup_tagCacheReq_ff_ltail ;
   assign tagLookup_tagCache_cts_read__795_BITS_100_TO_9_ETC___d3499 =
 	     tagLookup_tagCache_cts[100:99] ==
@@ -12790,9 +13058,9 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_cts[100:99] ==
 	     tagLookup_tagCache_orderer_slaveReqs_bag[10:9] ;
   assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 =
-	     tagLookup_tagCache_cts[135:109] == x1_avValue_tag__h84437 ;
+	     tagLookup_tagCache_cts[135:109] == x1_avValue_tag__h84405 ;
   assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 =
-	     tagLookup_tagCache_cts[135:109] == x1_avValue_tag__h84377 ;
+	     tagLookup_tagCache_cts[135:109] == x1_avValue_tag__h84345 ;
   assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3572 =
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
@@ -12829,26 +13097,26 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4288 =
+  assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4289 =
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) &&
 	     (IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) ;
-  assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4326 =
+  assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4327 =
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) &&
 	     !tagLookup_tagCache_cts[143] ;
-  assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4733 =
+  assign tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4734 =
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455 ||
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3461 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488) &&
 	     !tagLookup_tagCache_cts[225] ;
-  assign tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d3991 =
+  assign tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d3992 =
 	     (tagLookup_tagCache_cts[143:140] == 4'd1 ||
 	      tagLookup_tagCache_cts[143:140] == 4'd2) &&
 	     tagLookup_tagCache_cts_read__795_BIT_136_060_O_ETC___d3609 &&
@@ -12856,11 +13124,11 @@ module mkTagController(CLK,
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4693 =
+  assign tagLookup_tagCache_cts_read__795_BITS_143_TO_1_ETC___d4694 =
 	     tagLookup_tagCache_cts[143:140] == 4'd8 &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2963 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 &&
-	     x_port1__read__h92293 != 5'd0 ;
+	     x_port1__read__h92267 != 5'd0 ;
   assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3582 =
 	     tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3572 &&
@@ -12884,14 +13152,14 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676 &&
 	     !tagLookup_tagCache_cts[143] ||
 	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3681 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3997 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3998 =
 	     tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	     tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3572 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
 	     SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d3614 &&
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4000 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4001 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	      !tagLookup_tagCache_cts[143] ||
@@ -12902,35 +13170,35 @@ module mkTagController(CLK,
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 &&
 	     SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d3614 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4120 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4121 =
 	     tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	     IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 &&
+	     IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4212 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4213 =
 	     tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	     tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3632 &&
 	     !tagLookup_tagCache_cts[143] ||
 	     tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) &&
-	     IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4210 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4229 =
+	     IF_SEL_ARR_IF_tagLookup_tagCache_tags_0_readAd_ETC___d4211 ;
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4230 =
 	     tagLookup_tagCache_cts[229:228] == 2'd1 &&
 	     (tagLookup_tagCache_cts[225] ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3544) &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 &&
 	     !_0_CONCAT_8_MINUS_tagLookup_mReqs_ff_lhead_read_ETC___d3617 &&
 	     !_16_MINUS_16_MINUS_tagLookup_tagCache_orderer_m_ETC___d3619 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4232 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4233 =
 	     tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	     tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3572 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 ||
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_135__ETC___d3534 ||
 	      tagLookup_tagCache_cts[143]) &&
-	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4230 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 =
+	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4231 ;
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1 ||
 	      tagLookup_tagCache_cts[143:140] != 4'd3) &&
@@ -12939,39 +13207,39 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts[143:140] != 4'd2) &&
 	     (SEL_ARR_NOT_tagLookup_tagCache_req_commits_rf__ETC___d3395 ||
 	      tagLookup_tagCache_cts[230]) ||
-	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4279 ||
+	     NOT_tagLookup_tagCache_orderer_slaveReqs_bag_4_ETC___d4280 ||
 	     tagLookup_tagCache_writebacks$EMPTY_N ||
 	     tagLookup_tagCache_invalidateWritebacks$EMPTY_N ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4291 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4292 =
 	     tagLookup_tagCache_cts[229:228] == 2'd0 &&
 	     (tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3572 &&
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 ||
-	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4288 &&
+	      tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d4289 &&
 	      !tagLookup_tagCache_cts[143]) ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4667 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4668 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566 ||
 	     tagLookup_tagCache_readReqReg[66] ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4956 =
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4957 =
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1 ||
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4951) &&
-	     (level__h1462 == 2'd0 ||
-	      NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d4954) ;
-  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4958 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4956 ||
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4952) &&
+	     (level__h1428 == 2'd0 ||
+	      NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d4955) ;
+  assign tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4959 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4957 ||
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1 ||
-	      NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4951) &&
+	      NOT_tagLookup_tagCache_cts_read__795_BITS_143__ETC___d4952) &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ;
   assign tagLookup_tagCache_cts_read__795_BITS_235_TO_2_ETC___d2845 =
 	     tagLookup_tagCache_cts[235:231] ==
 	     tagLookup_tagCache_orderer_slaveRespState[10:6] ;
   assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3290 =
 	     tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	     level__h1462 != 2'd0 &&
+	     level__h1428 != 2'd0 &&
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3283 ||
 	      NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3284) ||
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
@@ -12985,7 +13253,7 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3290 ;
   assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3303 =
 	     tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	     level__h1462 != 2'd0 &&
+	     level__h1428 != 2'd0 &&
 	     (tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3299 ||
 	      NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3284) ||
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
@@ -12995,10 +13263,10 @@ module mkTagController(CLK,
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
 	     NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3516 &&
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 &&
-	     x__h102651 != 4'd0 &&
+	     x__h102630 != 4'd0 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3660 &&
 	     tagLookup_tagCache_orderer_mastReqIds_lhead != 5'd0 &&
-	     level__h1011 == 4'd8 ;
+	     level__h977 == 4'd8 ;
   assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3769 =
 	     { tagLookup_tagCache_cts[278:277] == 2'd1 ||
 	       tagLookup_tagCache_cts[236],
@@ -13013,19 +13281,19 @@ module mkTagController(CLK,
 	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3151 &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3855 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3974 =
+  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3975 =
 	     tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 &&
-	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 &&
+	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984 =
+  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985 =
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
 	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3151 &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd1 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3855 ;
-  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d4983 =
+  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d4984 =
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	     (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ?
+	     (tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ?
 		tagLookup_tagCache_cts[229:228] == 2'd0 :
 		tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3511 &&
 		!tagLookup_tagCache_writebacks$EMPTY_N &&
@@ -13033,14 +13301,14 @@ module mkTagController(CLK,
 		tagLookup_tagCache_cts[229:228] == 2'd0 &&
 		tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3676 &&
 		!tagLookup_tagCache_cts[143]) ;
-  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d5072 =
+  assign tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d5073 =
 	     tagLookup_tagCache_cts[278:277] == 2'd0 &&
-	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5064 &&
-	     (NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5060 ||
-	      NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5066 &&
+	     NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5065 &&
+	     (NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5061 ||
+	      NOT_tagLookup_tagCache_orderer_mastLines_bag_4_ETC___d5067 &&
 	      !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4739) &&
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 ;
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4740) &&
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 ;
   assign tagLookup_tagCache_cts_read__795_BIT_136_060_O_ETC___d3609 =
 	     tagLookup_tagCache_cts[136] ||
 	     tagLookup_tagCache_cts_read__795_BITS_135_TO_1_ETC___d3427 &&
@@ -13050,19 +13318,19 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d2843 =
 	     tagLookup_tagCache_cts[236] ==
 	     tagLookup_tagCache_orderer_slaveRespState[11] ;
-  assign tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d4760 =
+  assign tagLookup_tagCache_cts_read__795_BIT_236_831_E_ETC___d4761 =
 	     tagLookup_tagCache_cts[236] ==
-	     x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_masterID__h278687 &&
+	     x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_masterID__h278667 &&
 	     tagLookup_tagCache_cts[235:231] ==
-	     x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_transactionID__h278688 ||
-	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4759 ;
+	     x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_transactionID__h278668 ||
+	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4760 ;
   assign tagLookup_tagCache_newReq_whas__787_AND_tagLoo_ETC___d2799 =
 	     CAN_FIRE_RL_tagLookup_feedTagCache &&
 	     tagLookup_tagCache_newReq$wget[141] ||
 	     tagLookup_tagCache_orderer_lookupState[12] ||
 	     !tagLookup_tagCache_nextEmpty ||
 	     tagLookup_tagCache_cts[80] ;
-  assign tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20 =
+  assign tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21 =
 	     tagLookup_tagCache_newReq$wget[140:101] ;
   assign tagLookup_tagCache_orderer_mastLines_bag_462_B_ETC___d1466 =
 	     tagLookup_tagCache_orderer_mastLines_bag[670] ==
@@ -13831,7 +14099,7 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d385 =
 	     tagLookup_tagCache_orderer_mastReqs_bag[56:52] ==
 	     tagLookup_tagCache_orderer_mastReqs_insertItem$wget[56:52] ;
-  assign tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3938 =
+  assign tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3939 =
 	     tagLookup_tagCache_orderer_mastReqs_bag[58] &&
 	     tagLookup_tagCache_orderer_mastReqs_bag[117] &&
 	     tagLookup_tagCache_orderer_mastReqs_bag[176] &&
@@ -14280,30 +14548,30 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3511 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2963 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 &&
-	     x_port1__read__h92293 != 5'd0 &&
+	     x_port1__read__h92267 != 5'd0 &&
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3503 ||
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509) ;
-  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4086 =
+  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4087 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2963 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 &&
-	     x_port1__read__h92293 != 5'd0 &&
+	     x_port1__read__h92267 != 5'd0 &&
 	     !tagLookup_tagCache_writebacks$EMPTY_N ;
-  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4348 =
+  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4349 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag[58] &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3268 &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3269 &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag[8:7] ==
 	     IF_tagLookup_tagCache_orderer_mastRespState_re_ETC___d3265 ;
-  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4708 =
+  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4709 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag[58] &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2849 &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2850 &&
 	     tagLookup_tagCache_orderer_slaveReqs_bag[8:7] ==
 	     tagLookup_tagCache_cts[100:99] ;
-  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 =
+  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d2963 &&
 	     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 &&
-	     x_port1__read__h92293 != 5'd0 &&
+	     x_port1__read__h92267 != 5'd0 &&
 	     (tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	      tagLookup_tagCache_cts[229:228] == 2'd1 ||
 	      tagLookup_tagCache_cts[143:140] != 4'd3) &&
@@ -14312,17 +14580,17 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_cts[143:140] != 4'd2) &&
 	     (SEL_ARR_NOT_tagLookup_tagCache_req_commits_rf__ETC___d3395 ||
 	      tagLookup_tagCache_cts[230]) ;
-  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4732 =
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4724 ||
-	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4086 &&
+  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4733 =
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4725 ||
+	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4087 &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
 	     IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3503 &&
-	     IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4729 ;
-  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4740 =
+	     IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4730 ;
+  assign tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d4741 =
 	     tagLookup_tagCache_orderer_slaveReqs_bag_46_BI_ETC___d3511 &&
 	     !tagLookup_tagCache_writebacks$EMPTY_N &&
 	     !tagLookup_tagCache_invalidateWritebacks$EMPTY_N &&
-	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4739 ;
+	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4740 ;
   assign tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 =
 	     tagLookup_tagCache_readReqReg[49:45] ==
 	     tagLookup_mRsps_ff_rf$D_OUT_1[75:71] ;
@@ -14339,7 +14607,7 @@ module mkTagController(CLK,
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 ||
 	      IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3274 &&
 	      !tagLookup_tagCache_readReqReg[51] &&
-	      x_port1__read__h92293 != 5'd0) ;
+	      x_port1__read__h92267 != 5'd0) ;
   assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3299 =
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
@@ -14347,51 +14615,51 @@ module mkTagController(CLK,
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[66] ||
 	      NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3297) ;
-  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942 =
+  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943 =
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	     tagLookup_tagCache_readReqReg[66] &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3855 ;
-  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948 =
+  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949 =
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	     tagLookup_tagCache_readReqReg[66] &&
-	     tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3946 &&
+	     tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3947 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3855 ;
-  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956 =
+  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957 =
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	     tagLookup_tagCache_readReqReg[66] &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 &&
-	     NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3953 &&
+	     NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3954 &&
 	     NOT_tagLookup_tagCache_orderer_mastReqs_bag_71_ETC___d3855 ;
-  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d4989 =
+  assign tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d4990 =
 	     tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3141 &&
 	     tagLookup_tagCache_readReqReg_read__136_BITS_4_ETC___d3145 &&
 	     tagLookup_tagCache_readReqReg[66] &&
 	     tagLookup_mRsps_ff_rf$D_OUT_1[68:67] != 2'd0 &&
-	     (tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3946 ||
-	      NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3953) ;
+	     (tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps_ff_l_ETC___d3947 ||
+	      NOT_tagLookup_mRsps_ff_rf_sub_tagLookup_mRsps__ETC___d3954) ;
   assign tagLookup_tagCache_readReqReg_read__136_BIT_57_ETC___d3162 =
 	     tagLookup_tagCache_readReqReg[57] ==
 	     tagLookup_tagCache_orderer_slaveRespState[11] ;
-  assign tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5155 =
+  assign tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5156 =
 	     tagLookup_tagCache_cacheState &&
 	     tagLookup_tagCache_respsReady$wget &&
 	     tagLookup_tagCache_resps$wget[224:223] != 2'd0 &&
-	     level__h8615 != 2'd2 ;
-  assign tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334 =
+	     level__h8582 != 2'd2 ;
+  assign tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335 =
 	     (tagLookup_tagCache_cacheState &&
 	      tagLookup_tagCache_respsReady$wget ||
-	      level__h8615 != 2'd0) &&
+	      level__h8582 != 2'd0) &&
 	     tagLookup_useNextRsp_ff_rf$D_OUT_1 ;
-  assign tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5377 =
+  assign tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5378 =
 	     (tagLookup_tagCache_cacheState &&
 	      tagLookup_tagCache_respsReady$wget ||
-	      level__h8615 != 2'd0) &&
+	      level__h8582 != 2'd0) &&
 	     !tagLookup_useNextRsp_ff_rf$D_OUT_1 ;
-  assign tagLookup_tagCache_respswget_BITS_219_TO_156__q37 =
+  assign tagLookup_tagCache_respswget_BITS_219_TO_156__q38 =
 	     tagLookup_tagCache_resps$wget[219:156] ;
   assign tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 =
 	     tagLookup_tagCache_tags_0_readAddr ==
@@ -14399,357 +14667,502 @@ module mkTagController(CLK,
   assign tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 =
 	     tagLookup_tagCache_tags_1_readAddr ==
 	     tagLookup_tagCache_tags_1_writeAddr ;
-  assign tagLookup_zeroAddr_211_ULT_4286574718___d5212 =
+  assign tagLookup_transNum_220_CONCAT_IF_cache_request_ETC___d6376 =
+	     { tagLookup_transNum,
+	       (cache_request_put_val[93:92] == 2'd1) ?
+		 { 1'd0,
+		   IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6372 } :
+		 { 3'd0,
+		   83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
+		   9'd3 } } ;
+  assign tagLookup_zeroAddr_212_ULT_4286574718___d5213 =
 	     tagLookup_zeroAddr < 40'h00FF7FF07E ;
-  assign way__h98148 =
-	     (level__h1462 == 2'd0) ?
-	       _theResult_____21__h86421 :
-	       y_avValue_snd_snd_fst__h98187 ;
-  assign wbitE__h303268 =
-	     IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5358 ?
+  assign tagReq_addr_lineNumber__h329799 =
+	     { cache_request_put_val[140:107], 3'd0 } ;
+  assign w__h307739 =
+	     (!IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ||
+	      tagLookup_pendingCapEnable[2]) ?
+	       w__h307900 | x__h308468 :
+	       w__h307900 & y__h308651 ;
+  assign w__h307900 =
+	     (!IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ||
+	      tagLookup_pendingCapEnable[1]) ?
+	       w__h307963 | x__h308507 :
+	       w__h307963 & y__h308626 ;
+  assign w__h307963 =
+	     (!IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ||
+	      tagLookup_pendingCapEnable[0]) ?
+	       wbitE__h304031 |
+	       _1_SL_tagLookup_pendingCapNumber_344_BITS_2_TO__ETC___d5679 :
+	       wbitE__h304031 & y__h308110 ;
+  assign w__h308425 =
+	     tagLookup_pendingCapEnable[2] ?
+	       w__h308464 | x__h308468 :
+	       w__h308464 & y__h308651 ;
+  assign w__h308464 =
+	     tagLookup_pendingCapEnable[1] ?
+	       w__h308503 | x__h308507 :
+	       w__h308503 & y__h308626 ;
+  assign w__h308503 =
+	     tagLookup_pendingCapEnable[0] ?
+	       _1_SL_tagLookup_pendingCapNumber_344_BITS_2_TO__ETC___d5679 :
+	       8'd0 ;
+  assign w__h310014 =
+	     (tagLookup_pendingTags[2] && tagLookup_pendingCapEnable[2]) ?
+	       w__h310165 | x__h308468 :
+	       w__h310165 & y__h308651 ;
+  assign w__h310165 =
+	     (tagLookup_pendingTags[1] && tagLookup_pendingCapEnable[1]) ?
+	       w__h310220 | x__h308507 :
+	       w__h310220 & y__h308626 ;
+  assign w__h310220 =
+	     (tagLookup_pendingTags[0] && tagLookup_pendingCapEnable[0]) ?
+	       _1_SL_tagLookup_pendingCapNumber_344_BITS_2_TO__ETC___d5679 :
+	       8'd0 ;
+  assign way__h98128 =
+	     (level__h1428 == 2'd0) ?
+	       _theResult_____21__h86389 :
+	       y_avValue_snd_snd_snd_fst__h98170 ;
+  assign wbitE__h304031 =
+	     IF_tagLookup_tagCache_writeResps_ff_lhead_read_ETC___d5359 ?
 	       8'd0 :
 	       8'd255 ;
-  assign wdata_data__h307590 = { 56'd0, x__h307115 } << x__h308226 ;
-  assign wdata_data__h307594 = { 56'd0, x__h308248 } << x__h308367 ;
-  assign wdata_data__h307596 = 64'd0 << x__h308606 ;
-  assign wdata_data__h339636 = { 56'd0, x__h339699 } << x__h339837 ;
-  assign x1_avValue_data__h86312 =
+  assign wdata_data__h308921 = { 56'd0, x__h308230 } << x__h309990 ;
+  assign wdata_data__h308925 = { 56'd0, x__h310012 } << x__h310431 ;
+  assign wdata_data__h308927 = 64'd0 << x__h310670 ;
+  assign wdata_data__h332659 = { 56'd0, x__h332722 } << x__h333100 ;
+  assign x1_avValue_data__h86280 =
 	     (tagLookup_tagCache_data_0_readAddr[9:2] ==
 	      tagLookup_tagCache_data_0_writeAddr[9:2] &&
 	      tagLookup_tagCache_data_0_readAddr[1:0] ==
 	      tagLookup_tagCache_data_0_writeAddr[1:0]) ?
 	       tagLookup_tagCache_data_0_writeData :
 	       tagLookup_tagCache_data_0_bram_bram$DOA ;
-  assign x1_avValue_data__h86371 =
+  assign x1_avValue_data__h86339 =
 	     (tagLookup_tagCache_data_1_readAddr[9:2] ==
 	      tagLookup_tagCache_data_1_writeAddr[9:2] &&
 	      tagLookup_tagCache_data_1_readAddr[1:0] ==
 	      tagLookup_tagCache_data_1_writeAddr[1:0]) ?
 	       tagLookup_tagCache_data_1_writeData :
 	       tagLookup_tagCache_data_1_bram_bram$DOA ;
-  assign x1_avValue_snd_addr_key__h74941 =
+  assign x1_avValue_snd_addr_key__h74909 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
-	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[12:5] :
+	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[12:5] :
 	       tagLookup_tagCache_cts[249:242] ;
-  assign x1_avValue_snd_addr_lineNumber__h114872 =
+  assign x1_avValue_snd_addr_lineNumber__h114851 =
 	     IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3509 ?
-	       y_avValue_snd_addr_lineNumber__h114870 :
+	       y_avValue_snd_addr_lineNumber__h114849 :
 	       tagLookup_tagCache_cts[276:240] ;
-  assign x1_avValue_snd_addr_tag__h74940 =
+  assign x1_avValue_snd_addr_tag__h74908 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
-	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q20[39:13] :
+	       tagLookup_tagCache_newReqwget_BITS_140_TO_101__q21[39:13] :
 	       tagLookup_tagCache_cts[276:250] ;
-  assign x1_avValue_snd_fst_key__h121150 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-	       y_avValue_snd_fst_key__h121125 :
+  assign x1_avValue_snd_fst_key__h121130 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+	       y_avValue_snd_fst_key__h121105 :
 	       tagLookup_tagCache_cts[108:101] ;
-  assign x1_avValue_snd_fst_way__h121152 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-	       y_avValue_snd_fst_way__h121127 :
-	       _theResult_____21__h86421 ;
-  assign x1_avValue_snd_fst_way__h121229 =
+  assign x1_avValue_snd_fst_way__h121132 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+	       y_avValue_snd_fst_way__h121107 :
+	       _theResult_____21__h86389 ;
+  assign x1_avValue_snd_fst_way__h121209 =
 	     (tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       _theResult_____21__h86421 :
-	       x1_avValue_snd_way__h121211 ;
-  assign x1_avValue_snd_snd_snd_d_key__h278378 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+	       _theResult_____21__h86389 :
+	       x1_avValue_snd_way__h121191 ;
+  assign x1_avValue_snd_snd_snd_d_key__h278358 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       y_avValue_snd_fst_key__h121125 :
+	       y_avValue_snd_fst_key__h121105 :
 	       tagLookup_tagCache_readReqReg[65:58] ;
-  assign x1_avValue_snd_snd_snd_snd_d_inId_masterID__h278679 =
+  assign x1_avValue_snd_snd_snd_snd_d_inId_masterID__h278659 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       tagLookup_tagCache_cts[236] :
 	       tagLookup_tagCache_readReqReg[57] ;
-  assign x1_avValue_snd_snd_snd_snd_d_inId_transactionID__h278680 =
+  assign x1_avValue_snd_snd_snd_snd_d_inId_transactionID__h278660 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       tagLookup_tagCache_cts[235:231] :
 	       tagLookup_tagCache_readReqReg[56:52] ;
-  assign x1_avValue_snd_snd_snd_snd_d_key__h278634 =
+  assign x1_avValue_snd_snd_snd_snd_d_key__h278614 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
 	       tagLookup_tagCache_cts[108:101] :
 	       tagLookup_tagCache_readReqReg[65:58] ;
-  assign x1_avValue_snd_snd_snd_snd_d_oldWay__h278640 =
+  assign x1_avValue_snd_snd_snd_snd_d_oldWay__h278620 =
 	     ((tagLookup_tagCache_cts[229:228] == 2'd0 ||
 	       tagLookup_tagCache_cts[229:228] == 2'd1) &&
 	      NOT_tagLookup_tagCache_cts_read__795_BITS_229__ETC___d3541 &&
 	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d3566) ?
-	       _theResult_____21__h86421 :
+	       _theResult_____21__h86389 :
 	       tagLookup_tagCache_readReqReg[2] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_d_key__h278770 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign x1_avValue_snd_snd_snd_snd_snd_d_key__h278750 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[65:58] :
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278652 ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278681 =
-	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4676 ?
-	       x1_avValue_snd_snd_snd_snd_d_inId_masterID__h278679 :
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278632 ;
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278661 =
+	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4677 ?
+	       x1_avValue_snd_snd_snd_snd_d_inId_masterID__h278659 :
 	       tagLookup_tagCache_readReqReg[57] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278683 =
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278663 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278681 :
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278661 :
 	       tagLookup_tagCache_readReqReg[57] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278682 =
-	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4676 ?
-	       x1_avValue_snd_snd_snd_snd_d_inId_transactionID__h278680 :
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278662 =
+	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4677 ?
+	       x1_avValue_snd_snd_snd_snd_d_inId_transactionID__h278660 :
 	       tagLookup_tagCache_readReqReg[56:52] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278684 =
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278664 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278682 :
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278662 :
 	       tagLookup_tagCache_readReqReg[56:52] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278643 =
-	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4676 ?
-	       x1_avValue_snd_snd_snd_snd_d_key__h278634 :
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278623 =
+	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4677 ?
+	       x1_avValue_snd_snd_snd_snd_d_key__h278614 :
 	       tagLookup_tagCache_readReqReg[65:58] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278652 =
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278632 =
 	     IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d3643 ?
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278643 :
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_key__h278623 :
 	       tagLookup_tagCache_readReqReg[65:58] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_oldWay__h278649 =
-	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4676 ?
-	       x1_avValue_snd_snd_snd_snd_d_oldWay__h278640 :
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_d_oldWay__h278629 =
+	     NOT_8_MINUS_tagLookup_mReqs_ff_lhead_read__351_ETC___d4677 ?
+	       x1_avValue_snd_snd_snd_snd_d_oldWay__h278620 :
 	       tagLookup_tagCache_readReqReg[2] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_fst_dataKey_key__h98515 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_fst_dataKey_key__h98493 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
 	       tagLookup_tagCache_readReqReg[65:58] :
 	       tagLookup_tagCache_cts[92:85] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_masterID__h98349 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_masterID__h98327 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
 	       tagLookup_tagCache_readReqReg[57] :
 	       tagLookup_tagCache_cts[236] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_transactionID__h98350 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_fst_req_transactionID__h98328 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
 	       tagLookup_tagCache_readReqReg[56:52] :
 	       tagLookup_tagCache_cts[235:231] ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_masterID__h278687 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_masterID__h278667 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[57] :
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278683 ;
-  assign x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_transactionID__h278688 =
-	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_masterID__h278663 ;
+  assign x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_fst_d_inId_transactionID__h278668 =
+	     tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 	       tagLookup_tagCache_readReqReg[56:52] :
-	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278684 ;
-  assign x1_avValue_snd_way__h121211 =
-	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193 ?
-	       way__h98148 :
-	       _theResult_____21__h86421 ;
-  assign x1_avValue_snd_writebackTag_tag__h81267 =
+	       x1_avValue_snd_snd_snd_snd_snd_snd_d_inId_transactionID__h278664 ;
+  assign x1_avValue_snd_way__h121191 =
+	     IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194 ?
+	       way__h98128 :
+	       _theResult_____21__h86389 ;
+  assign x1_avValue_snd_writebackTag_tag__h81235 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
 	       27'd0 :
 	       tagLookup_tagCache_cts[42:16] ;
-  assign x1_avValue_tag__h84377 =
+  assign x1_avValue_tag__h84345 =
 	     tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 	       tagLookup_tagCache_tags_0_writeData[40:14] :
 	       tagLookup_tagCache_tags_0_bramA_bram$DOA[40:14] ;
-  assign x1_avValue_tag__h84437 =
+  assign x1_avValue_tag__h84405 =
 	     tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 	       tagLookup_tagCache_tags_1_writeData[40:14] :
 	       tagLookup_tagCache_tags_1_bramA_bram$DOA[40:14] ;
-  assign x1_avValue_way__h74756 =
+  assign x1_avValue_way__h74724 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141] ||
 	      tagLookup_mRsps_ff_lhead_read__894_MINUS_tagLo_ETC___d2965) ?
-	       _theResult_____3_way__h74738 :
+	       _theResult_____3_way__h74706 :
 	       tagLookup_tagCache_nextWay ;
-  assign x__h102651 = 4'd8 - level__h1011 ;
-  assign x__h117046 =
+  assign x__h102630 = 4'd8 - level__h977 ;
+  assign x__h117026 =
 	     (tagLookup_tagCache_cts[229:228] != 2'd0 &&
 	      tagLookup_tagCache_cts[229:228] != 2'd1 ||
 	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d3683) ?
 	       tagLookup_tagCache_cts[276:240] :
-	       x1_avValue_snd_addr_lineNumber__h114872 ;
-  assign x__h118911 =
+	       x1_avValue_snd_addr_lineNumber__h114851 ;
+  assign x__h118891 =
 	     tagLookup_tagCache_cts[207:200] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h119244 =
+  assign x__h119224 =
 	     tagLookup_tagCache_cts[199:192] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h119383 =
+  assign x__h119363 =
 	     tagLookup_tagCache_cts[191:184] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h119522 =
+  assign x__h119502 =
 	     tagLookup_tagCache_cts[183:176] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h119661 =
+  assign x__h119641 =
 	     tagLookup_tagCache_cts[175:168] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h119800 =
+  assign x__h119780 =
 	     tagLookup_tagCache_cts[167:160] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h119939 =
+  assign x__h119919 =
 	     tagLookup_tagCache_cts[159:152] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h120078 =
+  assign x__h120058 =
 	     tagLookup_tagCache_cts[151:144] &
 	     tagLookup_tagCache_cts[216:209] ;
-  assign x__h122840 =
-	     (level__h1462 == 2'd0) ?
+  assign x__h122820 =
+	     (level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[100:99] :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4363 ;
-  assign x__h135286 =
-	     (level__h1462 == 2'd0) ?
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4364 ;
+  assign x__h135266 =
+	     (level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[84:83] :
-	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4511 ;
-  assign x__h303702 =
+	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4512 ;
+  assign x__h304465 =
 	     tagLookup_pendingCapNumber >>
-	     CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q13 ;
-  assign x__h303813 =
+	     CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 ;
+  assign x__h304576 =
 	     tagLookup_pendingCapNumber >>
-	     CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q3 ;
-  assign x__h306916 =
+	     CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2 ;
+  assign x__h307679 =
 	     (tagLookup_state == 3'd3 &&
-	      tagLookup_tagCache_respsReady_whas__145_AND_ta_ETC___d5334) ?
-	       bitEnable__h303983 :
-	       IF_tagLookup_state_read__216_EQ_4_326_AND_tagL_ETC___d5681 ;
-  assign x__h307115 = 8'd1 << x__h303702[2:0] ;
-  assign x__h308226 =
-	     { _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5490[2:0],
+	      tagLookup_tagCache_respsReady_whas__146_AND_ta_ETC___d5335) ?
+	       bitEnable__h304746 :
+	       IF_tagLookup_state_read__217_EQ_4_327_AND_tagL_ETC___d5717 ;
+  assign x__h308230 = 8'd1 << x__h304465[2:0] ;
+  assign x__h308429 = 8'd1 << x__h308655 ;
+  assign x__h308468 = 8'd1 << x__h308630 ;
+  assign x__h308507 = 8'd1 << x__h308605 ;
+  assign x__h308605 = tagLookup_pendingCapNumber[2:0] + 3'd1 ;
+  assign x__h308630 = tagLookup_pendingCapNumber[2:0] + 3'd2 ;
+  assign x__h308655 = tagLookup_pendingCapNumber[2:0] + 3'd3 ;
+  assign x__h309990 =
+	     { _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491[2:0],
 	       3'b0 } ;
-  assign x__h308248 =
-	     (tagLookup_pendingTags && tagLookup_pendingCapEnable) ?
-	       _1_SL_tagLookup_pendingCapNumber_343_BITS_2_TO__ETC___d5670 :
-	       8'd0 ;
-  assign x__h308367 =
-	     { _0_CONCAT_tagLookup_pendingCapNumber_343_BITS_3_ETC___d5493[2:0],
+  assign x__h310012 =
+	     (tagLookup_pendingTags[3] && tagLookup_pendingCapEnable[3]) ?
+	       w__h310014 | x__h308429 :
+	       w__h310014 & y__h308676 ;
+  assign x__h310431 =
+	     { _0_CONCAT_tagLookup_pendingCapNumber_344_BITS_3_ETC___d5494[2:0],
 	       3'b0 } ;
-  assign x__h308606 =
-	     { _0_CONCAT_tagLookup_pendingCapNumber_343_SRL_SE_ETC___d5354[2:0],
+  assign x__h310670 =
+	     { _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355[2:0],
 	       3'b0 } ;
-  assign x__h333963 =
+  assign x__h318041 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d5849 ?
+	       ((level__h312400 == 3'd0 ||
+		 !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5857 ||
+		 !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d5860) ?
+		  2'd3 :
+		  2'd2) :
+	       ((level__h311828 == 3'd0 ||
+		 !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5827 ||
+		 !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d5831) ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h318728 =
+	     (level__h311828 != 3'd0 && level__h312114 != 3'd0) ?
+	       ((level__h312400 == 3'd0) ? 2'd2 : 2'd3) :
+	       ((level__h311828 == 3'd0) ? 2'd0 : 2'd1) ;
+  assign x__h319788 = lookupRsp_fifos_0_lhead + 3'd1 ;
+  assign x__h320223 = lookupRsp_fifos_1_lhead + 3'd1 ;
+  assign x__h320658 = lookupRsp_fifos_2_lhead + 3'd1 ;
+  assign x__h321093 = lookupRsp_fifos_3_lhead + 3'd1 ;
+  assign x__h325129 =
 	     (cache_request_put_val[93:92] == 2'd1 &&
-	      !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 &&
-	      cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) ?
+	      !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 &&
+	      cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) ?
 	       8'd0 :
 	       cache_request_put_val[80:73] ;
-  assign x__h339486 =
+  assign x__h326448 =
+	     addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6121 ?
+	       ((level__h313756 == 3'd0 ||
+		 !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6125 ||
+		 !addrFrame_fifos_2_rf_sub_addrFrame_fifos_2_lta_ETC___d6128) ?
+		  2'd3 :
+		  2'd2) :
+	       ((level__h313184 == 3'd0 ||
+		 !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6103 ||
+		 !addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_lta_ETC___d6107) ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h327135 =
+	     (level__h313184 != 3'd0 && level__h313470 != 3'd0) ?
+	       ((level__h313756 == 3'd0) ? 2'd2 : 2'd3) :
+	       ((level__h313184 == 3'd0) ? 2'd0 : 2'd1) ;
+  assign x__h327624 = addrFrame_fifos_0_lhead + 3'd1 ;
+  assign x__h327667 = addrFrame_fifos_1_lhead + 3'd1 ;
+  assign x__h327710 = addrFrame_fifos_2_lhead + 3'd1 ;
+  assign x__h327753 = addrFrame_fifos_3_lhead + 3'd1 ;
+  assign x__h332509 =
 	     8'd1 <<
-	     cache_request_put_val_BITS_140_TO_101_471_MINU_ETC___d6525[12:10] ;
-  assign x__h339699 =
-	     cache_request_put_val_BIT_72_528_AND_NOT_NOT_c_ETC___d6556 ?
-	       x__h339486 :
+	     cache_request_put_val_BITS_140_TO_107_272_CONC_ETC___d6289[12:10] ;
+  assign x__h332722 =
+	     IF_IF_cache_request_put_val_BITS_106_TO_105_25_ETC___d6364 ?
+	       x__h332509 :
 	       8'd0 ;
-  assign x__h339837 =
-	     { _0_CONCAT_cache_request_put_val_BITS_140_TO_101_ETC___d6537[2:0],
+  assign x__h333100 =
+	     { _0_CONCAT_cache_request_put_val_BITS_140_TO_107_ETC___d6314[2:0],
 	       3'b0 } ;
-  assign x__h340832 =
-	     (level__h326233 == 6'd0) ?
-	       _theResult___snd_snd_fst_masterID__h340914 :
+  assign x__h337805 =
+	     (level__h316619 == 6'd0) ?
+	       _theResult___snd_snd_fst_masterID__h338133 :
 	       mRsps_ff_rf$D_OUT_1[76] ;
-  assign x__h340927 =
-	     (level__h326233 == 6'd0) ?
-	       _theResult___snd_snd_fst_transactionID__h340915 :
+  assign x__h337988 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6511 ?
+	       ((level__h312400 == 3'd0 ||
+		 !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6429 ||
+		 !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6430) ?
+		  2'd3 :
+		  2'd2) :
+	       ((level__h311828 == 3'd0 ||
+		 !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6419 ||
+		 !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6421) ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h338146 =
+	     (level__h316619 == 6'd0) ?
+	       _theResult___snd_snd_fst_transactionID__h338134 :
 	       mRsps_ff_rf$D_OUT_1[75:71] ;
-  assign x__h341433 =
-	     ((addrFrame_bag[63] &&
-	       addrFrame_bag[62] == mRsps_ff_rf$D_OUT_1[76] &&
-	       addrFrame_bag[61:57] == mRsps_ff_rf$D_OUT_1[75:71]) ?
-		addrFrame_bag[55:54] :
-		((addrFrame_bag[47] &&
-		  addrFrame_bag[46] == mRsps_ff_rf$D_OUT_1[76] &&
-		  addrFrame_bag[45:41] == mRsps_ff_rf$D_OUT_1[75:71]) ?
-		   addrFrame_bag[39:38] :
-		   ((addrFrame_bag[31] &&
-		     addrFrame_bag[30] == mRsps_ff_rf$D_OUT_1[76] &&
-		     addrFrame_bag[29:25] == mRsps_ff_rf$D_OUT_1[75:71]) ?
-		      addrFrame_bag[23:22] :
-		      addrFrame_bag[7:6]))) +
-	     frame[2:1] ;
-  assign x__h342707 =
-	     lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6594 ?
-	       lookupRsp_bag[57:54] :
-	       IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6675 ;
-  assign x__h344283 = frame + 3'd1 ;
-  assign x__h72110 = tagLookup_tagCache_initCount + 8'd1 ;
-  assign x__h78975 =
+  assign x__h338546 =
+	     lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6566 ?
+	       ((level__h312400 == 3'd0 ||
+		 !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6455 ||
+		 !lookupRsp_fifos_2_rf_sub_lookupRsp_fifos_2_lta_ETC___d6456) ?
+		  2'd3 :
+		  2'd2) :
+	       ((level__h311828 == 3'd0 ||
+		 !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6445 ||
+		 !lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_lta_ETC___d6447) ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h338753 =
+	     SEL_ARR_addrFrame_fifos_0_rf_sub_addrFrame_fif_ETC___d6619 +
+	     memoryResponseFrame[2:1] ;
+  assign x__h339467 =
+	     (addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6593 &&
+	      (level__h313470 == 3'd0 ||
+	       addrFrame_fifos_1_rf$D_OUT_1[14] != mRsps_ff_rf$D_OUT_1[76] ||
+	       addrFrame_fifos_1_rf$D_OUT_1[13:9] !=
+	       mRsps_ff_rf$D_OUT_1[75:71])) ?
+	       ((level__h313756 == 3'd0 ||
+		 addrFrame_fifos_2_rf$D_OUT_1[14] !=
+		 mRsps_ff_rf$D_OUT_1[76] ||
+		 addrFrame_fifos_2_rf$D_OUT_1[13:9] !=
+		 mRsps_ff_rf$D_OUT_1[75:71]) ?
+		  2'd3 :
+		  2'd2) :
+	       (addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6593 ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h340389 =
+	     { SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6532,
+	       SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6538,
+	       SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6545,
+	       SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6551 } ;
+  assign x__h342476 =
+	     (lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6658 &&
+	      lookupRsp_fifos_1_lhead_read__835_MINUS_lookup_ETC___d6664) ?
+	       (lookupRsp_fifos_2_lhead_read__850_MINUS_lookup_ETC___d6671 ?
+		  2'd3 :
+		  2'd2) :
+	       (lookupRsp_fifos_0_lhead_read__816_MINUS_lookup_ETC___d6658 ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h343315 =
+	     (addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6704 &&
+	      addrFrame_fifos_1_lhead_read__008_MINUS_addrFr_ETC___d6710) ?
+	       (addrFrame_fifos_2_lhead_read__013_MINUS_addrFr_ETC___d6717 ?
+		  2'd3 :
+		  2'd2) :
+	       (addrFrame_fifos_0_lhead_read__003_MINUS_addrFr_ETC___d6704 ?
+		  2'd1 :
+		  2'd0) ;
+  assign x__h343468 = memoryResponseFrame + 3'd1 ;
+  assign x__h343894 =
+	     (level__h316294 == 3'd0) ?
+	       tagLookup_mReqs_ff_rf$D_OUT_1[100] :
+	       mReqs_rf$D_OUT_1[100] ;
+  assign x__h343903 =
+	     (level__h316294 == 3'd0) ?
+	       tagLookup_mReqs_ff_rf$D_OUT_1[99:95] :
+	       mReqs_rf$D_OUT_1[99:95] ;
+  assign x__h72077 = tagLookup_tagCache_initCount + 8'd1 ;
+  assign x__h78943 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
 	       tagLookup_tagCache_newReq$wget[100] :
 	       tagLookup_tagCache_cts[236] ;
-  assign x__h78978 =
+  assign x__h78946 =
 	     (CAN_FIRE_RL_tagLookup_feedTagCache &&
 	      tagLookup_tagCache_newReq$wget[141]) ?
 	       tagLookup_tagCache_newReq$wget[99:95] :
 	       tagLookup_tagCache_cts[235:231] ;
-  assign x_lineNumber__h292966 = tagLookup_zeroAddr[39:3] + 37'd1 ;
-  assign x_mastReqsSpaces__h53161 = 5'd16 - x_remaining__h53144 ;
-  assign x_port1__read__h92293 =
+  assign x_lineNumber__h293649 = tagLookup_zeroAddr[39:3] + 37'd1 ;
+  assign x_mastReqsSpaces__h53128 = 5'd16 - x_remaining__h53111 ;
+  assign x_port1__read__h92267 =
 	     (tagLookup_tagCache_req_commits_level != 5'd16) ?
 	       tagLookup_tagCache_req_commits_level$port0__write_1 :
 	       tagLookup_tagCache_req_commits_level ;
-  assign x_remaining__h53144 =
+  assign x_remaining__h53111 =
 	     5'd16 - tagLookup_tagCache_orderer_mastReqIds_lhead ;
-  assign y__h118912 = cacheResp_data_data__h284963[63:56] & y__h119137 ;
-  assign y__h119137 = ~tagLookup_tagCache_cts[216:209] ;
-  assign y__h119245 = cacheResp_data_data__h284963[55:48] & y__h119137 ;
-  assign y__h119384 = cacheResp_data_data__h284963[47:40] & y__h119137 ;
-  assign y__h119523 = cacheResp_data_data__h284963[39:32] & y__h119137 ;
-  assign y__h119662 = cacheResp_data_data__h284963[31:24] & y__h119137 ;
-  assign y__h119801 = cacheResp_data_data__h284963[23:16] & y__h119137 ;
-  assign y__h119940 = cacheResp_data_data__h284963[15:8] & y__h119137 ;
-  assign y__h120079 = cacheResp_data_data__h284963[7:0] & y__h119137 ;
-  assign y__h304732 =
-	     3'd7 << CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q2 ;
-  assign y__h307070 =
-	     ~_1_SL_tagLookup_pendingCapNumber_343_BITS_2_TO__ETC___d5670 ;
-  assign y_avValue_snd_addr_lineNumber__h114870 =
+  assign y__h118892 = cacheResp_data_data__h284943[63:56] & y__h119117 ;
+  assign y__h119117 = ~tagLookup_tagCache_cts[216:209] ;
+  assign y__h119225 = cacheResp_data_data__h284943[55:48] & y__h119117 ;
+  assign y__h119364 = cacheResp_data_data__h284943[47:40] & y__h119117 ;
+  assign y__h119503 = cacheResp_data_data__h284943[39:32] & y__h119117 ;
+  assign y__h119642 = cacheResp_data_data__h284943[31:24] & y__h119117 ;
+  assign y__h119781 = cacheResp_data_data__h284943[23:16] & y__h119117 ;
+  assign y__h119920 = cacheResp_data_data__h284943[15:8] & y__h119117 ;
+  assign y__h120059 = cacheResp_data_data__h284943[7:0] & y__h119117 ;
+  assign y__h305495 =
+	     3'd7 << CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q1 ;
+  assign y__h308110 =
+	     ~_1_SL_tagLookup_pendingCapNumber_344_BITS_2_TO__ETC___d5679 ;
+  assign y__h308626 = ~x__h308507 ;
+  assign y__h308651 = ~x__h308468 ;
+  assign y__h308676 = ~x__h308429 ;
+  assign y_avValue_snd_addr_lineNumber__h114849 =
 	     { tagLookup_tagCache_cts[135:101], 2'd0 } ;
-  assign y_avValue_snd_fst_key__h121125 =
-	     (level__h1462 == 2'd0) ?
+  assign y_avValue_snd_fst_key__h121105 =
+	     (level__h1428 == 2'd0) ?
 	       tagLookup_tagCache_cts[92:85] :
-	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_dataKey_key__h98515 ;
-  assign y_avValue_snd_fst_way__h121127 =
-	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3971 &&
+	       x1_avValue_snd_snd_snd_snd_snd_snd_fst_dataKey_key__h98493 ;
+  assign y_avValue_snd_fst_way__h121107 =
+	     (IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d3972 &&
 	      tagLookup_mRsps_ff_rf$D_OUT_1[68:67] == 2'd0) ?
-	       x1_avValue_snd_way__h121211 :
-	       x1_avValue_snd_fst_way__h121229 ;
-  assign y_avValue_snd_snd_fst__h98187 =
-	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-	       tagLookup_tagCache_readReqReg[2] :
-	       _theResult_____21__h86421 ;
-  assign y_avValue_snd_snd_fst_newTag_tag__h121563 =
+	       x1_avValue_snd_way__h121191 :
+	       x1_avValue_snd_fst_way__h121209 ;
+  assign y_avValue_snd_snd_fst_newTag_tag__h121543 =
 	     (IF_tagLookup_tagCache_orderer_slaveRespState_r_ETC___d3561 &&
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4117 ||
-	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4219) ?
-	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4233 ?
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4118 ||
+	      IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4220) ?
+	       (IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4234 ?
 		  27'd0 :
-		  IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4296) :
-	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4296 ;
-  always@(mReqs_ff_rf$D_OUT_1)
-  begin
-    case (mReqs_ff_rf$D_OUT_1[93:92])
-      2'd0, 2'd1:
-	  CASE_mReqs_ff_rfD_OUT_1_BITS_93_TO_92_0_mReqs_ETC__q1 =
-	      mReqs_ff_rf$D_OUT_1[93:92];
-      default: CASE_mReqs_ff_rfD_OUT_1_BITS_93_TO_92_0_mReqs_ETC__q1 = 2'd2;
-    endcase
-  end
+		  IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4297) :
+	       IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4297 ;
+  assign y_avValue_snd_snd_snd_fst__h98170 =
+	     NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+	       tagLookup_tagCache_readReqReg[2] :
+	       _theResult_____21__h86389 ;
   always@(tagLookup_currentDepth)
   begin
     case (tagLookup_currentDepth)
       2'd0:
-	  CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q2 =
+	  CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q1 =
 	      32'hFFFFFFFD;
-      2'd1: CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q2 = 32'd3;
-      default: CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q2 =
+      2'd1: CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q1 = 32'd3;
+      default: CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q1 =
 		   32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(tagLookup_currentDepth)
   begin
     case (tagLookup_currentDepth)
-      2'd0: CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q3 = 32'd0;
-      2'd1: CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q3 = 32'd6;
-      default: CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q3 =
+      2'd0: CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2 = 32'd0;
+      2'd1: CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2 = 32'd6;
+      default: CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2 =
 		   32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
@@ -14795,23 +15208,23 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3474;
     endcase
   end
-  always@(_theResult_____23__h86224 or
-	  x1_avValue_data__h86312 or x1_avValue_data__h86371)
+  always@(_theResult_____23__h86192 or
+	  x1_avValue_data__h86280 or x1_avValue_data__h86339)
   begin
-    case (_theResult_____23__h86224)
-      1'd0: cacheResp_data_data__h284963 = x1_avValue_data__h86312;
-      1'd1: cacheResp_data_data__h284963 = x1_avValue_data__h86371;
+    case (_theResult_____23__h86192)
+      1'd0: cacheResp_data_data__h284943 = x1_avValue_data__h86280;
+      1'd1: cacheResp_data_data__h284943 = x1_avValue_data__h86339;
     endcase
   end
-  always@(_theResult_____21__h86421 or
-	  x1_avValue_tag__h84377 or x1_avValue_tag__h84437)
+  always@(_theResult_____21__h86389 or
+	  x1_avValue_tag__h84345 or x1_avValue_tag__h84405)
   begin
-    case (_theResult_____21__h86421)
-      1'd0: x_addr_tag__h102719 = x1_avValue_tag__h84377;
-      1'd1: x_addr_tag__h102719 = x1_avValue_tag__h84437;
+    case (_theResult_____21__h86389)
+      1'd0: x_addr_tag__h102698 = x1_avValue_tag__h84345;
+      1'd1: x_addr_tag__h102698 = x1_avValue_tag__h84405;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14819,7 +15232,7 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3496 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
@@ -14832,7 +15245,7 @@ module mkTagController(CLK,
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[4];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14840,7 +15253,7 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
@@ -14853,11 +15266,11 @@ module mkTagController(CLK,
 		tagLookup_tagCache_tags_1_bramA_bram$DOA[13];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488 or
 	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
 	  SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d3614 =
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3488;
@@ -14866,7 +15279,7 @@ module mkTagController(CLK,
 	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d3455;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14874,20 +15287,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		tagLookup_tagCache_tags_0_writeData[12] :
 		tagLookup_tagCache_tags_0_bramA_bram$DOA[12];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		tagLookup_tagCache_tags_1_writeData[12] :
 		tagLookup_tagCache_tags_1_bramA_bram$DOA[12];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14895,46 +15308,46 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		tagLookup_tagCache_tags_0_writeData[11] :
 		tagLookup_tagCache_tags_0_bramA_bram$DOA[11];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		tagLookup_tagCache_tags_1_writeData[11] :
 		tagLookup_tagCache_tags_1_bramA_bram$DOA[11];
     endcase
   end
-  always@(_theResult_____21__h86421 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4050 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4053)
+  always@(_theResult_____21__h86389 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4051 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4054)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4050;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4051;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4053;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4054;
     endcase
   end
-  always@(_theResult_____21__h86421 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4058 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4061)
+  always@(_theResult_____21__h86389 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4059 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4062)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4058;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4059;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4061;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4062;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14942,29 +15355,29 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		tagLookup_tagCache_tags_0_writeData[4] :
 		tagLookup_tagCache_tags_0_bramA_bram$DOA[4];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		tagLookup_tagCache_tags_1_writeData[4] :
 		tagLookup_tagCache_tags_1_bramA_bram$DOA[4];
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  _theResult_____21__h86421 or x1_avValue_snd_fst_way__h121152)
+	  _theResult_____21__h86389 or x1_avValue_snd_fst_way__h121132)
   begin
     case (tagLookup_tagCache_cts[278:277])
-      2'd1: x__h121270 = _theResult_____21__h86421;
-      2'd2: x__h121270 = x1_avValue_snd_fst_way__h121152;
-      default: x__h121270 = _theResult_____21__h86421;
+      2'd1: x__h121250 = _theResult_____21__h86389;
+      2'd2: x__h121250 = x1_avValue_snd_fst_way__h121132;
+      default: x__h121250 = _theResult_____21__h86389;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14972,20 +15385,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		tagLookup_tagCache_tags_0_writeData[10] :
 		tagLookup_tagCache_tags_0_bramA_bram$DOA[10];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		tagLookup_tagCache_tags_1_writeData[10] :
 		tagLookup_tagCache_tags_1_bramA_bram$DOA[10];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -14993,153 +15406,153 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		tagLookup_tagCache_tags_0_writeData[9] :
 		tagLookup_tagCache_tags_0_bramA_bram$DOA[9];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		tagLookup_tagCache_tags_1_writeData[9] :
 		tagLookup_tagCache_tags_1_bramA_bram$DOA[9];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3474 or
 	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3440)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 =
 	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3474;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 =
 	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3440;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3471 or
 	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3437)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 =
 	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3471;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 =
 	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3437;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3468 or
 	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3434)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 =
 	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3468;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 =
 	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3434;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3465 or
 	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3431)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 =
 	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d3465;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 =
 	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d3431;
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4078 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4070 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4061 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4053)
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4076 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4068 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4059 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4051)
   begin
     case (tagLookup_tagCache_cts[100:99])
       2'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4078;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4076;
       2'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4070;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4068;
       2'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4061;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4059;
       2'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4053;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4051;
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4075 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4067 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4058 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4050)
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4079 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4071 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4062 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4054)
   begin
     case (tagLookup_tagCache_cts[100:99])
       2'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4075;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4079;
       2'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4067;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4071;
       2'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4058;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4062;
       2'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4050;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4054;
     endcase
   end
-  always@(_theResult_____21__h86421 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540)
+  always@(_theResult_____21__h86389 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4542 =
-	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4538;
+	  SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4543 =
+	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4539;
       1'd1:
-	  SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4542 =
-	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4540;
+	  SEL_ARR_SEL_ARR_IF_tagLookup_tagCache_tags_0_r_ETC___d4543 =
+	      SEL_ARR_IF_tagLookup_tagCache_tags_1_readAddr__ETC___d4541;
     endcase
   end
-  always@(_theResult_____21__h86421 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4067 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4070)
+  always@(_theResult_____21__h86389 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4068 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4071)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4067;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4068;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4070;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4071;
     endcase
   end
-  always@(_theResult_____21__h86421 or
-	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4075 or
-	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4078)
+  always@(_theResult_____21__h86389 or
+	  IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4076 or
+	  IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4079)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 =
-	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4075;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 =
+	      IF_tagLookup_tagCache_tags_0_readAddr_read__40_ETC___d4076;
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 =
-	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4078;
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 =
+	      IF_tagLookup_tagCache_tags_1_readAddr_read__41_ETC___d4079;
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15147,20 +15560,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q5 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q4 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[11] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[11];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q5 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q4 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[11] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[11];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15168,20 +15581,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q6 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q5 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[10] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[10];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q6 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q5 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[10] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[10];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15189,20 +15602,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q7 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q6 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[9] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[9];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q7 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q6 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[9] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[9];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15210,20 +15623,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q8 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q7 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[8] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[8];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q8 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q7 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[8] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[8];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15231,20 +15644,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q9 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q8 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[7] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[7];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q9 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q8 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[7] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[7];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15252,20 +15665,20 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q10 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q9 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[6] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[6];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q10 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q9 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[6] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[6];
     endcase
   end
-  always@(_theResult_____21__h86421 or
+  always@(_theResult_____21__h86389 or
 	  tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 or
 	  tagLookup_tagCache_tags_0_writeData or
 	  tagLookup_tagCache_tags_0_bramA_bram$DOA or
@@ -15273,17 +15686,26 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_tags_1_writeData or
 	  tagLookup_tagCache_tags_1_bramA_bram$DOA)
   begin
-    case (_theResult_____21__h86421)
+    case (_theResult_____21__h86389)
       1'd0:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q11 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q10 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
 		!tagLookup_tagCache_tags_0_writeData[5] :
 		!tagLookup_tagCache_tags_0_bramA_bram$DOA[5];
       1'd1:
-	  CASE_theResult_____216421_0_IF_tagLookup_tagCa_ETC__q11 =
+	  CASE_theResult_____216389_0_IF_tagLookup_tagCa_ETC__q10 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
 		!tagLookup_tagCache_tags_1_writeData[5] :
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[5];
+    endcase
+  end
+  always@(tagLookup_currentDepth_339_MINUS_1___d5482)
+  begin
+    case (tagLookup_currentDepth_339_MINUS_1___d5482)
+      2'd0: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 = 32'd0;
+      2'd1: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 = 32'd6;
+      default: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 =
+		   32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(tagLookup_currentDepth)
@@ -15299,133 +15721,342 @@ module mkTagController(CLK,
 		   37'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
-  always@(tagLookup_currentDepth_338_MINUS_1___d5481)
-  begin
-    case (tagLookup_currentDepth_338_MINUS_1___d5481)
-      2'd0: CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q13 = 32'd0;
-      2'd1: CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q13 = 32'd6;
-      default: CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q13 =
-		   32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
-    endcase
-  end
   always@(tagLookup_currentDepth)
   begin
     case (tagLookup_currentDepth)
-      2'd0: SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 = 1'd0;
-      2'd1: SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 = 1'd1;
-      default: SEL_ARR_0_1_503_tagLookup_currentDepth_338___d5504 =
+      2'd0: SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 = 1'd0;
+      2'd1: SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 = 1'd1;
+      default: SEL_ARR_0_1_505_tagLookup_currentDepth_339___d5506 =
 		   1'bx /* unspecified value */ ;
     endcase
   end
-  always@(tagLookup_currentDepth_338_MINUS_1___d5481)
+  always@(tagLookup_currentDepth_339_MINUS_1___d5482)
   begin
-    case (tagLookup_currentDepth_338_MINUS_1___d5481)
+    case (tagLookup_currentDepth_339_MINUS_1___d5482)
       2'd0:
-	  CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q14 =
+	  CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q13 =
 	      37'd535821840;
       2'd1:
-	  CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q14 =
+	  CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q13 =
 	      37'd535805456;
-      default: CASE_tagLookup_currentDepth_338_MINUS_1_481_0__ETC__q14 =
+      default: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q13 =
 		   37'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
-  always@(x__h341433 or
-	  lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 or
-	  lookupRsp_bag or
-	  IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6692 or
-	  IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6700 or
-	  IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6708 or
-	  IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6716)
+  always@(x__h337988 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
   begin
-    case (x__h341433)
+    case (x__h337988)
       2'd0:
-	  SEL_ARR_IF_lookupRsp_bag_741_BIT_71_796_AND_lo_ETC___d6745 =
-	      lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ?
-		lookupRsp_bag[54] :
-		IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6692;
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6532 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[3];
       2'd1:
-	  SEL_ARR_IF_lookupRsp_bag_741_BIT_71_796_AND_lo_ETC___d6745 =
-	      lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ?
-		lookupRsp_bag[55] :
-		IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6700;
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6532 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[3];
       2'd2:
-	  SEL_ARR_IF_lookupRsp_bag_741_BIT_71_796_AND_lo_ETC___d6745 =
-	      lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ?
-		lookupRsp_bag[56] :
-		IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6708;
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6532 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[3];
       2'd3:
-	  SEL_ARR_IF_lookupRsp_bag_741_BIT_71_796_AND_lo_ETC___d6745 =
-	      lookupRsp_bag_741_BIT_71_796_AND_lookupRsp_bag_ETC___d6620 ?
-		lookupRsp_bag[57] :
-		IF_lookupRsp_bag_741_BIT_53_867_AND_lookupRsp__ETC___d6716;
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6532 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[3];
     endcase
   end
-  always@(cache_request_put_val or
-	  cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 or
-	  cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473 or
-	  x__h333963)
+  always@(x__h337988 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
   begin
-    case (cache_request_put_val[93:92])
+    case (x__h337988)
       2'd0:
-	  IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6508 =
-	      cache_request_put_val[93:0];
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6538 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[2];
       2'd1:
-	  IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6508 =
-	      { cache_request_put_val[93:89],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[88],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[87],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[86],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[85],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[84],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[83],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[82],
-		(cache_request_put_val[93:92] != 2'd1 ||
-		 cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6472 ||
-		 !cache_request_put_val_BITS_140_TO_101_471_ULT__ETC___d6473) &&
-		cache_request_put_val[81],
-		x__h333963,
-		cache_request_put_val[72:0] };
-      default: IF_cache_request_put_val_BITS_93_TO_92_442_EQ__ETC___d6508 =
-		   { 2'd2, cache_request_put_val[91:0] };
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6538 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[2];
+      2'd2:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6538 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[2];
+      2'd3:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6538 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[2];
+    endcase
+  end
+  always@(x__h337988 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h337988)
+      2'd0:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6526 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[4];
+      2'd1:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6526 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[4];
+      2'd2:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6526 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[4];
+      2'd3:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6526 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[4];
+    endcase
+  end
+  always@(x__h339467 or
+	  addrFrame_fifos_0_rf$D_OUT_1 or
+	  addrFrame_fifos_1_rf$D_OUT_1 or
+	  addrFrame_fifos_2_rf$D_OUT_1 or addrFrame_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h339467)
+      2'd0:
+	  SEL_ARR_addrFrame_fifos_0_rf_sub_addrFrame_fif_ETC___d6619 =
+	      addrFrame_fifos_0_rf$D_OUT_1[7:6];
+      2'd1:
+	  SEL_ARR_addrFrame_fifos_0_rf_sub_addrFrame_fif_ETC___d6619 =
+	      addrFrame_fifos_1_rf$D_OUT_1[7:6];
+      2'd2:
+	  SEL_ARR_addrFrame_fifos_0_rf_sub_addrFrame_fif_ETC___d6619 =
+	      addrFrame_fifos_2_rf$D_OUT_1[7:6];
+      2'd3:
+	  SEL_ARR_addrFrame_fifos_0_rf_sub_addrFrame_fif_ETC___d6619 =
+	      addrFrame_fifos_3_rf$D_OUT_1[7:6];
+    endcase
+  end
+  always@(x__h338546 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h338546)
+      2'd0:
+	  SEL_ARR_NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_ETC___d6636 =
+	      !lookupRsp_fifos_0_rf$D_OUT_1[4];
+      2'd1:
+	  SEL_ARR_NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_ETC___d6636 =
+	      !lookupRsp_fifos_1_rf$D_OUT_1[4];
+      2'd2:
+	  SEL_ARR_NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_ETC___d6636 =
+	      !lookupRsp_fifos_2_rf$D_OUT_1[4];
+      2'd3:
+	  SEL_ARR_NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_ETC___d6636 =
+	      !lookupRsp_fifos_3_rf$D_OUT_1[4];
+    endcase
+  end
+  always@(x__h338546 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h338546)
+      2'd0:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6581 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[4];
+      2'd1:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6581 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[4];
+      2'd2:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6581 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[4];
+      2'd3:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6581 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[4];
+    endcase
+  end
+  always@(x__h338753 or lookupRsp_fifos_0_rf$D_OUT_1)
+  begin
+    case (x__h338753)
+      2'd0:
+	  CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[0];
+      2'd1:
+	  CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[1];
+      2'd2:
+	  CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[2];
+      2'd3:
+	  CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[3];
+    endcase
+  end
+  always@(x__h338753 or lookupRsp_fifos_1_rf$D_OUT_1)
+  begin
+    case (x__h338753)
+      2'd0:
+	  CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[0];
+      2'd1:
+	  CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[1];
+      2'd2:
+	  CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[2];
+      2'd3:
+	  CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[3];
+    endcase
+  end
+  always@(x__h338753 or lookupRsp_fifos_2_rf$D_OUT_1)
+  begin
+    case (x__h338753)
+      2'd0:
+	  CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[0];
+      2'd1:
+	  CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[1];
+      2'd2:
+	  CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[2];
+      2'd3:
+	  CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[3];
+    endcase
+  end
+  always@(x__h338753 or lookupRsp_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h338753)
+      2'd0:
+	  CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[0];
+      2'd1:
+	  CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[1];
+      2'd2:
+	  CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[2];
+      2'd3:
+	  CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[3];
+    endcase
+  end
+  always@(x__h338546 or
+	  CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14 or
+	  CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15 or
+	  CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16 or
+	  CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17)
+  begin
+    case (x__h338546)
+      2'd0:
+	  SEL_ARR_SEL_ARR_lookupRsp_fifos_0_rf_sub_looku_ETC___d6630 =
+	      CASE_x38753_0_lookupRsp_fifos_0_rfD_OUT_1_BIT_ETC__q14;
+      2'd1:
+	  SEL_ARR_SEL_ARR_lookupRsp_fifos_0_rf_sub_looku_ETC___d6630 =
+	      CASE_x38753_0_lookupRsp_fifos_1_rfD_OUT_1_BIT_ETC__q15;
+      2'd2:
+	  SEL_ARR_SEL_ARR_lookupRsp_fifos_0_rf_sub_looku_ETC___d6630 =
+	      CASE_x38753_0_lookupRsp_fifos_2_rfD_OUT_1_BIT_ETC__q16;
+      2'd3:
+	  SEL_ARR_SEL_ARR_lookupRsp_fifos_0_rf_sub_looku_ETC___d6630 =
+	      CASE_x38753_0_lookupRsp_fifos_3_rfD_OUT_1_BIT_ETC__q17;
+    endcase
+  end
+  always@(x__h337988 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h337988)
+      2'd0:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6545 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[1];
+      2'd1:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6545 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[1];
+      2'd2:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6545 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[1];
+      2'd3:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6545 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[1];
+    endcase
+  end
+  always@(x__h337988 or
+	  lookupRsp_fifos_0_rf$D_OUT_1 or
+	  lookupRsp_fifos_1_rf$D_OUT_1 or
+	  lookupRsp_fifos_2_rf$D_OUT_1 or lookupRsp_fifos_3_rf$D_OUT_1)
+  begin
+    case (x__h337988)
+      2'd0:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6551 =
+	      lookupRsp_fifos_0_rf$D_OUT_1[0];
+      2'd1:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6551 =
+	      lookupRsp_fifos_1_rf$D_OUT_1[0];
+      2'd2:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6551 =
+	      lookupRsp_fifos_2_rf$D_OUT_1[0];
+      2'd3:
+	  SEL_ARR_lookupRsp_fifos_0_rf_sub_lookupRsp_fif_ETC___d6551 =
+	      lookupRsp_fifos_3_rf$D_OUT_1[0];
     endcase
   end
   always@(tagLookup_tagCache_cts)
   begin
     case (tagLookup_tagCache_cts[100:99])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q15 =
+	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q18 =
 	      tagLookup_tagCache_cts[2];
       2'd1:
-	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q15 =
+	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q18 =
 	      tagLookup_tagCache_cts[3];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q15 =
+	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q18 =
 	      tagLookup_tagCache_cts[4];
       2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q15 =
+	  CASE_tagLookup_tagCache_cts_BITS_100_TO_99_0_t_ETC__q18 =
 	      tagLookup_tagCache_cts[5];
+    endcase
+  end
+  always@(cache_request_put_val or
+	  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 or
+	  cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055 or
+	  x__h325129)
+  begin
+    case (cache_request_put_val[93:92])
+      2'd0:
+	  IF_cache_request_put_val_BITS_93_TO_92_035_EQ__ETC___d6090 =
+	      cache_request_put_val[93:0];
+      2'd1:
+	  IF_cache_request_put_val_BITS_93_TO_92_035_EQ__ETC___d6090 =
+	      { cache_request_put_val[93:89],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[88],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[87],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[86],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[85],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[84],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[83],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[82],
+		(cache_request_put_val[93:92] != 2'd1 ||
+		 cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6054 ||
+		 !cache_request_put_val_BITS_140_TO_101_053_ULT__ETC___d6055) &&
+		cache_request_put_val[81],
+		x__h325129,
+		cache_request_put_val[72:0] };
+      default: IF_cache_request_put_val_BITS_93_TO_92_035_EQ__ETC___d6090 =
+		   { 2'd2, cache_request_put_val[91:0] };
     endcase
   end
   always@(tagLookup_currentDepth or
@@ -15433,62 +16064,44 @@ module mkTagController(CLK,
   begin
     case (tagLookup_currentDepth)
       2'd0:
-	  CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q16 =
+	  CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19 =
 	      tagLookup_oldTags_0;
       2'd1:
-	  CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q16 =
+	  CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19 =
 	      tagLookup_oldTags_1;
-      default: CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q16 =
+      default: CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19 =
 		   64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
-  always@(halfWrite)
+  always@(tagLookup_tagCache_cts or
+	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4716)
   begin
-    case (halfWrite[93:92])
-      2'd0, 2'd1:
-	  CASE_halfWrite_BITS_93_TO_92_0_halfWrite_BITS__ETC__q17 =
-	      halfWrite[93:92];
-      default: CASE_halfWrite_BITS_93_TO_92_0_halfWrite_BITS__ETC__q17 = 2'd2;
-    endcase
-  end
-  always@(tagLookup_mReqs_ff_rf$D_OUT_1)
-  begin
-    case (tagLookup_mReqs_ff_rf$D_OUT_1[93:92])
-      2'd0, 2'd1:
-	  CASE_tagLookup_mReqs_ff_rfD_OUT_1_BITS_93_TO__ETC__q18 =
-	      tagLookup_mReqs_ff_rf$D_OUT_1[93:92];
-      default: CASE_tagLookup_mReqs_ff_rfD_OUT_1_BITS_93_TO__ETC__q18 = 2'd2;
+    case (tagLookup_tagCache_cts[278:277])
+      2'd1: x__h284292 = tagLookup_tagCache_cts[236];
+      2'd2:
+	  x__h284292 =
+	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4716;
+      default: x__h284292 = tagLookup_tagCache_cts[236];
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4715)
+	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4719)
   begin
     case (tagLookup_tagCache_cts[278:277])
-      2'd1: x__h284312 = tagLookup_tagCache_cts[236];
+      2'd1: x__h284314 = tagLookup_tagCache_cts[235:231];
       2'd2:
-	  x__h284312 =
-	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4715;
-      default: x__h284312 = tagLookup_tagCache_cts[236];
-    endcase
-  end
-  always@(tagLookup_tagCache_cts or
-	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4718)
-  begin
-    case (tagLookup_tagCache_cts[278:277])
-      2'd1: x__h284334 = tagLookup_tagCache_cts[235:231];
-      2'd2:
-	  x__h284334 =
-	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4718;
-      default: x__h284334 = tagLookup_tagCache_cts[235:231];
+	  x__h284314 =
+	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4719;
+      default: x__h284314 = tagLookup_tagCache_cts[235:231];
     endcase
   end
   always@(tagLookup_tagCacheReq_ff_rf)
   begin
     case (tagLookup_tagCacheReq_ff_rf[93:92])
       2'd0, 2'd1:
-	  CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q19 =
+	  CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q20 =
 	      tagLookup_tagCacheReq_ff_rf[93:92];
-      default: CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q19 = 2'd2;
+      default: CASE_tagLookup_tagCacheReq_ff_rf_BITS_93_TO_92_ETC__q20 = 2'd2;
     endcase
   end
   always@(tagLookup_tagCache_req_commits_tail or
@@ -15547,363 +16160,363 @@ module mkTagController(CLK,
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  x1_avValue_snd_snd_snd_snd_snd_d_key__h278770 or
-	  _theResult_____3_snd_snd_snd_snd_snd_d_key__h278741)
+	  x1_avValue_snd_snd_snd_snd_snd_d_key__h278750 or
+	  _theResult_____3_snd_snd_snd_snd_snd_d_key__h278721)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278781 =
-	      x1_avValue_snd_snd_snd_snd_snd_d_key__h278770;
+	  x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278761 =
+	      x1_avValue_snd_snd_snd_snd_snd_d_key__h278750;
       2'd1, 2'd3:
-	  x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278781 =
+	  x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278761 =
 	      tagLookup_tagCache_readReqReg[65:58];
       2'd2:
-	  x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278781 =
-	      _theResult_____3_snd_snd_snd_snd_snd_d_key__h278741;
+	  x1_avValue_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_snd_d_key__h278761 =
+	      _theResult_____3_snd_snd_snd_snd_snd_d_key__h278721;
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4487 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4385 or
-	  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4387)
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 or
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4488 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4386 or
+	  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4388)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4490 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4487;
+	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4491 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4488;
       2'd1, 2'd3:
-	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4490 =
-	      { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4025,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4027,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4030,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4032,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4035,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4037,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4040,
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4042 };
+	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4491 =
+	      { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4031,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4033,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4036,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4038,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4041,
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4043 };
       2'd2:
-	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4490 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4385 :
-		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4387;
+	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4491 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4386 :
+		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4388;
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072 or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4640 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4530 or
-	  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4532)
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073 or
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 or
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4641 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4531 or
+	  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4533)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4642 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4640;
+	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4641;
       2'd2:
-	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4642 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4530 :
-		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4532;
-      default: IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4642 =
-		   { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4055,
-		     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4063,
-		     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4072,
-		     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4080 };
+	  IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4531 :
+		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4533;
+      default: IF_tagLookup_tagCache_cts_read__795_BITS_278_T_ETC___d4643 =
+		   { SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4056,
+		     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4064,
+		     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4073,
+		     SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4081 };
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 or
-	  tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 or
-	  IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4505 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4494 or
-	  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193)
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 or
+	  tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 or
+	  IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4506 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4495 or
+	  IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q21 =
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
-		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047 :
-		IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4505;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q22 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
+		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048 :
+		IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4506;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q21 =
-	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4047;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q22 =
+	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4048;
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q21 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4494 :
-		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4193;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q22 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4495 :
+		IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ta_ETC___d4194;
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  level__h1462 or
-	  IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5042)
+	  level__h1428 or
+	  IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5043)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd1:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q22 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q23 =
 	      tagLookup_tagCache_cts[236:231];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q22 =
-	      (level__h1462 == 2'd0) ?
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q23 =
+	      (level__h1428 == 2'd0) ?
 		tagLookup_tagCache_cts[236:231] :
-		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5042;
-      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q22 =
+		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d5043;
+      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q23 =
 		   tagLookup_tagCache_cts[236:231];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4795)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4796)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q23 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4795;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4796;
       2'd1, 2'd2, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q23 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24 =
 	      tagLookup_tagCache_readReqReg[16];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4807 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4808 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4802)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4807;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4808;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 =
 	      tagLookup_tagCache_readReqReg[15:3];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q24 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4801 :
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4802 :
 		tagLookup_tagCache_readReqReg[15:3];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4788 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4783)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4789 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4784)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4788;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4789;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 =
 	      tagLookup_tagCache_readReqReg[43:17];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q25 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4783 :
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4784 :
 		tagLookup_tagCache_readReqReg[43:17];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 or
-	  IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4937 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4864)
+	  tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 or
+	  IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4938 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4865)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 =
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 		tagLookup_tagCache_readReqReg[2:0] :
-		IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4937;
+		IF_IF_NOT_tagLookup_tagCache_cts_read__795_BIT_ETC___d4938;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27 =
 	      tagLookup_tagCache_readReqReg[2:0];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4864 :
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4865 :
 		tagLookup_tagCache_readReqReg[2:0];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4771)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4772)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4771;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4772;
       2'd1, 2'd2, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q27 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28 =
 	      tagLookup_tagCache_readReqReg[50:45];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4779 or
-	  IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4775)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4780 or
+	  IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4776)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4779;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4780;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29 =
 	      tagLookup_tagCache_readReqReg[44];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q28 =
-	      IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4775;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29 =
+	      IF_NOT_tagLookup_mRsps_ff_lhead_read__894_MINU_ETC___d4776;
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4689)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4690)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4689;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4690;
       2'd1, 2'd2, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q29 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30 =
 	      tagLookup_tagCache_readReqReg[57:52];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4762 or
-	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4723)
+	  IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4763 or
+	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4724)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30 =
-	      IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4762;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 =
+	      IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d4763;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 =
 	      tagLookup_tagCache_readReqReg[51];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q30 =
-	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4723;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 =
+	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4724;
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_mRsps_ff_rf$D_OUT_1 or
-	  IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5028)
+	  IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5029)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 =
-	      IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5028;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 =
+	      IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5029;
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 =
 	      tagLookup_mRsps_ff_rf$D_OUT_1[65];
-      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q31 =
+      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 =
 		   tagLookup_mRsps_ff_rf$D_OUT_1[65];
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_mRsps_ff_rf$D_OUT_1 or
-	  IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5005 or
-	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4996)
+	  IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5006 or
+	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4997)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 =
-	      IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5005;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q33 =
+	      IF_tagLookup_tagCache_orderer_slaveReqs_bag_46_ETC___d5006;
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 =
-	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4996;
-      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q32 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q33 =
+	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d4997;
+      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q33 =
 		   tagLookup_mRsps_ff_rf$D_OUT_1[66:65];
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5044)
+	  IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5045)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd1:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q33 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q34 =
 	      tagLookup_tagCache_cts[236:231];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q33 =
-	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5044;
-      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q33 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q34 =
+	      IF_NOT_tagLookup_tagCache_cts_read__795_BITS_2_ETC___d5045;
+      default: CASE_tagLookup_tagCache_cts_BITS_278_TO_277_1__ETC__q34 =
 		   tagLookup_tagCache_cts[236:231];
     endcase
   end
   always@(tagLookup_tagCache_cts or
-	  x_addr_tag__h102719 or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4306 or
-	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 or
-	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4267 or
-	  _theResult_____1_tag__h121549)
+	  x_addr_tag__h102698 or
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4307 or
+	  NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 or
+	  IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4268 or
+	  _theResult_____1_tag__h121529)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q34 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4306;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4307;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q34 =
-	      x_addr_tag__h102719;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35 =
+	      x_addr_tag__h102698;
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q34 =
-	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3964 ?
-		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4267 :
-		_theResult_____1_tag__h121549;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35 =
+	      NOT_tagLookup_mRsps_ff_lhead_read__894_MINUS_t_ETC___d3965 ?
+		IF_IF_tagLookup_mRsps_ff_lhead_read__894_MINUS_ETC___d4268 :
+		_theResult_____1_tag__h121529;
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 or
-	  tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 or
-	  IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4339 or
-	  level__h1462 or
-	  IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4311)
+	  tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 or
+	  IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4340 or
+	  level__h1428 or
+	  IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4312)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35 =
-	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4282 ?
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q36 =
+	      tagLookup_tagCache_cts_read__795_BITS_229_TO_2_ETC___d4283 ?
 		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 :
-		IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4339;
+		IF_IF_tagLookup_tagCache_orderer_slaveRespStat_ETC___d4340;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q36 =
 	      SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530;
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35 =
-	      (level__h1462 == 2'd0) ?
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q36 =
+	      (level__h1428 == 2'd0) ?
 		SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d3530 :
-		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4311;
+		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4312;
     endcase
   end
   always@(tagLookup_tagCache_cts)
   begin
     case (tagLookup_tagCache_cts[229:228])
       2'd0, 2'd1:
-	  CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q36 =
+	  CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q37 =
 	      tagLookup_tagCache_cts[229:228];
-      default: CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q36 = 2'd2;
+      default: CASE_tagLookup_tagCache_cts_BITS_229_TO_228_0__ETC__q37 = 2'd2;
     endcase
   end
   always@(tagLookup_currentDepth or tagLookup_state)
   begin
     case (tagLookup_currentDepth)
       2'd0, 2'd1:
-	  CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q38 = 3'd1;
-      default: CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q38 =
+	  CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q39 = 3'd1;
+      default: CASE_tagLookup_currentDepth_0_1_1_1_tagLookup__ETC__q39 =
 		   tagLookup_state;
     endcase
   end
@@ -16045,7 +16658,7 @@ module mkTagController(CLK,
 	      NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d973;
     endcase
   end
-  always@(idx__h31675 or
+  always@(idx__h31642 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16063,7 +16676,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h31675)
+    case (idx__h31642)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1055 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16114,7 +16727,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h31791 or
+  always@(idx__h31758 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16132,7 +16745,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h31791)
+    case (idx__h31758)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1061 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16183,7 +16796,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h31907 or
+  always@(idx__h31874 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16201,7 +16814,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h31907)
+    case (idx__h31874)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1067 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16252,7 +16865,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32023 or
+  always@(idx__h31990 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16270,7 +16883,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32023)
+    case (idx__h31990)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1073 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16321,7 +16934,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32139 or
+  always@(idx__h32106 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16339,7 +16952,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32139)
+    case (idx__h32106)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16390,7 +17003,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32255 or
+  always@(idx__h32222 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16408,7 +17021,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32255)
+    case (idx__h32222)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1085 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16459,7 +17072,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32371 or
+  always@(idx__h32338 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16477,7 +17090,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32371)
+    case (idx__h32338)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1091 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16528,7 +17141,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32487 or
+  always@(idx__h32454 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16546,7 +17159,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32487)
+    case (idx__h32454)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1097 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16597,7 +17210,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32603 or
+  always@(idx__h32570 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16615,7 +17228,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32603)
+    case (idx__h32570)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1103 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16666,7 +17279,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32719 or
+  always@(idx__h32686 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16684,7 +17297,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32719)
+    case (idx__h32686)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1109 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16735,7 +17348,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h33067 or
+  always@(idx__h32802 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16753,76 +17366,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h33067)
-      4'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
-      4'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039;
-      4'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040;
-      4'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041;
-      4'd4:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042;
-      4'd5:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043;
-      4'd6:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044;
-      4'd7:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045;
-      4'd8:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046;
-      4'd9:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047;
-      4'd10:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048;
-      4'd11:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049;
-      4'd12:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050;
-      4'd13:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051;
-      4'd14:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
-      4'd15:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
-    endcase
-  end
-  always@(idx__h32835 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
-  begin
-    case (idx__h32835)
+    case (idx__h32802)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1115 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16873,7 +17417,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32951 or
+  always@(idx__h33034 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16891,7 +17435,76 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h32951)
+    case (idx__h33034)
+      4'd0:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
+      4'd1:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039;
+      4'd2:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040;
+      4'd3:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041;
+      4'd4:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042;
+      4'd5:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043;
+      4'd6:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044;
+      4'd7:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045;
+      4'd8:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046;
+      4'd9:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047;
+      4'd10:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048;
+      4'd11:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049;
+      4'd12:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050;
+      4'd13:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051;
+      4'd14:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
+      4'd15:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
+    endcase
+  end
+  always@(idx__h32918 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
+  begin
+    case (idx__h32918)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1121 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -16942,7 +17555,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h33183 or
+  always@(idx__h33150 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -16960,7 +17573,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h33183)
+    case (idx__h33150)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1133 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -17011,7 +17624,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h33299 or
+  always@(idx__h33266 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
@@ -17029,7 +17642,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
   begin
-    case (idx__h33299)
+    case (idx__h33266)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1139 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
@@ -17149,7 +17762,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(_theResult_____1__h31533 or
+  always@(_theResult_____1__h31500 or
 	  tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d1022 or
 	  tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d848 or
 	  tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d813 or
@@ -17167,7 +17780,7 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d476 or
 	  tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d418)
   begin
-    case (_theResult_____1__h31533)
+    case (_theResult_____1__h31500)
       4'd0:
 	  SEL_ARR_tagLookup_tagCache_orderer_mastReqs_re_ETC___d1164 =
 	      tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d1022;
@@ -17218,7 +17831,7 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_orderer_mastReqs_removeItem_ETC___d418;
     endcase
   end
-  always@(_theResult_____1__h31533 or
+  always@(_theResult_____1__h31500 or
 	  NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d1027 or
 	  NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d1001 or
 	  NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d999 or
@@ -17236,7 +17849,7 @@ module mkTagController(CLK,
 	  NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d975 or
 	  NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d973)
   begin
-    case (_theResult_____1__h31533)
+    case (_theResult_____1__h31500)
       4'd0:
 	  SEL_ARR_NOT_tagLookup_tagCache_orderer_mastReq_ETC___d1166 =
 	      NOT_tagLookup_tagCache_orderer_mastReqs_insert_ETC___d1027;
@@ -17425,7 +18038,7 @@ module mkTagController(CLK,
 	      NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2144;
     endcase
   end
-  always@(idx__h43464 or
+  always@(idx__h43431 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17443,7 +18056,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h43464)
+    case (idx__h43431)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2226 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17494,7 +18107,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h43580 or
+  always@(idx__h43547 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17512,7 +18125,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h43580)
+    case (idx__h43547)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2232 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17563,7 +18176,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h43696 or
+  always@(idx__h43663 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17581,7 +18194,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h43696)
+    case (idx__h43663)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2238 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17632,7 +18245,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h43812 or
+  always@(idx__h43779 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17650,7 +18263,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h43812)
+    case (idx__h43779)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2244 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17701,7 +18314,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h43928 or
+  always@(idx__h43895 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17719,7 +18332,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h43928)
+    case (idx__h43895)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17770,7 +18383,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44044 or
+  always@(idx__h44011 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17788,7 +18401,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44044)
+    case (idx__h44011)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2256 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17839,7 +18452,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44160 or
+  always@(idx__h44127 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17857,7 +18470,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44160)
+    case (idx__h44127)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2262 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17908,7 +18521,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44276 or
+  always@(idx__h44243 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17926,7 +18539,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44276)
+    case (idx__h44243)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2268 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -17977,7 +18590,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44392 or
+  always@(idx__h44359 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -17995,7 +18608,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44392)
+    case (idx__h44359)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2274 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -18046,7 +18659,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44508 or
+  always@(idx__h44475 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -18064,7 +18677,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44508)
+    case (idx__h44475)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2280 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -18115,7 +18728,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44624 or
+  always@(idx__h44591 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -18133,7 +18746,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44624)
+    case (idx__h44591)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2286 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -18184,7 +18797,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44740 or
+  always@(idx__h44707 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -18202,7 +18815,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44740)
+    case (idx__h44707)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2292 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -18253,7 +18866,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h44972 or
+  always@(idx__h44823 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -18271,76 +18884,7 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h44972)
-      4'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
-      4'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210;
-      4'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211;
-      4'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212;
-      4'd4:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213;
-      4'd5:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214;
-      4'd6:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215;
-      4'd7:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216;
-      4'd8:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217;
-      4'd9:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218;
-      4'd10:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219;
-      4'd11:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220;
-      4'd12:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221;
-      4'd13:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222;
-      4'd14:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223;
-      4'd15:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
-    endcase
-  end
-  always@(idx__h44856 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
-  begin
-    case (idx__h44856)
+    case (idx__h44823)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2298 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -18391,7 +18935,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h45088 or
+  always@(idx__h44939 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
@@ -18409,7 +18953,76 @@ module mkTagController(CLK,
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
   begin
-    case (idx__h45088)
+    case (idx__h44939)
+      4'd0:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
+      4'd1:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210;
+      4'd2:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211;
+      4'd3:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212;
+      4'd4:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213;
+      4'd5:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214;
+      4'd6:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215;
+      4'd7:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216;
+      4'd8:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217;
+      4'd9:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218;
+      4'd10:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219;
+      4'd11:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220;
+      4'd12:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221;
+      4'd13:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222;
+      4'd14:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223;
+      4'd15:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2304 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
+    endcase
+  end
+  always@(idx__h45055 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
+  begin
+    case (idx__h45055)
       4'd0:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2310 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
@@ -18529,7 +19142,7 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(_theResult_____1__h43322 or
+  always@(_theResult_____1__h43289 or
 	  tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d2193 or
 	  tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d2019 or
 	  tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d1984 or
@@ -18547,7 +19160,7 @@ module mkTagController(CLK,
 	  tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d1647 or
 	  tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d1609)
   begin
-    case (_theResult_____1__h43322)
+    case (_theResult_____1__h43289)
       4'd0:
 	  SEL_ARR_tagLookup_tagCache_orderer_mastLines_r_ETC___d2335 =
 	      tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d2193;
@@ -18598,7 +19211,7 @@ module mkTagController(CLK,
 	      tagLookup_tagCache_orderer_mastLines_removeIte_ETC___d1609;
     endcase
   end
-  always@(_theResult_____1__h43322 or
+  always@(_theResult_____1__h43289 or
 	  NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2198 or
 	  NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2172 or
 	  NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2170 or
@@ -18616,7 +19229,7 @@ module mkTagController(CLK,
 	  NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2146 or
 	  NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2144)
   begin
-    case (_theResult_____1__h43322)
+    case (_theResult_____1__h43289)
       4'd0:
 	  SEL_ARR_NOT_tagLookup_tagCache_orderer_mastLin_ETC___d2337 =
 	      NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2198;
@@ -18667,590 +19280,254 @@ module mkTagController(CLK,
 	      NOT_tagLookup_tagCache_orderer_mastLines_inser_ETC___d2144;
     endcase
   end
-  always@(lookupRsp_nextValidKeyReg or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804)
-  begin
-    case (lookupRsp_nextValidKeyReg)
-      2'd0:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6031 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029;
-      2'd1:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6031 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919;
-      2'd2:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6031 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869;
-      2'd3:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6031 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804;
-    endcase
-  end
-  always@(lookupRsp_nextValidKeyReg or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016)
-  begin
-    case (lookupRsp_nextValidKeyReg)
-      2'd0:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6036 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034;
-      2'd1:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6036 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020;
-      2'd2:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6036 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018;
-      2'd3:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6036 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016;
-    endcase
-  end
-  always@(idx__h321062 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798)
-  begin
-    case (idx__h321062)
-      2'd0:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976;
-      2'd1:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930;
-      2'd2:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879;
-      2'd3:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6046 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798;
-    endcase
-  end
-  always@(idx__h321106 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798)
-  begin
-    case (idx__h321106)
-      2'd0:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976;
-      2'd1:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930;
-      2'd2:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879;
-      2'd3:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6052 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798;
-    endcase
-  end
-  always@(idx__h321150 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798)
-  begin
-    case (idx__h321150)
-      2'd0:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976;
-      2'd1:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930;
-      2'd2:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879;
-      2'd3:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6058 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798;
-    endcase
-  end
-  always@(lookupRsp_nextValidKeyReg or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879 or
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798)
-  begin
-    case (lookupRsp_nextValidKeyReg)
-      2'd0:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5976;
-      2'd1:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5930;
-      2'd2:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5879;
-      2'd3:
-	  SEL_ARR_IF_lookupRsp_insertItem_whas__737_AND__ETC___d6061 =
-	      IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d5798;
-    endcase
-  end
-  always@(_theResult_____1__h321004 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869 or
-	  lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804)
-  begin
-    case (_theResult_____1__h321004)
-      2'd0:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6071 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d6029;
-      2'd1:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6071 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5919;
-      2'd2:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6071 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5869;
-      2'd3:
-	  SEL_ARR_lookupRsp_removeItem_whas__780_AND_loo_ETC___d6071 =
-	      lookupRsp_removeItem_whas__780_AND_lookupRsp_r_ETC___d5804;
-    endcase
-  end
-  always@(_theResult_____1__h321004 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018 or
-	  NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016)
-  begin
-    case (_theResult_____1__h321004)
-      2'd0:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6073 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6034;
-      2'd1:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6073 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6020;
-      2'd2:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6073 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6018;
-      2'd3:
-	  SEL_ARR_NOT_lookupRsp_insertItem_whas__737_012_ETC___d6073 =
-	      NOT_lookupRsp_insertItem_whas__737_012_OR_NOT__ETC___d6016;
-    endcase
-  end
-  always@(addrFrame_nextValidKeyReg or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156)
-  begin
-    case (addrFrame_nextValidKeyReg)
-      2'd0:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6300 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298;
-      2'd1:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6300 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226;
-      2'd2:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6300 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202;
-      2'd3:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6300 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156;
-    endcase
-  end
-  always@(addrFrame_nextValidKeyReg or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285)
-  begin
-    case (addrFrame_nextValidKeyReg)
-      2'd0:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6305 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303;
-      2'd1:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6305 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289;
-      2'd2:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6305 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287;
-      2'd3:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6305 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285;
-    endcase
-  end
-  always@(idx__h324693 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317)
-  begin
-    case (idx__h324693)
-      2'd0:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314;
-      2'd1:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315;
-      2'd2:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316;
-      2'd3:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6319 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317;
-    endcase
-  end
-  always@(idx__h324737 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317)
-  begin
-    case (idx__h324737)
-      2'd0:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314;
-      2'd1:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315;
-      2'd2:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316;
-      2'd3:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6325 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317;
-    endcase
-  end
-  always@(idx__h324781 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317)
-  begin
-    case (idx__h324781)
-      2'd0:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314;
-      2'd1:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315;
-      2'd2:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316;
-      2'd3:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6331 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317;
-    endcase
-  end
-  always@(addrFrame_nextValidKeyReg or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316 or
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317)
-  begin
-    case (addrFrame_nextValidKeyReg)
-      2'd0:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6314;
-      2'd1:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6315;
-      2'd2:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6316;
-      2'd3:
-	  SEL_ARR_IF_addrFrame_insertItem_whas__101_AND__ETC___d6334 =
-	      IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6317;
-    endcase
-  end
-  always@(_theResult_____1__h324635 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202 or
-	  addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156)
-  begin
-    case (_theResult_____1__h324635)
-      2'd0:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6344 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6298;
-      2'd1:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6344 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6226;
-      2'd2:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6344 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6202;
-      2'd3:
-	  SEL_ARR_addrFrame_removeItem_whas__142_AND_add_ETC___d6344 =
-	      addrFrame_removeItem_whas__142_AND_addrFrame_r_ETC___d6156;
-    endcase
-  end
-  always@(_theResult_____1__h324635 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287 or
-	  NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285)
-  begin
-    case (_theResult_____1__h324635)
-      2'd0:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6346 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6303;
-      2'd1:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6346 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6289;
-      2'd2:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6346 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6287;
-      2'd3:
-	  SEL_ARR_NOT_addrFrame_insertItem_whas__101_281_ETC___d6346 =
-	      NOT_addrFrame_insertItem_whas__101_281_OR_NOT__ETC___d6285;
-    endcase
-  end
   always@(memory_response_put_val)
   begin
     case (memory_response_put_val[68:67])
       2'd0, 2'd1:
-	  CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q41 =
+	  CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q42 =
 	      memory_response_put_val[68:65];
-      default: CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q41 =
+      default: CASE_memory_response_put_val_BITS_68_TO_67_0_m_ETC__q42 =
 		   { 2'd2, memory_response_put_val[66:65] };
     endcase
   end
-  always@(idx__h296158 or tagLookup_tagCache_respswget_BITS_219_TO_156__q37)
+  always@(idx__h296842 or tagLookup_tagCache_respswget_BITS_219_TO_156__q38)
   begin
-    case (idx__h296158)
+    case (idx__h296842)
       6'd0:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[3];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[3];
       6'd1:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[7];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[7];
       6'd2:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[11];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[11];
       6'd3:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[15];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[15];
       6'd4:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[19];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[19];
       6'd5:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[23];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[23];
       6'd6:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[27];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[27];
       6'd7:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[31];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[31];
       6'd8:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[35];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[35];
       6'd9:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[39];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[39];
       6'd10:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[43];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[43];
       6'd11:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[47];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[47];
       6'd12:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[51];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[51];
       6'd13:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[55];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[55];
       6'd14:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[59];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[59];
       6'd15:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[63];
-      default: CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q42 =
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[63];
+      default: CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q43 =
 		   1'bx /* unspecified value */ ;
     endcase
   end
-  always@(idx__h296158 or tagLookup_tagCache_respswget_BITS_219_TO_156__q37)
+  always@(idx__h296842 or tagLookup_tagCache_respswget_BITS_219_TO_156__q38)
   begin
-    case (idx__h296158)
+    case (idx__h296842)
       6'd0:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[2];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[2];
       6'd1:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[6];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[6];
       6'd2:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[10];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[10];
       6'd3:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[14];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[14];
       6'd4:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[18];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[18];
       6'd5:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[22];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[22];
       6'd6:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[26];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[26];
       6'd7:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[30];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[30];
       6'd8:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[34];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[34];
       6'd9:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[38];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[38];
       6'd10:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[42];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[42];
       6'd11:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[46];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[46];
       6'd12:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[50];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[50];
       6'd13:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[54];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[54];
       6'd14:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[58];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[58];
       6'd15:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[62];
-      default: CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q43 =
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[62];
+      default: CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q44 =
 		   1'bx /* unspecified value */ ;
     endcase
   end
-  always@(idx__h296158 or tagLookup_tagCache_respswget_BITS_219_TO_156__q37)
+  always@(idx__h296842 or tagLookup_tagCache_respswget_BITS_219_TO_156__q38)
   begin
-    case (idx__h296158)
+    case (idx__h296842)
       6'd0:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[1];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[1];
       6'd1:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[5];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[5];
       6'd2:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[9];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[9];
       6'd3:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[13];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[13];
       6'd4:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[17];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[17];
       6'd5:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[21];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[21];
       6'd6:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[25];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[25];
       6'd7:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[29];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[29];
       6'd8:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[33];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[33];
       6'd9:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[37];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[37];
       6'd10:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[41];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[41];
       6'd11:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[45];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[45];
       6'd12:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[49];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[49];
       6'd13:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[53];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[53];
       6'd14:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[57];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[57];
       6'd15:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[61];
-      default: CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q44 =
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[61];
+      default: CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q45 =
 		   1'bx /* unspecified value */ ;
     endcase
   end
-  always@(idx__h296158 or tagLookup_tagCache_respswget_BITS_219_TO_156__q37)
+  always@(idx__h296842 or tagLookup_tagCache_respswget_BITS_219_TO_156__q38)
   begin
-    case (idx__h296158)
+    case (idx__h296842)
       6'd0:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[0];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[0];
       6'd1:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[4];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[4];
       6'd2:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[8];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[8];
       6'd3:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[12];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[12];
       6'd4:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[16];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[16];
       6'd5:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[20];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[20];
       6'd6:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[24];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[24];
       6'd7:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[28];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[28];
       6'd8:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[32];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[32];
       6'd9:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[36];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[36];
       6'd10:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[40];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[40];
       6'd11:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[44];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[44];
       6'd12:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[48];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[48];
       6'd13:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[52];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[52];
       6'd14:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[56];
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[56];
       6'd15:
-	  CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
-	      tagLookup_tagCache_respswget_BITS_219_TO_156__q37[60];
-      default: CASE_idx96158_0_tagLookup_tagCache_respswget_B_ETC__q45 =
+	  CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
+	      tagLookup_tagCache_respswget_BITS_219_TO_156__q38[60];
+      default: CASE_idx96842_0_tagLookup_tagCache_respswget_B_ETC__q46 =
 		   1'bx /* unspecified value */ ;
     endcase
   end
   always@(tagLookup_tagCache_cts or
 	  tagLookup_tagCache_readReqReg or
-	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4670 or
-	  level__h1462 or
-	  IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4665)
+	  IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4671 or
+	  level__h1428 or
+	  IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4666)
   begin
     case (tagLookup_tagCache_cts[278:277])
       2'd0:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q46 =
-	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4670;
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q47 =
+	      IF_tagLookup_tagCache_cts_read__795_BITS_229_T_ETC___d4671;
       2'd1, 2'd3:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q46 =
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q47 =
 	      tagLookup_tagCache_readReqReg[66];
       2'd2:
-	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q46 =
-	      (level__h1462 == 2'd0) ?
+	  CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q47 =
+	      (level__h1428 == 2'd0) ?
 		tagLookup_tagCache_readReqReg[66] :
-		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4665;
+		IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4666;
     endcase
   end
 
@@ -19260,34 +19537,13 @@ module mkTagController(CLK,
   begin
     if (RST_N == `BSV_RESET_VALUE)
       begin
-        addrFrame_bag <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      15'bxxxxxxxxxxxxxxx /* unspecified value */ ,
-	      1'd0,
-	      15'bxxxxxxxxxxxxxxx /* unspecified value */ ,
-	      1'd0,
-	      15'bxxxxxxxxxxxxxxx /* unspecified value */ ,
-	      1'd0,
-	      15'bxxxxxxxxxxxxxxx /* unspecified value */  };
-	frame <= `BSV_ASSIGNMENT_DELAY 3'd0;
-	halfWrite <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      141'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	lookupRsp_bag <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      17'bxxxxxxxxxxxxxxxxx /* unspecified value */ ,
-	      1'd0,
-	      17'bxxxxxxxxxxxxxxxxx /* unspecified value */ ,
-	      1'd0,
-	      17'bxxxxxxxxxxxxxxxxx /* unspecified value */ ,
-	      1'd0,
-	      17'bxxxxxxxxxxxxxxxxx /* unspecified value */  };
+        memoryResponseFrame <= `BSV_ASSIGNMENT_DELAY 3'd0;
 	tagLookup_currentDepth <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	tagLookup_oldTags_0 <= `BSV_ASSIGNMENT_DELAY 64'd0;
 	tagLookup_oldTags_1 <= `BSV_ASSIGNMENT_DELAY 64'd0;
-	tagLookup_pendingCapEnable <= `BSV_ASSIGNMENT_DELAY 1'd0;
+	tagLookup_pendingCapEnable <= `BSV_ASSIGNMENT_DELAY 4'd0;
 	tagLookup_pendingCapNumber <= `BSV_ASSIGNMENT_DELAY 36'd0;
-	tagLookup_pendingTags <= `BSV_ASSIGNMENT_DELAY 1'd0;
+	tagLookup_pendingTags <= `BSV_ASSIGNMENT_DELAY 4'd0;
 	tagLookup_readReqs_ff_full <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	tagLookup_state <= `BSV_ASSIGNMENT_DELAY 3'd0;
 	tagLookup_tagCache_cacheState <= `BSV_ASSIGNMENT_DELAY 1'd0;
@@ -19412,15 +19668,13 @@ module mkTagController(CLK,
 	tagLookup_tagCache_writebackWriteBank <= `BSV_ASSIGNMENT_DELAY 2'd0;
 	tagLookup_transNum <= `BSV_ASSIGNMENT_DELAY 5'd0;
 	tagLookup_zeroAddr <= `BSV_ASSIGNMENT_DELAY 40'h00FF7DF080;
+	tagWrite <= `BSV_ASSIGNMENT_DELAY 8'd0;
       end
     else
       begin
-        if (addrFrame_bag$EN)
-	  addrFrame_bag <= `BSV_ASSIGNMENT_DELAY addrFrame_bag$D_IN;
-	if (frame$EN) frame <= `BSV_ASSIGNMENT_DELAY frame$D_IN;
-	if (halfWrite$EN) halfWrite <= `BSV_ASSIGNMENT_DELAY halfWrite$D_IN;
-	if (lookupRsp_bag$EN)
-	  lookupRsp_bag <= `BSV_ASSIGNMENT_DELAY lookupRsp_bag$D_IN;
+        if (memoryResponseFrame$EN)
+	  memoryResponseFrame <= `BSV_ASSIGNMENT_DELAY
+	      memoryResponseFrame$D_IN;
 	if (tagLookup_currentDepth$EN)
 	  tagLookup_currentDepth <= `BSV_ASSIGNMENT_DELAY
 	      tagLookup_currentDepth$D_IN;
@@ -19514,21 +19768,14 @@ module mkTagController(CLK,
 	  tagLookup_transNum <= `BSV_ASSIGNMENT_DELAY tagLookup_transNum$D_IN;
 	if (tagLookup_zeroAddr$EN)
 	  tagLookup_zeroAddr <= `BSV_ASSIGNMENT_DELAY tagLookup_zeroAddr$D_IN;
+	if (tagWrite$EN) tagWrite <= `BSV_ASSIGNMENT_DELAY tagWrite$D_IN;
       end
-    if (addrFrame_nextValidKeyReg$EN)
-      addrFrame_nextValidKeyReg <= `BSV_ASSIGNMENT_DELAY
-	  addrFrame_nextValidKeyReg$D_IN;
-    if (lookupRsp_nextValidKeyReg$EN)
-      lookupRsp_nextValidKeyReg <= `BSV_ASSIGNMENT_DELAY
-	  lookupRsp_nextValidKeyReg$D_IN;
     if (tagLookup_lookupRsp_ff_rf$EN)
       tagLookup_lookupRsp_ff_rf <= `BSV_ASSIGNMENT_DELAY
 	  tagLookup_lookupRsp_ff_rf$D_IN;
     if (tagLookup_readReqs_ff_dataReg$EN)
       tagLookup_readReqs_ff_dataReg <= `BSV_ASSIGNMENT_DELAY
 	  tagLookup_readReqs_ff_dataReg$D_IN;
-    if (tagLookup_reqeustId$EN)
-      tagLookup_reqeustId <= `BSV_ASSIGNMENT_DELAY tagLookup_reqeustId$D_IN;
     if (tagLookup_tagCacheReq_ff_rf$EN)
       tagLookup_tagCacheReq_ff_rf <= `BSV_ASSIGNMENT_DELAY
 	  tagLookup_tagCacheReq_ff_rf$D_IN;
@@ -19588,8 +19835,28 @@ module mkTagController(CLK,
   always@(posedge CLK or `BSV_RESET_EDGE RST_N)
   if (RST_N == `BSV_RESET_VALUE)
     begin
-      mReqs_ff_lhead <= `BSV_ASSIGNMENT_DELAY 2'd0;
-      mReqs_ff_ltail <= `BSV_ASSIGNMENT_DELAY 2'd0;
+      addrFrame_fifos_0_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_0_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_1_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_1_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_2_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_2_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_3_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      addrFrame_fifos_3_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupId_ff_lhead <= `BSV_ASSIGNMENT_DELAY 2'd0;
+      lookupId_ff_ltail <= `BSV_ASSIGNMENT_DELAY 2'd0;
+      lookupRsp_fifos_0_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_0_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_1_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_1_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_2_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_2_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_3_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      lookupRsp_fifos_3_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      mReqBurst_lhead <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      mReqBurst_ltail <= `BSV_ASSIGNMENT_DELAY 3'd0;
+      mReqs_lhead <= `BSV_ASSIGNMENT_DELAY 5'd0;
+      mReqs_ltail <= `BSV_ASSIGNMENT_DELAY 5'd0;
       mRsps_ff_lhead <= `BSV_ASSIGNMENT_DELAY 6'd0;
       mRsps_ff_ltail <= `BSV_ASSIGNMENT_DELAY 6'd0;
       tagLookup_lookupRsp_ff_lhead <= `BSV_ASSIGNMENT_DELAY 1'd0;
@@ -19629,10 +19896,66 @@ module mkTagController(CLK,
     end
   else
     begin
-      if (mReqs_ff_lhead$EN)
-	mReqs_ff_lhead <= `BSV_ASSIGNMENT_DELAY mReqs_ff_lhead$D_IN;
-      if (mReqs_ff_ltail$EN)
-	mReqs_ff_ltail <= `BSV_ASSIGNMENT_DELAY mReqs_ff_ltail$D_IN;
+      if (addrFrame_fifos_0_lhead$EN)
+	addrFrame_fifos_0_lhead <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_0_lhead$D_IN;
+      if (addrFrame_fifos_0_ltail$EN)
+	addrFrame_fifos_0_ltail <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_0_ltail$D_IN;
+      if (addrFrame_fifos_1_lhead$EN)
+	addrFrame_fifos_1_lhead <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_1_lhead$D_IN;
+      if (addrFrame_fifos_1_ltail$EN)
+	addrFrame_fifos_1_ltail <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_1_ltail$D_IN;
+      if (addrFrame_fifos_2_lhead$EN)
+	addrFrame_fifos_2_lhead <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_2_lhead$D_IN;
+      if (addrFrame_fifos_2_ltail$EN)
+	addrFrame_fifos_2_ltail <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_2_ltail$D_IN;
+      if (addrFrame_fifos_3_lhead$EN)
+	addrFrame_fifos_3_lhead <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_3_lhead$D_IN;
+      if (addrFrame_fifos_3_ltail$EN)
+	addrFrame_fifos_3_ltail <= `BSV_ASSIGNMENT_DELAY
+	    addrFrame_fifos_3_ltail$D_IN;
+      if (lookupId_ff_lhead$EN)
+	lookupId_ff_lhead <= `BSV_ASSIGNMENT_DELAY lookupId_ff_lhead$D_IN;
+      if (lookupId_ff_ltail$EN)
+	lookupId_ff_ltail <= `BSV_ASSIGNMENT_DELAY lookupId_ff_ltail$D_IN;
+      if (lookupRsp_fifos_0_lhead$EN)
+	lookupRsp_fifos_0_lhead <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_0_lhead$D_IN;
+      if (lookupRsp_fifos_0_ltail$EN)
+	lookupRsp_fifos_0_ltail <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_0_ltail$D_IN;
+      if (lookupRsp_fifos_1_lhead$EN)
+	lookupRsp_fifos_1_lhead <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_1_lhead$D_IN;
+      if (lookupRsp_fifos_1_ltail$EN)
+	lookupRsp_fifos_1_ltail <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_1_ltail$D_IN;
+      if (lookupRsp_fifos_2_lhead$EN)
+	lookupRsp_fifos_2_lhead <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_2_lhead$D_IN;
+      if (lookupRsp_fifos_2_ltail$EN)
+	lookupRsp_fifos_2_ltail <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_2_ltail$D_IN;
+      if (lookupRsp_fifos_3_lhead$EN)
+	lookupRsp_fifos_3_lhead <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_3_lhead$D_IN;
+      if (lookupRsp_fifos_3_ltail$EN)
+	lookupRsp_fifos_3_ltail <= `BSV_ASSIGNMENT_DELAY
+	    lookupRsp_fifos_3_ltail$D_IN;
+      if (mReqBurst_lhead$EN)
+	mReqBurst_lhead <= `BSV_ASSIGNMENT_DELAY mReqBurst_lhead$D_IN;
+      if (mReqBurst_ltail$EN)
+	mReqBurst_ltail <= `BSV_ASSIGNMENT_DELAY mReqBurst_ltail$D_IN;
+      if (mReqs_lhead$EN)
+	mReqs_lhead <= `BSV_ASSIGNMENT_DELAY mReqs_lhead$D_IN;
+      if (mReqs_ltail$EN)
+	mReqs_ltail <= `BSV_ASSIGNMENT_DELAY mReqs_ltail$D_IN;
       if (mRsps_ff_lhead$EN)
 	mRsps_ff_lhead <= `BSV_ASSIGNMENT_DELAY mRsps_ff_lhead$D_IN;
       if (mRsps_ff_ltail$EN)
@@ -19717,16 +20040,31 @@ module mkTagController(CLK,
   `else // not BSV_NO_INITIAL_BLOCKS
   initial
   begin
-    addrFrame_bag = 64'hAAAAAAAAAAAAAAAA;
-    addrFrame_nextValidKeyReg = 2'h2;
-    frame = 3'h2;
-    halfWrite = 142'h2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;
-    lookupRsp_bag = 72'hAAAAAAAAAAAAAAAAAA;
-    lookupRsp_nextValidKeyReg = 2'h2;
-    mReqs_ff_lhead = 2'h2;
-    mReqs_ff_ltail = 2'h2;
+    addrFrame_fifos_0_lhead = 3'h2;
+    addrFrame_fifos_0_ltail = 3'h2;
+    addrFrame_fifos_1_lhead = 3'h2;
+    addrFrame_fifos_1_ltail = 3'h2;
+    addrFrame_fifos_2_lhead = 3'h2;
+    addrFrame_fifos_2_ltail = 3'h2;
+    addrFrame_fifos_3_lhead = 3'h2;
+    addrFrame_fifos_3_ltail = 3'h2;
+    lookupId_ff_lhead = 2'h2;
+    lookupId_ff_ltail = 2'h2;
+    lookupRsp_fifos_0_lhead = 3'h2;
+    lookupRsp_fifos_0_ltail = 3'h2;
+    lookupRsp_fifos_1_lhead = 3'h2;
+    lookupRsp_fifos_1_ltail = 3'h2;
+    lookupRsp_fifos_2_lhead = 3'h2;
+    lookupRsp_fifos_2_ltail = 3'h2;
+    lookupRsp_fifos_3_lhead = 3'h2;
+    lookupRsp_fifos_3_ltail = 3'h2;
+    mReqBurst_lhead = 3'h2;
+    mReqBurst_ltail = 3'h2;
+    mReqs_lhead = 5'h0A;
+    mReqs_ltail = 5'h0A;
     mRsps_ff_lhead = 6'h2A;
     mRsps_ff_ltail = 6'h2A;
+    memoryResponseFrame = 3'h2;
     tagLookup_currentDepth = 2'h2;
     tagLookup_lookupRsp_ff_lhead = 1'h0;
     tagLookup_lookupRsp_ff_ltail = 1'h0;
@@ -19737,12 +20075,11 @@ module mkTagController(CLK,
     tagLookup_mRsps_ff_ltail = 2'h2;
     tagLookup_oldTags_0 = 64'hAAAAAAAAAAAAAAAA;
     tagLookup_oldTags_1 = 64'hAAAAAAAAAAAAAAAA;
-    tagLookup_pendingCapEnable = 1'h0;
+    tagLookup_pendingCapEnable = 4'hA;
     tagLookup_pendingCapNumber = 36'hAAAAAAAAA;
-    tagLookup_pendingTags = 1'h0;
+    tagLookup_pendingTags = 4'hA;
     tagLookup_readReqs_ff_dataReg = 1'h0;
     tagLookup_readReqs_ff_full = 1'h0;
-    tagLookup_reqeustId = 6'h2A;
     tagLookup_state = 3'h2;
     tagLookup_tagCacheReq_ff_lhead = 1'h0;
     tagLookup_tagCacheReq_ff_ltail = 1'h0;
@@ -19809,6 +20146,7 @@ module mkTagController(CLK,
     tagLookup_zeroAddr = 40'hAAAAAAAAAA;
     tagOnlyReads_lhead = 3'h2;
     tagOnlyReads_ltail = 3'h2;
+    tagWrite = 8'hAA;
   end
   `endif // BSV_NO_INITIAL_BLOCKS
   // synopsys translate_on
@@ -19819,6 +20157,27 @@ module mkTagController(CLK,
   always@(negedge CLK)
   begin
     #0;
+    if (RST_N != `BSV_RESET_VALUE)
+      if (EN_cache_response_get &&
+	  IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	  IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6680)
+	$display("Panic!  Deq called on fifo ID that is not present");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (EN_cache_response_get &&
+	  IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6479 &&
+	  IF_mRsps_ff_lhead_read__407_MINUS_mRsps_ff_lta_ETC___d6726)
+	$display("Panic!  Deq called on fifo ID that is not present");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_getTagLookupResponse &&
+	  NOT_lookupRsp_fifos_0_rf_sub_lookupRsp_fifos_0_ETC___d5982)
+	$display("Panic! Enqued new key with no empty FIFOs!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (EN_cache_request_put && cache_request_put_val[93:92] == 2'd0 &&
+	  NOT_addrFrame_fifos_0_rf_sub_addrFrame_fifos_0_ETC___d6251)
+	$display("Panic! Enqued new key with no empty FIFOs!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_tagLookup_mReqs_displayDeqPanic)
+	$display("Panic!  Dequing from an empty UGFF %s", "TagLookup_mReqs");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_tagLookup_mRsps_displayEnqPanic)
 	$display("Panic!  Enqing to a full UGFF %s", "TagLookup_mRsps");
@@ -19835,15 +20194,15 @@ module mkTagController(CLK,
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3858)
 	begin
-	  v__h87524 = $time;
+	  v__h87493 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3858)
 	$write("<time %0t, cache %0d, CacheCorderer> Panic! Memory response for unrecorded ID! ",
-	       v__h87524,
-	       16'd1);
+	       v__h87493,
+	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3858)
@@ -19935,238 +20294,238 @@ module mkTagController(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd1 &&
-	  tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3938)
+	  tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3939)
 	begin
-	  v__h90844 = $time;
+	  v__h90815 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd1 &&
-	  tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3938)
+	  tagLookup_tagCache_orderer_mastReqs_bag_71_BIT_ETC___d3939)
 	$display("<time %0t, cache %0d, CacheCorderer> Panic! Enquing mastReqs when full. ",
-		 v__h90844,
-		 16'd1);
+		 v__h90815,
+		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	begin
-	  v__h93101 = $time;
+	  v__h93075 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	$write("<time %0t, cache %0d, CacheCorderer> Panic! Memory response for unrecorded ID! ",
-	       v__h93101,
-	       16'd1);
+	       v__h93075,
+	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	$write("ReqId { ", "masterID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[76]);
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	$write(", ", "transactionID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[75:71], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3942)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3943)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	begin
-	  v__h94581 = $time;
+	  v__h94556 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	$write("<time %0t, cache %0d, CacheCorderer> Panic! Memory response for unrecorded ID! ",
-	       v__h94581,
-	       16'd1);
+	       v__h94556,
+	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	$write("ReqId { ", "masterID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[76]);
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	$write(", ", "transactionID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[75:71], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3948)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3949)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	begin
-	  v__h95972 = $time;
+	  v__h95948 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	$write("<time %0t, cache %0d, CacheCorderer> Panic! Memory response for unrecorded ID! ",
-	       v__h95972,
-	       16'd1);
+	       v__h95948,
+	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	$write("ReqId { ", "masterID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[76]);
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	$write(", ", "transactionID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[75:71], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3956)
+	  level__h1428 != 2'd0 &&
+	  tagLookup_tagCache_readReqReg_read__136_BIT_50_ETC___d3957)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	begin
-	  v__h97473 = $time;
+	  v__h97450 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	$write("<time %0t, cache %0d, CacheCorderer> Panic! Memory response for unrecorded ID! ",
-	       v__h97473,
-	       16'd1);
+	       v__h97450,
+	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	$write("ReqId { ", "masterID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[76]);
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	$write(", ", "transactionID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[75:71], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
 	  tagLookup_tagCache_cts[278:277] == 2'd2 &&
-	  level__h1462 != 2'd0 &&
-	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3960)
+	  level__h1428 != 2'd0 &&
+	  NOT_tagLookup_tagCache_readReqReg_read__136_BI_ETC___d3961)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	begin
-	  v__h99939 = $time;
+	  v__h99917 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	$write("<time %0t, cache %0d, CacheCorderer> Panic! Memory response for unrecorded ID! ",
-	       v__h99939,
-	       16'd1);
+	       v__h99917,
+	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	$write("ReqId { ", "masterID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[76]);
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	$write(", ", "transactionID: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	$write("'h%h", tagLookup_mRsps_ff_rf$D_OUT_1[75:71], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (tagLookup_tagCache_cacheState &&
-	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3984)
+	  tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3985)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_tagLookup_mReqs_displayEnqPanic)
@@ -20192,20 +20551,40 @@ module mkTagController(CLK,
 	  IF_IF_tagLookup_tagCache_orderer_mastLines_ins_ETC___d2626)
 	$display("Panic! Returning invalid element for next when not empty!");
     if (RST_N != `BSV_RESET_VALUE)
-      if (IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6037 &&
-	  IF_lookupRsp_insertItem_whas__737_AND_lookupRs_ETC___d6074 &&
-	  IF_IF_lookupRsp_insertItem_whas__737_AND_looku_ETC___d6098)
-	$display("Panic! Returning invalid element for next when not empty!");
+      if (WILL_FIRE_RL_lookupRsp_fifos_0_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
     if (RST_N != `BSV_RESET_VALUE)
-      if (IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6306 &&
-	  IF_addrFrame_insertItem_whas__101_AND_addrFram_ETC___d6347 &&
-	  IF_IF_addrFrame_insertItem_whas__101_AND_addrF_ETC___d6371)
-	$display("Panic! Returning invalid element for next when not empty!");
+      if (WILL_FIRE_RL_lookupRsp_fifos_1_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_lookupRsp_fifos_2_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_lookupRsp_fifos_3_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_addrFrame_fifos_0_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_addrFrame_fifos_1_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_addrFrame_fifos_2_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_addrFrame_fifos_3_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_lookupId_ff_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_tagOnlyReads_doDisplayPanic)
 	$display("Panic!  Enqing to a full UGFF!");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_mReqs_ff_doDisplayPanic)
+      if (WILL_FIRE_RL_mReqs_doDisplayPanic)
+	$display("Panic!  Enqing to a full UGFF!");
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_mReqBurst_doDisplayPanic)
 	$display("Panic!  Enqing to a full UGFF!");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_mRsps_displayEnqPanic)

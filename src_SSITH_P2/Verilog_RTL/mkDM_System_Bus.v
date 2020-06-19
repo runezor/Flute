@@ -6,334 +6,43 @@
 //
 // Ports:
 // Name                         I/O  size props
-// RDY_reset                      O     1
+// RDY_reset                      O     1 const
 // av_read                        O    32
 // RDY_av_read                    O     1
 // RDY_write                      O     1
-// master_awid                    O     4
-// master_awaddr                  O    64
-// master_awlen                   O     8
-// master_awsize                  O     3
-// master_awburst                 O     2
-// master_awlock                  O     1
-// master_awcache                 O     4
-// master_awprot                  O     3
-// master_awqos                   O     4
-// master_awregion                O     4
-// master_awvalid                 O     1
-// master_wdata                   O    64
-// master_wstrb                   O     8
-// master_wlast                   O     1
-// master_wuser                   O     1
-// master_wvalid                  O     1
-// master_bready                  O     1
-// master_arid                    O     4
-// master_araddr                  O    64
-// master_arlen                   O     8
-// master_arsize                  O     3
-// master_arburst                 O     2
-// master_arlock                  O     1
-// master_arcache                 O     4
-// master_arprot                  O     3
-// master_arqos                   O     4
-// master_arregion                O     4
-// master_arvalid                 O     1
-// master_rready                  O     1
+// master_aw_canPeek              O     1 reg
+// master_aw_peek                 O    97 reg
+// RDY_master_aw_peek             O     1 reg
+// RDY_master_aw_drop             O     1 reg
+// master_w_canPeek               O     1 reg
+// master_w_peek                  O    74 reg
+// RDY_master_w_peek              O     1 reg
+// RDY_master_w_drop              O     1 reg
+// master_b_canPut                O     1 reg
+// RDY_master_b_put               O     1 reg
+// master_ar_canPeek              O     1 reg
+// master_ar_peek                 O    97 reg
+// RDY_master_ar_peek             O     1 reg
+// RDY_master_ar_drop             O     1 reg
+// master_r_canPut                O     1 reg
+// RDY_master_r_put               O     1 reg
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
 // av_read_dm_addr                I     7
 // write_dm_addr                  I     7
 // write_dm_word                  I    32
-// master_awready                 I     1
-// master_wready                  I     1
-// master_bid                     I     4
-// master_bresp                   I     2
-// master_arready                 I     1
-// master_rid                     I     4
-// master_rdata                   I    64
-// master_rresp                   I     2
-// master_rlast                   I     1
-// master_ruser                   I     1
+// master_b_put_val               I     6 reg
+// master_r_put_val               I    72 reg
 // EN_reset                       I     1
 // EN_write                       I     1
-// master_bvalid                  I     1
-// master_rvalid                  I     1
+// EN_master_aw_drop              I     1
+// EN_master_w_drop               I     1
+// EN_master_b_put                I     1
+// EN_master_ar_drop              I     1
+// EN_master_r_put                I     1
 // EN_av_read                     I     1
 //
 // Combinational paths from inputs to outputs:
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awid
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awaddr
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awlen
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awsize
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awburst
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awlock
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awcache
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awprot
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awqos
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awregion
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awuser
-//   (write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_awvalid
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_wdata
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_wstrb
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_wlast
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_wuser
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_write,
-//    master_rvalid) -> master_wvalid
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arid
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_araddr
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arlen
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arsize
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arburst
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arlock
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arcache
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arprot
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arqos
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arregion
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_aruser
-//   (write_dm_addr,
-//    write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    av_read_dm_addr,
-//    EN_write,
-//    master_rvalid,
-//    EN_av_read) -> master_arvalid
 //   av_read_dm_addr -> av_read
 //
 //
@@ -367,80 +76,41 @@ module mkDM_System_Bus(CLK,
 		       EN_write,
 		       RDY_write,
 
-		       master_awid,
+		       master_aw_canPeek,
 
-		       master_awaddr,
+		       master_aw_peek,
+		       RDY_master_aw_peek,
 
-		       master_awlen,
+		       EN_master_aw_drop,
+		       RDY_master_aw_drop,
 
-		       master_awsize,
+		       master_w_canPeek,
 
-		       master_awburst,
+		       master_w_peek,
+		       RDY_master_w_peek,
 
-		       master_awlock,
+		       EN_master_w_drop,
+		       RDY_master_w_drop,
 
-		       master_awcache,
+		       master_b_canPut,
 
-		       master_awprot,
+		       master_b_put_val,
+		       EN_master_b_put,
+		       RDY_master_b_put,
 
-		       master_awqos,
+		       master_ar_canPeek,
 
-		       master_awregion,
+		       master_ar_peek,
+		       RDY_master_ar_peek,
 
-		       master_awvalid,
+		       EN_master_ar_drop,
+		       RDY_master_ar_drop,
 
-		       master_awready,
+		       master_r_canPut,
 
-		       master_wdata,
-
-		       master_wstrb,
-
-		       master_wlast,
-
-		       master_wuser,
-
-		       master_wvalid,
-
-		       master_wready,
-
-		       master_bid,
-		       master_bresp,
-		       master_bvalid,
-
-		       master_bready,
-
-		       master_arid,
-
-		       master_araddr,
-
-		       master_arlen,
-
-		       master_arsize,
-
-		       master_arburst,
-
-		       master_arlock,
-
-		       master_arcache,
-
-		       master_arprot,
-
-		       master_arqos,
-
-		       master_arregion,
-
-		       master_arvalid,
-
-		       master_arready,
-
-		       master_rid,
-		       master_rdata,
-		       master_rresp,
-		       master_rlast,
-		       master_ruser,
-		       master_rvalid,
-
-		       master_rready);
+		       master_r_put_val,
+		       EN_master_r_put,
+		       RDY_master_r_put);
   input  CLK;
   input  RST_N;
 
@@ -460,212 +130,75 @@ module mkDM_System_Bus(CLK,
   input  EN_write;
   output RDY_write;
 
-  // value method master_aw_awid
-  output [3 : 0] master_awid;
+  // value method master_aw_canPeek
+  output master_aw_canPeek;
 
-  // value method master_aw_awaddr
-  output [63 : 0] master_awaddr;
+  // value method master_aw_peek
+  output [96 : 0] master_aw_peek;
+  output RDY_master_aw_peek;
 
-  // value method master_aw_awlen
-  output [7 : 0] master_awlen;
+  // action method master_aw_drop
+  input  EN_master_aw_drop;
+  output RDY_master_aw_drop;
 
-  // value method master_aw_awsize
-  output [2 : 0] master_awsize;
+  // value method master_w_canPeek
+  output master_w_canPeek;
 
-  // value method master_aw_awburst
-  output [1 : 0] master_awburst;
+  // value method master_w_peek
+  output [73 : 0] master_w_peek;
+  output RDY_master_w_peek;
 
-  // value method master_aw_awlock
-  output master_awlock;
+  // action method master_w_drop
+  input  EN_master_w_drop;
+  output RDY_master_w_drop;
 
-  // value method master_aw_awcache
-  output [3 : 0] master_awcache;
+  // value method master_b_canPut
+  output master_b_canPut;
 
-  // value method master_aw_awprot
-  output [2 : 0] master_awprot;
+  // action method master_b_put
+  input  [5 : 0] master_b_put_val;
+  input  EN_master_b_put;
+  output RDY_master_b_put;
 
-  // value method master_aw_awqos
-  output [3 : 0] master_awqos;
+  // value method master_ar_canPeek
+  output master_ar_canPeek;
 
-  // value method master_aw_awregion
-  output [3 : 0] master_awregion;
+  // value method master_ar_peek
+  output [96 : 0] master_ar_peek;
+  output RDY_master_ar_peek;
 
-  // value method master_aw_awuser
+  // action method master_ar_drop
+  input  EN_master_ar_drop;
+  output RDY_master_ar_drop;
 
-  // value method master_aw_awvalid
-  output master_awvalid;
+  // value method master_r_canPut
+  output master_r_canPut;
 
-  // action method master_aw_awready
-  input  master_awready;
-
-  // value method master_w_wdata
-  output [63 : 0] master_wdata;
-
-  // value method master_w_wstrb
-  output [7 : 0] master_wstrb;
-
-  // value method master_w_wlast
-  output master_wlast;
-
-  // value method master_w_wuser
-  output master_wuser;
-
-  // value method master_w_wvalid
-  output master_wvalid;
-
-  // action method master_w_wready
-  input  master_wready;
-
-  // action method master_b_bflit
-  input  [3 : 0] master_bid;
-  input  [1 : 0] master_bresp;
-  input  master_bvalid;
-
-  // value method master_b_bready
-  output master_bready;
-
-  // value method master_ar_arid
-  output [3 : 0] master_arid;
-
-  // value method master_ar_araddr
-  output [63 : 0] master_araddr;
-
-  // value method master_ar_arlen
-  output [7 : 0] master_arlen;
-
-  // value method master_ar_arsize
-  output [2 : 0] master_arsize;
-
-  // value method master_ar_arburst
-  output [1 : 0] master_arburst;
-
-  // value method master_ar_arlock
-  output master_arlock;
-
-  // value method master_ar_arcache
-  output [3 : 0] master_arcache;
-
-  // value method master_ar_arprot
-  output [2 : 0] master_arprot;
-
-  // value method master_ar_arqos
-  output [3 : 0] master_arqos;
-
-  // value method master_ar_arregion
-  output [3 : 0] master_arregion;
-
-  // value method master_ar_aruser
-
-  // value method master_ar_arvalid
-  output master_arvalid;
-
-  // action method master_ar_arready
-  input  master_arready;
-
-  // action method master_r_rflit
-  input  [3 : 0] master_rid;
-  input  [63 : 0] master_rdata;
-  input  [1 : 0] master_rresp;
-  input  master_rlast;
-  input  master_ruser;
-  input  master_rvalid;
-
-  // value method master_r_rready
-  output master_rready;
+  // action method master_r_put
+  input  [71 : 0] master_r_put_val;
+  input  EN_master_r_put;
+  output RDY_master_r_put;
 
   // signals for module outputs
   reg [31 : 0] av_read;
-  wire [63 : 0] master_araddr, master_awaddr, master_wdata;
-  wire [7 : 0] master_arlen, master_awlen, master_wstrb;
-  wire [3 : 0] master_arcache,
-	       master_arid,
-	       master_arqos,
-	       master_arregion,
-	       master_awcache,
-	       master_awid,
-	       master_awqos,
-	       master_awregion;
-  wire [2 : 0] master_arprot, master_arsize, master_awprot, master_awsize;
-  wire [1 : 0] master_arburst, master_awburst;
+  wire [96 : 0] master_ar_peek, master_aw_peek;
+  wire [73 : 0] master_w_peek;
   wire RDY_av_read,
+       RDY_master_ar_drop,
+       RDY_master_ar_peek,
+       RDY_master_aw_drop,
+       RDY_master_aw_peek,
+       RDY_master_b_put,
+       RDY_master_r_put,
+       RDY_master_w_drop,
+       RDY_master_w_peek,
        RDY_reset,
        RDY_write,
-       master_arlock,
-       master_arvalid,
-       master_awlock,
-       master_awvalid,
-       master_bready,
-       master_rready,
-       master_wlast,
-       master_wuser,
-       master_wvalid;
-
-  // inlined wires
-  wire [97 : 0] master_xactor_shim_arff_rv$port0__write_1,
-		master_xactor_shim_arff_rv$port1__read,
-		master_xactor_shim_arff_rv$port1__write_1,
-		master_xactor_shim_arff_rv$port2__read,
-		master_xactor_shim_arff_rv$port3__read,
-		master_xactor_shim_awff_rv$port0__write_1,
-		master_xactor_shim_awff_rv$port1__read,
-		master_xactor_shim_awff_rv$port2__read,
-		master_xactor_shim_awff_rv$port3__read;
-  wire [74 : 0] master_xactor_shim_wff_rv$port0__write_1,
-		master_xactor_shim_wff_rv$port1__read,
-		master_xactor_shim_wff_rv$port1__write_1,
-		master_xactor_shim_wff_rv$port2__read,
-		master_xactor_shim_wff_rv$port3__read;
-  wire [72 : 0] master_xactor_shim_rff_rv$port0__write_1,
-		master_xactor_shim_rff_rv$port1__read,
-		master_xactor_shim_rff_rv$port1__write_1,
-		master_xactor_shim_rff_rv$port2__read,
-		master_xactor_shim_rff_rv$port3__read;
-  wire [71 : 0] master_xactor_ug_master_u_r_putWire$wget;
-  wire [6 : 0] master_xactor_shim_bff_rv$port0__write_1,
-	       master_xactor_shim_bff_rv$port1__read,
-	       master_xactor_shim_bff_rv$port1__write_1,
-	       master_xactor_shim_bff_rv$port2__read,
-	       master_xactor_shim_bff_rv$port3__read;
-  wire [5 : 0] master_xactor_ug_master_u_b_putWire$wget;
-  wire master_xactor_shim_arff_rv$EN_port0__write,
-       master_xactor_shim_awff_rv$EN_port0__write,
-       master_xactor_shim_bff_rv$EN_port1__write,
-       master_xactor_shim_rff_rv$EN_port1__write,
-       master_xactor_shim_wff_rv$EN_port0__write,
-       master_xactor_ug_master_u_ar_dropWire$whas,
-       master_xactor_ug_master_u_aw_dropWire$whas,
-       master_xactor_ug_master_u_b_putWire$whas,
-       master_xactor_ug_master_u_r_putWire$whas,
-       master_xactor_ug_master_u_w_dropWire$whas;
-
-  // register master_xactor_clearing
-  reg master_xactor_clearing;
-  wire master_xactor_clearing$D_IN, master_xactor_clearing$EN;
-
-  // register master_xactor_shim_arff_rv
-  reg [97 : 0] master_xactor_shim_arff_rv;
-  wire [97 : 0] master_xactor_shim_arff_rv$D_IN;
-  wire master_xactor_shim_arff_rv$EN;
-
-  // register master_xactor_shim_awff_rv
-  reg [97 : 0] master_xactor_shim_awff_rv;
-  wire [97 : 0] master_xactor_shim_awff_rv$D_IN;
-  wire master_xactor_shim_awff_rv$EN;
-
-  // register master_xactor_shim_bff_rv
-  reg [6 : 0] master_xactor_shim_bff_rv;
-  wire [6 : 0] master_xactor_shim_bff_rv$D_IN;
-  wire master_xactor_shim_bff_rv$EN;
-
-  // register master_xactor_shim_rff_rv
-  reg [72 : 0] master_xactor_shim_rff_rv;
-  wire [72 : 0] master_xactor_shim_rff_rv$D_IN;
-  wire master_xactor_shim_rff_rv$EN;
-
-  // register master_xactor_shim_wff_rv
-  reg [74 : 0] master_xactor_shim_wff_rv;
-  wire [74 : 0] master_xactor_shim_wff_rv$D_IN;
-  wire master_xactor_shim_wff_rv$EN;
+       master_ar_canPeek,
+       master_aw_canPeek,
+       master_b_canPut,
+       master_r_canPut,
+       master_w_canPeek;
 
   // register rg_sb_state
   reg [1 : 0] rg_sb_state;
@@ -719,53 +252,65 @@ module mkDM_System_Bus(CLK,
   reg [31 : 0] rg_sbdata0$D_IN;
   wire rg_sbdata0$EN;
 
+  // ports of submodule masterPortShim_arff
+  wire [96 : 0] masterPortShim_arff$D_IN, masterPortShim_arff$D_OUT;
+  wire masterPortShim_arff$CLR,
+       masterPortShim_arff$DEQ,
+       masterPortShim_arff$EMPTY_N,
+       masterPortShim_arff$ENQ,
+       masterPortShim_arff$FULL_N;
+
+  // ports of submodule masterPortShim_awff
+  wire [96 : 0] masterPortShim_awff$D_IN, masterPortShim_awff$D_OUT;
+  wire masterPortShim_awff$CLR,
+       masterPortShim_awff$DEQ,
+       masterPortShim_awff$EMPTY_N,
+       masterPortShim_awff$ENQ,
+       masterPortShim_awff$FULL_N;
+
+  // ports of submodule masterPortShim_bff
+  wire [5 : 0] masterPortShim_bff$D_IN, masterPortShim_bff$D_OUT;
+  wire masterPortShim_bff$CLR,
+       masterPortShim_bff$DEQ,
+       masterPortShim_bff$EMPTY_N,
+       masterPortShim_bff$ENQ,
+       masterPortShim_bff$FULL_N;
+
+  // ports of submodule masterPortShim_rff
+  wire [71 : 0] masterPortShim_rff$D_IN, masterPortShim_rff$D_OUT;
+  wire masterPortShim_rff$CLR,
+       masterPortShim_rff$DEQ,
+       masterPortShim_rff$EMPTY_N,
+       masterPortShim_rff$ENQ,
+       masterPortShim_rff$FULL_N;
+
+  // ports of submodule masterPortShim_wff
+  wire [73 : 0] masterPortShim_wff$D_IN, masterPortShim_wff$D_OUT;
+  wire masterPortShim_wff$CLR,
+       masterPortShim_wff$DEQ,
+       masterPortShim_wff$EMPTY_N,
+       masterPortShim_wff$ENQ,
+       masterPortShim_wff$FULL_N;
+
   // rule scheduling signals
-  wire CAN_FIRE_RL_master_xactor_do_clear,
-       CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek,
-       CAN_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek,
-       CAN_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek,
-       CAN_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop,
-       CAN_FIRE_RL_rl_sb_read_finish,
+  wire CAN_FIRE_RL_rl_sb_read_finish,
        CAN_FIRE_RL_rl_sb_write_response,
        CAN_FIRE_av_read,
-       CAN_FIRE_master_ar_arready,
-       CAN_FIRE_master_aw_awready,
-       CAN_FIRE_master_b_bflit,
-       CAN_FIRE_master_r_rflit,
-       CAN_FIRE_master_w_wready,
+       CAN_FIRE_master_ar_drop,
+       CAN_FIRE_master_aw_drop,
+       CAN_FIRE_master_b_put,
+       CAN_FIRE_master_r_put,
+       CAN_FIRE_master_w_drop,
        CAN_FIRE_reset,
        CAN_FIRE_write,
-       WILL_FIRE_RL_master_xactor_do_clear,
-       WILL_FIRE_RL_master_xactor_ug_master_u_ar_doDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_ar_setPeek,
-       WILL_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_aw_doDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_aw_setPeek,
-       WILL_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_b_doPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_r_doPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_w_doDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_w_setPeek,
-       WILL_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop,
        WILL_FIRE_RL_rl_sb_read_finish,
        WILL_FIRE_RL_rl_sb_write_response,
        WILL_FIRE_av_read,
-       WILL_FIRE_master_ar_arready,
-       WILL_FIRE_master_aw_awready,
-       WILL_FIRE_master_b_bflit,
-       WILL_FIRE_master_r_rflit,
-       WILL_FIRE_master_w_wready,
+       WILL_FIRE_master_ar_drop,
+       WILL_FIRE_master_aw_drop,
+       WILL_FIRE_master_b_put,
+       WILL_FIRE_master_r_put,
+       WILL_FIRE_master_w_drop,
        WILL_FIRE_reset,
        WILL_FIRE_write;
 
@@ -773,82 +318,79 @@ module mkDM_System_Bus(CLK,
   reg [31 : 0] MUX_rg_sbaddress0$write_1__VAL_2,
 	       MUX_rg_sbaddress1$write_1__VAL_2;
   reg [2 : 0] MUX_rg_sbcs_sberror$write_1__VAL_4;
-  wire [97 : 0] MUX_master_xactor_shim_arff_rv$port0__write_1__VAL_1,
-		MUX_master_xactor_shim_arff_rv$port0__write_1__VAL_2;
-  wire MUX_master_xactor_shim_arff_rv$port0__write_1__SEL_1,
+  wire [96 : 0] MUX_masterPortShim_arff$enq_1__VAL_1,
+		MUX_masterPortShim_arff$enq_1__VAL_2;
+  wire MUX_masterPortShim_arff$enq_1__SEL_1,
        MUX_rg_sbaddress0$write_1__SEL_2,
        MUX_rg_sbaddress0$write_1__SEL_3,
        MUX_rg_sbaddress1$write_1__SEL_2,
        MUX_rg_sbcs_sbbusyerror$write_1__SEL_2,
        MUX_rg_sbcs_sbbusyerror$write_1__SEL_3,
-       MUX_rg_sbcs_sberror$write_1__SEL_1,
+       MUX_rg_sbcs_sberror$write_1__SEL_2,
        MUX_rg_sbcs_sberror$write_1__SEL_3,
        MUX_rg_sbcs_sberror$write_1__SEL_4,
        MUX_rg_sbdata0$write_1__SEL_3;
 
   // remaining internal signals
   reg [63 : 0] CASE_rg_sbaddress_reading_BITS_2_TO_0_0x0_resu_ETC__q1,
-	       IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104,
-	       IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117,
-	       IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155,
-	       IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130,
-	       wrd_wdata__h7269;
-  reg [7 : 0] wrd_wstrb__h7270;
-  reg [2 : 0] _theResult___snd_snd_val__h7160, axi4_size_val__h5415;
-  wire [96 : 0] master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4,
-		master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2;
-  wire [73 : 0] master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3;
-  wire [63 : 0] _theResult___fst__h7145,
-		addr64__h6432,
-		result__h3808,
-		result__h3838,
-		result__h3865,
-		result__h3892,
-		result__h3919,
-		result__h3946,
-		result__h3973,
-		result__h4000,
-		result__h4045,
-		result__h4072,
-		result__h4099,
-		result__h4126,
-		result__h4167,
-		result__h4194,
-		rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156,
-		rg_sbaddress1_49_CONCAT_write_dm_word_53_PLUS__ETC___d354,
-		sbaddress__h3099,
-		word64__h7090;
-  wire [31 : 0] IF_rg_sbcs_sbreadonaddr_76_THEN_IF_rg_sbcs_sba_ETC___d365,
-		IF_write_dm_addr_EQ_0x39_13_THEN_rg_sbaddress1_ETC___d356,
-		v__h4807,
-		v__h4941;
-  wire [7 : 0] strobe64__h7143, strobe64__h7147, strobe64__h7151;
-  wire [5 : 0] shift_bits__h7093;
-  wire rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147,
-       rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d162,
-       rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d371,
-       rg_sbcs_sberror_9_EQ_0_0_AND_rg_sbcs_sbreadona_ETC___d346,
-       write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311,
-       write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d320,
-       write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d326,
-       write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d328,
-       write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d333,
-       write_dm_addr_EQ_0x3C_16_AND_rg_sb_state_7_EQ__ETC___d381;
+	       IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62,
+	       IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75,
+	       IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114,
+	       IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88,
+	       wrd_wdata__h4557;
+  reg [7 : 0] wrd_wstrb__h4558;
+  reg [2 : 0] _theResult___snd_snd_val__h4509, axi4_size_val__h2835;
+  wire [63 : 0] _theResult___fst__h4494,
+		addr64__h3849,
+		result__h1276,
+		result__h1306,
+		result__h1333,
+		result__h1360,
+		result__h1387,
+		result__h1414,
+		result__h1441,
+		result__h1468,
+		result__h1513,
+		result__h1540,
+		result__h1567,
+		result__h1594,
+		result__h1635,
+		result__h1662,
+		rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115,
+		rg_sbaddress1_08_CONCAT_write_dm_word_09_PLUS__ETC___d310,
+		sbaddress__h631,
+		word64__h4439;
+  wire [31 : 0] IF_rg_sbcs_sbreadonaddr_35_THEN_IF_rg_sbcs_sba_ETC___d321,
+		IF_write_dm_addr_EQ_0x39_69_THEN_rg_sbaddress1_ETC___d312,
+		v__h2279,
+		v__h2413;
+  wire [7 : 0] strobe64__h4492, strobe64__h4496, strobe64__h4500;
+  wire [5 : 0] shift_bits__h4442;
+  wire rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106,
+       rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d121,
+       rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d327,
+       rg_sbcs_sberror_EQ_0_AND_rg_sbcs_sbreadonaddr__ETC___d302,
+       write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267,
+       write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d276,
+       write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d282,
+       write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d284,
+       write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d289,
+       write_dm_addr_EQ_0x3C_72_AND_rg_sb_state_EQ_0__ETC___d337;
 
   // action method reset
-  assign RDY_reset = !master_xactor_clearing ;
-  assign CAN_FIRE_reset = !master_xactor_clearing ;
+  assign RDY_reset = 1'd1 ;
+  assign CAN_FIRE_reset = 1'd1 ;
   assign WILL_FIRE_reset = EN_reset ;
 
   // actionvalue method av_read
   always@(av_read_dm_addr or
-	  v__h4807 or rg_sbaddress0 or rg_sbaddress1 or v__h4941)
+	  v__h2279 or rg_sbaddress0 or rg_sbaddress1 or v__h2413)
   begin
     case (av_read_dm_addr)
-      7'h38: av_read = v__h4807;
+      7'h38: av_read = v__h2279;
       7'h39: av_read = rg_sbaddress0;
       7'h3A: av_read = rg_sbaddress1;
-      7'h3C: av_read = v__h4941;
+      7'h3C: av_read = v__h2413;
       default: av_read = 32'd0;
     endcase
   end
@@ -856,7 +398,7 @@ module mkDM_System_Bus(CLK,
 	     rg_sb_state == 2'd0 &&
 	     (rg_sbcs_sbbusyerror || rg_sbcs_sberror != 3'd0 ||
 	      !rg_sbcs_sbreadondata ||
-	      !master_xactor_clearing && !master_xactor_shim_arff_rv[97]) ;
+	      masterPortShim_arff$FULL_N) ;
   assign CAN_FIRE_av_read = RDY_av_read ;
   assign WILL_FIRE_av_read = EN_av_read ;
 
@@ -866,320 +408,198 @@ module mkDM_System_Bus(CLK,
 	     (rg_sb_state != 2'd0 || rg_sbcs_sbbusyerror ||
 	      rg_sbcs_sberror != 3'd0 ||
 	      !rg_sbcs_sbreadonaddr ||
-	      !master_xactor_clearing && !master_xactor_shim_arff_rv[97]) &&
+	      masterPortShim_arff$FULL_N) &&
 	     (rg_sb_state != 2'd0 || rg_sbcs_sbbusyerror ||
 	      rg_sbcs_sberror != 3'd0 ||
-	      !master_xactor_clearing && !master_xactor_shim_awff_rv[97] &&
-	      !master_xactor_shim_wff_rv[74]) ;
+	      masterPortShim_awff$FULL_N && masterPortShim_wff$FULL_N) ;
   assign WILL_FIRE_write = EN_write ;
 
-  // value method master_aw_awid
-  assign master_awid =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[96:93] ;
+  // value method master_aw_canPeek
+  assign master_aw_canPeek = masterPortShim_awff$EMPTY_N ;
 
-  // value method master_aw_awaddr
-  assign master_awaddr =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[92:29] ;
+  // value method master_aw_peek
+  assign master_aw_peek = masterPortShim_awff$D_OUT ;
+  assign RDY_master_aw_peek = masterPortShim_awff$EMPTY_N ;
 
-  // value method master_aw_awlen
-  assign master_awlen =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[28:21] ;
+  // action method master_aw_drop
+  assign RDY_master_aw_drop = masterPortShim_awff$EMPTY_N ;
+  assign CAN_FIRE_master_aw_drop = masterPortShim_awff$EMPTY_N ;
+  assign WILL_FIRE_master_aw_drop = EN_master_aw_drop ;
 
-  // value method master_aw_awsize
-  assign master_awsize =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[20:18] ;
+  // value method master_w_canPeek
+  assign master_w_canPeek = masterPortShim_wff$EMPTY_N ;
 
-  // value method master_aw_awburst
-  assign master_awburst =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[17:16] ;
+  // value method master_w_peek
+  assign master_w_peek = masterPortShim_wff$D_OUT ;
+  assign RDY_master_w_peek = masterPortShim_wff$EMPTY_N ;
 
-  // value method master_aw_awlock
-  assign master_awlock =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[15] ;
+  // action method master_w_drop
+  assign RDY_master_w_drop = masterPortShim_wff$EMPTY_N ;
+  assign CAN_FIRE_master_w_drop = masterPortShim_wff$EMPTY_N ;
+  assign WILL_FIRE_master_w_drop = EN_master_w_drop ;
 
-  // value method master_aw_awcache
-  assign master_awcache =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[14:11] ;
+  // value method master_b_canPut
+  assign master_b_canPut = masterPortShim_bff$FULL_N ;
 
-  // value method master_aw_awprot
-  assign master_awprot =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[10:8] ;
+  // action method master_b_put
+  assign RDY_master_b_put = masterPortShim_bff$FULL_N ;
+  assign CAN_FIRE_master_b_put = masterPortShim_bff$FULL_N ;
+  assign WILL_FIRE_master_b_put = EN_master_b_put ;
 
-  // value method master_aw_awqos
-  assign master_awqos =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[7:4] ;
+  // value method master_ar_canPeek
+  assign master_ar_canPeek = masterPortShim_arff$EMPTY_N ;
 
-  // value method master_aw_awregion
-  assign master_awregion =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[3:0] ;
+  // value method master_ar_peek
+  assign master_ar_peek = masterPortShim_arff$D_OUT ;
+  assign RDY_master_ar_peek = masterPortShim_arff$EMPTY_N ;
 
-  // value method master_aw_awvalid
-  assign master_awvalid = CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek ;
+  // action method master_ar_drop
+  assign RDY_master_ar_drop = masterPortShim_arff$EMPTY_N ;
+  assign CAN_FIRE_master_ar_drop = masterPortShim_arff$EMPTY_N ;
+  assign WILL_FIRE_master_ar_drop = EN_master_ar_drop ;
 
-  // action method master_aw_awready
-  assign CAN_FIRE_master_aw_awready = 1'd1 ;
-  assign WILL_FIRE_master_aw_awready = 1'd1 ;
+  // value method master_r_canPut
+  assign master_r_canPut = masterPortShim_rff$FULL_N ;
 
-  // value method master_w_wdata
-  assign master_wdata =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[73:10] ;
+  // action method master_r_put
+  assign RDY_master_r_put = masterPortShim_rff$FULL_N ;
+  assign CAN_FIRE_master_r_put = masterPortShim_rff$FULL_N ;
+  assign WILL_FIRE_master_r_put = EN_master_r_put ;
 
-  // value method master_w_wstrb
-  assign master_wstrb =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[9:2] ;
+  // submodule masterPortShim_arff
+  FIFO2 #(.width(32'd97), .guarded(32'd1)) masterPortShim_arff(.RST(RST_N),
+							       .CLK(CLK),
+							       .D_IN(masterPortShim_arff$D_IN),
+							       .ENQ(masterPortShim_arff$ENQ),
+							       .DEQ(masterPortShim_arff$DEQ),
+							       .CLR(masterPortShim_arff$CLR),
+							       .D_OUT(masterPortShim_arff$D_OUT),
+							       .FULL_N(masterPortShim_arff$FULL_N),
+							       .EMPTY_N(masterPortShim_arff$EMPTY_N));
 
-  // value method master_w_wlast
-  assign master_wlast =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[1] ;
+  // submodule masterPortShim_awff
+  FIFO2 #(.width(32'd97), .guarded(32'd1)) masterPortShim_awff(.RST(RST_N),
+							       .CLK(CLK),
+							       .D_IN(masterPortShim_awff$D_IN),
+							       .ENQ(masterPortShim_awff$ENQ),
+							       .DEQ(masterPortShim_awff$DEQ),
+							       .CLR(masterPortShim_awff$CLR),
+							       .D_OUT(masterPortShim_awff$D_OUT),
+							       .FULL_N(masterPortShim_awff$FULL_N),
+							       .EMPTY_N(masterPortShim_awff$EMPTY_N));
 
-  // value method master_w_wuser
-  assign master_wuser =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[0] ;
+  // submodule masterPortShim_bff
+  FIFO2 #(.width(32'd6), .guarded(32'd1)) masterPortShim_bff(.RST(RST_N),
+							     .CLK(CLK),
+							     .D_IN(masterPortShim_bff$D_IN),
+							     .ENQ(masterPortShim_bff$ENQ),
+							     .DEQ(masterPortShim_bff$DEQ),
+							     .CLR(masterPortShim_bff$CLR),
+							     .D_OUT(masterPortShim_bff$D_OUT),
+							     .FULL_N(masterPortShim_bff$FULL_N),
+							     .EMPTY_N(masterPortShim_bff$EMPTY_N));
 
-  // value method master_w_wvalid
-  assign master_wvalid = CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek ;
+  // submodule masterPortShim_rff
+  FIFO2 #(.width(32'd72), .guarded(32'd1)) masterPortShim_rff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(masterPortShim_rff$D_IN),
+							      .ENQ(masterPortShim_rff$ENQ),
+							      .DEQ(masterPortShim_rff$DEQ),
+							      .CLR(masterPortShim_rff$CLR),
+							      .D_OUT(masterPortShim_rff$D_OUT),
+							      .FULL_N(masterPortShim_rff$FULL_N),
+							      .EMPTY_N(masterPortShim_rff$EMPTY_N));
 
-  // action method master_w_wready
-  assign CAN_FIRE_master_w_wready = 1'd1 ;
-  assign WILL_FIRE_master_w_wready = 1'd1 ;
-
-  // action method master_b_bflit
-  assign CAN_FIRE_master_b_bflit = 1'd1 ;
-  assign WILL_FIRE_master_b_bflit = master_bvalid ;
-
-  // value method master_b_bready
-  assign master_bready = !master_xactor_shim_bff_rv[6] ;
-
-  // value method master_ar_arid
-  assign master_arid =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[96:93] ;
-
-  // value method master_ar_araddr
-  assign master_araddr =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[92:29] ;
-
-  // value method master_ar_arlen
-  assign master_arlen =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[28:21] ;
-
-  // value method master_ar_arsize
-  assign master_arsize =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[20:18] ;
-
-  // value method master_ar_arburst
-  assign master_arburst =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[17:16] ;
-
-  // value method master_ar_arlock
-  assign master_arlock =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[15] ;
-
-  // value method master_ar_arcache
-  assign master_arcache =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[14:11] ;
-
-  // value method master_ar_arprot
-  assign master_arprot =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[10:8] ;
-
-  // value method master_ar_arqos
-  assign master_arqos =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[7:4] ;
-
-  // value method master_ar_arregion
-  assign master_arregion =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[3:0] ;
-
-  // value method master_ar_arvalid
-  assign master_arvalid = CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek ;
-
-  // action method master_ar_arready
-  assign CAN_FIRE_master_ar_arready = 1'd1 ;
-  assign WILL_FIRE_master_ar_arready = 1'd1 ;
-
-  // action method master_r_rflit
-  assign CAN_FIRE_master_r_rflit = 1'd1 ;
-  assign WILL_FIRE_master_r_rflit = master_rvalid ;
-
-  // value method master_r_rready
-  assign master_rready = !master_xactor_shim_rff_rv[72] ;
-
-  // rule RL_master_xactor_ug_master_u_b_warnDoPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut =
-	     master_xactor_ug_master_u_b_putWire$whas &&
-	     master_xactor_shim_bff_rv[6] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut ;
-
-  // rule RL_master_xactor_ug_master_u_b_doPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut =
-	     !master_xactor_shim_bff_rv[6] &&
-	     master_xactor_ug_master_u_b_putWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_b_doPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut ;
-
-  // rule RL_master_xactor_ug_master_u_r_warnDoPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut =
-	     master_xactor_ug_master_u_r_putWire$whas &&
-	     master_xactor_shim_rff_rv[72] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut ;
-
-  // rule RL_master_xactor_ug_master_u_r_doPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut =
-	     !master_xactor_shim_rff_rv[72] &&
-	     master_xactor_ug_master_u_r_putWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_r_doPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut ;
+  // submodule masterPortShim_wff
+  FIFO2 #(.width(32'd74), .guarded(32'd1)) masterPortShim_wff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(masterPortShim_wff$D_IN),
+							      .ENQ(masterPortShim_wff$ENQ),
+							      .DEQ(masterPortShim_wff$DEQ),
+							      .CLR(masterPortShim_wff$CLR),
+							      .D_OUT(masterPortShim_wff$D_OUT),
+							      .FULL_N(masterPortShim_wff$FULL_N),
+							      .EMPTY_N(masterPortShim_wff$EMPTY_N));
 
   // rule RL_rl_sb_read_finish
   assign CAN_FIRE_RL_rl_sb_read_finish =
-	     !master_xactor_clearing &&
-	     master_xactor_shim_rff_rv$port1__read[72] &&
-	     rg_sb_state == 2'd1 &&
+	     masterPortShim_rff$EMPTY_N && rg_sb_state == 2'd1 &&
 	     rg_sbcs_sberror == 3'd0 ;
   assign WILL_FIRE_RL_rl_sb_read_finish = CAN_FIRE_RL_rl_sb_read_finish ;
 
   // rule RL_rl_sb_write_response
-  assign CAN_FIRE_RL_rl_sb_write_response =
-	     !master_xactor_clearing &&
-	     master_xactor_shim_bff_rv$port1__read[6] ;
-  assign WILL_FIRE_RL_rl_sb_write_response =
-	     CAN_FIRE_RL_rl_sb_write_response ;
-
-  // rule RL_master_xactor_ug_master_u_aw_setPeek
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek =
-	     master_xactor_shim_awff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_aw_setPeek =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek ;
-
-  // rule RL_master_xactor_ug_master_u_aw_warnDoDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop =
-	     master_xactor_ug_master_u_aw_dropWire$whas &&
-	     !master_xactor_shim_awff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop ;
-
-  // rule RL_master_xactor_ug_master_u_aw_doDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop =
-	     master_xactor_shim_awff_rv$port1__read[97] &&
-	     master_xactor_ug_master_u_aw_dropWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_aw_doDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop ;
-
-  // rule RL_master_xactor_ug_master_u_w_setPeek
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek =
-	     master_xactor_shim_wff_rv$port1__read[74] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_w_setPeek =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek ;
-
-  // rule RL_master_xactor_ug_master_u_w_warnDoDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop =
-	     master_xactor_ug_master_u_w_dropWire$whas &&
-	     !master_xactor_shim_wff_rv$port1__read[74] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop ;
-
-  // rule RL_master_xactor_ug_master_u_w_doDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop =
-	     master_xactor_shim_wff_rv$port1__read[74] &&
-	     master_xactor_ug_master_u_w_dropWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_w_doDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop ;
-
-  // rule RL_master_xactor_ug_master_u_ar_setPeek
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek =
-	     master_xactor_shim_arff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_ar_setPeek =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek ;
-
-  // rule RL_master_xactor_ug_master_u_ar_warnDoDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop =
-	     master_xactor_ug_master_u_ar_dropWire$whas &&
-	     !master_xactor_shim_arff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop ;
-
-  // rule RL_master_xactor_ug_master_u_ar_doDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop =
-	     master_xactor_shim_arff_rv$port1__read[97] &&
-	     master_xactor_ug_master_u_ar_dropWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_ar_doDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop ;
-
-  // rule RL_master_xactor_do_clear
-  assign CAN_FIRE_RL_master_xactor_do_clear = master_xactor_clearing ;
-  assign WILL_FIRE_RL_master_xactor_do_clear = master_xactor_clearing ;
+  assign CAN_FIRE_RL_rl_sb_write_response = masterPortShim_bff$EMPTY_N ;
+  assign WILL_FIRE_RL_rl_sb_write_response = masterPortShim_bff$EMPTY_N ;
 
   // inputs to muxes for submodule ports
-  assign MUX_master_xactor_shim_arff_rv$port0__write_1__SEL_1 =
+  assign MUX_masterPortShim_arff$enq_1__SEL_1 =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d162 ;
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d121 ;
   assign MUX_rg_sbaddress0$write_1__SEL_2 =
 	     EN_write && write_dm_addr != 7'h38 &&
 	     (rg_sb_state == 2'd0 && !rg_sbcs_sbbusyerror &&
 	      rg_sbcs_sberror == 3'd0 &&
 	      write_dm_addr == 7'h39 ||
 	      write_dm_addr == 7'h3C &&
-	      rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147) ;
+	      rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106) ;
   assign MUX_rg_sbaddress0$write_1__SEL_3 =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147 ;
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106 ;
   assign MUX_rg_sbaddress1$write_1__SEL_2 =
 	     EN_write && write_dm_addr != 7'h38 &&
 	     ((write_dm_addr == 7'h39 || write_dm_addr == 7'h3A) &&
 	      rg_sb_state == 2'd0 &&
 	      !rg_sbcs_sbbusyerror &&
-	      rg_sbcs_sberror_9_EQ_0_0_AND_rg_sbcs_sbreadona_ETC___d346 ||
+	      rg_sbcs_sberror_EQ_0_AND_rg_sbcs_sbreadonaddr__ETC___d302 ||
 	      write_dm_addr == 7'h3C &&
-	      rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147) ;
+	      rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106) ;
   assign MUX_rg_sbcs_sbbusyerror$write_1__SEL_2 =
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d320 ;
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d276 ;
   assign MUX_rg_sbcs_sbbusyerror$write_1__SEL_3 =
 	     EN_av_read && av_read_dm_addr == 7'h3C && rg_sb_state != 2'd0 ;
-  assign MUX_rg_sbcs_sberror$write_1__SEL_1 =
-	     WILL_FIRE_RL_rl_sb_write_response &&
-	     master_xactor_shim_bff_rv$port1__read[1:0] != 2'd0 ;
+  assign MUX_rg_sbcs_sberror$write_1__SEL_2 =
+	     masterPortShim_bff$EMPTY_N &&
+	     masterPortShim_bff$D_OUT[1:0] != 2'd0 ;
   assign MUX_rg_sbcs_sberror$write_1__SEL_3 =
 	     WILL_FIRE_RL_rl_sb_read_finish &&
-	     master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ;
+	     masterPortShim_rff$D_OUT[3:2] != 2'd0 ;
   assign MUX_rg_sbcs_sberror$write_1__SEL_4 =
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d328 ;
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d284 ;
   assign MUX_rg_sbdata0$write_1__SEL_3 =
 	     EN_write &&
-	     write_dm_addr_EQ_0x3C_16_AND_rg_sb_state_7_EQ__ETC___d381 ;
-  assign MUX_master_xactor_shim_arff_rv$port0__write_1__VAL_1 =
-	     { 5'd16,
-	       sbaddress__h3099,
+	     write_dm_addr_EQ_0x3C_72_AND_rg_sb_state_EQ_0__ETC___d337 ;
+  assign MUX_masterPortShim_arff$enq_1__VAL_1 =
+	     { 4'd0,
+	       sbaddress__h631,
 	       8'd0,
-	       axi4_size_val__h5415,
+	       axi4_size_val__h2835,
 	       18'd65536 } ;
-  assign MUX_master_xactor_shim_arff_rv$port0__write_1__VAL_2 =
-	     { 5'd16, addr64__h6432, 8'd0, axi4_size_val__h5415, 18'd65536 } ;
+  assign MUX_masterPortShim_arff$enq_1__VAL_2 =
+	     { 4'd0, addr64__h3849, 8'd0, axi4_size_val__h2835, 18'd65536 } ;
   always@(write_dm_addr or
-	  rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156 or
-	  IF_rg_sbcs_sbreadonaddr_76_THEN_IF_rg_sbcs_sba_ETC___d365)
+	  rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115 or
+	  IF_rg_sbcs_sbreadonaddr_35_THEN_IF_rg_sbcs_sba_ETC___d321)
   begin
     case (write_dm_addr)
       7'h39, 7'h3A:
 	  MUX_rg_sbaddress0$write_1__VAL_2 =
-	      IF_rg_sbcs_sbreadonaddr_76_THEN_IF_rg_sbcs_sba_ETC___d365;
+	      IF_rg_sbcs_sbreadonaddr_35_THEN_IF_rg_sbcs_sba_ETC___d321;
       default: MUX_rg_sbaddress0$write_1__VAL_2 =
-		   rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156[31:0];
+		   rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115[31:0];
     endcase
   end
   always@(write_dm_addr or
-	  rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156 or
-	  IF_write_dm_addr_EQ_0x39_13_THEN_rg_sbaddress1_ETC___d356)
+	  rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115 or
+	  IF_write_dm_addr_EQ_0x39_69_THEN_rg_sbaddress1_ETC___d312)
   begin
     case (write_dm_addr)
       7'h39, 7'h3A:
 	  MUX_rg_sbaddress1$write_1__VAL_2 =
-	      IF_write_dm_addr_EQ_0x39_13_THEN_rg_sbaddress1_ETC___d356;
+	      IF_write_dm_addr_EQ_0x39_69_THEN_rg_sbaddress1_ETC___d312;
       default: MUX_rg_sbaddress1$write_1__VAL_2 =
-		   rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156[63:32];
+		   rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115[63:32];
     endcase
   end
   always@(write_dm_word)
@@ -1190,169 +610,14 @@ module mkDM_System_Bus(CLK,
     endcase
   end
 
-  // inlined wires
-  assign master_xactor_ug_master_u_b_putWire$wget =
-	     { master_bid, master_bresp } ;
-  assign master_xactor_ug_master_u_b_putWire$whas =
-	     master_bvalid && !master_xactor_shim_bff_rv[6] ;
-  assign master_xactor_ug_master_u_r_putWire$wget =
-	     { master_rid,
-	       master_rdata,
-	       master_rresp,
-	       master_rlast,
-	       master_ruser } ;
-  assign master_xactor_ug_master_u_r_putWire$whas =
-	     master_rvalid && !master_xactor_shim_rff_rv[72] ;
-  assign master_xactor_ug_master_u_aw_dropWire$whas =
-	     master_xactor_shim_awff_rv$port1__read[97] && master_awready ;
-  assign master_xactor_ug_master_u_w_dropWire$whas =
-	     master_xactor_shim_wff_rv$port1__read[74] && master_wready ;
-  assign master_xactor_ug_master_u_ar_dropWire$whas =
-	     master_xactor_shim_arff_rv$port1__read[97] && master_arready ;
-  assign master_xactor_shim_awff_rv$EN_port0__write =
-	     EN_write &&
-	     write_dm_addr_EQ_0x3C_16_AND_rg_sb_state_7_EQ__ETC___d381 ;
-  assign master_xactor_shim_awff_rv$port0__write_1 =
-	     { 5'd16,
-	       sbaddress__h3099,
-	       8'd0,
-	       _theResult___snd_snd_val__h7160,
-	       18'd65536 } ;
-  assign master_xactor_shim_awff_rv$port1__read =
-	     master_xactor_shim_awff_rv$EN_port0__write ?
-	       master_xactor_shim_awff_rv$port0__write_1 :
-	       master_xactor_shim_awff_rv ;
-  assign master_xactor_shim_awff_rv$port2__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_awff_rv$port1__read ;
-  assign master_xactor_shim_awff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_awff_rv$port2__read ;
-  assign master_xactor_shim_wff_rv$EN_port0__write =
-	     EN_write &&
-	     write_dm_addr_EQ_0x3C_16_AND_rg_sb_state_7_EQ__ETC___d381 ;
-  assign master_xactor_shim_wff_rv$port0__write_1 =
-	     { 1'd1, wrd_wdata__h7269, wrd_wstrb__h7270, 2'd2 } ;
-  assign master_xactor_shim_wff_rv$port1__read =
-	     master_xactor_shim_wff_rv$EN_port0__write ?
-	       master_xactor_shim_wff_rv$port0__write_1 :
-	       master_xactor_shim_wff_rv ;
-  assign master_xactor_shim_wff_rv$port1__write_1 =
-	     { 1'd0,
-	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_wff_rv$port2__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop ?
-	       master_xactor_shim_wff_rv$port1__write_1 :
-	       master_xactor_shim_wff_rv$port1__read ;
-  assign master_xactor_shim_wff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_wff_rv$port1__write_1 :
-	       master_xactor_shim_wff_rv$port2__read ;
-  assign master_xactor_shim_bff_rv$port0__write_1 =
-	     { 1'd1, master_xactor_ug_master_u_b_putWire$wget } ;
-  assign master_xactor_shim_bff_rv$port1__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut ?
-	       master_xactor_shim_bff_rv$port0__write_1 :
-	       master_xactor_shim_bff_rv ;
-  assign master_xactor_shim_bff_rv$EN_port1__write =
-	     !master_xactor_clearing &&
-	     master_xactor_shim_bff_rv$port1__read[6] ;
-  assign master_xactor_shim_bff_rv$port1__write_1 =
-	     { 1'd0, 6'bxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_bff_rv$port2__read =
-	     master_xactor_shim_bff_rv$EN_port1__write ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
-	       master_xactor_shim_bff_rv$port1__read ;
-  assign master_xactor_shim_bff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
-	       master_xactor_shim_bff_rv$port2__read ;
-  assign master_xactor_shim_arff_rv$EN_port0__write =
-	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d162 ||
-	     EN_write && write_dm_addr == 7'h39 &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d371 ;
-  assign master_xactor_shim_arff_rv$port0__write_1 =
-	     MUX_master_xactor_shim_arff_rv$port0__write_1__SEL_1 ?
-	       MUX_master_xactor_shim_arff_rv$port0__write_1__VAL_1 :
-	       MUX_master_xactor_shim_arff_rv$port0__write_1__VAL_2 ;
-  assign master_xactor_shim_arff_rv$port1__read =
-	     master_xactor_shim_arff_rv$EN_port0__write ?
-	       master_xactor_shim_arff_rv$port0__write_1 :
-	       master_xactor_shim_arff_rv ;
-  assign master_xactor_shim_arff_rv$port1__write_1 =
-	     { 1'd0,
-	       97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_arff_rv$port2__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_arff_rv$port1__read ;
-  assign master_xactor_shim_arff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_arff_rv$port2__read ;
-  assign master_xactor_shim_rff_rv$port0__write_1 =
-	     { 1'd1, master_xactor_ug_master_u_r_putWire$wget } ;
-  assign master_xactor_shim_rff_rv$port1__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut ?
-	       master_xactor_shim_rff_rv$port0__write_1 :
-	       master_xactor_shim_rff_rv ;
-  assign master_xactor_shim_rff_rv$EN_port1__write =
-	     !master_xactor_clearing &&
-	     master_xactor_shim_rff_rv$port1__read[72] &&
-	     rg_sb_state == 2'd1 &&
-	     rg_sbcs_sberror == 3'd0 ;
-  assign master_xactor_shim_rff_rv$port1__write_1 =
-	     { 1'd0,
-	       72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_rff_rv$port2__read =
-	     master_xactor_shim_rff_rv$EN_port1__write ?
-	       master_xactor_shim_rff_rv$port1__write_1 :
-	       master_xactor_shim_rff_rv$port1__read ;
-  assign master_xactor_shim_rff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_rff_rv$port1__write_1 :
-	       master_xactor_shim_rff_rv$port2__read ;
-
-  // register master_xactor_clearing
-  assign master_xactor_clearing$D_IN = !master_xactor_clearing ;
-  assign master_xactor_clearing$EN = master_xactor_clearing || EN_reset ;
-
-  // register master_xactor_shim_arff_rv
-  assign master_xactor_shim_arff_rv$D_IN =
-	     master_xactor_shim_arff_rv$port3__read ;
-  assign master_xactor_shim_arff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_awff_rv
-  assign master_xactor_shim_awff_rv$D_IN =
-	     master_xactor_shim_awff_rv$port3__read ;
-  assign master_xactor_shim_awff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_bff_rv
-  assign master_xactor_shim_bff_rv$D_IN =
-	     master_xactor_shim_bff_rv$port3__read ;
-  assign master_xactor_shim_bff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_rff_rv
-  assign master_xactor_shim_rff_rv$D_IN =
-	     master_xactor_shim_rff_rv$port3__read ;
-  assign master_xactor_shim_rff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_wff_rv
-  assign master_xactor_shim_wff_rv$D_IN =
-	     master_xactor_shim_wff_rv$port3__read ;
-  assign master_xactor_shim_wff_rv$EN = 1'b1 ;
-
   // register rg_sb_state
   assign rg_sb_state$D_IN =
 	     (EN_reset || WILL_FIRE_RL_rl_sb_read_finish) ? 2'd0 : 2'd1 ;
   assign rg_sb_state$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d162 ||
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d121 ||
 	     EN_write && write_dm_addr == 7'h39 &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d371 ||
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d327 ||
 	     WILL_FIRE_RL_rl_sb_read_finish ||
 	     EN_reset ;
 
@@ -1361,20 +626,20 @@ module mkDM_System_Bus(CLK,
 	  MUX_rg_sbaddress0$write_1__SEL_2 or
 	  MUX_rg_sbaddress0$write_1__VAL_2 or
 	  MUX_rg_sbaddress0$write_1__SEL_3 or
-	  rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156)
+	  rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115)
   case (1'b1)
     EN_reset: rg_sbaddress0$D_IN = 32'd0;
     MUX_rg_sbaddress0$write_1__SEL_2:
 	rg_sbaddress0$D_IN = MUX_rg_sbaddress0$write_1__VAL_2;
     MUX_rg_sbaddress0$write_1__SEL_3:
 	rg_sbaddress0$D_IN =
-	    rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156[31:0];
+	    rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115[31:0];
     default: rg_sbaddress0$D_IN =
 		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sbaddress0$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147 ||
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106 ||
 	     MUX_rg_sbaddress0$write_1__SEL_2 ||
 	     EN_reset ;
 
@@ -1383,46 +648,46 @@ module mkDM_System_Bus(CLK,
 	  MUX_rg_sbaddress1$write_1__SEL_2 or
 	  MUX_rg_sbaddress1$write_1__VAL_2 or
 	  MUX_rg_sbaddress0$write_1__SEL_3 or
-	  rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156)
+	  rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115)
   case (1'b1)
     EN_reset: rg_sbaddress1$D_IN = 32'd0;
     MUX_rg_sbaddress1$write_1__SEL_2:
 	rg_sbaddress1$D_IN = MUX_rg_sbaddress1$write_1__VAL_2;
     MUX_rg_sbaddress0$write_1__SEL_3:
 	rg_sbaddress1$D_IN =
-	    rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156[63:32];
+	    rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115[63:32];
     default: rg_sbaddress1$D_IN =
 		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sbaddress1$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147 ||
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106 ||
 	     MUX_rg_sbaddress1$write_1__SEL_2 ||
 	     EN_reset ;
 
   // register rg_sbaddress_reading
   assign rg_sbaddress_reading$D_IN =
-	     MUX_master_xactor_shim_arff_rv$port0__write_1__SEL_1 ?
-	       sbaddress__h3099 :
-	       addr64__h6432 ;
+	     MUX_masterPortShim_arff$enq_1__SEL_1 ?
+	       sbaddress__h631 :
+	       addr64__h3849 ;
   assign rg_sbaddress_reading$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d162 ||
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d121 ||
 	     EN_write && write_dm_addr == 7'h39 &&
-	     rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d371 ;
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d327 ;
 
   // register rg_sbcs_sbaccess
   assign rg_sbcs_sbaccess$D_IN = EN_reset ? 3'd2 : write_dm_word[19:17] ;
   assign rg_sbcs_sbaccess$EN =
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311 ||
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267 ||
 	     EN_reset ;
 
   // register rg_sbcs_sbautoincrement
   assign rg_sbcs_sbautoincrement$D_IN = !EN_reset && write_dm_word[16] ;
   assign rg_sbcs_sbautoincrement$EN =
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311 ||
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267 ||
 	     EN_reset ;
 
   // register rg_sbcs_sbbusyerror
@@ -1439,141 +704,170 @@ module mkDM_System_Bus(CLK,
   assign rg_sbcs_sbbusyerror$EN =
 	     EN_av_read && av_read_dm_addr == 7'h3C && rg_sb_state != 2'd0 ||
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d320 ||
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d276 ||
 	     EN_reset ;
 
   // register rg_sbcs_sberror
-  always@(MUX_rg_sbcs_sberror$write_1__SEL_1 or
-	  EN_reset or
+  always@(EN_reset or
+	  MUX_rg_sbcs_sberror$write_1__SEL_2 or
 	  MUX_rg_sbcs_sberror$write_1__SEL_3 or
 	  MUX_rg_sbcs_sberror$write_1__SEL_4 or
 	  MUX_rg_sbcs_sberror$write_1__VAL_4)
   case (1'b1)
-    MUX_rg_sbcs_sberror$write_1__SEL_1: rg_sbcs_sberror$D_IN = 3'd3;
     EN_reset: rg_sbcs_sberror$D_IN = 3'd0;
-    MUX_rg_sbcs_sberror$write_1__SEL_3: rg_sbcs_sberror$D_IN = 3'd3;
+    MUX_rg_sbcs_sberror$write_1__SEL_2 || MUX_rg_sbcs_sberror$write_1__SEL_3:
+	rg_sbcs_sberror$D_IN = 3'd3;
     MUX_rg_sbcs_sberror$write_1__SEL_4:
 	rg_sbcs_sberror$D_IN = MUX_rg_sbcs_sberror$write_1__VAL_4;
     default: rg_sbcs_sberror$D_IN = 3'bxxx /* unspecified value */ ;
   endcase
   assign rg_sbcs_sberror$EN =
 	     WILL_FIRE_RL_rl_sb_read_finish &&
-	     master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 ||
-	     WILL_FIRE_RL_rl_sb_write_response &&
-	     master_xactor_shim_bff_rv$port1__read[1:0] != 2'd0 ||
+	     masterPortShim_rff$D_OUT[3:2] != 2'd0 ||
+	     masterPortShim_bff$EMPTY_N &&
+	     masterPortShim_bff$D_OUT[1:0] != 2'd0 ||
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d328 ||
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d284 ||
 	     EN_reset ;
 
   // register rg_sbcs_sbreadonaddr
   assign rg_sbcs_sbreadonaddr$D_IN = !EN_reset && write_dm_word[20] ;
   assign rg_sbcs_sbreadonaddr$EN =
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311 ||
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267 ||
 	     EN_reset ;
 
   // register rg_sbcs_sbreadondata
   assign rg_sbcs_sbreadondata$D_IN = !EN_reset && write_dm_word[15] ;
   assign rg_sbcs_sbreadondata$EN =
 	     EN_write &&
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311 ||
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267 ||
 	     EN_reset ;
 
   // register rg_sbdata0
   always@(EN_reset or
 	  WILL_FIRE_RL_rl_sb_read_finish or
-	  IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130 or
+	  IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88 or
 	  MUX_rg_sbdata0$write_1__SEL_3 or write_dm_word)
   case (1'b1)
     EN_reset: rg_sbdata0$D_IN = 32'd0;
     WILL_FIRE_RL_rl_sb_read_finish:
 	rg_sbdata0$D_IN =
-	    IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130[31:0];
+	    IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88[31:0];
     MUX_rg_sbdata0$write_1__SEL_3: rg_sbdata0$D_IN = write_dm_word;
     default: rg_sbdata0$D_IN =
 		 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
   endcase
   assign rg_sbdata0$EN =
 	     EN_write &&
-	     write_dm_addr_EQ_0x3C_16_AND_rg_sb_state_7_EQ__ETC___d381 ||
+	     write_dm_addr_EQ_0x3C_72_AND_rg_sb_state_EQ_0__ETC___d337 ||
 	     WILL_FIRE_RL_rl_sb_read_finish ||
 	     EN_reset ;
 
+  // submodule masterPortShim_arff
+  assign masterPortShim_arff$D_IN =
+	     MUX_masterPortShim_arff$enq_1__SEL_1 ?
+	       MUX_masterPortShim_arff$enq_1__VAL_1 :
+	       MUX_masterPortShim_arff$enq_1__VAL_2 ;
+  assign masterPortShim_arff$ENQ =
+	     EN_av_read && av_read_dm_addr == 7'h3C &&
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d121 ||
+	     EN_write && write_dm_addr == 7'h39 &&
+	     rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d327 ;
+  assign masterPortShim_arff$DEQ = EN_master_ar_drop ;
+  assign masterPortShim_arff$CLR = EN_reset ;
+
+  // submodule masterPortShim_awff
+  assign masterPortShim_awff$D_IN =
+	     { 4'd0,
+	       sbaddress__h631,
+	       8'd0,
+	       _theResult___snd_snd_val__h4509,
+	       18'd65536 } ;
+  assign masterPortShim_awff$ENQ =
+	     EN_write &&
+	     write_dm_addr_EQ_0x3C_72_AND_rg_sb_state_EQ_0__ETC___d337 ;
+  assign masterPortShim_awff$DEQ = EN_master_aw_drop ;
+  assign masterPortShim_awff$CLR = EN_reset ;
+
+  // submodule masterPortShim_bff
+  assign masterPortShim_bff$D_IN = master_b_put_val ;
+  assign masterPortShim_bff$ENQ = EN_master_b_put ;
+  assign masterPortShim_bff$DEQ = masterPortShim_bff$EMPTY_N ;
+  assign masterPortShim_bff$CLR = EN_reset ;
+
+  // submodule masterPortShim_rff
+  assign masterPortShim_rff$D_IN = master_r_put_val ;
+  assign masterPortShim_rff$ENQ = EN_master_r_put ;
+  assign masterPortShim_rff$DEQ =
+	     masterPortShim_rff$EMPTY_N && rg_sb_state == 2'd1 &&
+	     rg_sbcs_sberror == 3'd0 ;
+  assign masterPortShim_rff$CLR = EN_reset ;
+
+  // submodule masterPortShim_wff
+  assign masterPortShim_wff$D_IN =
+	     { wrd_wdata__h4557, wrd_wstrb__h4558, 2'd2 } ;
+  assign masterPortShim_wff$ENQ =
+	     EN_write &&
+	     write_dm_addr_EQ_0x3C_72_AND_rg_sb_state_EQ_0__ETC___d337 ;
+  assign masterPortShim_wff$DEQ = EN_master_w_drop ;
+  assign masterPortShim_wff$CLR = EN_reset ;
+
   // remaining internal signals
-  assign IF_rg_sbcs_sbreadonaddr_76_THEN_IF_rg_sbcs_sba_ETC___d365 =
+  assign IF_rg_sbcs_sbreadonaddr_35_THEN_IF_rg_sbcs_sba_ETC___d321 =
 	     rg_sbcs_sbreadonaddr ?
 	       (rg_sbcs_sbautoincrement ?
-		  rg_sbaddress1_49_CONCAT_write_dm_word_53_PLUS__ETC___d354[31:0] :
+		  rg_sbaddress1_08_CONCAT_write_dm_word_09_PLUS__ETC___d310[31:0] :
 		  write_dm_word) :
 	       write_dm_word ;
-  assign IF_write_dm_addr_EQ_0x39_13_THEN_rg_sbaddress1_ETC___d356 =
+  assign IF_write_dm_addr_EQ_0x39_69_THEN_rg_sbaddress1_ETC___d312 =
 	     (write_dm_addr == 7'h39) ?
-	       rg_sbaddress1_49_CONCAT_write_dm_word_53_PLUS__ETC___d354[63:32] :
+	       rg_sbaddress1_08_CONCAT_write_dm_word_09_PLUS__ETC___d310[63:32] :
 	       write_dm_word ;
-  assign _theResult___fst__h7145 = word64__h7090 << shift_bits__h7093 ;
-  assign addr64__h6432 = { rg_sbaddress1, write_dm_word } ;
-  assign master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4 =
-	     master_xactor_shim_arff_rv$port1__read[96:0] ;
-  assign master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2 =
-	     master_xactor_shim_awff_rv$port1__read[96:0] ;
-  assign master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3 =
-	     master_xactor_shim_wff_rv$port1__read[73:0] ;
-  assign result__h3808 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[11:4] } ;
-  assign result__h3838 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[19:12] } ;
-  assign result__h3865 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[27:20] } ;
-  assign result__h3892 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[35:28] } ;
-  assign result__h3919 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[43:36] } ;
-  assign result__h3946 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[51:44] } ;
-  assign result__h3973 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[59:52] } ;
-  assign result__h4000 =
-	     { 56'd0, master_xactor_shim_rff_rv$port1__read[67:60] } ;
-  assign result__h4045 =
-	     { 48'd0, master_xactor_shim_rff_rv$port1__read[19:4] } ;
-  assign result__h4072 =
-	     { 48'd0, master_xactor_shim_rff_rv$port1__read[35:20] } ;
-  assign result__h4099 =
-	     { 48'd0, master_xactor_shim_rff_rv$port1__read[51:36] } ;
-  assign result__h4126 =
-	     { 48'd0, master_xactor_shim_rff_rv$port1__read[67:52] } ;
-  assign result__h4167 =
-	     { 32'd0, master_xactor_shim_rff_rv$port1__read[35:4] } ;
-  assign result__h4194 =
-	     { 32'd0, master_xactor_shim_rff_rv$port1__read[67:36] } ;
-  assign rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d147 =
+  assign _theResult___fst__h4494 = word64__h4439 << shift_bits__h4442 ;
+  assign addr64__h3849 = { rg_sbaddress1, write_dm_word } ;
+  assign result__h1276 = { 56'd0, masterPortShim_rff$D_OUT[11:4] } ;
+  assign result__h1306 = { 56'd0, masterPortShim_rff$D_OUT[19:12] } ;
+  assign result__h1333 = { 56'd0, masterPortShim_rff$D_OUT[27:20] } ;
+  assign result__h1360 = { 56'd0, masterPortShim_rff$D_OUT[35:28] } ;
+  assign result__h1387 = { 56'd0, masterPortShim_rff$D_OUT[43:36] } ;
+  assign result__h1414 = { 56'd0, masterPortShim_rff$D_OUT[51:44] } ;
+  assign result__h1441 = { 56'd0, masterPortShim_rff$D_OUT[59:52] } ;
+  assign result__h1468 = { 56'd0, masterPortShim_rff$D_OUT[67:60] } ;
+  assign result__h1513 = { 48'd0, masterPortShim_rff$D_OUT[19:4] } ;
+  assign result__h1540 = { 48'd0, masterPortShim_rff$D_OUT[35:20] } ;
+  assign result__h1567 = { 48'd0, masterPortShim_rff$D_OUT[51:36] } ;
+  assign result__h1594 = { 48'd0, masterPortShim_rff$D_OUT[67:52] } ;
+  assign result__h1635 = { 32'd0, masterPortShim_rff$D_OUT[35:4] } ;
+  assign result__h1662 = { 32'd0, masterPortShim_rff$D_OUT[67:36] } ;
+  assign rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d106 =
 	     rg_sb_state == 2'd0 && !rg_sbcs_sbbusyerror &&
 	     rg_sbcs_sberror == 3'd0 &&
 	     rg_sbcs_sbautoincrement ;
-  assign rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d162 =
+  assign rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d121 =
 	     rg_sb_state == 2'd0 && !rg_sbcs_sbbusyerror &&
 	     rg_sbcs_sberror == 3'd0 &&
 	     rg_sbcs_sbreadondata ;
-  assign rg_sb_state_7_EQ_0_39_AND_NOT_rg_sbcs_sbbusyer_ETC___d371 =
+  assign rg_sb_state_EQ_0_8_AND_NOT_rg_sbcs_sbbusyerror_ETC___d327 =
 	     rg_sb_state == 2'd0 && !rg_sbcs_sbbusyerror &&
 	     rg_sbcs_sberror == 3'd0 &&
 	     rg_sbcs_sbreadonaddr ;
-  assign rg_sbaddress1_49_CONCAT_rg_sbaddress0_50_51_PL_ETC___d156 =
-	     sbaddress__h3099 +
-	     IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 ;
-  assign rg_sbaddress1_49_CONCAT_write_dm_word_53_PLUS__ETC___d354 =
-	     addr64__h6432 +
-	     IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 ;
-  assign rg_sbcs_sberror_9_EQ_0_0_AND_rg_sbcs_sbreadona_ETC___d346 =
+  assign rg_sbaddress1_08_CONCAT_rg_sbaddress0_09_10_PL_ETC___d115 =
+	     sbaddress__h631 +
+	     IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 ;
+  assign rg_sbaddress1_08_CONCAT_write_dm_word_09_PLUS__ETC___d310 =
+	     addr64__h3849 +
+	     IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 ;
+  assign rg_sbcs_sberror_EQ_0_AND_rg_sbcs_sbreadonaddr__ETC___d302 =
 	     rg_sbcs_sberror == 3'd0 &&
 	     (rg_sbcs_sbreadonaddr && rg_sbcs_sbautoincrement ||
 	      write_dm_addr != 7'h39) ;
-  assign sbaddress__h3099 = { rg_sbaddress1, rg_sbaddress0 } ;
-  assign shift_bits__h7093 = { rg_sbaddress0[2:0], 3'b0 } ;
-  assign strobe64__h7143 = 8'b00000001 << rg_sbaddress0[2:0] ;
-  assign strobe64__h7147 = 8'b00000011 << rg_sbaddress0[2:0] ;
-  assign strobe64__h7151 = 8'b00001111 << rg_sbaddress0[2:0] ;
-  assign v__h4807 =
+  assign sbaddress__h631 = { rg_sbaddress1, rg_sbaddress0 } ;
+  assign shift_bits__h4442 = { rg_sbaddress0[2:0], 3'b0 } ;
+  assign strobe64__h4492 = 8'b00000001 << rg_sbaddress0[2:0] ;
+  assign strobe64__h4496 = 8'b00000011 << rg_sbaddress0[2:0] ;
+  assign strobe64__h4500 = 8'b00001111 << rg_sbaddress0[2:0] ;
+  assign v__h2279 =
 	     { 9'd64,
 	       rg_sbcs_sbbusyerror,
 	       rg_sb_state != 2'd0,
@@ -1583,173 +877,173 @@ module mkDM_System_Bus(CLK,
 	       rg_sbcs_sbreadondata,
 	       rg_sbcs_sberror,
 	       12'd2055 } ;
-  assign v__h4941 =
+  assign v__h2413 =
 	     (rg_sb_state != 2'd0 || rg_sbcs_sbbusyerror ||
 	      rg_sbcs_sberror != 3'd0) ?
 	       32'd0 :
 	       rg_sbdata0 ;
-  assign word64__h7090 = { 32'd0, write_dm_word } ;
-  assign write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311 =
+  assign word64__h4439 = { 32'd0, write_dm_word } ;
+  assign write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267 =
 	     write_dm_addr == 7'h38 &&
 	     (rg_sbcs_sberror == 3'd0 || write_dm_word[14:12] != 3'd0) &&
 	     (!rg_sbcs_sbbusyerror || write_dm_word[22]) &&
 	     write_dm_word[19:17] != 3'd4 &&
 	     write_dm_word[19:17] != 3'd3 ;
-  assign write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d320 =
-	     write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d311 ||
+  assign write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d276 =
+	     write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d267 ||
 	     (write_dm_addr == 7'h39 || write_dm_addr == 7'h3A ||
 	      write_dm_addr == 7'h3C) &&
 	     rg_sb_state != 2'd0 ;
-  assign write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d326 =
+  assign write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d282 =
 	     write_dm_addr == 7'h38 &&
 	     (rg_sbcs_sberror == 3'd0 || write_dm_word[14:12] != 3'd0) &&
 	     rg_sbcs_sbbusyerror &&
 	     !write_dm_word[22] ;
-  assign write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d328 =
+  assign write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d284 =
 	     write_dm_addr == 7'h38 &&
 	     (rg_sbcs_sberror == 3'd0 || write_dm_word[14:12] != 3'd0) &&
 	     (!rg_sbcs_sbbusyerror || write_dm_word[22]) ;
-  assign write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d333 =
+  assign write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d289 =
 	     write_dm_addr == 7'h38 &&
 	     (rg_sbcs_sberror == 3'd0 || write_dm_word[14:12] != 3'd0) &&
 	     (!rg_sbcs_sbbusyerror || write_dm_word[22]) &&
 	     (write_dm_word[19:17] == 3'd4 || write_dm_word[19:17] == 3'd3) ;
-  assign write_dm_addr_EQ_0x3C_16_AND_rg_sb_state_7_EQ__ETC___d381 =
+  assign write_dm_addr_EQ_0x3C_72_AND_rg_sb_state_EQ_0__ETC___d337 =
 	     write_dm_addr == 7'h3C && rg_sb_state == 2'd0 &&
 	     !rg_sbcs_sbbusyerror &&
 	     rg_sbcs_sberror == 3'd0 ;
   always@(rg_sbcs_sbaccess)
   begin
     case (rg_sbcs_sbaccess)
-      3'd0, 3'd1, 3'd2: axi4_size_val__h5415 = rg_sbcs_sbaccess;
-      default: axi4_size_val__h5415 = 3'b011;
+      3'd0, 3'd1, 3'd2: axi4_size_val__h2835 = rg_sbcs_sbaccess;
+      default: axi4_size_val__h2835 = 3'b011;
     endcase
   end
   always@(rg_sbcs_sbaccess)
   begin
     case (rg_sbcs_sbaccess)
       3'd0, 3'd1, 3'd2, 3'd3:
-	  _theResult___snd_snd_val__h7160 = rg_sbcs_sbaccess;
-      default: _theResult___snd_snd_val__h7160 = 3'b111;
+	  _theResult___snd_snd_val__h4509 = rg_sbcs_sbaccess;
+      default: _theResult___snd_snd_val__h4509 = 3'b111;
     endcase
   end
   always@(rg_sbcs_sbaccess or
-	  strobe64__h7143 or strobe64__h7147 or strobe64__h7151)
+	  strobe64__h4492 or strobe64__h4496 or strobe64__h4500)
   begin
     case (rg_sbcs_sbaccess)
-      3'd0: wrd_wstrb__h7270 = strobe64__h7143;
-      3'd1: wrd_wstrb__h7270 = strobe64__h7147;
-      3'd2: wrd_wstrb__h7270 = strobe64__h7151;
-      3'd3: wrd_wstrb__h7270 = 8'b11111111;
-      default: wrd_wstrb__h7270 = 8'd0;
+      3'd0: wrd_wstrb__h4558 = strobe64__h4492;
+      3'd1: wrd_wstrb__h4558 = strobe64__h4496;
+      3'd2: wrd_wstrb__h4558 = strobe64__h4500;
+      3'd3: wrd_wstrb__h4558 = 8'b11111111;
+      default: wrd_wstrb__h4558 = 8'd0;
     endcase
   end
-  always@(rg_sbcs_sbaccess or word64__h7090 or _theResult___fst__h7145)
+  always@(rg_sbcs_sbaccess or word64__h4439 or _theResult___fst__h4494)
   begin
     case (rg_sbcs_sbaccess)
-      3'd0, 3'd1, 3'd2: wrd_wdata__h7269 = _theResult___fst__h7145;
-      default: wrd_wdata__h7269 = word64__h7090;
+      3'd0, 3'd1, 3'd2: wrd_wdata__h4557 = _theResult___fst__h4494;
+      default: wrd_wdata__h4557 = word64__h4439;
     endcase
   end
   always@(rg_sbcs_sbaccess)
   begin
     case (rg_sbcs_sbaccess)
-      3'd0: IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 = 64'd1;
-      3'd1: IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 = 64'd2;
-      3'd2: IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 = 64'd4;
-      3'd3: IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 = 64'd8;
-      default: IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_1_ELSE_IF_rg_ETC___d155 =
+      3'd0: IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 = 64'd1;
+      3'd1: IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 = 64'd2;
+      3'd2: IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 = 64'd4;
+      3'd3: IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 = 64'd8;
+      default: IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_1_ELSE_IF_rg_ETC___d114 =
 		   64'd16;
     endcase
   end
   always@(rg_sbaddress_reading or
-	  result__h3808 or
-	  result__h3838 or
-	  result__h3865 or
-	  result__h3892 or
-	  result__h3919 or result__h3946 or result__h3973 or result__h4000)
+	  result__h1276 or
+	  result__h1306 or
+	  result__h1333 or
+	  result__h1360 or
+	  result__h1387 or result__h1414 or result__h1441 or result__h1468)
   begin
     case (rg_sbaddress_reading[2:0])
       3'h0:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3808;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1276;
       3'h1:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3838;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1306;
       3'h2:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3865;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1333;
       3'h3:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3892;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1360;
       3'h4:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3919;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1387;
       3'h5:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3946;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1414;
       3'h6:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h3973;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1441;
       3'h7:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 =
-	      result__h4000;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 =
+	      result__h1468;
     endcase
   end
   always@(rg_sbaddress_reading or
-	  result__h4045 or result__h4072 or result__h4099 or result__h4126)
+	  result__h1513 or result__h1540 or result__h1567 or result__h1594)
   begin
     case (rg_sbaddress_reading[2:0])
       3'h0:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117 =
-	      result__h4045;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75 =
+	      result__h1513;
       3'h2:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117 =
-	      result__h4072;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75 =
+	      result__h1540;
       3'h4:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117 =
-	      result__h4099;
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75 =
+	      result__h1567;
       3'h6:
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117 =
-	      result__h4126;
-      default: IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117 =
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75 =
+	      result__h1594;
+      default: IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75 =
 		   64'd0;
     endcase
   end
-  always@(rg_sbaddress_reading or result__h4167 or result__h4194)
+  always@(rg_sbaddress_reading or result__h1635 or result__h1662)
   begin
     case (rg_sbaddress_reading[2:0])
       3'h0:
 	  CASE_rg_sbaddress_reading_BITS_2_TO_0_0x0_resu_ETC__q1 =
-	      result__h4167;
+	      result__h1635;
       3'h4:
 	  CASE_rg_sbaddress_reading_BITS_2_TO_0_0x0_resu_ETC__q1 =
-	      result__h4194;
+	      result__h1662;
       default: CASE_rg_sbaddress_reading_BITS_2_TO_0_0x0_resu_ETC__q1 = 64'd0;
     endcase
   end
   always@(rg_sbcs_sbaccess or
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104 or
-	  IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117 or
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62 or
+	  IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75 or
 	  CASE_rg_sbaddress_reading_BITS_2_TO_0_0x0_resu_ETC__q1 or
-	  rg_sbaddress_reading or master_xactor_shim_rff_rv$port1__read)
+	  rg_sbaddress_reading or masterPortShim_rff$D_OUT)
   begin
     case (rg_sbcs_sbaccess)
       3'd0:
-	  IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130 =
-	      IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d104;
+	  IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88 =
+	      IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d62;
       3'd1:
-	  IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130 =
-	      IF_rg_sbaddress_reading_1_BITS_2_TO_0_2_EQ_0x0_ETC___d117;
+	  IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88 =
+	      IF_rg_sbaddress_reading_9_BITS_2_TO_0_0_EQ_0x0_ETC___d75;
       3'd2:
-	  IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130 =
+	  IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88 =
 	      CASE_rg_sbaddress_reading_BITS_2_TO_0_0x0_resu_ETC__q1;
       3'd3:
-	  IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130 =
+	  IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88 =
 	      (rg_sbaddress_reading[2:0] == 3'h0) ?
-		master_xactor_shim_rff_rv$port1__read[67:4] :
+		masterPortShim_rff$D_OUT[67:4] :
 		64'd0;
-      default: IF_rg_sbcs_sbaccess_9_EQ_0_0_THEN_IF_rg_sbaddr_ETC___d130 =
+      default: IF_rg_sbcs_sbaccess_7_EQ_0_8_THEN_IF_rg_sbaddr_ETC___d88 =
 		   64'd0;
     endcase
   end
@@ -1760,45 +1054,12 @@ module mkDM_System_Bus(CLK,
   begin
     if (RST_N == `BSV_RESET_VALUE)
       begin
-        master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	master_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	master_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0, 6'bxxxxxx /* unspecified value */  };
-	master_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	master_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	rg_sbaddress0 <= `BSV_ASSIGNMENT_DELAY 32'd0;
+        rg_sbaddress0 <= `BSV_ASSIGNMENT_DELAY 32'd0;
 	rg_sbaddress1 <= `BSV_ASSIGNMENT_DELAY 32'd0;
       end
     else
       begin
-        if (master_xactor_clearing$EN)
-	  master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_clearing$D_IN;
-	if (master_xactor_shim_arff_rv$EN)
-	  master_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_arff_rv$D_IN;
-	if (master_xactor_shim_awff_rv$EN)
-	  master_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_awff_rv$D_IN;
-	if (master_xactor_shim_bff_rv$EN)
-	  master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_bff_rv$D_IN;
-	if (master_xactor_shim_rff_rv$EN)
-	  master_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_rff_rv$D_IN;
-	if (master_xactor_shim_wff_rv$EN)
-	  master_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_wff_rv$D_IN;
-	if (rg_sbaddress0$EN)
+        if (rg_sbaddress0$EN)
 	  rg_sbaddress0 <= `BSV_ASSIGNMENT_DELAY rg_sbaddress0$D_IN;
 	if (rg_sbaddress1$EN)
 	  rg_sbaddress1 <= `BSV_ASSIGNMENT_DELAY rg_sbaddress1$D_IN;
@@ -1827,12 +1088,6 @@ module mkDM_System_Bus(CLK,
   `else // not BSV_NO_INITIAL_BLOCKS
   initial
   begin
-    master_xactor_clearing = 1'h0;
-    master_xactor_shim_arff_rv = 98'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    master_xactor_shim_awff_rv = 98'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    master_xactor_shim_bff_rv = 7'h2A;
-    master_xactor_shim_rff_rv = 73'h0AAAAAAAAAAAAAAAAAA;
-    master_xactor_shim_wff_rv = 75'h2AAAAAAAAAAAAAAAAAA;
     rg_sb_state = 2'h2;
     rg_sbaddress0 = 32'hAAAAAAAA;
     rg_sbaddress1 = 32'hAAAAAAAA;
@@ -1984,12 +1239,6 @@ module mkDM_System_Bus(CLK,
 	  av_read_dm_addr != 7'h3C)
 	$write("] not supported", "\n");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
       if (EN_write && write_dm_addr == 7'h38 && rg_sbcs_sberror != 3'd0 &&
 	  write_dm_word[14:12] == 3'd0)
 	$display("DM_System_Bus.sbcs_write <= 0x%08h: ERROR", write_dm_word);
@@ -2004,24 +1253,24 @@ module mkDM_System_Bus(CLK,
 	$display("    Must be cleared to re-enable system bus access.");
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write &&
-	  write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d326)
+	  write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d282)
 	$display("DM_System_Bus.sbcs_write <= 0x%08h: ERROR", write_dm_word);
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write &&
-	  write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d326)
+	  write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d282)
 	$display("    ERROR: existing sbbusyerror (%0d) is not being cleared.",
 		 rg_sbcs_sbbusyerror);
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write &&
-	  write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d326)
+	  write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d282)
 	$display("    Must be cleared to re-enable system bus access.");
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write &&
-	  write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d333)
+	  write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d289)
 	$display("DM_System_Bus.sbcs_write <= 0x%08h: ERROR", write_dm_word);
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write &&
-	  write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d333)
+	  write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d289)
 	$write("    ERROR: sbaccess ");
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write && write_dm_addr == 7'h38 &&
@@ -2037,7 +1286,7 @@ module mkDM_System_Bus(CLK,
 	$write("DM_SBACCESS_128_BIT");
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write &&
-	  write_dm_addr_EQ_0x38_96_AND_rg_sbcs_sberror_9_ETC___d333)
+	  write_dm_addr_EQ_0x38_52_AND_rg_sbcs_sberror_E_ETC___d289)
 	$write(" not supported", "\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_write && write_dm_addr != 7'h38 &&
@@ -2178,81 +1427,72 @@ module mkDM_System_Bus(CLK,
 	$write("] <= 0x%08h; addr not supported", write_dm_word, "\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$display("DM_System_Bus.rule_sb_read_finish: setting rg_sbcs_sberror to DM_SBERROR_OTHER\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write("    rdr = ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write("AXI4_RFlit { ", "rid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
-	$write("'h%h", master_xactor_shim_rff_rv$port1__read[71:68]);
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
+	$write("'h%h", masterPortShim_rff$D_OUT[71:68]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write(", ", "rdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
-	$write("'h%h", master_xactor_shim_rff_rv$port1__read[67:4]);
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
+	$write("'h%h", masterPortShim_rff$D_OUT[67:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write(", ", "rresp: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] == 2'd1)
+	  masterPortShim_rff$D_OUT[3:2] == 2'd1)
 	$write("EXOKAY");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] == 2'd2)
+	  masterPortShim_rff$D_OUT[3:2] == 2'd2)
 	$write("SLVERR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd1 &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd2)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0 &&
+	  masterPortShim_rff$D_OUT[3:2] != 2'd1 &&
+	  masterPortShim_rff$D_OUT[3:2] != 2'd2)
 	$write("DECERR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write(", ", "rlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
-	  master_xactor_shim_rff_rv$port1__read[1])
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0 &&
+	  masterPortShim_rff$D_OUT[1])
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0 &&
-	  !master_xactor_shim_rff_rv$port1__read[1])
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0 &&
+	  !masterPortShim_rff$D_OUT[1])
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write(", ", "ruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
-	$write("'h%h", master_xactor_shim_rff_rv$port1__read[0], " }");
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
+	$write("'h%h", masterPortShim_rff$D_OUT[0], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_sb_read_finish &&
-	  master_xactor_shim_rff_rv$port1__read[3:2] != 2'd0)
+	  masterPortShim_rff$D_OUT[3:2] != 2'd0)
 	$write("\n");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
   end
   // synopsys translate_on
 endmodule  // mkDM_System_Bus

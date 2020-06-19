@@ -6,7 +6,7 @@
 //
 // Ports:
 // Name                         I/O  size props
-// master0_awid                   O     6
+// master0_awid                   O     5 reg
 // master0_awaddr                 O    64 reg
 // master0_awlen                  O     8 reg
 // master0_awsize                 O     3 reg
@@ -22,7 +22,7 @@
 // master0_wlast                  O     1 reg
 // master0_wvalid                 O     1 reg
 // master0_bready                 O     1 reg
-// master0_arid                   O     6
+// master0_arid                   O     5 reg
 // master0_araddr                 O    64 reg
 // master0_arlen                  O     8 reg
 // master0_arsize                 O     3 reg
@@ -69,18 +69,22 @@
 // RST_N                          I     1 reset
 // master0_awready                I     1
 // master0_wready                 I     1
-// master0_bid                    I     6 reg
+// master0_bvalid                 I     1
+// master0_bid                    I     5 reg
 // master0_bresp                  I     2 reg
 // master0_arready                I     1
-// master0_rid                    I     6 reg
+// master0_rvalid                 I     1
+// master0_rid                    I     5 reg
 // master0_rdata                  I    64 reg
 // master0_rresp                  I     2 reg
 // master0_rlast                  I     1 reg
 // master1_awready                I     1
 // master1_wready                 I     1
+// master1_bvalid                 I     1
 // master1_bid                    I     6
 // master1_bresp                  I     2
 // master1_arready                I     1
+// master1_rvalid                 I     1
 // master1_rid                    I     6
 // master1_rdata                  I    64
 // master1_rresp                  I     2
@@ -89,10 +93,6 @@
 // jtag_tdi                       I     1
 // jtag_tms                       I     1
 // jtag_tclk                      I     1
-// master0_bvalid                 I     1
-// master0_rvalid                 I     1
-// master1_bvalid                 I     1
-// master1_rvalid                 I     1
 //
 // No combinational paths from inputs to outputs
 //
@@ -148,9 +148,9 @@ module mkP2_Core(CLK,
 
 		 master0_wready,
 
+		 master0_bvalid,
 		 master0_bid,
 		 master0_bresp,
-		 master0_bvalid,
 
 		 master0_bready,
 
@@ -178,11 +178,11 @@ module mkP2_Core(CLK,
 
 		 master0_arready,
 
+		 master0_rvalid,
 		 master0_rid,
 		 master0_rdata,
 		 master0_rresp,
 		 master0_rlast,
-		 master0_rvalid,
 
 		 master0_rready,
 
@@ -220,9 +220,9 @@ module mkP2_Core(CLK,
 
 		 master1_wready,
 
+		 master1_bvalid,
 		 master1_bid,
 		 master1_bresp,
-		 master1_bvalid,
 
 		 master1_bready,
 
@@ -250,11 +250,11 @@ module mkP2_Core(CLK,
 
 		 master1_arready,
 
+		 master1_rvalid,
 		 master1_rid,
 		 master1_rdata,
 		 master1_rresp,
 		 master1_rlast,
-		 master1_rvalid,
 
 		 master1_rready,
 
@@ -274,7 +274,7 @@ module mkP2_Core(CLK,
   input  RST_N;
 
   // value method master0_aw_awid
-  output [5 : 0] master0_awid;
+  output [4 : 0] master0_awid;
 
   // value method master0_aw_awaddr
   output [63 : 0] master0_awaddr;
@@ -329,15 +329,15 @@ module mkP2_Core(CLK,
   input  master0_wready;
 
   // action method master0_b_bflit
-  input  [5 : 0] master0_bid;
-  input  [1 : 0] master0_bresp;
   input  master0_bvalid;
+  input  [4 : 0] master0_bid;
+  input  [1 : 0] master0_bresp;
 
   // value method master0_b_bready
   output master0_bready;
 
   // value method master0_ar_arid
-  output [5 : 0] master0_arid;
+  output [4 : 0] master0_arid;
 
   // value method master0_ar_araddr
   output [63 : 0] master0_araddr;
@@ -375,11 +375,11 @@ module mkP2_Core(CLK,
   input  master0_arready;
 
   // action method master0_r_rflit
-  input  [5 : 0] master0_rid;
+  input  master0_rvalid;
+  input  [4 : 0] master0_rid;
   input  [63 : 0] master0_rdata;
   input  [1 : 0] master0_rresp;
   input  master0_rlast;
-  input  master0_rvalid;
 
   // value method master0_r_rready
   output master0_rready;
@@ -440,9 +440,9 @@ module mkP2_Core(CLK,
   input  master1_wready;
 
   // action method master1_b_bflit
+  input  master1_bvalid;
   input  [5 : 0] master1_bid;
   input  [1 : 0] master1_bresp;
-  input  master1_bvalid;
 
   // value method master1_b_bready
   output master1_bready;
@@ -486,11 +486,11 @@ module mkP2_Core(CLK,
   input  master1_arready;
 
   // action method master1_r_rflit
+  input  master1_rvalid;
   input  [5 : 0] master1_rid;
   input  [63 : 0] master1_rdata;
   input  [1 : 0] master1_rresp;
   input  master1_rlast;
-  input  master1_rvalid;
 
   // value method master1_r_rready
   output master1_rready;
@@ -527,7 +527,8 @@ module mkP2_Core(CLK,
 	       master1_arlen,
 	       master1_awlen,
 	       master1_wstrb;
-  wire [5 : 0] master0_arid, master0_awid, master1_arid, master1_awid;
+  wire [5 : 0] master1_arid, master1_awid;
+  wire [4 : 0] master0_arid, master0_awid;
   wire [3 : 0] master0_arcache,
 	       master0_arqos,
 	       master0_arregion,
@@ -629,8 +630,8 @@ module mkP2_Core(CLK,
   wire [5 : 0] core$cpu_dmem_master_arid,
 	       core$cpu_dmem_master_awid,
 	       core$cpu_dmem_master_bid,
-	       core$cpu_dmem_master_rid,
-	       core$cpu_imem_master_arid,
+	       core$cpu_dmem_master_rid;
+  wire [4 : 0] core$cpu_imem_master_arid,
 	       core$cpu_imem_master_awid,
 	       core$cpu_imem_master_bid,
 	       core$cpu_imem_master_rid;
@@ -896,7 +897,7 @@ module mkP2_Core(CLK,
 
   // action method master0_b_bflit
   assign CAN_FIRE_master0_b_bflit = 1'd1 ;
-  assign WILL_FIRE_master0_b_bflit = master0_bvalid ;
+  assign WILL_FIRE_master0_b_bflit = 1'd1 ;
 
   // value method master0_b_bready
   assign master0_bready = core$cpu_imem_master_bready ;
@@ -940,7 +941,7 @@ module mkP2_Core(CLK,
 
   // action method master0_r_rflit
   assign CAN_FIRE_master0_r_rflit = 1'd1 ;
-  assign WILL_FIRE_master0_r_rflit = master0_rvalid ;
+  assign WILL_FIRE_master0_r_rflit = 1'd1 ;
 
   // value method master0_r_rready
   assign master0_rready = core$cpu_imem_master_rready ;
@@ -1000,7 +1001,7 @@ module mkP2_Core(CLK,
 
   // action method master1_b_bflit
   assign CAN_FIRE_master1_b_bflit = 1'd1 ;
-  assign WILL_FIRE_master1_b_bflit = master1_bvalid ;
+  assign WILL_FIRE_master1_b_bflit = 1'd1 ;
 
   // value method master1_b_bready
   assign master1_bready = core$cpu_dmem_master_bready ;
@@ -1044,7 +1045,7 @@ module mkP2_Core(CLK,
 
   // action method master1_r_rflit
   assign CAN_FIRE_master1_r_rflit = 1'd1 ;
-  assign WILL_FIRE_master1_r_rflit = master1_rvalid ;
+  assign WILL_FIRE_master1_r_rflit = 1'd1 ;
 
   // value method master1_r_rready
   assign master1_rready = core$cpu_dmem_master_rready ;
@@ -1080,129 +1081,129 @@ module mkP2_Core(CLK,
 							     .EMPTY_N(bus_dmi_req_fifof$EMPTY_N));
 
   // submodule core
-  mkCore core(.CLK(CLK),
-	      .RST_N(RST_N),
-	      .core_external_interrupt_sources_0_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_0_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_10_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_10_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_11_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_11_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_12_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_12_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_13_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_13_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_14_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_14_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_15_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_15_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_1_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_1_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_2_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_2_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_3_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_3_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_4_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_4_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_5_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_5_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_6_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_6_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_7_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_7_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_8_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_8_m_interrupt_req_set_not_clear),
-	      .core_external_interrupt_sources_9_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_9_m_interrupt_req_set_not_clear),
-	      .cpu_dmem_master_arready(core$cpu_dmem_master_arready),
-	      .cpu_dmem_master_awready(core$cpu_dmem_master_awready),
-	      .cpu_dmem_master_bid(core$cpu_dmem_master_bid),
-	      .cpu_dmem_master_bresp(core$cpu_dmem_master_bresp),
-	      .cpu_dmem_master_rdata(core$cpu_dmem_master_rdata),
-	      .cpu_dmem_master_rid(core$cpu_dmem_master_rid),
-	      .cpu_dmem_master_rlast(core$cpu_dmem_master_rlast),
-	      .cpu_dmem_master_rresp(core$cpu_dmem_master_rresp),
-	      .cpu_dmem_master_wready(core$cpu_dmem_master_wready),
-	      .cpu_imem_master_arready(core$cpu_imem_master_arready),
-	      .cpu_imem_master_awready(core$cpu_imem_master_awready),
-	      .cpu_imem_master_bid(core$cpu_imem_master_bid),
-	      .cpu_imem_master_bresp(core$cpu_imem_master_bresp),
-	      .cpu_imem_master_rdata(core$cpu_imem_master_rdata),
-	      .cpu_imem_master_rid(core$cpu_imem_master_rid),
-	      .cpu_imem_master_rlast(core$cpu_imem_master_rlast),
-	      .cpu_imem_master_rresp(core$cpu_imem_master_rresp),
-	      .cpu_imem_master_wready(core$cpu_imem_master_wready),
-	      .cpu_reset_server_request_put(core$cpu_reset_server_request_put),
-	      .dm_dmi_read_addr_dm_addr(core$dm_dmi_read_addr_dm_addr),
-	      .dm_dmi_write_dm_addr(core$dm_dmi_write_dm_addr),
-	      .dm_dmi_write_dm_word(core$dm_dmi_write_dm_word),
-	      .ndm_reset_client_response_put(core$ndm_reset_client_response_put),
-	      .nmi_req_set_not_clear(core$nmi_req_set_not_clear),
-	      .set_verbosity_logdelay(core$set_verbosity_logdelay),
-	      .set_verbosity_verbosity(core$set_verbosity_verbosity),
-	      .EN_set_verbosity(core$EN_set_verbosity),
-	      .EN_cpu_reset_server_request_put(core$EN_cpu_reset_server_request_put),
-	      .EN_cpu_reset_server_response_get(core$EN_cpu_reset_server_response_get),
-	      .cpu_imem_master_bvalid(core$cpu_imem_master_bvalid),
-	      .cpu_imem_master_rvalid(core$cpu_imem_master_rvalid),
-	      .cpu_dmem_master_bvalid(core$cpu_dmem_master_bvalid),
-	      .cpu_dmem_master_rvalid(core$cpu_dmem_master_rvalid),
-	      .EN_dm_dmi_read_addr(core$EN_dm_dmi_read_addr),
-	      .EN_dm_dmi_read_data(core$EN_dm_dmi_read_data),
-	      .EN_dm_dmi_write(core$EN_dm_dmi_write),
-	      .EN_ndm_reset_client_request_get(core$EN_ndm_reset_client_request_get),
-	      .EN_ndm_reset_client_response_put(core$EN_ndm_reset_client_response_put),
-	      .RDY_set_verbosity(),
-	      .RDY_cpu_reset_server_request_put(core$RDY_cpu_reset_server_request_put),
-	      .cpu_reset_server_response_get(core$cpu_reset_server_response_get),
-	      .RDY_cpu_reset_server_response_get(core$RDY_cpu_reset_server_response_get),
-	      .cpu_imem_master_awid(core$cpu_imem_master_awid),
-	      .cpu_imem_master_awaddr(core$cpu_imem_master_awaddr),
-	      .cpu_imem_master_awlen(core$cpu_imem_master_awlen),
-	      .cpu_imem_master_awsize(core$cpu_imem_master_awsize),
-	      .cpu_imem_master_awburst(core$cpu_imem_master_awburst),
-	      .cpu_imem_master_awlock(core$cpu_imem_master_awlock),
-	      .cpu_imem_master_awcache(core$cpu_imem_master_awcache),
-	      .cpu_imem_master_awprot(core$cpu_imem_master_awprot),
-	      .cpu_imem_master_awqos(core$cpu_imem_master_awqos),
-	      .cpu_imem_master_awregion(core$cpu_imem_master_awregion),
-	      .cpu_imem_master_awvalid(core$cpu_imem_master_awvalid),
-	      .cpu_imem_master_wdata(core$cpu_imem_master_wdata),
-	      .cpu_imem_master_wstrb(core$cpu_imem_master_wstrb),
-	      .cpu_imem_master_wlast(core$cpu_imem_master_wlast),
-	      .cpu_imem_master_wvalid(core$cpu_imem_master_wvalid),
-	      .cpu_imem_master_bready(core$cpu_imem_master_bready),
-	      .cpu_imem_master_arid(core$cpu_imem_master_arid),
-	      .cpu_imem_master_araddr(core$cpu_imem_master_araddr),
-	      .cpu_imem_master_arlen(core$cpu_imem_master_arlen),
-	      .cpu_imem_master_arsize(core$cpu_imem_master_arsize),
-	      .cpu_imem_master_arburst(core$cpu_imem_master_arburst),
-	      .cpu_imem_master_arlock(core$cpu_imem_master_arlock),
-	      .cpu_imem_master_arcache(core$cpu_imem_master_arcache),
-	      .cpu_imem_master_arprot(core$cpu_imem_master_arprot),
-	      .cpu_imem_master_arqos(core$cpu_imem_master_arqos),
-	      .cpu_imem_master_arregion(core$cpu_imem_master_arregion),
-	      .cpu_imem_master_arvalid(core$cpu_imem_master_arvalid),
-	      .cpu_imem_master_rready(core$cpu_imem_master_rready),
-	      .cpu_dmem_master_awid(core$cpu_dmem_master_awid),
-	      .cpu_dmem_master_awaddr(core$cpu_dmem_master_awaddr),
-	      .cpu_dmem_master_awlen(core$cpu_dmem_master_awlen),
-	      .cpu_dmem_master_awsize(core$cpu_dmem_master_awsize),
-	      .cpu_dmem_master_awburst(core$cpu_dmem_master_awburst),
-	      .cpu_dmem_master_awlock(core$cpu_dmem_master_awlock),
-	      .cpu_dmem_master_awcache(core$cpu_dmem_master_awcache),
-	      .cpu_dmem_master_awprot(core$cpu_dmem_master_awprot),
-	      .cpu_dmem_master_awqos(core$cpu_dmem_master_awqos),
-	      .cpu_dmem_master_awregion(core$cpu_dmem_master_awregion),
-	      .cpu_dmem_master_awvalid(core$cpu_dmem_master_awvalid),
-	      .cpu_dmem_master_wdata(core$cpu_dmem_master_wdata),
-	      .cpu_dmem_master_wstrb(core$cpu_dmem_master_wstrb),
-	      .cpu_dmem_master_wlast(core$cpu_dmem_master_wlast),
-	      .cpu_dmem_master_wvalid(core$cpu_dmem_master_wvalid),
-	      .cpu_dmem_master_bready(core$cpu_dmem_master_bready),
-	      .cpu_dmem_master_arid(core$cpu_dmem_master_arid),
-	      .cpu_dmem_master_araddr(core$cpu_dmem_master_araddr),
-	      .cpu_dmem_master_arlen(core$cpu_dmem_master_arlen),
-	      .cpu_dmem_master_arsize(core$cpu_dmem_master_arsize),
-	      .cpu_dmem_master_arburst(core$cpu_dmem_master_arburst),
-	      .cpu_dmem_master_arlock(core$cpu_dmem_master_arlock),
-	      .cpu_dmem_master_arcache(core$cpu_dmem_master_arcache),
-	      .cpu_dmem_master_arprot(core$cpu_dmem_master_arprot),
-	      .cpu_dmem_master_arqos(core$cpu_dmem_master_arqos),
-	      .cpu_dmem_master_arregion(core$cpu_dmem_master_arregion),
-	      .cpu_dmem_master_arvalid(core$cpu_dmem_master_arvalid),
-	      .cpu_dmem_master_rready(core$cpu_dmem_master_rready),
-	      .RDY_dm_dmi_read_addr(core$RDY_dm_dmi_read_addr),
-	      .dm_dmi_read_data(core$dm_dmi_read_data),
-	      .RDY_dm_dmi_read_data(core$RDY_dm_dmi_read_data),
-	      .RDY_dm_dmi_write(core$RDY_dm_dmi_write),
-	      .ndm_reset_client_request_get(core$ndm_reset_client_request_get),
-	      .RDY_ndm_reset_client_request_get(core$RDY_ndm_reset_client_request_get),
-	      .RDY_ndm_reset_client_response_put(core$RDY_ndm_reset_client_response_put));
+  mkCore_Synth core(.CLK(CLK),
+		    .RST_N(RST_N),
+		    .core_external_interrupt_sources_0_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_0_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_10_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_10_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_11_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_11_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_12_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_12_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_13_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_13_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_14_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_14_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_15_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_15_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_1_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_1_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_2_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_2_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_3_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_3_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_4_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_4_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_5_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_5_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_6_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_6_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_7_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_7_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_8_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_8_m_interrupt_req_set_not_clear),
+		    .core_external_interrupt_sources_9_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_9_m_interrupt_req_set_not_clear),
+		    .cpu_dmem_master_arready(core$cpu_dmem_master_arready),
+		    .cpu_dmem_master_awready(core$cpu_dmem_master_awready),
+		    .cpu_dmem_master_bid(core$cpu_dmem_master_bid),
+		    .cpu_dmem_master_bresp(core$cpu_dmem_master_bresp),
+		    .cpu_dmem_master_bvalid(core$cpu_dmem_master_bvalid),
+		    .cpu_dmem_master_rdata(core$cpu_dmem_master_rdata),
+		    .cpu_dmem_master_rid(core$cpu_dmem_master_rid),
+		    .cpu_dmem_master_rlast(core$cpu_dmem_master_rlast),
+		    .cpu_dmem_master_rresp(core$cpu_dmem_master_rresp),
+		    .cpu_dmem_master_rvalid(core$cpu_dmem_master_rvalid),
+		    .cpu_dmem_master_wready(core$cpu_dmem_master_wready),
+		    .cpu_imem_master_arready(core$cpu_imem_master_arready),
+		    .cpu_imem_master_awready(core$cpu_imem_master_awready),
+		    .cpu_imem_master_bid(core$cpu_imem_master_bid),
+		    .cpu_imem_master_bresp(core$cpu_imem_master_bresp),
+		    .cpu_imem_master_bvalid(core$cpu_imem_master_bvalid),
+		    .cpu_imem_master_rdata(core$cpu_imem_master_rdata),
+		    .cpu_imem_master_rid(core$cpu_imem_master_rid),
+		    .cpu_imem_master_rlast(core$cpu_imem_master_rlast),
+		    .cpu_imem_master_rresp(core$cpu_imem_master_rresp),
+		    .cpu_imem_master_rvalid(core$cpu_imem_master_rvalid),
+		    .cpu_imem_master_wready(core$cpu_imem_master_wready),
+		    .cpu_reset_server_request_put(core$cpu_reset_server_request_put),
+		    .dm_dmi_read_addr_dm_addr(core$dm_dmi_read_addr_dm_addr),
+		    .dm_dmi_write_dm_addr(core$dm_dmi_write_dm_addr),
+		    .dm_dmi_write_dm_word(core$dm_dmi_write_dm_word),
+		    .ndm_reset_client_response_put(core$ndm_reset_client_response_put),
+		    .nmi_req_set_not_clear(core$nmi_req_set_not_clear),
+		    .set_verbosity_logdelay(core$set_verbosity_logdelay),
+		    .set_verbosity_verbosity(core$set_verbosity_verbosity),
+		    .EN_set_verbosity(core$EN_set_verbosity),
+		    .EN_cpu_reset_server_request_put(core$EN_cpu_reset_server_request_put),
+		    .EN_cpu_reset_server_response_get(core$EN_cpu_reset_server_response_get),
+		    .EN_dm_dmi_read_addr(core$EN_dm_dmi_read_addr),
+		    .EN_dm_dmi_read_data(core$EN_dm_dmi_read_data),
+		    .EN_dm_dmi_write(core$EN_dm_dmi_write),
+		    .EN_ndm_reset_client_request_get(core$EN_ndm_reset_client_request_get),
+		    .EN_ndm_reset_client_response_put(core$EN_ndm_reset_client_response_put),
+		    .RDY_set_verbosity(),
+		    .RDY_cpu_reset_server_request_put(core$RDY_cpu_reset_server_request_put),
+		    .cpu_reset_server_response_get(core$cpu_reset_server_response_get),
+		    .RDY_cpu_reset_server_response_get(core$RDY_cpu_reset_server_response_get),
+		    .cpu_imem_master_awid(core$cpu_imem_master_awid),
+		    .cpu_imem_master_awaddr(core$cpu_imem_master_awaddr),
+		    .cpu_imem_master_awlen(core$cpu_imem_master_awlen),
+		    .cpu_imem_master_awsize(core$cpu_imem_master_awsize),
+		    .cpu_imem_master_awburst(core$cpu_imem_master_awburst),
+		    .cpu_imem_master_awlock(core$cpu_imem_master_awlock),
+		    .cpu_imem_master_awcache(core$cpu_imem_master_awcache),
+		    .cpu_imem_master_awprot(core$cpu_imem_master_awprot),
+		    .cpu_imem_master_awqos(core$cpu_imem_master_awqos),
+		    .cpu_imem_master_awregion(core$cpu_imem_master_awregion),
+		    .cpu_imem_master_awvalid(core$cpu_imem_master_awvalid),
+		    .cpu_imem_master_wdata(core$cpu_imem_master_wdata),
+		    .cpu_imem_master_wstrb(core$cpu_imem_master_wstrb),
+		    .cpu_imem_master_wlast(core$cpu_imem_master_wlast),
+		    .cpu_imem_master_wvalid(core$cpu_imem_master_wvalid),
+		    .cpu_imem_master_bready(core$cpu_imem_master_bready),
+		    .cpu_imem_master_arid(core$cpu_imem_master_arid),
+		    .cpu_imem_master_araddr(core$cpu_imem_master_araddr),
+		    .cpu_imem_master_arlen(core$cpu_imem_master_arlen),
+		    .cpu_imem_master_arsize(core$cpu_imem_master_arsize),
+		    .cpu_imem_master_arburst(core$cpu_imem_master_arburst),
+		    .cpu_imem_master_arlock(core$cpu_imem_master_arlock),
+		    .cpu_imem_master_arcache(core$cpu_imem_master_arcache),
+		    .cpu_imem_master_arprot(core$cpu_imem_master_arprot),
+		    .cpu_imem_master_arqos(core$cpu_imem_master_arqos),
+		    .cpu_imem_master_arregion(core$cpu_imem_master_arregion),
+		    .cpu_imem_master_arvalid(core$cpu_imem_master_arvalid),
+		    .cpu_imem_master_rready(core$cpu_imem_master_rready),
+		    .cpu_dmem_master_awid(core$cpu_dmem_master_awid),
+		    .cpu_dmem_master_awaddr(core$cpu_dmem_master_awaddr),
+		    .cpu_dmem_master_awlen(core$cpu_dmem_master_awlen),
+		    .cpu_dmem_master_awsize(core$cpu_dmem_master_awsize),
+		    .cpu_dmem_master_awburst(core$cpu_dmem_master_awburst),
+		    .cpu_dmem_master_awlock(core$cpu_dmem_master_awlock),
+		    .cpu_dmem_master_awcache(core$cpu_dmem_master_awcache),
+		    .cpu_dmem_master_awprot(core$cpu_dmem_master_awprot),
+		    .cpu_dmem_master_awqos(core$cpu_dmem_master_awqos),
+		    .cpu_dmem_master_awregion(core$cpu_dmem_master_awregion),
+		    .cpu_dmem_master_awvalid(core$cpu_dmem_master_awvalid),
+		    .cpu_dmem_master_wdata(core$cpu_dmem_master_wdata),
+		    .cpu_dmem_master_wstrb(core$cpu_dmem_master_wstrb),
+		    .cpu_dmem_master_wlast(core$cpu_dmem_master_wlast),
+		    .cpu_dmem_master_wvalid(core$cpu_dmem_master_wvalid),
+		    .cpu_dmem_master_bready(core$cpu_dmem_master_bready),
+		    .cpu_dmem_master_arid(core$cpu_dmem_master_arid),
+		    .cpu_dmem_master_araddr(core$cpu_dmem_master_araddr),
+		    .cpu_dmem_master_arlen(core$cpu_dmem_master_arlen),
+		    .cpu_dmem_master_arsize(core$cpu_dmem_master_arsize),
+		    .cpu_dmem_master_arburst(core$cpu_dmem_master_arburst),
+		    .cpu_dmem_master_arlock(core$cpu_dmem_master_arlock),
+		    .cpu_dmem_master_arcache(core$cpu_dmem_master_arcache),
+		    .cpu_dmem_master_arprot(core$cpu_dmem_master_arprot),
+		    .cpu_dmem_master_arqos(core$cpu_dmem_master_arqos),
+		    .cpu_dmem_master_arregion(core$cpu_dmem_master_arregion),
+		    .cpu_dmem_master_arvalid(core$cpu_dmem_master_arvalid),
+		    .cpu_dmem_master_rready(core$cpu_dmem_master_rready),
+		    .RDY_dm_dmi_read_addr(core$RDY_dm_dmi_read_addr),
+		    .dm_dmi_read_data(core$dm_dmi_read_data),
+		    .RDY_dm_dmi_read_data(core$RDY_dm_dmi_read_data),
+		    .RDY_dm_dmi_write(core$RDY_dm_dmi_write),
+		    .ndm_reset_client_request_get(core$ndm_reset_client_request_get),
+		    .RDY_ndm_reset_client_request_get(core$RDY_ndm_reset_client_request_get),
+		    .RDY_ndm_reset_client_response_put(core$RDY_ndm_reset_client_response_put));
 
   // submodule jtagtap
   mkJtagTap jtagtap(.CLK(CLK),
@@ -1496,19 +1497,23 @@ module mkP2_Core(CLK,
   assign core$cpu_dmem_master_awready = master1_awready ;
   assign core$cpu_dmem_master_bid = master1_bid ;
   assign core$cpu_dmem_master_bresp = master1_bresp ;
+  assign core$cpu_dmem_master_bvalid = master1_bvalid ;
   assign core$cpu_dmem_master_rdata = master1_rdata ;
   assign core$cpu_dmem_master_rid = master1_rid ;
   assign core$cpu_dmem_master_rlast = master1_rlast ;
   assign core$cpu_dmem_master_rresp = master1_rresp ;
+  assign core$cpu_dmem_master_rvalid = master1_rvalid ;
   assign core$cpu_dmem_master_wready = master1_wready ;
   assign core$cpu_imem_master_arready = master0_arready ;
   assign core$cpu_imem_master_awready = master0_awready ;
   assign core$cpu_imem_master_bid = master0_bid ;
   assign core$cpu_imem_master_bresp = master0_bresp ;
+  assign core$cpu_imem_master_bvalid = master0_bvalid ;
   assign core$cpu_imem_master_rdata = master0_rdata ;
   assign core$cpu_imem_master_rid = master0_rid ;
   assign core$cpu_imem_master_rlast = master0_rlast ;
   assign core$cpu_imem_master_rresp = master0_rresp ;
+  assign core$cpu_imem_master_rvalid = master0_rvalid ;
   assign core$cpu_imem_master_wready = master0_wready ;
   assign core$cpu_reset_server_request_put =
 	     !rg_ndm_reset[1] || rg_ndm_reset[0] ;
@@ -1521,21 +1526,21 @@ module mkP2_Core(CLK,
   assign core$set_verbosity_logdelay = 64'h0 ;
   assign core$set_verbosity_verbosity = 4'h0 ;
   assign core$EN_set_verbosity = 1'b0 ;
-  assign core$EN_cpu_reset_server_request_put = CAN_FIRE_RL_rl_once ;
+  assign core$EN_cpu_reset_server_request_put =
+	     core$RDY_cpu_reset_server_request_put && !rg_once ;
   assign core$EN_cpu_reset_server_response_get =
-	     CAN_FIRE_RL_rl_reset_response ;
-  assign core$cpu_imem_master_bvalid = master0_bvalid ;
-  assign core$cpu_imem_master_rvalid = master0_rvalid ;
-  assign core$cpu_dmem_master_bvalid = master1_bvalid ;
-  assign core$cpu_dmem_master_rvalid = master1_rvalid ;
+	     core$RDY_cpu_reset_server_response_get &&
+	     (!rg_ndm_reset[1] || core$RDY_ndm_reset_client_response_put) ;
   assign core$EN_dm_dmi_read_addr =
 	     WILL_FIRE_RL_rl_dmi_req_cpu &&
 	     bus_dmi_req_fifof$D_OUT[1:0] == 2'd1 ;
-  assign core$EN_dm_dmi_read_data = WILL_FIRE_RL_rl_dmi_rsp_cpu ;
+  assign core$EN_dm_dmi_read_data =
+	     CAN_FIRE_RL_rl_dmi_rsp_cpu && !WILL_FIRE_RL_rl_dmi_req_cpu ;
   assign core$EN_dm_dmi_write =
 	     WILL_FIRE_RL_rl_dmi_req_cpu &&
 	     bus_dmi_req_fifof$D_OUT[1:0] == 2'd2 ;
-  assign core$EN_ndm_reset_client_request_get = CAN_FIRE_RL_rl_ndmreset ;
+  assign core$EN_ndm_reset_client_request_get =
+	     core$RDY_ndm_reset_client_request_get && rg_once ;
   assign core$EN_ndm_reset_client_response_put =
 	     WILL_FIRE_RL_rl_reset_response && rg_ndm_reset[1] ;
 

@@ -30,35 +30,22 @@
 // ndm_reset_client_request_get   O     1 reg
 // RDY_ndm_reset_client_request_get  O     1 reg
 // RDY_ndm_reset_client_response_put  O     1 reg
-// master_awid                    O     4
-// master_awaddr                  O    64
-// master_awlen                   O     8
-// master_awsize                  O     3
-// master_awburst                 O     2
-// master_awlock                  O     1
-// master_awcache                 O     4
-// master_awprot                  O     3
-// master_awqos                   O     4
-// master_awregion                O     4
-// master_awvalid                 O     1
-// master_wdata                   O    64
-// master_wstrb                   O     8
-// master_wlast                   O     1
-// master_wuser                   O     1
-// master_wvalid                  O     1
-// master_bready                  O     1
-// master_arid                    O     4
-// master_araddr                  O    64
-// master_arlen                   O     8
-// master_arsize                  O     3
-// master_arburst                 O     2
-// master_arlock                  O     1
-// master_arcache                 O     4
-// master_arprot                  O     3
-// master_arqos                   O     4
-// master_arregion                O     4
-// master_arvalid                 O     1
-// master_rready                  O     1
+// master_aw_canPeek              O     1 reg
+// master_aw_peek                 O    97 reg
+// RDY_master_aw_peek             O     1 reg
+// RDY_master_aw_drop             O     1 reg
+// master_w_canPeek               O     1 reg
+// master_w_peek                  O    74 reg
+// RDY_master_w_peek              O     1 reg
+// RDY_master_w_drop              O     1 reg
+// master_b_canPut                O     1 reg
+// RDY_master_b_put               O     1 reg
+// master_ar_canPeek              O     1 reg
+// master_ar_peek                 O    97 reg
+// RDY_master_ar_peek             O     1 reg
+// RDY_master_ar_drop             O     1 reg
+// master_r_canPut                O     1 reg
+// RDY_master_r_put               O     1 reg
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
 // dmi_read_addr_dm_addr          I     7 reg
@@ -70,16 +57,8 @@
 // hart0_fpr_mem_client_response_put  I    65 reg
 // hart0_csr_mem_client_response_put  I    65 reg
 // ndm_reset_client_response_put  I     1 reg
-// master_awready                 I     1
-// master_wready                  I     1
-// master_bid                     I     4
-// master_bresp                   I     2
-// master_arready                 I     1
-// master_rid                     I     4
-// master_rdata                   I    64
-// master_rresp                   I     2
-// master_rlast                   I     1
-// master_ruser                   I     1
+// master_b_put_val               I     6 reg
+// master_r_put_val               I    72 reg
 // EN_dmi_read_addr               I     1
 // EN_dmi_write                   I     1
 // EN_hart0_reset_client_response_put  I     1
@@ -88,8 +67,11 @@
 // EN_hart0_fpr_mem_client_response_put  I     1
 // EN_hart0_csr_mem_client_response_put  I     1
 // EN_ndm_reset_client_response_put  I     1
-// master_bvalid                  I     1
-// master_rvalid                  I     1
+// EN_master_aw_drop              I     1
+// EN_master_w_drop               I     1
+// EN_master_b_put                I     1
+// EN_master_ar_drop              I     1
+// EN_master_r_put                I     1
 // EN_dmi_read_data               I     1
 // EN_hart0_reset_client_request_get  I     1
 // EN_hart0_client_run_halt_request_get  I     1
@@ -100,267 +82,6 @@
 // EN_ndm_reset_client_request_get  I     1
 //
 // Combinational paths from inputs to outputs:
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awid
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awaddr
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awlen
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awsize
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awburst
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awlock
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awcache
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awprot
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awqos
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awregion
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awuser
-//   (dmi_write_dm_addr,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_awvalid
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_wdata
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_wstrb
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_wlast
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_wuser
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid) -> master_wvalid
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arid
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_araddr
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arlen
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arsize
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arburst
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arlock
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arcache
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arprot
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arqos
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arregion
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_aruser
-//   (dmi_write_dm_addr,
-//    dmi_write_dm_word,
-//    master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    EN_dmi_write,
-//    master_rvalid,
-//    EN_dmi_read_data) -> master_arvalid
 //   EN_dmi_read_data -> dmi_read_data
 //
 //
@@ -446,80 +167,41 @@ module mkDebug_Module(CLK,
 		      EN_ndm_reset_client_response_put,
 		      RDY_ndm_reset_client_response_put,
 
-		      master_awid,
+		      master_aw_canPeek,
 
-		      master_awaddr,
+		      master_aw_peek,
+		      RDY_master_aw_peek,
 
-		      master_awlen,
+		      EN_master_aw_drop,
+		      RDY_master_aw_drop,
 
-		      master_awsize,
+		      master_w_canPeek,
 
-		      master_awburst,
+		      master_w_peek,
+		      RDY_master_w_peek,
 
-		      master_awlock,
+		      EN_master_w_drop,
+		      RDY_master_w_drop,
 
-		      master_awcache,
+		      master_b_canPut,
 
-		      master_awprot,
+		      master_b_put_val,
+		      EN_master_b_put,
+		      RDY_master_b_put,
 
-		      master_awqos,
+		      master_ar_canPeek,
 
-		      master_awregion,
+		      master_ar_peek,
+		      RDY_master_ar_peek,
 
-		      master_awvalid,
+		      EN_master_ar_drop,
+		      RDY_master_ar_drop,
 
-		      master_awready,
+		      master_r_canPut,
 
-		      master_wdata,
-
-		      master_wstrb,
-
-		      master_wlast,
-
-		      master_wuser,
-
-		      master_wvalid,
-
-		      master_wready,
-
-		      master_bid,
-		      master_bresp,
-		      master_bvalid,
-
-		      master_bready,
-
-		      master_arid,
-
-		      master_araddr,
-
-		      master_arlen,
-
-		      master_arsize,
-
-		      master_arburst,
-
-		      master_arlock,
-
-		      master_arcache,
-
-		      master_arprot,
-
-		      master_arqos,
-
-		      master_arregion,
-
-		      master_arvalid,
-
-		      master_arready,
-
-		      master_rid,
-		      master_rdata,
-		      master_rresp,
-		      master_rlast,
-		      master_ruser,
-		      master_rvalid,
-
-		      master_rready);
+		      master_r_put_val,
+		      EN_master_r_put,
+		      RDY_master_r_put);
   input  CLK;
   input  RST_N;
 
@@ -604,137 +286,63 @@ module mkDebug_Module(CLK,
   input  EN_ndm_reset_client_response_put;
   output RDY_ndm_reset_client_response_put;
 
-  // value method master_aw_awid
-  output [3 : 0] master_awid;
+  // value method master_aw_canPeek
+  output master_aw_canPeek;
 
-  // value method master_aw_awaddr
-  output [63 : 0] master_awaddr;
+  // value method master_aw_peek
+  output [96 : 0] master_aw_peek;
+  output RDY_master_aw_peek;
 
-  // value method master_aw_awlen
-  output [7 : 0] master_awlen;
+  // action method master_aw_drop
+  input  EN_master_aw_drop;
+  output RDY_master_aw_drop;
 
-  // value method master_aw_awsize
-  output [2 : 0] master_awsize;
+  // value method master_w_canPeek
+  output master_w_canPeek;
 
-  // value method master_aw_awburst
-  output [1 : 0] master_awburst;
+  // value method master_w_peek
+  output [73 : 0] master_w_peek;
+  output RDY_master_w_peek;
 
-  // value method master_aw_awlock
-  output master_awlock;
+  // action method master_w_drop
+  input  EN_master_w_drop;
+  output RDY_master_w_drop;
 
-  // value method master_aw_awcache
-  output [3 : 0] master_awcache;
+  // value method master_b_canPut
+  output master_b_canPut;
 
-  // value method master_aw_awprot
-  output [2 : 0] master_awprot;
+  // action method master_b_put
+  input  [5 : 0] master_b_put_val;
+  input  EN_master_b_put;
+  output RDY_master_b_put;
 
-  // value method master_aw_awqos
-  output [3 : 0] master_awqos;
+  // value method master_ar_canPeek
+  output master_ar_canPeek;
 
-  // value method master_aw_awregion
-  output [3 : 0] master_awregion;
+  // value method master_ar_peek
+  output [96 : 0] master_ar_peek;
+  output RDY_master_ar_peek;
 
-  // value method master_aw_awuser
+  // action method master_ar_drop
+  input  EN_master_ar_drop;
+  output RDY_master_ar_drop;
 
-  // value method master_aw_awvalid
-  output master_awvalid;
+  // value method master_r_canPut
+  output master_r_canPut;
 
-  // action method master_aw_awready
-  input  master_awready;
-
-  // value method master_w_wdata
-  output [63 : 0] master_wdata;
-
-  // value method master_w_wstrb
-  output [7 : 0] master_wstrb;
-
-  // value method master_w_wlast
-  output master_wlast;
-
-  // value method master_w_wuser
-  output master_wuser;
-
-  // value method master_w_wvalid
-  output master_wvalid;
-
-  // action method master_w_wready
-  input  master_wready;
-
-  // action method master_b_bflit
-  input  [3 : 0] master_bid;
-  input  [1 : 0] master_bresp;
-  input  master_bvalid;
-
-  // value method master_b_bready
-  output master_bready;
-
-  // value method master_ar_arid
-  output [3 : 0] master_arid;
-
-  // value method master_ar_araddr
-  output [63 : 0] master_araddr;
-
-  // value method master_ar_arlen
-  output [7 : 0] master_arlen;
-
-  // value method master_ar_arsize
-  output [2 : 0] master_arsize;
-
-  // value method master_ar_arburst
-  output [1 : 0] master_arburst;
-
-  // value method master_ar_arlock
-  output master_arlock;
-
-  // value method master_ar_arcache
-  output [3 : 0] master_arcache;
-
-  // value method master_ar_arprot
-  output [2 : 0] master_arprot;
-
-  // value method master_ar_arqos
-  output [3 : 0] master_arqos;
-
-  // value method master_ar_arregion
-  output [3 : 0] master_arregion;
-
-  // value method master_ar_aruser
-
-  // value method master_ar_arvalid
-  output master_arvalid;
-
-  // action method master_ar_arready
-  input  master_arready;
-
-  // action method master_r_rflit
-  input  [3 : 0] master_rid;
-  input  [63 : 0] master_rdata;
-  input  [1 : 0] master_rresp;
-  input  master_rlast;
-  input  master_ruser;
-  input  master_rvalid;
-
-  // value method master_r_rready
-  output master_rready;
+  // action method master_r_put
+  input  [71 : 0] master_r_put_val;
+  input  EN_master_r_put;
+  output RDY_master_r_put;
 
   // signals for module outputs
   reg [31 : 0] dmi_read_data;
+  wire [96 : 0] master_ar_peek, master_aw_peek;
   wire [76 : 0] hart0_csr_mem_client_request_get;
+  wire [73 : 0] master_w_peek;
   wire [69 : 0] hart0_fpr_mem_client_request_get,
 		hart0_gpr_mem_client_request_get;
-  wire [63 : 0] master_araddr, master_awaddr, master_wdata;
-  wire [7 : 0] master_arlen, master_awlen, master_wstrb;
-  wire [3 : 0] hart0_get_other_req_get,
-	       master_arcache,
-	       master_arid,
-	       master_arqos,
-	       master_arregion,
-	       master_awcache,
-	       master_awid,
-	       master_awqos,
-	       master_awregion;
-  wire [2 : 0] master_arprot, master_arsize, master_awprot, master_awsize;
-  wire [1 : 0] master_arburst, master_awburst;
+  wire [3 : 0] hart0_get_other_req_get;
   wire RDY_dmi_read_addr,
        RDY_dmi_read_data,
        RDY_dmi_write,
@@ -749,19 +357,23 @@ module mkDebug_Module(CLK,
        RDY_hart0_gpr_mem_client_response_put,
        RDY_hart0_reset_client_request_get,
        RDY_hart0_reset_client_response_put,
+       RDY_master_ar_drop,
+       RDY_master_ar_peek,
+       RDY_master_aw_drop,
+       RDY_master_aw_peek,
+       RDY_master_b_put,
+       RDY_master_r_put,
+       RDY_master_w_drop,
+       RDY_master_w_peek,
        RDY_ndm_reset_client_request_get,
        RDY_ndm_reset_client_response_put,
        hart0_client_run_halt_request_get,
        hart0_reset_client_request_get,
-       master_arlock,
-       master_arvalid,
-       master_awlock,
-       master_awvalid,
-       master_bready,
-       master_rready,
-       master_wlast,
-       master_wuser,
-       master_wvalid,
+       master_ar_canPeek,
+       master_aw_canPeek,
+       master_b_canPut,
+       master_r_canPut,
+       master_w_canPeek,
        ndm_reset_client_request_get;
 
   // ports of submodule dm_abstract_commands
@@ -822,55 +434,35 @@ module mkDebug_Module(CLK,
        dm_run_control$ndm_reset_client_response_put;
 
   // ports of submodule dm_system_bus
-  wire [63 : 0] dm_system_bus$master_araddr,
-		dm_system_bus$master_awaddr,
-		dm_system_bus$master_rdata,
-		dm_system_bus$master_wdata;
+  wire [96 : 0] dm_system_bus$master_ar_peek, dm_system_bus$master_aw_peek;
+  wire [73 : 0] dm_system_bus$master_w_peek;
+  wire [71 : 0] dm_system_bus$master_r_put_val;
   wire [31 : 0] dm_system_bus$av_read, dm_system_bus$write_dm_word;
-  wire [7 : 0] dm_system_bus$master_arlen,
-	       dm_system_bus$master_awlen,
-	       dm_system_bus$master_wstrb;
   wire [6 : 0] dm_system_bus$av_read_dm_addr, dm_system_bus$write_dm_addr;
-  wire [3 : 0] dm_system_bus$master_arcache,
-	       dm_system_bus$master_arid,
-	       dm_system_bus$master_arqos,
-	       dm_system_bus$master_arregion,
-	       dm_system_bus$master_awcache,
-	       dm_system_bus$master_awid,
-	       dm_system_bus$master_awqos,
-	       dm_system_bus$master_awregion,
-	       dm_system_bus$master_bid,
-	       dm_system_bus$master_rid;
-  wire [2 : 0] dm_system_bus$master_arprot,
-	       dm_system_bus$master_arsize,
-	       dm_system_bus$master_awprot,
-	       dm_system_bus$master_awsize;
-  wire [1 : 0] dm_system_bus$master_arburst,
-	       dm_system_bus$master_awburst,
-	       dm_system_bus$master_bresp,
-	       dm_system_bus$master_rresp;
+  wire [5 : 0] dm_system_bus$master_b_put_val;
   wire dm_system_bus$EN_av_read,
+       dm_system_bus$EN_master_ar_drop,
+       dm_system_bus$EN_master_aw_drop,
+       dm_system_bus$EN_master_b_put,
+       dm_system_bus$EN_master_r_put,
+       dm_system_bus$EN_master_w_drop,
        dm_system_bus$EN_reset,
        dm_system_bus$EN_write,
        dm_system_bus$RDY_av_read,
-       dm_system_bus$RDY_reset,
+       dm_system_bus$RDY_master_ar_drop,
+       dm_system_bus$RDY_master_ar_peek,
+       dm_system_bus$RDY_master_aw_drop,
+       dm_system_bus$RDY_master_aw_peek,
+       dm_system_bus$RDY_master_b_put,
+       dm_system_bus$RDY_master_r_put,
+       dm_system_bus$RDY_master_w_drop,
+       dm_system_bus$RDY_master_w_peek,
        dm_system_bus$RDY_write,
-       dm_system_bus$master_arlock,
-       dm_system_bus$master_arready,
-       dm_system_bus$master_arvalid,
-       dm_system_bus$master_awlock,
-       dm_system_bus$master_awready,
-       dm_system_bus$master_awvalid,
-       dm_system_bus$master_bready,
-       dm_system_bus$master_bvalid,
-       dm_system_bus$master_rlast,
-       dm_system_bus$master_rready,
-       dm_system_bus$master_ruser,
-       dm_system_bus$master_rvalid,
-       dm_system_bus$master_wlast,
-       dm_system_bus$master_wready,
-       dm_system_bus$master_wuser,
-       dm_system_bus$master_wvalid;
+       dm_system_bus$master_ar_canPeek,
+       dm_system_bus$master_aw_canPeek,
+       dm_system_bus$master_b_canPut,
+       dm_system_bus$master_r_canPut,
+       dm_system_bus$master_w_canPeek;
 
   // ports of submodule f_read_addr
   wire [6 : 0] f_read_addr$D_IN, f_read_addr$D_OUT;
@@ -896,11 +488,11 @@ module mkDebug_Module(CLK,
        CAN_FIRE_hart0_gpr_mem_client_response_put,
        CAN_FIRE_hart0_reset_client_request_get,
        CAN_FIRE_hart0_reset_client_response_put,
-       CAN_FIRE_master_ar_arready,
-       CAN_FIRE_master_aw_awready,
-       CAN_FIRE_master_b_bflit,
-       CAN_FIRE_master_r_rflit,
-       CAN_FIRE_master_w_wready,
+       CAN_FIRE_master_ar_drop,
+       CAN_FIRE_master_aw_drop,
+       CAN_FIRE_master_b_put,
+       CAN_FIRE_master_r_put,
+       CAN_FIRE_master_w_drop,
        CAN_FIRE_ndm_reset_client_request_get,
        CAN_FIRE_ndm_reset_client_response_put,
        WILL_FIRE_RL_rl_reset,
@@ -918,18 +510,18 @@ module mkDebug_Module(CLK,
        WILL_FIRE_hart0_gpr_mem_client_response_put,
        WILL_FIRE_hart0_reset_client_request_get,
        WILL_FIRE_hart0_reset_client_response_put,
-       WILL_FIRE_master_ar_arready,
-       WILL_FIRE_master_aw_awready,
-       WILL_FIRE_master_b_bflit,
-       WILL_FIRE_master_r_rflit,
-       WILL_FIRE_master_w_wready,
+       WILL_FIRE_master_ar_drop,
+       WILL_FIRE_master_aw_drop,
+       WILL_FIRE_master_b_put,
+       WILL_FIRE_master_r_put,
+       WILL_FIRE_master_w_drop,
        WILL_FIRE_ndm_reset_client_request_get,
        WILL_FIRE_ndm_reset_client_response_put;
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [31 : 0] v__h756;
-  reg [31 : 0] v__h750;
+  reg [31 : 0] v__h500;
+  reg [31 : 0] v__h494;
   // synopsys translate_on
 
   // action method dmi_read_addr
@@ -1115,112 +707,57 @@ module mkDebug_Module(CLK,
   assign WILL_FIRE_ndm_reset_client_response_put =
 	     EN_ndm_reset_client_response_put ;
 
-  // value method master_aw_awid
-  assign master_awid = dm_system_bus$master_awid ;
+  // value method master_aw_canPeek
+  assign master_aw_canPeek = dm_system_bus$master_aw_canPeek ;
 
-  // value method master_aw_awaddr
-  assign master_awaddr = dm_system_bus$master_awaddr ;
+  // value method master_aw_peek
+  assign master_aw_peek = dm_system_bus$master_aw_peek ;
+  assign RDY_master_aw_peek = dm_system_bus$RDY_master_aw_peek ;
 
-  // value method master_aw_awlen
-  assign master_awlen = dm_system_bus$master_awlen ;
+  // action method master_aw_drop
+  assign RDY_master_aw_drop = dm_system_bus$RDY_master_aw_drop ;
+  assign CAN_FIRE_master_aw_drop = dm_system_bus$RDY_master_aw_drop ;
+  assign WILL_FIRE_master_aw_drop = EN_master_aw_drop ;
 
-  // value method master_aw_awsize
-  assign master_awsize = dm_system_bus$master_awsize ;
+  // value method master_w_canPeek
+  assign master_w_canPeek = dm_system_bus$master_w_canPeek ;
 
-  // value method master_aw_awburst
-  assign master_awburst = dm_system_bus$master_awburst ;
+  // value method master_w_peek
+  assign master_w_peek = dm_system_bus$master_w_peek ;
+  assign RDY_master_w_peek = dm_system_bus$RDY_master_w_peek ;
 
-  // value method master_aw_awlock
-  assign master_awlock = dm_system_bus$master_awlock ;
+  // action method master_w_drop
+  assign RDY_master_w_drop = dm_system_bus$RDY_master_w_drop ;
+  assign CAN_FIRE_master_w_drop = dm_system_bus$RDY_master_w_drop ;
+  assign WILL_FIRE_master_w_drop = EN_master_w_drop ;
 
-  // value method master_aw_awcache
-  assign master_awcache = dm_system_bus$master_awcache ;
+  // value method master_b_canPut
+  assign master_b_canPut = dm_system_bus$master_b_canPut ;
 
-  // value method master_aw_awprot
-  assign master_awprot = dm_system_bus$master_awprot ;
+  // action method master_b_put
+  assign RDY_master_b_put = dm_system_bus$RDY_master_b_put ;
+  assign CAN_FIRE_master_b_put = dm_system_bus$RDY_master_b_put ;
+  assign WILL_FIRE_master_b_put = EN_master_b_put ;
 
-  // value method master_aw_awqos
-  assign master_awqos = dm_system_bus$master_awqos ;
+  // value method master_ar_canPeek
+  assign master_ar_canPeek = dm_system_bus$master_ar_canPeek ;
 
-  // value method master_aw_awregion
-  assign master_awregion = dm_system_bus$master_awregion ;
+  // value method master_ar_peek
+  assign master_ar_peek = dm_system_bus$master_ar_peek ;
+  assign RDY_master_ar_peek = dm_system_bus$RDY_master_ar_peek ;
 
-  // value method master_aw_awvalid
-  assign master_awvalid = dm_system_bus$master_awvalid ;
+  // action method master_ar_drop
+  assign RDY_master_ar_drop = dm_system_bus$RDY_master_ar_drop ;
+  assign CAN_FIRE_master_ar_drop = dm_system_bus$RDY_master_ar_drop ;
+  assign WILL_FIRE_master_ar_drop = EN_master_ar_drop ;
 
-  // action method master_aw_awready
-  assign CAN_FIRE_master_aw_awready = 1'd1 ;
-  assign WILL_FIRE_master_aw_awready = 1'd1 ;
+  // value method master_r_canPut
+  assign master_r_canPut = dm_system_bus$master_r_canPut ;
 
-  // value method master_w_wdata
-  assign master_wdata = dm_system_bus$master_wdata ;
-
-  // value method master_w_wstrb
-  assign master_wstrb = dm_system_bus$master_wstrb ;
-
-  // value method master_w_wlast
-  assign master_wlast = dm_system_bus$master_wlast ;
-
-  // value method master_w_wuser
-  assign master_wuser = dm_system_bus$master_wuser ;
-
-  // value method master_w_wvalid
-  assign master_wvalid = dm_system_bus$master_wvalid ;
-
-  // action method master_w_wready
-  assign CAN_FIRE_master_w_wready = 1'd1 ;
-  assign WILL_FIRE_master_w_wready = 1'd1 ;
-
-  // action method master_b_bflit
-  assign CAN_FIRE_master_b_bflit = 1'd1 ;
-  assign WILL_FIRE_master_b_bflit = master_bvalid ;
-
-  // value method master_b_bready
-  assign master_bready = dm_system_bus$master_bready ;
-
-  // value method master_ar_arid
-  assign master_arid = dm_system_bus$master_arid ;
-
-  // value method master_ar_araddr
-  assign master_araddr = dm_system_bus$master_araddr ;
-
-  // value method master_ar_arlen
-  assign master_arlen = dm_system_bus$master_arlen ;
-
-  // value method master_ar_arsize
-  assign master_arsize = dm_system_bus$master_arsize ;
-
-  // value method master_ar_arburst
-  assign master_arburst = dm_system_bus$master_arburst ;
-
-  // value method master_ar_arlock
-  assign master_arlock = dm_system_bus$master_arlock ;
-
-  // value method master_ar_arcache
-  assign master_arcache = dm_system_bus$master_arcache ;
-
-  // value method master_ar_arprot
-  assign master_arprot = dm_system_bus$master_arprot ;
-
-  // value method master_ar_arqos
-  assign master_arqos = dm_system_bus$master_arqos ;
-
-  // value method master_ar_arregion
-  assign master_arregion = dm_system_bus$master_arregion ;
-
-  // value method master_ar_arvalid
-  assign master_arvalid = dm_system_bus$master_arvalid ;
-
-  // action method master_ar_arready
-  assign CAN_FIRE_master_ar_arready = 1'd1 ;
-  assign WILL_FIRE_master_ar_arready = 1'd1 ;
-
-  // action method master_r_rflit
-  assign CAN_FIRE_master_r_rflit = 1'd1 ;
-  assign WILL_FIRE_master_r_rflit = master_rvalid ;
-
-  // value method master_r_rready
-  assign master_rready = dm_system_bus$master_rready ;
+  // action method master_r_put
+  assign RDY_master_r_put = dm_system_bus$RDY_master_r_put ;
+  assign CAN_FIRE_master_r_put = dm_system_bus$RDY_master_r_put ;
+  assign WILL_FIRE_master_r_put = EN_master_r_put ;
 
   // submodule dm_abstract_commands
   mkDM_Abstract_Commands dm_abstract_commands(.CLK(CLK),
@@ -1295,56 +832,38 @@ module mkDebug_Module(CLK,
   mkDM_System_Bus dm_system_bus(.CLK(CLK),
 				.RST_N(RST_N),
 				.av_read_dm_addr(dm_system_bus$av_read_dm_addr),
-				.master_arready(dm_system_bus$master_arready),
-				.master_awready(dm_system_bus$master_awready),
-				.master_bid(dm_system_bus$master_bid),
-				.master_bresp(dm_system_bus$master_bresp),
-				.master_rdata(dm_system_bus$master_rdata),
-				.master_rid(dm_system_bus$master_rid),
-				.master_rlast(dm_system_bus$master_rlast),
-				.master_rresp(dm_system_bus$master_rresp),
-				.master_ruser(dm_system_bus$master_ruser),
-				.master_wready(dm_system_bus$master_wready),
+				.master_b_put_val(dm_system_bus$master_b_put_val),
+				.master_r_put_val(dm_system_bus$master_r_put_val),
 				.write_dm_addr(dm_system_bus$write_dm_addr),
 				.write_dm_word(dm_system_bus$write_dm_word),
 				.EN_reset(dm_system_bus$EN_reset),
 				.EN_av_read(dm_system_bus$EN_av_read),
 				.EN_write(dm_system_bus$EN_write),
-				.master_bvalid(dm_system_bus$master_bvalid),
-				.master_rvalid(dm_system_bus$master_rvalid),
-				.RDY_reset(dm_system_bus$RDY_reset),
+				.EN_master_aw_drop(dm_system_bus$EN_master_aw_drop),
+				.EN_master_w_drop(dm_system_bus$EN_master_w_drop),
+				.EN_master_b_put(dm_system_bus$EN_master_b_put),
+				.EN_master_ar_drop(dm_system_bus$EN_master_ar_drop),
+				.EN_master_r_put(dm_system_bus$EN_master_r_put),
+				.RDY_reset(),
 				.av_read(dm_system_bus$av_read),
 				.RDY_av_read(dm_system_bus$RDY_av_read),
 				.RDY_write(dm_system_bus$RDY_write),
-				.master_awid(dm_system_bus$master_awid),
-				.master_awaddr(dm_system_bus$master_awaddr),
-				.master_awlen(dm_system_bus$master_awlen),
-				.master_awsize(dm_system_bus$master_awsize),
-				.master_awburst(dm_system_bus$master_awburst),
-				.master_awlock(dm_system_bus$master_awlock),
-				.master_awcache(dm_system_bus$master_awcache),
-				.master_awprot(dm_system_bus$master_awprot),
-				.master_awqos(dm_system_bus$master_awqos),
-				.master_awregion(dm_system_bus$master_awregion),
-				.master_awvalid(dm_system_bus$master_awvalid),
-				.master_wdata(dm_system_bus$master_wdata),
-				.master_wstrb(dm_system_bus$master_wstrb),
-				.master_wlast(dm_system_bus$master_wlast),
-				.master_wuser(dm_system_bus$master_wuser),
-				.master_wvalid(dm_system_bus$master_wvalid),
-				.master_bready(dm_system_bus$master_bready),
-				.master_arid(dm_system_bus$master_arid),
-				.master_araddr(dm_system_bus$master_araddr),
-				.master_arlen(dm_system_bus$master_arlen),
-				.master_arsize(dm_system_bus$master_arsize),
-				.master_arburst(dm_system_bus$master_arburst),
-				.master_arlock(dm_system_bus$master_arlock),
-				.master_arcache(dm_system_bus$master_arcache),
-				.master_arprot(dm_system_bus$master_arprot),
-				.master_arqos(dm_system_bus$master_arqos),
-				.master_arregion(dm_system_bus$master_arregion),
-				.master_arvalid(dm_system_bus$master_arvalid),
-				.master_rready(dm_system_bus$master_rready));
+				.master_aw_canPeek(dm_system_bus$master_aw_canPeek),
+				.master_aw_peek(dm_system_bus$master_aw_peek),
+				.RDY_master_aw_peek(dm_system_bus$RDY_master_aw_peek),
+				.RDY_master_aw_drop(dm_system_bus$RDY_master_aw_drop),
+				.master_w_canPeek(dm_system_bus$master_w_canPeek),
+				.master_w_peek(dm_system_bus$master_w_peek),
+				.RDY_master_w_peek(dm_system_bus$RDY_master_w_peek),
+				.RDY_master_w_drop(dm_system_bus$RDY_master_w_drop),
+				.master_b_canPut(dm_system_bus$master_b_canPut),
+				.RDY_master_b_put(dm_system_bus$RDY_master_b_put),
+				.master_ar_canPeek(dm_system_bus$master_ar_canPeek),
+				.master_ar_peek(dm_system_bus$master_ar_peek),
+				.RDY_master_ar_peek(dm_system_bus$RDY_master_ar_peek),
+				.RDY_master_ar_drop(dm_system_bus$RDY_master_ar_drop),
+				.master_r_canPut(dm_system_bus$master_r_canPut),
+				.RDY_master_r_put(dm_system_bus$RDY_master_r_put));
 
   // submodule f_read_addr
   FIFO1 #(.width(32'd7), .guarded(32'd1)) f_read_addr(.RST(RST_N),
@@ -1358,8 +877,7 @@ module mkDebug_Module(CLK,
 						      .EMPTY_N(f_read_addr$EMPTY_N));
 
   // rule RL_rl_reset
-  assign CAN_FIRE_RL_rl_reset =
-	     dm_system_bus$RDY_reset && !dm_run_control$dmactive ;
+  assign CAN_FIRE_RL_rl_reset = !dm_run_control$dmactive ;
   assign WILL_FIRE_RL_rl_reset = CAN_FIRE_RL_rl_reset ;
 
   // submodule dm_abstract_commands
@@ -1470,16 +988,8 @@ module mkDebug_Module(CLK,
 
   // submodule dm_system_bus
   assign dm_system_bus$av_read_dm_addr = f_read_addr$D_OUT ;
-  assign dm_system_bus$master_arready = master_arready ;
-  assign dm_system_bus$master_awready = master_awready ;
-  assign dm_system_bus$master_bid = master_bid ;
-  assign dm_system_bus$master_bresp = master_bresp ;
-  assign dm_system_bus$master_rdata = master_rdata ;
-  assign dm_system_bus$master_rid = master_rid ;
-  assign dm_system_bus$master_rlast = master_rlast ;
-  assign dm_system_bus$master_rresp = master_rresp ;
-  assign dm_system_bus$master_ruser = master_ruser ;
-  assign dm_system_bus$master_wready = master_wready ;
+  assign dm_system_bus$master_b_put_val = master_b_put_val ;
+  assign dm_system_bus$master_r_put_val = master_r_put_val ;
   assign dm_system_bus$write_dm_addr = dmi_write_dm_addr ;
   assign dm_system_bus$write_dm_word = dmi_write_dm_word ;
   assign dm_system_bus$EN_reset = CAN_FIRE_RL_rl_reset ;
@@ -1501,8 +1011,11 @@ module mkDebug_Module(CLK,
 	      dmi_write_dm_addr == 7'h3D ||
 	      dmi_write_dm_addr == 7'h3E ||
 	      dmi_write_dm_addr == 7'h3F) ;
-  assign dm_system_bus$master_bvalid = master_bvalid ;
-  assign dm_system_bus$master_rvalid = master_rvalid ;
+  assign dm_system_bus$EN_master_aw_drop = EN_master_aw_drop ;
+  assign dm_system_bus$EN_master_w_drop = EN_master_w_drop ;
+  assign dm_system_bus$EN_master_b_put = EN_master_b_put ;
+  assign dm_system_bus$EN_master_ar_drop = EN_master_ar_drop ;
+  assign dm_system_bus$EN_master_r_put = EN_master_r_put ;
 
   // submodule f_read_addr
   assign f_read_addr$D_IN = dmi_read_addr_dm_addr ;
@@ -1519,12 +1032,12 @@ module mkDebug_Module(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset)
 	begin
-	  v__h756 = $stime;
+	  v__h500 = $stime;
 	  #0;
 	end
-    v__h750 = v__h756 / 32'd10;
+    v__h494 = v__h500 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_rl_reset) $display("%0d: Debug_Module reset", v__h750);
+      if (WILL_FIRE_RL_rl_reset) $display("%0d: Debug_Module reset", v__h494);
   end
   // synopsys translate_on
 endmodule  // mkDebug_Module

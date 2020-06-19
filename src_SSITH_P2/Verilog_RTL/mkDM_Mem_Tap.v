@@ -6,539 +6,58 @@
 //
 // Ports:
 // Name                         I/O  size props
-// slave_awready                  O     1
-// slave_wready                   O     1
-// slave_bid                      O     4
-// slave_bresp                    O     2
-// slave_bvalid                   O     1
-// slave_arready                  O     1
-// slave_rid                      O     4
-// slave_rdata                    O    64
-// slave_rresp                    O     2
-// slave_rlast                    O     1
-// slave_ruser                    O     1
-// slave_rvalid                   O     1
-// master_awid                    O     4
-// master_awaddr                  O    64
-// master_awlen                   O     8
-// master_awsize                  O     3
-// master_awburst                 O     2
-// master_awlock                  O     1
-// master_awcache                 O     4
-// master_awprot                  O     3
-// master_awqos                   O     4
-// master_awregion                O     4
-// master_awvalid                 O     1
-// master_wdata                   O    64
-// master_wstrb                   O     8
-// master_wlast                   O     1
-// master_wuser                   O     1
-// master_wvalid                  O     1
-// master_bready                  O     1
-// master_arid                    O     4
-// master_araddr                  O    64
-// master_arlen                   O     8
-// master_arsize                  O     3
-// master_arburst                 O     2
-// master_arlock                  O     1
-// master_arcache                 O     4
-// master_arprot                  O     3
-// master_arqos                   O     4
-// master_arregion                O     4
-// master_arvalid                 O     1
-// master_rready                  O     1
+// slave_aw_canPut                O     1 reg
+// RDY_slave_aw_put               O     1 reg
+// slave_w_canPut                 O     1 reg
+// RDY_slave_w_put                O     1 reg
+// slave_b_canPeek                O     1 reg
+// slave_b_peek                   O     6 reg
+// RDY_slave_b_peek               O     1 reg
+// RDY_slave_b_drop               O     1 reg
+// slave_ar_canPut                O     1 reg
+// RDY_slave_ar_put               O     1 reg
+// slave_r_canPeek                O     1 reg
+// slave_r_peek                   O    72 reg
+// RDY_slave_r_peek               O     1 reg
+// RDY_slave_r_drop               O     1 reg
+// master_aw_canPeek              O     1 reg
+// master_aw_peek                 O    97 reg
+// RDY_master_aw_peek             O     1 reg
+// RDY_master_aw_drop             O     1 reg
+// master_w_canPeek               O     1 reg
+// master_w_peek                  O    74 reg
+// RDY_master_w_peek              O     1 reg
+// RDY_master_w_drop              O     1 reg
+// master_b_canPut                O     1 reg
+// RDY_master_b_put               O     1 reg
+// master_ar_canPeek              O     1 reg
+// master_ar_peek                 O    97 reg
+// RDY_master_ar_peek             O     1 reg
+// RDY_master_ar_drop             O     1 reg
+// master_r_canPut                O     1 reg
+// RDY_master_r_put               O     1 reg
 // trace_data_out_get             O   427 reg
 // RDY_trace_data_out_get         O     1 reg
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
-// slave_awid                     I     4
-// slave_awaddr                   I    64
-// slave_awlen                    I     8
-// slave_awsize                   I     3
-// slave_awburst                  I     2
-// slave_awlock                   I     1
-// slave_awcache                  I     4
-// slave_awprot                   I     3
-// slave_awqos                    I     4
-// slave_awregion                 I     4
-// slave_wdata                    I    64
-// slave_wstrb                    I     8
-// slave_wlast                    I     1
-// slave_wuser                    I     1
-// slave_bready                   I     1
-// slave_arid                     I     4
-// slave_araddr                   I    64
-// slave_arlen                    I     8
-// slave_arsize                   I     3
-// slave_arburst                  I     2
-// slave_arlock                   I     1
-// slave_arcache                  I     4
-// slave_arprot                   I     3
-// slave_arqos                    I     4
-// slave_arregion                 I     4
-// slave_rready                   I     1
-// master_awready                 I     1
-// master_wready                  I     1
-// master_bid                     I     4
-// master_bresp                   I     2
-// master_arready                 I     1
-// master_rid                     I     4
-// master_rdata                   I    64
-// master_rresp                   I     2
-// master_rlast                   I     1
-// master_ruser                   I     1
-// slave_awvalid                  I     1
-// slave_wvalid                   I     1
-// slave_arvalid                  I     1
-// master_bvalid                  I     1
-// master_rvalid                  I     1
+// slave_aw_put_val               I    97 reg
+// slave_w_put_val                I    74 reg
+// slave_ar_put_val               I    97 reg
+// master_b_put_val               I     6 reg
+// master_r_put_val               I    72 reg
+// EN_slave_aw_put                I     1
+// EN_slave_w_put                 I     1
+// EN_slave_b_drop                I     1
+// EN_slave_ar_put                I     1
+// EN_slave_r_drop                I     1
+// EN_master_aw_drop              I     1
+// EN_master_w_drop               I     1
+// EN_master_b_put                I     1
+// EN_master_ar_drop              I     1
+// EN_master_r_put                I     1
 // EN_trace_data_out_get          I     1
 //
-// Combinational paths from inputs to outputs:
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awid
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awaddr
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awlen
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awsize
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awburst
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awlock
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awcache
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awprot
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awqos
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awregion
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awuser
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_awvalid
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_wdata
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_wstrb
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_wlast
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_wuser
-//   (slave_awid,
-//    slave_awaddr,
-//    slave_awlen,
-//    slave_awsize,
-//    slave_awburst,
-//    slave_awlock,
-//    slave_awcache,
-//    slave_awprot,
-//    slave_awqos,
-//    slave_awregion,
-//    slave_wdata,
-//    slave_wstrb,
-//    slave_wlast,
-//    slave_wuser,
-//    slave_awvalid,
-//    slave_wvalid) -> master_wvalid
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arid
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_araddr
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arlen
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arsize
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arburst
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arlock
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arcache
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arprot
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arqos
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arregion
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_aruser
-//   (slave_arid,
-//    slave_araddr,
-//    slave_arlen,
-//    slave_arsize,
-//    slave_arburst,
-//    slave_arlock,
-//    slave_arcache,
-//    slave_arprot,
-//    slave_arqos,
-//    slave_arregion,
-//    slave_arvalid) -> master_arvalid
-//   (master_bid, master_bresp, master_bvalid) -> slave_bid
-//   (master_bid, master_bresp, master_bvalid) -> slave_bresp
-//   (master_bid, master_bresp, master_bvalid) -> slave_buser
-//   (master_bid, master_bresp, master_bvalid) -> slave_bvalid
-//   (master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    master_rvalid) -> slave_rid
-//   (master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    master_rvalid) -> slave_rdata
-//   (master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    master_rvalid) -> slave_rresp
-//   (master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    master_rvalid) -> slave_rlast
-//   (master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    master_rvalid) -> slave_ruser
-//   (master_rid,
-//    master_rdata,
-//    master_rresp,
-//    master_rlast,
-//    master_ruser,
-//    master_rvalid) -> slave_rvalid
+// No combinational paths from inputs to outputs
 //
 //
 
@@ -558,138 +77,75 @@
 module mkDM_Mem_Tap(CLK,
 		    RST_N,
 
-		    slave_awid,
-		    slave_awaddr,
-		    slave_awlen,
-		    slave_awsize,
-		    slave_awburst,
-		    slave_awlock,
-		    slave_awcache,
-		    slave_awprot,
-		    slave_awqos,
-		    slave_awregion,
-		    slave_awvalid,
+		    slave_aw_canPut,
 
-		    slave_awready,
+		    slave_aw_put_val,
+		    EN_slave_aw_put,
+		    RDY_slave_aw_put,
 
-		    slave_wdata,
-		    slave_wstrb,
-		    slave_wlast,
-		    slave_wuser,
-		    slave_wvalid,
+		    slave_w_canPut,
 
-		    slave_wready,
+		    slave_w_put_val,
+		    EN_slave_w_put,
+		    RDY_slave_w_put,
 
-		    slave_bid,
+		    slave_b_canPeek,
 
-		    slave_bresp,
+		    slave_b_peek,
+		    RDY_slave_b_peek,
 
-		    slave_bvalid,
+		    EN_slave_b_drop,
+		    RDY_slave_b_drop,
 
-		    slave_bready,
+		    slave_ar_canPut,
 
-		    slave_arid,
-		    slave_araddr,
-		    slave_arlen,
-		    slave_arsize,
-		    slave_arburst,
-		    slave_arlock,
-		    slave_arcache,
-		    slave_arprot,
-		    slave_arqos,
-		    slave_arregion,
-		    slave_arvalid,
+		    slave_ar_put_val,
+		    EN_slave_ar_put,
+		    RDY_slave_ar_put,
 
-		    slave_arready,
+		    slave_r_canPeek,
 
-		    slave_rid,
+		    slave_r_peek,
+		    RDY_slave_r_peek,
 
-		    slave_rdata,
+		    EN_slave_r_drop,
+		    RDY_slave_r_drop,
 
-		    slave_rresp,
+		    master_aw_canPeek,
 
-		    slave_rlast,
+		    master_aw_peek,
+		    RDY_master_aw_peek,
 
-		    slave_ruser,
+		    EN_master_aw_drop,
+		    RDY_master_aw_drop,
 
-		    slave_rvalid,
+		    master_w_canPeek,
 
-		    slave_rready,
+		    master_w_peek,
+		    RDY_master_w_peek,
 
-		    master_awid,
+		    EN_master_w_drop,
+		    RDY_master_w_drop,
 
-		    master_awaddr,
+		    master_b_canPut,
 
-		    master_awlen,
+		    master_b_put_val,
+		    EN_master_b_put,
+		    RDY_master_b_put,
 
-		    master_awsize,
+		    master_ar_canPeek,
 
-		    master_awburst,
+		    master_ar_peek,
+		    RDY_master_ar_peek,
 
-		    master_awlock,
+		    EN_master_ar_drop,
+		    RDY_master_ar_drop,
 
-		    master_awcache,
+		    master_r_canPut,
 
-		    master_awprot,
-
-		    master_awqos,
-
-		    master_awregion,
-
-		    master_awvalid,
-
-		    master_awready,
-
-		    master_wdata,
-
-		    master_wstrb,
-
-		    master_wlast,
-
-		    master_wuser,
-
-		    master_wvalid,
-
-		    master_wready,
-
-		    master_bid,
-		    master_bresp,
-		    master_bvalid,
-
-		    master_bready,
-
-		    master_arid,
-
-		    master_araddr,
-
-		    master_arlen,
-
-		    master_arsize,
-
-		    master_arburst,
-
-		    master_arlock,
-
-		    master_arcache,
-
-		    master_arprot,
-
-		    master_arqos,
-
-		    master_arregion,
-
-		    master_arvalid,
-
-		    master_arready,
-
-		    master_rid,
-		    master_rdata,
-		    master_rresp,
-		    master_rlast,
-		    master_ruser,
-		    master_rvalid,
-
-		    master_rready,
+		    master_r_put_val,
+		    EN_master_r_put,
+		    RDY_master_r_put,
 
 		    EN_trace_data_out_get,
 		    trace_data_out_get,
@@ -697,195 +153,100 @@ module mkDM_Mem_Tap(CLK,
   input  CLK;
   input  RST_N;
 
-  // action method slave_aw_awflit
-  input  [3 : 0] slave_awid;
-  input  [63 : 0] slave_awaddr;
-  input  [7 : 0] slave_awlen;
-  input  [2 : 0] slave_awsize;
-  input  [1 : 0] slave_awburst;
-  input  slave_awlock;
-  input  [3 : 0] slave_awcache;
-  input  [2 : 0] slave_awprot;
-  input  [3 : 0] slave_awqos;
-  input  [3 : 0] slave_awregion;
-  input  slave_awvalid;
+  // value method slave_aw_canPut
+  output slave_aw_canPut;
 
-  // value method slave_aw_awready
-  output slave_awready;
+  // action method slave_aw_put
+  input  [96 : 0] slave_aw_put_val;
+  input  EN_slave_aw_put;
+  output RDY_slave_aw_put;
 
-  // action method slave_w_wflit
-  input  [63 : 0] slave_wdata;
-  input  [7 : 0] slave_wstrb;
-  input  slave_wlast;
-  input  slave_wuser;
-  input  slave_wvalid;
+  // value method slave_w_canPut
+  output slave_w_canPut;
 
-  // value method slave_w_wready
-  output slave_wready;
+  // action method slave_w_put
+  input  [73 : 0] slave_w_put_val;
+  input  EN_slave_w_put;
+  output RDY_slave_w_put;
 
-  // value method slave_b_bid
-  output [3 : 0] slave_bid;
+  // value method slave_b_canPeek
+  output slave_b_canPeek;
 
-  // value method slave_b_bresp
-  output [1 : 0] slave_bresp;
+  // value method slave_b_peek
+  output [5 : 0] slave_b_peek;
+  output RDY_slave_b_peek;
 
-  // value method slave_b_buser
+  // action method slave_b_drop
+  input  EN_slave_b_drop;
+  output RDY_slave_b_drop;
 
-  // value method slave_b_bvalid
-  output slave_bvalid;
+  // value method slave_ar_canPut
+  output slave_ar_canPut;
 
-  // action method slave_b_bready
-  input  slave_bready;
+  // action method slave_ar_put
+  input  [96 : 0] slave_ar_put_val;
+  input  EN_slave_ar_put;
+  output RDY_slave_ar_put;
 
-  // action method slave_ar_arflit
-  input  [3 : 0] slave_arid;
-  input  [63 : 0] slave_araddr;
-  input  [7 : 0] slave_arlen;
-  input  [2 : 0] slave_arsize;
-  input  [1 : 0] slave_arburst;
-  input  slave_arlock;
-  input  [3 : 0] slave_arcache;
-  input  [2 : 0] slave_arprot;
-  input  [3 : 0] slave_arqos;
-  input  [3 : 0] slave_arregion;
-  input  slave_arvalid;
+  // value method slave_r_canPeek
+  output slave_r_canPeek;
 
-  // value method slave_ar_arready
-  output slave_arready;
+  // value method slave_r_peek
+  output [71 : 0] slave_r_peek;
+  output RDY_slave_r_peek;
 
-  // value method slave_r_rid
-  output [3 : 0] slave_rid;
+  // action method slave_r_drop
+  input  EN_slave_r_drop;
+  output RDY_slave_r_drop;
 
-  // value method slave_r_rdata
-  output [63 : 0] slave_rdata;
+  // value method master_aw_canPeek
+  output master_aw_canPeek;
 
-  // value method slave_r_rresp
-  output [1 : 0] slave_rresp;
+  // value method master_aw_peek
+  output [96 : 0] master_aw_peek;
+  output RDY_master_aw_peek;
 
-  // value method slave_r_rlast
-  output slave_rlast;
+  // action method master_aw_drop
+  input  EN_master_aw_drop;
+  output RDY_master_aw_drop;
 
-  // value method slave_r_ruser
-  output slave_ruser;
+  // value method master_w_canPeek
+  output master_w_canPeek;
 
-  // value method slave_r_rvalid
-  output slave_rvalid;
+  // value method master_w_peek
+  output [73 : 0] master_w_peek;
+  output RDY_master_w_peek;
 
-  // action method slave_r_rready
-  input  slave_rready;
+  // action method master_w_drop
+  input  EN_master_w_drop;
+  output RDY_master_w_drop;
 
-  // value method master_aw_awid
-  output [3 : 0] master_awid;
+  // value method master_b_canPut
+  output master_b_canPut;
 
-  // value method master_aw_awaddr
-  output [63 : 0] master_awaddr;
+  // action method master_b_put
+  input  [5 : 0] master_b_put_val;
+  input  EN_master_b_put;
+  output RDY_master_b_put;
 
-  // value method master_aw_awlen
-  output [7 : 0] master_awlen;
+  // value method master_ar_canPeek
+  output master_ar_canPeek;
 
-  // value method master_aw_awsize
-  output [2 : 0] master_awsize;
+  // value method master_ar_peek
+  output [96 : 0] master_ar_peek;
+  output RDY_master_ar_peek;
 
-  // value method master_aw_awburst
-  output [1 : 0] master_awburst;
+  // action method master_ar_drop
+  input  EN_master_ar_drop;
+  output RDY_master_ar_drop;
 
-  // value method master_aw_awlock
-  output master_awlock;
+  // value method master_r_canPut
+  output master_r_canPut;
 
-  // value method master_aw_awcache
-  output [3 : 0] master_awcache;
-
-  // value method master_aw_awprot
-  output [2 : 0] master_awprot;
-
-  // value method master_aw_awqos
-  output [3 : 0] master_awqos;
-
-  // value method master_aw_awregion
-  output [3 : 0] master_awregion;
-
-  // value method master_aw_awuser
-
-  // value method master_aw_awvalid
-  output master_awvalid;
-
-  // action method master_aw_awready
-  input  master_awready;
-
-  // value method master_w_wdata
-  output [63 : 0] master_wdata;
-
-  // value method master_w_wstrb
-  output [7 : 0] master_wstrb;
-
-  // value method master_w_wlast
-  output master_wlast;
-
-  // value method master_w_wuser
-  output master_wuser;
-
-  // value method master_w_wvalid
-  output master_wvalid;
-
-  // action method master_w_wready
-  input  master_wready;
-
-  // action method master_b_bflit
-  input  [3 : 0] master_bid;
-  input  [1 : 0] master_bresp;
-  input  master_bvalid;
-
-  // value method master_b_bready
-  output master_bready;
-
-  // value method master_ar_arid
-  output [3 : 0] master_arid;
-
-  // value method master_ar_araddr
-  output [63 : 0] master_araddr;
-
-  // value method master_ar_arlen
-  output [7 : 0] master_arlen;
-
-  // value method master_ar_arsize
-  output [2 : 0] master_arsize;
-
-  // value method master_ar_arburst
-  output [1 : 0] master_arburst;
-
-  // value method master_ar_arlock
-  output master_arlock;
-
-  // value method master_ar_arcache
-  output [3 : 0] master_arcache;
-
-  // value method master_ar_arprot
-  output [2 : 0] master_arprot;
-
-  // value method master_ar_arqos
-  output [3 : 0] master_arqos;
-
-  // value method master_ar_arregion
-  output [3 : 0] master_arregion;
-
-  // value method master_ar_aruser
-
-  // value method master_ar_arvalid
-  output master_arvalid;
-
-  // action method master_ar_arready
-  input  master_arready;
-
-  // action method master_r_rflit
-  input  [3 : 0] master_rid;
-  input  [63 : 0] master_rdata;
-  input  [1 : 0] master_rresp;
-  input  master_rlast;
-  input  master_ruser;
-  input  master_rvalid;
-
-  // value method master_r_rready
-  output master_rready;
+  // action method master_r_put
+  input  [71 : 0] master_r_put_val;
+  input  EN_master_r_put;
+  output RDY_master_r_put;
 
   // actionvalue method trace_data_out_get
   input  EN_trace_data_out_get;
@@ -894,158 +255,36 @@ module mkDM_Mem_Tap(CLK,
 
   // signals for module outputs
   wire [426 : 0] trace_data_out_get;
-  wire [63 : 0] master_araddr, master_awaddr, master_wdata, slave_rdata;
-  wire [7 : 0] master_arlen, master_awlen, master_wstrb;
-  wire [3 : 0] master_arcache,
-	       master_arid,
-	       master_arqos,
-	       master_arregion,
-	       master_awcache,
-	       master_awid,
-	       master_awqos,
-	       master_awregion,
-	       slave_bid,
-	       slave_rid;
-  wire [2 : 0] master_arprot, master_arsize, master_awprot, master_awsize;
-  wire [1 : 0] master_arburst, master_awburst, slave_bresp, slave_rresp;
-  wire RDY_trace_data_out_get,
-       master_arlock,
-       master_arvalid,
-       master_awlock,
-       master_awvalid,
-       master_bready,
-       master_rready,
-       master_wlast,
-       master_wuser,
-       master_wvalid,
-       slave_arready,
-       slave_awready,
-       slave_bvalid,
-       slave_rlast,
-       slave_ruser,
-       slave_rvalid,
-       slave_wready;
-
-  // inlined wires
-  wire [97 : 0] master_xactor_shim_arff_rv$port0__write_1,
-		master_xactor_shim_arff_rv$port1__read,
-		master_xactor_shim_arff_rv$port1__write_1,
-		master_xactor_shim_arff_rv$port2__read,
-		master_xactor_shim_arff_rv$port3__read,
-		master_xactor_shim_awff_rv$port0__write_1,
-		master_xactor_shim_awff_rv$port1__read,
-		master_xactor_shim_awff_rv$port2__read,
-		master_xactor_shim_awff_rv$port3__read,
-		slave_xactor_shim_arff_rv$port0__write_1,
-		slave_xactor_shim_arff_rv$port1__read,
-		slave_xactor_shim_arff_rv$port2__read,
-		slave_xactor_shim_arff_rv$port3__read,
-		slave_xactor_shim_awff_rv$port0__write_1,
-		slave_xactor_shim_awff_rv$port1__read,
-		slave_xactor_shim_awff_rv$port2__read,
-		slave_xactor_shim_awff_rv$port3__read;
-  wire [96 : 0] slave_xactor_ug_slave_u_ar_putWire$wget,
-		slave_xactor_ug_slave_u_aw_putWire$wget;
-  wire [74 : 0] master_xactor_shim_wff_rv$port0__write_1,
-		master_xactor_shim_wff_rv$port1__read,
-		master_xactor_shim_wff_rv$port2__read,
-		master_xactor_shim_wff_rv$port2__write_1,
-		master_xactor_shim_wff_rv$port3__read,
-		slave_xactor_shim_wff_rv$port0__write_1,
-		slave_xactor_shim_wff_rv$port1__read,
-		slave_xactor_shim_wff_rv$port2__read,
-		slave_xactor_shim_wff_rv$port3__read;
-  wire [73 : 0] slave_xactor_ug_slave_u_w_putWire$wget;
-  wire [72 : 0] master_xactor_shim_rff_rv$port0__write_1,
-		master_xactor_shim_rff_rv$port1__read,
-		master_xactor_shim_rff_rv$port1__write_1,
-		master_xactor_shim_rff_rv$port2__read,
-		master_xactor_shim_rff_rv$port3__read,
-		slave_xactor_shim_rff_rv$port0__write_1,
-		slave_xactor_shim_rff_rv$port1__read,
-		slave_xactor_shim_rff_rv$port2__read,
-		slave_xactor_shim_rff_rv$port3__read;
-  wire [71 : 0] master_xactor_ug_master_u_r_putWire$wget,
-		slave_xactor_ug_slave_u_r_peekWire$wget;
-  wire [6 : 0] master_xactor_shim_bff_rv$port0__write_1,
-	       master_xactor_shim_bff_rv$port1__read,
-	       master_xactor_shim_bff_rv$port1__write_1,
-	       master_xactor_shim_bff_rv$port2__read,
-	       master_xactor_shim_bff_rv$port3__read,
-	       slave_xactor_shim_bff_rv$port0__write_1,
-	       slave_xactor_shim_bff_rv$port1__read,
-	       slave_xactor_shim_bff_rv$port2__read,
-	       slave_xactor_shim_bff_rv$port3__read;
-  wire [5 : 0] master_xactor_ug_master_u_b_putWire$wget,
-	       slave_xactor_ug_slave_u_b_peekWire$wget;
-  wire master_xactor_ug_master_u_ar_dropWire$whas,
-       master_xactor_ug_master_u_aw_dropWire$whas,
-       master_xactor_ug_master_u_b_putWire$whas,
-       master_xactor_ug_master_u_r_putWire$whas,
-       master_xactor_ug_master_u_w_dropWire$whas,
-       slave_xactor_ug_slave_u_ar_putWire$whas,
-       slave_xactor_ug_slave_u_aw_putWire$whas,
-       slave_xactor_ug_slave_u_b_dropWire$whas,
-       slave_xactor_ug_slave_u_r_dropWire$whas,
-       slave_xactor_ug_slave_u_w_putWire$whas;
-
-  // register master_xactor_clearing
-  reg master_xactor_clearing;
-  wire master_xactor_clearing$D_IN, master_xactor_clearing$EN;
-
-  // register master_xactor_shim_arff_rv
-  reg [97 : 0] master_xactor_shim_arff_rv;
-  wire [97 : 0] master_xactor_shim_arff_rv$D_IN;
-  wire master_xactor_shim_arff_rv$EN;
-
-  // register master_xactor_shim_awff_rv
-  reg [97 : 0] master_xactor_shim_awff_rv;
-  wire [97 : 0] master_xactor_shim_awff_rv$D_IN;
-  wire master_xactor_shim_awff_rv$EN;
-
-  // register master_xactor_shim_bff_rv
-  reg [6 : 0] master_xactor_shim_bff_rv;
-  wire [6 : 0] master_xactor_shim_bff_rv$D_IN;
-  wire master_xactor_shim_bff_rv$EN;
-
-  // register master_xactor_shim_rff_rv
-  reg [72 : 0] master_xactor_shim_rff_rv;
-  wire [72 : 0] master_xactor_shim_rff_rv$D_IN;
-  wire master_xactor_shim_rff_rv$EN;
-
-  // register master_xactor_shim_wff_rv
-  reg [74 : 0] master_xactor_shim_wff_rv;
-  wire [74 : 0] master_xactor_shim_wff_rv$D_IN;
-  wire master_xactor_shim_wff_rv$EN;
-
-  // register slave_xactor_clearing
-  reg slave_xactor_clearing;
-  wire slave_xactor_clearing$D_IN, slave_xactor_clearing$EN;
-
-  // register slave_xactor_shim_arff_rv
-  reg [97 : 0] slave_xactor_shim_arff_rv;
-  wire [97 : 0] slave_xactor_shim_arff_rv$D_IN;
-  wire slave_xactor_shim_arff_rv$EN;
-
-  // register slave_xactor_shim_awff_rv
-  reg [97 : 0] slave_xactor_shim_awff_rv;
-  wire [97 : 0] slave_xactor_shim_awff_rv$D_IN;
-  wire slave_xactor_shim_awff_rv$EN;
-
-  // register slave_xactor_shim_bff_rv
-  reg [6 : 0] slave_xactor_shim_bff_rv;
-  wire [6 : 0] slave_xactor_shim_bff_rv$D_IN;
-  wire slave_xactor_shim_bff_rv$EN;
-
-  // register slave_xactor_shim_rff_rv
-  reg [72 : 0] slave_xactor_shim_rff_rv;
-  wire [72 : 0] slave_xactor_shim_rff_rv$D_IN;
-  wire slave_xactor_shim_rff_rv$EN;
-
-  // register slave_xactor_shim_wff_rv
-  reg [74 : 0] slave_xactor_shim_wff_rv;
-  wire [74 : 0] slave_xactor_shim_wff_rv$D_IN;
-  wire slave_xactor_shim_wff_rv$EN;
+  wire [96 : 0] master_ar_peek, master_aw_peek;
+  wire [73 : 0] master_w_peek;
+  wire [71 : 0] slave_r_peek;
+  wire [5 : 0] slave_b_peek;
+  wire RDY_master_ar_drop,
+       RDY_master_ar_peek,
+       RDY_master_aw_drop,
+       RDY_master_aw_peek,
+       RDY_master_b_put,
+       RDY_master_r_put,
+       RDY_master_w_drop,
+       RDY_master_w_peek,
+       RDY_slave_ar_put,
+       RDY_slave_aw_put,
+       RDY_slave_b_drop,
+       RDY_slave_b_peek,
+       RDY_slave_r_drop,
+       RDY_slave_r_peek,
+       RDY_slave_w_put,
+       RDY_trace_data_out_get,
+       master_ar_canPeek,
+       master_aw_canPeek,
+       master_b_canPut,
+       master_r_canPut,
+       master_w_canPeek,
+       slave_ar_canPut,
+       slave_aw_canPut,
+       slave_b_canPeek,
+       slave_r_canPeek,
+       slave_w_canPut;
 
   // ports of submodule f_trace_data
   wire [426 : 0] f_trace_data$D_IN, f_trace_data$D_OUT;
@@ -1055,287 +294,254 @@ module mkDM_Mem_Tap(CLK,
        f_trace_data$ENQ,
        f_trace_data$FULL_N;
 
+  // ports of submodule masterPortShim_arff
+  wire [96 : 0] masterPortShim_arff$D_IN, masterPortShim_arff$D_OUT;
+  wire masterPortShim_arff$CLR,
+       masterPortShim_arff$DEQ,
+       masterPortShim_arff$EMPTY_N,
+       masterPortShim_arff$ENQ,
+       masterPortShim_arff$FULL_N;
+
+  // ports of submodule masterPortShim_awff
+  wire [96 : 0] masterPortShim_awff$D_IN, masterPortShim_awff$D_OUT;
+  wire masterPortShim_awff$CLR,
+       masterPortShim_awff$DEQ,
+       masterPortShim_awff$EMPTY_N,
+       masterPortShim_awff$ENQ,
+       masterPortShim_awff$FULL_N;
+
+  // ports of submodule masterPortShim_bff
+  wire [5 : 0] masterPortShim_bff$D_IN, masterPortShim_bff$D_OUT;
+  wire masterPortShim_bff$CLR,
+       masterPortShim_bff$DEQ,
+       masterPortShim_bff$EMPTY_N,
+       masterPortShim_bff$ENQ,
+       masterPortShim_bff$FULL_N;
+
+  // ports of submodule masterPortShim_rff
+  wire [71 : 0] masterPortShim_rff$D_IN, masterPortShim_rff$D_OUT;
+  wire masterPortShim_rff$CLR,
+       masterPortShim_rff$DEQ,
+       masterPortShim_rff$EMPTY_N,
+       masterPortShim_rff$ENQ,
+       masterPortShim_rff$FULL_N;
+
+  // ports of submodule masterPortShim_wff
+  wire [73 : 0] masterPortShim_wff$D_IN, masterPortShim_wff$D_OUT;
+  wire masterPortShim_wff$CLR,
+       masterPortShim_wff$DEQ,
+       masterPortShim_wff$EMPTY_N,
+       masterPortShim_wff$ENQ,
+       masterPortShim_wff$FULL_N;
+
+  // ports of submodule slavePortShim_arff
+  wire [96 : 0] slavePortShim_arff$D_IN, slavePortShim_arff$D_OUT;
+  wire slavePortShim_arff$CLR,
+       slavePortShim_arff$DEQ,
+       slavePortShim_arff$EMPTY_N,
+       slavePortShim_arff$ENQ,
+       slavePortShim_arff$FULL_N;
+
+  // ports of submodule slavePortShim_awff
+  wire [96 : 0] slavePortShim_awff$D_IN, slavePortShim_awff$D_OUT;
+  wire slavePortShim_awff$CLR,
+       slavePortShim_awff$DEQ,
+       slavePortShim_awff$EMPTY_N,
+       slavePortShim_awff$ENQ,
+       slavePortShim_awff$FULL_N;
+
+  // ports of submodule slavePortShim_bff
+  wire [5 : 0] slavePortShim_bff$D_IN, slavePortShim_bff$D_OUT;
+  wire slavePortShim_bff$CLR,
+       slavePortShim_bff$DEQ,
+       slavePortShim_bff$EMPTY_N,
+       slavePortShim_bff$ENQ,
+       slavePortShim_bff$FULL_N;
+
+  // ports of submodule slavePortShim_rff
+  wire [71 : 0] slavePortShim_rff$D_IN, slavePortShim_rff$D_OUT;
+  wire slavePortShim_rff$CLR,
+       slavePortShim_rff$DEQ,
+       slavePortShim_rff$EMPTY_N,
+       slavePortShim_rff$ENQ,
+       slavePortShim_rff$FULL_N;
+
+  // ports of submodule slavePortShim_wff
+  wire [73 : 0] slavePortShim_wff$D_IN, slavePortShim_wff$D_OUT;
+  wire slavePortShim_wff$CLR,
+       slavePortShim_wff$DEQ,
+       slavePortShim_wff$EMPTY_N,
+       slavePortShim_wff$ENQ,
+       slavePortShim_wff$FULL_N;
+
   // rule scheduling signals
-  wire CAN_FIRE_RL_master_xactor_do_clear,
-       CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek,
-       CAN_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek,
-       CAN_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut,
-       CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop,
-       CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek,
-       CAN_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop,
-       CAN_FIRE_RL_mkConnectionGetPut,
-       CAN_FIRE_RL_mkConnectionGetPut_1,
-       CAN_FIRE_RL_mkConnectionGetPut_2,
-       CAN_FIRE_RL_slave_xactor_do_clear,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut,
+  wire CAN_FIRE_RL_connect,
+       CAN_FIRE_RL_connect_1,
+       CAN_FIRE_RL_connect_2,
+       CAN_FIRE_RL_ug_snk_1_doPut,
+       CAN_FIRE_RL_ug_snk_1_warnDoPut,
+       CAN_FIRE_RL_ug_snk_2_doPut,
+       CAN_FIRE_RL_ug_snk_2_warnDoPut,
+       CAN_FIRE_RL_ug_snk_doPut,
+       CAN_FIRE_RL_ug_snk_warnDoPut,
+       CAN_FIRE_RL_ug_src_1_doDrop,
+       CAN_FIRE_RL_ug_src_1_setPeek,
+       CAN_FIRE_RL_ug_src_1_warnDoDrop,
+       CAN_FIRE_RL_ug_src_2_doDrop,
+       CAN_FIRE_RL_ug_src_2_setPeek,
+       CAN_FIRE_RL_ug_src_2_warnDoDrop,
+       CAN_FIRE_RL_ug_src_doDrop,
+       CAN_FIRE_RL_ug_src_setPeek,
+       CAN_FIRE_RL_ug_src_warnDoDrop,
        CAN_FIRE_RL_write_reqs,
-       CAN_FIRE_master_ar_arready,
-       CAN_FIRE_master_aw_awready,
-       CAN_FIRE_master_b_bflit,
-       CAN_FIRE_master_r_rflit,
-       CAN_FIRE_master_w_wready,
-       CAN_FIRE_slave_ar_arflit,
-       CAN_FIRE_slave_aw_awflit,
-       CAN_FIRE_slave_b_bready,
-       CAN_FIRE_slave_r_rready,
-       CAN_FIRE_slave_w_wflit,
+       CAN_FIRE_master_ar_drop,
+       CAN_FIRE_master_aw_drop,
+       CAN_FIRE_master_b_put,
+       CAN_FIRE_master_r_put,
+       CAN_FIRE_master_w_drop,
+       CAN_FIRE_slave_ar_put,
+       CAN_FIRE_slave_aw_put,
+       CAN_FIRE_slave_b_drop,
+       CAN_FIRE_slave_r_drop,
+       CAN_FIRE_slave_w_put,
        CAN_FIRE_trace_data_out_get,
-       WILL_FIRE_RL_master_xactor_do_clear,
-       WILL_FIRE_RL_master_xactor_ug_master_u_ar_doDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_ar_setPeek,
-       WILL_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_aw_doDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_aw_setPeek,
-       WILL_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_b_doPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_r_doPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut,
-       WILL_FIRE_RL_master_xactor_ug_master_u_w_doDrop,
-       WILL_FIRE_RL_master_xactor_ug_master_u_w_setPeek,
-       WILL_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop,
-       WILL_FIRE_RL_mkConnectionGetPut,
-       WILL_FIRE_RL_mkConnectionGetPut_1,
-       WILL_FIRE_RL_mkConnectionGetPut_2,
-       WILL_FIRE_RL_slave_xactor_do_clear,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_w_doPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut,
+       WILL_FIRE_RL_connect,
+       WILL_FIRE_RL_connect_1,
+       WILL_FIRE_RL_connect_2,
+       WILL_FIRE_RL_ug_snk_1_doPut,
+       WILL_FIRE_RL_ug_snk_1_warnDoPut,
+       WILL_FIRE_RL_ug_snk_2_doPut,
+       WILL_FIRE_RL_ug_snk_2_warnDoPut,
+       WILL_FIRE_RL_ug_snk_doPut,
+       WILL_FIRE_RL_ug_snk_warnDoPut,
+       WILL_FIRE_RL_ug_src_1_doDrop,
+       WILL_FIRE_RL_ug_src_1_setPeek,
+       WILL_FIRE_RL_ug_src_1_warnDoDrop,
+       WILL_FIRE_RL_ug_src_2_doDrop,
+       WILL_FIRE_RL_ug_src_2_setPeek,
+       WILL_FIRE_RL_ug_src_2_warnDoDrop,
+       WILL_FIRE_RL_ug_src_doDrop,
+       WILL_FIRE_RL_ug_src_setPeek,
+       WILL_FIRE_RL_ug_src_warnDoDrop,
        WILL_FIRE_RL_write_reqs,
-       WILL_FIRE_master_ar_arready,
-       WILL_FIRE_master_aw_awready,
-       WILL_FIRE_master_b_bflit,
-       WILL_FIRE_master_r_rflit,
-       WILL_FIRE_master_w_wready,
-       WILL_FIRE_slave_ar_arflit,
-       WILL_FIRE_slave_aw_awflit,
-       WILL_FIRE_slave_b_bready,
-       WILL_FIRE_slave_r_rready,
-       WILL_FIRE_slave_w_wflit,
+       WILL_FIRE_master_ar_drop,
+       WILL_FIRE_master_aw_drop,
+       WILL_FIRE_master_b_put,
+       WILL_FIRE_master_r_put,
+       WILL_FIRE_master_w_drop,
+       WILL_FIRE_slave_ar_put,
+       WILL_FIRE_slave_aw_put,
+       WILL_FIRE_slave_b_drop,
+       WILL_FIRE_slave_r_drop,
+       WILL_FIRE_slave_w_put,
        WILL_FIRE_trace_data_out_get;
 
   // remaining internal signals
-  reg [63 : 0] y__h7005;
-  reg [31 : 0] CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1;
-  reg [2 : 0] sz__h6839;
-  wire [96 : 0] master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4,
-		master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2;
-  wire [73 : 0] master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3;
-  wire [63 : 0] x__h6907, x__h6990, x__h7004;
+  reg [63 : 0] y__h1842;
+  reg [31 : 0] CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1;
+  reg [2 : 0] sz__h1676;
+  wire [63 : 0] x__h1744, x__h1827, x__h1841;
+  wire slavePortShim_wff_i_notEmpty_AND_masterPortShi_ETC___d10;
 
-  // action method slave_aw_awflit
-  assign CAN_FIRE_slave_aw_awflit = 1'd1 ;
-  assign WILL_FIRE_slave_aw_awflit = slave_awvalid ;
+  // value method slave_aw_canPut
+  assign slave_aw_canPut = slavePortShim_awff$FULL_N ;
 
-  // value method slave_aw_awready
-  assign slave_awready = !slave_xactor_shim_awff_rv[97] ;
+  // action method slave_aw_put
+  assign RDY_slave_aw_put = slavePortShim_awff$FULL_N ;
+  assign CAN_FIRE_slave_aw_put = slavePortShim_awff$FULL_N ;
+  assign WILL_FIRE_slave_aw_put = EN_slave_aw_put ;
 
-  // action method slave_w_wflit
-  assign CAN_FIRE_slave_w_wflit = 1'd1 ;
-  assign WILL_FIRE_slave_w_wflit = slave_wvalid ;
+  // value method slave_w_canPut
+  assign slave_w_canPut = slavePortShim_wff$FULL_N ;
 
-  // value method slave_w_wready
-  assign slave_wready = !slave_xactor_shim_wff_rv[74] ;
+  // action method slave_w_put
+  assign RDY_slave_w_put = slavePortShim_wff$FULL_N ;
+  assign CAN_FIRE_slave_w_put = slavePortShim_wff$FULL_N ;
+  assign WILL_FIRE_slave_w_put = EN_slave_w_put ;
 
-  // value method slave_b_bid
-  assign slave_bid = slave_xactor_ug_slave_u_b_peekWire$wget[5:2] ;
+  // value method slave_b_canPeek
+  assign slave_b_canPeek = slavePortShim_bff$EMPTY_N ;
 
-  // value method slave_b_bresp
-  assign slave_bresp = slave_xactor_ug_slave_u_b_peekWire$wget[1:0] ;
+  // value method slave_b_peek
+  assign slave_b_peek = slavePortShim_bff$D_OUT ;
+  assign RDY_slave_b_peek = slavePortShim_bff$EMPTY_N ;
 
-  // value method slave_b_bvalid
-  assign slave_bvalid = CAN_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek ;
+  // action method slave_b_drop
+  assign RDY_slave_b_drop = slavePortShim_bff$EMPTY_N ;
+  assign CAN_FIRE_slave_b_drop = slavePortShim_bff$EMPTY_N ;
+  assign WILL_FIRE_slave_b_drop = EN_slave_b_drop ;
 
-  // action method slave_b_bready
-  assign CAN_FIRE_slave_b_bready = 1'd1 ;
-  assign WILL_FIRE_slave_b_bready = 1'd1 ;
+  // value method slave_ar_canPut
+  assign slave_ar_canPut = slavePortShim_arff$FULL_N ;
 
-  // action method slave_ar_arflit
-  assign CAN_FIRE_slave_ar_arflit = 1'd1 ;
-  assign WILL_FIRE_slave_ar_arflit = slave_arvalid ;
+  // action method slave_ar_put
+  assign RDY_slave_ar_put = slavePortShim_arff$FULL_N ;
+  assign CAN_FIRE_slave_ar_put = slavePortShim_arff$FULL_N ;
+  assign WILL_FIRE_slave_ar_put = EN_slave_ar_put ;
 
-  // value method slave_ar_arready
-  assign slave_arready = !slave_xactor_shim_arff_rv[97] ;
+  // value method slave_r_canPeek
+  assign slave_r_canPeek = slavePortShim_rff$EMPTY_N ;
 
-  // value method slave_r_rid
-  assign slave_rid = slave_xactor_ug_slave_u_r_peekWire$wget[71:68] ;
+  // value method slave_r_peek
+  assign slave_r_peek = slavePortShim_rff$D_OUT ;
+  assign RDY_slave_r_peek = slavePortShim_rff$EMPTY_N ;
 
-  // value method slave_r_rdata
-  assign slave_rdata = slave_xactor_ug_slave_u_r_peekWire$wget[67:4] ;
+  // action method slave_r_drop
+  assign RDY_slave_r_drop = slavePortShim_rff$EMPTY_N ;
+  assign CAN_FIRE_slave_r_drop = slavePortShim_rff$EMPTY_N ;
+  assign WILL_FIRE_slave_r_drop = EN_slave_r_drop ;
 
-  // value method slave_r_rresp
-  assign slave_rresp = slave_xactor_ug_slave_u_r_peekWire$wget[3:2] ;
+  // value method master_aw_canPeek
+  assign master_aw_canPeek = masterPortShim_awff$EMPTY_N ;
 
-  // value method slave_r_rlast
-  assign slave_rlast = slave_xactor_ug_slave_u_r_peekWire$wget[1] ;
+  // value method master_aw_peek
+  assign master_aw_peek = masterPortShim_awff$D_OUT ;
+  assign RDY_master_aw_peek = masterPortShim_awff$EMPTY_N ;
 
-  // value method slave_r_ruser
-  assign slave_ruser = slave_xactor_ug_slave_u_r_peekWire$wget[0] ;
+  // action method master_aw_drop
+  assign RDY_master_aw_drop = masterPortShim_awff$EMPTY_N ;
+  assign CAN_FIRE_master_aw_drop = masterPortShim_awff$EMPTY_N ;
+  assign WILL_FIRE_master_aw_drop = EN_master_aw_drop ;
 
-  // value method slave_r_rvalid
-  assign slave_rvalid = CAN_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek ;
+  // value method master_w_canPeek
+  assign master_w_canPeek = masterPortShim_wff$EMPTY_N ;
 
-  // action method slave_r_rready
-  assign CAN_FIRE_slave_r_rready = 1'd1 ;
-  assign WILL_FIRE_slave_r_rready = 1'd1 ;
+  // value method master_w_peek
+  assign master_w_peek = masterPortShim_wff$D_OUT ;
+  assign RDY_master_w_peek = masterPortShim_wff$EMPTY_N ;
 
-  // value method master_aw_awid
-  assign master_awid =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[96:93] ;
+  // action method master_w_drop
+  assign RDY_master_w_drop = masterPortShim_wff$EMPTY_N ;
+  assign CAN_FIRE_master_w_drop = masterPortShim_wff$EMPTY_N ;
+  assign WILL_FIRE_master_w_drop = EN_master_w_drop ;
 
-  // value method master_aw_awaddr
-  assign master_awaddr =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[92:29] ;
+  // value method master_b_canPut
+  assign master_b_canPut = masterPortShim_bff$FULL_N ;
 
-  // value method master_aw_awlen
-  assign master_awlen =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[28:21] ;
+  // action method master_b_put
+  assign RDY_master_b_put = masterPortShim_bff$FULL_N ;
+  assign CAN_FIRE_master_b_put = masterPortShim_bff$FULL_N ;
+  assign WILL_FIRE_master_b_put = EN_master_b_put ;
 
-  // value method master_aw_awsize
-  assign master_awsize =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[20:18] ;
+  // value method master_ar_canPeek
+  assign master_ar_canPeek = masterPortShim_arff$EMPTY_N ;
 
-  // value method master_aw_awburst
-  assign master_awburst =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[17:16] ;
+  // value method master_ar_peek
+  assign master_ar_peek = masterPortShim_arff$D_OUT ;
+  assign RDY_master_ar_peek = masterPortShim_arff$EMPTY_N ;
 
-  // value method master_aw_awlock
-  assign master_awlock =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[15] ;
+  // action method master_ar_drop
+  assign RDY_master_ar_drop = masterPortShim_arff$EMPTY_N ;
+  assign CAN_FIRE_master_ar_drop = masterPortShim_arff$EMPTY_N ;
+  assign WILL_FIRE_master_ar_drop = EN_master_ar_drop ;
 
-  // value method master_aw_awcache
-  assign master_awcache =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[14:11] ;
+  // value method master_r_canPut
+  assign master_r_canPut = masterPortShim_rff$FULL_N ;
 
-  // value method master_aw_awprot
-  assign master_awprot =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[10:8] ;
-
-  // value method master_aw_awqos
-  assign master_awqos =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[7:4] ;
-
-  // value method master_aw_awregion
-  assign master_awregion =
-	     master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2[3:0] ;
-
-  // value method master_aw_awvalid
-  assign master_awvalid = CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek ;
-
-  // action method master_aw_awready
-  assign CAN_FIRE_master_aw_awready = 1'd1 ;
-  assign WILL_FIRE_master_aw_awready = 1'd1 ;
-
-  // value method master_w_wdata
-  assign master_wdata =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[73:10] ;
-
-  // value method master_w_wstrb
-  assign master_wstrb =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[9:2] ;
-
-  // value method master_w_wlast
-  assign master_wlast =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[1] ;
-
-  // value method master_w_wuser
-  assign master_wuser =
-	     master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3[0] ;
-
-  // value method master_w_wvalid
-  assign master_wvalid = CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek ;
-
-  // action method master_w_wready
-  assign CAN_FIRE_master_w_wready = 1'd1 ;
-  assign WILL_FIRE_master_w_wready = 1'd1 ;
-
-  // action method master_b_bflit
-  assign CAN_FIRE_master_b_bflit = 1'd1 ;
-  assign WILL_FIRE_master_b_bflit = master_bvalid ;
-
-  // value method master_b_bready
-  assign master_bready = !master_xactor_shim_bff_rv[6] ;
-
-  // value method master_ar_arid
-  assign master_arid =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[96:93] ;
-
-  // value method master_ar_araddr
-  assign master_araddr =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[92:29] ;
-
-  // value method master_ar_arlen
-  assign master_arlen =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[28:21] ;
-
-  // value method master_ar_arsize
-  assign master_arsize =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[20:18] ;
-
-  // value method master_ar_arburst
-  assign master_arburst =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[17:16] ;
-
-  // value method master_ar_arlock
-  assign master_arlock =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[15] ;
-
-  // value method master_ar_arcache
-  assign master_arcache =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[14:11] ;
-
-  // value method master_ar_arprot
-  assign master_arprot =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[10:8] ;
-
-  // value method master_ar_arqos
-  assign master_arqos =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[7:4] ;
-
-  // value method master_ar_arregion
-  assign master_arregion =
-	     master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4[3:0] ;
-
-  // value method master_ar_arvalid
-  assign master_arvalid = CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek ;
-
-  // action method master_ar_arready
-  assign CAN_FIRE_master_ar_arready = 1'd1 ;
-  assign WILL_FIRE_master_ar_arready = 1'd1 ;
-
-  // action method master_r_rflit
-  assign CAN_FIRE_master_r_rflit = 1'd1 ;
-  assign WILL_FIRE_master_r_rflit = master_rvalid ;
-
-  // value method master_r_rready
-  assign master_rready = !master_xactor_shim_rff_rv[72] ;
+  // action method master_r_put
+  assign RDY_master_r_put = masterPortShim_rff$FULL_N ;
+  assign CAN_FIRE_master_r_put = masterPortShim_rff$FULL_N ;
+  assign WILL_FIRE_master_r_put = EN_master_r_put ;
 
   // actionvalue method trace_data_out_get
   assign trace_data_out_get = f_trace_data$D_OUT ;
@@ -1354,483 +560,208 @@ module mkDM_Mem_Tap(CLK,
 							 .FULL_N(f_trace_data$FULL_N),
 							 .EMPTY_N(f_trace_data$EMPTY_N));
 
-  // rule RL_slave_xactor_ug_slave_u_aw_warnDoPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut =
-	     slave_xactor_ug_slave_u_aw_putWire$whas &&
-	     slave_xactor_shim_awff_rv[97] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut ;
+  // submodule masterPortShim_arff
+  FIFO2 #(.width(32'd97), .guarded(32'd1)) masterPortShim_arff(.RST(RST_N),
+							       .CLK(CLK),
+							       .D_IN(masterPortShim_arff$D_IN),
+							       .ENQ(masterPortShim_arff$ENQ),
+							       .DEQ(masterPortShim_arff$DEQ),
+							       .CLR(masterPortShim_arff$CLR),
+							       .D_OUT(masterPortShim_arff$D_OUT),
+							       .FULL_N(masterPortShim_arff$FULL_N),
+							       .EMPTY_N(masterPortShim_arff$EMPTY_N));
 
-  // rule RL_slave_xactor_ug_slave_u_aw_doPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut =
-	     !slave_xactor_shim_awff_rv[97] &&
-	     slave_xactor_ug_slave_u_aw_putWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut ;
+  // submodule masterPortShim_awff
+  FIFO2 #(.width(32'd97), .guarded(32'd1)) masterPortShim_awff(.RST(RST_N),
+							       .CLK(CLK),
+							       .D_IN(masterPortShim_awff$D_IN),
+							       .ENQ(masterPortShim_awff$ENQ),
+							       .DEQ(masterPortShim_awff$DEQ),
+							       .CLR(masterPortShim_awff$CLR),
+							       .D_OUT(masterPortShim_awff$D_OUT),
+							       .FULL_N(masterPortShim_awff$FULL_N),
+							       .EMPTY_N(masterPortShim_awff$EMPTY_N));
 
-  // rule RL_slave_xactor_ug_slave_u_w_warnDoPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut =
-	     slave_xactor_ug_slave_u_w_putWire$whas &&
-	     slave_xactor_shim_wff_rv[74] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut ;
+  // submodule masterPortShim_bff
+  FIFO2 #(.width(32'd6), .guarded(32'd1)) masterPortShim_bff(.RST(RST_N),
+							     .CLK(CLK),
+							     .D_IN(masterPortShim_bff$D_IN),
+							     .ENQ(masterPortShim_bff$ENQ),
+							     .DEQ(masterPortShim_bff$DEQ),
+							     .CLR(masterPortShim_bff$CLR),
+							     .D_OUT(masterPortShim_bff$D_OUT),
+							     .FULL_N(masterPortShim_bff$FULL_N),
+							     .EMPTY_N(masterPortShim_bff$EMPTY_N));
 
-  // rule RL_slave_xactor_ug_slave_u_w_doPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut =
-	     !slave_xactor_shim_wff_rv[74] &&
-	     slave_xactor_ug_slave_u_w_putWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_w_doPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut ;
+  // submodule masterPortShim_rff
+  FIFO2 #(.width(32'd72), .guarded(32'd1)) masterPortShim_rff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(masterPortShim_rff$D_IN),
+							      .ENQ(masterPortShim_rff$ENQ),
+							      .DEQ(masterPortShim_rff$DEQ),
+							      .CLR(masterPortShim_rff$CLR),
+							      .D_OUT(masterPortShim_rff$D_OUT),
+							      .FULL_N(masterPortShim_rff$FULL_N),
+							      .EMPTY_N(masterPortShim_rff$EMPTY_N));
+
+  // submodule masterPortShim_wff
+  FIFO2 #(.width(32'd74), .guarded(32'd1)) masterPortShim_wff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(masterPortShim_wff$D_IN),
+							      .ENQ(masterPortShim_wff$ENQ),
+							      .DEQ(masterPortShim_wff$DEQ),
+							      .CLR(masterPortShim_wff$CLR),
+							      .D_OUT(masterPortShim_wff$D_OUT),
+							      .FULL_N(masterPortShim_wff$FULL_N),
+							      .EMPTY_N(masterPortShim_wff$EMPTY_N));
+
+  // submodule slavePortShim_arff
+  FIFO2 #(.width(32'd97), .guarded(32'd1)) slavePortShim_arff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(slavePortShim_arff$D_IN),
+							      .ENQ(slavePortShim_arff$ENQ),
+							      .DEQ(slavePortShim_arff$DEQ),
+							      .CLR(slavePortShim_arff$CLR),
+							      .D_OUT(slavePortShim_arff$D_OUT),
+							      .FULL_N(slavePortShim_arff$FULL_N),
+							      .EMPTY_N(slavePortShim_arff$EMPTY_N));
+
+  // submodule slavePortShim_awff
+  FIFO2 #(.width(32'd97), .guarded(32'd1)) slavePortShim_awff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(slavePortShim_awff$D_IN),
+							      .ENQ(slavePortShim_awff$ENQ),
+							      .DEQ(slavePortShim_awff$DEQ),
+							      .CLR(slavePortShim_awff$CLR),
+							      .D_OUT(slavePortShim_awff$D_OUT),
+							      .FULL_N(slavePortShim_awff$FULL_N),
+							      .EMPTY_N(slavePortShim_awff$EMPTY_N));
+
+  // submodule slavePortShim_bff
+  FIFO2 #(.width(32'd6), .guarded(32'd1)) slavePortShim_bff(.RST(RST_N),
+							    .CLK(CLK),
+							    .D_IN(slavePortShim_bff$D_IN),
+							    .ENQ(slavePortShim_bff$ENQ),
+							    .DEQ(slavePortShim_bff$DEQ),
+							    .CLR(slavePortShim_bff$CLR),
+							    .D_OUT(slavePortShim_bff$D_OUT),
+							    .FULL_N(slavePortShim_bff$FULL_N),
+							    .EMPTY_N(slavePortShim_bff$EMPTY_N));
+
+  // submodule slavePortShim_rff
+  FIFO2 #(.width(32'd72), .guarded(32'd1)) slavePortShim_rff(.RST(RST_N),
+							     .CLK(CLK),
+							     .D_IN(slavePortShim_rff$D_IN),
+							     .ENQ(slavePortShim_rff$ENQ),
+							     .DEQ(slavePortShim_rff$DEQ),
+							     .CLR(slavePortShim_rff$CLR),
+							     .D_OUT(slavePortShim_rff$D_OUT),
+							     .FULL_N(slavePortShim_rff$FULL_N),
+							     .EMPTY_N(slavePortShim_rff$EMPTY_N));
+
+  // submodule slavePortShim_wff
+  FIFO2 #(.width(32'd74), .guarded(32'd1)) slavePortShim_wff(.RST(RST_N),
+							     .CLK(CLK),
+							     .D_IN(slavePortShim_wff$D_IN),
+							     .ENQ(slavePortShim_wff$ENQ),
+							     .DEQ(slavePortShim_wff$DEQ),
+							     .CLR(slavePortShim_wff$CLR),
+							     .D_OUT(slavePortShim_wff$D_OUT),
+							     .FULL_N(slavePortShim_wff$FULL_N),
+							     .EMPTY_N(slavePortShim_wff$EMPTY_N));
 
   // rule RL_write_reqs
   assign CAN_FIRE_RL_write_reqs =
-	     !slave_xactor_clearing && !master_xactor_clearing &&
-	     slave_xactor_shim_awff_rv$port1__read[97] &&
-	     slave_xactor_shim_wff_rv$port1__read[74] &&
-	     !master_xactor_shim_awff_rv[97] &&
-	     !master_xactor_shim_wff_rv[74] &&
-	     f_trace_data$FULL_N ;
+	     slavePortShim_awff$EMPTY_N && slavePortShim_wff$EMPTY_N &&
+	     slavePortShim_wff_i_notEmpty_AND_masterPortShi_ETC___d10 ;
   assign WILL_FIRE_RL_write_reqs = CAN_FIRE_RL_write_reqs ;
 
-  // rule RL_slave_xactor_ug_slave_u_ar_warnDoPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut =
-	     slave_xactor_ug_slave_u_ar_putWire$whas &&
-	     slave_xactor_shim_arff_rv[97] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut ;
+  // rule RL_ug_src_setPeek
+  assign CAN_FIRE_RL_ug_src_setPeek = slavePortShim_arff$EMPTY_N ;
+  assign WILL_FIRE_RL_ug_src_setPeek = slavePortShim_arff$EMPTY_N ;
 
-  // rule RL_slave_xactor_ug_slave_u_ar_doPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut =
-	     !slave_xactor_shim_arff_rv[97] &&
-	     slave_xactor_ug_slave_u_ar_putWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut ;
+  // rule RL_connect
+  assign CAN_FIRE_RL_connect =
+	     slavePortShim_arff$EMPTY_N && masterPortShim_arff$FULL_N ;
+  assign WILL_FIRE_RL_connect = CAN_FIRE_RL_connect ;
 
-  // rule RL_mkConnectionGetPut
-  assign CAN_FIRE_RL_mkConnectionGetPut =
-	     !slave_xactor_clearing && !master_xactor_clearing &&
-	     slave_xactor_shim_arff_rv$port1__read[97] &&
-	     !master_xactor_shim_arff_rv[97] ;
-  assign WILL_FIRE_RL_mkConnectionGetPut = CAN_FIRE_RL_mkConnectionGetPut ;
+  // rule RL_ug_src_warnDoDrop
+  assign CAN_FIRE_RL_ug_src_warnDoDrop =
+	     CAN_FIRE_RL_connect && !slavePortShim_arff$EMPTY_N ;
+  assign WILL_FIRE_RL_ug_src_warnDoDrop = CAN_FIRE_RL_ug_src_warnDoDrop ;
 
-  // rule RL_master_xactor_ug_master_u_aw_setPeek
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek =
-	     master_xactor_shim_awff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_aw_setPeek =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_setPeek ;
+  // rule RL_ug_src_doDrop
+  assign CAN_FIRE_RL_ug_src_doDrop =
+	     slavePortShim_arff$EMPTY_N && CAN_FIRE_RL_connect ;
+  assign WILL_FIRE_RL_ug_src_doDrop = CAN_FIRE_RL_ug_src_doDrop ;
 
-  // rule RL_master_xactor_ug_master_u_aw_warnDoDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop =
-	     master_xactor_ug_master_u_aw_dropWire$whas &&
-	     !master_xactor_shim_awff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop ;
+  // rule RL_ug_snk_warnDoPut
+  assign CAN_FIRE_RL_ug_snk_warnDoPut =
+	     CAN_FIRE_RL_connect && !masterPortShim_arff$FULL_N ;
+  assign WILL_FIRE_RL_ug_snk_warnDoPut = CAN_FIRE_RL_ug_snk_warnDoPut ;
 
-  // rule RL_master_xactor_ug_master_u_aw_doDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop =
-	     master_xactor_shim_awff_rv$port1__read[97] &&
-	     master_xactor_ug_master_u_aw_dropWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_aw_doDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop ;
+  // rule RL_ug_snk_doPut
+  assign CAN_FIRE_RL_ug_snk_doPut =
+	     masterPortShim_arff$FULL_N && CAN_FIRE_RL_connect ;
+  assign WILL_FIRE_RL_ug_snk_doPut = CAN_FIRE_RL_ug_snk_doPut ;
 
-  // rule RL_master_xactor_ug_master_u_w_setPeek
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek =
-	     master_xactor_shim_wff_rv$port1__read[74] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_w_setPeek =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_setPeek ;
+  // rule RL_ug_src_1_setPeek
+  assign CAN_FIRE_RL_ug_src_1_setPeek = masterPortShim_bff$EMPTY_N ;
+  assign WILL_FIRE_RL_ug_src_1_setPeek = masterPortShim_bff$EMPTY_N ;
 
-  // rule RL_master_xactor_ug_master_u_w_warnDoDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop =
-	     master_xactor_ug_master_u_w_dropWire$whas &&
-	     !master_xactor_shim_wff_rv$port1__read[74] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop ;
+  // rule RL_connect_1
+  assign CAN_FIRE_RL_connect_1 =
+	     masterPortShim_bff$EMPTY_N && slavePortShim_bff$FULL_N ;
+  assign WILL_FIRE_RL_connect_1 = CAN_FIRE_RL_connect_1 ;
 
-  // rule RL_master_xactor_ug_master_u_w_doDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop =
-	     master_xactor_shim_wff_rv$port1__read[74] &&
-	     master_xactor_ug_master_u_w_dropWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_w_doDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop ;
+  // rule RL_ug_src_1_warnDoDrop
+  assign CAN_FIRE_RL_ug_src_1_warnDoDrop =
+	     CAN_FIRE_RL_connect_1 && !masterPortShim_bff$EMPTY_N ;
+  assign WILL_FIRE_RL_ug_src_1_warnDoDrop = CAN_FIRE_RL_ug_src_1_warnDoDrop ;
 
-  // rule RL_master_xactor_ug_master_u_b_warnDoPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut =
-	     master_xactor_ug_master_u_b_putWire$whas &&
-	     master_xactor_shim_bff_rv[6] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut ;
+  // rule RL_ug_src_1_doDrop
+  assign CAN_FIRE_RL_ug_src_1_doDrop =
+	     masterPortShim_bff$EMPTY_N && CAN_FIRE_RL_connect_1 ;
+  assign WILL_FIRE_RL_ug_src_1_doDrop = CAN_FIRE_RL_ug_src_1_doDrop ;
 
-  // rule RL_master_xactor_ug_master_u_b_doPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut =
-	     !master_xactor_shim_bff_rv[6] &&
-	     master_xactor_ug_master_u_b_putWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_b_doPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut ;
+  // rule RL_ug_snk_1_warnDoPut
+  assign CAN_FIRE_RL_ug_snk_1_warnDoPut =
+	     CAN_FIRE_RL_connect_1 && !slavePortShim_bff$FULL_N ;
+  assign WILL_FIRE_RL_ug_snk_1_warnDoPut = CAN_FIRE_RL_ug_snk_1_warnDoPut ;
 
-  // rule RL_mkConnectionGetPut_1
-  assign CAN_FIRE_RL_mkConnectionGetPut_1 =
-	     !slave_xactor_clearing && !master_xactor_clearing &&
-	     master_xactor_shim_bff_rv$port1__read[6] &&
-	     !slave_xactor_shim_bff_rv[6] ;
-  assign WILL_FIRE_RL_mkConnectionGetPut_1 =
-	     CAN_FIRE_RL_mkConnectionGetPut_1 ;
+  // rule RL_ug_snk_1_doPut
+  assign CAN_FIRE_RL_ug_snk_1_doPut =
+	     slavePortShim_bff$FULL_N && CAN_FIRE_RL_connect_1 ;
+  assign WILL_FIRE_RL_ug_snk_1_doPut = CAN_FIRE_RL_ug_snk_1_doPut ;
 
-  // rule RL_slave_xactor_ug_slave_u_b_setPeek
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek =
-	     slave_xactor_shim_bff_rv$port1__read[6] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek ;
+  // rule RL_ug_src_2_setPeek
+  assign CAN_FIRE_RL_ug_src_2_setPeek = masterPortShim_rff$EMPTY_N ;
+  assign WILL_FIRE_RL_ug_src_2_setPeek = masterPortShim_rff$EMPTY_N ;
 
-  // rule RL_slave_xactor_ug_slave_u_b_warnDoDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop =
-	     slave_xactor_ug_slave_u_b_dropWire$whas &&
-	     !slave_xactor_shim_bff_rv$port1__read[6] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop ;
+  // rule RL_connect_2
+  assign CAN_FIRE_RL_connect_2 =
+	     masterPortShim_rff$EMPTY_N && slavePortShim_rff$FULL_N ;
+  assign WILL_FIRE_RL_connect_2 = CAN_FIRE_RL_connect_2 ;
 
-  // rule RL_slave_xactor_ug_slave_u_b_doDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop =
-	     slave_xactor_shim_bff_rv$port1__read[6] &&
-	     slave_xactor_ug_slave_u_b_dropWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop ;
+  // rule RL_ug_src_2_warnDoDrop
+  assign CAN_FIRE_RL_ug_src_2_warnDoDrop =
+	     CAN_FIRE_RL_connect_2 && !masterPortShim_rff$EMPTY_N ;
+  assign WILL_FIRE_RL_ug_src_2_warnDoDrop = CAN_FIRE_RL_ug_src_2_warnDoDrop ;
 
-  // rule RL_master_xactor_ug_master_u_ar_setPeek
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek =
-	     master_xactor_shim_arff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_ar_setPeek =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_setPeek ;
+  // rule RL_ug_src_2_doDrop
+  assign CAN_FIRE_RL_ug_src_2_doDrop =
+	     masterPortShim_rff$EMPTY_N && CAN_FIRE_RL_connect_2 ;
+  assign WILL_FIRE_RL_ug_src_2_doDrop = CAN_FIRE_RL_ug_src_2_doDrop ;
 
-  // rule RL_master_xactor_ug_master_u_ar_warnDoDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop =
-	     master_xactor_ug_master_u_ar_dropWire$whas &&
-	     !master_xactor_shim_arff_rv$port1__read[97] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop ;
+  // rule RL_ug_snk_2_warnDoPut
+  assign CAN_FIRE_RL_ug_snk_2_warnDoPut =
+	     CAN_FIRE_RL_connect_2 && !slavePortShim_rff$FULL_N ;
+  assign WILL_FIRE_RL_ug_snk_2_warnDoPut = CAN_FIRE_RL_ug_snk_2_warnDoPut ;
 
-  // rule RL_master_xactor_ug_master_u_ar_doDrop
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop =
-	     master_xactor_shim_arff_rv$port1__read[97] &&
-	     master_xactor_ug_master_u_ar_dropWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_ar_doDrop =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop ;
-
-  // rule RL_master_xactor_ug_master_u_r_warnDoPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut =
-	     master_xactor_ug_master_u_r_putWire$whas &&
-	     master_xactor_shim_rff_rv[72] ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut ;
-
-  // rule RL_master_xactor_ug_master_u_r_doPut
-  assign CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut =
-	     !master_xactor_shim_rff_rv[72] &&
-	     master_xactor_ug_master_u_r_putWire$whas ;
-  assign WILL_FIRE_RL_master_xactor_ug_master_u_r_doPut =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut ;
-
-  // rule RL_mkConnectionGetPut_2
-  assign CAN_FIRE_RL_mkConnectionGetPut_2 =
-	     !slave_xactor_clearing && !master_xactor_clearing &&
-	     master_xactor_shim_rff_rv$port1__read[72] &&
-	     !slave_xactor_shim_rff_rv[72] ;
-  assign WILL_FIRE_RL_mkConnectionGetPut_2 =
-	     CAN_FIRE_RL_mkConnectionGetPut_2 ;
-
-  // rule RL_slave_xactor_ug_slave_u_r_setPeek
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek =
-	     slave_xactor_shim_rff_rv$port1__read[72] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek ;
-
-  // rule RL_slave_xactor_ug_slave_u_r_warnDoDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop =
-	     slave_xactor_ug_slave_u_r_dropWire$whas &&
-	     !slave_xactor_shim_rff_rv$port1__read[72] ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop ;
-
-  // rule RL_slave_xactor_ug_slave_u_r_doDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop =
-	     slave_xactor_shim_rff_rv$port1__read[72] &&
-	     slave_xactor_ug_slave_u_r_dropWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop ;
-
-  // rule RL_slave_xactor_do_clear
-  assign CAN_FIRE_RL_slave_xactor_do_clear = slave_xactor_clearing ;
-  assign WILL_FIRE_RL_slave_xactor_do_clear = slave_xactor_clearing ;
-
-  // rule RL_master_xactor_do_clear
-  assign CAN_FIRE_RL_master_xactor_do_clear = master_xactor_clearing ;
-  assign WILL_FIRE_RL_master_xactor_do_clear = master_xactor_clearing ;
-
-  // inlined wires
-  assign slave_xactor_ug_slave_u_aw_putWire$wget =
-	     { slave_awid,
-	       slave_awaddr,
-	       slave_awlen,
-	       slave_awsize,
-	       slave_awburst,
-	       slave_awlock,
-	       slave_awcache,
-	       slave_awprot,
-	       slave_awqos,
-	       slave_awregion } ;
-  assign slave_xactor_ug_slave_u_aw_putWire$whas =
-	     slave_awvalid && !slave_xactor_shim_awff_rv[97] ;
-  assign slave_xactor_ug_slave_u_w_putWire$wget =
-	     { slave_wdata, slave_wstrb, slave_wlast, slave_wuser } ;
-  assign slave_xactor_ug_slave_u_w_putWire$whas =
-	     slave_wvalid && !slave_xactor_shim_wff_rv[74] ;
-  assign slave_xactor_ug_slave_u_b_peekWire$wget =
-	     slave_xactor_shim_bff_rv$port1__read[5:0] ;
-  assign slave_xactor_ug_slave_u_ar_putWire$wget =
-	     { slave_arid,
-	       slave_araddr,
-	       slave_arlen,
-	       slave_arsize,
-	       slave_arburst,
-	       slave_arlock,
-	       slave_arcache,
-	       slave_arprot,
-	       slave_arqos,
-	       slave_arregion } ;
-  assign slave_xactor_ug_slave_u_ar_putWire$whas =
-	     slave_arvalid && !slave_xactor_shim_arff_rv[97] ;
-  assign slave_xactor_ug_slave_u_r_peekWire$wget =
-	     slave_xactor_shim_rff_rv$port1__read[71:0] ;
-  assign master_xactor_ug_master_u_b_putWire$wget =
-	     { master_bid, master_bresp } ;
-  assign master_xactor_ug_master_u_b_putWire$whas =
-	     master_bvalid && !master_xactor_shim_bff_rv[6] ;
-  assign master_xactor_ug_master_u_r_putWire$wget =
-	     { master_rid,
-	       master_rdata,
-	       master_rresp,
-	       master_rlast,
-	       master_ruser } ;
-  assign master_xactor_ug_master_u_r_putWire$whas =
-	     master_rvalid && !master_xactor_shim_rff_rv[72] ;
-  assign slave_xactor_ug_slave_u_b_dropWire$whas =
-	     slave_xactor_shim_bff_rv$port1__read[6] && slave_bready ;
-  assign slave_xactor_ug_slave_u_r_dropWire$whas =
-	     slave_xactor_shim_rff_rv$port1__read[72] && slave_rready ;
-  assign master_xactor_ug_master_u_aw_dropWire$whas =
-	     master_xactor_shim_awff_rv$port1__read[97] && master_awready ;
-  assign master_xactor_ug_master_u_w_dropWire$whas =
-	     master_xactor_shim_wff_rv$port1__read[74] && master_wready ;
-  assign master_xactor_ug_master_u_ar_dropWire$whas =
-	     master_xactor_shim_arff_rv$port1__read[97] && master_arready ;
-  assign slave_xactor_shim_awff_rv$port0__write_1 =
-	     { 1'd1, slave_xactor_ug_slave_u_aw_putWire$wget } ;
-  assign slave_xactor_shim_awff_rv$port1__read =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut ?
-	       slave_xactor_shim_awff_rv$port0__write_1 :
-	       slave_xactor_shim_awff_rv ;
-  assign slave_xactor_shim_awff_rv$port2__read =
-	     CAN_FIRE_RL_write_reqs ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       slave_xactor_shim_awff_rv$port1__read ;
-  assign slave_xactor_shim_awff_rv$port3__read =
-	     slave_xactor_clearing ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       slave_xactor_shim_awff_rv$port2__read ;
-  assign slave_xactor_shim_wff_rv$port0__write_1 =
-	     { 1'd1, slave_xactor_ug_slave_u_w_putWire$wget } ;
-  assign slave_xactor_shim_wff_rv$port1__read =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut ?
-	       slave_xactor_shim_wff_rv$port0__write_1 :
-	       slave_xactor_shim_wff_rv ;
-  assign slave_xactor_shim_wff_rv$port2__read =
-	     CAN_FIRE_RL_write_reqs ?
-	       master_xactor_shim_wff_rv$port2__write_1 :
-	       slave_xactor_shim_wff_rv$port1__read ;
-  assign slave_xactor_shim_wff_rv$port3__read =
-	     slave_xactor_clearing ?
-	       master_xactor_shim_wff_rv$port2__write_1 :
-	       slave_xactor_shim_wff_rv$port2__read ;
-  assign slave_xactor_shim_bff_rv$port0__write_1 =
-	     { 1'd1, master_xactor_shim_bff_rv$port1__read[5:0] } ;
-  assign slave_xactor_shim_bff_rv$port1__read =
-	     CAN_FIRE_RL_mkConnectionGetPut_1 ?
-	       slave_xactor_shim_bff_rv$port0__write_1 :
-	       slave_xactor_shim_bff_rv ;
-  assign slave_xactor_shim_bff_rv$port2__read =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
-	       slave_xactor_shim_bff_rv$port1__read ;
-  assign slave_xactor_shim_bff_rv$port3__read =
-	     slave_xactor_clearing ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
-	       slave_xactor_shim_bff_rv$port2__read ;
-  assign slave_xactor_shim_arff_rv$port0__write_1 =
-	     { 1'd1, slave_xactor_ug_slave_u_ar_putWire$wget } ;
-  assign slave_xactor_shim_arff_rv$port1__read =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut ?
-	       slave_xactor_shim_arff_rv$port0__write_1 :
-	       slave_xactor_shim_arff_rv ;
-  assign slave_xactor_shim_arff_rv$port2__read =
-	     CAN_FIRE_RL_mkConnectionGetPut ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       slave_xactor_shim_arff_rv$port1__read ;
-  assign slave_xactor_shim_arff_rv$port3__read =
-	     slave_xactor_clearing ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       slave_xactor_shim_arff_rv$port2__read ;
-  assign slave_xactor_shim_rff_rv$port0__write_1 =
-	     { 1'd1, master_xactor_shim_rff_rv$port1__read[71:0] } ;
-  assign slave_xactor_shim_rff_rv$port1__read =
-	     CAN_FIRE_RL_mkConnectionGetPut_2 ?
-	       slave_xactor_shim_rff_rv$port0__write_1 :
-	       slave_xactor_shim_rff_rv ;
-  assign slave_xactor_shim_rff_rv$port2__read =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop ?
-	       master_xactor_shim_rff_rv$port1__write_1 :
-	       slave_xactor_shim_rff_rv$port1__read ;
-  assign slave_xactor_shim_rff_rv$port3__read =
-	     slave_xactor_clearing ?
-	       master_xactor_shim_rff_rv$port1__write_1 :
-	       slave_xactor_shim_rff_rv$port2__read ;
-  assign master_xactor_shim_awff_rv$port0__write_1 =
-	     { 1'd1, slave_xactor_shim_awff_rv$port1__read[96:0] } ;
-  assign master_xactor_shim_awff_rv$port1__read =
-	     CAN_FIRE_RL_write_reqs ?
-	       master_xactor_shim_awff_rv$port0__write_1 :
-	       master_xactor_shim_awff_rv ;
-  assign master_xactor_shim_awff_rv$port2__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_aw_doDrop ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_awff_rv$port1__read ;
-  assign master_xactor_shim_awff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_awff_rv$port2__read ;
-  assign master_xactor_shim_wff_rv$port0__write_1 =
-	     { 1'd1, slave_xactor_shim_wff_rv$port1__read[73:0] } ;
-  assign master_xactor_shim_wff_rv$port1__read =
-	     CAN_FIRE_RL_write_reqs ?
-	       master_xactor_shim_wff_rv$port0__write_1 :
-	       master_xactor_shim_wff_rv ;
-  assign master_xactor_shim_wff_rv$port2__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_w_doDrop ?
-	       master_xactor_shim_wff_rv$port2__write_1 :
-	       master_xactor_shim_wff_rv$port1__read ;
-  assign master_xactor_shim_wff_rv$port2__write_1 =
-	     { 1'd0,
-	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_wff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_wff_rv$port2__write_1 :
-	       master_xactor_shim_wff_rv$port2__read ;
-  assign master_xactor_shim_bff_rv$port0__write_1 =
-	     { 1'd1, master_xactor_ug_master_u_b_putWire$wget } ;
-  assign master_xactor_shim_bff_rv$port1__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_b_doPut ?
-	       master_xactor_shim_bff_rv$port0__write_1 :
-	       master_xactor_shim_bff_rv ;
-  assign master_xactor_shim_bff_rv$port1__write_1 =
-	     { 1'd0, 6'bxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_bff_rv$port2__read =
-	     CAN_FIRE_RL_mkConnectionGetPut_1 ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
-	       master_xactor_shim_bff_rv$port1__read ;
-  assign master_xactor_shim_bff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_bff_rv$port1__write_1 :
-	       master_xactor_shim_bff_rv$port2__read ;
-  assign master_xactor_shim_arff_rv$port0__write_1 =
-	     { 1'd1, slave_xactor_shim_arff_rv$port1__read[96:0] } ;
-  assign master_xactor_shim_arff_rv$port1__read =
-	     CAN_FIRE_RL_mkConnectionGetPut ?
-	       master_xactor_shim_arff_rv$port0__write_1 :
-	       master_xactor_shim_arff_rv ;
-  assign master_xactor_shim_arff_rv$port1__write_1 =
-	     { 1'd0,
-	       97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_arff_rv$port2__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_ar_doDrop ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_arff_rv$port1__read ;
-  assign master_xactor_shim_arff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_arff_rv$port1__write_1 :
-	       master_xactor_shim_arff_rv$port2__read ;
-  assign master_xactor_shim_rff_rv$port0__write_1 =
-	     { 1'd1, master_xactor_ug_master_u_r_putWire$wget } ;
-  assign master_xactor_shim_rff_rv$port1__read =
-	     CAN_FIRE_RL_master_xactor_ug_master_u_r_doPut ?
-	       master_xactor_shim_rff_rv$port0__write_1 :
-	       master_xactor_shim_rff_rv ;
-  assign master_xactor_shim_rff_rv$port1__write_1 =
-	     { 1'd0,
-	       72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign master_xactor_shim_rff_rv$port2__read =
-	     CAN_FIRE_RL_mkConnectionGetPut_2 ?
-	       master_xactor_shim_rff_rv$port1__write_1 :
-	       master_xactor_shim_rff_rv$port1__read ;
-  assign master_xactor_shim_rff_rv$port3__read =
-	     master_xactor_clearing ?
-	       master_xactor_shim_rff_rv$port1__write_1 :
-	       master_xactor_shim_rff_rv$port2__read ;
-
-  // register master_xactor_clearing
-  assign master_xactor_clearing$D_IN = 1'd0 ;
-  assign master_xactor_clearing$EN = master_xactor_clearing ;
-
-  // register master_xactor_shim_arff_rv
-  assign master_xactor_shim_arff_rv$D_IN =
-	     master_xactor_shim_arff_rv$port3__read ;
-  assign master_xactor_shim_arff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_awff_rv
-  assign master_xactor_shim_awff_rv$D_IN =
-	     master_xactor_shim_awff_rv$port3__read ;
-  assign master_xactor_shim_awff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_bff_rv
-  assign master_xactor_shim_bff_rv$D_IN =
-	     master_xactor_shim_bff_rv$port3__read ;
-  assign master_xactor_shim_bff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_rff_rv
-  assign master_xactor_shim_rff_rv$D_IN =
-	     master_xactor_shim_rff_rv$port3__read ;
-  assign master_xactor_shim_rff_rv$EN = 1'b1 ;
-
-  // register master_xactor_shim_wff_rv
-  assign master_xactor_shim_wff_rv$D_IN =
-	     master_xactor_shim_wff_rv$port3__read ;
-  assign master_xactor_shim_wff_rv$EN = 1'b1 ;
-
-  // register slave_xactor_clearing
-  assign slave_xactor_clearing$D_IN = 1'd0 ;
-  assign slave_xactor_clearing$EN = slave_xactor_clearing ;
-
-  // register slave_xactor_shim_arff_rv
-  assign slave_xactor_shim_arff_rv$D_IN =
-	     slave_xactor_shim_arff_rv$port3__read ;
-  assign slave_xactor_shim_arff_rv$EN = 1'b1 ;
-
-  // register slave_xactor_shim_awff_rv
-  assign slave_xactor_shim_awff_rv$D_IN =
-	     slave_xactor_shim_awff_rv$port3__read ;
-  assign slave_xactor_shim_awff_rv$EN = 1'b1 ;
-
-  // register slave_xactor_shim_bff_rv
-  assign slave_xactor_shim_bff_rv$D_IN =
-	     slave_xactor_shim_bff_rv$port3__read ;
-  assign slave_xactor_shim_bff_rv$EN = 1'b1 ;
-
-  // register slave_xactor_shim_rff_rv
-  assign slave_xactor_shim_rff_rv$D_IN =
-	     slave_xactor_shim_rff_rv$port3__read ;
-  assign slave_xactor_shim_rff_rv$EN = 1'b1 ;
-
-  // register slave_xactor_shim_wff_rv
-  assign slave_xactor_shim_wff_rv$D_IN =
-	     slave_xactor_shim_wff_rv$port3__read ;
-  assign slave_xactor_shim_wff_rv$EN = 1'b1 ;
+  // rule RL_ug_snk_2_doPut
+  assign CAN_FIRE_RL_ug_snk_2_doPut =
+	     slavePortShim_rff$FULL_N && CAN_FIRE_RL_connect_2 ;
+  assign WILL_FIRE_RL_ug_snk_2_doPut = CAN_FIRE_RL_ug_snk_2_doPut ;
 
   // submodule f_trace_data
   assign f_trace_data$D_IN =
@@ -1839,164 +770,130 @@ module mkDM_Mem_Tap(CLK,
 	       1'bx /* unspecified value */ ,
 	       32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       5'bxxxxx /* unspecified value */ ,
-	       x__h6907,
-	       x__h6990,
-	       slave_xactor_shim_awff_rv$port1__read[92:0],
+	       x__h1744,
+	       x__h1827,
+	       slavePortShim_awff$D_OUT[92:0],
 	       99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
   assign f_trace_data$ENQ = CAN_FIRE_RL_write_reqs ;
   assign f_trace_data$DEQ = EN_trace_data_out_get ;
   assign f_trace_data$CLR = 1'b0 ;
 
+  // submodule masterPortShim_arff
+  assign masterPortShim_arff$D_IN = slavePortShim_arff$D_OUT ;
+  assign masterPortShim_arff$ENQ = CAN_FIRE_RL_ug_snk_doPut ;
+  assign masterPortShim_arff$DEQ = EN_master_ar_drop ;
+  assign masterPortShim_arff$CLR = 1'b0 ;
+
+  // submodule masterPortShim_awff
+  assign masterPortShim_awff$D_IN = slavePortShim_awff$D_OUT ;
+  assign masterPortShim_awff$ENQ = CAN_FIRE_RL_write_reqs ;
+  assign masterPortShim_awff$DEQ = EN_master_aw_drop ;
+  assign masterPortShim_awff$CLR = 1'b0 ;
+
+  // submodule masterPortShim_bff
+  assign masterPortShim_bff$D_IN = master_b_put_val ;
+  assign masterPortShim_bff$ENQ = EN_master_b_put ;
+  assign masterPortShim_bff$DEQ = CAN_FIRE_RL_ug_src_1_doDrop ;
+  assign masterPortShim_bff$CLR = 1'b0 ;
+
+  // submodule masterPortShim_rff
+  assign masterPortShim_rff$D_IN = master_r_put_val ;
+  assign masterPortShim_rff$ENQ = EN_master_r_put ;
+  assign masterPortShim_rff$DEQ = CAN_FIRE_RL_ug_src_2_doDrop ;
+  assign masterPortShim_rff$CLR = 1'b0 ;
+
+  // submodule masterPortShim_wff
+  assign masterPortShim_wff$D_IN = slavePortShim_wff$D_OUT ;
+  assign masterPortShim_wff$ENQ = CAN_FIRE_RL_write_reqs ;
+  assign masterPortShim_wff$DEQ = EN_master_w_drop ;
+  assign masterPortShim_wff$CLR = 1'b0 ;
+
+  // submodule slavePortShim_arff
+  assign slavePortShim_arff$D_IN = slave_ar_put_val ;
+  assign slavePortShim_arff$ENQ = EN_slave_ar_put ;
+  assign slavePortShim_arff$DEQ =
+	     slavePortShim_arff$EMPTY_N && CAN_FIRE_RL_connect ;
+  assign slavePortShim_arff$CLR = 1'b0 ;
+
+  // submodule slavePortShim_awff
+  assign slavePortShim_awff$D_IN = slave_aw_put_val ;
+  assign slavePortShim_awff$ENQ = EN_slave_aw_put ;
+  assign slavePortShim_awff$DEQ =
+	     slavePortShim_awff$EMPTY_N && slavePortShim_wff$EMPTY_N &&
+	     slavePortShim_wff_i_notEmpty_AND_masterPortShi_ETC___d10 ;
+  assign slavePortShim_awff$CLR = 1'b0 ;
+
+  // submodule slavePortShim_bff
+  assign slavePortShim_bff$D_IN = masterPortShim_bff$D_OUT ;
+  assign slavePortShim_bff$ENQ =
+	     slavePortShim_bff$FULL_N && CAN_FIRE_RL_connect_1 ;
+  assign slavePortShim_bff$DEQ = EN_slave_b_drop ;
+  assign slavePortShim_bff$CLR = 1'b0 ;
+
+  // submodule slavePortShim_rff
+  assign slavePortShim_rff$D_IN = masterPortShim_rff$D_OUT ;
+  assign slavePortShim_rff$ENQ =
+	     slavePortShim_rff$FULL_N && CAN_FIRE_RL_connect_2 ;
+  assign slavePortShim_rff$DEQ = EN_slave_r_drop ;
+  assign slavePortShim_rff$CLR = 1'b0 ;
+
+  // submodule slavePortShim_wff
+  assign slavePortShim_wff$D_IN = slave_w_put_val ;
+  assign slavePortShim_wff$ENQ = EN_slave_w_put ;
+  assign slavePortShim_wff$DEQ =
+	     slavePortShim_awff$EMPTY_N && slavePortShim_wff$EMPTY_N &&
+	     slavePortShim_wff_i_notEmpty_AND_masterPortShi_ETC___d10 ;
+  assign slavePortShim_wff$CLR = 1'b0 ;
+
   // remaining internal signals
-  assign master_xactor_shim_arff_rvport1__read_BITS_96_ETC__q4 =
-	     master_xactor_shim_arff_rv$port1__read[96:0] ;
-  assign master_xactor_shim_awff_rvport1__read_BITS_96_ETC__q2 =
-	     master_xactor_shim_awff_rv$port1__read[96:0] ;
-  assign master_xactor_shim_wff_rvport1__read_BITS_73__ETC__q3 =
-	     master_xactor_shim_wff_rv$port1__read[73:0] ;
-  assign x__h6907 = { 61'd0, sz__h6839 } ;
-  assign x__h6990 = x__h7004 & y__h7005 ;
-  assign x__h7004 =
-	     slave_xactor_shim_wff_rv$port1__read[73:10] >>
-	     CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 ;
-  always@(slave_xactor_shim_wff_rv$port1__read)
+  assign slavePortShim_wff_i_notEmpty_AND_masterPortShi_ETC___d10 =
+	     slavePortShim_wff$EMPTY_N && masterPortShim_awff$FULL_N &&
+	     masterPortShim_wff$FULL_N &&
+	     f_trace_data$FULL_N ;
+  assign x__h1744 = { 61'd0, sz__h1676 } ;
+  assign x__h1827 = x__h1841 & y__h1842 ;
+  assign x__h1841 =
+	     slavePortShim_wff$D_OUT[73:10] >>
+	     CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 ;
+  always@(slavePortShim_wff$D_OUT)
   begin
-    case (slave_xactor_shim_wff_rv$port1__read[9:2])
-      8'h03, 8'h0C, 8'h30, 8'hC0: sz__h6839 = 3'b001;
-      8'h0F, 8'hF0: sz__h6839 = 3'b010;
-      8'h10, 8'h20, 8'h40, 8'h80: sz__h6839 = 3'b0;
-      8'hFF: sz__h6839 = 3'b011;
-      default: sz__h6839 = 3'b0;
+    case (slavePortShim_wff$D_OUT[9:2])
+      8'h03, 8'h0C, 8'h30, 8'hC0: sz__h1676 = 3'b001;
+      8'h0F, 8'hF0: sz__h1676 = 3'b010;
+      8'h10, 8'h20, 8'h40, 8'h80: sz__h1676 = 3'b0;
+      8'hFF: sz__h1676 = 3'b011;
+      default: sz__h1676 = 3'b0;
     endcase
   end
-  always@(slave_xactor_shim_wff_rv$port1__read)
+  always@(slavePortShim_wff$D_OUT)
   begin
-    case (slave_xactor_shim_wff_rv$port1__read[9:2])
-      8'h02: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd8;
+    case (slavePortShim_wff$D_OUT[9:2])
+      8'h02: CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd8;
       8'h03, 8'h0F, 8'hFF:
-	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd0;
+	  CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd0;
       8'h04, 8'h0C:
-	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd16;
-      8'h08: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd24;
+	  CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd16;
+      8'h08: CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd24;
       8'h10, 8'h30, 8'hF0:
-	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd32;
-      8'h20: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd40;
+	  CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd32;
+      8'h20: CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd40;
       8'h40, 8'hC0:
-	  CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd48;
-      8'h80: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd56;
-      default: CASE_slave_xactor_shim_wff_rvport1__read_BITS_ETC__q1 = 32'd0;
+	  CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd48;
+      8'h80: CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd56;
+      default: CASE_slavePortShim_wffD_OUT_BITS_9_TO_2_0x2_8_ETC__q1 = 32'd0;
     endcase
   end
-  always@(slave_xactor_shim_wff_rv$port1__read)
+  always@(slavePortShim_wff$D_OUT)
   begin
-    case (slave_xactor_shim_wff_rv$port1__read[9:2])
+    case (slavePortShim_wff$D_OUT[9:2])
       8'h01, 8'h02, 8'h04, 8'h08, 8'h10, 8'h20, 8'h40, 8'h80:
-	  y__h7005 = 64'h00000000000000FF;
-      8'h03, 8'h0C, 8'h30, 8'hC0: y__h7005 = 64'h000000000000FFFF;
-      8'h0F, 8'hF0: y__h7005 = 64'h00000000FFFFFFFF;
-      8'hFF: y__h7005 = 64'hFFFFFFFFFFFFFFFF;
-      default: y__h7005 = 64'd0;
+	  y__h1842 = 64'h00000000000000FF;
+      8'h03, 8'h0C, 8'h30, 8'hC0: y__h1842 = 64'h000000000000FFFF;
+      8'h0F, 8'hF0: y__h1842 = 64'h00000000FFFFFFFF;
+      8'hFF: y__h1842 = 64'hFFFFFFFFFFFFFFFF;
+      default: y__h1842 = 64'd0;
     endcase
   end
-
-  // handling of inlined registers
-
-  always@(posedge CLK)
-  begin
-    if (RST_N == `BSV_RESET_VALUE)
-      begin
-        master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	master_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	master_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0, 6'bxxxxxx /* unspecified value */  };
-	master_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	master_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	slave_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	slave_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	slave_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      97'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	slave_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0, 6'bxxxxxx /* unspecified value */  };
-	slave_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      72'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	slave_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	    { 1'd0,
-	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-      end
-    else
-      begin
-        if (master_xactor_clearing$EN)
-	  master_xactor_clearing <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_clearing$D_IN;
-	if (master_xactor_shim_arff_rv$EN)
-	  master_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_arff_rv$D_IN;
-	if (master_xactor_shim_awff_rv$EN)
-	  master_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_awff_rv$D_IN;
-	if (master_xactor_shim_bff_rv$EN)
-	  master_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_bff_rv$D_IN;
-	if (master_xactor_shim_rff_rv$EN)
-	  master_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_rff_rv$D_IN;
-	if (master_xactor_shim_wff_rv$EN)
-	  master_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	      master_xactor_shim_wff_rv$D_IN;
-	if (slave_xactor_clearing$EN)
-	  slave_xactor_clearing <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_clearing$D_IN;
-	if (slave_xactor_shim_arff_rv$EN)
-	  slave_xactor_shim_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_shim_arff_rv$D_IN;
-	if (slave_xactor_shim_awff_rv$EN)
-	  slave_xactor_shim_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_shim_awff_rv$D_IN;
-	if (slave_xactor_shim_bff_rv$EN)
-	  slave_xactor_shim_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_shim_bff_rv$D_IN;
-	if (slave_xactor_shim_rff_rv$EN)
-	  slave_xactor_shim_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_shim_rff_rv$D_IN;
-	if (slave_xactor_shim_wff_rv$EN)
-	  slave_xactor_shim_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_shim_wff_rv$D_IN;
-      end
-  end
-
-  // synopsys translate_off
-  `ifdef BSV_NO_INITIAL_BLOCKS
-  `else // not BSV_NO_INITIAL_BLOCKS
-  initial
-  begin
-    master_xactor_clearing = 1'h0;
-    master_xactor_shim_arff_rv = 98'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    master_xactor_shim_awff_rv = 98'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    master_xactor_shim_bff_rv = 7'h2A;
-    master_xactor_shim_rff_rv = 73'h0AAAAAAAAAAAAAAAAAA;
-    master_xactor_shim_wff_rv = 75'h2AAAAAAAAAAAAAAAAAA;
-    slave_xactor_clearing = 1'h0;
-    slave_xactor_shim_arff_rv = 98'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    slave_xactor_shim_awff_rv = 98'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    slave_xactor_shim_bff_rv = 7'h2A;
-    slave_xactor_shim_rff_rv = 73'h0AAAAAAAAAAAAAAAAAA;
-    slave_xactor_shim_wff_rv = 75'h2AAAAAAAAAAAAAAAAAA;
-  end
-  `endif // BSV_NO_INITIAL_BLOCKS
-  // synopsys translate_on
 
   // handling of system tasks
 
@@ -2005,35 +902,23 @@ module mkDM_Mem_Tap(CLK,
   begin
     #0;
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
+      if (WILL_FIRE_RL_ug_src_warnDoDrop)
+	$display("WARNING: %m - dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
+      if (WILL_FIRE_RL_ug_snk_warnDoPut)
+	$display("WARNING: %m - putting into a Sink that can't be put into");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
+      if (WILL_FIRE_RL_ug_src_1_warnDoDrop)
+	$display("WARNING: %m - dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_aw_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
+      if (WILL_FIRE_RL_ug_snk_1_warnDoPut)
+	$display("WARNING: %m - putting into a Sink that can't be put into");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_w_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
+      if (WILL_FIRE_RL_ug_src_2_warnDoDrop)
+	$display("WARNING: %m - dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_b_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_ar_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_master_xactor_ug_master_u_r_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
+      if (WILL_FIRE_RL_ug_snk_2_warnDoPut)
+	$display("WARNING: %m - putting into a Sink that can't be put into");
   end
   // synopsys translate_on
 endmodule  // mkDM_Mem_Tap

@@ -9,18 +9,20 @@
 // RDY_server_reset_request_put   O     1 reg
 // RDY_server_reset_response_get  O     1 reg
 // RDY_set_addr_map               O     1 const
-// axi4_slave_awready             O     1 reg
-// axi4_slave_wready              O     1 reg
-// axi4_slave_bid                 O     5 reg
-// axi4_slave_bresp               O     2 reg
-// axi4_slave_bvalid              O     1 reg
-// axi4_slave_arready             O     1 reg
-// axi4_slave_rid                 O     5
-// axi4_slave_rdata               O    64
-// axi4_slave_rresp               O     2
-// axi4_slave_rlast               O     1
-// axi4_slave_ruser               O     1
-// axi4_slave_rvalid              O     1 reg
+// axi4_slave_aw_canPut           O     1 reg
+// RDY_axi4_slave_aw_put          O     1 reg
+// axi4_slave_w_canPut            O     1 reg
+// RDY_axi4_slave_w_put           O     1 reg
+// axi4_slave_b_canPeek           O     1 reg
+// axi4_slave_b_peek              O     7 reg
+// RDY_axi4_slave_b_peek          O     1 reg
+// RDY_axi4_slave_b_drop          O     1 reg
+// axi4_slave_ar_canPut           O     1 reg
+// RDY_axi4_slave_ar_put          O     1 reg
+// axi4_slave_r_canPeek           O     1 reg
+// axi4_slave_r_peek              O    72 reg
+// RDY_axi4_slave_r_peek          O     1 reg
+// RDY_axi4_slave_r_drop          O     1 reg
 // get_timer_interrupt_req_get    O     1 reg
 // RDY_get_timer_interrupt_req_get  O     1 reg
 // get_sw_interrupt_req_get       O     1 reg
@@ -29,38 +31,17 @@
 // RST_N                          I     1 reset
 // set_addr_map_addr_base         I    64 reg
 // set_addr_map_addr_lim          I    64 reg
-// axi4_slave_awid                I     5 reg
-// axi4_slave_awaddr              I    64 reg
-// axi4_slave_awlen               I     8 reg
-// axi4_slave_awsize              I     3 reg
-// axi4_slave_awburst             I     2 reg
-// axi4_slave_awlock              I     1 reg
-// axi4_slave_awcache             I     4 reg
-// axi4_slave_awprot              I     3 reg
-// axi4_slave_awqos               I     4 reg
-// axi4_slave_awregion            I     4 reg
-// axi4_slave_wdata               I    64 reg
-// axi4_slave_wstrb               I     8 reg
-// axi4_slave_wlast               I     1 reg
-// axi4_slave_wuser               I     1 reg
-// axi4_slave_bready              I     1
-// axi4_slave_arid                I     5 reg
-// axi4_slave_araddr              I    64 reg
-// axi4_slave_arlen               I     8 reg
-// axi4_slave_arsize              I     3 reg
-// axi4_slave_arburst             I     2 reg
-// axi4_slave_arlock              I     1 reg
-// axi4_slave_arcache             I     4 reg
-// axi4_slave_arprot              I     3 reg
-// axi4_slave_arqos               I     4 reg
-// axi4_slave_arregion            I     4 reg
-// axi4_slave_rready              I     1
+// axi4_slave_aw_put_val          I    98 reg
+// axi4_slave_w_put_val           I    73 reg
+// axi4_slave_ar_put_val          I    98 reg
 // EN_server_reset_request_put    I     1
 // EN_server_reset_response_get   I     1
 // EN_set_addr_map                I     1
-// axi4_slave_awvalid             I     1
-// axi4_slave_wvalid              I     1
-// axi4_slave_arvalid             I     1
+// EN_axi4_slave_aw_put           I     1
+// EN_axi4_slave_w_put            I     1
+// EN_axi4_slave_b_drop           I     1
+// EN_axi4_slave_ar_put           I     1
+// EN_axi4_slave_r_drop           I     1
 // EN_get_timer_interrupt_req_get  I     1
 // EN_get_sw_interrupt_req_get    I     1
 //
@@ -95,63 +76,39 @@ module mkNear_Mem_IO_AXI4(CLK,
 			  EN_set_addr_map,
 			  RDY_set_addr_map,
 
-			  axi4_slave_awid,
-			  axi4_slave_awaddr,
-			  axi4_slave_awlen,
-			  axi4_slave_awsize,
-			  axi4_slave_awburst,
-			  axi4_slave_awlock,
-			  axi4_slave_awcache,
-			  axi4_slave_awprot,
-			  axi4_slave_awqos,
-			  axi4_slave_awregion,
-			  axi4_slave_awvalid,
+			  axi4_slave_aw_canPut,
 
-			  axi4_slave_awready,
+			  axi4_slave_aw_put_val,
+			  EN_axi4_slave_aw_put,
+			  RDY_axi4_slave_aw_put,
 
-			  axi4_slave_wdata,
-			  axi4_slave_wstrb,
-			  axi4_slave_wlast,
-			  axi4_slave_wuser,
-			  axi4_slave_wvalid,
+			  axi4_slave_w_canPut,
 
-			  axi4_slave_wready,
+			  axi4_slave_w_put_val,
+			  EN_axi4_slave_w_put,
+			  RDY_axi4_slave_w_put,
 
-			  axi4_slave_bid,
+			  axi4_slave_b_canPeek,
 
-			  axi4_slave_bresp,
+			  axi4_slave_b_peek,
+			  RDY_axi4_slave_b_peek,
 
-			  axi4_slave_bvalid,
+			  EN_axi4_slave_b_drop,
+			  RDY_axi4_slave_b_drop,
 
-			  axi4_slave_bready,
+			  axi4_slave_ar_canPut,
 
-			  axi4_slave_arid,
-			  axi4_slave_araddr,
-			  axi4_slave_arlen,
-			  axi4_slave_arsize,
-			  axi4_slave_arburst,
-			  axi4_slave_arlock,
-			  axi4_slave_arcache,
-			  axi4_slave_arprot,
-			  axi4_slave_arqos,
-			  axi4_slave_arregion,
-			  axi4_slave_arvalid,
+			  axi4_slave_ar_put_val,
+			  EN_axi4_slave_ar_put,
+			  RDY_axi4_slave_ar_put,
 
-			  axi4_slave_arready,
+			  axi4_slave_r_canPeek,
 
-			  axi4_slave_rid,
+			  axi4_slave_r_peek,
+			  RDY_axi4_slave_r_peek,
 
-			  axi4_slave_rdata,
-
-			  axi4_slave_rresp,
-
-			  axi4_slave_rlast,
-
-			  axi4_slave_ruser,
-
-			  axi4_slave_rvalid,
-
-			  axi4_slave_rready,
+			  EN_axi4_slave_r_drop,
+			  RDY_axi4_slave_r_drop,
 
 			  EN_get_timer_interrupt_req_get,
 			  get_timer_interrupt_req_get,
@@ -177,82 +134,51 @@ module mkNear_Mem_IO_AXI4(CLK,
   input  EN_set_addr_map;
   output RDY_set_addr_map;
 
-  // action method axi4_slave_aw_awflit
-  input  [4 : 0] axi4_slave_awid;
-  input  [63 : 0] axi4_slave_awaddr;
-  input  [7 : 0] axi4_slave_awlen;
-  input  [2 : 0] axi4_slave_awsize;
-  input  [1 : 0] axi4_slave_awburst;
-  input  axi4_slave_awlock;
-  input  [3 : 0] axi4_slave_awcache;
-  input  [2 : 0] axi4_slave_awprot;
-  input  [3 : 0] axi4_slave_awqos;
-  input  [3 : 0] axi4_slave_awregion;
-  input  axi4_slave_awvalid;
+  // value method axi4_slave_aw_canPut
+  output axi4_slave_aw_canPut;
 
-  // value method axi4_slave_aw_awready
-  output axi4_slave_awready;
+  // action method axi4_slave_aw_put
+  input  [97 : 0] axi4_slave_aw_put_val;
+  input  EN_axi4_slave_aw_put;
+  output RDY_axi4_slave_aw_put;
 
-  // action method axi4_slave_w_wflit
-  input  [63 : 0] axi4_slave_wdata;
-  input  [7 : 0] axi4_slave_wstrb;
-  input  axi4_slave_wlast;
-  input  axi4_slave_wuser;
-  input  axi4_slave_wvalid;
+  // value method axi4_slave_w_canPut
+  output axi4_slave_w_canPut;
 
-  // value method axi4_slave_w_wready
-  output axi4_slave_wready;
+  // action method axi4_slave_w_put
+  input  [72 : 0] axi4_slave_w_put_val;
+  input  EN_axi4_slave_w_put;
+  output RDY_axi4_slave_w_put;
 
-  // value method axi4_slave_b_bid
-  output [4 : 0] axi4_slave_bid;
+  // value method axi4_slave_b_canPeek
+  output axi4_slave_b_canPeek;
 
-  // value method axi4_slave_b_bresp
-  output [1 : 0] axi4_slave_bresp;
+  // value method axi4_slave_b_peek
+  output [6 : 0] axi4_slave_b_peek;
+  output RDY_axi4_slave_b_peek;
 
-  // value method axi4_slave_b_buser
+  // action method axi4_slave_b_drop
+  input  EN_axi4_slave_b_drop;
+  output RDY_axi4_slave_b_drop;
 
-  // value method axi4_slave_b_bvalid
-  output axi4_slave_bvalid;
+  // value method axi4_slave_ar_canPut
+  output axi4_slave_ar_canPut;
 
-  // action method axi4_slave_b_bready
-  input  axi4_slave_bready;
+  // action method axi4_slave_ar_put
+  input  [97 : 0] axi4_slave_ar_put_val;
+  input  EN_axi4_slave_ar_put;
+  output RDY_axi4_slave_ar_put;
 
-  // action method axi4_slave_ar_arflit
-  input  [4 : 0] axi4_slave_arid;
-  input  [63 : 0] axi4_slave_araddr;
-  input  [7 : 0] axi4_slave_arlen;
-  input  [2 : 0] axi4_slave_arsize;
-  input  [1 : 0] axi4_slave_arburst;
-  input  axi4_slave_arlock;
-  input  [3 : 0] axi4_slave_arcache;
-  input  [2 : 0] axi4_slave_arprot;
-  input  [3 : 0] axi4_slave_arqos;
-  input  [3 : 0] axi4_slave_arregion;
-  input  axi4_slave_arvalid;
+  // value method axi4_slave_r_canPeek
+  output axi4_slave_r_canPeek;
 
-  // value method axi4_slave_ar_arready
-  output axi4_slave_arready;
+  // value method axi4_slave_r_peek
+  output [71 : 0] axi4_slave_r_peek;
+  output RDY_axi4_slave_r_peek;
 
-  // value method axi4_slave_r_rid
-  output [4 : 0] axi4_slave_rid;
-
-  // value method axi4_slave_r_rdata
-  output [63 : 0] axi4_slave_rdata;
-
-  // value method axi4_slave_r_rresp
-  output [1 : 0] axi4_slave_rresp;
-
-  // value method axi4_slave_r_rlast
-  output axi4_slave_rlast;
-
-  // value method axi4_slave_r_ruser
-  output axi4_slave_ruser;
-
-  // value method axi4_slave_r_rvalid
-  output axi4_slave_rvalid;
-
-  // action method axi4_slave_r_rready
-  input  axi4_slave_rready;
+  // action method axi4_slave_r_drop
+  input  EN_axi4_slave_r_drop;
+  output RDY_axi4_slave_r_drop;
 
   // actionvalue method get_timer_interrupt_req_get
   input  EN_get_timer_interrupt_req_get;
@@ -265,41 +191,35 @@ module mkNear_Mem_IO_AXI4(CLK,
   output RDY_get_sw_interrupt_req_get;
 
   // signals for module outputs
-  wire [63 : 0] axi4_slave_rdata;
-  wire [4 : 0] axi4_slave_bid, axi4_slave_rid;
-  wire [1 : 0] axi4_slave_bresp, axi4_slave_rresp;
-  wire RDY_get_sw_interrupt_req_get,
+  wire [71 : 0] axi4_slave_r_peek;
+  wire [6 : 0] axi4_slave_b_peek;
+  wire RDY_axi4_slave_ar_put,
+       RDY_axi4_slave_aw_put,
+       RDY_axi4_slave_b_drop,
+       RDY_axi4_slave_b_peek,
+       RDY_axi4_slave_r_drop,
+       RDY_axi4_slave_r_peek,
+       RDY_axi4_slave_w_put,
+       RDY_get_sw_interrupt_req_get,
        RDY_get_timer_interrupt_req_get,
        RDY_server_reset_request_put,
        RDY_server_reset_response_get,
        RDY_set_addr_map,
-       axi4_slave_arready,
-       axi4_slave_awready,
-       axi4_slave_bvalid,
-       axi4_slave_rlast,
-       axi4_slave_ruser,
-       axi4_slave_rvalid,
-       axi4_slave_wready,
+       axi4_slave_ar_canPut,
+       axi4_slave_aw_canPut,
+       axi4_slave_b_canPeek,
+       axi4_slave_r_canPeek,
+       axi4_slave_w_canPut,
        get_sw_interrupt_req_get,
        get_timer_interrupt_req_get;
 
   // inlined wires
-  wire [97 : 0] slave_xactor_ug_slave_u_ar_putWire$wget,
-		slave_xactor_ug_slave_u_aw_putWire$wget;
-  wire [73 : 0] slave_xactor_ug_slave_u_w_putWire$wget;
-  wire [72 : 0] slave_xactor_ug_slave_u_r_peekWire$wget;
   wire [63 : 0] crg_time$port0__write_1,
 		crg_time$port1__write_1,
 		crg_time$port2__read,
 		crg_timecmp$port1__write_1,
 		crg_timecmp$port2__read;
-  wire crg_time$EN_port1__write,
-       crg_timecmp$EN_port1__write,
-       slave_xactor_ug_slave_u_ar_putWire$whas,
-       slave_xactor_ug_slave_u_aw_putWire$whas,
-       slave_xactor_ug_slave_u_b_dropWire$whas,
-       slave_xactor_ug_slave_u_r_dropWire$whas,
-       slave_xactor_ug_slave_u_w_putWire$whas;
+  wire crg_time$EN_port1__write, crg_timecmp$EN_port1__write;
 
   // register cfg_verbosity
   reg [3 : 0] cfg_verbosity;
@@ -338,10 +258,6 @@ module mkNear_Mem_IO_AXI4(CLK,
   reg rg_state;
   wire rg_state$D_IN, rg_state$EN;
 
-  // register slave_xactor_clearing
-  reg slave_xactor_clearing;
-  wire slave_xactor_clearing$D_IN, slave_xactor_clearing$EN;
-
   // ports of submodule f_reset_reqs
   wire f_reset_reqs$CLR,
        f_reset_reqs$DEQ,
@@ -374,45 +290,45 @@ module mkNear_Mem_IO_AXI4(CLK,
        f_timer_interrupt_req$ENQ,
        f_timer_interrupt_req$FULL_N;
 
-  // ports of submodule slave_xactor_shim_arff
-  wire [97 : 0] slave_xactor_shim_arff$D_IN, slave_xactor_shim_arff$D_OUT;
-  wire slave_xactor_shim_arff$CLR,
-       slave_xactor_shim_arff$DEQ,
-       slave_xactor_shim_arff$EMPTY_N,
-       slave_xactor_shim_arff$ENQ,
-       slave_xactor_shim_arff$FULL_N;
+  // ports of submodule slavePortShim_arff
+  wire [97 : 0] slavePortShim_arff$D_IN, slavePortShim_arff$D_OUT;
+  wire slavePortShim_arff$CLR,
+       slavePortShim_arff$DEQ,
+       slavePortShim_arff$EMPTY_N,
+       slavePortShim_arff$ENQ,
+       slavePortShim_arff$FULL_N;
 
-  // ports of submodule slave_xactor_shim_awff
-  wire [97 : 0] slave_xactor_shim_awff$D_IN, slave_xactor_shim_awff$D_OUT;
-  wire slave_xactor_shim_awff$CLR,
-       slave_xactor_shim_awff$DEQ,
-       slave_xactor_shim_awff$EMPTY_N,
-       slave_xactor_shim_awff$ENQ,
-       slave_xactor_shim_awff$FULL_N;
+  // ports of submodule slavePortShim_awff
+  wire [97 : 0] slavePortShim_awff$D_IN, slavePortShim_awff$D_OUT;
+  wire slavePortShim_awff$CLR,
+       slavePortShim_awff$DEQ,
+       slavePortShim_awff$EMPTY_N,
+       slavePortShim_awff$ENQ,
+       slavePortShim_awff$FULL_N;
 
-  // ports of submodule slave_xactor_shim_bff
-  wire [6 : 0] slave_xactor_shim_bff$D_IN, slave_xactor_shim_bff$D_OUT;
-  wire slave_xactor_shim_bff$CLR,
-       slave_xactor_shim_bff$DEQ,
-       slave_xactor_shim_bff$EMPTY_N,
-       slave_xactor_shim_bff$ENQ,
-       slave_xactor_shim_bff$FULL_N;
+  // ports of submodule slavePortShim_bff
+  wire [6 : 0] slavePortShim_bff$D_IN, slavePortShim_bff$D_OUT;
+  wire slavePortShim_bff$CLR,
+       slavePortShim_bff$DEQ,
+       slavePortShim_bff$EMPTY_N,
+       slavePortShim_bff$ENQ,
+       slavePortShim_bff$FULL_N;
 
-  // ports of submodule slave_xactor_shim_rff
-  wire [71 : 0] slave_xactor_shim_rff$D_IN, slave_xactor_shim_rff$D_OUT;
-  wire slave_xactor_shim_rff$CLR,
-       slave_xactor_shim_rff$DEQ,
-       slave_xactor_shim_rff$EMPTY_N,
-       slave_xactor_shim_rff$ENQ,
-       slave_xactor_shim_rff$FULL_N;
+  // ports of submodule slavePortShim_rff
+  wire [71 : 0] slavePortShim_rff$D_IN, slavePortShim_rff$D_OUT;
+  wire slavePortShim_rff$CLR,
+       slavePortShim_rff$DEQ,
+       slavePortShim_rff$EMPTY_N,
+       slavePortShim_rff$ENQ,
+       slavePortShim_rff$FULL_N;
 
-  // ports of submodule slave_xactor_shim_wff
-  wire [72 : 0] slave_xactor_shim_wff$D_IN, slave_xactor_shim_wff$D_OUT;
-  wire slave_xactor_shim_wff$CLR,
-       slave_xactor_shim_wff$DEQ,
-       slave_xactor_shim_wff$EMPTY_N,
-       slave_xactor_shim_wff$ENQ,
-       slave_xactor_shim_wff$FULL_N;
+  // ports of submodule slavePortShim_wff
+  wire [72 : 0] slavePortShim_wff$D_IN, slavePortShim_wff$D_OUT;
+  wire slavePortShim_wff$CLR,
+       slavePortShim_wff$DEQ,
+       slavePortShim_wff$EMPTY_N,
+       slavePortShim_wff$ENQ,
+       slavePortShim_wff$FULL_N;
 
   // rule scheduling signals
   wire CAN_FIRE_RL_rl_compare,
@@ -421,24 +337,11 @@ module mkNear_Mem_IO_AXI4(CLK,
        CAN_FIRE_RL_rl_reset,
        CAN_FIRE_RL_rl_soft_reset,
        CAN_FIRE_RL_rl_tick_timer,
-       CAN_FIRE_RL_slave_xactor_do_clear,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut,
-       CAN_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut,
-       CAN_FIRE_axi4_slave_ar_arflit,
-       CAN_FIRE_axi4_slave_aw_awflit,
-       CAN_FIRE_axi4_slave_b_bready,
-       CAN_FIRE_axi4_slave_r_rready,
-       CAN_FIRE_axi4_slave_w_wflit,
+       CAN_FIRE_axi4_slave_ar_put,
+       CAN_FIRE_axi4_slave_aw_put,
+       CAN_FIRE_axi4_slave_b_drop,
+       CAN_FIRE_axi4_slave_r_drop,
+       CAN_FIRE_axi4_slave_w_put,
        CAN_FIRE_get_sw_interrupt_req_get,
        CAN_FIRE_get_timer_interrupt_req_get,
        CAN_FIRE_server_reset_request_put,
@@ -450,24 +353,11 @@ module mkNear_Mem_IO_AXI4(CLK,
        WILL_FIRE_RL_rl_reset,
        WILL_FIRE_RL_rl_soft_reset,
        WILL_FIRE_RL_rl_tick_timer,
-       WILL_FIRE_RL_slave_xactor_do_clear,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_w_doPut,
-       WILL_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut,
-       WILL_FIRE_axi4_slave_ar_arflit,
-       WILL_FIRE_axi4_slave_aw_awflit,
-       WILL_FIRE_axi4_slave_b_bready,
-       WILL_FIRE_axi4_slave_r_rready,
-       WILL_FIRE_axi4_slave_w_wflit,
+       WILL_FIRE_axi4_slave_ar_put,
+       WILL_FIRE_axi4_slave_aw_put,
+       WILL_FIRE_axi4_slave_b_drop,
+       WILL_FIRE_axi4_slave_r_drop,
+       WILL_FIRE_axi4_slave_w_put,
        WILL_FIRE_get_sw_interrupt_req_get,
        WILL_FIRE_get_timer_interrupt_req_get,
        WILL_FIRE_server_reset_request_put,
@@ -483,71 +373,71 @@ module mkNear_Mem_IO_AXI4(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [31 : 0] v__h11698;
-  reg [31 : 0] v__h11830;
-  reg [31 : 0] v__h3133;
-  reg [31 : 0] v__h3385;
-  reg [31 : 0] v__h3572;
-  reg [31 : 0] v__h3786;
-  reg [31 : 0] v__h4009;
-  reg [31 : 0] v__h4272;
-  reg [31 : 0] v__h4607;
-  reg [31 : 0] v__h4863;
-  reg [31 : 0] v__h10432;
-  reg [31 : 0] v__h10678;
-  reg [31 : 0] v__h11049;
-  reg [31 : 0] v__h11159;
-  reg [31 : 0] v__h11266;
-  reg [31 : 0] v__h3127;
-  reg [31 : 0] v__h3379;
-  reg [31 : 0] v__h3566;
-  reg [31 : 0] v__h3780;
-  reg [31 : 0] v__h4003;
-  reg [31 : 0] v__h4266;
-  reg [31 : 0] v__h4601;
-  reg [31 : 0] v__h4857;
-  reg [31 : 0] v__h10426;
-  reg [31 : 0] v__h10672;
-  reg [31 : 0] v__h11043;
-  reg [31 : 0] v__h11153;
-  reg [31 : 0] v__h11260;
-  reg [31 : 0] v__h11692;
-  reg [31 : 0] v__h11824;
+  reg [31 : 0] v__h10415;
+  reg [31 : 0] v__h10547;
+  reg [31 : 0] v__h2094;
+  reg [31 : 0] v__h2279;
+  reg [31 : 0] v__h2493;
+  reg [31 : 0] v__h2716;
+  reg [31 : 0] v__h2982;
+  reg [31 : 0] v__h3319;
+  reg [31 : 0] v__h3575;
+  reg [31 : 0] v__h9144;
+  reg [31 : 0] v__h9391;
+  reg [31 : 0] v__h9762;
+  reg [31 : 0] v__h9872;
+  reg [31 : 0] v__h9979;
+  reg [31 : 0] v__h1843;
+  reg [31 : 0] v__h1837;
+  reg [31 : 0] v__h2088;
+  reg [31 : 0] v__h2273;
+  reg [31 : 0] v__h2487;
+  reg [31 : 0] v__h2710;
+  reg [31 : 0] v__h2976;
+  reg [31 : 0] v__h3313;
+  reg [31 : 0] v__h3569;
+  reg [31 : 0] v__h9138;
+  reg [31 : 0] v__h9385;
+  reg [31 : 0] v__h9756;
+  reg [31 : 0] v__h9866;
+  reg [31 : 0] v__h9973;
+  reg [31 : 0] v__h10409;
+  reg [31 : 0] v__h10541;
   // synopsys translate_on
 
   // remaining internal signals
-  reg [63 : 0] _theResult___fst__h3930;
-  reg [1 : 0] CASE_byte_addr737_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2,
-	      CASE_byte_addr824_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1;
-  wire [63 : 0] byte_addr__h3737,
-		byte_addr__h4824,
-		crg_timecmp_port1__read__53_AND_INV_SEXT_slave_ETC___d292,
-		mask__h5297,
-		new_time__h6555,
-		new_timecmp__h5266,
-		old_time__h9114,
-		rdata___1__h3926,
-		x__h4148,
-		x__h5308,
-		x__h6597,
-		y__h5309,
-		y__h5310;
-  wire [7 : 0] SEXT_slave_xactor_shim_wff_first__85_BIT_1_78___d279,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_2_75___d276,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_3_71___d272,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_4_68___d269,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_5_64___d265,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_6_61___d262,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_7_57___d258,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_8_54___d255;
-  wire NOT_cfg_verbosity_read__9_ULE_1_3___d74,
-       NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67,
-       rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187,
-       slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114,
-       slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d147,
-       slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181,
-       slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d324,
-       slave_xactor_shim_awff_i_notEmpty__75_AND_slav_ETC___d195;
+  reg [63 : 0] _theResult___fst__h2637;
+  reg [1 : 0] CASE_byte_addr444_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2,
+	      CASE_byte_addr536_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1;
+  wire [63 : 0] byte_addr__h2444,
+		byte_addr__h3536,
+		crg_timecmp_port1__read__09_AND_INV_SEXT_slave_ETC___d248,
+		mask__h4009,
+		new_time__h5267,
+		new_timecmp__h3978,
+		old_time__h7826,
+		rdata___1__h2633,
+		x__h2855,
+		x__h4020,
+		x__h5309,
+		y__h4021,
+		y__h4022;
+  wire [7 : 0] SEXT_slavePortShim_wff_first__42_BIT_1_34___d235,
+	       SEXT_slavePortShim_wff_first__42_BIT_2_31___d232,
+	       SEXT_slavePortShim_wff_first__42_BIT_3_27___d228,
+	       SEXT_slavePortShim_wff_first__42_BIT_4_24___d225,
+	       SEXT_slavePortShim_wff_first__42_BIT_5_20___d221,
+	       SEXT_slavePortShim_wff_first__42_BIT_6_17___d218,
+	       SEXT_slavePortShim_wff_first__42_BIT_7_13___d214,
+	       SEXT_slavePortShim_wff_first__42_BIT_8_10___d211;
+  wire NOT_cfg_verbosity_read_ULE_1_1___d32,
+       NOT_crg_time_port0__read__4_ULT_crg_timecmp_po_ETC___d25,
+       rg_msip_07_EQ_slavePortShim_wff_first__42_BIT__ETC___d144,
+       slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d104,
+       slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71,
+       slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138,
+       slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d280,
+       slavePortShim_awff_i_notEmpty__32_AND_slavePor_ETC___d152;
 
   // action method server_reset_request_put
   assign RDY_server_reset_request_put = f_reset_reqs$FULL_N ;
@@ -564,61 +454,53 @@ module mkNear_Mem_IO_AXI4(CLK,
   assign CAN_FIRE_set_addr_map = 1'd1 ;
   assign WILL_FIRE_set_addr_map = EN_set_addr_map ;
 
-  // action method axi4_slave_aw_awflit
-  assign CAN_FIRE_axi4_slave_aw_awflit = 1'd1 ;
-  assign WILL_FIRE_axi4_slave_aw_awflit = axi4_slave_awvalid ;
+  // value method axi4_slave_aw_canPut
+  assign axi4_slave_aw_canPut = slavePortShim_awff$FULL_N ;
 
-  // value method axi4_slave_aw_awready
-  assign axi4_slave_awready = slave_xactor_shim_awff$FULL_N ;
+  // action method axi4_slave_aw_put
+  assign RDY_axi4_slave_aw_put = slavePortShim_awff$FULL_N ;
+  assign CAN_FIRE_axi4_slave_aw_put = slavePortShim_awff$FULL_N ;
+  assign WILL_FIRE_axi4_slave_aw_put = EN_axi4_slave_aw_put ;
 
-  // action method axi4_slave_w_wflit
-  assign CAN_FIRE_axi4_slave_w_wflit = 1'd1 ;
-  assign WILL_FIRE_axi4_slave_w_wflit = axi4_slave_wvalid ;
+  // value method axi4_slave_w_canPut
+  assign axi4_slave_w_canPut = slavePortShim_wff$FULL_N ;
 
-  // value method axi4_slave_w_wready
-  assign axi4_slave_wready = slave_xactor_shim_wff$FULL_N ;
+  // action method axi4_slave_w_put
+  assign RDY_axi4_slave_w_put = slavePortShim_wff$FULL_N ;
+  assign CAN_FIRE_axi4_slave_w_put = slavePortShim_wff$FULL_N ;
+  assign WILL_FIRE_axi4_slave_w_put = EN_axi4_slave_w_put ;
 
-  // value method axi4_slave_b_bid
-  assign axi4_slave_bid = slave_xactor_shim_bff$D_OUT[6:2] ;
+  // value method axi4_slave_b_canPeek
+  assign axi4_slave_b_canPeek = slavePortShim_bff$EMPTY_N ;
 
-  // value method axi4_slave_b_bresp
-  assign axi4_slave_bresp = slave_xactor_shim_bff$D_OUT[1:0] ;
+  // value method axi4_slave_b_peek
+  assign axi4_slave_b_peek = slavePortShim_bff$D_OUT ;
+  assign RDY_axi4_slave_b_peek = slavePortShim_bff$EMPTY_N ;
 
-  // value method axi4_slave_b_bvalid
-  assign axi4_slave_bvalid = slave_xactor_shim_bff$EMPTY_N ;
+  // action method axi4_slave_b_drop
+  assign RDY_axi4_slave_b_drop = slavePortShim_bff$EMPTY_N ;
+  assign CAN_FIRE_axi4_slave_b_drop = slavePortShim_bff$EMPTY_N ;
+  assign WILL_FIRE_axi4_slave_b_drop = EN_axi4_slave_b_drop ;
 
-  // action method axi4_slave_b_bready
-  assign CAN_FIRE_axi4_slave_b_bready = 1'd1 ;
-  assign WILL_FIRE_axi4_slave_b_bready = 1'd1 ;
+  // value method axi4_slave_ar_canPut
+  assign axi4_slave_ar_canPut = slavePortShim_arff$FULL_N ;
 
-  // action method axi4_slave_ar_arflit
-  assign CAN_FIRE_axi4_slave_ar_arflit = 1'd1 ;
-  assign WILL_FIRE_axi4_slave_ar_arflit = axi4_slave_arvalid ;
+  // action method axi4_slave_ar_put
+  assign RDY_axi4_slave_ar_put = slavePortShim_arff$FULL_N ;
+  assign CAN_FIRE_axi4_slave_ar_put = slavePortShim_arff$FULL_N ;
+  assign WILL_FIRE_axi4_slave_ar_put = EN_axi4_slave_ar_put ;
 
-  // value method axi4_slave_ar_arready
-  assign axi4_slave_arready = slave_xactor_shim_arff$FULL_N ;
+  // value method axi4_slave_r_canPeek
+  assign axi4_slave_r_canPeek = slavePortShim_rff$EMPTY_N ;
 
-  // value method axi4_slave_r_rid
-  assign axi4_slave_rid = slave_xactor_ug_slave_u_r_peekWire$wget[72:68] ;
+  // value method axi4_slave_r_peek
+  assign axi4_slave_r_peek = slavePortShim_rff$D_OUT ;
+  assign RDY_axi4_slave_r_peek = slavePortShim_rff$EMPTY_N ;
 
-  // value method axi4_slave_r_rdata
-  assign axi4_slave_rdata = slave_xactor_ug_slave_u_r_peekWire$wget[67:4] ;
-
-  // value method axi4_slave_r_rresp
-  assign axi4_slave_rresp = slave_xactor_ug_slave_u_r_peekWire$wget[3:2] ;
-
-  // value method axi4_slave_r_rlast
-  assign axi4_slave_rlast = slave_xactor_ug_slave_u_r_peekWire$wget[1] ;
-
-  // value method axi4_slave_r_ruser
-  assign axi4_slave_ruser = slave_xactor_ug_slave_u_r_peekWire$wget[0] ;
-
-  // value method axi4_slave_r_rvalid
-  assign axi4_slave_rvalid = slave_xactor_shim_rff$EMPTY_N ;
-
-  // action method axi4_slave_r_rready
-  assign CAN_FIRE_axi4_slave_r_rready = 1'd1 ;
-  assign WILL_FIRE_axi4_slave_r_rready = 1'd1 ;
+  // action method axi4_slave_r_drop
+  assign RDY_axi4_slave_r_drop = slavePortShim_rff$EMPTY_N ;
+  assign CAN_FIRE_axi4_slave_r_drop = slavePortShim_rff$EMPTY_N ;
+  assign WILL_FIRE_axi4_slave_r_drop = EN_axi4_slave_r_drop ;
 
   // actionvalue method get_timer_interrupt_req_get
   assign get_timer_interrupt_req_get = f_timer_interrupt_req$D_OUT ;
@@ -674,79 +556,60 @@ module mkNear_Mem_IO_AXI4(CLK,
 								.FULL_N(f_timer_interrupt_req$FULL_N),
 								.EMPTY_N(f_timer_interrupt_req$EMPTY_N));
 
-  // submodule slave_xactor_shim_arff
-  SizedFIFO #(.p1width(32'd98),
-	      .p2depth(32'd4),
-	      .p3cntr_width(32'd2),
-	      .guarded(32'd1)) slave_xactor_shim_arff(.RST(RST_N),
-						      .CLK(CLK),
-						      .D_IN(slave_xactor_shim_arff$D_IN),
-						      .ENQ(slave_xactor_shim_arff$ENQ),
-						      .DEQ(slave_xactor_shim_arff$DEQ),
-						      .CLR(slave_xactor_shim_arff$CLR),
-						      .D_OUT(slave_xactor_shim_arff$D_OUT),
-						      .FULL_N(slave_xactor_shim_arff$FULL_N),
-						      .EMPTY_N(slave_xactor_shim_arff$EMPTY_N));
+  // submodule slavePortShim_arff
+  FIFO2 #(.width(32'd98), .guarded(32'd1)) slavePortShim_arff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(slavePortShim_arff$D_IN),
+							      .ENQ(slavePortShim_arff$ENQ),
+							      .DEQ(slavePortShim_arff$DEQ),
+							      .CLR(slavePortShim_arff$CLR),
+							      .D_OUT(slavePortShim_arff$D_OUT),
+							      .FULL_N(slavePortShim_arff$FULL_N),
+							      .EMPTY_N(slavePortShim_arff$EMPTY_N));
 
-  // submodule slave_xactor_shim_awff
-  SizedFIFO #(.p1width(32'd98),
-	      .p2depth(32'd4),
-	      .p3cntr_width(32'd2),
-	      .guarded(32'd1)) slave_xactor_shim_awff(.RST(RST_N),
-						      .CLK(CLK),
-						      .D_IN(slave_xactor_shim_awff$D_IN),
-						      .ENQ(slave_xactor_shim_awff$ENQ),
-						      .DEQ(slave_xactor_shim_awff$DEQ),
-						      .CLR(slave_xactor_shim_awff$CLR),
-						      .D_OUT(slave_xactor_shim_awff$D_OUT),
-						      .FULL_N(slave_xactor_shim_awff$FULL_N),
-						      .EMPTY_N(slave_xactor_shim_awff$EMPTY_N));
+  // submodule slavePortShim_awff
+  FIFO2 #(.width(32'd98), .guarded(32'd1)) slavePortShim_awff(.RST(RST_N),
+							      .CLK(CLK),
+							      .D_IN(slavePortShim_awff$D_IN),
+							      .ENQ(slavePortShim_awff$ENQ),
+							      .DEQ(slavePortShim_awff$DEQ),
+							      .CLR(slavePortShim_awff$CLR),
+							      .D_OUT(slavePortShim_awff$D_OUT),
+							      .FULL_N(slavePortShim_awff$FULL_N),
+							      .EMPTY_N(slavePortShim_awff$EMPTY_N));
 
-  // submodule slave_xactor_shim_bff
-  SizedFIFO #(.p1width(32'd7),
-	      .p2depth(32'd4),
-	      .p3cntr_width(32'd2),
-	      .guarded(32'd1)) slave_xactor_shim_bff(.RST(RST_N),
-						     .CLK(CLK),
-						     .D_IN(slave_xactor_shim_bff$D_IN),
-						     .ENQ(slave_xactor_shim_bff$ENQ),
-						     .DEQ(slave_xactor_shim_bff$DEQ),
-						     .CLR(slave_xactor_shim_bff$CLR),
-						     .D_OUT(slave_xactor_shim_bff$D_OUT),
-						     .FULL_N(slave_xactor_shim_bff$FULL_N),
-						     .EMPTY_N(slave_xactor_shim_bff$EMPTY_N));
+  // submodule slavePortShim_bff
+  FIFO2 #(.width(32'd7), .guarded(32'd1)) slavePortShim_bff(.RST(RST_N),
+							    .CLK(CLK),
+							    .D_IN(slavePortShim_bff$D_IN),
+							    .ENQ(slavePortShim_bff$ENQ),
+							    .DEQ(slavePortShim_bff$DEQ),
+							    .CLR(slavePortShim_bff$CLR),
+							    .D_OUT(slavePortShim_bff$D_OUT),
+							    .FULL_N(slavePortShim_bff$FULL_N),
+							    .EMPTY_N(slavePortShim_bff$EMPTY_N));
 
-  // submodule slave_xactor_shim_rff
-  SizedFIFO #(.p1width(32'd72),
-	      .p2depth(32'd4),
-	      .p3cntr_width(32'd2),
-	      .guarded(32'd1)) slave_xactor_shim_rff(.RST(RST_N),
-						     .CLK(CLK),
-						     .D_IN(slave_xactor_shim_rff$D_IN),
-						     .ENQ(slave_xactor_shim_rff$ENQ),
-						     .DEQ(slave_xactor_shim_rff$DEQ),
-						     .CLR(slave_xactor_shim_rff$CLR),
-						     .D_OUT(slave_xactor_shim_rff$D_OUT),
-						     .FULL_N(slave_xactor_shim_rff$FULL_N),
-						     .EMPTY_N(slave_xactor_shim_rff$EMPTY_N));
+  // submodule slavePortShim_rff
+  FIFO2 #(.width(32'd72), .guarded(32'd1)) slavePortShim_rff(.RST(RST_N),
+							     .CLK(CLK),
+							     .D_IN(slavePortShim_rff$D_IN),
+							     .ENQ(slavePortShim_rff$ENQ),
+							     .DEQ(slavePortShim_rff$DEQ),
+							     .CLR(slavePortShim_rff$CLR),
+							     .D_OUT(slavePortShim_rff$D_OUT),
+							     .FULL_N(slavePortShim_rff$FULL_N),
+							     .EMPTY_N(slavePortShim_rff$EMPTY_N));
 
-  // submodule slave_xactor_shim_wff
-  SizedFIFO #(.p1width(32'd73),
-	      .p2depth(32'd4),
-	      .p3cntr_width(32'd2),
-	      .guarded(32'd1)) slave_xactor_shim_wff(.RST(RST_N),
-						     .CLK(CLK),
-						     .D_IN(slave_xactor_shim_wff$D_IN),
-						     .ENQ(slave_xactor_shim_wff$ENQ),
-						     .DEQ(slave_xactor_shim_wff$DEQ),
-						     .CLR(slave_xactor_shim_wff$CLR),
-						     .D_OUT(slave_xactor_shim_wff$D_OUT),
-						     .FULL_N(slave_xactor_shim_wff$FULL_N),
-						     .EMPTY_N(slave_xactor_shim_wff$EMPTY_N));
-
-  // rule RL_rl_reset
-  assign CAN_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
-  assign WILL_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
+  // submodule slavePortShim_wff
+  FIFO2 #(.width(32'd73), .guarded(32'd1)) slavePortShim_wff(.RST(RST_N),
+							     .CLK(CLK),
+							     .D_IN(slavePortShim_wff$D_IN),
+							     .ENQ(slavePortShim_wff$ENQ),
+							     .DEQ(slavePortShim_wff$DEQ),
+							     .CLR(slavePortShim_wff$CLR),
+							     .D_OUT(slavePortShim_wff$D_OUT),
+							     .FULL_N(slavePortShim_wff$FULL_N),
+							     .EMPTY_N(slavePortShim_wff$EMPTY_N));
 
   // rule RL_rl_soft_reset
   assign CAN_FIRE_RL_rl_soft_reset = MUX_rg_state$write_1__SEL_1 ;
@@ -756,75 +619,13 @@ module mkNear_Mem_IO_AXI4(CLK,
   assign CAN_FIRE_RL_rl_compare =
 	     f_timer_interrupt_req$FULL_N && rg_state &&
 	     rg_mtip !=
-	     NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67 &&
+	     NOT_crg_time_port0__read__4_ULT_crg_timecmp_po_ETC___d25 &&
 	     !f_reset_reqs$EMPTY_N ;
   assign WILL_FIRE_RL_rl_compare = CAN_FIRE_RL_rl_compare ;
 
-  // rule RL_slave_xactor_ug_slave_u_aw_warnDoPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut =
-	     slave_xactor_ug_slave_u_aw_putWire$whas &&
-	     !slave_xactor_shim_awff$FULL_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut ;
-
-  // rule RL_slave_xactor_ug_slave_u_w_warnDoPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut =
-	     slave_xactor_ug_slave_u_w_putWire$whas &&
-	     !slave_xactor_shim_wff$FULL_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut ;
-
-  // rule RL_slave_xactor_ug_slave_u_b_setPeek
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek =
-	     slave_xactor_shim_bff$EMPTY_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_b_setPeek =
-	     slave_xactor_shim_bff$EMPTY_N ;
-
-  // rule RL_slave_xactor_ug_slave_u_b_warnDoDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop =
-	     slave_xactor_ug_slave_u_b_dropWire$whas &&
-	     !slave_xactor_shim_bff$EMPTY_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop ;
-
-  // rule RL_slave_xactor_ug_slave_u_b_doDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop =
-	     slave_xactor_shim_bff$EMPTY_N &&
-	     slave_xactor_ug_slave_u_b_dropWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop ;
-
-  // rule RL_slave_xactor_ug_slave_u_ar_warnDoPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut =
-	     slave_xactor_ug_slave_u_ar_putWire$whas &&
-	     !slave_xactor_shim_arff$FULL_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut ;
-
-  // rule RL_slave_xactor_ug_slave_u_r_setPeek
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek =
-	     slave_xactor_shim_rff$EMPTY_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_r_setPeek =
-	     slave_xactor_shim_rff$EMPTY_N ;
-
-  // rule RL_slave_xactor_ug_slave_u_r_warnDoDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop =
-	     slave_xactor_ug_slave_u_r_dropWire$whas &&
-	     !slave_xactor_shim_rff$EMPTY_N ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop ;
-
-  // rule RL_slave_xactor_ug_slave_u_r_doDrop
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop =
-	     slave_xactor_shim_rff$EMPTY_N &&
-	     slave_xactor_ug_slave_u_r_dropWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop ;
-
   // rule RL_rl_process_rd_req
   assign CAN_FIRE_RL_rl_process_rd_req =
-	     !slave_xactor_clearing && slave_xactor_shim_arff$EMPTY_N &&
-	     slave_xactor_shim_rff$FULL_N &&
+	     slavePortShim_arff$EMPTY_N && slavePortShim_rff$FULL_N &&
 	     rg_state &&
 	     !f_reset_reqs$EMPTY_N ;
   assign WILL_FIRE_RL_rl_process_rd_req = CAN_FIRE_RL_rl_process_rd_req ;
@@ -837,121 +638,59 @@ module mkNear_Mem_IO_AXI4(CLK,
 
   // rule RL_rl_process_wr_req
   assign CAN_FIRE_RL_rl_process_wr_req =
-	     !slave_xactor_clearing && slave_xactor_shim_awff$EMPTY_N &&
-	     slave_xactor_shim_awff_i_notEmpty__75_AND_slav_ETC___d195 &&
+	     slavePortShim_awff$EMPTY_N &&
+	     slavePortShim_awff_i_notEmpty__32_AND_slavePor_ETC___d152 &&
 	     rg_state &&
 	     !f_reset_reqs$EMPTY_N ;
   assign WILL_FIRE_RL_rl_process_wr_req = CAN_FIRE_RL_rl_process_wr_req ;
 
-  // rule RL_slave_xactor_ug_slave_u_aw_doPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut =
-	     slave_xactor_shim_awff$FULL_N &&
-	     slave_xactor_ug_slave_u_aw_putWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut ;
-
-  // rule RL_slave_xactor_ug_slave_u_w_doPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut =
-	     slave_xactor_shim_wff$FULL_N &&
-	     slave_xactor_ug_slave_u_w_putWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_w_doPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut ;
-
-  // rule RL_slave_xactor_ug_slave_u_ar_doPut
-  assign CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut =
-	     slave_xactor_shim_arff$FULL_N &&
-	     slave_xactor_ug_slave_u_ar_putWire$whas ;
-  assign WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut ;
-
-  // rule RL_slave_xactor_do_clear
-  assign CAN_FIRE_RL_slave_xactor_do_clear = slave_xactor_clearing ;
-  assign WILL_FIRE_RL_slave_xactor_do_clear = slave_xactor_clearing ;
+  // rule RL_rl_reset
+  assign CAN_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
+  assign WILL_FIRE_RL_rl_reset = MUX_rg_state$write_1__SEL_2 ;
 
   // inputs to muxes for submodule ports
   assign MUX_crg_time$port1__write_1__SEL_1 =
 	     WILL_FIRE_RL_rl_process_wr_req &&
-	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	     (byte_addr__h4824 == 64'h000000000000BFF8 ||
-	      byte_addr__h4824 == 64'h000000000000BFFC) ;
+	     !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	     (byte_addr__h3536 == 64'h000000000000BFF8 ||
+	      byte_addr__h3536 == 64'h000000000000BFFC) ;
   assign MUX_crg_timecmp$port1__write_1__SEL_1 =
 	     WILL_FIRE_RL_rl_process_wr_req &&
-	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	     (byte_addr__h4824 == 64'h0000000000004000 ||
-	      byte_addr__h4824 == 64'h0000000000004004) ;
+	     !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	     (byte_addr__h3536 == 64'h0000000000004000 ||
+	      byte_addr__h3536 == 64'h0000000000004004) ;
   assign MUX_rg_msip$write_1__SEL_1 =
 	     WILL_FIRE_RL_rl_process_wr_req &&
-	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	     byte_addr__h4824 == 64'h0 &&
-	     !rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187 ;
+	     !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	     byte_addr__h3536 == 64'h0 &&
+	     !rg_msip_07_EQ_slavePortShim_wff_first__42_BIT__ETC___d144 ;
   assign MUX_rg_state$write_1__SEL_1 = f_reset_reqs$EMPTY_N && rg_state ;
   assign MUX_rg_state$write_1__SEL_2 =
-	     !slave_xactor_clearing && f_reset_reqs$EMPTY_N &&
-	     f_reset_rsps$FULL_N &&
-	     !rg_state ;
+	     f_reset_reqs$EMPTY_N && f_reset_rsps$FULL_N && !rg_state ;
 
   // inlined wires
-  assign slave_xactor_ug_slave_u_aw_putWire$wget =
-	     { axi4_slave_awid,
-	       axi4_slave_awaddr,
-	       axi4_slave_awlen,
-	       axi4_slave_awsize,
-	       axi4_slave_awburst,
-	       axi4_slave_awlock,
-	       axi4_slave_awcache,
-	       axi4_slave_awprot,
-	       axi4_slave_awqos,
-	       axi4_slave_awregion } ;
-  assign slave_xactor_ug_slave_u_aw_putWire$whas =
-	     axi4_slave_awvalid && slave_xactor_shim_awff$FULL_N ;
-  assign slave_xactor_ug_slave_u_w_putWire$wget =
-	     { axi4_slave_wdata,
-	       axi4_slave_wstrb,
-	       axi4_slave_wlast,
-	       axi4_slave_wuser } ;
-  assign slave_xactor_ug_slave_u_w_putWire$whas =
-	     axi4_slave_wvalid && slave_xactor_shim_wff$FULL_N ;
-  assign slave_xactor_ug_slave_u_ar_putWire$wget =
-	     { axi4_slave_arid,
-	       axi4_slave_araddr,
-	       axi4_slave_arlen,
-	       axi4_slave_arsize,
-	       axi4_slave_arburst,
-	       axi4_slave_arlock,
-	       axi4_slave_arcache,
-	       axi4_slave_arprot,
-	       axi4_slave_arqos,
-	       axi4_slave_arregion } ;
-  assign slave_xactor_ug_slave_u_ar_putWire$whas =
-	     axi4_slave_arvalid && slave_xactor_shim_arff$FULL_N ;
-  assign slave_xactor_ug_slave_u_r_peekWire$wget =
-	     { slave_xactor_shim_rff$D_OUT, 1'd0 } ;
-  assign slave_xactor_ug_slave_u_b_dropWire$whas =
-	     slave_xactor_shim_bff$EMPTY_N && axi4_slave_bready ;
-  assign slave_xactor_ug_slave_u_r_dropWire$whas =
-	     slave_xactor_shim_rff$EMPTY_N && axi4_slave_rready ;
   assign crg_time$port0__write_1 = crg_time + 64'd1 ;
   assign crg_time$EN_port1__write =
 	     WILL_FIRE_RL_rl_process_wr_req &&
-	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	     (byte_addr__h4824 == 64'h000000000000BFF8 ||
-	      byte_addr__h4824 == 64'h000000000000BFFC) ||
+	     !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	     (byte_addr__h3536 == 64'h000000000000BFF8 ||
+	      byte_addr__h3536 == 64'h000000000000BFFC) ||
 	     WILL_FIRE_RL_rl_reset ;
   assign crg_time$port1__write_1 =
-	     MUX_crg_time$port1__write_1__SEL_1 ? new_time__h6555 : 64'd1 ;
+	     MUX_crg_time$port1__write_1__SEL_1 ? new_time__h5267 : 64'd1 ;
   assign crg_time$port2__read =
 	     crg_time$EN_port1__write ?
 	       crg_time$port1__write_1 :
-	       old_time__h9114 ;
+	       old_time__h7826 ;
   assign crg_timecmp$EN_port1__write =
 	     WILL_FIRE_RL_rl_process_wr_req &&
-	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	     (byte_addr__h4824 == 64'h0000000000004000 ||
-	      byte_addr__h4824 == 64'h0000000000004004) ||
+	     !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	     (byte_addr__h3536 == 64'h0000000000004000 ||
+	      byte_addr__h3536 == 64'h0000000000004004) ||
 	     WILL_FIRE_RL_rl_reset ;
   assign crg_timecmp$port1__write_1 =
 	     MUX_crg_timecmp$port1__write_1__SEL_1 ?
-	       new_timecmp__h5266 :
+	       new_timecmp__h3978 :
 	       64'd0 ;
   assign crg_timecmp$port2__read =
 	     crg_timecmp$EN_port1__write ?
@@ -980,28 +719,23 @@ module mkNear_Mem_IO_AXI4(CLK,
 
   // register rg_msip
   assign rg_msip$D_IN =
-	     MUX_rg_msip$write_1__SEL_1 && slave_xactor_shim_wff$D_OUT[9] ;
+	     MUX_rg_msip$write_1__SEL_1 && slavePortShim_wff$D_OUT[9] ;
   assign rg_msip$EN =
 	     WILL_FIRE_RL_rl_process_wr_req &&
-	     !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	     byte_addr__h4824 == 64'h0 &&
-	     !rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187 ||
+	     !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	     byte_addr__h3536 == 64'h0 &&
+	     !rg_msip_07_EQ_slavePortShim_wff_first__42_BIT__ETC___d144 ||
 	     WILL_FIRE_RL_rl_reset ;
 
   // register rg_mtip
   assign rg_mtip$D_IN =
 	     !WILL_FIRE_RL_rl_compare ||
-	     NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67 ;
+	     NOT_crg_time_port0__read__4_ULT_crg_timecmp_po_ETC___d25 ;
   assign rg_mtip$EN = WILL_FIRE_RL_rl_compare || WILL_FIRE_RL_rl_reset ;
 
   // register rg_state
   assign rg_state$D_IN = !WILL_FIRE_RL_rl_soft_reset ;
   assign rg_state$EN = WILL_FIRE_RL_rl_soft_reset || WILL_FIRE_RL_rl_reset ;
-
-  // register slave_xactor_clearing
-  assign slave_xactor_clearing$D_IN = !slave_xactor_clearing ;
-  assign slave_xactor_clearing$EN =
-	     slave_xactor_clearing || WILL_FIRE_RL_rl_reset ;
 
   // submodule f_reset_reqs
   assign f_reset_reqs$ENQ = EN_server_reset_request_put ;
@@ -1014,194 +748,183 @@ module mkNear_Mem_IO_AXI4(CLK,
   assign f_reset_rsps$CLR = 1'b0 ;
 
   // submodule f_sw_interrupt_req
-  assign f_sw_interrupt_req$D_IN = slave_xactor_shim_wff$D_OUT[9] ;
+  assign f_sw_interrupt_req$D_IN = slavePortShim_wff$D_OUT[9] ;
   assign f_sw_interrupt_req$ENQ = MUX_rg_msip$write_1__SEL_1 ;
   assign f_sw_interrupt_req$DEQ = EN_get_sw_interrupt_req_get ;
   assign f_sw_interrupt_req$CLR = MUX_rg_state$write_1__SEL_2 ;
 
   // submodule f_timer_interrupt_req
   assign f_timer_interrupt_req$D_IN =
-	     NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67 ;
+	     NOT_crg_time_port0__read__4_ULT_crg_timecmp_po_ETC___d25 ;
   assign f_timer_interrupt_req$ENQ = CAN_FIRE_RL_rl_compare ;
   assign f_timer_interrupt_req$DEQ = EN_get_timer_interrupt_req_get ;
   assign f_timer_interrupt_req$CLR = MUX_rg_state$write_1__SEL_2 ;
 
-  // submodule slave_xactor_shim_arff
-  assign slave_xactor_shim_arff$D_IN =
-	     slave_xactor_ug_slave_u_ar_putWire$wget ;
-  assign slave_xactor_shim_arff$ENQ =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_ar_doPut ;
-  assign slave_xactor_shim_arff$DEQ = CAN_FIRE_RL_rl_process_rd_req ;
-  assign slave_xactor_shim_arff$CLR = slave_xactor_clearing ;
+  // submodule slavePortShim_arff
+  assign slavePortShim_arff$D_IN = axi4_slave_ar_put_val ;
+  assign slavePortShim_arff$ENQ = EN_axi4_slave_ar_put ;
+  assign slavePortShim_arff$DEQ = CAN_FIRE_RL_rl_process_rd_req ;
+  assign slavePortShim_arff$CLR = MUX_rg_state$write_1__SEL_2 ;
 
-  // submodule slave_xactor_shim_awff
-  assign slave_xactor_shim_awff$D_IN =
-	     slave_xactor_ug_slave_u_aw_putWire$wget ;
-  assign slave_xactor_shim_awff$ENQ =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_aw_doPut ;
-  assign slave_xactor_shim_awff$DEQ = CAN_FIRE_RL_rl_process_wr_req ;
-  assign slave_xactor_shim_awff$CLR = slave_xactor_clearing ;
+  // submodule slavePortShim_awff
+  assign slavePortShim_awff$D_IN = axi4_slave_aw_put_val ;
+  assign slavePortShim_awff$ENQ = EN_axi4_slave_aw_put ;
+  assign slavePortShim_awff$DEQ = CAN_FIRE_RL_rl_process_wr_req ;
+  assign slavePortShim_awff$CLR = MUX_rg_state$write_1__SEL_2 ;
 
-  // submodule slave_xactor_shim_bff
-  assign slave_xactor_shim_bff$D_IN =
-	     { slave_xactor_shim_awff$D_OUT[97:93],
-	       slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ?
+  // submodule slavePortShim_bff
+  assign slavePortShim_bff$D_IN =
+	     { slavePortShim_awff$D_OUT[97:93],
+	       slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ?
 		 2'd3 :
-		 CASE_byte_addr824_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1 } ;
-  assign slave_xactor_shim_bff$ENQ = CAN_FIRE_RL_rl_process_wr_req ;
-  assign slave_xactor_shim_bff$DEQ =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_b_doDrop ;
-  assign slave_xactor_shim_bff$CLR = slave_xactor_clearing ;
+		 CASE_byte_addr536_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1 } ;
+  assign slavePortShim_bff$ENQ = CAN_FIRE_RL_rl_process_wr_req ;
+  assign slavePortShim_bff$DEQ = EN_axi4_slave_b_drop ;
+  assign slavePortShim_bff$CLR = MUX_rg_state$write_1__SEL_2 ;
 
-  // submodule slave_xactor_shim_rff
-  assign slave_xactor_shim_rff$D_IN =
-	     { slave_xactor_shim_arff$D_OUT[97:93],
-	       x__h4148,
-	       slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ?
+  // submodule slavePortShim_rff
+  assign slavePortShim_rff$D_IN =
+	     { slavePortShim_arff$D_OUT[97:93],
+	       x__h2855,
+	       slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ?
 		 2'd3 :
-		 CASE_byte_addr737_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2,
+		 CASE_byte_addr444_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2,
 	       1'd1 } ;
-  assign slave_xactor_shim_rff$ENQ = CAN_FIRE_RL_rl_process_rd_req ;
-  assign slave_xactor_shim_rff$DEQ =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_r_doDrop ;
-  assign slave_xactor_shim_rff$CLR = slave_xactor_clearing ;
+  assign slavePortShim_rff$ENQ = CAN_FIRE_RL_rl_process_rd_req ;
+  assign slavePortShim_rff$DEQ = EN_axi4_slave_r_drop ;
+  assign slavePortShim_rff$CLR = MUX_rg_state$write_1__SEL_2 ;
 
-  // submodule slave_xactor_shim_wff
-  assign slave_xactor_shim_wff$D_IN =
-	     slave_xactor_ug_slave_u_w_putWire$wget[73:1] ;
-  assign slave_xactor_shim_wff$ENQ =
-	     CAN_FIRE_RL_slave_xactor_ug_slave_u_w_doPut ;
-  assign slave_xactor_shim_wff$DEQ = CAN_FIRE_RL_rl_process_wr_req ;
-  assign slave_xactor_shim_wff$CLR = slave_xactor_clearing ;
+  // submodule slavePortShim_wff
+  assign slavePortShim_wff$D_IN = axi4_slave_w_put_val ;
+  assign slavePortShim_wff$ENQ = EN_axi4_slave_w_put ;
+  assign slavePortShim_wff$DEQ = CAN_FIRE_RL_rl_process_wr_req ;
+  assign slavePortShim_wff$CLR = MUX_rg_state$write_1__SEL_2 ;
 
   // remaining internal signals
-  assign NOT_cfg_verbosity_read__9_ULE_1_3___d74 = cfg_verbosity > 4'd1 ;
-  assign NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67 =
+  assign NOT_cfg_verbosity_read_ULE_1_1___d32 = cfg_verbosity > 4'd1 ;
+  assign NOT_crg_time_port0__read__4_ULT_crg_timecmp_po_ETC___d25 =
 	     crg_time >= crg_timecmp ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_1_78___d279 =
-	     {8{slave_xactor_shim_wff$D_OUT[1]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_2_75___d276 =
-	     {8{slave_xactor_shim_wff$D_OUT[2]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_3_71___d272 =
-	     {8{slave_xactor_shim_wff$D_OUT[3]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_4_68___d269 =
-	     {8{slave_xactor_shim_wff$D_OUT[4]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_5_64___d265 =
-	     {8{slave_xactor_shim_wff$D_OUT[5]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_6_61___d262 =
-	     {8{slave_xactor_shim_wff$D_OUT[6]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_7_57___d258 =
-	     {8{slave_xactor_shim_wff$D_OUT[7]}} ;
-  assign SEXT_slave_xactor_shim_wff_first__85_BIT_8_54___d255 =
-	     {8{slave_xactor_shim_wff$D_OUT[8]}} ;
-  assign byte_addr__h3737 =
-	     slave_xactor_shim_arff$D_OUT[92:29] - rg_addr_base ;
-  assign byte_addr__h4824 =
-	     slave_xactor_shim_awff$D_OUT[92:29] - rg_addr_base ;
-  assign crg_timecmp_port1__read__53_AND_INV_SEXT_slave_ETC___d292 =
-	     new_timecmp__h5266 - old_time__h9114 ;
-  assign mask__h5297 =
-	     { SEXT_slave_xactor_shim_wff_first__85_BIT_8_54___d255,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_7_57___d258,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_6_61___d262,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_5_64___d265,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_4_68___d269,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_3_71___d272,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_2_75___d276,
-	       SEXT_slave_xactor_shim_wff_first__85_BIT_1_78___d279 } ;
-  assign new_time__h6555 = x__h6597 | y__h5309 ;
-  assign new_timecmp__h5266 = x__h5308 | y__h5309 ;
-  assign old_time__h9114 =
+  assign SEXT_slavePortShim_wff_first__42_BIT_1_34___d235 =
+	     {8{slavePortShim_wff$D_OUT[1]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_2_31___d232 =
+	     {8{slavePortShim_wff$D_OUT[2]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_3_27___d228 =
+	     {8{slavePortShim_wff$D_OUT[3]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_4_24___d225 =
+	     {8{slavePortShim_wff$D_OUT[4]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_5_20___d221 =
+	     {8{slavePortShim_wff$D_OUT[5]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_6_17___d218 =
+	     {8{slavePortShim_wff$D_OUT[6]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_7_13___d214 =
+	     {8{slavePortShim_wff$D_OUT[7]}} ;
+  assign SEXT_slavePortShim_wff_first__42_BIT_8_10___d211 =
+	     {8{slavePortShim_wff$D_OUT[8]}} ;
+  assign byte_addr__h2444 = slavePortShim_arff$D_OUT[92:29] - rg_addr_base ;
+  assign byte_addr__h3536 = slavePortShim_awff$D_OUT[92:29] - rg_addr_base ;
+  assign crg_timecmp_port1__read__09_AND_INV_SEXT_slave_ETC___d248 =
+	     new_timecmp__h3978 - old_time__h7826 ;
+  assign mask__h4009 =
+	     { SEXT_slavePortShim_wff_first__42_BIT_8_10___d211,
+	       SEXT_slavePortShim_wff_first__42_BIT_7_13___d214,
+	       SEXT_slavePortShim_wff_first__42_BIT_6_17___d218,
+	       SEXT_slavePortShim_wff_first__42_BIT_5_20___d221,
+	       SEXT_slavePortShim_wff_first__42_BIT_4_24___d225,
+	       SEXT_slavePortShim_wff_first__42_BIT_3_27___d228,
+	       SEXT_slavePortShim_wff_first__42_BIT_2_31___d232,
+	       SEXT_slavePortShim_wff_first__42_BIT_1_34___d235 } ;
+  assign new_time__h5267 = x__h5309 | y__h4021 ;
+  assign new_timecmp__h3978 = x__h4020 | y__h4021 ;
+  assign old_time__h7826 =
 	     CAN_FIRE_RL_rl_tick_timer ? crg_time$port0__write_1 : crg_time ;
-  assign rdata___1__h3926 = { 63'd0, rg_msip } ;
-  assign rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187 =
-	     rg_msip == slave_xactor_shim_wff$D_OUT[9] ;
-  assign slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 =
-	     slave_xactor_shim_arff$D_OUT[92:29] < rg_addr_base ;
-  assign slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d147 =
-	     (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	      byte_addr__h3737 != 64'h0 &&
-	      byte_addr__h3737 != 64'h0000000000004000 &&
-	      byte_addr__h3737 != 64'h000000000000BFF8 &&
-	      byte_addr__h3737 != 64'h0000000000000004 &&
-	      byte_addr__h3737 != 64'h0000000000004004 &&
-	      byte_addr__h3737 != 64'h000000000000BFFC) &&
-	     slave_xactor_shim_arff$D_OUT[17:16] != 2'd0 &&
-	     slave_xactor_shim_arff$D_OUT[17:16] != 2'd1 &&
-	     slave_xactor_shim_arff$D_OUT[17:16] != 2'd2 ;
-  assign slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 =
-	     slave_xactor_shim_awff$D_OUT[92:29] < rg_addr_base ;
-  assign slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d324 =
-	     (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	      byte_addr__h4824 != 64'h0 &&
-	      byte_addr__h4824 != 64'h0000000000004000 &&
-	      byte_addr__h4824 != 64'h000000000000BFF8 &&
-	      byte_addr__h4824 != 64'h0000000000000004 &&
-	      byte_addr__h4824 != 64'h0000000000004004 &&
-	      byte_addr__h4824 != 64'h000000000000BFFC) &&
-	     slave_xactor_shim_awff$D_OUT[17:16] != 2'd0 &&
-	     slave_xactor_shim_awff$D_OUT[17:16] != 2'd1 &&
-	     slave_xactor_shim_awff$D_OUT[17:16] != 2'd2 ;
-  assign slave_xactor_shim_awff_i_notEmpty__75_AND_slav_ETC___d195 =
-	     slave_xactor_shim_awff$EMPTY_N &&
-	     slave_xactor_shim_wff$EMPTY_N &&
-	     slave_xactor_shim_bff$FULL_N &&
-	     (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	      byte_addr__h4824 != 64'h0 ||
-	      rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187 ||
+  assign rdata___1__h2633 = { 63'd0, rg_msip } ;
+  assign rg_msip_07_EQ_slavePortShim_wff_first__42_BIT__ETC___d144 =
+	     rg_msip == slavePortShim_wff$D_OUT[9] ;
+  assign slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d104 =
+	     (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	      byte_addr__h2444 != 64'h0 &&
+	      byte_addr__h2444 != 64'h0000000000004000 &&
+	      byte_addr__h2444 != 64'h000000000000BFF8 &&
+	      byte_addr__h2444 != 64'h0000000000000004 &&
+	      byte_addr__h2444 != 64'h0000000000004004 &&
+	      byte_addr__h2444 != 64'h000000000000BFFC) &&
+	     slavePortShim_arff$D_OUT[17:16] != 2'd0 &&
+	     slavePortShim_arff$D_OUT[17:16] != 2'd1 &&
+	     slavePortShim_arff$D_OUT[17:16] != 2'd2 ;
+  assign slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 =
+	     slavePortShim_arff$D_OUT[92:29] < rg_addr_base ;
+  assign slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 =
+	     slavePortShim_awff$D_OUT[92:29] < rg_addr_base ;
+  assign slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d280 =
+	     (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	      byte_addr__h3536 != 64'h0 &&
+	      byte_addr__h3536 != 64'h0000000000004000 &&
+	      byte_addr__h3536 != 64'h000000000000BFF8 &&
+	      byte_addr__h3536 != 64'h0000000000000004 &&
+	      byte_addr__h3536 != 64'h0000000000004004 &&
+	      byte_addr__h3536 != 64'h000000000000BFFC) &&
+	     slavePortShim_awff$D_OUT[17:16] != 2'd0 &&
+	     slavePortShim_awff$D_OUT[17:16] != 2'd1 &&
+	     slavePortShim_awff$D_OUT[17:16] != 2'd2 ;
+  assign slavePortShim_awff_i_notEmpty__32_AND_slavePor_ETC___d152 =
+	     slavePortShim_awff$EMPTY_N && slavePortShim_wff$EMPTY_N &&
+	     slavePortShim_bff$FULL_N &&
+	     (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	      byte_addr__h3536 != 64'h0 ||
+	      rg_msip_07_EQ_slavePortShim_wff_first__42_BIT__ETC___d144 ||
 	      f_sw_interrupt_req$FULL_N) ;
-  assign x__h4148 =
-	     slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ?
+  assign x__h2855 =
+	     slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ?
 	       64'd0 :
-	       _theResult___fst__h3930 ;
-  assign x__h5308 = crg_timecmp & y__h5310 ;
-  assign x__h6597 = old_time__h9114 & y__h5310 ;
-  assign y__h5309 = slave_xactor_shim_wff$D_OUT[72:9] & mask__h5297 ;
-  assign y__h5310 =
-	     { ~SEXT_slave_xactor_shim_wff_first__85_BIT_8_54___d255,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_7_57___d258,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_6_61___d262,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_5_64___d265,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_4_68___d269,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_3_71___d272,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_2_75___d276,
-	       ~SEXT_slave_xactor_shim_wff_first__85_BIT_1_78___d279 } ;
-  always@(byte_addr__h3737 or rdata___1__h3926 or crg_timecmp or crg_time)
+	       _theResult___fst__h2637 ;
+  assign x__h4020 = crg_timecmp & y__h4022 ;
+  assign x__h5309 = old_time__h7826 & y__h4022 ;
+  assign y__h4021 = slavePortShim_wff$D_OUT[72:9] & mask__h4009 ;
+  assign y__h4022 =
+	     { ~SEXT_slavePortShim_wff_first__42_BIT_8_10___d211,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_7_13___d214,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_6_17___d218,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_5_20___d221,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_4_24___d225,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_3_27___d228,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_2_31___d232,
+	       ~SEXT_slavePortShim_wff_first__42_BIT_1_34___d235 } ;
+  always@(byte_addr__h2444 or rdata___1__h2633 or crg_timecmp or crg_time)
   begin
-    case (byte_addr__h3737)
-      64'h0: _theResult___fst__h3930 = rdata___1__h3926;
-      64'h0000000000000004: _theResult___fst__h3930 = 64'd0;
+    case (byte_addr__h2444)
+      64'h0: _theResult___fst__h2637 = rdata___1__h2633;
+      64'h0000000000000004: _theResult___fst__h2637 = 64'd0;
       64'h0000000000004000, 64'h0000000000004004:
-	  _theResult___fst__h3930 = crg_timecmp;
+	  _theResult___fst__h2637 = crg_timecmp;
       64'h000000000000BFF8, 64'h000000000000BFFC:
-	  _theResult___fst__h3930 = crg_time;
-      default: _theResult___fst__h3930 = 64'd0;
+	  _theResult___fst__h2637 = crg_time;
+      default: _theResult___fst__h2637 = 64'd0;
     endcase
   end
-  always@(byte_addr__h4824)
+  always@(byte_addr__h3536)
   begin
-    case (byte_addr__h4824)
+    case (byte_addr__h3536)
       64'h0,
       64'h0000000000000004,
       64'h0000000000004000,
       64'h0000000000004004,
       64'h000000000000BFF8,
       64'h000000000000BFFC:
-	  CASE_byte_addr824_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1 = 2'd0;
-      default: CASE_byte_addr824_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1 = 2'd3;
+	  CASE_byte_addr536_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1 = 2'd0;
+      default: CASE_byte_addr536_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q1 = 2'd3;
     endcase
   end
-  always@(byte_addr__h3737)
+  always@(byte_addr__h2444)
   begin
-    case (byte_addr__h3737)
+    case (byte_addr__h2444)
       64'h0,
       64'h0000000000000004,
       64'h0000000000004000,
       64'h0000000000004004,
       64'h000000000000BFF8,
       64'h000000000000BFFC:
-	  CASE_byte_addr737_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2 = 2'd0;
-      default: CASE_byte_addr737_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2 = 2'd3;
+	  CASE_byte_addr444_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2 = 2'd0;
+      default: CASE_byte_addr444_0x0_0_0x4_0_0x4000_0_0x4004__ETC__q2 = 2'd3;
     endcase
   end
 
@@ -1216,7 +939,6 @@ module mkNear_Mem_IO_AXI4(CLK,
 	crg_timecmp <= `BSV_ASSIGNMENT_DELAY 64'd0;
 	rg_mtip <= `BSV_ASSIGNMENT_DELAY 1'd1;
 	rg_state <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	slave_xactor_clearing <= `BSV_ASSIGNMENT_DELAY 1'd0;
       end
     else
       begin
@@ -1227,9 +949,6 @@ module mkNear_Mem_IO_AXI4(CLK,
 	  crg_timecmp <= `BSV_ASSIGNMENT_DELAY crg_timecmp$D_IN;
 	if (rg_mtip$EN) rg_mtip <= `BSV_ASSIGNMENT_DELAY rg_mtip$D_IN;
 	if (rg_state$EN) rg_state <= `BSV_ASSIGNMENT_DELAY rg_state$D_IN;
-	if (slave_xactor_clearing$EN)
-	  slave_xactor_clearing <= `BSV_ASSIGNMENT_DELAY
-	      slave_xactor_clearing$D_IN;
       end
     if (rg_addr_base$EN)
       rg_addr_base <= `BSV_ASSIGNMENT_DELAY rg_addr_base$D_IN;
@@ -1250,7 +969,6 @@ module mkNear_Mem_IO_AXI4(CLK,
     rg_msip = 1'h0;
     rg_mtip = 1'h0;
     rg_state = 1'h0;
-    slave_xactor_clearing = 1'h0;
   end
   `endif // BSV_NO_INITIAL_BLOCKS
   // synopsys translate_on
@@ -1263,2023 +981,2006 @@ module mkNear_Mem_IO_AXI4(CLK,
     #0;
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_get_timer_interrupt_req_get &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h11698 = $stime;
+	  v__h10415 = $stime;
 	  #0;
 	end
-    v__h11692 = v__h11698 / 32'd10;
+    v__h10409 = v__h10415 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (EN_get_timer_interrupt_req_get &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("%0d: Near_Mem_IO_AXI4: get_timer_interrupt_req: %x",
-		 v__h11692,
+		 v__h10409,
 		 f_timer_interrupt_req$D_OUT);
     if (RST_N != `BSV_RESET_VALUE)
-      if (EN_get_sw_interrupt_req_get &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+      if (EN_get_sw_interrupt_req_get && NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h11830 = $stime;
+	  v__h10547 = $stime;
 	  #0;
 	end
-    v__h11824 = v__h11830 / 32'd10;
+    v__h10541 = v__h10547 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
-      if (EN_get_sw_interrupt_req_get &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+      if (EN_get_sw_interrupt_req_get && NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("%0d: Near_Mem_IO_AXI4: get_sw_interrupt_req: %x",
-		 v__h11824,
+		 v__h10541,
 		 f_sw_interrupt_req$D_OUT);
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_rl_reset && cfg_verbosity != 4'd0)
+      if (WILL_FIRE_RL_rl_compare && NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h3133 = $stime;
+	  v__h2094 = $stime;
 	  #0;
 	end
-    v__h3127 = v__h3133 / 32'd10;
+    v__h2088 = v__h2094 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_rl_reset && cfg_verbosity != 4'd0)
-	$display("%0d: Near_Mem_IO_AXI4.rl_reset", v__h3127);
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_rl_compare && NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	begin
-	  v__h3385 = $stime;
-	  #0;
-	end
-    v__h3379 = v__h3385 / 32'd10;
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_rl_compare && NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+      if (WILL_FIRE_RL_rl_compare && NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("%0d: Near_Mem_IO_AXI4.rl_compare: new MTIP = %0d, sim_time = %0d, timecmp = %0d",
-		 v__h3379,
-		 NOT_crg_time_port0__read__6_ULT_crg_timecmp_po_ETC___d67,
+		 v__h2088,
+		 NOT_crg_time_port0__read__4_ULT_crg_timecmp_po_ETC___d25,
 		 crg_time,
 		 crg_timecmp);
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_aw_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_w_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_b_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_ar_warnDoPut)
-	$display("WARNING: putting into a Sink that can't be put into");
-    if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_slave_xactor_ug_slave_u_r_warnDoDrop)
-	$display("WARNING: dropping from Source that can't be dropped from");
-    if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h3572 = $stime;
+	  v__h2279 = $stime;
 	  #0;
 	end
-    v__h3566 = v__h3572 / 32'd10;
+    v__h2273 = v__h2279 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("%0d: Near_Mem_IO_AXI4.rl_process_rd_req: rg_mtip = %0d",
-		 v__h3566,
+		 v__h2273,
 		 rg_mtip);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("    ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[97:93]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[92:29]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[28:21]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[20:18], " }");
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd0)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd1)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd0 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd1 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd0 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd1 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd2)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_arff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_arff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[14:11]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[10:8]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[7:4]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[3:0]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	begin
-	  v__h3786 = $stime;
+	  v__h2493 = $stime;
 	  #0;
 	end
-    v__h3780 = v__h3786 / 32'd10;
+    v__h2487 = v__h2493 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$display("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_rd_req: unrecognized addr",
-		 v__h3780);
+		 v__h2487);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[97:93]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[92:29]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[28:21]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[20:18], " }");
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd0)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd1)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd2)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd0 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd1 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd2)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd0 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd1 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd2)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  slave_xactor_shim_arff$D_OUT[15])
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  slavePortShim_arff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  !slave_xactor_shim_arff$D_OUT[15])
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  !slavePortShim_arff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[14:11]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[10:8]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[7:4]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[3:0]);
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
+	$write("'h%h", slavePortShim_arff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	begin
-	  v__h4009 = $stime;
+	  v__h2716 = $stime;
 	  #0;
 	end
-    v__h4003 = v__h4009 / 32'd10;
+    v__h2710 = v__h2716 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$display("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_rd_req: unrecognized addr",
-		 v__h4003);
+		 v__h2710);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[97:93]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[92:29]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[28:21]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[20:18], " }");
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd0)
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC) &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd1)
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC) &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd2)
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC) &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d147)
+	  slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d104)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_arff$D_OUT[15])
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC) &&
+	  slavePortShim_arff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC) &&
-	  !slave_xactor_shim_arff$D_OUT[15])
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC) &&
+	  !slavePortShim_arff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[14:11]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[10:8]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[7:4]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[3:0]);
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_arff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h4272 = $stime;
+	  v__h2982 = $stime;
 	  #0;
 	end
-    v__h4266 = v__h4272 / 32'd10;
+    v__h2976 = v__h2982 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("%0d: Near_Mem_IO_AXI4.rl_process_rd_req", v__h4266);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("%0d: Near_Mem_IO_AXI4.rl_process_rd_req", v__h2976);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_ARFlit { ", "arid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[97:93]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "araddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[92:29]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[28:21]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[20:18], " }");
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd0)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd1)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] == 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd0 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd1 &&
-	  slave_xactor_shim_arff$D_OUT[17:16] != 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd0 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd1 &&
+	  slavePortShim_arff$D_OUT[17:16] != 2'd2)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_arff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_arff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_arff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_arff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[14:11]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[10:8]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[7:4]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "arregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[3:0]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "aruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_RFlit { ", "rid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_arff$D_OUT[97:93]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_arff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "rdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", x__h4148);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", x__h2855);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "rresp: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 &&
-	  (byte_addr__h3737 == 64'h0 ||
-	   byte_addr__h3737 == 64'h0000000000004000 ||
-	   byte_addr__h3737 == 64'h000000000000BFF8 ||
-	   byte_addr__h3737 == 64'h0000000000000004 ||
-	   byte_addr__h3737 == 64'h0000000000004004 ||
-	   byte_addr__h3737 == 64'h000000000000BFFC))
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 &&
+	  (byte_addr__h2444 == 64'h0 ||
+	   byte_addr__h2444 == 64'h0000000000004000 ||
+	   byte_addr__h2444 == 64'h000000000000BFF8 ||
+	   byte_addr__h2444 == 64'h0000000000000004 ||
+	   byte_addr__h2444 == 64'h0000000000004004 ||
+	   byte_addr__h2444 == 64'h000000000000BFFC))
 	$write("OKAY");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  (slave_xactor_shim_arff_first__7_BITS_92_TO_29__ETC___d114 ||
-	   byte_addr__h3737 != 64'h0 &&
-	   byte_addr__h3737 != 64'h0000000000004000 &&
-	   byte_addr__h3737 != 64'h000000000000BFF8 &&
-	   byte_addr__h3737 != 64'h0000000000000004 &&
-	   byte_addr__h3737 != 64'h0000000000004004 &&
-	   byte_addr__h3737 != 64'h000000000000BFFC))
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  (slavePortShim_arff_first__4_BITS_92_TO_29_6_UL_ETC___d71 ||
+	   byte_addr__h2444 != 64'h0 &&
+	   byte_addr__h2444 != 64'h0000000000004000 &&
+	   byte_addr__h2444 != 64'h000000000000BFF8 &&
+	   byte_addr__h2444 != 64'h0000000000000004 &&
+	   byte_addr__h2444 != 64'h0000000000004004 &&
+	   byte_addr__h2444 != 64'h000000000000BFFC))
 	$write("DECERR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "rlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "ruser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_rd_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h4607 = $stime;
+	  v__h3319 = $stime;
 	  #0;
 	end
-    v__h4601 = v__h4607 / 32'd10;
+    v__h3313 = v__h3319 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("%0d: Near_Mem_IO_AXI4.rl_process_wr_req: rg_mtip = %0d",
-		 v__h4601,
+		 v__h3313,
 		 rg_mtip);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("    ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_AWFlit { ", "awid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[97:93]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awaddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[92:29]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[28:21]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[20:18], " }");
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd0)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd1)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd0 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd1 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd0 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd1 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd2)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_awff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_awff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[14:11]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[10:8]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[7:4]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[3:0]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("    ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_WFlit { ", "wdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[72:9]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_wff$D_OUT[72:9]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "wstrb: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[8:1]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_wff$D_OUT[8:1]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "wlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_wff$D_OUT[0])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_wff$D_OUT[0])
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_wff$D_OUT[0])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_wff$D_OUT[0])
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "wuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	begin
-	  v__h4863 = $stime;
+	  v__h3575 = $stime;
 	  #0;
 	end
-    v__h4857 = v__h4863 / 32'd10;
+    v__h3569 = v__h3575 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$display("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_wr_req: unrecognized addr",
-		 v__h4857);
+		 v__h3569);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("AXI4_AWFlit { ", "awid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[97:93]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awaddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[92:29]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[28:21]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[20:18], " }");
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd0)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd1)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd2)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd0 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd1 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd2)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd0 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd1 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd2)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  slave_xactor_shim_awff$D_OUT[15])
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  slavePortShim_awff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  !slave_xactor_shim_awff$D_OUT[15])
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  !slavePortShim_awff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[14:11]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[10:8]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[7:4]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[3:0]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_awff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "awuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("AXI4_WFlit { ", "wdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[72:9]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_wff$D_OUT[72:9]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "wstrb: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[8:1]);
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
+	$write("'h%h", slavePortShim_wff$D_OUT[8:1]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "wlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  slave_xactor_shim_wff$D_OUT[0])
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  slavePortShim_wff$D_OUT[0])
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  !slave_xactor_shim_wff$D_OUT[0])
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  !slavePortShim_wff$D_OUT[0])
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write(", ", "wuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0 &&
-	  !rg_msip_50_EQ_slave_xactor_shim_wff_first__85__ETC___d187 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("    new MSIP = %0d", slave_xactor_shim_wff$D_OUT[9]);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0 &&
+	  !rg_msip_07_EQ_slavePortShim_wff_first__42_BIT__ETC___d144 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("    new MSIP = %0d", slavePortShim_wff$D_OUT[9]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004000 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004000 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("    Writing MTIMECMP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004000 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004000 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("        old MTIMECMP         = 0x%0h", crg_timecmp);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004000 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        new MTIMECMP         = 0x%0h", new_timecmp__h5266);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004000 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        new MTIMECMP         = 0x%0h", new_timecmp__h3978);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004000 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        cur MTIME            = 0x%0h", old_time__h9114);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004000 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        cur MTIME            = 0x%0h", old_time__h7826);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004000 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004000 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("        new MTIMECMP - MTIME = 0x%0h",
-		 crg_timecmp_port1__read__53_AND_INV_SEXT_slave_ETC___d292);
+		 crg_timecmp_port1__read__09_AND_INV_SEXT_slave_ETC___d248);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h000000000000BFF8 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h000000000000BFF8 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("    Writing MTIME");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h000000000000BFF8 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        old MTIME = 0x%0h", old_time__h9114);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h000000000000BFF8 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        old MTIME = 0x%0h", old_time__h7826);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h000000000000BFF8 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        new MTIME = 0x%0h", new_time__h6555);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h000000000000BFF8 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        new MTIME = 0x%0h", new_time__h5267);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004004 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004004 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("    Writing MTIMECMP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004004 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004004 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("        old MTIMECMP         = 0x%0h", crg_timecmp);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004004 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        new MTIMECMP         = 0x%0h", new_timecmp__h5266);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004004 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        new MTIMECMP         = 0x%0h", new_timecmp__h3978);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004004 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        cur MTIME            = 0x%0h", old_time__h9114);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004004 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        cur MTIME            = 0x%0h", old_time__h7826);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h0000000000004004 &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h0000000000004004 &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("        new MTIMECMP - MTIME = 0x%0h",
-		 crg_timecmp_port1__read__53_AND_INV_SEXT_slave_ETC___d292);
+		 crg_timecmp_port1__read__09_AND_INV_SEXT_slave_ETC___d248);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h000000000000BFFC &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h000000000000BFFC &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$display("    Writing MTIME");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h000000000000BFFC &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        old MTIME = 0x%0h", old_time__h9114);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h000000000000BFFC &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        old MTIME = 0x%0h", old_time__h7826);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  byte_addr__h4824 == 64'h000000000000BFFC &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("        new MTIME = 0x%0h", new_time__h6555);
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  byte_addr__h3536 == 64'h000000000000BFFC &&
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("        new MTIME = 0x%0h", new_time__h5267);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	begin
-	  v__h10432 = $stime;
+	  v__h9144 = $stime;
 	  #0;
 	end
-    v__h10426 = v__h10432 / 32'd10;
+    v__h9138 = v__h9144 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$display("%0d: ERROR: Near_Mem_IO_AXI4.rl_process_wr_req: unrecognized addr",
-		 v__h10426);
+		 v__h9138);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("AXI4_AWFlit { ", "awid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[97:93]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awaddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[92:29]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[28:21]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[20:18], " }");
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd0)
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd1)
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd2)
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d324)
+	  slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d280)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_awff$D_OUT[15])
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  slavePortShim_awff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  !slave_xactor_shim_awff$D_OUT[15])
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  !slavePortShim_awff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[14:11]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[10:8]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[7:4]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[3:0]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_awff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "awuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("AXI4_WFlit { ", "wdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[72:9]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_wff$D_OUT[72:9]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "wstrb: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[8:1]);
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
+	$write("'h%h", slavePortShim_wff$D_OUT[8:1]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "wlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  slave_xactor_shim_wff$D_OUT[0])
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  slavePortShim_wff$D_OUT[0])
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC) &&
-	  !slave_xactor_shim_wff$D_OUT[0])
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC) &&
+	  !slavePortShim_wff$D_OUT[0])
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write(", ", "wuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	begin
-	  v__h10678 = $stime;
+	  v__h9391 = $stime;
 	  #0;
 	end
-    v__h10672 = v__h10678 / 32'd10;
+    v__h9385 = v__h9391 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$display("%0d: Near_Mem_IO.AXI4.rl_process_wr_req", v__h10672);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$display("%0d: Near_Mem_IO.AXI4.rl_process_wr_req", v__h9385);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_AWFlit { ", "awid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[97:93]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awaddr: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[92:29]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[92:29]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awlen: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[28:21]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[28:21]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awsize: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_Size { ", "val: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[20:18], " }");
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[20:18], " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awburst: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd0)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd0)
 	$write("FIXED");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd1)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd1)
 	$write("INCR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] == 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] == 2'd2)
 	$write("WRAP");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd0 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd1 &&
-	  slave_xactor_shim_awff$D_OUT[17:16] != 2'd2)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd0 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd1 &&
+	  slavePortShim_awff$D_OUT[17:16] != 2'd2)
 	$write("Res");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awlock: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_awff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_awff$D_OUT[15])
 	$write("EXCLUSIVE");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_awff$D_OUT[15])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_awff$D_OUT[15])
 	$write("NORMAL");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awcache: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[14:11]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[14:11]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awprot: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[10:8]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[10:8]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awqos: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[7:4]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[7:4]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awregion: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[3:0]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[3:0]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "awuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_WFlit { ", "wdata: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[72:9]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_wff$D_OUT[72:9]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "wstrb: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_wff$D_OUT[8:1]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_wff$D_OUT[8:1]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "wlast: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  slave_xactor_shim_wff$D_OUT[0])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  slavePortShim_wff$D_OUT[0])
 	$write("True");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_wff$D_OUT[0])
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_wff$D_OUT[0])
 	$write("False");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "wuser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("            ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("AXI4_BFlit { ", "bid: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
-	$write("'h%h", slave_xactor_shim_awff$D_OUT[97:93]);
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
+	$write("'h%h", slavePortShim_awff$D_OUT[97:93]);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "bresp: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  !slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 &&
-	  (byte_addr__h4824 == 64'h0 ||
-	   byte_addr__h4824 == 64'h0000000000004000 ||
-	   byte_addr__h4824 == 64'h000000000000BFF8 ||
-	   byte_addr__h4824 == 64'h0000000000000004 ||
-	   byte_addr__h4824 == 64'h0000000000004004 ||
-	   byte_addr__h4824 == 64'h000000000000BFFC))
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  !slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 &&
+	  (byte_addr__h3536 == 64'h0 ||
+	   byte_addr__h3536 == 64'h0000000000004000 ||
+	   byte_addr__h3536 == 64'h000000000000BFF8 ||
+	   byte_addr__h3536 == 64'h0000000000000004 ||
+	   byte_addr__h3536 == 64'h0000000000004004 ||
+	   byte_addr__h3536 == 64'h000000000000BFFC))
 	$write("OKAY");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74 &&
-	  (slave_xactor_shim_awff_first__79_BITS_92_TO_29_ETC___d181 ||
-	   byte_addr__h4824 != 64'h0 &&
-	   byte_addr__h4824 != 64'h0000000000004000 &&
-	   byte_addr__h4824 != 64'h000000000000BFF8 &&
-	   byte_addr__h4824 != 64'h0000000000000004 &&
-	   byte_addr__h4824 != 64'h0000000000004004 &&
-	   byte_addr__h4824 != 64'h000000000000BFFC))
+	  NOT_cfg_verbosity_read_ULE_1_1___d32 &&
+	  (slavePortShim_awff_first__36_BITS_92_TO_29_37__ETC___d138 ||
+	   byte_addr__h3536 != 64'h0 &&
+	   byte_addr__h3536 != 64'h0000000000004000 &&
+	   byte_addr__h3536 != 64'h000000000000BFF8 &&
+	   byte_addr__h3536 != 64'h0000000000000004 &&
+	   byte_addr__h3536 != 64'h0000000000004004 &&
+	   byte_addr__h3536 != 64'h000000000000BFFC))
 	$write("DECERR");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write(", ", "buser: ");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("'h%h", 1'd0, " }");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_process_wr_req &&
-	  NOT_cfg_verbosity_read__9_ULE_1_3___d74)
+	  NOT_cfg_verbosity_read_ULE_1_1___d32)
 	$write("\n");
     if (EN_set_addr_map && set_addr_map_addr_base[1:0] != 2'd0)
       begin
-        v__h11049 = $stime;
+        v__h9762 = $stime;
 	#0;
       end
-    v__h11043 = v__h11049 / 32'd10;
+    v__h9756 = v__h9762 / 32'd10;
     if (EN_set_addr_map && set_addr_map_addr_base[1:0] != 2'd0)
       $display("%0d: WARNING: Near_Mem_IO_AXI4.set_addr_map: addr_base 0x%0h is not 4-Byte-aligned",
-	       v__h11043,
+	       v__h9756,
 	       set_addr_map_addr_base);
     if (EN_set_addr_map && set_addr_map_addr_lim[1:0] != 2'd0)
       begin
-        v__h11159 = $stime;
+        v__h9872 = $stime;
 	#0;
       end
-    v__h11153 = v__h11159 / 32'd10;
+    v__h9866 = v__h9872 / 32'd10;
     if (EN_set_addr_map && set_addr_map_addr_lim[1:0] != 2'd0)
       $display("%0d: WARNING: Near_Mem_IO_AXI4.set_addr_map: addr_lim 0x%0h is not 4-Byte-aligned",
-	       v__h11153,
+	       v__h9866,
 	       set_addr_map_addr_lim);
     if (EN_set_addr_map)
       begin
-        v__h11266 = $stime;
+        v__h9979 = $stime;
 	#0;
       end
-    v__h11260 = v__h11266 / 32'd10;
+    v__h9973 = v__h9979 / 32'd10;
     if (EN_set_addr_map)
       $display("%0d: Near_Mem_IO_AXI4.set_addr_map: addr_base 0x%0h addr_lim 0x%0h",
-	       v__h11260,
+	       v__h9973,
 	       set_addr_map_addr_base,
 	       set_addr_map_addr_lim);
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_rl_reset && cfg_verbosity != 4'd0)
+	begin
+	  v__h1843 = $stime;
+	  #0;
+	end
+    v__h1837 = v__h1843 / 32'd10;
+    if (RST_N != `BSV_RESET_VALUE)
+      if (WILL_FIRE_RL_rl_reset && cfg_verbosity != 4'd0)
+	$display("%0d: Near_Mem_IO_AXI4.rl_reset", v__h1837);
   end
   // synopsys translate_on
 endmodule  // mkNear_Mem_IO_AXI4

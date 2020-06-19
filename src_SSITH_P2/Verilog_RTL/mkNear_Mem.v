@@ -15,70 +15,44 @@
 // imem_exc                       O     1
 // imem_exc_code                  O     6 reg
 // imem_tval                      O    64 reg
-// imem_master_awid               O     5
-// imem_master_awaddr             O    64
-// imem_master_awlen              O     8
-// imem_master_awsize             O     3
-// imem_master_awburst            O     2
-// imem_master_awlock             O     1
-// imem_master_awcache            O     4
-// imem_master_awprot             O     3
-// imem_master_awqos              O     4
-// imem_master_awregion           O     4
-// imem_master_awvalid            O     1
-// imem_master_wdata              O    64
-// imem_master_wstrb              O     8
-// imem_master_wlast              O     1
-// imem_master_wuser              O     1
-// imem_master_wvalid             O     1
-// imem_master_bready             O     1
-// imem_master_arid               O     5
-// imem_master_araddr             O    64
-// imem_master_arlen              O     8
-// imem_master_arsize             O     3
-// imem_master_arburst            O     2
-// imem_master_arlock             O     1
-// imem_master_arcache            O     4
-// imem_master_arprot             O     3
-// imem_master_arqos              O     4
-// imem_master_arregion           O     4
-// imem_master_arvalid            O     1
-// imem_master_rready             O     1
+// imem_master_aw_canPeek         O     1 reg
+// imem_master_aw_peek            O    98 reg
+// RDY_imem_master_aw_peek        O     1 reg
+// RDY_imem_master_aw_drop        O     1 reg
+// imem_master_w_canPeek          O     1 reg
+// imem_master_w_peek             O    74 reg
+// RDY_imem_master_w_peek         O     1 reg
+// RDY_imem_master_w_drop         O     1 reg
+// imem_master_b_canPut           O     1 reg
+// RDY_imem_master_b_put          O     1 reg
+// imem_master_ar_canPeek         O     1 reg
+// imem_master_ar_peek            O    98 reg
+// RDY_imem_master_ar_peek        O     1 reg
+// RDY_imem_master_ar_drop        O     1 reg
+// imem_master_r_canPut           O     1 reg
+// RDY_imem_master_r_put          O     1 reg
 // dmem_valid                     O     1
 // dmem_word128_fst               O     1
 // dmem_word128_snd               O   128
 // dmem_st_amo_val                O   128
 // dmem_exc                       O     1
 // dmem_exc_code                  O     6 reg
-// dmem_master_awid               O     4
-// dmem_master_awaddr             O    64
-// dmem_master_awlen              O     8
-// dmem_master_awsize             O     3
-// dmem_master_awburst            O     2
-// dmem_master_awlock             O     1
-// dmem_master_awcache            O     4
-// dmem_master_awprot             O     3
-// dmem_master_awqos              O     4
-// dmem_master_awregion           O     4
-// dmem_master_awvalid            O     1
-// dmem_master_wdata              O    64
-// dmem_master_wstrb              O     8
-// dmem_master_wlast              O     1
-// dmem_master_wuser              O     1
-// dmem_master_wvalid             O     1
-// dmem_master_bready             O     1
-// dmem_master_arid               O     4
-// dmem_master_araddr             O    64
-// dmem_master_arlen              O     8
-// dmem_master_arsize             O     3
-// dmem_master_arburst            O     2
-// dmem_master_arlock             O     1
-// dmem_master_arcache            O     4
-// dmem_master_arprot             O     3
-// dmem_master_arqos              O     4
-// dmem_master_arregion           O     4
-// dmem_master_arvalid            O     1
-// dmem_master_rready             O     1
+// dmem_master_aw_canPeek         O     1 reg
+// dmem_master_aw_peek            O    97 reg
+// RDY_dmem_master_aw_peek        O     1 reg
+// RDY_dmem_master_aw_drop        O     1 reg
+// dmem_master_w_canPeek          O     1 reg
+// dmem_master_w_peek             O    74 reg
+// RDY_dmem_master_w_peek         O     1 reg
+// RDY_dmem_master_w_drop         O     1 reg
+// dmem_master_b_canPut           O     1 reg
+// RDY_dmem_master_b_put          O     1 reg
+// dmem_master_ar_canPeek         O     1 reg
+// dmem_master_ar_peek            O    97 reg
+// RDY_dmem_master_ar_peek        O     1 reg
+// RDY_dmem_master_ar_drop        O     1 reg
+// dmem_master_r_canPut           O     1 reg
+// RDY_dmem_master_r_put          O     1 reg
 // RDY_server_fence_i_request_put  O     1
 // RDY_server_fence_i_response_get  O     1
 // RDY_server_fence_request_put   O     1 reg
@@ -92,16 +66,8 @@
 // imem_req_sstatus_SUM           I     1 reg
 // imem_req_mstatus_MXR           I     1 reg
 // imem_req_satp                  I    64 reg
-// imem_master_awready            I     1
-// imem_master_wready             I     1
-// imem_master_bid                I     5
-// imem_master_bresp              I     2
-// imem_master_arready            I     1
-// imem_master_rid                I     5
-// imem_master_rdata              I    64
-// imem_master_rresp              I     2
-// imem_master_rlast              I     1
-// imem_master_ruser              I     1
+// imem_master_b_put_val          I     7 reg
+// imem_master_r_put_val          I    73 reg
 // dmem_req_op                    I     2
 // dmem_req_width_code            I     3
 // dmem_req_is_unsigned           I     1 reg
@@ -112,27 +78,25 @@
 // dmem_req_sstatus_SUM           I     1 reg
 // dmem_req_mstatus_MXR           I     1 reg
 // dmem_req_satp                  I    64 reg
-// dmem_master_awready            I     1
-// dmem_master_wready             I     1
-// dmem_master_bid                I     4
-// dmem_master_bresp              I     2
-// dmem_master_arready            I     1
-// dmem_master_rid                I     4
-// dmem_master_rdata              I    64
-// dmem_master_rresp              I     2
-// dmem_master_rlast              I     1
-// dmem_master_ruser              I     1
+// dmem_master_b_put_val          I     6 reg
+// dmem_master_r_put_val          I    72 reg
 // server_fence_request_put       I     8 unused
 // EN_server_reset_request_put    I     1
 // EN_server_reset_response_get   I     1
 // EN_imem_req                    I     1
 // EN_imem_commit                 I     1
-// imem_master_bvalid             I     1
-// imem_master_rvalid             I     1
+// EN_imem_master_aw_drop         I     1
+// EN_imem_master_w_drop          I     1
+// EN_imem_master_b_put           I     1
+// EN_imem_master_ar_drop         I     1
+// EN_imem_master_r_put           I     1
 // EN_dmem_req                    I     1
 // EN_dmem_commit                 I     1
-// dmem_master_bvalid             I     1
-// dmem_master_rvalid             I     1
+// EN_dmem_master_aw_drop         I     1
+// EN_dmem_master_w_drop          I     1
+// EN_dmem_master_b_put           I     1
+// EN_dmem_master_ar_drop         I     1
+// EN_dmem_master_r_put           I     1
 // EN_server_fence_i_request_put  I     1
 // EN_server_fence_i_response_get  I     1
 // EN_server_fence_request_put    I     1
@@ -140,173 +104,11 @@
 // EN_sfence_vma                  I     1
 //
 // Combinational paths from inputs to outputs:
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arid
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_araddr
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arlen
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arsize
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arburst
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arlock
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arcache
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arprot
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arqos
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arregion
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_aruser
-//   (imem_master_rid,
-//    imem_master_rdata,
-//    imem_master_rresp,
-//    imem_master_rlast,
-//    imem_master_ruser,
-//    imem_master_rvalid) -> imem_master_arvalid
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    EN_dmem_commit,
-//    dmem_master_rvalid) -> dmem_valid
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    EN_dmem_commit,
-//    dmem_master_rvalid) -> dmem_word128_fst
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    EN_dmem_commit,
-//    dmem_master_rvalid) -> dmem_word128_snd
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arid
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_araddr
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arlen
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arsize
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arburst
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arlock
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arcache
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arprot
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arqos
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arregion
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_aruser
-//   (dmem_master_rid,
-//    dmem_master_rdata,
-//    dmem_master_rresp,
-//    dmem_master_rlast,
-//    dmem_master_ruser,
-//    dmem_master_rvalid) -> dmem_master_arvalid
 //   EN_imem_commit -> imem_valid
 //   EN_imem_commit -> imem_instr
+//   EN_dmem_commit -> dmem_valid
+//   EN_dmem_commit -> dmem_word128_fst
+//   EN_dmem_commit -> dmem_word128_snd
 //   EN_dmem_commit -> dmem_st_amo_val
 //
 //
@@ -357,80 +159,41 @@ module mkNear_Mem(CLK,
 
 		  imem_tval,
 
-		  imem_master_awid,
+		  imem_master_aw_canPeek,
 
-		  imem_master_awaddr,
+		  imem_master_aw_peek,
+		  RDY_imem_master_aw_peek,
 
-		  imem_master_awlen,
+		  EN_imem_master_aw_drop,
+		  RDY_imem_master_aw_drop,
 
-		  imem_master_awsize,
+		  imem_master_w_canPeek,
 
-		  imem_master_awburst,
+		  imem_master_w_peek,
+		  RDY_imem_master_w_peek,
 
-		  imem_master_awlock,
+		  EN_imem_master_w_drop,
+		  RDY_imem_master_w_drop,
 
-		  imem_master_awcache,
+		  imem_master_b_canPut,
 
-		  imem_master_awprot,
+		  imem_master_b_put_val,
+		  EN_imem_master_b_put,
+		  RDY_imem_master_b_put,
 
-		  imem_master_awqos,
+		  imem_master_ar_canPeek,
 
-		  imem_master_awregion,
+		  imem_master_ar_peek,
+		  RDY_imem_master_ar_peek,
 
-		  imem_master_awvalid,
+		  EN_imem_master_ar_drop,
+		  RDY_imem_master_ar_drop,
 
-		  imem_master_awready,
+		  imem_master_r_canPut,
 
-		  imem_master_wdata,
-
-		  imem_master_wstrb,
-
-		  imem_master_wlast,
-
-		  imem_master_wuser,
-
-		  imem_master_wvalid,
-
-		  imem_master_wready,
-
-		  imem_master_bid,
-		  imem_master_bresp,
-		  imem_master_bvalid,
-
-		  imem_master_bready,
-
-		  imem_master_arid,
-
-		  imem_master_araddr,
-
-		  imem_master_arlen,
-
-		  imem_master_arsize,
-
-		  imem_master_arburst,
-
-		  imem_master_arlock,
-
-		  imem_master_arcache,
-
-		  imem_master_arprot,
-
-		  imem_master_arqos,
-
-		  imem_master_arregion,
-
-		  imem_master_arvalid,
-
-		  imem_master_arready,
-
-		  imem_master_rid,
-		  imem_master_rdata,
-		  imem_master_rresp,
-		  imem_master_rlast,
-		  imem_master_ruser,
-		  imem_master_rvalid,
-
-		  imem_master_rready,
+		  imem_master_r_put_val,
+		  EN_imem_master_r_put,
+		  RDY_imem_master_r_put,
 
 		  dmem_req_op,
 		  dmem_req_width_code,
@@ -458,80 +221,41 @@ module mkNear_Mem(CLK,
 
 		  dmem_exc_code,
 
-		  dmem_master_awid,
+		  dmem_master_aw_canPeek,
 
-		  dmem_master_awaddr,
+		  dmem_master_aw_peek,
+		  RDY_dmem_master_aw_peek,
 
-		  dmem_master_awlen,
+		  EN_dmem_master_aw_drop,
+		  RDY_dmem_master_aw_drop,
 
-		  dmem_master_awsize,
+		  dmem_master_w_canPeek,
 
-		  dmem_master_awburst,
+		  dmem_master_w_peek,
+		  RDY_dmem_master_w_peek,
 
-		  dmem_master_awlock,
+		  EN_dmem_master_w_drop,
+		  RDY_dmem_master_w_drop,
 
-		  dmem_master_awcache,
+		  dmem_master_b_canPut,
 
-		  dmem_master_awprot,
+		  dmem_master_b_put_val,
+		  EN_dmem_master_b_put,
+		  RDY_dmem_master_b_put,
 
-		  dmem_master_awqos,
+		  dmem_master_ar_canPeek,
 
-		  dmem_master_awregion,
+		  dmem_master_ar_peek,
+		  RDY_dmem_master_ar_peek,
 
-		  dmem_master_awvalid,
+		  EN_dmem_master_ar_drop,
+		  RDY_dmem_master_ar_drop,
 
-		  dmem_master_awready,
+		  dmem_master_r_canPut,
 
-		  dmem_master_wdata,
-
-		  dmem_master_wstrb,
-
-		  dmem_master_wlast,
-
-		  dmem_master_wuser,
-
-		  dmem_master_wvalid,
-
-		  dmem_master_wready,
-
-		  dmem_master_bid,
-		  dmem_master_bresp,
-		  dmem_master_bvalid,
-
-		  dmem_master_bready,
-
-		  dmem_master_arid,
-
-		  dmem_master_araddr,
-
-		  dmem_master_arlen,
-
-		  dmem_master_arsize,
-
-		  dmem_master_arburst,
-
-		  dmem_master_arlock,
-
-		  dmem_master_arcache,
-
-		  dmem_master_arprot,
-
-		  dmem_master_arqos,
-
-		  dmem_master_arregion,
-
-		  dmem_master_arvalid,
-
-		  dmem_master_arready,
-
-		  dmem_master_rid,
-		  dmem_master_rdata,
-		  dmem_master_rresp,
-		  dmem_master_rlast,
-		  dmem_master_ruser,
-		  dmem_master_rvalid,
-
-		  dmem_master_rready,
+		  dmem_master_r_put_val,
+		  EN_dmem_master_r_put,
+		  RDY_dmem_master_r_put,
 
 		  EN_server_fence_i_request_put,
 		  RDY_server_fence_i_request_put,
@@ -592,118 +316,54 @@ module mkNear_Mem(CLK,
   // value method imem_tval
   output [63 : 0] imem_tval;
 
-  // value method imem_master_aw_awid
-  output [4 : 0] imem_master_awid;
+  // value method imem_master_aw_canPeek
+  output imem_master_aw_canPeek;
 
-  // value method imem_master_aw_awaddr
-  output [63 : 0] imem_master_awaddr;
+  // value method imem_master_aw_peek
+  output [97 : 0] imem_master_aw_peek;
+  output RDY_imem_master_aw_peek;
 
-  // value method imem_master_aw_awlen
-  output [7 : 0] imem_master_awlen;
+  // action method imem_master_aw_drop
+  input  EN_imem_master_aw_drop;
+  output RDY_imem_master_aw_drop;
 
-  // value method imem_master_aw_awsize
-  output [2 : 0] imem_master_awsize;
+  // value method imem_master_w_canPeek
+  output imem_master_w_canPeek;
 
-  // value method imem_master_aw_awburst
-  output [1 : 0] imem_master_awburst;
+  // value method imem_master_w_peek
+  output [73 : 0] imem_master_w_peek;
+  output RDY_imem_master_w_peek;
 
-  // value method imem_master_aw_awlock
-  output imem_master_awlock;
+  // action method imem_master_w_drop
+  input  EN_imem_master_w_drop;
+  output RDY_imem_master_w_drop;
 
-  // value method imem_master_aw_awcache
-  output [3 : 0] imem_master_awcache;
+  // value method imem_master_b_canPut
+  output imem_master_b_canPut;
 
-  // value method imem_master_aw_awprot
-  output [2 : 0] imem_master_awprot;
+  // action method imem_master_b_put
+  input  [6 : 0] imem_master_b_put_val;
+  input  EN_imem_master_b_put;
+  output RDY_imem_master_b_put;
 
-  // value method imem_master_aw_awqos
-  output [3 : 0] imem_master_awqos;
+  // value method imem_master_ar_canPeek
+  output imem_master_ar_canPeek;
 
-  // value method imem_master_aw_awregion
-  output [3 : 0] imem_master_awregion;
+  // value method imem_master_ar_peek
+  output [97 : 0] imem_master_ar_peek;
+  output RDY_imem_master_ar_peek;
 
-  // value method imem_master_aw_awuser
+  // action method imem_master_ar_drop
+  input  EN_imem_master_ar_drop;
+  output RDY_imem_master_ar_drop;
 
-  // value method imem_master_aw_awvalid
-  output imem_master_awvalid;
+  // value method imem_master_r_canPut
+  output imem_master_r_canPut;
 
-  // action method imem_master_aw_awready
-  input  imem_master_awready;
-
-  // value method imem_master_w_wdata
-  output [63 : 0] imem_master_wdata;
-
-  // value method imem_master_w_wstrb
-  output [7 : 0] imem_master_wstrb;
-
-  // value method imem_master_w_wlast
-  output imem_master_wlast;
-
-  // value method imem_master_w_wuser
-  output imem_master_wuser;
-
-  // value method imem_master_w_wvalid
-  output imem_master_wvalid;
-
-  // action method imem_master_w_wready
-  input  imem_master_wready;
-
-  // action method imem_master_b_bflit
-  input  [4 : 0] imem_master_bid;
-  input  [1 : 0] imem_master_bresp;
-  input  imem_master_bvalid;
-
-  // value method imem_master_b_bready
-  output imem_master_bready;
-
-  // value method imem_master_ar_arid
-  output [4 : 0] imem_master_arid;
-
-  // value method imem_master_ar_araddr
-  output [63 : 0] imem_master_araddr;
-
-  // value method imem_master_ar_arlen
-  output [7 : 0] imem_master_arlen;
-
-  // value method imem_master_ar_arsize
-  output [2 : 0] imem_master_arsize;
-
-  // value method imem_master_ar_arburst
-  output [1 : 0] imem_master_arburst;
-
-  // value method imem_master_ar_arlock
-  output imem_master_arlock;
-
-  // value method imem_master_ar_arcache
-  output [3 : 0] imem_master_arcache;
-
-  // value method imem_master_ar_arprot
-  output [2 : 0] imem_master_arprot;
-
-  // value method imem_master_ar_arqos
-  output [3 : 0] imem_master_arqos;
-
-  // value method imem_master_ar_arregion
-  output [3 : 0] imem_master_arregion;
-
-  // value method imem_master_ar_aruser
-
-  // value method imem_master_ar_arvalid
-  output imem_master_arvalid;
-
-  // action method imem_master_ar_arready
-  input  imem_master_arready;
-
-  // action method imem_master_r_rflit
-  input  [4 : 0] imem_master_rid;
-  input  [63 : 0] imem_master_rdata;
-  input  [1 : 0] imem_master_rresp;
-  input  imem_master_rlast;
-  input  imem_master_ruser;
-  input  imem_master_rvalid;
-
-  // value method imem_master_r_rready
-  output imem_master_rready;
+  // action method imem_master_r_put
+  input  [72 : 0] imem_master_r_put_val;
+  input  EN_imem_master_r_put;
+  output RDY_imem_master_r_put;
 
   // action method dmem_req
   input  [1 : 0] dmem_req_op;
@@ -739,118 +399,54 @@ module mkNear_Mem(CLK,
   // value method dmem_exc_code
   output [5 : 0] dmem_exc_code;
 
-  // value method dmem_master_aw_awid
-  output [3 : 0] dmem_master_awid;
+  // value method dmem_master_aw_canPeek
+  output dmem_master_aw_canPeek;
 
-  // value method dmem_master_aw_awaddr
-  output [63 : 0] dmem_master_awaddr;
+  // value method dmem_master_aw_peek
+  output [96 : 0] dmem_master_aw_peek;
+  output RDY_dmem_master_aw_peek;
 
-  // value method dmem_master_aw_awlen
-  output [7 : 0] dmem_master_awlen;
+  // action method dmem_master_aw_drop
+  input  EN_dmem_master_aw_drop;
+  output RDY_dmem_master_aw_drop;
 
-  // value method dmem_master_aw_awsize
-  output [2 : 0] dmem_master_awsize;
+  // value method dmem_master_w_canPeek
+  output dmem_master_w_canPeek;
 
-  // value method dmem_master_aw_awburst
-  output [1 : 0] dmem_master_awburst;
+  // value method dmem_master_w_peek
+  output [73 : 0] dmem_master_w_peek;
+  output RDY_dmem_master_w_peek;
 
-  // value method dmem_master_aw_awlock
-  output dmem_master_awlock;
+  // action method dmem_master_w_drop
+  input  EN_dmem_master_w_drop;
+  output RDY_dmem_master_w_drop;
 
-  // value method dmem_master_aw_awcache
-  output [3 : 0] dmem_master_awcache;
+  // value method dmem_master_b_canPut
+  output dmem_master_b_canPut;
 
-  // value method dmem_master_aw_awprot
-  output [2 : 0] dmem_master_awprot;
+  // action method dmem_master_b_put
+  input  [5 : 0] dmem_master_b_put_val;
+  input  EN_dmem_master_b_put;
+  output RDY_dmem_master_b_put;
 
-  // value method dmem_master_aw_awqos
-  output [3 : 0] dmem_master_awqos;
+  // value method dmem_master_ar_canPeek
+  output dmem_master_ar_canPeek;
 
-  // value method dmem_master_aw_awregion
-  output [3 : 0] dmem_master_awregion;
+  // value method dmem_master_ar_peek
+  output [96 : 0] dmem_master_ar_peek;
+  output RDY_dmem_master_ar_peek;
 
-  // value method dmem_master_aw_awuser
+  // action method dmem_master_ar_drop
+  input  EN_dmem_master_ar_drop;
+  output RDY_dmem_master_ar_drop;
 
-  // value method dmem_master_aw_awvalid
-  output dmem_master_awvalid;
+  // value method dmem_master_r_canPut
+  output dmem_master_r_canPut;
 
-  // action method dmem_master_aw_awready
-  input  dmem_master_awready;
-
-  // value method dmem_master_w_wdata
-  output [63 : 0] dmem_master_wdata;
-
-  // value method dmem_master_w_wstrb
-  output [7 : 0] dmem_master_wstrb;
-
-  // value method dmem_master_w_wlast
-  output dmem_master_wlast;
-
-  // value method dmem_master_w_wuser
-  output dmem_master_wuser;
-
-  // value method dmem_master_w_wvalid
-  output dmem_master_wvalid;
-
-  // action method dmem_master_w_wready
-  input  dmem_master_wready;
-
-  // action method dmem_master_b_bflit
-  input  [3 : 0] dmem_master_bid;
-  input  [1 : 0] dmem_master_bresp;
-  input  dmem_master_bvalid;
-
-  // value method dmem_master_b_bready
-  output dmem_master_bready;
-
-  // value method dmem_master_ar_arid
-  output [3 : 0] dmem_master_arid;
-
-  // value method dmem_master_ar_araddr
-  output [63 : 0] dmem_master_araddr;
-
-  // value method dmem_master_ar_arlen
-  output [7 : 0] dmem_master_arlen;
-
-  // value method dmem_master_ar_arsize
-  output [2 : 0] dmem_master_arsize;
-
-  // value method dmem_master_ar_arburst
-  output [1 : 0] dmem_master_arburst;
-
-  // value method dmem_master_ar_arlock
-  output dmem_master_arlock;
-
-  // value method dmem_master_ar_arcache
-  output [3 : 0] dmem_master_arcache;
-
-  // value method dmem_master_ar_arprot
-  output [2 : 0] dmem_master_arprot;
-
-  // value method dmem_master_ar_arqos
-  output [3 : 0] dmem_master_arqos;
-
-  // value method dmem_master_ar_arregion
-  output [3 : 0] dmem_master_arregion;
-
-  // value method dmem_master_ar_aruser
-
-  // value method dmem_master_ar_arvalid
-  output dmem_master_arvalid;
-
-  // action method dmem_master_ar_arready
-  input  dmem_master_arready;
-
-  // action method dmem_master_r_rflit
-  input  [3 : 0] dmem_master_rid;
-  input  [63 : 0] dmem_master_rdata;
-  input  [1 : 0] dmem_master_rresp;
-  input  dmem_master_rlast;
-  input  dmem_master_ruser;
-  input  dmem_master_rvalid;
-
-  // value method dmem_master_r_rready
-  output dmem_master_rready;
+  // action method dmem_master_r_put
+  input  [71 : 0] dmem_master_r_put_val;
+  input  EN_dmem_master_r_put;
+  output RDY_dmem_master_r_put;
 
   // action method server_fence_i_request_put
   input  EN_server_fence_i_request_put;
@@ -875,50 +471,29 @@ module mkNear_Mem(CLK,
 
   // signals for module outputs
   wire [127 : 0] dmem_st_amo_val, dmem_word128_snd;
-  wire [63 : 0] dmem_master_araddr,
-		dmem_master_awaddr,
-		dmem_master_wdata,
-		imem_master_araddr,
-		imem_master_awaddr,
-		imem_master_wdata,
-		imem_pc,
-		imem_tval;
+  wire [97 : 0] imem_master_ar_peek, imem_master_aw_peek;
+  wire [96 : 0] dmem_master_ar_peek, dmem_master_aw_peek;
+  wire [73 : 0] dmem_master_w_peek, imem_master_w_peek;
+  wire [63 : 0] imem_pc, imem_tval;
   wire [31 : 0] imem_instr;
-  wire [7 : 0] dmem_master_arlen,
-	       dmem_master_awlen,
-	       dmem_master_wstrb,
-	       imem_master_arlen,
-	       imem_master_awlen,
-	       imem_master_wstrb;
   wire [5 : 0] dmem_exc_code, imem_exc_code;
-  wire [4 : 0] imem_master_arid, imem_master_awid;
-  wire [3 : 0] dmem_master_arcache,
-	       dmem_master_arid,
-	       dmem_master_arqos,
-	       dmem_master_arregion,
-	       dmem_master_awcache,
-	       dmem_master_awid,
-	       dmem_master_awqos,
-	       dmem_master_awregion,
-	       imem_master_arcache,
-	       imem_master_arqos,
-	       imem_master_arregion,
-	       imem_master_awcache,
-	       imem_master_awqos,
-	       imem_master_awregion;
-  wire [2 : 0] dmem_master_arprot,
-	       dmem_master_arsize,
-	       dmem_master_awprot,
-	       dmem_master_awsize,
-	       imem_master_arprot,
-	       imem_master_arsize,
-	       imem_master_awprot,
-	       imem_master_awsize;
-  wire [1 : 0] dmem_master_arburst,
-	       dmem_master_awburst,
-	       imem_master_arburst,
-	       imem_master_awburst;
-  wire RDY_server_fence_i_request_put,
+  wire RDY_dmem_master_ar_drop,
+       RDY_dmem_master_ar_peek,
+       RDY_dmem_master_aw_drop,
+       RDY_dmem_master_aw_peek,
+       RDY_dmem_master_b_put,
+       RDY_dmem_master_r_put,
+       RDY_dmem_master_w_drop,
+       RDY_dmem_master_w_peek,
+       RDY_imem_master_ar_drop,
+       RDY_imem_master_ar_peek,
+       RDY_imem_master_aw_drop,
+       RDY_imem_master_aw_peek,
+       RDY_imem_master_b_put,
+       RDY_imem_master_r_put,
+       RDY_imem_master_w_drop,
+       RDY_imem_master_w_peek,
+       RDY_server_fence_i_request_put,
        RDY_server_fence_i_response_get,
        RDY_server_fence_request_put,
        RDY_server_fence_response_get,
@@ -926,28 +501,20 @@ module mkNear_Mem(CLK,
        RDY_server_reset_response_get,
        RDY_sfence_vma,
        dmem_exc,
-       dmem_master_arlock,
-       dmem_master_arvalid,
-       dmem_master_awlock,
-       dmem_master_awvalid,
-       dmem_master_bready,
-       dmem_master_rready,
-       dmem_master_wlast,
-       dmem_master_wuser,
-       dmem_master_wvalid,
+       dmem_master_ar_canPeek,
+       dmem_master_aw_canPeek,
+       dmem_master_b_canPut,
+       dmem_master_r_canPut,
+       dmem_master_w_canPeek,
        dmem_valid,
        dmem_word128_fst,
        imem_exc,
        imem_is_i32_not_i16,
-       imem_master_arlock,
-       imem_master_arvalid,
-       imem_master_awlock,
-       imem_master_awvalid,
-       imem_master_bready,
-       imem_master_rready,
-       imem_master_wlast,
-       imem_master_wuser,
-       imem_master_wvalid,
+       imem_master_ar_canPeek,
+       imem_master_aw_canPeek,
+       imem_master_b_canPut,
+       imem_master_r_canPut,
+       imem_master_w_canPeek,
        imem_valid;
 
   // register cfg_verbosity
@@ -963,40 +530,21 @@ module mkNear_Mem(CLK,
   // ports of submodule dcache
   wire [128 : 0] dcache$req_st_value;
   wire [127 : 0] dcache$st_amo_val_snd, dcache$word128_snd;
-  wire [63 : 0] dcache$mem_master_araddr,
-		dcache$mem_master_awaddr,
-		dcache$mem_master_rdata,
-		dcache$mem_master_wdata,
-		dcache$req_addr,
-		dcache$req_satp;
-  wire [7 : 0] dcache$mem_master_arlen,
-	       dcache$mem_master_awlen,
-	       dcache$mem_master_wstrb;
-  wire [5 : 0] dcache$exc_code;
+  wire [96 : 0] dcache$mem_master_ar_peek, dcache$mem_master_aw_peek;
+  wire [73 : 0] dcache$mem_master_w_peek;
+  wire [71 : 0] dcache$mem_master_r_put_val;
+  wire [63 : 0] dcache$req_addr, dcache$req_satp;
+  wire [5 : 0] dcache$exc_code, dcache$mem_master_b_put_val;
   wire [4 : 0] dcache$req_amo_funct5;
-  wire [3 : 0] dcache$mem_master_arcache,
-	       dcache$mem_master_arid,
-	       dcache$mem_master_arqos,
-	       dcache$mem_master_arregion,
-	       dcache$mem_master_awcache,
-	       dcache$mem_master_awid,
-	       dcache$mem_master_awqos,
-	       dcache$mem_master_awregion,
-	       dcache$mem_master_bid,
-	       dcache$mem_master_rid,
-	       dcache$set_verbosity_verbosity;
-  wire [2 : 0] dcache$mem_master_arprot,
-	       dcache$mem_master_arsize,
-	       dcache$mem_master_awprot,
-	       dcache$mem_master_awsize,
-	       dcache$req_width_code;
-  wire [1 : 0] dcache$mem_master_arburst,
-	       dcache$mem_master_awburst,
-	       dcache$mem_master_bresp,
-	       dcache$mem_master_rresp,
-	       dcache$req_op,
-	       dcache$req_priv;
+  wire [3 : 0] dcache$set_verbosity_verbosity;
+  wire [2 : 0] dcache$req_width_code;
+  wire [1 : 0] dcache$req_op, dcache$req_priv;
   wire dcache$EN_commit,
+       dcache$EN_mem_master_ar_drop,
+       dcache$EN_mem_master_aw_drop,
+       dcache$EN_mem_master_b_put,
+       dcache$EN_mem_master_r_put,
+       dcache$EN_mem_master_w_drop,
        dcache$EN_req,
        dcache$EN_server_flush_request_put,
        dcache$EN_server_flush_response_get,
@@ -1004,27 +552,24 @@ module mkNear_Mem(CLK,
        dcache$EN_server_reset_response_get,
        dcache$EN_set_verbosity,
        dcache$EN_tlb_flush,
+       dcache$RDY_mem_master_ar_drop,
+       dcache$RDY_mem_master_ar_peek,
+       dcache$RDY_mem_master_aw_drop,
+       dcache$RDY_mem_master_aw_peek,
+       dcache$RDY_mem_master_b_put,
+       dcache$RDY_mem_master_r_put,
+       dcache$RDY_mem_master_w_drop,
+       dcache$RDY_mem_master_w_peek,
        dcache$RDY_server_flush_request_put,
        dcache$RDY_server_flush_response_get,
        dcache$RDY_server_reset_request_put,
        dcache$RDY_server_reset_response_get,
        dcache$exc,
-       dcache$mem_master_arlock,
-       dcache$mem_master_arready,
-       dcache$mem_master_arvalid,
-       dcache$mem_master_awlock,
-       dcache$mem_master_awready,
-       dcache$mem_master_awvalid,
-       dcache$mem_master_bready,
-       dcache$mem_master_bvalid,
-       dcache$mem_master_rlast,
-       dcache$mem_master_rready,
-       dcache$mem_master_ruser,
-       dcache$mem_master_rvalid,
-       dcache$mem_master_wlast,
-       dcache$mem_master_wready,
-       dcache$mem_master_wuser,
-       dcache$mem_master_wvalid,
+       dcache$mem_master_ar_canPeek,
+       dcache$mem_master_aw_canPeek,
+       dcache$mem_master_b_canPut,
+       dcache$mem_master_r_canPut,
+       dcache$mem_master_w_canPeek,
        dcache$req_is_unsigned,
        dcache$req_mstatus_MXR,
        dcache$req_sstatus_SUM,
@@ -1041,41 +586,22 @@ module mkNear_Mem(CLK,
   // ports of submodule icache
   wire [128 : 0] icache$req_st_value;
   wire [127 : 0] icache$word128_snd;
-  wire [63 : 0] icache$addr,
-		icache$mem_master_araddr,
-		icache$mem_master_awaddr,
-		icache$mem_master_rdata,
-		icache$mem_master_wdata,
-		icache$req_addr,
-		icache$req_satp;
-  wire [7 : 0] icache$mem_master_arlen,
-	       icache$mem_master_awlen,
-	       icache$mem_master_wstrb;
+  wire [97 : 0] icache$mem_master_ar_peek, icache$mem_master_aw_peek;
+  wire [73 : 0] icache$mem_master_w_peek;
+  wire [72 : 0] icache$mem_master_r_put_val;
+  wire [63 : 0] icache$addr, icache$req_addr, icache$req_satp;
+  wire [6 : 0] icache$mem_master_b_put_val;
   wire [5 : 0] icache$exc_code;
-  wire [4 : 0] icache$mem_master_arid,
-	       icache$mem_master_awid,
-	       icache$mem_master_bid,
-	       icache$mem_master_rid,
-	       icache$req_amo_funct5;
-  wire [3 : 0] icache$mem_master_arcache,
-	       icache$mem_master_arqos,
-	       icache$mem_master_arregion,
-	       icache$mem_master_awcache,
-	       icache$mem_master_awqos,
-	       icache$mem_master_awregion,
-	       icache$set_verbosity_verbosity;
-  wire [2 : 0] icache$mem_master_arprot,
-	       icache$mem_master_arsize,
-	       icache$mem_master_awprot,
-	       icache$mem_master_awsize,
-	       icache$req_width_code;
-  wire [1 : 0] icache$mem_master_arburst,
-	       icache$mem_master_awburst,
-	       icache$mem_master_bresp,
-	       icache$mem_master_rresp,
-	       icache$req_op,
-	       icache$req_priv;
+  wire [4 : 0] icache$req_amo_funct5;
+  wire [3 : 0] icache$set_verbosity_verbosity;
+  wire [2 : 0] icache$req_width_code;
+  wire [1 : 0] icache$req_op, icache$req_priv;
   wire icache$EN_commit,
+       icache$EN_mem_master_ar_drop,
+       icache$EN_mem_master_aw_drop,
+       icache$EN_mem_master_b_put,
+       icache$EN_mem_master_r_put,
+       icache$EN_mem_master_w_drop,
        icache$EN_req,
        icache$EN_server_flush_request_put,
        icache$EN_server_flush_response_get,
@@ -1083,27 +609,24 @@ module mkNear_Mem(CLK,
        icache$EN_server_reset_response_get,
        icache$EN_set_verbosity,
        icache$EN_tlb_flush,
+       icache$RDY_mem_master_ar_drop,
+       icache$RDY_mem_master_ar_peek,
+       icache$RDY_mem_master_aw_drop,
+       icache$RDY_mem_master_aw_peek,
+       icache$RDY_mem_master_b_put,
+       icache$RDY_mem_master_r_put,
+       icache$RDY_mem_master_w_drop,
+       icache$RDY_mem_master_w_peek,
        icache$RDY_server_flush_request_put,
        icache$RDY_server_flush_response_get,
        icache$RDY_server_reset_request_put,
        icache$RDY_server_reset_response_get,
        icache$exc,
-       icache$mem_master_arlock,
-       icache$mem_master_arready,
-       icache$mem_master_arvalid,
-       icache$mem_master_awlock,
-       icache$mem_master_awready,
-       icache$mem_master_awvalid,
-       icache$mem_master_bready,
-       icache$mem_master_bvalid,
-       icache$mem_master_rlast,
-       icache$mem_master_rready,
-       icache$mem_master_ruser,
-       icache$mem_master_rvalid,
-       icache$mem_master_wlast,
-       icache$mem_master_wready,
-       icache$mem_master_wuser,
-       icache$mem_master_wvalid,
+       icache$mem_master_ar_canPeek,
+       icache$mem_master_aw_canPeek,
+       icache$mem_master_b_canPut,
+       icache$mem_master_r_canPut,
+       icache$mem_master_w_canPeek,
        icache$req_is_unsigned,
        icache$req_mstatus_MXR,
        icache$req_sstatus_SUM,
@@ -1118,18 +641,18 @@ module mkNear_Mem(CLK,
   wire CAN_FIRE_RL_rl_reset,
        CAN_FIRE_RL_rl_reset_complete,
        CAN_FIRE_dmem_commit,
-       CAN_FIRE_dmem_master_ar_arready,
-       CAN_FIRE_dmem_master_aw_awready,
-       CAN_FIRE_dmem_master_b_bflit,
-       CAN_FIRE_dmem_master_r_rflit,
-       CAN_FIRE_dmem_master_w_wready,
+       CAN_FIRE_dmem_master_ar_drop,
+       CAN_FIRE_dmem_master_aw_drop,
+       CAN_FIRE_dmem_master_b_put,
+       CAN_FIRE_dmem_master_r_put,
+       CAN_FIRE_dmem_master_w_drop,
        CAN_FIRE_dmem_req,
        CAN_FIRE_imem_commit,
-       CAN_FIRE_imem_master_ar_arready,
-       CAN_FIRE_imem_master_aw_awready,
-       CAN_FIRE_imem_master_b_bflit,
-       CAN_FIRE_imem_master_r_rflit,
-       CAN_FIRE_imem_master_w_wready,
+       CAN_FIRE_imem_master_ar_drop,
+       CAN_FIRE_imem_master_aw_drop,
+       CAN_FIRE_imem_master_b_put,
+       CAN_FIRE_imem_master_r_put,
+       CAN_FIRE_imem_master_w_drop,
        CAN_FIRE_imem_req,
        CAN_FIRE_server_fence_i_request_put,
        CAN_FIRE_server_fence_i_response_get,
@@ -1141,18 +664,18 @@ module mkNear_Mem(CLK,
        WILL_FIRE_RL_rl_reset,
        WILL_FIRE_RL_rl_reset_complete,
        WILL_FIRE_dmem_commit,
-       WILL_FIRE_dmem_master_ar_arready,
-       WILL_FIRE_dmem_master_aw_awready,
-       WILL_FIRE_dmem_master_b_bflit,
-       WILL_FIRE_dmem_master_r_rflit,
-       WILL_FIRE_dmem_master_w_wready,
+       WILL_FIRE_dmem_master_ar_drop,
+       WILL_FIRE_dmem_master_aw_drop,
+       WILL_FIRE_dmem_master_b_put,
+       WILL_FIRE_dmem_master_r_put,
+       WILL_FIRE_dmem_master_w_drop,
        WILL_FIRE_dmem_req,
        WILL_FIRE_imem_commit,
-       WILL_FIRE_imem_master_ar_arready,
-       WILL_FIRE_imem_master_aw_awready,
-       WILL_FIRE_imem_master_b_bflit,
-       WILL_FIRE_imem_master_r_rflit,
-       WILL_FIRE_imem_master_w_wready,
+       WILL_FIRE_imem_master_ar_drop,
+       WILL_FIRE_imem_master_aw_drop,
+       WILL_FIRE_imem_master_b_put,
+       WILL_FIRE_imem_master_r_put,
+       WILL_FIRE_imem_master_w_drop,
        WILL_FIRE_imem_req,
        WILL_FIRE_server_fence_i_request_put,
        WILL_FIRE_server_fence_i_response_get,
@@ -1167,10 +690,10 @@ module mkNear_Mem(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [31 : 0] v__h1672;
-  reg [31 : 0] v__h1823;
-  reg [31 : 0] v__h1666;
-  reg [31 : 0] v__h1817;
+  reg [31 : 0] v__h1160;
+  reg [31 : 0] v__h1311;
+  reg [31 : 0] v__h1154;
+  reg [31 : 0] v__h1305;
   // synopsys translate_on
 
   // remaining internal signals
@@ -1215,112 +738,57 @@ module mkNear_Mem(CLK,
   // value method imem_tval
   assign imem_tval = icache$addr ;
 
-  // value method imem_master_aw_awid
-  assign imem_master_awid = icache$mem_master_awid ;
+  // value method imem_master_aw_canPeek
+  assign imem_master_aw_canPeek = icache$mem_master_aw_canPeek ;
 
-  // value method imem_master_aw_awaddr
-  assign imem_master_awaddr = icache$mem_master_awaddr ;
+  // value method imem_master_aw_peek
+  assign imem_master_aw_peek = icache$mem_master_aw_peek ;
+  assign RDY_imem_master_aw_peek = icache$RDY_mem_master_aw_peek ;
 
-  // value method imem_master_aw_awlen
-  assign imem_master_awlen = icache$mem_master_awlen ;
+  // action method imem_master_aw_drop
+  assign RDY_imem_master_aw_drop = icache$RDY_mem_master_aw_drop ;
+  assign CAN_FIRE_imem_master_aw_drop = icache$RDY_mem_master_aw_drop ;
+  assign WILL_FIRE_imem_master_aw_drop = EN_imem_master_aw_drop ;
 
-  // value method imem_master_aw_awsize
-  assign imem_master_awsize = icache$mem_master_awsize ;
+  // value method imem_master_w_canPeek
+  assign imem_master_w_canPeek = icache$mem_master_w_canPeek ;
 
-  // value method imem_master_aw_awburst
-  assign imem_master_awburst = icache$mem_master_awburst ;
+  // value method imem_master_w_peek
+  assign imem_master_w_peek = icache$mem_master_w_peek ;
+  assign RDY_imem_master_w_peek = icache$RDY_mem_master_w_peek ;
 
-  // value method imem_master_aw_awlock
-  assign imem_master_awlock = icache$mem_master_awlock ;
+  // action method imem_master_w_drop
+  assign RDY_imem_master_w_drop = icache$RDY_mem_master_w_drop ;
+  assign CAN_FIRE_imem_master_w_drop = icache$RDY_mem_master_w_drop ;
+  assign WILL_FIRE_imem_master_w_drop = EN_imem_master_w_drop ;
 
-  // value method imem_master_aw_awcache
-  assign imem_master_awcache = icache$mem_master_awcache ;
+  // value method imem_master_b_canPut
+  assign imem_master_b_canPut = icache$mem_master_b_canPut ;
 
-  // value method imem_master_aw_awprot
-  assign imem_master_awprot = icache$mem_master_awprot ;
+  // action method imem_master_b_put
+  assign RDY_imem_master_b_put = icache$RDY_mem_master_b_put ;
+  assign CAN_FIRE_imem_master_b_put = icache$RDY_mem_master_b_put ;
+  assign WILL_FIRE_imem_master_b_put = EN_imem_master_b_put ;
 
-  // value method imem_master_aw_awqos
-  assign imem_master_awqos = icache$mem_master_awqos ;
+  // value method imem_master_ar_canPeek
+  assign imem_master_ar_canPeek = icache$mem_master_ar_canPeek ;
 
-  // value method imem_master_aw_awregion
-  assign imem_master_awregion = icache$mem_master_awregion ;
+  // value method imem_master_ar_peek
+  assign imem_master_ar_peek = icache$mem_master_ar_peek ;
+  assign RDY_imem_master_ar_peek = icache$RDY_mem_master_ar_peek ;
 
-  // value method imem_master_aw_awvalid
-  assign imem_master_awvalid = icache$mem_master_awvalid ;
+  // action method imem_master_ar_drop
+  assign RDY_imem_master_ar_drop = icache$RDY_mem_master_ar_drop ;
+  assign CAN_FIRE_imem_master_ar_drop = icache$RDY_mem_master_ar_drop ;
+  assign WILL_FIRE_imem_master_ar_drop = EN_imem_master_ar_drop ;
 
-  // action method imem_master_aw_awready
-  assign CAN_FIRE_imem_master_aw_awready = 1'd1 ;
-  assign WILL_FIRE_imem_master_aw_awready = 1'd1 ;
+  // value method imem_master_r_canPut
+  assign imem_master_r_canPut = icache$mem_master_r_canPut ;
 
-  // value method imem_master_w_wdata
-  assign imem_master_wdata = icache$mem_master_wdata ;
-
-  // value method imem_master_w_wstrb
-  assign imem_master_wstrb = icache$mem_master_wstrb ;
-
-  // value method imem_master_w_wlast
-  assign imem_master_wlast = icache$mem_master_wlast ;
-
-  // value method imem_master_w_wuser
-  assign imem_master_wuser = icache$mem_master_wuser ;
-
-  // value method imem_master_w_wvalid
-  assign imem_master_wvalid = icache$mem_master_wvalid ;
-
-  // action method imem_master_w_wready
-  assign CAN_FIRE_imem_master_w_wready = 1'd1 ;
-  assign WILL_FIRE_imem_master_w_wready = 1'd1 ;
-
-  // action method imem_master_b_bflit
-  assign CAN_FIRE_imem_master_b_bflit = 1'd1 ;
-  assign WILL_FIRE_imem_master_b_bflit = imem_master_bvalid ;
-
-  // value method imem_master_b_bready
-  assign imem_master_bready = icache$mem_master_bready ;
-
-  // value method imem_master_ar_arid
-  assign imem_master_arid = icache$mem_master_arid ;
-
-  // value method imem_master_ar_araddr
-  assign imem_master_araddr = icache$mem_master_araddr ;
-
-  // value method imem_master_ar_arlen
-  assign imem_master_arlen = icache$mem_master_arlen ;
-
-  // value method imem_master_ar_arsize
-  assign imem_master_arsize = icache$mem_master_arsize ;
-
-  // value method imem_master_ar_arburst
-  assign imem_master_arburst = icache$mem_master_arburst ;
-
-  // value method imem_master_ar_arlock
-  assign imem_master_arlock = icache$mem_master_arlock ;
-
-  // value method imem_master_ar_arcache
-  assign imem_master_arcache = icache$mem_master_arcache ;
-
-  // value method imem_master_ar_arprot
-  assign imem_master_arprot = icache$mem_master_arprot ;
-
-  // value method imem_master_ar_arqos
-  assign imem_master_arqos = icache$mem_master_arqos ;
-
-  // value method imem_master_ar_arregion
-  assign imem_master_arregion = icache$mem_master_arregion ;
-
-  // value method imem_master_ar_arvalid
-  assign imem_master_arvalid = icache$mem_master_arvalid ;
-
-  // action method imem_master_ar_arready
-  assign CAN_FIRE_imem_master_ar_arready = 1'd1 ;
-  assign WILL_FIRE_imem_master_ar_arready = 1'd1 ;
-
-  // action method imem_master_r_rflit
-  assign CAN_FIRE_imem_master_r_rflit = 1'd1 ;
-  assign WILL_FIRE_imem_master_r_rflit = imem_master_rvalid ;
-
-  // value method imem_master_r_rready
-  assign imem_master_rready = icache$mem_master_rready ;
+  // action method imem_master_r_put
+  assign RDY_imem_master_r_put = icache$RDY_mem_master_r_put ;
+  assign CAN_FIRE_imem_master_r_put = icache$RDY_mem_master_r_put ;
+  assign WILL_FIRE_imem_master_r_put = EN_imem_master_r_put ;
 
   // action method dmem_req
   assign CAN_FIRE_dmem_req = 1'd1 ;
@@ -1348,112 +816,57 @@ module mkNear_Mem(CLK,
   // value method dmem_exc_code
   assign dmem_exc_code = dcache$exc_code ;
 
-  // value method dmem_master_aw_awid
-  assign dmem_master_awid = dcache$mem_master_awid ;
+  // value method dmem_master_aw_canPeek
+  assign dmem_master_aw_canPeek = dcache$mem_master_aw_canPeek ;
 
-  // value method dmem_master_aw_awaddr
-  assign dmem_master_awaddr = dcache$mem_master_awaddr ;
+  // value method dmem_master_aw_peek
+  assign dmem_master_aw_peek = dcache$mem_master_aw_peek ;
+  assign RDY_dmem_master_aw_peek = dcache$RDY_mem_master_aw_peek ;
 
-  // value method dmem_master_aw_awlen
-  assign dmem_master_awlen = dcache$mem_master_awlen ;
+  // action method dmem_master_aw_drop
+  assign RDY_dmem_master_aw_drop = dcache$RDY_mem_master_aw_drop ;
+  assign CAN_FIRE_dmem_master_aw_drop = dcache$RDY_mem_master_aw_drop ;
+  assign WILL_FIRE_dmem_master_aw_drop = EN_dmem_master_aw_drop ;
 
-  // value method dmem_master_aw_awsize
-  assign dmem_master_awsize = dcache$mem_master_awsize ;
+  // value method dmem_master_w_canPeek
+  assign dmem_master_w_canPeek = dcache$mem_master_w_canPeek ;
 
-  // value method dmem_master_aw_awburst
-  assign dmem_master_awburst = dcache$mem_master_awburst ;
+  // value method dmem_master_w_peek
+  assign dmem_master_w_peek = dcache$mem_master_w_peek ;
+  assign RDY_dmem_master_w_peek = dcache$RDY_mem_master_w_peek ;
 
-  // value method dmem_master_aw_awlock
-  assign dmem_master_awlock = dcache$mem_master_awlock ;
+  // action method dmem_master_w_drop
+  assign RDY_dmem_master_w_drop = dcache$RDY_mem_master_w_drop ;
+  assign CAN_FIRE_dmem_master_w_drop = dcache$RDY_mem_master_w_drop ;
+  assign WILL_FIRE_dmem_master_w_drop = EN_dmem_master_w_drop ;
 
-  // value method dmem_master_aw_awcache
-  assign dmem_master_awcache = dcache$mem_master_awcache ;
+  // value method dmem_master_b_canPut
+  assign dmem_master_b_canPut = dcache$mem_master_b_canPut ;
 
-  // value method dmem_master_aw_awprot
-  assign dmem_master_awprot = dcache$mem_master_awprot ;
+  // action method dmem_master_b_put
+  assign RDY_dmem_master_b_put = dcache$RDY_mem_master_b_put ;
+  assign CAN_FIRE_dmem_master_b_put = dcache$RDY_mem_master_b_put ;
+  assign WILL_FIRE_dmem_master_b_put = EN_dmem_master_b_put ;
 
-  // value method dmem_master_aw_awqos
-  assign dmem_master_awqos = dcache$mem_master_awqos ;
+  // value method dmem_master_ar_canPeek
+  assign dmem_master_ar_canPeek = dcache$mem_master_ar_canPeek ;
 
-  // value method dmem_master_aw_awregion
-  assign dmem_master_awregion = dcache$mem_master_awregion ;
+  // value method dmem_master_ar_peek
+  assign dmem_master_ar_peek = dcache$mem_master_ar_peek ;
+  assign RDY_dmem_master_ar_peek = dcache$RDY_mem_master_ar_peek ;
 
-  // value method dmem_master_aw_awvalid
-  assign dmem_master_awvalid = dcache$mem_master_awvalid ;
+  // action method dmem_master_ar_drop
+  assign RDY_dmem_master_ar_drop = dcache$RDY_mem_master_ar_drop ;
+  assign CAN_FIRE_dmem_master_ar_drop = dcache$RDY_mem_master_ar_drop ;
+  assign WILL_FIRE_dmem_master_ar_drop = EN_dmem_master_ar_drop ;
 
-  // action method dmem_master_aw_awready
-  assign CAN_FIRE_dmem_master_aw_awready = 1'd1 ;
-  assign WILL_FIRE_dmem_master_aw_awready = 1'd1 ;
+  // value method dmem_master_r_canPut
+  assign dmem_master_r_canPut = dcache$mem_master_r_canPut ;
 
-  // value method dmem_master_w_wdata
-  assign dmem_master_wdata = dcache$mem_master_wdata ;
-
-  // value method dmem_master_w_wstrb
-  assign dmem_master_wstrb = dcache$mem_master_wstrb ;
-
-  // value method dmem_master_w_wlast
-  assign dmem_master_wlast = dcache$mem_master_wlast ;
-
-  // value method dmem_master_w_wuser
-  assign dmem_master_wuser = dcache$mem_master_wuser ;
-
-  // value method dmem_master_w_wvalid
-  assign dmem_master_wvalid = dcache$mem_master_wvalid ;
-
-  // action method dmem_master_w_wready
-  assign CAN_FIRE_dmem_master_w_wready = 1'd1 ;
-  assign WILL_FIRE_dmem_master_w_wready = 1'd1 ;
-
-  // action method dmem_master_b_bflit
-  assign CAN_FIRE_dmem_master_b_bflit = 1'd1 ;
-  assign WILL_FIRE_dmem_master_b_bflit = dmem_master_bvalid ;
-
-  // value method dmem_master_b_bready
-  assign dmem_master_bready = dcache$mem_master_bready ;
-
-  // value method dmem_master_ar_arid
-  assign dmem_master_arid = dcache$mem_master_arid ;
-
-  // value method dmem_master_ar_araddr
-  assign dmem_master_araddr = dcache$mem_master_araddr ;
-
-  // value method dmem_master_ar_arlen
-  assign dmem_master_arlen = dcache$mem_master_arlen ;
-
-  // value method dmem_master_ar_arsize
-  assign dmem_master_arsize = dcache$mem_master_arsize ;
-
-  // value method dmem_master_ar_arburst
-  assign dmem_master_arburst = dcache$mem_master_arburst ;
-
-  // value method dmem_master_ar_arlock
-  assign dmem_master_arlock = dcache$mem_master_arlock ;
-
-  // value method dmem_master_ar_arcache
-  assign dmem_master_arcache = dcache$mem_master_arcache ;
-
-  // value method dmem_master_ar_arprot
-  assign dmem_master_arprot = dcache$mem_master_arprot ;
-
-  // value method dmem_master_ar_arqos
-  assign dmem_master_arqos = dcache$mem_master_arqos ;
-
-  // value method dmem_master_ar_arregion
-  assign dmem_master_arregion = dcache$mem_master_arregion ;
-
-  // value method dmem_master_ar_arvalid
-  assign dmem_master_arvalid = dcache$mem_master_arvalid ;
-
-  // action method dmem_master_ar_arready
-  assign CAN_FIRE_dmem_master_ar_arready = 1'd1 ;
-  assign WILL_FIRE_dmem_master_ar_arready = 1'd1 ;
-
-  // action method dmem_master_r_rflit
-  assign CAN_FIRE_dmem_master_r_rflit = 1'd1 ;
-  assign WILL_FIRE_dmem_master_r_rflit = dmem_master_rvalid ;
-
-  // value method dmem_master_r_rready
-  assign dmem_master_rready = dcache$mem_master_rready ;
+  // action method dmem_master_r_put
+  assign RDY_dmem_master_r_put = dcache$RDY_mem_master_r_put ;
+  assign CAN_FIRE_dmem_master_r_put = dcache$RDY_mem_master_r_put ;
+  assign WILL_FIRE_dmem_master_r_put = EN_dmem_master_r_put ;
 
   // action method server_fence_i_request_put
   assign RDY_server_fence_i_request_put =
@@ -1496,16 +909,8 @@ module mkNear_Mem(CLK,
   // submodule dcache
   mkMMU_DCache dcache(.CLK(CLK),
 		      .RST_N(RST_N),
-		      .mem_master_arready(dcache$mem_master_arready),
-		      .mem_master_awready(dcache$mem_master_awready),
-		      .mem_master_bid(dcache$mem_master_bid),
-		      .mem_master_bresp(dcache$mem_master_bresp),
-		      .mem_master_rdata(dcache$mem_master_rdata),
-		      .mem_master_rid(dcache$mem_master_rid),
-		      .mem_master_rlast(dcache$mem_master_rlast),
-		      .mem_master_rresp(dcache$mem_master_rresp),
-		      .mem_master_ruser(dcache$mem_master_ruser),
-		      .mem_master_wready(dcache$mem_master_wready),
+		      .mem_master_b_put_val(dcache$mem_master_b_put_val),
+		      .mem_master_r_put_val(dcache$mem_master_r_put_val),
 		      .req_addr(dcache$req_addr),
 		      .req_amo_funct5(dcache$req_amo_funct5),
 		      .req_is_unsigned(dcache$req_is_unsigned),
@@ -1525,8 +930,11 @@ module mkNear_Mem(CLK,
 		      .EN_server_flush_request_put(dcache$EN_server_flush_request_put),
 		      .EN_server_flush_response_get(dcache$EN_server_flush_response_get),
 		      .EN_tlb_flush(dcache$EN_tlb_flush),
-		      .mem_master_bvalid(dcache$mem_master_bvalid),
-		      .mem_master_rvalid(dcache$mem_master_rvalid),
+		      .EN_mem_master_aw_drop(dcache$EN_mem_master_aw_drop),
+		      .EN_mem_master_w_drop(dcache$EN_mem_master_w_drop),
+		      .EN_mem_master_b_put(dcache$EN_mem_master_b_put),
+		      .EN_mem_master_ar_drop(dcache$EN_mem_master_ar_drop),
+		      .EN_mem_master_r_put(dcache$EN_mem_master_r_put),
 		      .RDY_set_verbosity(),
 		      .RDY_server_reset_request_put(dcache$RDY_server_reset_request_put),
 		      .RDY_server_reset_response_get(dcache$RDY_server_reset_response_get),
@@ -1541,35 +949,22 @@ module mkNear_Mem(CLK,
 		      .RDY_server_flush_request_put(dcache$RDY_server_flush_request_put),
 		      .RDY_server_flush_response_get(dcache$RDY_server_flush_response_get),
 		      .RDY_tlb_flush(),
-		      .mem_master_awid(dcache$mem_master_awid),
-		      .mem_master_awaddr(dcache$mem_master_awaddr),
-		      .mem_master_awlen(dcache$mem_master_awlen),
-		      .mem_master_awsize(dcache$mem_master_awsize),
-		      .mem_master_awburst(dcache$mem_master_awburst),
-		      .mem_master_awlock(dcache$mem_master_awlock),
-		      .mem_master_awcache(dcache$mem_master_awcache),
-		      .mem_master_awprot(dcache$mem_master_awprot),
-		      .mem_master_awqos(dcache$mem_master_awqos),
-		      .mem_master_awregion(dcache$mem_master_awregion),
-		      .mem_master_awvalid(dcache$mem_master_awvalid),
-		      .mem_master_wdata(dcache$mem_master_wdata),
-		      .mem_master_wstrb(dcache$mem_master_wstrb),
-		      .mem_master_wlast(dcache$mem_master_wlast),
-		      .mem_master_wuser(dcache$mem_master_wuser),
-		      .mem_master_wvalid(dcache$mem_master_wvalid),
-		      .mem_master_bready(dcache$mem_master_bready),
-		      .mem_master_arid(dcache$mem_master_arid),
-		      .mem_master_araddr(dcache$mem_master_araddr),
-		      .mem_master_arlen(dcache$mem_master_arlen),
-		      .mem_master_arsize(dcache$mem_master_arsize),
-		      .mem_master_arburst(dcache$mem_master_arburst),
-		      .mem_master_arlock(dcache$mem_master_arlock),
-		      .mem_master_arcache(dcache$mem_master_arcache),
-		      .mem_master_arprot(dcache$mem_master_arprot),
-		      .mem_master_arqos(dcache$mem_master_arqos),
-		      .mem_master_arregion(dcache$mem_master_arregion),
-		      .mem_master_arvalid(dcache$mem_master_arvalid),
-		      .mem_master_rready(dcache$mem_master_rready));
+		      .mem_master_aw_canPeek(dcache$mem_master_aw_canPeek),
+		      .mem_master_aw_peek(dcache$mem_master_aw_peek),
+		      .RDY_mem_master_aw_peek(dcache$RDY_mem_master_aw_peek),
+		      .RDY_mem_master_aw_drop(dcache$RDY_mem_master_aw_drop),
+		      .mem_master_w_canPeek(dcache$mem_master_w_canPeek),
+		      .mem_master_w_peek(dcache$mem_master_w_peek),
+		      .RDY_mem_master_w_peek(dcache$RDY_mem_master_w_peek),
+		      .RDY_mem_master_w_drop(dcache$RDY_mem_master_w_drop),
+		      .mem_master_b_canPut(dcache$mem_master_b_canPut),
+		      .RDY_mem_master_b_put(dcache$RDY_mem_master_b_put),
+		      .mem_master_ar_canPeek(dcache$mem_master_ar_canPeek),
+		      .mem_master_ar_peek(dcache$mem_master_ar_peek),
+		      .RDY_mem_master_ar_peek(dcache$RDY_mem_master_ar_peek),
+		      .RDY_mem_master_ar_drop(dcache$RDY_mem_master_ar_drop),
+		      .mem_master_r_canPut(dcache$mem_master_r_canPut),
+		      .RDY_mem_master_r_put(dcache$RDY_mem_master_r_put));
 
   // submodule f_reset_rsps
   FIFO20 #(.guarded(32'd1)) f_reset_rsps(.RST(RST_N),
@@ -1583,16 +978,8 @@ module mkNear_Mem(CLK,
   // submodule icache
   mkMMU_ICache icache(.CLK(CLK),
 		      .RST_N(RST_N),
-		      .mem_master_arready(icache$mem_master_arready),
-		      .mem_master_awready(icache$mem_master_awready),
-		      .mem_master_bid(icache$mem_master_bid),
-		      .mem_master_bresp(icache$mem_master_bresp),
-		      .mem_master_rdata(icache$mem_master_rdata),
-		      .mem_master_rid(icache$mem_master_rid),
-		      .mem_master_rlast(icache$mem_master_rlast),
-		      .mem_master_rresp(icache$mem_master_rresp),
-		      .mem_master_ruser(icache$mem_master_ruser),
-		      .mem_master_wready(icache$mem_master_wready),
+		      .mem_master_b_put_val(icache$mem_master_b_put_val),
+		      .mem_master_r_put_val(icache$mem_master_r_put_val),
 		      .req_addr(icache$req_addr),
 		      .req_amo_funct5(icache$req_amo_funct5),
 		      .req_is_unsigned(icache$req_is_unsigned),
@@ -1612,8 +999,11 @@ module mkNear_Mem(CLK,
 		      .EN_server_flush_request_put(icache$EN_server_flush_request_put),
 		      .EN_server_flush_response_get(icache$EN_server_flush_response_get),
 		      .EN_tlb_flush(icache$EN_tlb_flush),
-		      .mem_master_bvalid(icache$mem_master_bvalid),
-		      .mem_master_rvalid(icache$mem_master_rvalid),
+		      .EN_mem_master_aw_drop(icache$EN_mem_master_aw_drop),
+		      .EN_mem_master_w_drop(icache$EN_mem_master_w_drop),
+		      .EN_mem_master_b_put(icache$EN_mem_master_b_put),
+		      .EN_mem_master_ar_drop(icache$EN_mem_master_ar_drop),
+		      .EN_mem_master_r_put(icache$EN_mem_master_r_put),
 		      .RDY_set_verbosity(),
 		      .RDY_server_reset_request_put(icache$RDY_server_reset_request_put),
 		      .RDY_server_reset_response_get(icache$RDY_server_reset_response_get),
@@ -1628,35 +1018,22 @@ module mkNear_Mem(CLK,
 		      .RDY_server_flush_request_put(icache$RDY_server_flush_request_put),
 		      .RDY_server_flush_response_get(icache$RDY_server_flush_response_get),
 		      .RDY_tlb_flush(),
-		      .mem_master_awid(icache$mem_master_awid),
-		      .mem_master_awaddr(icache$mem_master_awaddr),
-		      .mem_master_awlen(icache$mem_master_awlen),
-		      .mem_master_awsize(icache$mem_master_awsize),
-		      .mem_master_awburst(icache$mem_master_awburst),
-		      .mem_master_awlock(icache$mem_master_awlock),
-		      .mem_master_awcache(icache$mem_master_awcache),
-		      .mem_master_awprot(icache$mem_master_awprot),
-		      .mem_master_awqos(icache$mem_master_awqos),
-		      .mem_master_awregion(icache$mem_master_awregion),
-		      .mem_master_awvalid(icache$mem_master_awvalid),
-		      .mem_master_wdata(icache$mem_master_wdata),
-		      .mem_master_wstrb(icache$mem_master_wstrb),
-		      .mem_master_wlast(icache$mem_master_wlast),
-		      .mem_master_wuser(icache$mem_master_wuser),
-		      .mem_master_wvalid(icache$mem_master_wvalid),
-		      .mem_master_bready(icache$mem_master_bready),
-		      .mem_master_arid(icache$mem_master_arid),
-		      .mem_master_araddr(icache$mem_master_araddr),
-		      .mem_master_arlen(icache$mem_master_arlen),
-		      .mem_master_arsize(icache$mem_master_arsize),
-		      .mem_master_arburst(icache$mem_master_arburst),
-		      .mem_master_arlock(icache$mem_master_arlock),
-		      .mem_master_arcache(icache$mem_master_arcache),
-		      .mem_master_arprot(icache$mem_master_arprot),
-		      .mem_master_arqos(icache$mem_master_arqos),
-		      .mem_master_arregion(icache$mem_master_arregion),
-		      .mem_master_arvalid(icache$mem_master_arvalid),
-		      .mem_master_rready(icache$mem_master_rready));
+		      .mem_master_aw_canPeek(icache$mem_master_aw_canPeek),
+		      .mem_master_aw_peek(icache$mem_master_aw_peek),
+		      .RDY_mem_master_aw_peek(icache$RDY_mem_master_aw_peek),
+		      .RDY_mem_master_aw_drop(icache$RDY_mem_master_aw_drop),
+		      .mem_master_w_canPeek(icache$mem_master_w_canPeek),
+		      .mem_master_w_peek(icache$mem_master_w_peek),
+		      .RDY_mem_master_w_peek(icache$RDY_mem_master_w_peek),
+		      .RDY_mem_master_w_drop(icache$RDY_mem_master_w_drop),
+		      .mem_master_b_canPut(icache$mem_master_b_canPut),
+		      .RDY_mem_master_b_put(icache$RDY_mem_master_b_put),
+		      .mem_master_ar_canPeek(icache$mem_master_ar_canPeek),
+		      .mem_master_ar_peek(icache$mem_master_ar_peek),
+		      .RDY_mem_master_ar_peek(icache$RDY_mem_master_ar_peek),
+		      .RDY_mem_master_ar_drop(icache$RDY_mem_master_ar_drop),
+		      .mem_master_r_canPut(icache$mem_master_r_canPut),
+		      .RDY_mem_master_r_put(icache$RDY_mem_master_r_put));
 
   // submodule soc_map
   mkSoC_Map soc_map(.CLK(CLK),
@@ -1730,16 +1107,8 @@ module mkNear_Mem(CLK,
 	     WILL_FIRE_RL_rl_reset_complete ;
 
   // submodule dcache
-  assign dcache$mem_master_arready = dmem_master_arready ;
-  assign dcache$mem_master_awready = dmem_master_awready ;
-  assign dcache$mem_master_bid = dmem_master_bid ;
-  assign dcache$mem_master_bresp = dmem_master_bresp ;
-  assign dcache$mem_master_rdata = dmem_master_rdata ;
-  assign dcache$mem_master_rid = dmem_master_rid ;
-  assign dcache$mem_master_rlast = dmem_master_rlast ;
-  assign dcache$mem_master_rresp = dmem_master_rresp ;
-  assign dcache$mem_master_ruser = dmem_master_ruser ;
-  assign dcache$mem_master_wready = dmem_master_wready ;
+  assign dcache$mem_master_b_put_val = dmem_master_b_put_val ;
+  assign dcache$mem_master_r_put_val = dmem_master_r_put_val ;
   assign dcache$req_addr = dmem_req_addr ;
   assign dcache$req_amo_funct5 = dmem_req_amo_funct5 ;
   assign dcache$req_is_unsigned = dmem_req_is_unsigned ;
@@ -1761,8 +1130,11 @@ module mkNear_Mem(CLK,
   assign dcache$EN_server_flush_response_get =
 	     EN_server_fence_i_response_get || EN_server_fence_response_get ;
   assign dcache$EN_tlb_flush = EN_sfence_vma ;
-  assign dcache$mem_master_bvalid = dmem_master_bvalid ;
-  assign dcache$mem_master_rvalid = dmem_master_rvalid ;
+  assign dcache$EN_mem_master_aw_drop = EN_dmem_master_aw_drop ;
+  assign dcache$EN_mem_master_w_drop = EN_dmem_master_w_drop ;
+  assign dcache$EN_mem_master_b_put = EN_dmem_master_b_put ;
+  assign dcache$EN_mem_master_ar_drop = EN_dmem_master_ar_drop ;
+  assign dcache$EN_mem_master_r_put = EN_dmem_master_r_put ;
 
   // submodule f_reset_rsps
   assign f_reset_rsps$ENQ = MUX_rg_state$write_1__SEL_3 ;
@@ -1770,16 +1142,8 @@ module mkNear_Mem(CLK,
   assign f_reset_rsps$CLR = 1'b0 ;
 
   // submodule icache
-  assign icache$mem_master_arready = imem_master_arready ;
-  assign icache$mem_master_awready = imem_master_awready ;
-  assign icache$mem_master_bid = imem_master_bid ;
-  assign icache$mem_master_bresp = imem_master_bresp ;
-  assign icache$mem_master_rdata = imem_master_rdata ;
-  assign icache$mem_master_rid = imem_master_rid ;
-  assign icache$mem_master_rlast = imem_master_rlast ;
-  assign icache$mem_master_rresp = imem_master_rresp ;
-  assign icache$mem_master_ruser = imem_master_ruser ;
-  assign icache$mem_master_wready = imem_master_wready ;
+  assign icache$mem_master_b_put_val = imem_master_b_put_val ;
+  assign icache$mem_master_r_put_val = imem_master_r_put_val ;
   assign icache$req_addr = imem_req_addr ;
   assign icache$req_amo_funct5 = 5'bxxxxx /* unspecified value */  ;
   assign icache$req_is_unsigned = 1'd1 ;
@@ -1802,8 +1166,11 @@ module mkNear_Mem(CLK,
   assign icache$EN_server_flush_response_get =
 	     EN_server_fence_i_response_get ;
   assign icache$EN_tlb_flush = EN_sfence_vma ;
-  assign icache$mem_master_bvalid = imem_master_bvalid ;
-  assign icache$mem_master_rvalid = imem_master_rvalid ;
+  assign icache$EN_mem_master_aw_drop = EN_imem_master_aw_drop ;
+  assign icache$EN_mem_master_w_drop = EN_imem_master_w_drop ;
+  assign icache$EN_mem_master_b_put = EN_imem_master_b_put ;
+  assign icache$EN_mem_master_ar_drop = EN_imem_master_ar_drop ;
+  assign icache$EN_mem_master_r_put = EN_imem_master_r_put ;
 
   // submodule soc_map
   assign soc_map$m_is_IO_addr_addr = 64'h0 ;
@@ -1850,23 +1217,23 @@ module mkNear_Mem(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset && NOT_cfg_verbosity_read_ULE_1___d9)
 	begin
-	  v__h1672 = $stime;
+	  v__h1160 = $stime;
 	  #0;
 	end
-    v__h1666 = v__h1672 / 32'd10;
+    v__h1154 = v__h1160 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset && NOT_cfg_verbosity_read_ULE_1___d9)
-	$display("%0d: Near_Mem.rl_reset", v__h1666);
+	$display("%0d: Near_Mem.rl_reset", v__h1154);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset_complete && NOT_cfg_verbosity_read_ULE_1___d9)
 	begin
-	  v__h1823 = $stime;
+	  v__h1311 = $stime;
 	  #0;
 	end
-    v__h1817 = v__h1823 / 32'd10;
+    v__h1305 = v__h1311 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset_complete && NOT_cfg_verbosity_read_ULE_1___d9)
-	$display("%0d: Near_Mem.rl_reset_complete", v__h1817);
+	$display("%0d: Near_Mem.rl_reset_complete", v__h1305);
   end
   // synopsys translate_on
 endmodule  // mkNear_Mem
