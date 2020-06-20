@@ -356,11 +356,11 @@ function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
 endfunction
 `else
 function Bit #(1) fn_PTE_to_StoreCap (PTE pte);
-   return True;
+   return 1'b1;
 endfunction
 
 function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
-   return True;
+   return 1'b1;
 endfunction
 `endif
 
