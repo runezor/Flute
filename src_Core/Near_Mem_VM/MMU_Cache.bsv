@@ -220,6 +220,7 @@ deriving (Bits, Eq, FShow);
 
 typedef struct {
    VM_Xlate_Outcome   outcome;
+   Bool               allow_cap;     // whether we will be allowed to load a cap
    PA                 pa;            // phys addr, if VM_XLATE_OK
    Exc_Code           exc_code;      // if VM_XLATE_EXC
    } VM_Xlate_Result
@@ -944,6 +945,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `else
       // In non-VM, PA is always WordXL
       VM_Xlate_Result vm_xlate_result = VM_Xlate_Result {outcome:      VM_XLATE_OK,
+							 allow_cap:    True,
 							 pa:           rg_addr,
 							 exc_code:     ?};
 `endif
