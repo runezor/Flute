@@ -523,6 +523,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
    Reg #(WordXL)     rg_addr        <- mkRegU;    // VA or PA
    Reg #(Tuple2#(Bool, Bit #(128))) rg_st_amo_val  <- mkRegU;    // Store-value for ST, SC, AMO
+   Reg #(Bool)       rg_allow_cap <- mkRegU;      // Whether load result is allowed to be tagged by VM page bits
 
    // The following are needed for VM
 `ifdef ISA_PRIV_S
@@ -580,9 +581,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Reg #(Bool)      dw_exc               <- mkDWire (False);
    Reg #(Exc_Code)  rg_exc_code          <- mkRegU;
    Reg #(Exc_Code)  dw_exc_code          <- mkDWire (?);
-   Reg #(Tuple2#(Bool, Bit#(128))) rg_ld_val            <- mkRegU;         // Load-value for LOAD/LR/AMO, success/fail for SC
-   Reg #(Tuple2#(Bool, Bit#(128))) dw_output_ld_val     <- mkDWire (?);
-   Reg #(Tuple2#(Bool, Bit#(128))) dw_output_st_amo_val <- mkDWire (?);    // stored value for ST, SC, AMO (for verification only)
+   Reg #(Tuple2 #(Bool, Bit #(128))) rg_ld_val            <- mkReg (tuple2 (False, ?));      // Load-value for LOAD/LR/AMO, success/fail for SC
+   Reg #(Tuple2 #(Bool, Bit #(128))) dw_output_ld_val     <- mkDWire (tuple2 (False, ?));
+   Reg #(Tuple2 #(Bool, Bit #(128))) dw_output_st_amo_val <- mkDWire (tuple2 (False, ?));    // stored value for ST, SC, AMO (for verification only)
 
    // This reg is used during PTWs
    Reg #(PA) rg_pte_pa <- mkRegU;
@@ -675,20 +676,22 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Exc_Code access_exc_code     = fn_access_exc_code     (dmem_not_imem, ((rg_op == CACHE_LD) || is_AMO_LR));
 
 `ifdef ISA_PRIV_S
-   Exc_Code page_fault_exc_code = fn_page_fault_exc_code (dmem_not_imem, ((rg_op == CACHE_LD) || is_AMO_LR));
+   Exc_Code page_fault_exc_code = fn_page_fault_default_exc_code (dmem_not_imem, ((rg_op == CACHE_LD) || is_AMO_LR));
 `endif
 
    // ----------------------------------------------------------------
    // Functions to drive read-responses (outputs)
 
    // Memory-read responses
-   function Action fa_drive_mem_rsp (Bit #(3) width_code, Bool is_unsigned, Addr addr, Cache_Entry ld_val, Cache_Entry st_amo_val, Bool commit);
+   function Action fa_drive_mem_rsp (Bit #(3) width_code, Bool is_unsigned, Addr addr, Cache_Entry ld_val, Cache_Entry st_amo_val, Bool allow_cap, Bool commit);
       action
 	 dw_valid             <= commit;
 	 // Value loaded into rd (LOAD, LR, AMO, SC success/fail result)
-	 dw_output_ld_val     <= fn_extract_and_extend_bytes (width_code, is_unsigned, addr, ld_val);
+	 let extracted = fn_extract_and_extend_bytes (width_code, is_unsigned, addr, ld_val);
+	 if (! allow_cap) extracted = tuple2 (False, tpl_2 (extracted));
+	 dw_output_ld_val     <= extracted;
 	 // Value stored into mem (STORE, SC, AMO final value stored)
-	 dw_output_st_amo_val <= tuple2(tpl_1(st_amo_val)[(valueOf(CLEN) == 64 && addr[4:0] == 0) ? 1 : 0] == 1'b1, tpl_2(st_amo_val));
+	 dw_output_st_amo_val <= tuple2 (tpl_1 (st_amo_val) [(valueOf (CLEN) == 64 && addr[4:0] == 0) ? 1 : 0] == 1'b1, tpl_2 (st_amo_val));
 	 if (cfg_verbosity > 1)
 	    $display ("%0d: %s.drive_mem_rsp: addr 0x%0h ld_val 0x%0h st_amo_val 0x%0h",
 		      cur_cycle, d_or_i, addr, ld_val, st_amo_val);
@@ -696,10 +699,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    endfunction
 
    // IO-read responses
-   function Action fa_drive_IO_read_rsp (Bit #(3) width_code, Bool is_unsigned, Addr addr, Tuple2#(Bool, Bit #(128)) ld_val);
+   function Action fa_drive_IO_read_rsp (Bit #(3) width_code, Bool is_unsigned, Addr addr, Tuple2#(Bool, Bit #(128)) ld_val, Bool allow_cap);
       action
 	 dw_valid         <= True;
 	 // Value loaded into rd (LOAD, LR, AMO, SC success/fail result)
+	 if (! allow_cap) ld_val = tuple2 (False, tpl_2 (ld_val));
 	 dw_output_ld_val <= ld_val;
 	 if (cfg_verbosity > 1)
 	    $display ("%0d: %s.drive_IO_read_rsp: addr 0x%0h ld_val 0x%0h", cur_cycle, d_or_i, addr, ld_val);
@@ -933,6 +937,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 						       tlb_result,
 						       dmem_not_imem,
 						       ((rg_op == CACHE_LD) || is_AMO_LR),
+						       tpl_1 (rg_st_amo_val),
 						       rg_priv,
 						       rg_sstatus_SUM,
 						       rg_mstatus_MXR);
@@ -956,6 +961,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 new_state = MODULE_EXCEPTION_RSP;
 	 new_exc_code = vm_xlate_result.exc_code;
       end
+`ifdef RVFI_DII
+   else if (vm_xlate_result.pa < fromInteger (valueOf (RVFI_DII_Mem_Start)) || vm_xlate_result.pa >= fromInteger (valueOf (RVFI_DII_Mem_End))) begin
+	 // We detect accesses outside of the assigned RVFI_DII range and trap on them
+	 new_state    = MODULE_EXCEPTION_RSP;
+	 new_exc_code = (((rg_op == CACHE_LD) || is_AMO_LR) ? exc_code_LOAD_ACCESS_FAULT : exc_code_STORE_AMO_ACCESS_FAULT);
+      end
+`endif
 
       // ---- vm_xlate_result.outcome == VM_XLATE_OK
       else begin
@@ -964,6 +976,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
 
 	 rg_pa <= vm_xlate_result.pa;
+	 rg_allow_cap <= vm_xlate_result.allow_cap;
 	 let is_mem_addr = soc_map.m_is_mem_addr (fn_PA_to_Fabric_Addr (vm_xlate_result.pa));
 
 	 // Access to non-memory
@@ -986,7 +999,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    if ((rg_op == CACHE_LD) || is_AMO_LR || (! dmem_not_imem)) begin
 	       if (hit) begin
 		  // Cache hit; drive response
-		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0), dw_commit);
+		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0), vm_xlate_result.allow_cap, dw_commit);
 
 `ifdef ISA_A
 		  if (is_AMO_LR) begin
@@ -1088,7 +1101,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       else begin // do_write == False
 		  // SC fail
 		     // Hard-code address to 0 to ensure fn_extract_and_extend_bytes takes the LSBs of our 1 value.
-		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, 0, tuple2(0,1), unpack(0), dw_commit);
+		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, 0, tuple2(0,1), unpack(0), False, dw_commit);
 		  if (cfg_verbosity > 1)
 		     $display ("        AMO SC: Fail response for addr 0x%0h", rg_addr);
 	       end
@@ -1632,7 +1645,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    rule rl_ST_AMO_response (rg_state == CACHE_ST_AMO_RSP && dmem_not_imem);
       dw_valid             <= True;
-      dw_output_ld_val     <= rg_ld_val;        // Irrelevant for ST; relevant for SC, AMO
+      let ld_val = rg_ld_val;
+      if (! rg_allow_cap) ld_val = tuple2 (False, tpl_2 (ld_val));
+      dw_output_ld_val     <= ld_val;        // Irrelevant for ST; relevant for SC, AMO
       dw_output_st_amo_val <= rg_st_amo_val;
    endrule
 
@@ -1684,7 +1699,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
         // Successful read
         if (rd_data.rresp == OKAY) begin
-           fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, ld_val);
+           fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, ld_val, rg_allow_cap);
            rg_state <= IO_READ_RSP;
         end
 
@@ -1702,7 +1717,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
           rg_lower_word64 <= rd_data.rdata;
         end else begin // rg_lower_word64_full && rd_data.rlast
           if (rd_data.rresp == OKAY) begin
-            fa_drive_IO_read_rsp(rg_width_code, rg_is_unsigned, rg_addr, tuple2(False, {rd_data.rdata, rg_lower_word64})); // No tags from IO mem
+            fa_drive_IO_read_rsp(rg_width_code, rg_is_unsigned, rg_addr, tuple2(False, {rd_data.rdata, rg_lower_word64}), rg_allow_cap); // No tags from IO mem
             rg_ld_val <= tuple2(False, {rd_data.rdata, rg_lower_word64});
             rg_lower_word64_full <= False;
           end else begin
@@ -1721,7 +1736,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Stays in this state until CPU's next request puts it back into RUNNING state
 
    rule rl_maintain_io_read_rsp (!resetting && rg_state == IO_READ_RSP && dmem_not_imem);
-      fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, rg_ld_val);
+      fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, rg_ld_val, rg_allow_cap);
    endrule
 
    // ----------------------------------------------------------------
@@ -1835,7 +1850,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    // Write back new st_val to fabric
 	    fa_fabric_send_write_req (rg_width_code, rg_pa, new_st_val);
 
-	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, new_ld_val);
+	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, new_ld_val, rg_allow_cap);
 	    rg_ld_val <= new_ld_val;
 	    rg_state  <= IO_READ_RSP;
 
@@ -1948,13 +1963,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 rg_state    <= MODULE_EXCEPTION_RSP;
 	 rg_exc_code <= ((op == CACHE_LD) ? exc_code_LOAD_ADDR_MISALIGNED : exc_code_STORE_AMO_ADDR_MISALIGNED);
       end
-`ifdef RVFI_DII
-   else if (addr < fromInteger(valueOf(RVFI_DII_Mem_Start)) || addr >= fromInteger(valueOf(RVFI_DII_Mem_End))) begin
-	 // We detect accesses outside of the assigned RVFI_DII range and trap on them
-	 rg_state    <= MODULE_EXCEPTION_RSP;
-	 rg_exc_code <= ((op == CACHE_LD) ? exc_code_LOAD_ACCESS_FAULT : exc_code_STORE_AMO_ACCESS_FAULT); //TODO check exception codes, deal with unaligned accesses that exceed range?
-      end
-`endif
       else begin
 	 rg_state <= MODULE_RUNNING;
 	 fa_req_ram_B (addr);

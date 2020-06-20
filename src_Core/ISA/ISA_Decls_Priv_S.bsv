@@ -281,6 +281,11 @@ Integer  pte_PPN_1_offset  = 19;
 Integer  pte_PPN_2_offset  = 28;
 `endif
 
+`ifdef RV64
+Integer  pte_StoreCap_offset = 63;
+Integer  pte_LoadCap_offset  = 62;
+`endif
+
 function Bit #(1) fn_PTE_to_V (PTE pte);
    return pte [pte_V_offset];
 endfunction
@@ -341,6 +346,24 @@ function PPN_2  fn_PTE_to_PPN_2 (PTE pte);
 endfunction
 `endif
 
+`ifdef RV64
+function Bit #(1) fn_PTE_to_StoreCap (PTE pte);
+   return pte [pte_StoreCap_offset];
+endfunction
+
+function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
+   return pte [pte_LoadCap_offset];
+endfunction
+`else
+function Bit #(1) fn_PTE_to_StoreCap (PTE pte);
+   return True;
+endfunction
+
+function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
+   return True;
+endfunction
+`endif
+
 // ----------------
 // Check if a PTE is invalid (V bit clear, or improper R/W bits)
 
@@ -353,17 +376,22 @@ endfunction
 // ----------------
 // Check if PTE bits deny a virtual-mem access
 
-function Bool is_pte_denial (Bool       dmem_not_imem,        // load-store or fetch?
-			     Bool       read_not_write,
-			     Priv_Mode  priv,
-			     Bit #(1)   sstatus_SUM,
-			     Bit #(1)   mstatus_MXR,
-			     PTE        pte);
+function Tuple2#(Bool,Exc_Code) is_pte_fault
+			   (Bool       dmem_not_imem,        // load-store or fetch?
+			    Bool       read_not_write,
+			    Bool       capability,
+			    Priv_Mode  priv,
+			    Bit #(1)   sstatus_SUM,
+			    Bit #(1)   mstatus_MXR,
+			    PTE        pte);
 
    let pte_u = fn_PTE_to_U (pte);
    let pte_x = fn_PTE_to_X (pte);
    let pte_w = fn_PTE_to_W (pte);
    let pte_r = fn_PTE_to_R (pte);
+
+   let pte_StoreCap = fn_PTE_to_StoreCap (pte);
+   // pte_LoadCap would not cause a denial
 
    Bool priv_deny = (   ((priv == u_Priv_Mode) && (pte_u == 1'b0))
 		     || ((priv == s_Priv_Mode) && (pte_u == 1'b1) && (sstatus_SUM == 1'b0)));
@@ -371,6 +399,7 @@ function Bool is_pte_denial (Bool       dmem_not_imem,        // load-store or f
    Bool access_fetch = ((! dmem_not_imem) && read_not_write);
    Bool access_load  = (dmem_not_imem && read_not_write);
    Bool access_store = (dmem_not_imem && (! read_not_write));
+   Bool access_cap   = (dmem_not_imem && capability);
 
    let pte_r_mxr = (pte_r | (mstatus_MXR & pte_x));
 
@@ -378,26 +407,36 @@ function Bool is_pte_denial (Bool       dmem_not_imem,        // load-store or f
 		     || (access_load  && (pte_r_mxr == 1'b1))
 		     || (access_store && (pte_w     == 1'b1)));
 
-   
-   return (priv_deny || (! access_ok));
+   Bool access_cap_ok = (   (! capability)
+			 || access_load
+			 || (access_store && (pte_StoreCap == 1'b1)));
+
+   Bool pte_a_d_fault = (   fn_PTE_to_A (pte) == 0)
+			 || ((! read_not_write) && (fn_PTE_to_D (pte) == 0));
+
+   Exc_Code exc_code = ?;
+
+   if (priv_deny || (! access_ok) || (access_cap_ok && pte_a_d_fault)) begin
+      exc_code = fn_page_fault_default_exc_code (dmem_not_imem, read_not_write);
+   end
+   else if (! access_cap_ok) begin
+      // Note that we cannot trap on loads for this reason.
+      // However, with additional revocation PTE modes, we may trap here, and
+      // will need separate read and write signals to behave correctly for
+      // AMOs.
+      exc_code = exc_code_STORE_AMO_CAP_PAGE_FAULT;
+   end
+
+   return tuple2 ((priv_deny || (! access_ok) || (! access_cap_ok) || pte_a_d_fault),
+		  exc_code);
 endfunction
 
-// ----------------
-// Check PTE A and D bits
-
-function Bool is_pte_A_D_fault (Bool read_not_write, PTE pte);
-   return (   (fn_PTE_to_A (pte) == 0)
-	   || ((! read_not_write) && (fn_PTE_to_D (pte) == 0)));
-endfunction
-
-// ----------------
-// Choose particular kind of page fault
-
-function Exc_Code  fn_page_fault_exc_code (Bool dmem_not_imem, Bool read_not_write);
+// Exception code to give in case of invalid PTEs etc only depends on access type
+function Exc_Code  fn_page_fault_default_exc_code (Bool dmem_not_imem, Bool read_not_write);
    return ((! dmem_not_imem) ? exc_code_INSTR_PAGE_FAULT
 	   :(read_not_write  ? exc_code_LOAD_PAGE_FAULT
 	     :                 exc_code_STORE_AMO_PAGE_FAULT));
-endfunction   
+endfunction
 
 `else // ifdef ISA_PRIV_S
 // The below definitions are valid for cases where there is no VM

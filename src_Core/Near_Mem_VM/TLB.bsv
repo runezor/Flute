@@ -351,6 +351,7 @@ deriving (Bits, Eq, FShow);
 
 typedef struct {
    VM_Xlate_Outcome   outcome;
+   Bool               allow_cap;     // whether we will be allowed to load a cap
    PA                 pa;            // phys addr, if VM_XLATE_OK
    Exc_Code           exc_code;      // if VM_XLATE_EXC
    Bool               pte_modified;  // if VM_XLATE_OK and pte's A or D bits were modified
@@ -363,6 +364,7 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 						       TLB_Lookup_Result  tlb_result,
 						       Bool               dmem_not_imem,
 						       Bool               read_not_write,
+						       Bool               capability,
 						       Priv_Mode          priv,
 						       Bit #(1)           sstatus_SUM,
 						       Bit #(1)           mstatus_MXR);
@@ -385,17 +387,11 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 
       if (xlate) begin
 	 if (tlb_result.hit) begin
-	    Bool deny = is_pte_denial (dmem_not_imem, read_not_write, priv, sstatus_SUM, mstatus_MXR, pte);
-	    if (deny) begin
+	    Tuple2 #(Bool, Exc_Code) fault = is_pte_fault (dmem_not_imem, read_not_write, capability, priv, sstatus_SUM, mstatus_MXR, pte);
+	    if (tpl_1 (fault)) begin
 	       outcome = VM_XLATE_EXCEPTION;
-	       exc_code = fn_page_fault_exc_code (dmem_not_imem, read_not_write);
+	       exc_code = tpl_2 (fault);
 	       // $display ("fav_vm_xlate: page fault due to pte_denial");
-	    end
-
-	    else if (is_pte_A_D_fault (read_not_write, pte)) begin
-	       outcome = VM_XLATE_EXCEPTION;
-	       exc_code = fn_page_fault_exc_code (dmem_not_imem, read_not_write);
-	       // $display ("fav_vm_xlate: page fault due to A/D fault");
 	    end
 
 	    else begin
@@ -434,6 +430,7 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 	    outcome = VM_XLATE_TLB_MISS;
       end
       return VM_Xlate_Result {outcome:      outcome,
+			      allow_cap:    fn_PTE_to_LoadCap (pte) == 1'b1,
 			      pa:           pa,
 			      exc_code:     exc_code,
 			      pte_modified: pte_modified,
