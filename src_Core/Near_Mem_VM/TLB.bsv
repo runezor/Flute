@@ -387,6 +387,22 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
       PTE                pte          = tlb_result.pte;
 
       if (xlate) begin
+	 if (tlb_result.pte_level == 0)
+	    pa = zeroExtend ({fn_PTE_to_PPN (pte),
+			      fn_Addr_to_Offset (addr) });
+
+	 else if (tlb_result.pte_level == 1)
+	    pa = zeroExtend ({fn_PTE_to_PPN_mega (pte),
+			      fn_Addr_to_VPN_0 (addr),
+			      fn_Addr_to_Offset (addr) });
+`ifdef SV39
+	 else if (tlb_result.pte_level == 2)
+	    pa = zeroExtend ({fn_PTE_to_PPN_giga (pte),
+			      fn_Addr_to_VPN_1 (addr),
+			      fn_Addr_to_VPN_0 (addr),
+			      fn_Addr_to_Offset (addr) });
+`endif
+
 	 if (tlb_result.hit) begin
 	    Tuple2 #(Bool, Exc_Code) fault = is_pte_fault (dmem_not_imem, read_not_write, capability, priv, sstatus_SUM, mstatus_MXR, pte);
 	    if (tpl_1 (fault)) begin
@@ -396,22 +412,6 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 	    end
 
 	    else begin
-	       if (tlb_result.pte_level == 0)
-		  pa = zeroExtend ({fn_PTE_to_PPN (pte),
-				    fn_Addr_to_Offset (addr) });
-
-	       else if (tlb_result.pte_level == 1)
-		  pa = zeroExtend ({fn_PTE_to_PPN_mega (pte),
-				    fn_Addr_to_VPN_0 (addr),
-				    fn_Addr_to_Offset (addr) });
-`ifdef SV39
-	       else if (tlb_result.pte_level == 2)
-		  pa = zeroExtend ({fn_PTE_to_PPN_giga (pte),
-				    fn_Addr_to_VPN_1 (addr),
-				    fn_Addr_to_VPN_0 (addr),
-				    fn_Addr_to_Offset (addr) });
-`endif
-
 	       // $display ("    fav_vm_xlate: PTE.A = %0d", fn_PTE_to_A (pte));
 	       if (fn_PTE_to_A (pte) == 1'b0) begin
 		  pte_modified = True;
