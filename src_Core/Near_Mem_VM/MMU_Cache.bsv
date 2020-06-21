@@ -950,6 +950,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 							 exc_code:     ?};
 `endif
 
+      // Compute cache hit/miss. If hit, also compute Way_in_CSet and Word128
+      let pa_ctag = fn_PA_to_CTag (vm_xlate_result.pa);
+      match { .hit, .way_hit, .word128 } <- fn_test_cache_hit_or_miss (pa_ctag);
+
       if (cfg_verbosity > 1)
 	 $display ("    TLB result: ", fshow (vm_xlate_result));
 
@@ -992,10 +996,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	 // Memory requests. Note: it's ok that this can go to non-memory space.
 	 else begin
-	    // Compute cache hit/miss. If hit, also compute Way_in_CSet and Word128
-	    let pa_ctag = fn_PA_to_CTag (vm_xlate_result.pa);
-	    match { .hit, .way_hit, .word128 } <- fn_test_cache_hit_or_miss (pa_ctag);
-
 	    // ----------------
 	    // Memory LD and AMO_LR
 	    if ((rg_op == CACHE_LD) || is_AMO_LR || (! dmem_not_imem)) begin
