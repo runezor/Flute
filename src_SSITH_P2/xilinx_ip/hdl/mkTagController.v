@@ -1128,11 +1128,11 @@ module mkTagController(CLK,
   reg [93 : 0] IF_cache_request_put_val_BITS_93_TO_92_035_EQ__ETC___d6090;
   reg [63 : 0] CASE_tagLookup_currentDepth_0_tagLookup_oldTag_ETC__q19,
 	       cacheResp_data_data__h284943;
-  reg [36 : 0] CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12,
+  reg [36 : 0] CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q11,
 	       CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q13;
   reg [31 : 0] CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2,
 	       CASE_tagLookup_currentDepth_0_4294967293_1_3_D_ETC__q1,
-	       CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11;
+	       CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q12;
   reg [26 : 0] CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q26,
 	       CASE_tagLookup_tagCache_cts_BITS_278_TO_277_0__ETC__q35,
 	       x_addr_tag__h102698;
@@ -3511,18 +3511,18 @@ module mkTagController(CLK,
 
   // rule RL_tagLookup_mReqs_displayEnqPanic
   assign CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic =
+	     CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic ;
+  assign WILL_FIRE_RL_tagLookup_mReqs_displayEnqPanic =
+	     CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic ;
+
+  // rule RL_tagLookup_mReqs_ff_doDisplayPanic
+  assign CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic =
 	     tagLookup_tagCache_cacheState &&
 	     (tagLookup_tagCache_cts[278:277] == 2'd1 &&
 	      level__h977 == 4'd8 ||
 	      tagLookup_tagCache_cts_read__795_BITS_278_TO_2_ETC___d3668) ;
-  assign WILL_FIRE_RL_tagLookup_mReqs_displayEnqPanic =
-	     CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic ;
-
-  // rule RL_tagLookup_mReqs_ff_doDisplayPanic
-  assign CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic =
-	     CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic ;
   assign WILL_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic =
-	     CAN_FIRE_RL_tagLookup_mReqs_displayEnqPanic ;
+	     CAN_FIRE_RL_tagLookup_mReqs_ff_doDisplayPanic ;
 
   // rule RL_tagLookup_useNextRsp_displayDeqPanic
   assign CAN_FIRE_RL_tagLookup_useNextRsp_displayDeqPanic =
@@ -12398,7 +12398,7 @@ module mkTagController(CLK,
 	     { 7'd0, tagLookup_pendingCapNumber[35:3] } + 40'h00FF7FF080 ;
   assign _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5355 =
 	     { 7'd0, x__h304576[35:3] } +
-	     { CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12,
+	     { CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q11,
 	       3'd0 } ;
   assign _0_CONCAT_tagLookup_pendingCapNumber_344_SRL_SE_ETC___d5491 =
 	     { 7'd0, x__h304465[35:3] } +
@@ -14920,7 +14920,7 @@ module mkTagController(CLK,
 	       IF_tagLookup_tagCache_readReqReg_read__136_BIT_ETC___d4512 ;
   assign x__h304465 =
 	     tagLookup_pendingCapNumber >>
-	     CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 ;
+	     CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q12 ;
   assign x__h304576 =
 	     tagLookup_pendingCapNumber >>
 	     CASE_tagLookup_currentDepth_0_0_1_6_DONTCARE__q2 ;
@@ -15289,15 +15289,15 @@ module mkTagController(CLK,
   begin
     case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
-		tagLookup_tagCache_tags_0_writeData[12] :
-		tagLookup_tagCache_tags_0_bramA_bram$DOA[12];
+		tagLookup_tagCache_tags_0_writeData[11] :
+		tagLookup_tagCache_tags_0_bramA_bram$DOA[11];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
-		tagLookup_tagCache_tags_1_writeData[12] :
-		tagLookup_tagCache_tags_1_bramA_bram$DOA[12];
+		tagLookup_tagCache_tags_1_writeData[11] :
+		tagLookup_tagCache_tags_1_bramA_bram$DOA[11];
     endcase
   end
   always@(_theResult_____21__h86389 or
@@ -15310,15 +15310,15 @@ module mkTagController(CLK,
   begin
     case (_theResult_____21__h86389)
       1'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 =
 	      tagLookup_tagCache_tags_0_readAddr_read__401_E_ETC___d3403 ?
-		tagLookup_tagCache_tags_0_writeData[11] :
-		tagLookup_tagCache_tags_0_bramA_bram$DOA[11];
+		tagLookup_tagCache_tags_0_writeData[12] :
+		tagLookup_tagCache_tags_0_bramA_bram$DOA[12];
       1'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4028 =
+	  SEL_ARR_IF_tagLookup_tagCache_tags_0_readAddr__ETC___d4026 =
 	      tagLookup_tagCache_tags_1_readAddr_read__411_E_ETC___d3413 ?
-		tagLookup_tagCache_tags_1_writeData[11] :
-		tagLookup_tagCache_tags_1_bramA_bram$DOA[11];
+		tagLookup_tagCache_tags_1_writeData[12] :
+		tagLookup_tagCache_tags_1_bramA_bram$DOA[12];
     endcase
   end
   always@(_theResult_____21__h86389 or
@@ -15699,26 +15699,26 @@ module mkTagController(CLK,
 		!tagLookup_tagCache_tags_1_bramA_bram$DOA[5];
     endcase
   end
-  always@(tagLookup_currentDepth_339_MINUS_1___d5482)
-  begin
-    case (tagLookup_currentDepth_339_MINUS_1___d5482)
-      2'd0: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 = 32'd0;
-      2'd1: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 = 32'd6;
-      default: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q11 =
-		   32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
-    endcase
-  end
   always@(tagLookup_currentDepth)
   begin
     case (tagLookup_currentDepth)
       2'd0:
-	  CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12 =
+	  CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q11 =
 	      37'd535821840;
       2'd1:
-	  CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12 =
+	  CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q11 =
 	      37'd535805456;
-      default: CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q12 =
+      default: CASE_tagLookup_currentDepth_0_535821840_1_5358_ETC__q11 =
 		   37'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
+    endcase
+  end
+  always@(tagLookup_currentDepth_339_MINUS_1___d5482)
+  begin
+    case (tagLookup_currentDepth_339_MINUS_1___d5482)
+      2'd0: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q12 = 32'd0;
+      2'd1: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q12 = 32'd6;
+      default: CASE_tagLookup_currentDepth_339_MINUS_1_482_0__ETC__q12 =
+		   32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ;
     endcase
   end
   always@(tagLookup_currentDepth)
@@ -16934,75 +16934,6 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h32106 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
-  begin
-    case (idx__h32106)
-      4'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
-      4'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039;
-      4'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040;
-      4'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041;
-      4'd4:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042;
-      4'd5:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043;
-      4'd6:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044;
-      4'd7:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045;
-      4'd8:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046;
-      4'd9:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047;
-      4'd10:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048;
-      4'd11:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049;
-      4'd12:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050;
-      4'd13:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051;
-      4'd14:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
-      4'd15:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
-    endcase
-  end
   always@(idx__h32222 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
@@ -17069,6 +17000,75 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
       4'd15:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1085 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
+    endcase
+  end
+  always@(idx__h32106 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
+  begin
+    case (idx__h32106)
+      4'd0:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
+      4'd1:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039;
+      4'd2:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040;
+      4'd3:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041;
+      4'd4:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042;
+      4'd5:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043;
+      4'd6:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044;
+      4'd7:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045;
+      4'd8:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046;
+      4'd9:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047;
+      4'd10:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048;
+      4'd11:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049;
+      4'd12:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050;
+      4'd13:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051;
+      4'd14:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
+      4'd15:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1079 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
@@ -17417,75 +17417,6 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
-  always@(idx__h33034 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
-	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
-  begin
-    case (idx__h33034)
-      4'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
-      4'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039;
-      4'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040;
-      4'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041;
-      4'd4:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042;
-      4'd5:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043;
-      4'd6:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044;
-      4'd7:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045;
-      4'd8:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046;
-      4'd9:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047;
-      4'd10:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048;
-      4'd11:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049;
-      4'd12:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050;
-      4'd13:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051;
-      4'd14:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
-      4'd15:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
-	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
-    endcase
-  end
   always@(idx__h32918 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
 	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
@@ -17552,6 +17483,75 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
       4'd15:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1121 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
+    endcase
+  end
+  always@(idx__h33034 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052 or
+	  IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053)
+  begin
+    case (idx__h33034)
+      4'd0:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1038;
+      4'd1:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1039;
+      4'd2:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1040;
+      4'd3:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1041;
+      4'd4:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1042;
+      4'd5:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1043;
+      4'd6:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1044;
+      4'd7:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1045;
+      4'd8:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1046;
+      4'd9:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1047;
+      4'd10:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1048;
+      4'd11:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1049;
+      4'd12:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1050;
+      4'd13:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1051;
+      4'd14:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
+	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1052;
+      4'd15:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastReqs_ETC___d1127 =
 	      IF_tagLookup_tagCache_orderer_mastReqs_insertI_ETC___d1053;
     endcase
   end
@@ -18314,75 +18314,6 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end
-  always@(idx__h43895 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
-	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
-  begin
-    case (idx__h43895)
-      4'd0:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
-      4'd1:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210;
-      4'd2:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211;
-      4'd3:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212;
-      4'd4:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213;
-      4'd5:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214;
-      4'd6:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215;
-      4'd7:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216;
-      4'd8:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217;
-      4'd9:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218;
-      4'd10:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219;
-      4'd11:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220;
-      4'd12:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221;
-      4'd13:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222;
-      4'd14:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223;
-      4'd15:
-	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
-	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
-    endcase
-  end
   always@(idx__h44011 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
 	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
@@ -18449,6 +18380,75 @@ module mkTagController(CLK,
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223;
       4'd15:
 	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2256 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
+    endcase
+  end
+  always@(idx__h43895 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223 or
+	  IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224)
+  begin
+    case (idx__h43895)
+      4'd0:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2209;
+      4'd1:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2210;
+      4'd2:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2211;
+      4'd3:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2212;
+      4'd4:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2213;
+      4'd5:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2214;
+      4'd6:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2215;
+      4'd7:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2216;
+      4'd8:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2217;
+      4'd9:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2218;
+      4'd10:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2219;
+      4'd11:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2220;
+      4'd12:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2221;
+      4'd13:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2222;
+      4'd14:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
+	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2223;
+      4'd15:
+	  SEL_ARR_IF_tagLookup_tagCache_orderer_mastLine_ETC___d2250 =
 	      IF_tagLookup_tagCache_orderer_mastLines_insert_ETC___d2224;
     endcase
   end

@@ -2280,6 +2280,10 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
+        <spirit:name>hdl/mkCore_Synth.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>hdl/mkDM_Abstract_Commands.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>

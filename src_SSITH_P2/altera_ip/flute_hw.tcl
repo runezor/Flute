@@ -64,6 +64,7 @@ add_fileset_file mkCSR_MIE.v VERILOG PATH hdl/mkCSR_MIE.v
 add_fileset_file mkCSR_MIP.v VERILOG PATH hdl/mkCSR_MIP.v
 add_fileset_file mkCSR_RegFile.v VERILOG PATH hdl/mkCSR_RegFile.v
 add_fileset_file mkCore.v VERILOG PATH hdl/mkCore.v
+add_fileset_file mkCore_Synth.v VERILOG PATH hdl/mkCore_Synth.v
 add_fileset_file mkDM_Abstract_Commands.v VERILOG PATH hdl/mkDM_Abstract_Commands.v
 add_fileset_file mkDM_CSR_Tap.v VERILOG PATH hdl/mkDM_CSR_Tap.v
 add_fileset_file mkDM_FPR_Tap.v VERILOG PATH hdl/mkDM_FPR_Tap.v
