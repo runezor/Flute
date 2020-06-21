@@ -381,6 +381,7 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 `endif
 
       VM_Xlate_Outcome   outcome      = VM_XLATE_OK;
+      Bool               allow_cap    = True;
       Exc_Code           exc_code     = ?;
       Bool               pte_modified = False;
       PTE                pte          = tlb_result.pte;
@@ -424,13 +425,16 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 		  WordXL tmp = 1;
 		  pte = (pte | (tmp << pte_D_offset));
 	       end
+
+	       if (fn_PTE_to_LoadCap (pte) == 1'b0)
+		  allow_cap = False;
 	    end
 	 end
 	 else
 	    outcome = VM_XLATE_TLB_MISS;
       end
       return VM_Xlate_Result {outcome:      outcome,
-			      allow_cap:    fn_PTE_to_LoadCap (pte) == 1'b1,
+			      allow_cap:    allow_cap,
 			      pa:           pa,
 			      exc_code:     exc_code,
 			      pte_modified: pte_modified,
