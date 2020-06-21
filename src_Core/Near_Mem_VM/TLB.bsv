@@ -382,9 +382,10 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 
       VM_Xlate_Outcome   outcome      = VM_XLATE_OK;
       Bool               allow_cap    = True;
-      Exc_Code           exc_code     = ?;
       Bool               pte_modified = False;
       PTE                pte          = tlb_result.pte;
+
+      match { .pte_fault, .exc_code } = is_pte_fault (dmem_not_imem, read_not_write, capability, priv, sstatus_SUM, mstatus_MXR, pte);
 
       if (xlate) begin
 	 if (tlb_result.pte_level == 0)
@@ -403,31 +404,27 @@ function ActionValue #(VM_Xlate_Result)  fav_vm_xlate (WordXL             addr,
 			      fn_Addr_to_Offset (addr) });
 `endif
 
+	 // $display ("    fav_vm_xlate: PTE.A = %0d", fn_PTE_to_A (pte));
+	 if (fn_PTE_to_A (pte) == 1'b0) begin
+	    pte_modified = True;
+	    WordXL tmp = 1;
+	    pte = (pte | (tmp << pte_A_offset));
+	 end
+
+	 // $display ("    fav_vm_xlate: PTE.D = %0d  read = %0d", fn_PTE_to_D (pte), pack (read_not_write));
+	 if ((fn_PTE_to_D (pte) == 1'b0) && (! read_not_write)) begin
+	    pte_modified = True;
+	    WordXL tmp = 1;
+	    pte = (pte | (tmp << pte_D_offset));
+	 end
+
+	 if (fn_PTE_to_LoadCap (pte) == 1'b0)
+	    allow_cap = False;
+
 	 if (tlb_result.hit) begin
-	    Tuple2 #(Bool, Exc_Code) fault = is_pte_fault (dmem_not_imem, read_not_write, capability, priv, sstatus_SUM, mstatus_MXR, pte);
-	    if (tpl_1 (fault)) begin
+	    if (pte_fault) begin
 	       outcome = VM_XLATE_EXCEPTION;
-	       exc_code = tpl_2 (fault);
 	       // $display ("fav_vm_xlate: page fault due to pte_denial");
-	    end
-
-	    else begin
-	       // $display ("    fav_vm_xlate: PTE.A = %0d", fn_PTE_to_A (pte));
-	       if (fn_PTE_to_A (pte) == 1'b0) begin
-		  pte_modified = True;
-		  WordXL tmp = 1;
-		  pte = (pte | (tmp << pte_A_offset));
-	       end
-
-	       // $display ("    fav_vm_xlate: PTE.D = %0d  read = %0d", fn_PTE_to_D (pte), pack (read_not_write));
-	       if ((fn_PTE_to_D (pte) == 1'b0) && (! read_not_write)) begin
-		  pte_modified = True;
-		  WordXL tmp = 1;
-		  pte = (pte | (tmp << pte_D_offset));
-	       end
-
-	       if (fn_PTE_to_LoadCap (pte) == 1'b0)
-		  allow_cap = False;
 	    end
 	 end
 	 else
