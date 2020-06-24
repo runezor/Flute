@@ -1387,15 +1387,16 @@ function ALU_Outputs checkValidJump(ALU_Outputs alu_outputs, Bool branchTaken, C
    return alu_outputs;
 endfunction
 
-function ALU_Outputs memCommon(ALU_Outputs alu_outputs, Bool isStoreNotLoad, Bool isUnsignedNotSigned, Bool useDDC, Bit#(3) widthCode, CapPipe ddc, CapPipe addr, Bit#(5) addrIdx, CapPipe data);
+function ALU_Outputs memCommon(ALU_Outputs alu_outputs, Bool isStoreNotLoad, Bool isUnsignedNotSigned, Bool useDDC, Bit#(3) widthCode, CapPipe ddc, CapPipe addr, Bit#(5) addrIdx, CapPipe data, Bool is_amo, Bit#(7) amo_funct7);
    let eaddr = getAddr(addr) + (useDDC ? getAddr(ddc) : 0);
 
    //width code must be checked externally
 
-   alu_outputs.op_stage2      = isStoreNotLoad ? OP_Stage2_ST : OP_Stage2_LD;
+   alu_outputs.op_stage2      = is_amo ? OP_Stage2_AMO : (isStoreNotLoad ? OP_Stage2_ST : OP_Stage2_LD);
    alu_outputs.addr           = eaddr;
    alu_outputs.mem_width_code = widthCode;
    alu_outputs.mem_unsigned   = isStoreNotLoad ? False : isUnsignedNotSigned;
+   alu_outputs.val1           = zeroExtend(amo_funct7);
    alu_outputs.val2           = zeroExtend(getAddr(data)); //for stores
    alu_outputs.cap_val2       = data;
    alu_outputs.val2_cap_not_int = widthCode == w_SIZE_CAP;
@@ -1731,35 +1732,44 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 alu_outputs.val1_cap_not_int = True;
             end
             f7_cap_Loads: begin
-                Bit#(3) widthCode = ?;
+                Bit#(3) widthCode = zeroExtend(funct5rs2[1:0]);
+                Bool is_lr = False;
                 if (funct5rs2[4] == 1) begin
                     if (funct5rs2[2:0] == 3'b111) begin
                         widthCode = w_SIZE_Q;
                     end else begin
+`ifdef ISA_A
+                        is_lr = True;
+                        widthCode = funct5rs2[2:0];
+`else
                         alu_outputs.control = CONTROL_TRAP;
                         alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
-                    end
-                end else begin
-                    widthCode = zeroExtend(funct5rs2[1:0]);
-                    if (funct5rs2[2:0] == 3'b111) begin
-                        alu_outputs.control = CONTROL_TRAP;
-                        alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
+`endif
                     end
                 end
-                if (widthCode > w_SIZE_MAX) begin
+                Bool is_unsigned = (! is_lr) && funct5rs2[2] == cap_mem_unsigned;
+                if ((widthCode > w_SIZE_MAX) || (is_unsigned && widthCode == w_SIZE_MAX)) begin
                     alu_outputs.control = CONTROL_TRAP;
                     alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
                 end
-                alu_outputs = memCommon(alu_outputs, False, funct5rs2[2] == cap_mem_unsigned, funct5rs2[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, ?);
+                alu_outputs = memCommon(alu_outputs, False, is_unsigned, funct5rs2[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, ?, is_lr, {f5_AMO_LR, 2'b0});
             end
             f7_cap_Stores: begin
                 let widthCode = funct5rd[2:0];
-                if (funct5rd[4] == 1) alu_outputs.control = CONTROL_TRAP;
+                Bool is_sc = funct5rd[4] == 1'b1;
+                if (is_sc) begin
+`ifdef ISA_A
+                    alu_outputs.rd = inputs.rs2_idx;
+`else
+                    alu_outputs.control = CONTROL_TRAP;
+                    alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
+`endif
+                end
                 if (widthCode > w_SIZE_MAX) begin
                     alu_outputs.control = CONTROL_TRAP;
                     alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
                 end
-                alu_outputs = memCommon(alu_outputs, True, ?, funct5rd[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, cs2_val);
+                alu_outputs = memCommon(alu_outputs, True, ?, funct5rd[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, cs2_val, is_sc, {f5_AMO_SC, 2'b0});
             end
             f7_cap_TwoOp: begin
                 case (funct5rs2)
