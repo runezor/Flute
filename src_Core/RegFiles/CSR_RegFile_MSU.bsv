@@ -1576,6 +1576,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef ISA_CHERI
       let xccsr = XCCSR {cheri_exc_reg: cheri_exc_reg, cheri_exc_code: cheri_exc_code};
+      if (exc_code == exc_code_CHERI) xtval = xccsr_to_word(xccsr);
       let xtcc = ?;
 `endif
 
