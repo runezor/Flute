@@ -847,7 +847,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_sip:        m_csr_value = tagged Valid (csr_mip.mv_sip_read);
 
 `ifdef ISA_CHERI
-      csr_addr_sccsr:      m_csr_value = tagged Valid (xccsr_to_word(rg_sccsr));
+      csr_addr_sccsr:      m_csr_value = tagged Valid (capexc_to_xccsr(rg_sccsr));
 `endif
 	    csr_addr_satp:       m_csr_value = tagged Valid rg_satp;
 
@@ -874,7 +874,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_mip:        m_csr_value = tagged Valid (csr_mip.mv_read);
 
 `ifdef ISA_CHERI
-      csr_addr_mccsr:      m_csr_value = tagged Valid (xccsr_to_word(rg_mccsr));
+      csr_addr_mccsr:      m_csr_value = tagged Valid (capexc_to_xccsr(rg_mccsr));
 `endif
 
 	    // TODO: Phys Mem Protection regs
@@ -1575,8 +1575,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       let new_status  <- csr_mstatus.mav_write (misa, new_mstatus);
 
 `ifdef ISA_CHERI
-      let xccsr = XCCSR {cheri_exc_reg: cheri_exc_reg, cheri_exc_code: cheri_exc_code};
-      if (exc_code == exc_code_CHERI) xtval = xccsr_to_word(xccsr);
+      let capexc = XCCSR {cheri_exc_reg: cheri_exc_reg, cheri_exc_code: cheri_exc_code};
+      if (exc_code == exc_code_CHERI) xtval = capexc_to_xtval(capexc);
       let xtcc = ?;
 `endif
 
@@ -1601,7 +1601,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `ifdef ISA_CHERI
    rg_mepcc   <= cast(pcc);
    xtcc        = rg_mtcc_unpacked;
-	 if (exc_code == exc_code_CHERI) rg_mccsr   <= xccsr;
+	 if (exc_code == exc_code_CHERI) rg_mccsr   <= capexc;
 `else
 	 rg_mepc    <= pc;
 `endif
@@ -1613,7 +1613,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `ifdef ISA_CHERI
    rg_sepcc   <= cast(pcc);
    xtcc        = rg_stcc_unpacked;
-   if (exc_code == exc_code_CHERI) rg_sccsr   <= xccsr;
+   if (exc_code == exc_code_CHERI) rg_sccsr   <= capexc;
 `else
 	 rg_sepc    <= pc;
 `endif

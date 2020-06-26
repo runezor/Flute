@@ -79,8 +79,12 @@ typedef struct {
   } XCCSR
 deriving(Bits);
 
-function WordXL xccsr_to_word(XCCSR xccsr);
+function WordXL capexc_to_xccsr(XCCSR xccsr);
   return zeroExtend({xccsr.cheri_exc_reg, xccsr.cheri_exc_code, 3'b0, 1'b1, 1'b1});
+endfunction
+
+function WordXL capexc_to_xtval(XCCSR xccsr);
+  return zeroExtend({xccsr.cheri_exc_reg, xccsr.cheri_exc_code});
 endfunction
 
 // SCR map
