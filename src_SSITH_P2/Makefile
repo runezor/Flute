@@ -16,7 +16,7 @@ all: compile
 # ================================================================
 
 REPO ?= ..
-ARCH ?= RV64ACDFIMSU
+ARCH ?= RV64ACDFIMSUxCHERI
 
 # ================================================================
 # RISC-V config macros passed into Bluespec 'bsc' compiler
