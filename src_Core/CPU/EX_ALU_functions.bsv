@@ -1389,10 +1389,14 @@ endfunction
 
 function ALU_Outputs memCommon(ALU_Outputs alu_outputs, Bool isStoreNotLoad, Bool isUnsignedNotSigned, Bool useDDC, Bit#(3) widthCode, CapPipe ddc, CapPipe addr, Bit#(5) addrIdx, CapPipe data, Bool is_amo, Bit#(7) amo_funct7);
    let eaddr = getAddr(addr) + (useDDC ? getAddr(ddc) : 0);
+   let op_stage2 = isStoreNotLoad ? OP_Stage2_ST : OP_Stage2_LD;
+`ifdef ISA_A
+   if (is_amo) op_stage2 = OP_Stage2_AMO;
+`endif
 
    //width code must be checked externally
 
-   alu_outputs.op_stage2      = is_amo ? OP_Stage2_AMO : (isStoreNotLoad ? OP_Stage2_ST : OP_Stage2_LD);
+   alu_outputs.op_stage2      = op_stage2;
    alu_outputs.addr           = eaddr;
    alu_outputs.mem_width_code = widthCode;
    alu_outputs.mem_unsigned   = isStoreNotLoad ? False : isUnsignedNotSigned;
