@@ -1348,9 +1348,9 @@ function ALU_Outputs checkValidDereference(ALU_Outputs alu_outputs, CapPipe auth
        alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_RPerm);
    end else if (isStore && !getHardPerms(authority).permitStore) begin
        alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_WPerm);
-   end else if (isStore && widthCode == w_SIZE_CAP && !getHardPerms(authority).permitStoreCap) begin
+   end else if (isStore && widthCode == w_SIZE_CAP && isValidCap(data) && !getHardPerms(authority).permitStoreCap) begin
        alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_SCPerm);
-   end else if (isStore && widthCode == w_SIZE_CAP && !getHardPerms(data).global && !getHardPerms(authority).permitStoreLocalCap) begin
+   end else if (isStore && widthCode == w_SIZE_CAP && isValidCap(data) && !getHardPerms(data).global && !getHardPerms(authority).permitStoreLocalCap) begin
        alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_SCLocalPerm);
    end
    alu_outputs.check_enable = True;
