@@ -426,7 +426,7 @@ module mkCPU (CPU_IFC);
 
 	 if (cur_verbosity > 1)
 	    $display ("    fa_stageF_redirect: minstret:%0d  new_pc:%0x  cur_priv:%0d, epoch %0d->%0d",
-		      mcycle, minstret, new_fetch_addr, rg_cur_priv, rg_epoch, new_epoch);
+		      minstret, new_fetch_addr, rg_cur_priv, rg_epoch, new_epoch);
       endaction
    endfunction
 
@@ -691,10 +691,13 @@ module mkCPU (CPU_IFC);
 
    // Halting conditions
    Bool halting = (stop_step_halt || mip_cmd_needed || (interrupt_pending && stage1_has_arch_instr));
-   // Stage1 can halt only when actually contains an instruction and downstream is empty
+   // Stage1 can halt only when actually contains an instruction, downstream is
+   // empty and, if a branch misprediction, StageF is able to be redirected.
    Bool stage1_halted = (   halting
 			 && (   (stage1.out.ostatus == OSTATUS_PIPE)
 			     || (stage1.out.ostatus == OSTATUS_NONPIPE))
+			 && (   (! stage1.out.redirect)
+			     || (stageF.out.ostatus != OSTATUS_BUSY))
 			 && (stage2.out.ostatus == OSTATUS_EMPTY)
 			 && (stage3.out.ostatus == OSTATUS_EMPTY));
 
@@ -1755,6 +1758,7 @@ module mkCPU (CPU_IFC);
    // ================================================================
    // Stage1: nonpipe special: SFENCE.VMA
 
+`ifdef ISA_PRIV_S
    rule rl_stage1_SFENCE_VMA (   (rg_state== CPU_RUNNING)
 			      && (! halting)
 			      && (stage3.out.ostatus == OSTATUS_EMPTY)
@@ -1776,7 +1780,7 @@ module mkCPU (CPU_IFC);
 `endif
 
       // Tell Near_Mem to do its SFENCE_VMA
-      near_mem.sfence_vma;
+      near_mem.sfence_vma_server.request.put (?);
       rg_state <= CPU_SFENCE_VMA;
 
       // Accounting
@@ -1806,7 +1810,8 @@ module mkCPU (CPU_IFC);
 			      && f_run_halt_reqs_empty);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_finish_SFENCE_VMA", mcycle);
 
-      // Note: Await mem system SFENCE.VMA completion, if SFENCE.VMA becomes split-phase
+      // Await SFENCE.VMA completion
+      let dummy <- near_mem.sfence_vma_server.response.get;
 
       // Resume pipe
       stageD.set_full (False);
@@ -1816,6 +1821,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1)
 	 $display ("    CPU.rl_finish_SFENCE_VMA");
    endrule: rl_finish_SFENCE_VMA
+`endif
 
    // ================================================================
    // Stage1: nonpipe special: WFI
@@ -2337,6 +2343,15 @@ module mkCPU (CPU_IFC);
 
    // CSR access
    interface Server  hart0_csr_mem_server = toGPServer (f_csr_reqs, f_csr_rsps);
+`endif
+
+   // ----------------------------------------------------------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+      near_mem.set_watch_tohost (watch_tohost, tohost_addr);
+   endmethod
 `endif
 
 endmodule: mkCPU

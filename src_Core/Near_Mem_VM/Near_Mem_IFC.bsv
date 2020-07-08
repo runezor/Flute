@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved.
+// Copyright (c) 2016-2020 Bluespec, Inc. All Rights Reserved.
 
 //-
 // AXI (user fields) + CHERI modifications:
@@ -49,7 +49,9 @@ import AXI4      :: *;
 
 import ISA_Decls :: *;
 
-import Fabric_Defs :: *;
+import MMU_Cache_Common :: *;
+import AXI4_Types       :: *;
+import Fabric_Defs      :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
 import AXI4Lite_Types :: *;
@@ -97,20 +99,24 @@ interface Near_Mem_IFC;
 
    interface Server #(Fence_Ordering, Token) server_fence;
 
-   // SFENCE_VMA
-   method Action sfence_vma;
+`ifdef ISA_PRIV_S
+   interface Server #(Token, Token) sfence_vma_server;
+`endif
+
+   // ----------------------------------------------------------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+`endif
+
 endinterface
 
 // ================================================================
-// Near_Mem opcodes
+// Cache flush specs
 
-typedef enum {  CACHE_LD
-	      , CACHE_ST
-`ifdef ISA_A
-	      , CACHE_AMO
-`endif
-   } CacheOp
-deriving (Bits, Eq, FShow);
+Bit #(1) flush_to_invalid = 0;
+Bit #(1) flush_to_clean   = 1;
 
 typedef 128 Cache_Data_Width;
 `ifdef ISA_CHERI

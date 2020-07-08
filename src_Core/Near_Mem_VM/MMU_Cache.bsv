@@ -75,8 +75,9 @@ import SourceSink    :: *;
 // ================================================================
 // Project imports
 
-import ISA_Decls    :: *;
-import Near_Mem_IFC :: *;
+import ISA_Decls        :: *;
+import Near_Mem_IFC     :: *;
+import MMU_Cache_Common :: *;
 
 `ifdef ISA_PRIV_S
 import TLB          :: *;
@@ -427,10 +428,10 @@ function Action fa_display_state_and_ctag_cset (CSet_in_Cache        cset_in_cac
 endfunction
 
 function Action fa_display_word128_set (CSet_in_Cache    cset_in_cache,
-				       Word128_in_CLine  word128_in_cline,
+				       CWord_in_CLine  cword_in_cline,
 				       Word128_Set       word128_set);
    action
-      $write ("        CSet 0x%0x, Word128 0x%0x: ", cset_in_cache, word128_in_cline);
+      $write ("        CSet 0x%0x, Word128 0x%0x: ", cset_in_cache, cword_in_cline);
       for (Integer j = 0; j < ways_per_cset; j = j + 1) begin
 	 $write (" 0x%0x", word128_set [j]);
       end
@@ -512,7 +513,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 										  config_output_register);
 
    // Data RAM
-   BRAM_DUAL_PORT #(Word128_Set_in_Cache, Word128_Set) ram_word128_set <- mkBRAMCore2 (word128_sets_per_cache,
+   BRAM_DUAL_PORT #(CSet_CWord_in_Cache, Word128_Set) ram_cword_set <- mkBRAMCore2 (cset_cwords_per_cache,
 										    config_output_register);
 
    // Registers holding incoming request args
@@ -561,10 +562,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Offset  offset = fn_Addr_to_Offset (rg_addr);
 `endif
 
-   CSet_in_Cache        cset_in_cache        = fn_Addr_to_CSet_in_Cache   (rg_addr);
-   Word128_Set_in_Cache word128_set_in_cache = fn_Addr_to_Word128_Set_in_Cache (rg_addr);
-   Word128_in_CLine     word128_in_cline     = fn_Addr_to_Word128_in_CLine (rg_addr);
-   Bit #(4)             byte_in_word128       = fn_Addr_to_Byte_in_Word128  (rg_addr);
+   CSet_in_Cache       cset_in_cache       = fn_Addr_to_CSet_in_Cache   (rg_addr);
+   CSet_CWord_in_Cache cset_cword_in_cache = fn_Addr_to_CSet_CWord_in_Cache (rg_addr);
+   CWord_in_CLine      cword_in_cline      = fn_Addr_to_CWord_in_CLine (rg_addr);
+   Bit #(4)            byte_in_cword       = fn_Addr_to_Byte_in_CWord  (rg_addr);
 
 `ifdef ISA_PRIV_S
    // Derivations from rg_satp
@@ -600,8 +601,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    // These regs are used in the cache refill loop for ram_State_and_CTag_CSet
    // and ram_Word128_Set
-   Reg #(Word128_Set_in_Cache) rg_word128_set_in_cache <- mkRegU;
-   Reg #(Bool)                 rg_error_during_refill <- mkRegU;
+   Reg #(CSet_CWord_in_Cache) rg_cset_cword_in_cache <- mkRegU;
+   Reg #(Bool)                rg_error_during_refill <- mkRegU;
    // In 64b (or lower) fabrics, these hold the lower word64 while we're fetching the upper word64 of a word128
    Reg #(Bool)      rg_lower_word64_full <- mkReg (False);
    Reg #(Bit #(64)) rg_lower_word64      <- mkRegU;
@@ -621,12 +622,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 ram_state_and_ctag_cset.b.put (bram_cmd_read, cset_in_cache,    ?);
 
 	 // Request data RAM
-	 let word128_set_in_cache = fn_Addr_to_Word128_Set_in_Cache (addr);
-	 ram_word128_set.b.put          (bram_cmd_read, word128_set_in_cache, ?);
+	 let cset_cword_in_cache = fn_Addr_to_CSet_CWord_in_Cache (addr);
+	 ram_cword_set.b.put          (bram_cmd_read, cset_cword_in_cache, ?);
 
 	 if (cfg_verbosity > 1)
 	    $display ("    fa_req_ram_B tagCSet [0x%0x] word128_set [0x%0d]",
-		      cset_in_cache, word128_set_in_cache);
+		      cset_in_cache, cset_cword_in_cache);
       endaction
    endfunction
 
@@ -634,7 +635,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Outputs of RAM read-ports (B ports)
 
    let state_and_ctag_cset = ram_state_and_ctag_cset.b.read;
-   let word128_set          = ram_word128_set.b.read;
+   let word128_set          = ram_cword_set.b.read;
 
    // Test cache hit or miss; if hit, return which 'way', and the word128 data
    // ---- This pure function is an ActionValue only for the $display inside
@@ -857,11 +858,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       $display ("%0d: %s: cache size %0d KB, associativity %0d, line size %0d bytes (= %0d XLEN words)",
 		cur_cycle, d_or_i, kb_per_cache, ways_per_cset,
-		(word128s_per_cline * 16),
+		(cwords_per_cline * 16),
 `ifdef RV32
-		(word128s_per_cline * 4)
+		(cwords_per_cline * 4)
 `else
-		(word128s_per_cline * 2)
+		(cwords_per_cline * 2)
 `endif
 		);
    endrule
@@ -923,10 +924,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("        eaddr = {CTag 0x%0h  CSet 0x%0h  Word128 0x%0h  Byte 0x%0h}",
 		   fn_PA_to_CTag (fn_WordXL_to_PA (rg_addr)),
 		   cset_in_cache,
-		   word128_in_cline,
-		   byte_in_word128);
+		   cword_in_cline,
+		   byte_in_cword);
 	 fa_display_state_and_ctag_cset (cset_in_cache, state_and_ctag_cset);
-	 fa_display_word128_set (cset_in_cache, word128_in_cline, word128_set);
+	 fa_display_word128_set (cset_in_cache, cword_in_cline, word128_set);
       end
 
       // ----------------
@@ -1073,12 +1074,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		    if (hit) begin
 		       // Update cache line in cache
 		      let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
-                      ram_word128_set.a.put (bram_cmd_write, word128_set_in_cache, new_word128_set);
+                      ram_cword_set.a.put (bram_cmd_write, cset_cword_in_cache, new_word128_set);
 
 		      if (cfg_verbosity > 1) begin
 		         $display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
 		         $write   ("        New Word128_Set:");
-		         fa_display_word128_set (cset_in_cache, word128_in_cline, new_word128_set);
+		         fa_display_word128_set (cset_in_cache, cword_in_cline, new_word128_set);
 		      end
 		    end
 		    else begin
@@ -1133,12 +1134,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 		  // Update cache line in cache
 		  let new_word128_set = fn_update_word128_set (word128_set, way_hit, vm_xlate_result.pa, rg_width_code, new_st_val);
-		  ram_word128_set.a.put (bram_cmd_write, word128_set_in_cache, new_word128_set);
+		  ram_cword_set.a.put (bram_cmd_write, cset_cword_in_cache, new_word128_set);
 
 		  if (cfg_verbosity > 1) begin
 		     $display ("          0x%0h  op  0x%0h -> 0x%0h", word128, word128, new_st_val);
 		     $write   ("          New Word128_Set:");
-		     fa_display_word128_set (cset_in_cache, word128_in_cline, new_word128_set);
+		     fa_display_word128_set (cset_in_cache, cword_in_cline, new_word128_set);
 		  end
 
 		  // Writeback data to memory (so cache remains clean)
@@ -1488,10 +1489,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Request read of first Word128_Set in CLine (BRAM port B)
       // for set read-modify-write (not relevant for direct-mapped)
-      let word128_in_cline      = 0;
-      let word128_set_in_cache  = { cset_in_cache, word128_in_cline };
-      rg_word128_set_in_cache  <= word128_set_in_cache;
-      ram_word128_set.b.put (bram_cmd_read, word128_set_in_cache, ?);
+      let cword_in_cline      = 0;
+      let cset_cword_in_cache  = { cset_in_cache, cword_in_cline };
+      rg_cset_cword_in_cache  <= cset_cword_in_cache;
+      ram_cword_set.b.put (bram_cmd_read, cset_cword_in_cache, ?);
 
       // Enter cache refill loop, awaiting refill responses from mem
       rg_lower_word64_full   <= False;
@@ -1582,11 +1583,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       if (cfg_verbosity > 2)
          $display ("        64b fabric: concat with rg_lower_word64: new_word128 0x%0x", new_word128);
 
-	 Word128_in_CLine word128_in_cline = truncate (rg_word128_set_in_cache);
+	 CWord_in_CLine cword_in_cline = truncate (rg_cset_cword_in_cache);
 
 	 // Update the State_and_CTag_CSet (BRAM port A) (if this is the first
 	 // response and not an error)
-	 if ((word128_in_cline == 0) && (! err_rsp)) begin
+	 if ((cword_in_cline == 0) && (! err_rsp)) begin
 	    let new_state_and_ctag_cset = state_and_ctag_cset;
 	    new_state_and_ctag_cset [rg_victim_way] = State_and_CTag {state: CTAG_CLEAN,
 								      ctag : fn_PA_to_CTag (rg_pa)};
@@ -1597,13 +1598,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 let new_word128_set = word128_set;
 	 new_word128_set [rg_victim_way] = new_word128;
 	 if (! err_rsp)
-	    ram_word128_set.a.put (bram_cmd_write, rg_word128_set_in_cache, new_word128_set);
+	    ram_cword_set.a.put (bram_cmd_write, rg_cset_cword_in_cache, new_word128_set);
 
 	 // If more word64_sets in cacheline, initiate RAM read for next word64_set
-	 if (word128_in_cline != fromInteger (word128s_per_cline - 1)) begin
-	    let next_word128_set_in_cache = rg_word128_set_in_cache + 1;
-	    ram_word128_set.b.put (bram_cmd_read, next_word128_set_in_cache, ?);
-	    rg_word128_set_in_cache <= next_word128_set_in_cache;
+	 if (cword_in_cline != fromInteger (cwords_per_cline - 1)) begin
+	    let next_cset_cword_in_cache = rg_cset_cword_in_cache + 1;
+	    ram_cword_set.b.put (bram_cmd_read, next_cset_cword_in_cache, ?);
+	    rg_cset_cword_in_cache <= next_cset_cword_in_cache;
 	 end
 
 	 // else final Word128 of CLine; raise exception if pending,
@@ -1623,11 +1624,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 end
 
 	 if (cfg_verbosity > 2) begin
-	    $display ("        Updating Cache word128_set 0x%0h, word128_in_cline %0d) old => new",
-		      rg_word128_set_in_cache, word128_in_cline);
+	    $display ("        Updating Cache word128_set 0x%0h, cword_in_cline %0d) old => new",
+		      rg_cset_cword_in_cache, cword_in_cline);
 
-	    fa_display_word128_set (cset_in_cache, word128_in_cline, word128_set);
-	    fa_display_word128_set (cset_in_cache, word128_in_cline, new_word128_set);
+	    fa_display_word128_set (cset_in_cache, cword_in_cline, word128_set);
+	    fa_display_word128_set (cset_in_cache, cword_in_cline, new_word128_set);
 	 end
       end
    endrule: rl_cache_refill_rsps_loop

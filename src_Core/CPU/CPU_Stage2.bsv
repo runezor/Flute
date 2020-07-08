@@ -63,9 +63,10 @@ import RVFI_DII  :: *;
 `endif
 import TV_Info       :: *;
 
-import CPU_Globals   :: *;
-import Near_Mem_IFC  :: *;
-import CSR_RegFile   :: *;    // For SATP, SSTATUS, MSTATUS
+import CPU_Globals      :: *;
+import Near_Mem_IFC     :: *;
+import MMU_Cache_Common :: *;    // for CacheOp
+import CSR_RegFile      :: *;    // For SATP, SSTATUS, MSTATUS
 
 `ifdef SHIFT_SERIAL
 import Shifter_Box  :: *;
@@ -188,13 +189,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       , rd:         rg_stage2.rd
       , rd_val:     cast (rg_stage2.val1)
 `ifdef ISA_F
-      , rd_in_fpr:  False
-      , upd_flags:  False
-      , fpr_flags:  0
-      , frd_val:    rg_stage2.fval1
+						    , rd_in_fpr:  False,
+						    upd_flags:  False,
+						    fpr_flags:  0,
+						    frd_val:    rg_stage2.fval1
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
-      , trace_data: rg_stage2.trace_data
+						    , trace_data: rg_stage2.trace_data
 `endif
 						    };
 
