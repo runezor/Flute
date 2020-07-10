@@ -1739,6 +1739,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 Bit#(3) widthCode = zeroExtend(funct5rs2[1:0]);
                 Bool is_lr = False;
                 Bool is_unsigned = funct5rs2[2] == cap_mem_unsigned && funct5rs2[4] == 1'b0;
+                Bool illegal = False;
                 if (funct5rs2[4] == 1'b1) begin
                     if (funct5rs2[2:0] == 3'b111) begin
                         widthCode = w_SIZE_Q;
@@ -1747,33 +1748,36 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                         is_lr = True;
                         widthCode = funct5rs2[2:0];
 `else
-                        alu_outputs.control = CONTROL_TRAP;
-                        alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
+                        illegal = True;
 `endif
                     end
                 end
-                if ((widthCode > w_SIZE_MAX) || (is_unsigned && widthCode == w_SIZE_MAX)) begin
+                if ((widthCode > w_SIZE_MAX) || (is_unsigned && widthCode == w_SIZE_MAX)) illegal = True;
+                if (illegal) begin
+                    // exc_code defaults to exc_code_ILLEGAL_INSTRUCTION
                     alu_outputs.control = CONTROL_TRAP;
-                    alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
+                end else begin
+                    alu_outputs = memCommon(alu_outputs, False, is_unsigned, funct5rs2[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, ?, is_lr, {f5_AMO_LR, 2'b0});
                 end
-                alu_outputs = memCommon(alu_outputs, False, is_unsigned, funct5rs2[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, ?, is_lr, {f5_AMO_LR, 2'b0});
             end
             f7_cap_Stores: begin
                 let widthCode = funct5rd[2:0];
                 Bool is_sc = funct5rd[4] == 1'b1;
+                Bool illegal = False;
                 if (is_sc) begin
 `ifdef ISA_A
                     alu_outputs.rd = inputs.rs2_idx;
 `else
-                    alu_outputs.control = CONTROL_TRAP;
-                    alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
+                    illegal = True;
 `endif
                 end
-                if (widthCode > w_SIZE_MAX) begin
+                if (widthCode > w_SIZE_MAX) illegal = True;
+                if (illegal) begin
+                    // exc_code defaults to exc_code_ILLEGAL_INSTRUCTION
                     alu_outputs.control = CONTROL_TRAP;
-                    alu_outputs.exc_code = exc_code_ILLEGAL_INSTRUCTION;
+                end else begin
+                    alu_outputs = memCommon(alu_outputs, True, ?, funct5rd[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, cs2_val, is_sc, {f5_AMO_SC, 2'b0});
                 end
-                alu_outputs = memCommon(alu_outputs, True, ?, funct5rd[3] == cap_mem_ddc, widthCode, inputs.ddc, cs1_val, inputs.rs1_idx, cs2_val, is_sc, {f5_AMO_SC, 2'b0});
             end
             f7_cap_TwoOp: begin
                 case (funct5rs2)
