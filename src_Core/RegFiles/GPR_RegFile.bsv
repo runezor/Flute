@@ -51,7 +51,11 @@ import CHERICC_Fat :: *;
 `define EXTERNAL_REG_TYPE_OUT CapPipe
 `define EXTERNAL_REG_TYPE_IN CapReg
 `define ZERO_REG_CONTENTS nullCap
+`ifdef RVFI_DII
 `define INITIAL_CONTENTS almightyCap
+`else
+`define INITIAL_CONTENTS nullCap
+`endif
 `else
 `define INTERNAL_REG_TYPE Word
 `define EXTERNAL_REG_TYPE_OUT Word
