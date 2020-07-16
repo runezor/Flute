@@ -1632,6 +1632,9 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     alu_outputs.val1 = zeroExtend(pack(False));
                 end
             end
+            f7_cap_CSetEqualExact: begin
+                alu_outputs.val1 = zeroExtend(pack(toMem(cs1_val) == toMem(cs2_val)));
+            end
             f7_cap_CCopyType: begin
                 check_cs1_tagged = True;
                 check_cs1_unsealed = True;
