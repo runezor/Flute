@@ -1447,19 +1447,19 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       return fv_csr_read (csr_addr);
    endmethod
 
-`ifdef ISA_CHERI
    // CSR write
    method ActionValue #(CSR_Write_Result) mav_csr_write (CSR_Addr csr_addr, WordXL word);
       let result <- fav_csr_write (csr_addr, word);
       return result;
    endmethod
-`endif
 
+`ifdef ISA_CHERI
    // SCR write
    method ActionValue #(CapReg) mav_scr_write (SCR_Addr scr_addr, CapReg cap);
       let result <- fav_scr_write (scr_addr, cap);
       return result;
    endmethod
+`endif
 
    // Read MISA
    method MISA read_misa;
