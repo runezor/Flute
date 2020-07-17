@@ -43,6 +43,10 @@ import Fabric_Defs      :: *;
 import AXI4_Lite_Types :: *;
 `endif
 
+`ifdef PERFORMANCE_MONITORING
+import PerformanceMonitor :: *;
+`endif
+
 // ================================================================
 // Near-Mem parameters (statically defined)
 
@@ -76,6 +80,30 @@ typedef AXI4_Master_IFC #(Wd_Id_Mem,
 			  Wd_Addr_Mem,
 			  Wd_Data_Mem,
 			  Wd_User_Mem)  Near_Mem_Fabric_IFC;
+// ================================================================
+
+`ifdef PERFORMANCE_MONITORING
+typedef struct {
+   Bool evt_LD;
+   Bool evt_LD_MISS;
+   Bool evt_LD_MISS_LAT;
+   Bool evt_ST;
+   Bool evt_ST_MISS;     // Unimplemented
+   Bool evt_ST_MISS_LAT; // Unimplemented
+   Bool evt_AMO;
+   Bool evt_AMO_MISS;
+   Bool evt_AMO_MISS_LAT;
+   Bool evt_TLB;
+   Bool evt_TLB_MISS;     // Only leaf is stored in TLB thus a full
+   Bool evt_TLB_MISS_LAT; // walk must happen every miss
+   Bool evt_TLB_FLUSH;
+   Bool evt_EVICT;
+} EventsCache deriving (Bits, FShow);
+
+instance BitVectorable #(EventsCache, 1, m) provisos (Bits #(EventsCache, m));
+      function to_vector = struct_to_vector;
+endinstance
+`endif
 
 // ================================================================
 
@@ -172,6 +200,9 @@ interface IMem_IFC;
    (* always_ready *)  method Bool     exc;
    (* always_ready *)  method Exc_Code exc_code;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
+`ifdef PERFORMANCE_MONITORING
+                       method EventsCache cacheEvents;
+`endif
 endinterface
 
 // ================================================================
@@ -199,6 +230,9 @@ interface DMem_IFC;
    (* always_ready *)  method Bit #(64)  st_amo_val;  // Final store-value for ST, SC, AMO
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
+`ifdef PERFORMANCE_MONITORING
+                       method EventsCache cacheEvents;
+`endif
 endinterface
 
 // ================================================================

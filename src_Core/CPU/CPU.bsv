@@ -33,6 +33,12 @@ import ConfigReg    :: *;
 import GetPut_Aux :: *;
 import Semi_FIFOF :: *;
 
+`ifdef PERFORMANCE_MONITORING
+import PerformanceMonitor :: *;
+import Vector :: *;
+import SpecialRegs :: *;
+`endif
+
 // ================================================================
 // Project imports
 
@@ -879,6 +885,43 @@ module mkCPU (CPU_IFC);
 	 $display ("    mcause:0x%0h  epc 0x%0h  tval:0x%0h  next_pc 0x%0h, new_priv %0d new_mstatus 0x%0h",
 		   mcause, epc, tval, next_pc, new_priv, new_mstatus);
    endrule: rl_trap
+
+`ifdef PERFORMANCE_MONITORING
+   // ================================================================
+   // Performance counters
+   Vector #(16, Bit #(64)) imem_evts = to_large_vector (near_mem.imem.cacheEvents);
+   Vector #(16, Bit #(64)) dmem_evts = to_large_vector (near_mem.dmem.cacheEvents);
+
+   let events = cons(
+      0
+    , append(
+        dmem_evts
+      , imem_evts
+      )
+   );
+
+  (* fire_when_enabled, no_implicit_conditions *)
+   rule rl_send_perf_evts;
+      csr_regfile.send_performance_events(events);
+   endrule
+
+   // Example usage:
+   //  csrwi 0x320, 24       // Write to mcountinhibit csr (not in rv-gcc though)
+   //  csrwi mhpmcounter3, 0
+   //  csrwi mhpmcounter4, 0 // Initialize counters
+   //  csrwi mhpmevent3, 2   // Count Data Cache Load Misses
+   //  csrwi mhpmevent4, 3   // Count Data Cache Load Miss Latency
+   //  csrwi 0x320, 0        // Start counting
+   //
+   //  la x1, <data>;
+   //  ld x2, 0(x1);
+   //
+   //  csrwi 0x320, 24        // Atomically stop counting
+   //  csrr x3, mhpmcounter3
+   //  csrr x4, mhpmcounter4
+   // Ratio eg. (x4 / x3)
+`endif
+
 
    // ================================================================
    // Stage1: nonpipe special: CSRRW and CSRRWI
