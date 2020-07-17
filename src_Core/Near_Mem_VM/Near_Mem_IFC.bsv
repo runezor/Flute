@@ -51,11 +51,41 @@ import ISA_Decls :: *;
 
 import Fabric_Defs :: *;
 
+`ifdef PERFORMANCE_MONITORING
+import PerformanceMonitor :: *;
+import Vector :: *;
+`endif
+
 `ifdef INCLUDE_DMEM_SLAVE
 import AXI4Lite_Types :: *;
 `endif
 
 // ================================================================
+
+typedef struct {
+`ifdef PERFORMANCE_MONITORING
+   Bool evt_LD;
+   Bool evt_LD_MISS;
+   Bool evt_LD_MISS_LAT;
+   Bool evt_ST;
+   Bool evt_EVICT;
+`endif
+} EventsCache deriving (Bits, FShow);
+
+
+`ifdef PERFORMANCE_MONITORING
+instance EventsList#(EventsCache, n, 8) provisos (Add#(a__, 1, n));
+  function Vector#(8, Bit#(n)) getList (EventsCache e);
+      Vector#(8, Bit#(n)) list = replicate (0);
+      list[0] = zeroExtend(pack(e.evt_LD));
+      list[1] = zeroExtend(pack(e.evt_LD_MISS));
+      list[2] = zeroExtend(pack(e.evt_LD_MISS_LAT));
+      list[3] = zeroExtend(pack(e.evt_ST));
+      return list;
+  endfunction
+endinstance
+`endif
+
 
 interface Near_Mem_IFC;
    // Reset
@@ -155,6 +185,8 @@ interface IMem_IFC;
    (* always_ready *)  method Bool     exc;
    (* always_ready *)  method Exc_Code exc_code;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
+
+   method EventsCache cacheEvents;
 endinterface
 
 // ================================================================
@@ -188,6 +220,8 @@ interface DMem_IFC;
                                                        // TODO this also needs tag?
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
+
+   method EventsCache cacheEvents;
 endinterface
 
 // ================================================================

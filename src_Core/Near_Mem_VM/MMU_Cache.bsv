@@ -71,6 +71,7 @@ import Semi_FIFOF    :: *;
 import CreditCounter :: *;
 import AXI4          :: *;
 import SourceSink    :: *;
+import SpecialWires  :: *;
 
 // ================================================================
 // Project imports
@@ -154,6 +155,8 @@ interface MMU_Cache_IFC#(numeric type mID);
    interface AXI4_Master #( mID, Wd_Addr, Wd_Data
                           , Wd_AW_User, Wd_W_User, Wd_B_User
                           , Wd_AR_User, Wd_R_User) mem_master;
+   
+   interface EventsCache cacheEvents;
 endinterface
 
 typedef MMU_Cache_IFC#(Wd_MId_2x3) MMU_DCache_IFC;
@@ -610,6 +613,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // the victim is picked 'randomly' according to this register
    Reg #(Way_in_CSet)  rg_victim_way <- mkRegU;
 
+   Array #(Wire #(EventsCache)) w_cacheEvents <- mkDWireOR (3, unpack (0));
+   Reg #(Bool)  rg_cache_rereq_data <- mkReg (False);
+
    // ----------------------------------------------------------------
    // This function initiates a read request on the 'B' ports of the rams
    // Invoked from original cache request method, and internally after refills
@@ -901,6 +907,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
 
    rule rl_probe_and_immed_rsp (!resetting && (rg_state == MODULE_RUNNING));
+      let cacheEvents = unpack(0);
 
       let new_state = rg_state;
       let new_exc_code = rg_exc_code;
@@ -999,6 +1006,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    // ----------------
 	    // Memory LD and AMO_LR
 	    if ((rg_op == CACHE_LD) || is_AMO_LR || (! dmem_not_imem)) begin
+`ifdef PERFORMANCE_MONITORING
+         // Cache miss will lead to refill and then another request
+         // Would double count if counted miss as access
+         cacheEvents.evt_LD = hit && dw_commit;
+         cacheEvents.evt_LD_MISS = !hit;
+         cacheEvents.evt_LD_MISS_LAT = !hit;
+`endif
 	       if (hit) begin
 		  // Cache hit; drive response
 		     fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, word128, unpack(0), vm_xlate_result.allow_cap, dw_commit);
@@ -1068,6 +1082,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       end
 `endif
 	       if (do_write) begin
+`ifdef PERFORMANCE_MONITORING
+            cacheEvents.evt_ST = True;
+`endif
 		  // ST, or successful SC
                   if (dw_commit) begin
 		    if (hit) begin
@@ -1173,6 +1190,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
       rg_state <= new_state;
       rg_exc_code <= new_exc_code;
+      w_cacheEvents[0] <= cacheEvents;
    endrule: rl_probe_and_immed_rsp
 
 
@@ -1461,6 +1479,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Send request into fabric for first fabric-word of cache line.
    // Pick victim way, update ctag.
    // Initiate read of word64_set in cache for read-modify-write of word64
+   rule rl_count_miss_lat (!resetting && (rg_state == CACHE_START_REFILL || rg_cache_rereq_data));
+      let cacheEvents = unpack(0);
+      cacheEvents.evt_LD_MISS_LAT = True;
+      w_cacheEvents[1] <= cacheEvents;
+
+      rg_cache_rereq_data <= rg_state != CACHE_REREQ;
+   endrule
 
    rule rl_start_cache_refill (!resetting && (rg_state == CACHE_START_REFILL) && (ctr_wr_rsps_pending.value == 0));
       if (cfg_verbosity > 1)
@@ -1548,6 +1573,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    //         (for set read-modify-write; not relevant for direct-mapped)
 
    rule rl_cache_refill_rsps_loop (!resetting && rg_state == CACHE_REFILL);
+      EventsCache cacheEvents = unpack(0);
+
       let mem_rsp <- get(masterPortShim.slave.r);
       if (cfg_verbosity > 2) begin
 	 $display ("%0d: %s.rl_cache_refill_rsps_loop:", cur_cycle, d_or_i);
@@ -1587,6 +1614,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 // Update the State_and_CTag_CSet (BRAM port A) (if this is the first
 	 // response and not an error)
 	 if ((word128_in_cline == 0) && (! err_rsp)) begin
+	    cacheEvents.evt_EVICT = (state_and_ctag_cset[rg_victim_way].state == CTAG_CLEAN);
+
 	    let new_state_and_ctag_cset = state_and_ctag_cset;
 	    new_state_and_ctag_cset [rg_victim_way] = State_and_CTag {state: CTAG_CLEAN,
 								      ctag : fn_PA_to_CTag (rg_pa)};
@@ -1630,6 +1659,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    fa_display_word128_set (cset_in_cache, word128_in_cline, new_word128_set);
 	 end
       end
+      w_cacheEvents[2] <= cacheEvents;
    endrule: rl_cache_refill_rsps_loop
 
    // ----------------------------------------------------------------
@@ -2091,6 +2121,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    // Fabric interface
    interface mem_master = masterPortShim.master;
+
+   interface EventsCache cacheEvents = w_cacheEvents[0];
+
 endmodule: mkMMU_Cache
 
 // ================================================================

@@ -40,6 +40,15 @@ import ClientServer :: *;
 
 import GetPut_Aux :: *;
 
+`ifdef PERFORMANCE_MONITORING
+import PerformanceMonitor :: *;
+
+`define ctrs 29
+`define evts 17
+`else
+`define ctrs 0
+`endif
+
 // ================================================================
 // Project imports
 
@@ -193,6 +202,11 @@ interface CSR_RegFile_IFC;
    // Read MTIME
    (* always_ready *)
    method Bit #(64) read_csr_mtime;
+
+`ifdef PERFORMANCE_MONITORING
+   (* always_ready, always_enabled *)
+   method Action send_performance_events (Vector #(`evts, Bit #(64)) evts);
+`endif
 
    // Access permission
    (* always_ready *)
@@ -453,10 +467,23 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    RWire #(Bit #(64)) rw_minstret      <- mkRWire;      // Driven on CSRRx write to minstret
    PulseWire          pw_minstret_incr <- mkPulseWire;
 
-`ifdef DETERMINISTIC_TIMING
-   let rg_mcycle = rg_minstret;
-`else
    Reg #(Bit #(64))   rg_mcycle <- mkReg (0);
+
+
+
+`ifdef PERFORMANCE_MONITORING
+   PerfCounters_IFC #(`ctrs, 64, `evts) perf_counters <- mkPerfCounters;
+   Vector #(`ctrs, ReadOnly #(Bit #(64))) ctrs = perf_counters.read_counters;
+   let ctr_sels = perf_counters.read_ctr_sels;
+   
+   Reg #(Bit #(2)) rg_ctr_inhib_ir_cy   <- mkReg (0);
+   RWire #(Bit #(2)) rw_ctr_inhib_ir_cy <- mkRWire;
+   Bit #(3) ctr_inhibit_lsb = {rg_ctr_inhib_ir_cy[1], 0, rg_ctr_inhib_ir_cy[0]};
+   Word ctr_inhibit = zeroExtend ({perf_counters.read_ctr_inhibit, ctr_inhibit_lsb});
+`else
+   Vector #(0, ReadOnly #(Bit #(64))) ctrs = newVector;
+   Vector #(0, ReadOnly #(Word)) ctr_sels = newVector;
+   Word ctr_inhibit = 0;
 `endif
 
    // Debug/Trace
@@ -561,18 +588,16 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    // ----------------------------------------------------------------
    // CYCLE counter
 
-`ifndef DETERMINISTIC_TIMING
    (* no_implicit_conditions, fire_when_enabled *)
    rule rl_mcycle_incr;
       // Update due to CSRRx    TODO: fix this
       if (rw_mcycle.wget matches tagged Valid .v)
-	 rg_mcycle <= rg_mcycle + 1;
+	 rg_mcycle <= v;
 
       // Update due to clock
-      else
+      else if (! unpack (ctr_inhibit[0]))
 	 rg_mcycle <= rg_mcycle + 1;
    endrule
-`endif
 
    // ----------------------------------------------------------------
    // INSTRET
@@ -585,8 +610,18 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    (* no_implicit_conditions, fire_when_enabled *)
    rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr);
-      rg_minstret <= rg_minstret + 1;
+      if (! unpack (ctr_inhibit[2])) rg_minstret <= rg_minstret + 1;
       // $display ("%0d: CSR_RegFile_UM.rl_upd_minstret_incr: new value is %0d", rg_mcycle, rg_minstret + 1);
+   endrule
+
+   // ----------------------------------------------------------------
+   // CTR INHIB
+   // Must do it this roundabout way so that rules above aren't blocked by
+   // fav_csr_write due to accessing both a wire (rw_minstret) and a reg (ctr_inhibit)
+   // This way ctr_inhibit is not written in fav_csr_write
+
+   rule rl_upd_ctr_inhib_csrrx (rw_ctr_inhib_ir_cy.wget matches tagged Valid .v);
+      rg_ctr_inhib_ir_cy <= v;
    endrule
 
    // ----------------------------------------------------------------
@@ -702,6 +737,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_mcycleh)
 		     || (csr_addr == csr_addr_minstreth)
 `endif
+		     || (csr_addr == csr_addr_mcountinhibit)
 
 		     || (csr_addr == csr_addr_tselect)
 		     || (csr_addr == csr_addr_tdata1)
@@ -792,19 +828,39 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       Maybe #(Word)  m_csr_value = tagged Invalid;
 
       if ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
-	 m_csr_value = tagged Valid 0;
+	 begin
+	    let idx = csr_addr - csr_addr_hpmcounter3;
+	    if (idx < `ctrs) m_csr_value = tagged Valid (truncate(ctrs[idx]));
+	    else m_csr_value = tagged Valid 0;
+	 end
 `ifdef RV32
       else if ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h))
-	 m_csr_value = tagged Valid 0;
+	 begin
+	    let idx = csr_addr - csr_addr_hpmcounter3h;
+	    if (idx < `ctrs) m_csr_value = tagged Valid (truncateLSB(ctrs[idx]));
+	    else m_csr_value = tagged Valid 0;
+	 end
 `endif
       else if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	 m_csr_value = tagged Valid 0;
+	 begin
+	    let idx = csr_addr - csr_addr_mhpmcounter3;
+	    if (idx < `ctrs) m_csr_value = tagged Valid (truncate(ctrs[idx]));
+	    else m_csr_value = tagged Valid 0;
+	 end
 `ifdef RV32
       else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
-	 m_csr_value = tagged Valid 0;
+	 begin
+	    let idx = csr_addr - csr_addr_mhpmcounter3h;
+	    if (idx < `ctrs) m_csr_value = tagged Valid (truncateLSB(ctrs[idx]));
+	    else m_csr_value = tagged Valid 0;
+	 end
 `endif
       else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
-	 m_csr_value = tagged Valid 0;
+	 begin
+	    let idx = csr_addr - csr_addr_mhpmevent3;
+	    if (idx < `ctrs) m_csr_value = tagged Valid (zeroExtend(ctr_sels[idx]));
+	    else m_csr_value = tagged Valid 0;
+   end
 
       else begin
 	 case (csr_addr)
@@ -907,6 +963,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_minstreth: m_csr_value = tagged Valid (rg_minstret [63:32]);
 `endif
 
+	    csr_addr_mcountinhibit: m_csr_value = tagged Valid ctr_inhibit;
+
 	    csr_addr_tselect:  m_csr_value = tagged Valid rg_tselect;
 	    csr_addr_tdata1:   m_csr_value = tagged Valid rg_tdata1;
 	    csr_addr_tdata2:   m_csr_value = tagged Valid rg_tdata2;
@@ -946,6 +1004,34 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 WordXL          new_csr_value  = ?;
 	 Maybe #(WordXL) m_new_csr_value2 = tagged Invalid;
 
+`ifdef PERFORMANCE_MONITORING
+`ifdef RV32
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
+	    begin
+	       let new_value = { ctrs[csr_addr - csr_addr_mhpmcounter3][63:32], wordxl };
+	       perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3, new_value);
+	       new_csr_value = wordxl;
+	    end
+	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
+	    begin
+	       let new_value = { wordxl, ctrs[csr_addr - csr_addr_mhpmcounter3h][31:0] };
+	       perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3h, new_value);
+	       new_csr_value = wordxl;
+	    end
+`else
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
+	    begin
+          perf_counters.write_counter (truncate (pack (csr_addr - csr_addr_mhpmcounter3)), wordxl);
+	        new_csr_value = wordxl;
+	    end
+`endif
+	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
+	    begin
+	       Bit #(TLog #(`evts)) new_val = truncate (wordxl);
+	       perf_counters.write_ctr_sel (truncate (pack (csr_addr - csr_addr_mhpmevent3)), new_val);
+	       new_csr_value = zeroExtend (new_val);
+	    end
+`else // !PERFORMANCE_MONITORING
 	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
 	    begin
 	       new_csr_value = 0;    // hardwired
@@ -960,6 +1046,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    begin
 	       new_csr_value = 0;    // hardwired
 	    end
+`endif // PERFORMANCE_MONITORING
 	 else
 	    case (csr_addr)
 	       // User mode csrs
@@ -1184,6 +1271,18 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       rw_minstret.wset (new_csr_value);
 				    end
 `endif
+	       csr_addr_mcountinhibit: begin
+`ifdef PERFORMANCE_MONITORING
+				       Bit #(TAdd #(`ctrs, 3)) new_ctr_inhibit = truncate (wordxl);
+				       new_ctr_inhibit[1] = 0;
+				       new_csr_value = zeroExtend (new_ctr_inhibit);
+
+				       rw_ctr_inhib_ir_cy.wset ({new_ctr_inhibit[2], new_ctr_inhibit[0]});
+				       perf_counters.write_ctr_inhibit (truncateLSB (new_ctr_inhibit));
+`else
+				       new_csr_value = 0;
+`endif
+				   end
 	       csr_addr_tselect:   begin
 				      // Until we implement trigger functionality,
 				      // return tselect always contains 0
@@ -1698,6 +1797,12 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       // We use mcycle as a proxy for time
       return rg_mcycle;
    endmethod
+
+`ifdef PERFORMANCE_MONITORING
+   method Action send_performance_events (Vector #(`evts, Bit #(64)) evts);
+      perf_counters.send_performance_events(evts);
+   endmethod
+`endif
 
 `ifdef ISA_CHERI
    // Access permission
