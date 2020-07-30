@@ -63,9 +63,10 @@ import RVFI_DII  :: *;
 `endif
 import TV_Info       :: *;
 
-import CPU_Globals   :: *;
-import Near_Mem_IFC  :: *;
-import CSR_RegFile   :: *;    // For SATP, SSTATUS, MSTATUS
+import CPU_Globals      :: *;
+import Near_Mem_IFC     :: *;
+import MMU_Cache_Common :: *;    // for CacheOp
+import CSR_RegFile      :: *;    // For SATP, SSTATUS, MSTATUS
 
 `ifdef SHIFT_SERIAL
 import Shifter_Box  :: *;
@@ -188,13 +189,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
       , rd:         rg_stage2.rd
       , rd_val:     cast (rg_stage2.val1)
 `ifdef ISA_F
-      , rd_in_fpr:  False
-      , upd_flags:  False
-      , fpr_flags:  0
-      , frd_val:    rg_stage2.fval1
+						    , rd_in_fpr:  False,
+						    upd_flags:  False,
+						    fpr_flags:  0,
+						    frd_val:    rg_stage2.fval1
 `endif
 `ifdef INCLUDE_TANDEM_VERIF
-      , trace_data: rg_stage2.trace_data
+						    , trace_data: rg_stage2.trace_data
 `endif
 						    };
 
@@ -678,13 +679,16 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 Bool op_stage2_amo = (x.op_stage2 == OP_Stage2_AMO);
 `ifdef ISA_CHERI
 	 Bit #(5) amo_funct5 = getAddr(extract_cap(x.val1)) [6:2];
+	 Bit #(7) amo_funct7 = getAddr(extract_cap(x.val1)) [6:0];
 `else
 	 Bit #(5) amo_funct5 = pack(x.val1) [6:2];
+	 Bit #(7) amo_funct7 = pack(x.val1) [6:0];
 `endif
          if (valid) rg_f5 <= amo_funct5;
 `else
 	 Bool op_stage2_amo = False;
 	 Bit #(5) amo_funct5 = 0;
+	 Bit #(7) amo_funct7 = 0;
 `endif
 	 if ((x.op_stage2 == OP_Stage2_LD) || (x.op_stage2 == OP_Stage2_ST) || op_stage2_amo) begin
 	    WordXL   mstatus     = csr_regfile.read_mstatus;
@@ -713,7 +717,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
         Bit#(TSub#(SizeOf#(CapMem),1)) tagless = truncate(capMem);
 `endif
 
-	    dcache.req (cache_op,
+        dcache.req (cache_op,
 			x.mem_width_code,
             x.mem_unsigned,
 `ifdef ISA_A

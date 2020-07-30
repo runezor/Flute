@@ -87,10 +87,10 @@ module mkBoot_ROM (Boot_ROM_IFC);
 
    // ----------------
 
-   function Bool fn_addr_is_aligned (Fabric_Addr addr);
-      if (valueOf (Wd_Data_Periph) == 32)
+   function Bool fn_addr_is_aligned (Fabric_Addr addr, AXI4_Size arsize);
+      if (arsize == 4)
 	 return (addr [1:0] == 2'b_00);
-      else if (valueOf (Wd_Data_Periph) == 64)
+      else if (arsize == 8)
 	 return (addr [2:0] == 3'b_000);
       else
 	 return False;
@@ -100,8 +100,8 @@ module mkBoot_ROM (Boot_ROM_IFC);
       return ((base <= addr) && (addr < lim));
    endfunction
 
-   function Bool fn_addr_is_ok (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim);
-      return (   fn_addr_is_aligned (addr)
+   function Bool fn_addr_is_ok (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim, AXI4_Size arsize);
+      return (   fn_addr_is_aligned (addr, arsize)
 	      && fn_addr_is_in_range (base, addr, lim));
    endfunction
 
@@ -118,9 +118,10 @@ module mkBoot_ROM (Boot_ROM_IFC);
 
       AXI4_Resp  rresp  = OKAY;
       Bit #(64)  data64 = 0;
-      if (! fn_addr_is_ok (rg_addr_base, rda.araddr, rg_addr_lim)) begin
+      if (! fn_addr_is_ok (rg_addr_base, rda.araddr, rg_addr_lim, rda.arsize)) begin
 	 rresp = SLVERR;
-	 $display ("%0d: ERROR: Boot_ROM.rl_process_rd_req: unrecognized addr",  cur_cycle);
+	 $display ("%0d: ERROR: Boot_ROM.rl_process_rd_req: unrecognized or misaligned addr",
+		   cur_cycle);
 	 $display ("    ", fshow (rda));
       end
       else if (rda.araddr [2:0] == 3'b0) begin
@@ -131,6 +132,8 @@ module mkBoot_ROM (Boot_ROM_IFC);
       else begin    // ((valueOf (Wd_Data_Periph) == 32) && (rda.addr [1:0] == 2'b_00))
 	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr);
 	 data64 = { 0, d1 };
+	 if (valueOf (Wd_Data) == 64)
+	    data64 = { d1, 0 };
       end
 
       Bit #(Wd_Data_Periph) rdata  = truncate (data64);
@@ -156,9 +159,10 @@ module mkBoot_ROM (Boot_ROM_IFC);
       let wrd <- get(slavePortShim.master.w);
 
       AXI4_Resp  bresp = OKAY;
-      if (! fn_addr_is_ok (rg_addr_base, wra.awaddr, rg_addr_lim)) begin
+      if (! fn_addr_is_ok (rg_addr_base, wra.awaddr, rg_addr_lim, wra.awsize)) begin
 	 bresp = SLVERR;
-	 $display ("%0d: ERROR: Boot_ROM.rl_process_wr_req: unrecognized addr",  cur_cycle);
+	 $display ("%0d: ERROR: Boot_ROM.rl_process_wr_req: unrecognized or misaligned addr",
+		   cur_cycle);
 	 $display ("    ", fshow (wra));
       end
 
