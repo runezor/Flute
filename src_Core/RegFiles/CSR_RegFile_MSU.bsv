@@ -44,7 +44,7 @@ import GetPut_Aux :: *;
 import PerformanceMonitor :: *;
 
 `define ctrs 29
-`define evts 17
+`define evts 63
 `else
 `define ctrs 0
 `endif
@@ -620,9 +620,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    // fav_csr_write due to accessing both a wire (rw_minstret) and a reg (ctr_inhibit)
    // This way ctr_inhibit is not written in fav_csr_write
 
+`ifdef PERFORMANCE_MONITORING
    rule rl_upd_ctr_inhib_csrrx (rw_ctr_inhib_ir_cy.wget matches tagged Valid .v);
       rg_ctr_inhib_ir_cy <= v;
    endrule
+`endif
 
    // ----------------------------------------------------------------
    // Help functions for interface methods
