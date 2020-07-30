@@ -32,7 +32,7 @@ import GetPut_Aux :: *;
 import PerformanceMonitor :: *;
 
 `define ctrs 29
-`define evts 33
+`define evts 63
 `else
 `define ctrs 0
 `endif

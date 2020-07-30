@@ -25,6 +25,9 @@ package CPU_Stage2;
 
 export
 CPU_Stage2_IFC (..),
+`ifdef PERFORMANCE_MONITORING
+Output_Stage2_Perf (..),
+`endif
 mkCPU_Stage2;
 
 // ================================================================
@@ -85,7 +88,19 @@ interface CPU_Stage2_IFC;
 
    (* always_ready *)
    method Action set_full (Bool full);
+
+`ifdef PERFORMANCE_MONITORING
+   method Output_Stage2_Perf perf;
+`endif
 endinterface
+
+`ifdef PERFORMANCE_MONITORING
+typedef struct {
+   Bool sc_success;
+   Bool ld_wait;
+   Bool st_wait;
+} Output_Stage2_Perf deriving (Bits);
+`endif
 
 // ================================================================
 // Implementation module
@@ -101,6 +116,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    Reg #(Bool)                  rg_resetting  <- mkReg (False);
    Reg #(Bool)                  rg_full       <- mkReg (False);
    Reg #(Data_Stage1_to_Stage2) rg_stage2     <- mkRegU;    // From Stage 1
+   Reg #(Bit#(5))               rg_f5         <- mkReg (0);
 
    // ----------------
    // Serial shifter box
@@ -506,6 +522,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 Bool op_stage2_amo = False;
 	 Bit #(7) amo_funct7 = 0;
 `endif
+	 rg_f5 <= pack(x.val1) [6:2];
 	 if ((x.op_stage2 == OP_Stage2_LD) || (x.op_stage2 == OP_Stage2_ST) || op_stage2_amo) begin
 	    WordXL   mstatus     = csr_regfile.read_mstatus;
 `ifdef ISA_PRIV_S
@@ -621,6 +638,25 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    method Action set_full (Bool full);
       rg_full <= full;
    endmethod
+
+`ifdef PERFORMANCE_MONITORING
+   method Output_Stage2_Perf perf;
+      let sc_success = False;
+`ifdef ISA_A
+      if (rg_stage2.op_stage2 == OP_Stage2_AMO && rg_f5 == f5_AMO_SC) begin
+	 WordXL result = truncate(dcache.word64);
+	 sc_success = result == 0;
+      end
+`endif
+      let ld_wait = (rg_stage2.op_stage2 == OP_Stage2_LD) && (! dcache.valid);
+      let st_wait = (rg_stage2.op_stage2 == OP_Stage2_ST) && (! dcache.valid);
+      return Output_Stage2_Perf {
+	 sc_success: sc_success,
+	 ld_wait: ld_wait,
+	 st_wait: st_wait
+      };
+  endmethod
+`endif
 endmodule
 
 // ================================================================
