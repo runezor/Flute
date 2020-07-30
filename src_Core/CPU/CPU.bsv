@@ -184,33 +184,33 @@ typedef struct {
 } EventsCore deriving (Bits, FShow);
 
 instance BitVectorable #(EventsCore, n, 30) provisos (Add #(a__, 1, n));
-  function Vector #(30, Bit #(n)) toVector (EventsCore e);
+   function Vector #(30, Bit #(n)) toVector (EventsCore e);
       Vector #(30, Bit #(n)) list = replicate (0);
-      list[0] = zeroExtend(pack(e.evt_REDIRECT));
-      list[1] = zeroExtend(pack(e.evt_TLB_EXC));
-      list[2] = zeroExtend(pack(e.evt_BR));
-      list[3] = zeroExtend(pack(e.evt_JAL));
-      list[4] = zeroExtend(pack(e.evt_JALR));
-      list[5] = zeroExtend(pack(e.evt_AUIPC));
-      list[6] = zeroExtend(pack(e.evt_LD));
-      list[7] = zeroExtend(pack(e.evt_ST));
-      list[8] = zeroExtend(pack(e.evt_LR));
-      list[9] = zeroExtend(pack(e.evt_SC));
-      list[10] = zeroExtend(pack(e.evt_AMO));
-      list[11] = zeroExtend(pack(e.evt_SERIAL_SHIFT));
-      list[12] = zeroExtend(pack(e.evt_INT_MUL_DIV_REM));
-      list[13] = zeroExtend(pack(e.evt_FP));
-      list[14] = zeroExtend(pack(e.evt_SC_SUCCESS));
-      list[15] = zeroExtend(pack(e.evt_LD_WAIT));
-      list[16] = zeroExtend(pack(e.evt_ST_WAIT));
-      list[17] = zeroExtend(pack(e.evt_FENCE));
-      list[18] = zeroExtend(pack(e.evt_WAIT_F));
-      list[19] = zeroExtend(pack(e.evt_WAIT_D));
-      list[20] = zeroExtend(pack(e.evt_WAIT_1));
-      list[21] = zeroExtend(pack(e.evt_WAIT_2));
-      list[22] = zeroExtend(pack(e.evt_WAIT_3));
+      list [0] = zeroExtend (pack (e.evt_REDIRECT));
+      list [1] = zeroExtend (pack (e.evt_TLB_EXC));
+      list [2] = zeroExtend (pack (e.evt_BR));
+      list [3] = zeroExtend (pack (e.evt_JAL));
+      list [4] = zeroExtend (pack (e.evt_JALR));
+      list [5] = zeroExtend (pack (e.evt_AUIPC));
+      list [6] = zeroExtend (pack (e.evt_LD));
+      list [7] = zeroExtend (pack (e.evt_ST));
+      list [8] = zeroExtend (pack (e.evt_LR));
+      list [9] = zeroExtend (pack (e.evt_SC));
+      list [10] = zeroExtend (pack (e.evt_AMO));
+      list [11] = zeroExtend (pack (e.evt_SERIAL_SHIFT));
+      list [12] = zeroExtend (pack (e.evt_INT_MUL_DIV_REM));
+      list [13] = zeroExtend (pack (e.evt_FP));
+      list [14] = zeroExtend (pack (e.evt_SC_SUCCESS));
+      list [15] = zeroExtend (pack (e.evt_LD_WAIT));
+      list [16] = zeroExtend (pack (e.evt_ST_WAIT));
+      list [17] = zeroExtend (pack (e.evt_FENCE));
+      list [18] = zeroExtend (pack (e.evt_WAIT_F));
+      list [19] = zeroExtend (pack (e.evt_WAIT_D));
+      list [20] = zeroExtend (pack (e.evt_WAIT_1));
+      list [21] = zeroExtend (pack (e.evt_WAIT_2));
+      list [22] = zeroExtend (pack (e.evt_WAIT_3));
       return list;
-  endfunction
+   endfunction
 endinstance
 `endif
 
@@ -858,7 +858,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_pipe", mcycle);
 
 `ifdef PERFORMANCE_MONITORING
-      let coreEvents = unpack(0);
+      let coreEvents = unpack (0);
 `endif
 
       Bool stage3_full = (stage3.out.ostatus != OSTATUS_EMPTY);
@@ -967,34 +967,34 @@ module mkCPU (CPU_IFC);
 	  && (stageD.out.ostatus == OSTATUS_PIPE))
 	 begin
 `ifdef PERFORMANCE_MONITORING
-      let instr = stageD.out.data_to_stage1.decoded_instr;
-      coreEvents.evt_LD = (instr.opcode == op_LOAD)
+	    let instr = stageD.out.data_to_stage1.decoded_instr;
+	    coreEvents.evt_LD = (instr.opcode == op_LOAD)
 `ifdef ISA_F
-                       || (instr.opcode == op_LOAD_FP)
+				   || (instr.opcode == op_LOAD_FP)
 `endif
-      ;
-      coreEvents.evt_ST = (instr.opcode == op_STORE)
+	    ;
+	    coreEvents.evt_ST = (instr.opcode == op_STORE)
 `ifdef ISA_F
-                       || (instr.opcode == op_STORE_FP)
+				   || (instr.opcode == op_STORE_FP)
 `endif
-      ;
+	    ;
 `ifdef ISA_A
-      coreEvents.evt_LR = (instr.opcode == op_AMO) && (instr.funct5 == f5_AMO_LR);
-      coreEvents.evt_SC = (instr.opcode == op_AMO) && (instr.funct5 == f5_AMO_SC);
-      coreEvents.evt_AMO = (instr.opcode == op_AMO) && (instr.funct5 != f5_AMO_LR) && (instr.funct5 != f5_AMO_SC);
+	    coreEvents.evt_LR = (instr.opcode == op_AMO) && (instr.funct5 == f5_AMO_LR);
+	    coreEvents.evt_SC = (instr.opcode == op_AMO) && (instr.funct5 == f5_AMO_SC);
+	    coreEvents.evt_AMO = (instr.opcode == op_AMO) && (instr.funct5 != f5_AMO_LR) && (instr.funct5 != f5_AMO_SC);
 `endif
-      coreEvents.evt_BR = instr.opcode == op_BRANCH;
+	    coreEvents.evt_BR = instr.opcode == op_BRANCH;
 	    coreEvents.evt_JAL = instr.opcode == op_JAL;
 	    coreEvents.evt_JALR = instr.opcode == op_JALR;
 	    coreEvents.evt_AUIPC = instr.opcode == op_AUIPC;
 	    coreEvents.evt_SERIAL_SHIFT = ((instr.opcode == op_OP_IMM) || (instr.opcode == op_OP))
-	                               && ((instr.funct3 == f3_SLLI) || (instr.funct3 == f3_SRLI) || (instr.funct3 == f3_SRAI));
+						 && ((instr.funct3 == f3_SLLI) || (instr.funct3 == f3_SRLI) || (instr.funct3 == f3_SRAI));
 `ifdef ISA_M
 	    coreEvents.evt_INT_MUL_DIV_REM = ((instr.opcode == op_OP) || (instr.opcode == op_OP_32)) && f7_is_OP_MUL_DIV_REM (instr.funct7);
 `endif
 `ifdef ISA_F
 	    coreEvents.evt_FP = (instr.opcode == op_FP) || (instr.opcode == op_FMADD) || (instr.opcode == op_FMSUB)
-	                     || (instr.opcode == op_FNMSUB) || (instr.opcode == op_FNMADD);
+				   || (instr.opcode == op_FNMSUB) || (instr.opcode == op_FNMADD);
 `endif
 `endif
 	    stage1.enq (stageD.out.data_to_stage1);  stage1_full = True;
@@ -1050,7 +1050,7 @@ module mkCPU (CPU_IFC);
       stageF.set_full (stageF_full);
 
 `ifdef PERFORMANCE_MONITORING
-      w_coreEvents[0] <= coreEvents;
+      w_coreEvents [0] <= coreEvents;
 `endif
    endrule: rl_pipe
 
@@ -1065,9 +1065,9 @@ module mkCPU (CPU_IFC);
 	 $display ("%0d: %m.rl_stage2_nonpipe", mcycle);
 
 `ifdef PERFORMANCE_MONITORING
-      let coreEvents = unpack(0);
+      let coreEvents = unpack (0);
       coreEvents.evt_TLB_EXC = True;
-      w_coreEvents[1] <= coreEvents;
+      w_coreEvents [1] <= coreEvents;
 `endif
 
       // Just save relevant info and handle in next clock
@@ -1245,19 +1245,19 @@ module mkCPU (CPU_IFC);
    // Performance counters
    Vector #(16, Bit #(64)) imem_evts = toVector (near_mem.imem.cacheEvents);
    Vector #(16, Bit #(64)) dmem_evts = toVector (near_mem.dmem.cacheEvents);
-   Vector #(30, Bit #(64)) core_evts = toVector (w_coreEvents[0]);
+   Vector #(30, Bit #(64)) core_evts = toVector (w_coreEvents [0]);
 
    let events = cons (
-        0
+	  0
     , append (append (
-         dmem_evts
-      ,  imem_evts
-      ), core_evts
+	   dmem_evts
+	,  imem_evts
+	), core_evts
    ));
 
-  (* fire_when_enabled, no_implicit_conditions *)
+   (* fire_when_enabled, no_implicit_conditions *)
    rule rl_send_perf_evts;
-      csr_regfile.send_performance_events(events);
+      csr_regfile.send_performance_events (events);
    endrule
 
    // Example usage:
@@ -1903,9 +1903,9 @@ module mkCPU (CPU_IFC);
 	 $display ("%0d: %m.rl_stage1_FENCE", mcycle);
 
 `ifdef PERFORMANCE_MONITORING
-      let coreEvents = unpack(0);
+      let coreEvents = unpack (0);
       coreEvents.evt_FENCE = True;
-      w_coreEvents[2] <= coreEvents;
+      w_coreEvents [2] <= coreEvents;
 `endif
    endrule
 

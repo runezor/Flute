@@ -818,6 +818,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
    method Output_Stage2_Perf perf;
       let sc_success = False;
 `ifdef ISA_A
+      // TODO: this is duplicate of part of fv_out (maybe move there)
       if (rg_stage2.op_stage2 == OP_Stage2_AMO && rg_f5 == f5_AMO_SC) begin
 	 match {.mem_tag, .mem_val} = dcache.word128;
 `ifdef ISA_CHERI

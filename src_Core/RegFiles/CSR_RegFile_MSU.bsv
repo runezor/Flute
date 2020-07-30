@@ -469,13 +469,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    Reg #(Bit #(64))   rg_mcycle <- mkReg (0);
 
-
-
 `ifdef PERFORMANCE_MONITORING
    PerfCounters_IFC #(`ctrs, 64, `evts) perf_counters <- mkPerfCounters;
    Vector #(`ctrs, ReadOnly #(Bit #(64))) ctrs = perf_counters.read_counters;
    let ctr_sels = perf_counters.read_ctr_sels;
-   
+
    Reg #(Bit #(2)) rg_ctr_inhib_ir_cy   <- mkReg (0);
    RWire #(Bit #(2)) rw_ctr_inhib_ir_cy <- mkRWire;
    Bit #(3) ctr_inhibit_lsb = {rg_ctr_inhib_ir_cy[1], 0, rg_ctr_inhib_ir_cy[0]};
