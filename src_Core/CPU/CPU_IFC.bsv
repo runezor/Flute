@@ -52,6 +52,12 @@ import RVFI_DII    :: *;
 
 import Fabric_Defs :: *;
 
+`ifdef PERFORMANCE_MONITORING
+import Vector :: *;
+
+typedef 17 ExternalEvtCount;
+`endif
+
 // ================================================================
 // CPU interface
 
@@ -144,6 +150,13 @@ interface CPU_IFC;
 
    // CSR access
    interface Server #(DM_CPU_Req #(12, XLEN), DM_CPU_Rsp #(XLEN)) hart0_csr_mem_server;
+`endif
+
+   // ----------------
+   // External events to be monitored
+
+`ifdef PERFORMANCE_MONITORING
+   method Action relay_external_events (Vector #(ExternalEvtCount, Bit #(1)) external_evts);
 `endif
 
 endinterface

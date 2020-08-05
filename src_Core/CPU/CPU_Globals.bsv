@@ -676,6 +676,10 @@ typedef struct {
    Stage_OStatus          ostatus;
    Trap_Info_Pipe         trap_info;    // relevant if ostatus == OSTATUS_NONPIPE
 
+`ifdef PERFORMANCE_MONITORING
+   Output_Stage2_Perf     perf;
+`endif
+
 `ifdef ISA_CHERI
    // Whether a capability bounds check succeeded
    Bool                   check_success;
@@ -691,6 +695,16 @@ typedef struct {
    Data_Stage2_to_Stage3  data_to_stage3;
    } Output_Stage2
 deriving (Bits);
+
+`ifdef PERFORMANCE_MONITORING
+typedef struct {
+   Bool sc_success;
+   Bool ld_cap;
+   Bool ld_cap_tag_set;
+   Bool ld_wait;
+   Bool st_wait;
+} Output_Stage2_Perf deriving (Bits);
+`endif
 
 instance FShow #(Output_Stage2);
    function Fmt fshow (Output_Stage2 x);

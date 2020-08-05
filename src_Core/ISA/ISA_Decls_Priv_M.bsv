@@ -142,6 +142,8 @@ CSR_Addr   csr_addr_mhpmcounter29h = 12'hB9D;    // Upper 32 bits of machine per
 CSR_Addr   csr_addr_mhpmcounter30h = 12'hB9E;    // Upper 32 bits of machine performance-monitoring counter
 CSR_Addr   csr_addr_mhpmcounter31h = 12'hB9F;    // Upper 32 bits of machine performance-monitoring counter
 
+CSR_Addr   csr_addr_mcountinhibit  = 12'h320;    // Machine Counter-Inhibit
+
 CSR_Addr   csr_addr_mhpmevent3     = 12'h323;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent4     = 12'h324;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent5     = 12'h325;    // Machine performance-monitoring event selector
@@ -171,8 +173,6 @@ CSR_Addr   csr_addr_mhpmevent28    = 12'h33C;    // Machine performance-monitori
 CSR_Addr   csr_addr_mhpmevent29    = 12'h33D;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent30    = 12'h33E;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent31    = 12'h33F;    // Machine performance-monitoring event selector
-
-CSR_Addr   csr_addr_mcountinhibit  = 12'h320;    // Machine Counter-Inhibit
 
 CSR_Addr   csr_addr_tselect   = 12'h7A0;    // Debug/Trace trigger register select
 CSR_Addr   csr_addr_tdata1    = 12'h7A1;    // First Debug/Trace trigger data
@@ -734,5 +734,22 @@ function Maybe #(Exc_Code) fv_interrupt_pending (MISA       misa,
 
    return m_ec;
 endfunction
+
+// ================================================================
+// The width of individual counters
+
+typedef 64 Counter_Width;
+
+`ifndef NO_OF_CTRS
+typedef 29 No_Of_Ctrs;
+`else
+typedef `NO_OF_CTRS No_Of_Ctrs;
+`endif
+
+`ifndef NO_OF_EVTS
+typedef 96 No_Of_Evts;
+`else
+typedef `NO_OF_EVTS No_Of_Evts;
+`endif
 
 // ================================================================

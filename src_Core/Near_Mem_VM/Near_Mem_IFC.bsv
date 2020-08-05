@@ -80,24 +80,9 @@ typedef struct {
    Bool evt_EVICT;
 } EventsCache deriving (Bits, FShow);
 
-instance BitVectorable #(EventsCache, n, 16) provisos (Add #(a__, 1, n));
-   function Vector #(16, Bit #(n)) toVector (EventsCache e);
-      Vector #(16, Bit #(n)) list = replicate (0);
-      list [0] = zeroExtend (pack (e.evt_LD));
-      list [1] = zeroExtend (pack (e.evt_LD_MISS));
-      list [2] = zeroExtend (pack (e.evt_LD_MISS_LAT));
-      list [3] = zeroExtend (pack (e.evt_ST));
-      list [4] = zeroExtend (pack (e.evt_ST_MISS));
-      list [5] = zeroExtend (pack (e.evt_ST_MISS_LAT));
-      list [6] = zeroExtend (pack (e.evt_AMO));
-      list [7] = zeroExtend (pack (e.evt_AMO_MISS));
-      list [8] = zeroExtend (pack (e.evt_AMO_MISS_LAT));
-      list [9] = zeroExtend (pack (e.evt_TLB));
-      list [10] = zeroExtend (pack (e.evt_TLB_MISS));
-      list [11] = zeroExtend (pack (e.evt_TLB_MISS_LAT));
-      list [12] = zeroExtend (pack (e.evt_TLB_FLUSH));
-      list [13] = zeroExtend (pack (e.evt_EVICT));
-      return list;
+instance BitVectorable #(EventsCache, 1, n) provisos (Bits #(EventsCache, n));
+   function Vector #(n, Bit #(1)) to_vector (EventsCache e);
+      return reverse (unpack (pack (e)));
    endfunction
 endinstance
 `endif
@@ -202,7 +187,7 @@ interface IMem_IFC;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
 
 `ifdef PERFORMANCE_MONITORING
-   method EventsCache cacheEvents;
+   method EventsCache events;
 `endif
 endinterface
 
@@ -239,7 +224,7 @@ interface DMem_IFC;
    (* always_ready *)  method Exc_Code   exc_code;
 
 `ifdef PERFORMANCE_MONITORING
-   method EventsCache cacheEvents;
+   method EventsCache events;
 `endif
 endinterface
 
