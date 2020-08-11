@@ -82,6 +82,9 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
 
       rg_banner_printed <= True;
 
+      // Set DDR4 'ready'
+      soc_top.ma_ddr4_ready;
+
       // Set CPU verbosity and logdelay (simulation only)
       Bool v1 <- $test$plusargs ("v1");
       Bool v2 <- $test$plusargs ("v2");
@@ -132,9 +135,9 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
    // ================================================================
    // Terminate on any non-zero status
 
-   rule rl_terminate (soc_top.status != 0);
+   rule rl_terminate (soc_top.mv_status != 0);
       $display ("%0d: %m:.rl_terminate: soc_top status is 0x%0h (= 0d%0d)",
-		cur_cycle, soc_top.status, soc_top.status);
+		cur_cycle, soc_top.mv_status, soc_top.mv_status);
 
       // End timing the simulation
       Bit #(32) cycle_num <- cur_cycle;

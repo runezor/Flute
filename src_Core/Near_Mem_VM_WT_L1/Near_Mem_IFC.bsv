@@ -45,6 +45,56 @@ import AXI4_Lite        :: *;
 `endif
 
 // ================================================================
+// Near-Mem parameters (statically defined)
+
+// Id of requestor for 'coherent DMA' port into (optional) L2 cache
+
+typedef 6   Wd_Id_Dma;
+typedef 64  Wd_Addr_Dma;
+typedef 512 Wd_Data_Dma;
+typedef 0   Wd_AW_User_Dma;
+typedef 0   Wd_W_User_Dma;
+typedef 0   Wd_B_User_Dma;
+typedef 0   Wd_AR_User_Dma;
+typedef 0   Wd_R_User_Dma;
+
+// ================================================================
+// This part of the interface is lifted out to surrounding modules.
+
+`ifdef MEM_512b
+
+typedef 16  Wd_Id_Mem;
+typedef 64  Wd_Addr_Mem;
+typedef 512 Wd_Data_Mem;
+typedef 0   Wd_AW_User_Mem;
+typedef 0   Wd_W_User_Mem;
+typedef 0   Wd_B_User_Mem;
+typedef 0   Wd_AR_User_Mem;
+typedef 0   Wd_R_User_Mem;
+
+`else
+
+typedef Wd_MId     Wd_Id_Mem;
+typedef Wd_Addr    Wd_Addr_Mem;
+typedef Wd_Data    Wd_Data_Mem;
+typedef Wd_AW_User Wd_AW_User_Mem;
+typedef Wd_W_User  Wd_W_User_Mem;
+typedef Wd_B_User  Wd_B_User_Mem;
+typedef Wd_AR_User Wd_AR_User_Mem;
+typedef Wd_R_User  Wd_R_User_Mem;
+
+`endif
+
+typedef AXI4_Master #(Wd_Id_Mem,
+			  Wd_Addr_Mem,
+			  Wd_Data_Mem,
+			  Wd_AW_User_Mem,
+			  Wd_W_User_Mem,
+			  Wd_B_User_Mem,
+			  Wd_AR_User_Mem,
+			  Wd_R_User_Mem)  Near_Mem_Fabric_IFC;
+
+// ================================================================
 
 interface Near_Mem_IFC;
    // Reset
@@ -70,7 +120,7 @@ interface Near_Mem_IFC;
    // Fabric side
    interface AXI4_Master #( Wd_MId_2x3, Wd_Addr, Wd_Data
                           , Wd_AW_User, Wd_W_User, Wd_B_User
-                          , Wd_AR_User, Wd_R_User) dmem_master;
+                          , Wd_AR_User, Wd_R_User) mem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite DMem slave interface
@@ -91,11 +141,28 @@ interface Near_Mem_IFC;
 `endif
 
    // ----------------------------------------------------------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+                         , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
+                         , Wd_AR_User_Dma, Wd_R_User_Dma)  dma_server;
+
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
    // For ISA tests: watch memory writes to <tohost> addr
 
 `ifdef WATCH_TOHOST
    method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
 `endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+
+   // Misc. status; 0 = running, no error
+   (* always_ready *)
+   method Bit #(8) mv_status;
 
 endinterface
 

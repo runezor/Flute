@@ -219,7 +219,7 @@ module mkNear_Mem (Near_Mem_IFC);
    endinterface
 
    // Fabric side
-   interface dmem_master = dcache.mem_master;
+   interface Near_Mem_Fabric_IFC  mem_master = dcache.mem_master;
 
 `ifdef INCLUDE_DMEM_SLAVE
    interface dmem_slave = dmem_slave_adapter.from_master;
@@ -267,6 +267,36 @@ module mkNear_Mem (Near_Mem_IFC);
 `ifdef ISA_PRIV_S
    interface Server sfence_vma_server = toGPServer (f_sfence_vma_reqs, f_sfence_vma_rsps);
 `endif
+
+   // ----------------------------------------------------------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+   // Tied off: no L2 cache in WT_L1
+
+   interface dma_server = culDeSac;
+
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+      dcache.set_watch_tohost (watch_tohost, tohost_addr);
+   endmethod
+`endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+      icache.ma_ddr4_ready;
+      dcache.ma_ddr4_ready;
+   endmethod
+
+   // Misc. status; 0 = running, no error
+   method Bit #(8) mv_status;
+      return dcache.mv_status;
+   endmethod
+
 endmodule
 
 // ================================================================

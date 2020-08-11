@@ -2308,7 +2308,7 @@ module mkCPU (CPU_IFC);
    interface  imem_master = near_mem.imem_master;
 
    // DMem to fabric master interface
-   interface  dmem_master = near_mem.dmem_master;
+   interface Near_Mem_Fabric_IFC  mem_master = near_mem.mem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
@@ -2318,6 +2318,11 @@ module mkCPU (CPU_IFC);
 `endif
 
    // ----------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave_IFC dma_server = near_mem.dma_server;
+
+   // ----------------------------------------------------------------
    // External interrupts
 
    method Action  m_external_interrupt_req (x) = csr_regfile.m_external_interrupt_req (x);
@@ -2342,14 +2347,6 @@ module mkCPU (CPU_IFC);
       return csr_regfile.read_csr_minstret;
    endmethod
 `endif
-
-   // ----------------
-   // For tracing
-
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
-      cfg_verbosity <= verbosity;
-      cfg_logdelay  <= logdelay;
-   endmethod
 
    // ----------------
    // Optional interface to Tandem Verifier
@@ -2387,6 +2384,17 @@ module mkCPU (CPU_IFC);
 `endif
 
    // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+      cfg_verbosity <= verbosity;
+      cfg_logdelay  <= logdelay;
+   endmethod
+
+   // ----------------
    // For ISA tests: watch memory writes to <tohost> addr
 
 `ifdef WATCH_TOHOST
@@ -2394,6 +2402,16 @@ module mkCPU (CPU_IFC);
       near_mem.set_watch_tohost (watch_tohost, tohost_addr);
    endmethod
 `endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+      near_mem.ma_ddr4_ready;
+   endmethod
+
+   // Misc. status; 0 = running, no error
+   method Bit #(8) mv_status;
+      return near_mem.mv_status;
+   endmethod
 
 endmodule: mkCPU
 

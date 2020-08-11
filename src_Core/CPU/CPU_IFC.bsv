@@ -32,6 +32,7 @@ import ISA_Decls       :: *;
 
 import AXI4_Types  :: *;
 import Fabric_Defs :: *;
+import Near_Mem_IFC :: *;    // For Wd_Id/Addr/Data/User_Dma
 
 `ifdef INCLUDE_DMEM_SLAVE
 import AXI4Lite_Types :: *;
@@ -70,7 +71,7 @@ interface CPU_IFC;
    // DMem to Fabric master interface
    interface AXI4_Master #( Wd_MId_2x3, Wd_Addr, Wd_Data
                           , Wd_AW_User, Wd_W_User, Wd_B_User
-                          , Wd_AR_User, Wd_R_User)  dmem_master;
+                          , Wd_AR_User, Wd_R_User)  mem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
@@ -80,6 +81,14 @@ interface CPU_IFC;
 `endif
 
    // ----------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+                         , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
+                         , Wd_AR_User_Dma, Wd_R_User_Dma)  dma_server;
+
+   // ----------------------------------------------------------------
+
    // External interrupts
 
    (* always_ready, always_enabled *)
@@ -106,11 +115,6 @@ interface CPU_IFC;
 `ifdef DETERMINISTIC_TIMING
    method Bit#(64) take_minstret;
 `endif
-
-   // ----------------
-   // Set core's verbosity
-
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
 
    // ----------------
    // Optional interface to Tandem Verifier
@@ -147,11 +151,26 @@ interface CPU_IFC;
 `endif
 
    // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+
+   method Action set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+
+   // ----------------
    // For ISA tests: watch memory writes to <tohost> addr
 
 `ifdef WATCH_TOHOST
    method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
 `endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+
+   // Misc. status; 0 = running, no error
+   (* always_ready *)
+   method Bit #(8) mv_status;
 
 endinterface
 
