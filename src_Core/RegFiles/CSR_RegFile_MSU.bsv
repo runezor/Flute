@@ -42,6 +42,7 @@ import GetPut_Aux :: *;
 
 `ifdef PERFORMANCE_MONITORING
 import PerformanceMonitor :: *;
+`endif
 
 // ================================================================
 // Project imports
@@ -347,6 +348,16 @@ deriving (Eq, Bits, FShow);
 
 // ================================================================
 
+`ifdef PERFORMANCE_MONITORING
+(* synthesize *)
+module mkPerfCountersFlute (PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, No_Of_Evts));
+  PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, No_Of_Evts) perf_counters <- mkPerfCounters;
+  return perf_counters;
+endmodule
+`endif
+
+// ================================================================
+
 (* synthesize *)
 module mkCSR_RegFile (CSR_RegFile_IFC);
 
@@ -468,7 +479,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `endif
 
 `ifdef PERFORMANCE_MONITORING
-   PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, No_Of_Evts) perf_counters <- mkPerfCounters;
+   PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, No_Of_Evts) perf_counters <- mkPerfCountersFlute;
    Vector #(No_Of_Ctrs, ReadOnly #(Bit #(Counter_Width))) ctrs = perf_counters.read_counters;
    let ctr_sels = perf_counters.read_ctr_sels;
 

@@ -55,7 +55,7 @@ import Fabric_Defs :: *;
 `ifdef PERFORMANCE_MONITORING
 import Vector :: *;
 
-typedef 17 ExternalEvtCount;
+typedef 19 ExternalEvtCount;
 `endif
 
 // ================================================================

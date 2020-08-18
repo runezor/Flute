@@ -107,24 +107,32 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    mkConnection(delay_shim.slave, cpu_imem);
    let imem_master = extendIDFields(zeroMasterUserFields(delay_shim.master), 0);
 
+`ifdef PERFORMANCE_MONITORING
+   Vector#(7, Bit#(1)) tag_cache_evts = replicate (0);
+`endif
    // set the appropriate axi4_dmem_shim_{master, slave} ifc
 `ifdef ISA_CHERI
 `ifdef NO_TAG_CACHE
    // CHERI, export the tags on the interface
    let axi4_dmem_shim <- mkAXI4Shim;
-   let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
-   let axi4_dmem_shim_master = axi4_dmem_shim.master;
+   // TODO: Get tag cache events from outside
 `else
    // CHERI, handle tags internally with a tagController
    let axi4_dmem_shim <- mkTagControllerAXI;
-   let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
-   let axi4_dmem_shim_master = axi4_dmem_shim.master;
+   tag_cache_evts = axi4_dmem_shim.events;
 `endif
 `else
    // No CHERI, no tags
    let axi4_dmem_shim <- mkAXI4Shim;
+`endif
    let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
    let axi4_dmem_shim_master = axi4_dmem_shim.master;
+
+`ifdef PERFORMANCE_MONITORING
+   let axi4_dmem_shim_slave_perf <- toAXI4_Slave_Perf (axi4_dmem_shim_slave);
+   let axi4_dmem_shim_master_perf <- toAXI4_Master_Perf (axi4_dmem_shim_master);
+   axi4_dmem_shim_slave = axi4_dmem_shim_slave_perf.mdle;
+   axi4_dmem_shim_master = axi4_dmem_shim_master_perf.mdle;
 `endif
 
    // Near_Mem_IO
@@ -429,8 +437,12 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Connect performance events from axi4_dmem_shim to CPU
 
 `ifdef PERFORMANCE_MONITORING
-   rule rl_relay_external_events;    // from Tag Cache
-      cpu.relay_external_events (to_vector (axi4_dmem_shim.events));
+   rule rl_relay_external_events;
+      // TODO: Get tag cache master events from outside
+      let master_events = to_vector (axi4_dmem_shim_master_perf.events);
+      let slave_events = to_vector (axi4_dmem_shim_slave_perf.events);
+      let events = append (tag_cache_evts, append (slave_events, master_events));
+      cpu.relay_external_events (to_large_vector (events));
    endrule
 `endif
 

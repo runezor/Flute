@@ -180,6 +180,9 @@ typedef struct {
    Bool                check_inclusive;
    Bool                check_exact_enable;
    Bool                check_exact_success;
+`ifdef PERFORMANCE_MONITORING
+   Bool                set_offset_in_bounds;
+`else
 `endif
 
    CF_Info    cf_info;        // For redirection and branch predictor
@@ -242,7 +245,12 @@ ALU_Outputs alu_outputs_base
                check_address_high : ?,
                check_inclusive    : ?,
                check_exact_enable : False,
+`ifndef PERFORMANCE_MONITORING
                check_exact_success : ?,
+`else
+               check_exact_success : True,
+               set_offset_in_bounds : True,
+`endif
 
                mem_allow_cap      : False,
 `endif
@@ -1898,6 +1906,9 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         end
         alu_outputs.cap_val1 = result.value;
         alu_outputs.val1_cap_not_int = True;
+`ifdef PERFORMANCE_MONITORING
+        alu_outputs.set_offset_in_bounds = result.exact;
+`endif
     end
     SET_BOUNDS: begin
         let result = setBounds(cs1_val, alu_outputs.internal_op2);

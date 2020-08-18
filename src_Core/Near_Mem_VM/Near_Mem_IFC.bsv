@@ -53,7 +53,6 @@ import Fabric_Defs :: *;
 
 `ifdef PERFORMANCE_MONITORING
 import PerformanceMonitor :: *;
-import Vector :: *;
 `endif
 
 `ifdef INCLUDE_DMEM_SLAVE
@@ -80,10 +79,8 @@ typedef struct {
    Bool evt_EVICT;
 } EventsCache deriving (Bits, FShow);
 
-instance BitVectorable #(EventsCache, 1, n) provisos (Bits #(EventsCache, n));
-   function Vector #(n, Bit #(1)) to_vector (EventsCache e);
-      return reverse (unpack (pack (e)));
-   endfunction
+instance BitVectorable #(EventsCache, 1, m) provisos (Bits #(EventsCache, m));
+      function to_vector = struct_to_vector;
 endinstance
 `endif
 

@@ -176,21 +176,21 @@ typedef struct {
    Bool evt_LOAD_WAIT;
    Bool evt_STORE_WAIT;
    Bool evt_FENCE;
-   Bool evt_BLOCKED_BY_F_BUSY;
-   Bool evt_BLOCKED_BY_D_BUSY;
-   Bool evt_BLOCKED_BY_1_BUSY;
-   Bool evt_BLOCKED_BY_2_BUSY;
-   Bool evt_BLOCKED_BY_3_BUSY;
+   Bool evt_F_BUSY_NO_CONSUME;
+   Bool evt_D_BUSY_NO_CONSUME;
+   Bool evt_1_BUSY_NO_CONSUME;
+   Bool evt_2_BUSY_NO_CONSUME;
+   Bool evt_3_BUSY_NO_CONSUME;
+   Bool evt_IMPRECISE_SETBOUND;
+   Bool evt_UNREPRESENTABLE_CAP;
    Bool evt_MEM_CAP_LOAD;
    Bool evt_MEM_CAP_STORE;
    Bool evt_MEM_CAP_LOAD_TAG_SET;
    Bool evt_MEM_CAP_STORE_TAG_SET;
 } EventsCore deriving (Bits, FShow);
 
-instance BitVectorable #(EventsCore, 1, n) provisos (Bits #(EventsCore, n));
-   function Vector #(n, Bit #(1)) to_vector (EventsCore e);
-      return reverse (unpack (pack (e)));
-   endfunction
+instance BitVectorable #(EventsCore, 1, m) provisos (Bits #(EventsCore, m));
+   function to_vector = struct_to_vector;
 endinstance
 `endif
 
@@ -457,7 +457,7 @@ module mkCPU (CPU_IFC);
 	 events.evt_SERIAL_SHIFT = (   (   (opcode == op_OP_IMM) || (opcode == op_OP)   )
 					&& (   (funct3 == f3_SLLI) || (funct3 == f3_SRLI) || (funct3 == f3_SRAI)   )   );
 `ifdef ISA_M
-       events.evt_INT_MUL_DIV_REM = (   (   (opcode == op_OP) || (opcode == op_OP_32)   )
+	 events.evt_INT_MUL_DIV_REM = (   (   (opcode == op_OP) || (opcode == op_OP_32)   )
 					   && f7_is_OP_MUL_DIV_REM (funct7)   );
 `endif
 `ifdef ISA_F
@@ -944,11 +944,11 @@ module mkCPU (CPU_IFC);
       events.evt_LOAD_WAIT = stage2.out.perf.ld_wait;
       events.evt_STORE_WAIT = stage2.out.perf.st_wait;
 
-      events.evt_BLOCKED_BY_F_BUSY = (stageF.out.ostatus != OSTATUS_PIPE) && (stageF.out.ostatus != OSTATUS_EMPTY);
-      events.evt_BLOCKED_BY_D_BUSY = (stageD.out.ostatus != OSTATUS_PIPE) && (stageD.out.ostatus != OSTATUS_EMPTY) && (stageF.out.ostatus == OSTATUS_PIPE);
-      events.evt_BLOCKED_BY_1_BUSY = (stage1.out.ostatus != OSTATUS_PIPE) && (stage1.out.ostatus != OSTATUS_EMPTY) && (stageD.out.ostatus == OSTATUS_PIPE);
-      events.evt_BLOCKED_BY_2_BUSY = (stage2.out.ostatus != OSTATUS_PIPE) && (stage2.out.ostatus != OSTATUS_EMPTY) && (stage1.out.ostatus == OSTATUS_PIPE);
-      events.evt_BLOCKED_BY_3_BUSY = (stage3.out.ostatus != OSTATUS_PIPE) && (stage3.out.ostatus != OSTATUS_EMPTY) && (stage2.out.ostatus == OSTATUS_PIPE);
+      events.evt_F_BUSY_NO_CONSUME = (stageF.out.ostatus != OSTATUS_PIPE) && (stageF.out.ostatus != OSTATUS_EMPTY);
+      events.evt_D_BUSY_NO_CONSUME = (stageD.out.ostatus != OSTATUS_PIPE) && (stageD.out.ostatus != OSTATUS_EMPTY) && (stageF.out.ostatus == OSTATUS_PIPE);
+      events.evt_1_BUSY_NO_CONSUME = (stage1.out.ostatus != OSTATUS_PIPE) && (stage1.out.ostatus != OSTATUS_EMPTY) && (stageD.out.ostatus == OSTATUS_PIPE);
+      events.evt_2_BUSY_NO_CONSUME = (stage2.out.ostatus != OSTATUS_PIPE) && (stage2.out.ostatus != OSTATUS_EMPTY) && (stage1.out.ostatus == OSTATUS_PIPE);
+      events.evt_3_BUSY_NO_CONSUME = (stage3.out.ostatus != OSTATUS_PIPE) && (stage3.out.ostatus != OSTATUS_EMPTY) && (stage2.out.ostatus == OSTATUS_PIPE);
 `endif
 
       // ----------------
@@ -994,6 +994,8 @@ module mkCPU (CPU_IFC);
 		     CapMem capMem = cast (capReg);
 		     events.evt_MEM_CAP_STORE_TAG_SET = isValidCap (capMem);
 		  end
+		  events.evt_IMPRECISE_SETBOUND =  ! stage1.out.data_to_stage2.check_exact_success;
+		  events.evt_UNREPRESENTABLE_CAP = ! stage1.out.data_to_stage2.set_offset_in_bounds;
 `endif
 	       end
 	    end
@@ -1259,13 +1261,13 @@ module mkCPU (CPU_IFC);
    Vector #(31, Bit #(Counter_Width)) core_evts_vec = to_large_vector (aw_events [0]);
    Vector #(16, Bit #(Counter_Width)) imem_evts_vec = to_large_vector (near_mem.imem.events);
    Vector #(16, Bit #(Counter_Width)) dmem_evts_vec = to_large_vector (near_mem.dmem.events);
-   Vector #(32, Bit #(Counter_Width)) external_evts_vec = to_vector (w_external_evts);
+   Vector #(32, Bit #(Counter_Width)) external_evts_vec = to_large_vector (w_external_evts);
 
    let events = append (null_evt, core_evts_vec);
    events = append (events, imem_evts_vec);
    events = append (events, dmem_evts_vec);
    events = append (events, external_evts_vec);
-   
+
    (* fire_when_enabled, no_implicit_conditions *)
    rule rl_send_perf_evts;
       csr_regfile.send_performance_events (events);

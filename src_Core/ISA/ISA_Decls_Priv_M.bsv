@@ -738,18 +738,19 @@ endfunction
 // ================================================================
 // The width of individual counters
 
-typedef 64 Counter_Width;
+`ifndef COUNTER_WIDTH
+`define COUNTER_WIDTH 64
+`endif
+typedef `COUNTER_WIDTH Counter_Width;
 
 `ifndef NO_OF_CTRS
-typedef 29 No_Of_Ctrs;
-`else
-typedef `NO_OF_CTRS No_Of_Ctrs;
+`define NO_OF_CTRS 29
 `endif
+typedef `NO_OF_CTRS No_Of_Ctrs;
 
 `ifndef NO_OF_EVTS
-typedef 96 No_Of_Evts;
-`else
-typedef `NO_OF_EVTS No_Of_Evts;
+`define NO_OF_EVTS 96
 `endif
+typedef `NO_OF_EVTS No_Of_Evts;
 
 // ================================================================

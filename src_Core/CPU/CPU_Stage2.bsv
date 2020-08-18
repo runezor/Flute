@@ -478,7 +478,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef ISA_CHERI
 	 perf.ld_cap = (rg_stage2.mem_width_code == w_SIZE_CAP);
 	 // TODO_P: Should 'rg_stage2.mem_allow_cap' also be set?
-	 perf.ld_cap_tag_set = (rg_stage2.mem_width_code == w_SIZE_CAP) && mem_tag;
+	 perf.ld_cap_tag_set = (rg_stage2.mem_width_code == w_SIZE_CAP) && mem_tag && rg_stage2.mem_allow_cap;
 `endif
 	 perf.ld_wait = (! dcache.valid);
 `endif
