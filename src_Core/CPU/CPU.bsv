@@ -147,41 +147,21 @@ typedef struct {
    Bool evt_LD_WAIT;
    Bool evt_ST_WAIT;
    Bool evt_FENCE;
-   Bool evt_WAIT_F;
-   Bool evt_WAIT_D;
-   Bool evt_WAIT_1;
-   Bool evt_WAIT_2;
-   Bool evt_WAIT_3;
+   Bool evt_F_BUSY_NO_CONSUME;
+   Bool evt_D_BUSY_NO_CONSUME;
+   Bool evt_1_BUSY_NO_CONSUME;
+   Bool evt_2_BUSY_NO_CONSUME;
+   Bool evt_3_BUSY_NO_CONSUME;
+   Bool evt_IMPRECISE_SETBOUND;
+   Bool evt_UNREPRESENTABLE_CAP;
+   Bool evt_MEM_CAP_LOAD;
+   Bool evt_MEM_CAP_STORE;
+   Bool evt_MEM_CAP_LOAD_TAG_SET;
+   Bool evt_MEM_CAP_STORE_TAG_SET;
 } EventsCore deriving (Bits, FShow);
 
-instance BitVectorable #(EventsCore, n, 30) provisos (Add #(a__, 1, n));
-   function Vector #(30, Bit #(n)) to_vector (EventsCore e);
-      Vector #(30, Bit #(n)) list = replicate (0);
-      list [0] = zeroExtend (pack (e.evt_REDIRECT));
-      list [1] = zeroExtend (pack (e.evt_TLB_EXC));
-      list [2] = zeroExtend (pack (e.evt_BR));
-      list [3] = zeroExtend (pack (e.evt_JAL));
-      list [4] = zeroExtend (pack (e.evt_JALR));
-      list [5] = zeroExtend (pack (e.evt_AUIPC));
-      list [6] = zeroExtend (pack (e.evt_LD));
-      list [7] = zeroExtend (pack (e.evt_ST));
-      list [8] = zeroExtend (pack (e.evt_LR));
-      list [9] = zeroExtend (pack (e.evt_SC));
-      list [10] = zeroExtend (pack (e.evt_AMO));
-      list [11] = zeroExtend (pack (e.evt_SERIAL_SHIFT));
-      list [12] = zeroExtend (pack (e.evt_INT_MUL_DIV_REM));
-      list [13] = zeroExtend (pack (e.evt_FP));
-      list [14] = zeroExtend (pack (e.evt_SC_SUCCESS));
-      list [15] = zeroExtend (pack (e.evt_LD_WAIT));
-      list [16] = zeroExtend (pack (e.evt_ST_WAIT));
-      list [17] = zeroExtend (pack (e.evt_FENCE));
-      list [18] = zeroExtend (pack (e.evt_WAIT_F));
-      list [19] = zeroExtend (pack (e.evt_WAIT_D));
-      list [20] = zeroExtend (pack (e.evt_WAIT_1));
-      list [21] = zeroExtend (pack (e.evt_WAIT_2));
-      list [22] = zeroExtend (pack (e.evt_WAIT_3));
-      return list;
-   endfunction
+instance BitVectorable #(EventsCore, 1, m) provisos (Bits #(EventsCore, m));
+   function to_vector = struct_to_vector;
 endinstance
 `endif
 
@@ -242,7 +222,7 @@ module mkCPU (CPU_IFC);
    Bit #(4)  cur_verbosity = ((minstret < cfg_logdelay) ? 0 : cfg_verbosity);
 
 `ifdef PERFORMANCE_MONITORING
-   Array #(Wire #(EventsCore)) w_coreEvents <- mkDWireOR (5, unpack (0));
+   Array #(Wire #(EventsCore)) aw_events <- mkDRegOR (5, unpack (0));
 `endif
 
    // ----------------
@@ -751,12 +731,11 @@ module mkCPU (CPU_IFC);
 `ifdef PERFORMANCE_MONITORING
       coreEvents.evt_LD_WAIT = stage2.perf.ld_wait;
       coreEvents.evt_ST_WAIT = stage2.perf.st_wait;
-
-      coreEvents.evt_WAIT_F = stageF_full;
-      coreEvents.evt_WAIT_D = stageD_full && (stageF.out.ostatus == OSTATUS_PIPE);
-      coreEvents.evt_WAIT_1 = stage1_full && (stageD.out.ostatus == OSTATUS_PIPE);
-      coreEvents.evt_WAIT_2 = stage2_full && (stage1.out.ostatus == OSTATUS_PIPE);
-      coreEvents.evt_WAIT_3 = stage3_full && (stage2.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_F_BUSY_NO_CONSUME = (stageF.out.ostatus != OSTATUS_PIPE) && (stageF.out.ostatus != OSTATUS_EMPTY);
+      coreEvents.evt_D_BUSY_NO_CONSUME = (stageD.out.ostatus != OSTATUS_PIPE) && (stageD.out.ostatus != OSTATUS_EMPTY) && (stageF.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_1_BUSY_NO_CONSUME = (stage1.out.ostatus != OSTATUS_PIPE) && (stage1.out.ostatus != OSTATUS_EMPTY) && (stageD.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_2_BUSY_NO_CONSUME = (stage2.out.ostatus != OSTATUS_PIPE) && (stage2.out.ostatus != OSTATUS_EMPTY) && (stage1.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_3_BUSY_NO_CONSUME = (stage3.out.ostatus != OSTATUS_PIPE) && (stage3.out.ostatus != OSTATUS_EMPTY) && (stage2.out.ostatus == OSTATUS_PIPE);
 `endif
 
       // ----------------
@@ -873,7 +852,7 @@ module mkCPU (CPU_IFC);
       stageF.set_full (stageF_full);
 
 `ifdef PERFORMANCE_MONITORING
-      w_coreEvents [0] <= coreEvents;
+      aw_events [0] <= coreEvents;
 `endif
    endrule: rl_pipe
 
@@ -889,7 +868,7 @@ module mkCPU (CPU_IFC);
 `ifdef PERFORMANCE_MONITORING
       let coreEvents = unpack (0);
       coreEvents.evt_TLB_EXC = True;
-      w_coreEvents [1] <= coreEvents;
+      aw_events [1] <= coreEvents;
 `endif
 
       // Just save relevant info and handle in next clock
@@ -1017,17 +996,16 @@ module mkCPU (CPU_IFC);
 `ifdef PERFORMANCE_MONITORING
    // ================================================================
    // Performance counters
-   Vector #(16, Bit #(64)) imem_evts = to_large_vector (near_mem.imem.cacheEvents);
-   Vector #(16, Bit #(64)) dmem_evts = to_large_vector (near_mem.dmem.cacheEvents);
-   Vector #(30, Bit #(64)) core_evts = to_vector (w_coreEvents[0]);
-   
-   let events = cons (
-	  0
-    , append (append (
-	   dmem_evts
-	,  imem_evts
-	), core_evts
-   ));
+   Vector #(1, Bit #(Counter_Width)) null_evt = replicate (0);
+   Vector #(31, Bit #(Counter_Width)) core_evts_vec = to_large_vector (aw_events [0]);
+   Vector #(16, Bit #(Counter_Width)) imem_evts_vec = to_large_vector (near_mem.imem.events);
+   Vector #(16, Bit #(Counter_Width)) dmem_evts_vec = to_large_vector (near_mem.dmem.events);
+   Vector #(32, Bit #(Counter_Width)) external_evts_vec = replicate (0); // No external events in this design
+
+   let events = append (null_evt, core_evts_vec);
+   events = append (events, imem_evts_vec);
+   events = append (events, dmem_evts_vec);
+   events = append (events, external_evts_vec);
 
    (* fire_when_enabled, no_implicit_conditions *)
    rule rl_send_perf_evts;
@@ -1434,7 +1412,7 @@ module mkCPU (CPU_IFC);
 `ifdef PERFORMANCE_MONITORING
       let coreEvents = unpack (0);
       coreEvents.evt_FENCE = True;
-      w_coreEvents [2] <= coreEvents;
+      aw_events [2] <= coreEvents;
 `endif
 
       // Resume pipe

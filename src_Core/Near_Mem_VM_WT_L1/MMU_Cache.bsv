@@ -129,7 +129,7 @@ interface MMU_Cache_IFC;
    // Misc. control and status
    interface AXI4_Master_IFC #(Wd_Id, Wd_Addr, Wd_Data, Wd_User) mem_master;
 `ifdef PERFORMANCE_MONITORING
-   interface EventsCache cacheEvents;
+   interface EventsCache events;
 `endif
    // ----------------
    // For ISA tests: watch memory writes to <tohost> addr
@@ -2072,7 +2072,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 
 `ifdef PERFORMANCE_MONITORING
    // Cache event reporting interface.
-   interface EventsCache cacheEvents = w_cacheEvents[0];
+   interface EventsCache events = w_cacheEvents[0];
 `endif
 
    // ----------------------------------------------------------------

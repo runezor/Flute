@@ -716,3 +716,21 @@ function Maybe #(Exc_Code) fv_interrupt_pending (MISA       misa,
 endfunction
 
 // ================================================================
+// The width of individual counters
+
+`ifndef COUNTER_WIDTH
+`define COUNTER_WIDTH 64
+`endif
+typedef `COUNTER_WIDTH Counter_Width;
+
+`ifndef NO_OF_CTRS
+`define NO_OF_CTRS 29
+`endif
+typedef `NO_OF_CTRS No_Of_Ctrs;
+
+`ifndef NO_OF_EVTS
+`define NO_OF_EVTS 96
+`endif
+typedef `NO_OF_EVTS No_Of_Evts;
+
+// ================================================================

@@ -201,7 +201,7 @@ interface IMem_IFC;
    (* always_ready *)  method Exc_Code exc_code;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
 `ifdef PERFORMANCE_MONITORING
-                       method EventsCache cacheEvents;
+                       method EventsCache events;
 `endif
 endinterface
 
@@ -231,7 +231,7 @@ interface DMem_IFC;
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
 `ifdef PERFORMANCE_MONITORING
-                       method EventsCache cacheEvents;
+                       method EventsCache events;
 `endif
 endinterface
 
