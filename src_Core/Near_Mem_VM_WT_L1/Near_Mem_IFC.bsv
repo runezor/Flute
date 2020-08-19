@@ -63,42 +63,6 @@ typedef 0   Wd_AR_User_Dma;
 typedef 0   Wd_R_User_Dma;
 
 // ================================================================
-// This part of the interface is lifted out to surrounding modules.
-
-`ifdef MEM_512b
-
-typedef 16  Wd_Id_Mem;
-typedef 64  Wd_Addr_Mem;
-typedef 512 Wd_Data_Mem;
-typedef 0   Wd_AW_User_Mem;
-typedef 0   Wd_W_User_Mem;
-typedef 0   Wd_B_User_Mem;
-typedef 0   Wd_AR_User_Mem;
-typedef 0   Wd_R_User_Mem;
-
-`else
-
-typedef Wd_MId     Wd_Id_Mem;
-typedef Wd_Addr    Wd_Addr_Mem;
-typedef Wd_Data    Wd_Data_Mem;
-typedef Wd_AW_User Wd_AW_User_Mem;
-typedef Wd_W_User  Wd_W_User_Mem;
-typedef Wd_B_User  Wd_B_User_Mem;
-typedef Wd_AR_User Wd_AR_User_Mem;
-typedef Wd_R_User  Wd_R_User_Mem;
-
-`endif
-
-typedef AXI4_Master #(Wd_Id_Mem,
-			  Wd_Addr_Mem,
-			  Wd_Data_Mem,
-			  Wd_AW_User_Mem,
-			  Wd_W_User_Mem,
-			  Wd_B_User_Mem,
-			  Wd_AR_User_Mem,
-			  Wd_R_User_Mem)  Near_Mem_Fabric_IFC;
-
-// ================================================================
 
 `ifdef PERFORMANCE_MONITORING
 typedef struct {
@@ -145,9 +109,7 @@ interface Near_Mem_IFC;
    interface DMem_IFC  dmem;
 
    // Fabric side
-   interface AXI4_Master #( Wd_MId_2x3, Wd_Addr, Wd_Data
-                          , Wd_AW_User, Wd_W_User, Wd_B_User
-                          , Wd_AR_User, Wd_R_User) mem_master;
+   interface Near_Mem_Fabric_IFC mem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite DMem slave interface

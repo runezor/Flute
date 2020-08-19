@@ -32,8 +32,9 @@ package Verifier;
 
 `ifdef INCLUDE_TANDEM_VERIF
 import TV_Info :: *;
-`elsif RVFI
+`elsif RVFI_DII
 import RVFI_DII :: *;
+`define RVFI
 `endif
 import ISA_Decls   :: *;
 import CPU_Globals :: *;

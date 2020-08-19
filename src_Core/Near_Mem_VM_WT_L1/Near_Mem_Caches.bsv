@@ -236,7 +236,7 @@ module mkNear_Mem (Near_Mem_IFC);
    endinterface
 
    // Fabric side
-   interface Near_Mem_Fabric_IFC  mem_master = dcache.mem_master;
+   interface mem_master = dcache.mem_master;
 
 `ifdef INCLUDE_DMEM_SLAVE
    interface dmem_slave = dmem_slave_adapter.from_master;

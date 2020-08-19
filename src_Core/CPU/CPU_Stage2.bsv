@@ -452,7 +452,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
                 match {.new_ld_val,
                        .new_st_val} = fn_amo_op (rg_stage2.mem_width_code,
                                                  rg_f5,
-                                                 rg_stage2.addr,
+                                                 rg_stage2.addr & ~(~0 << rg_stage2.mem_width_code), // force aligned address as return from memory is already sliced appropriately (a 0 addr would just work)
                                                  unpack(pack(toMem(result))),
                                                  tuple2(False, zeroExtend(rg_stage2.info_RVFI_s1.mem_wdata))
                                                 );

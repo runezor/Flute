@@ -78,6 +78,7 @@ import Near_Mem_IFC :: *;
 
 import SoC_Map :: *;
 
+import Cache_Decls      :: *;
 import MMU_Cache_Common :: *;
 
 `ifdef ISA_PRIV_S
@@ -87,6 +88,10 @@ import PTW :: *;
 
 import Cache :: *;
 import MMIO  :: *;
+
+`ifdef RVFI_DII
+import RVFI_DII :: *;
+`endif
 
 // ================================================================
 
@@ -99,23 +104,25 @@ interface D_MMU_Cache_IFC;
    // CPU interface: request
    (* always_ready *)
    method Action  ma_req (CacheOp    op,
-			  Bit #(3)   f3,
+			  Bit #(3)   width_code,
+              Bool is_unsigned,
 `ifdef ISA_A
-			  Bit #(7)   amo_funct7,
+			  Bit #(5)   amo_funct5,
 `endif
-			  WordXL     va,
-			  Bit #(64)  st_value,
+			  Addr       va,
+			  Tuple2 #(Bool, CWord) st_value,
 			  // The following args for VM
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
 			  WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+   (* always_ready *)  method Action commit;
 
    // CPU interface: response
    (* always_ready *)  method Bool       valid;
    (* always_ready *)  method WordXL     addr;        // req addr for which this is a response
-   (* always_ready *)  method Bit #(64)  word64;      // rd_val (data for LD, LR, AMO, SC success/fail result)
-   (* always_ready *)  method Bit #(64)  st_amo_val;  // Final stored value for ST, SC, AMO
+   (* always_ready *)  method Tuple2 #(Bool, CWord) cword;      // rd_val (data for LD, LR, AMO, SC success/fail result)
+   (* always_ready *)  method Tuple2 #(Bool, CWord) st_amo_val;  // Final stored value for ST, SC, AMO
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
 
@@ -231,7 +238,7 @@ endfunction
 
 // ================================================================
 // MODULE IMPLEMENTATION
-                
+
 (* synthesize *)
 module mkD_MMU_Cache (D_MMU_Cache_IFC);
 
@@ -279,8 +286,8 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
    Reg #(Bool)      crg_valid [2]        <- mkCReg (2, False);
    Reg #(Bool)      crg_exc [2]          <- mkCRegU (2);
    Reg #(Exc_Code)  crg_exc_code [2]     <- mkCRegU (2);
-   Reg #(Bit #(64)) crg_ld_val [2]       <- mkCRegU (2);  // Load-val for LOAD/LR/AMO, success/fail for SC
-   Reg #(Bit #(64)) crg_final_st_val [2] <- mkCRegU (2);
+   Reg #(Tuple2#(Bool, CWord)) crg_ld_val [2] <- mkCRegU (2);  // Load-val for LOAD/LR/AMO, success/fail for SC
+   Reg #(Tuple2#(Bool, CWord)) crg_final_st_val [2] <- mkCRegU (2);
 
 `ifdef WATCH_TOHOST
    // See NOTE: "tohost" above.
@@ -304,17 +311,17 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
    Reg #(Bool) rg_pass_fail_msg_printed <- mkReg (False);
 `endif
 
-   function Action fa_watch_tohost (Bit #(64) addr, Bit #(64) final_st_val);
+   function Action fa_watch_tohost (Bit #(64) addr, Tuple2#(Bool, CWord) final_st_val);
       action
 `ifdef WATCH_TOHOST
 	 if (rg_watch_tohost
 	     && (addr == rg_tohost_addr)
-	     && (final_st_val != 0))
+	     && (final_st_val != tuple2 (False, 0)))
 	    begin
-	       rg_tohost_value <= final_st_val;
+	       rg_tohost_value <= truncate (tpl_2 (final_st_val));
 
 	       if (! rg_pass_fail_msg_printed) begin
-		  let test_num = (final_st_val >> 1);
+	          let test_num = (tpl_2 (final_st_val) >> 1);
 		  $display ("%0d: %m.fa_watch_tohost", cur_cycle);
 		  if (test_num == 0) $write ("    PASS");
 		  else               $write ("    FAIL <test_%0d>", test_num);
@@ -408,6 +415,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 						      crg_mmu_cache_req [0].satp,
 						      ((crg_mmu_cache_req [0].op == CACHE_LD)
 						       || fv_is_AMO_LR (crg_mmu_cache_req [0])),
+                              crg_mmu_cache_req [0].is_cap,
 						      crg_mmu_cache_req [0].priv,
 						      crg_mmu_cache_req [0].sstatus_SUM,
 						      crg_mmu_cache_req [0].mstatus_MXR);
@@ -431,7 +439,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       if (verbosity >= 3)
 	 $display ("    ", fshow_VM_Xlate_Result (vm_xlate_result));
 
-      if (! fn_is_aligned (mmu_cache_req.f3 [1:0], mmu_cache_req.va)) begin
+      if (! fn_is_aligned (mmu_cache_req.width_code, mmu_cache_req.va)) begin
 	 // Misaligned accesses not supported
 	 crg_valid [0]               <= True;
 	 crg_exc [0]                 <= True;
@@ -442,6 +450,16 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 	    $display ("    MISALIGNED exception");
       end
 
+`ifdef RVFI_DII
+      else if (mmu_cache_req.va < fromInteger (valueOf (RVFI_DII_Mem_Start)) || mmu_cache_req.va >= fromInteger (valueOf (RVFI_DII_Mem_End))) begin
+	 // We detect accesses outside of the assigned RVFI_DII range and trap on them
+         Bool is_AMO_LR = ((mmu_cache_req.op == CACHE_AMO) && (mmu_cache_req.amo_funct5 == f5_AMO_LR));
+	 crg_valid [0]               <= True;
+	 crg_exc [0]                 <= True;
+	 crg_exc_code [0]            <=  (((mmu_cache_req.op == CACHE_LD) || is_AMO_LR) ? exc_code_LOAD_ACCESS_FAULT : exc_code_STORE_AMO_ACCESS_FAULT);
+	 crg_mmu_cache_req_state [0] <= REQ_STATE_EMPTY;
+      end
+`endif
 `ifdef ISA_PRIV_S
       // ---- TLB miss
       else if (vm_xlate_result.outcome == VM_XLATE_TLB_MISS) begin
@@ -590,8 +608,8 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       end
 
       crg_valid [0]               <= True;
-      crg_ld_val [0]              <= ld_val;
-      crg_final_st_val [0]        <= final_st_val;
+      crg_ld_val [0]              <= tuple2 (False, ld_val);
+      crg_final_st_val [0]        <= tuple2 (False, final_st_val);
       crg_exc [0]                 <= err;
       crg_exc_code [0]            <= fv_exc_code_access_fault (crg_mmu_cache_req [0]);
       crg_mmu_cache_req_state [0] <= REQ_STATE_EMPTY;
@@ -698,14 +716,14 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       rg_state_stack_during_ptw_rd <= crg_state [0];
       crg_state [0]                <= STATE_PTE_RD_B;
    endrule
-   
+
    // Step B
    rule rl_ptw_rd_B (crg_state [0] == STATE_PTE_RD_B);
       let req = MMU_Cache_Req {op:          CACHE_LD,
-			       f3:          ((xlen == 32) ? 3'b010 : 3'b011),
+			       width_code:          ((xlen == 32) ? 3'b010 : 3'b011),
 			       va:          truncate (rg_ptw_mem_req.pte_pa),
 			       st_value:    ?,
-			       amo_funct7:  0,
+			       amo_funct5:  0,
 			       priv:        m_Priv_Mode,
 			       sstatus_SUM: 0,
 			       mstatus_MXR: 0,
@@ -714,11 +732,11 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 	 $display ("%0d: %m.rl_ptw_rd_B: cache request_B", cur_cycle);
 	 $display ("    ", fshow_MMU_Cache_Req (req));
       end
-      
+
       let cache_result <- cache.mav_request_pa (req, rg_ptw_mem_req.pte_pa);
       if (verbosity >= 3)
 	 $display ("    rl_ptw_rd_B: ", fshow_Cache_Result (cache_result));
-      
+
       // Assertion check: cannot be a WRITE_HIT
       if (cache_result.outcome == CACHE_WRITE_HIT) begin
 	 $display ("%0d: %m.rl_ptw_rd_B", cur_cycle);
@@ -728,7 +746,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       end
 
       if (cache_result.outcome == CACHE_READ_HIT) begin
-	 let ptw_mem_rsp = PTW_Mem_Rsp {ok: True, pte: truncate (cache_result.final_ld_val)};
+	 let ptw_mem_rsp = PTW_Mem_Rsp {ok: True, pte: truncate (tpl_2 (cache_result.final_ld_val))};
 	 ptw.mem_client.response.put (ptw_mem_rsp);
 	 crg_state [0] <= rg_state_stack_during_ptw_rd;
 	 if (verbosity >= 3)
@@ -740,7 +758,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 	    $display ("    rl_ptw_rd_B: -> STATE_PTE_RD_CACHE_WAIT");
       end
    endrule
-   
+
    // Wait for cache miss to be serviced
    rule rl_ptw_rd_wait (crg_state [0] == STATE_PTE_RD_CACHE_WAIT);
       if (verbosity >= 3)
@@ -792,14 +810,14 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       cache.ma_request_va (truncate (pte_writeback_pa));
       crg_state [0] <= STATE_PTE_WR_B;
    endrule
-   
+
    // Phase B
    rule rl_pte_wb_req_B (crg_state [0] == STATE_PTE_WR_B);
       let req = MMU_Cache_Req {op:          CACHE_ST,
-			       f3:          ((xlen == 32) ? 3'b010 : 3'b011),
+			       width_code:  ((xlen == 32) ? 3'b010 : 3'b011),
 			       va:          truncate (pte_writeback_pa),
-			       st_value:    zeroExtend (pte_writeback_pte),
-			       amo_funct7:  0,
+			       st_value:    tuple2 (False, zeroExtend (pte_writeback_pte)),
+			       amo_funct5:  0,
 			       priv:        m_Priv_Mode,
 			       sstatus_SUM: 0,
 			       mstatus_MXR: 0,
@@ -808,11 +826,11 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 	 $display ("%0d: %m.rl_pte_wb_req_B: cache request", cur_cycle);
 	 $display ("    ", fshow_MMU_Cache_Req (req));
       end
-      
+
       let cache_result <- cache.mav_request_pa (req, pte_writeback_pa);
       if (verbosity >= 3)
 	 $display ("    ", fshow_Cache_Result (cache_result));
-      
+
       if (cache_result.outcome == CACHE_WRITE_HIT) begin
 	 crg_state [0] <= STATE_MAIN;    // No response expected for writes
 	 f_pte_writebacks.deq;
@@ -820,7 +838,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       else // Miss
 	 crg_state [0] <= STATE_PTE_WR_CACHE_WAIT;
    endrule
-   
+
    // Wait for cache miss to be serviced
    rule rl_pte_wb_cache_WAIT (crg_state [0] == STATE_PTE_WR_CACHE_WAIT);
       if (verbosity >= 2)
@@ -848,12 +866,13 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
    // NOTE: this has no flow control: CPU should only invoke it when consuming prev output.
    // As soon as this method is called, the module starts working on this new request.
    method Action ma_req (CacheOp    op,
-			 Bit #(3)   f3,
+			 Bit #(3)   width_code,
+             Bool       is_unsigned,
 `ifdef ISA_A
-			 Bit #(7)   amo_funct7,
+			 Bit #(5)   amo_funct5,
 `endif
-			 WordXL     va,
-			 Bit #(64)  st_value,
+			 Addr       va,
+			 Tuple2 #(Bool, CWord)  st_value,
 			 // The following  args for VM
 			 Priv_Mode  priv,
 			 Bit #(1)   sstatus_SUM,
@@ -861,11 +880,13 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 			 WordXL     satp);         // = { VM_Mode, ASID, PPN_for_page_table }
 
       let mmu_cache_req = MMU_Cache_Req {op:          op,
-					 f3:          f3,
+					 width_code:  width_code,
+                     is_unsigned: is_unsigned,
+                     is_cap: ?,
 					 va:          va,
 					 st_value:    st_value
 `ifdef ISA_A
-				       , amo_funct7:  amo_funct7
+				       , amo_funct5:  amo_funct5
 `endif
 `ifdef ISA_PRIV_S
 				       , priv:        priv,
@@ -876,6 +897,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 					 };
       wire_mmu_cache_req <= mmu_cache_req;
    endmethod
+   method Action commit = noAction;
 
    method Bool  valid;
       return crg_valid [0];
@@ -885,11 +907,11 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       return crg_mmu_cache_req [0].va;
    endmethod
 
-   method Bit #(64)  word64;
+   method cword;
       return crg_ld_val [0];
    endmethod
 
-   method Bit #(64)  st_amo_val;
+   method st_amo_val;
       return crg_final_st_val [0];
    endmethod
 

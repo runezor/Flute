@@ -67,17 +67,18 @@ import ISA_Decls :: *;
 
 import TV_Info   :: *;
 
-`ifdef RVFI
-import Verifier  :: *;
-import RVFI_DII  :: *;
-`endif
 `ifdef RVFI_DII
 import Flute_RVFI_DII_Bridge :: *;
+`define RVFI
 `else
 `ifdef ISA_C
 // 'C' extension (16b compressed instructions)
 import CPU_Fetch_C  :: *;
 `endif
+`endif
+`ifdef RVFI
+import Verifier  :: *;
+import RVFI_DII  :: *;
 `endif
 
 import GPR_RegFile :: *;

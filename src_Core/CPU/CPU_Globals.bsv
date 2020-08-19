@@ -26,6 +26,10 @@ import CHERICap :: *;
 import CHERICC_Fat :: *;
 `endif
 
+`ifdef RVFI_DII
+`define RVFI
+`endif
+
 import TV_Info   :: *;
 
 // ================================================================
