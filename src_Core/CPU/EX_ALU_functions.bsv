@@ -1710,10 +1710,12 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 alu_outputs.val1 = zeroExtend(getAddr(cs1_val) - getAddr(cs2_val));
             end
             f7_cap_CBuildCap: begin
+                let auth_idx = {0, inputs.rs1_idx};
                 if (inputs.rs1_idx == 0) begin
                     check_ddc_tagged = True;
                     check_ddc_unsealed = True;
                     check_cs2_perm_subset_ddc = True;
+                    auth_idx = {1, scr_addr_DDC};
                 end else begin
                     check_cs1_tagged = True;
                     check_cs1_unsealed = True;
@@ -1726,7 +1728,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
                 alu_outputs.check_enable = True;
                 alu_outputs.check_authority = inputs.rs1_idx == 0 ? inputs.ddc : cs1_val;
-                alu_outputs.check_authority_idx = {0,inputs.rs1_idx};
+                alu_outputs.check_authority_idx = auth_idx;
                 alu_outputs.check_address_low = cs2_base;
                 alu_outputs.check_address_high = cs2_top;
                 alu_outputs.check_inclusive = True;
