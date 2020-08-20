@@ -845,7 +845,7 @@ function ALU_Outputs fv_LD (ALU_Inputs inputs, Maybe#(Bit#(3)) size);
    if (valueOf(XLEN) == 32 && inputs.decoded_instr.funct3 == f3_LD) size = Valid(w_SIZE_D);
 
    let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
+   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_DDC} : {0,inputs.rs1_idx};
    WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
@@ -929,7 +929,7 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
    IntXL  imm_s     = extend (unpack (inputs.decoded_instr.imm12_S));
 `ifdef ISA_CHERI
    let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
+   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_DDC} : {0,inputs.rs1_idx};
    WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
@@ -1260,7 +1260,7 @@ function ALU_Outputs fv_AMO (ALU_Inputs inputs);
    IntXL  s_rs1_val = unpack (inputs.rs1_val);
 `ifdef ISA_CHERI
    let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_PCC} : {0,inputs.rs1_idx};
+   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_DDC} : {0,inputs.rs1_idx};
    WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val : getAddr(inputs.cap_rs1_val);
 `else
    WordXL eaddr = pack (s_rs1_val);
@@ -1406,7 +1406,7 @@ function ALU_Outputs memCommon(ALU_Outputs alu_outputs, Bool isStoreNotLoad, Boo
    alu_outputs.val2_cap_not_int = widthCode == w_SIZE_CAP;
 
    let authority = useDDC ? ddc : addr;
-   let authorityIdx = useDDC ? {1,scr_addr_PCC} : {0,addrIdx};
+   let authorityIdx = useDDC ? {1,scr_addr_DDC} : {0,addrIdx};
 
    alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, widthCode, isStoreNotLoad, !isStoreNotLoad, data);
 
