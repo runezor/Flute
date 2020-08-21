@@ -215,6 +215,7 @@ deriving (Bits, Eq, FShow);
 
 typedef struct {
    VM_Xlate_Outcome   outcome;
+   Bool               allow_cap;     // whether we will be allowed to load a cap
    PA                 pa;            // phys addr, if VM_XLATE_OK
    Exc_Code           exc_code;      // if VM_XLATE_EXC
    } VM_Xlate_Result
