@@ -1711,12 +1711,12 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
             end
             f7_cap_CBuildCap: begin
                 let auth = cs1_val;
-                let auth_idx = {0, inputs.rs1_idx};
+                let auth_idx = {1'b0, inputs.rs1_idx};
                 if (inputs.rs1_idx == 0) begin
                     check_ddc_tagged = True;
                     check_ddc_unsealed = True;
                     check_cs2_perm_subset_ddc = True;
-                    auth_idx = {1, scr_addr_DDC};
+                    auth_idx = {1'b1, scr_addr_DDC};
                     auth = inputs.ddc;
                 end else begin
                     check_cs1_tagged = True;
