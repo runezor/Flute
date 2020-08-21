@@ -18,6 +18,7 @@ help:
 	@echo '                           For Verilog simulation: generates RTL'
 	@echo '    make  simulator    Compiles and links intermediate files/RTL to create simulation executable'
 	@echo '                           (Bluesim, verilator or iverilog)'
+	@echo '    make  tagsparams   Generates the CHERI tag controller parameters source file'
 	@echo '    make  all          = make  compile  simulator'
 	@echo ''
 	@echo '    make  run_example  Runs simulation executable on ELF given by EXAMPLE'
@@ -132,9 +133,11 @@ test:
 
 .PHONY: isa_tests
 isa_tests:
+	make -C  $(TESTS_DIR)/elf_to_hex
 	@echo "Running regressions on ISA tests; saving logs in Logs/"
 	$(REPO)/Tests/Run_regression.py  ./exe_HW_sim  $(REPO)  ./Logs  $(ARCH)
 	@echo "Finished running regressions; saved logs in Logs/"
+
 # ================================================================
 # Generate Bluespec CHERI tag controller source file
 
@@ -142,7 +145,6 @@ isa_tests:
 tagsparams: $(REPO)/libs/TagController/tagsparams.py
 	@echo "INFO: Re-generating CHERI tag controller parameters"
 	$^ -v -c $(CAPSIZE) -s $(TAGS_STRUCT:"%"=%) -a $(TAGS_ALIGN) --covered-start-addr 0x80000000 --covered-mem-size 0x3fffc000 --top-addr 0xbffff000 -b TagTableStructure.bsv
-
 	@echo "INFO: Re-generated CHERI tag controller parameters"
 compile: tagsparams
 
@@ -151,6 +153,7 @@ compile: tagsparams
 .PHONY: clean
 clean:
 	rm -r -f  *~  Makefile_*  symbol_table.txt  build_dir  obj_dir
+	rm -f $(REPO)/src_Testbench/SoC/TagTableStructure.bsv
 
 .PHONY: full_clean
 full_clean: clean
