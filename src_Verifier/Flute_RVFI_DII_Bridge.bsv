@@ -59,7 +59,7 @@ import RVFI_DII  :: *;
         Reg#(Maybe#(Dii_Id)) seq_req[2] <- mkCReg(2, Invalid);
 
         Bit#(32) nop = 'h00000013;
-        
+
         Bit#(32) instrBits = tpl_1(fromMaybe(?,instr[1]));
 
         interface Flute_RVFI_DII_Server rvfi_dii_server;

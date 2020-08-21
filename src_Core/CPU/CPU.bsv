@@ -1781,12 +1781,14 @@ module mkCPU (CPU_IFC);
    // Stage1: nonpipe special: SFENCE.VMA
 
 `ifdef ISA_PRIV_S
+`ifndef RVFI_DII
 `ifdef ISA_C
    // TODO: analyze this carefully; added to resolve a blockage
    // imem_rl_fetch_next_32b is in CPU_Fetch_C.bsv, and calls imem32.req (near_mem.imem_req).
    // fa_stageF_redirect calls stageF.enq which also calls imem.req which calls imem32.req.
    // But cond_i32_odd_fetch_next should make these rules mutually exclusive; why doesn't bsc realize this?
    (* descending_urgency = "imem_rl_fetch_next_32b, rl_stage1_SFENCE_VMA" *)
+`endif
 `endif
 
    rule rl_stage1_SFENCE_VMA (   (rg_state== CPU_RUNNING)

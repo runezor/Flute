@@ -159,7 +159,11 @@ module mkNear_Mem (Near_Mem_IFC);
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
-			  WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+			  WordXL     satp
+`ifdef RVFI_DII
+            , Dii_Id seq_req
+`endif
+      );    // { VM_Mode, ASID, PPN_for_page_table }
 	 icache.req (CACHE_LD, f3, True,
 `ifdef ISA_A
 		     ?,
@@ -172,7 +176,12 @@ module mkNear_Mem (Near_Mem_IFC);
       method Bool     valid          = icache.valid;
       method Bool     is_i32_not_i16 = True;
       method WordXL   pc             = icache.addr;
+`ifdef RVFI_DII
+      method Tuple2#(Instr,Dii_Id) instr =
+         tuple2 (truncate (tpl_2 (icache.cword)), 0);
+`else
       method Instr    instr          = truncate (tpl_2 (icache.cword));
+`endif
       method Bool     exc            = icache.exc;
       method Exc_Code exc_code       = icache.exc_code;
       method WordXL   tval           = icache.addr;

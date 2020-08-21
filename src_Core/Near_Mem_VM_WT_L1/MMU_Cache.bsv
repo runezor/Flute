@@ -82,6 +82,10 @@ import AXI4         :: *;
 import SourceSink   :: *;
 import Fabric_Defs  :: *;
 
+`ifdef RVFI_DII
+import RVFI_DII :: *;
+`endif
+
 // ================================================================
 
 export  MMU_Cache_IFC (..), MMU_ICache_IFC (..), MMU_DCache_IFC (..);
