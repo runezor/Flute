@@ -125,7 +125,9 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `else
    // CHERI, handle tags internally with a tagController
    let axi4_dmem_shim <- mkTagControllerAXI;
+`ifdef PERFORMANCE_MONITORING
    tag_cache_evts = axi4_dmem_shim.events;
+`endif
 `endif
 `else
    // No CHERI, no tags
