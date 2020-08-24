@@ -25,11 +25,12 @@ deriving (Bits, Eq, FShow);
 // ================================================================
 // Check if addr is aligned
 
-function Bool fn_is_aligned (Bit #(3) f3, Bit #(n) addr);
-   return (    (f3 [1:0] == 2'b00)                                // B, BU
-	   || ((f3 [1:0] == 2'b01) && (addr [0] == 1'b0))         // H, HU
-	   || ((f3 [1:0] == 2'b10) && (addr [1:0] == 2'b00))      // W, WU
-	   || ((f3 [1:0] == 2'b11) && (addr [2:0] == 3'b000))     // D
+function Bool fn_is_aligned (Bit #(3) width_code, Bit #(n) addr);
+   return (    (width_code == 3'b000)                                // B, BU
+	   || ((width_code == 3'b001) && (addr [0] == 1'b0))         // H, HU
+	   || ((width_code == 3'b010) && (addr [1:0] == 2'b00))      // W, WU
+	   || ((width_code == 3'b011) && (addr [2:0] == 3'b000))     // D
+	   || ((width_code == 3'b100) && (addr [3:0] == 4'b0000))    // Q
 	   );
 endfunction
 
