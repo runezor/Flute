@@ -149,6 +149,7 @@ interface MMU_Cache_IFC #(numeric type mID);
 
 `ifdef WATCH_TOHOST
    method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+   method Bit #(64) mv_tohost_value;
 `endif
 
    // Inform core that DDR4 has been initialized and is ready to accept requests
@@ -623,6 +624,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // These are set by the 'set_watch_tohost' method but are otherwise read-only.
    Reg #(Bool)      rg_watch_tohost <- mkReg (False);
    Reg #(Bit #(64)) rg_tohost_addr  <- mkReg ('h_8000_1000);
+   Reg #(Bit #(64)) rg_tohost_value <- mkReg (0);
 `endif
 
    // ----------------------------------------------------------------
@@ -1694,14 +1696,14 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	  && (zeroExtend (rg_pa) == rg_tohost_addr)
 	  && (tpl_2 (rg_st_amo_val) != 0))
 	 begin
-	    let test_num = (tpl_2 (rg_st_amo_val) >> 1);
-	    $display ("****************************************************************");
-	    if (test_num == 0) $display ("PASS:");
-	    else               $display ("FAIL <test_%0d>:", test_num);
-	    $display ("  (ISA test terminated: <tohost> va %0h pa %0h data %0h)",
-		      rg_addr, rg_pa, rg_st_amo_val);
-	    $display ("    Cycle count %0d (from %m.fa_cpu_response)", cur_cycle);
-	    $finish (0);
+	    rg_tohost_value <= truncate (tpl_2 (rg_st_amo_val));
+
+	    if (verbosity >= 1) begin
+	       let test_num = (tpl_2 (rg_st_amo_val) >> 1);
+	       if (test_num == 0) $display ("PASS:");
+	       else               $display ("FAIL <test_%0d>:", test_num);
+	       $display ("  (<tohost>  addr %0h  data %0h)", rg_tohost_addr, rg_st_amo_val);
+	    end
 	 end
 `endif
    endrule
@@ -2155,6 +2157,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
       rg_watch_tohost <= watch_tohost;
       rg_tohost_addr  <= tohost_addr;
+      $display ("%0d: %m.set_watch_tohost: watch %0d, addr %0h",
+		cur_cycle, watch_tohost, tohost_addr);   endmethod
+
+   method Bit #(64) mv_tohost_value;
+      return rg_tohost_value;
    endmethod
 `endif
 
