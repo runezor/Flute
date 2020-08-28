@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
+// Copyright (c) 2016-2020 Bluespec, Inc. All Rights Reserved
 
 //-
 // AXI (user fields) modifications:
@@ -88,12 +88,11 @@ module mkBoot_ROM (Boot_ROM_IFC);
    // ----------------
 
    function Bool fn_addr_is_aligned (Fabric_Addr addr, AXI4_Size arsize);
-      if (arsize == 4)
-	 return (addr [1:0] == 2'b_00);
-      else if (arsize == 8)
-	 return (addr [2:0] == 3'b_000);
-      else
-	 return False;
+      if      (arsize == 1)  return True;
+      else if (arsize == 2)  return (addr [0] == 1'b_0);
+      else if (arsize == 4)  return (addr [1:0] == 2'b_00);
+      else if (arsize == 8)  return (addr [2:0] == 3'b_000);
+      else return False;
    endfunction
 
    function Bool fn_addr_is_in_range (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim);
@@ -114,34 +113,40 @@ module mkBoot_ROM (Boot_ROM_IFC);
    rule rl_process_rd_req (rg_module_ready);
       let rda <- get(slavePortShim.master.ar);
 
-      let byte_addr = rda.araddr - rg_addr_base;
+      // Byte offset, aligned to 4-byte boundary
+      let byte_offset = ((rda.araddr - rg_addr_base) & (~ 'h_3));
 
       AXI4_Resp  rresp  = OKAY;
       Bit #(64)  data64 = 0;
+
       if (! fn_addr_is_ok (rg_addr_base, rda.araddr, rg_addr_lim, rda.arsize)) begin
 	 rresp = SLVERR;
 	 $display ("%0d: ERROR: Boot_ROM.rl_process_rd_req: unrecognized or misaligned addr",
 		   cur_cycle);
 	 $display ("    ", fshow (rda));
       end
-      else if (rda.araddr [2:0] == 3'b0) begin
-	 Bit #(32) d0 = fn_read_ROM_0 (byte_addr);
-	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr + 4);
+      else if (byte_offset [2] == 1'b_0) begin
+	 // Addr is in lower 4-bytes of 8-byte word
+	 Bit #(32) d0 = fn_read_ROM_0 (byte_offset);
+	 Bit #(32) d1 = fn_read_ROM_4 (byte_offset + 4);
 	 data64 = { d1, d0 };
       end
-      else begin    // ((valueOf (Wd_Data_Periph) == 32) && (rda.addr [1:0] == 2'b_00))
-	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr);
-	 data64 = { 0, d1 };
-	 if (valueOf (Wd_Data) == 64)
+      else begin
+	 // Addr is in upper 4-bytes of 8-byte word
+	 Bit #(32) d1 = fn_read_ROM_4 (byte_offset);
+	 if (valueOf (Wd_Data) == 32)
+	    data64 = { 0, d1 };
+	 else if (valueOf (Wd_Data) == 64)
 	    data64 = { d1, 0 };
       end
 
+
       Bit #(Wd_Data_Periph) rdata  = truncate (data64);
       AXI4_RFlit#(Wd_SId, Wd_Data_Periph, 0) rdr = AXI4_RFlit {rid:   rda.arid,
-			                                       rdata: rdata,
-			                                       rresp: rresp,
-			                                       rlast: True,
-			                                       ruser: 0};
+			      rdata: rdata,
+			      rresp: rresp,
+			      rlast: True,
+			      ruser: 0};
       slavePortShim.master.r.put(rdr);
 
       if (verbosity > 0) begin
