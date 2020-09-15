@@ -284,7 +284,6 @@ Integer  pte_PPN_2_offset  = 28;
 `ifdef RV64
 Integer  pte_StoreCap_offset = 63;
 Integer  pte_LoadCap_offset  = 62;
-Integer  pte_CapDirty_offset = 61;
 `endif
 
 function Bit #(1) fn_PTE_to_V (PTE pte);
@@ -355,20 +354,12 @@ endfunction
 function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
    return pte [pte_LoadCap_offset];
 endfunction
-
-function Bit #(1) fn_PTE_to_CapDirty (PTE pte);
-   return pte [pte_CapDirty_offset];
-endfunction
 `else
 function Bit #(1) fn_PTE_to_StoreCap (PTE pte);
    return 1'b1;
 endfunction
 
 function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
-   return 1'b1;
-endfunction
-
-function Bit #(1) fn_PTE_to_CapDirty (PTE pte);
    return 1'b1;
 endfunction
 `endif
@@ -400,7 +391,6 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
    let pte_r = fn_PTE_to_R (pte);
 
    let pte_StoreCap = fn_PTE_to_StoreCap (pte);
-   let pte_CapDirty = fn_PTE_to_CapDirty (pte);
    // pte_LoadCap would not cause a denial
 
    Bool priv_deny = (   ((priv == u_Priv_Mode) && (pte_u == 1'b0))
@@ -409,6 +399,7 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
    Bool access_fetch = ((! dmem_not_imem) && read_not_write);
    Bool access_load  = (dmem_not_imem && read_not_write);
    Bool access_store = (dmem_not_imem && (! read_not_write));
+   Bool access_cap   = (dmem_not_imem && capability);
 
    let pte_r_mxr = (pte_r | (mstatus_MXR & pte_x));
 
@@ -418,8 +409,7 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
 
    Bool access_cap_ok = (   (! capability)
 			 || access_load
-			 || (access_store && (pte_StoreCap == 1'b1) &&
-			     (pte_CapDirty == 1'b1)));
+			 || (access_store && (pte_StoreCap == 1'b1)));
 
    Bool pte_a_d_fault = (   fn_PTE_to_A (pte) == 0)
 			 || ((! read_not_write) && (fn_PTE_to_D (pte) == 0));
