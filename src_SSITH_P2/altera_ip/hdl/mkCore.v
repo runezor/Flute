@@ -6,7 +6,6 @@
 //
 // Ports:
 // Name                         I/O  size props
-// RDY_set_verbosity              O     1 const
 // RDY_cpu_reset_server_request_put  O     1 reg
 // cpu_reset_server_response_get  O     1 reg
 // RDY_cpu_reset_server_response_get  O     1 reg
@@ -26,22 +25,36 @@
 // RDY_cpu_imem_master_ar_drop    O     1 reg
 // cpu_imem_master_r_canPut       O     1 reg
 // RDY_cpu_imem_master_r_put      O     1 reg
-// cpu_dmem_master_aw_canPeek     O     1
-// cpu_dmem_master_aw_peek        O    99
-// RDY_cpu_dmem_master_aw_peek    O     1
-// RDY_cpu_dmem_master_aw_drop    O     1
-// cpu_dmem_master_w_canPeek      O     1
-// cpu_dmem_master_w_peek         O    73
-// RDY_cpu_dmem_master_w_peek     O     1
-// RDY_cpu_dmem_master_w_drop     O     1
-// cpu_dmem_master_b_canPut       O     1
-// RDY_cpu_dmem_master_b_put      O     1
-// cpu_dmem_master_ar_canPeek     O     1
-// cpu_dmem_master_ar_peek        O    99
-// RDY_cpu_dmem_master_ar_peek    O     1
-// RDY_cpu_dmem_master_ar_drop    O     1
-// cpu_dmem_master_r_canPut       O     1
-// RDY_cpu_dmem_master_r_put      O     1
+// core_mem_master_aw_canPeek     O     1
+// core_mem_master_aw_peek        O    99
+// RDY_core_mem_master_aw_peek    O     1
+// RDY_core_mem_master_aw_drop    O     1
+// core_mem_master_w_canPeek      O     1
+// core_mem_master_w_peek         O    73
+// RDY_core_mem_master_w_peek     O     1
+// RDY_core_mem_master_w_drop     O     1
+// core_mem_master_b_canPut       O     1
+// RDY_core_mem_master_b_put      O     1
+// core_mem_master_ar_canPeek     O     1
+// core_mem_master_ar_peek        O    99
+// RDY_core_mem_master_ar_peek    O     1
+// RDY_core_mem_master_ar_drop    O     1
+// core_mem_master_r_canPut       O     1
+// RDY_core_mem_master_r_put      O     1
+// dma_server_aw_canPut           O     1 const
+// RDY_dma_server_aw_put          O     1 const
+// dma_server_w_canPut            O     1 const
+// RDY_dma_server_w_put           O     1 const
+// dma_server_b_canPeek           O     1 const
+// dma_server_b_peek              O     8
+// RDY_dma_server_b_peek          O     1 const
+// RDY_dma_server_b_drop          O     1 const
+// dma_server_ar_canPut           O     1 const
+// RDY_dma_server_ar_put          O     1 const
+// dma_server_r_canPeek           O     1 const
+// dma_server_r_peek              O   521
+// RDY_dma_server_r_peek          O     1 const
+// RDY_dma_server_r_drop          O     1 const
 // RDY_dm_dmi_read_addr           O     1
 // dm_dmi_read_data               O    32
 // RDY_dm_dmi_read_data           O     1
@@ -49,15 +62,19 @@
 // ndm_reset_client_request_get   O     1 reg
 // RDY_ndm_reset_client_request_get  O     1 reg
 // RDY_ndm_reset_client_response_put  O     1 reg
+// RDY_set_verbosity              O     1 const
+// RDY_ma_ddr4_ready              O     1 const
+// mv_status                      O     8
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
-// set_verbosity_verbosity        I     4
-// set_verbosity_logdelay         I    64 reg
 // cpu_reset_server_request_put   I     1 reg
 // cpu_imem_master_b_put_val      I     7 reg
 // cpu_imem_master_r_put_val      I    72 reg
-// cpu_dmem_master_b_put_val      I     8
-// cpu_dmem_master_r_put_val      I    73
+// core_mem_master_b_put_val      I     8
+// core_mem_master_r_put_val      I    73
+// dma_server_aw_put_val          I    99 unused
+// dma_server_w_put_val           I   577 unused
+// dma_server_ar_put_val          I    99 unused
 // core_external_interrupt_sources_0_m_interrupt_req_set_not_clear  I     1
 // core_external_interrupt_sources_1_m_interrupt_req_set_not_clear  I     1
 // core_external_interrupt_sources_2_m_interrupt_req_set_not_clear  I     1
@@ -79,21 +96,29 @@
 // dm_dmi_write_dm_addr           I     7
 // dm_dmi_write_dm_word           I    32
 // ndm_reset_client_response_put  I     1 reg
-// EN_set_verbosity               I     1
+// set_verbosity_verbosity        I     4
+// set_verbosity_logdelay         I    64 reg
 // EN_cpu_reset_server_request_put  I     1
 // EN_cpu_imem_master_aw_drop     I     1
 // EN_cpu_imem_master_w_drop      I     1
 // EN_cpu_imem_master_b_put       I     1
 // EN_cpu_imem_master_ar_drop     I     1
 // EN_cpu_imem_master_r_put       I     1
-// EN_cpu_dmem_master_aw_drop     I     1
-// EN_cpu_dmem_master_w_drop      I     1
-// EN_cpu_dmem_master_b_put       I     1
-// EN_cpu_dmem_master_ar_drop     I     1
-// EN_cpu_dmem_master_r_put       I     1
+// EN_core_mem_master_aw_drop     I     1
+// EN_core_mem_master_w_drop      I     1
+// EN_core_mem_master_b_put       I     1
+// EN_core_mem_master_ar_drop     I     1
+// EN_core_mem_master_r_put       I     1
+// EN_dma_server_aw_put           I     1 unused
+// EN_dma_server_w_put            I     1 unused
+// EN_dma_server_b_drop           I     1 unused
+// EN_dma_server_ar_put           I     1 unused
+// EN_dma_server_r_drop           I     1 unused
 // EN_dm_dmi_read_addr            I     1
 // EN_dm_dmi_write                I     1
 // EN_ndm_reset_client_response_put  I     1
+// EN_set_verbosity               I     1
+// EN_ma_ddr4_ready               I     1
 // EN_cpu_reset_server_response_get  I     1
 // EN_dm_dmi_read_data            I     1
 // EN_ndm_reset_client_request_get  I     1
@@ -118,11 +143,6 @@
 
 module mkCore(CLK,
 	      RST_N,
-
-	      set_verbosity_verbosity,
-	      set_verbosity_logdelay,
-	      EN_set_verbosity,
-	      RDY_set_verbosity,
 
 	      cpu_reset_server_request_put,
 	      EN_cpu_reset_server_request_put,
@@ -168,41 +188,75 @@ module mkCore(CLK,
 	      EN_cpu_imem_master_r_put,
 	      RDY_cpu_imem_master_r_put,
 
-	      cpu_dmem_master_aw_canPeek,
+	      core_mem_master_aw_canPeek,
 
-	      cpu_dmem_master_aw_peek,
-	      RDY_cpu_dmem_master_aw_peek,
+	      core_mem_master_aw_peek,
+	      RDY_core_mem_master_aw_peek,
 
-	      EN_cpu_dmem_master_aw_drop,
-	      RDY_cpu_dmem_master_aw_drop,
+	      EN_core_mem_master_aw_drop,
+	      RDY_core_mem_master_aw_drop,
 
-	      cpu_dmem_master_w_canPeek,
+	      core_mem_master_w_canPeek,
 
-	      cpu_dmem_master_w_peek,
-	      RDY_cpu_dmem_master_w_peek,
+	      core_mem_master_w_peek,
+	      RDY_core_mem_master_w_peek,
 
-	      EN_cpu_dmem_master_w_drop,
-	      RDY_cpu_dmem_master_w_drop,
+	      EN_core_mem_master_w_drop,
+	      RDY_core_mem_master_w_drop,
 
-	      cpu_dmem_master_b_canPut,
+	      core_mem_master_b_canPut,
 
-	      cpu_dmem_master_b_put_val,
-	      EN_cpu_dmem_master_b_put,
-	      RDY_cpu_dmem_master_b_put,
+	      core_mem_master_b_put_val,
+	      EN_core_mem_master_b_put,
+	      RDY_core_mem_master_b_put,
 
-	      cpu_dmem_master_ar_canPeek,
+	      core_mem_master_ar_canPeek,
 
-	      cpu_dmem_master_ar_peek,
-	      RDY_cpu_dmem_master_ar_peek,
+	      core_mem_master_ar_peek,
+	      RDY_core_mem_master_ar_peek,
 
-	      EN_cpu_dmem_master_ar_drop,
-	      RDY_cpu_dmem_master_ar_drop,
+	      EN_core_mem_master_ar_drop,
+	      RDY_core_mem_master_ar_drop,
 
-	      cpu_dmem_master_r_canPut,
+	      core_mem_master_r_canPut,
 
-	      cpu_dmem_master_r_put_val,
-	      EN_cpu_dmem_master_r_put,
-	      RDY_cpu_dmem_master_r_put,
+	      core_mem_master_r_put_val,
+	      EN_core_mem_master_r_put,
+	      RDY_core_mem_master_r_put,
+
+	      dma_server_aw_canPut,
+
+	      dma_server_aw_put_val,
+	      EN_dma_server_aw_put,
+	      RDY_dma_server_aw_put,
+
+	      dma_server_w_canPut,
+
+	      dma_server_w_put_val,
+	      EN_dma_server_w_put,
+	      RDY_dma_server_w_put,
+
+	      dma_server_b_canPeek,
+
+	      dma_server_b_peek,
+	      RDY_dma_server_b_peek,
+
+	      EN_dma_server_b_drop,
+	      RDY_dma_server_b_drop,
+
+	      dma_server_ar_canPut,
+
+	      dma_server_ar_put_val,
+	      EN_dma_server_ar_put,
+	      RDY_dma_server_ar_put,
+
+	      dma_server_r_canPeek,
+
+	      dma_server_r_peek,
+	      RDY_dma_server_r_peek,
+
+	      EN_dma_server_r_drop,
+	      RDY_dma_server_r_drop,
 
 	      core_external_interrupt_sources_0_m_interrupt_req_set_not_clear,
 
@@ -257,15 +311,19 @@ module mkCore(CLK,
 
 	      ndm_reset_client_response_put,
 	      EN_ndm_reset_client_response_put,
-	      RDY_ndm_reset_client_response_put);
+	      RDY_ndm_reset_client_response_put,
+
+	      set_verbosity_verbosity,
+	      set_verbosity_logdelay,
+	      EN_set_verbosity,
+	      RDY_set_verbosity,
+
+	      EN_ma_ddr4_ready,
+	      RDY_ma_ddr4_ready,
+
+	      mv_status);
   input  CLK;
   input  RST_N;
-
-  // action method set_verbosity
-  input  [3 : 0] set_verbosity_verbosity;
-  input  [63 : 0] set_verbosity_logdelay;
-  input  EN_set_verbosity;
-  output RDY_set_verbosity;
 
   // action method cpu_reset_server_request_put
   input  cpu_reset_server_request_put;
@@ -326,54 +384,100 @@ module mkCore(CLK,
   input  EN_cpu_imem_master_r_put;
   output RDY_cpu_imem_master_r_put;
 
-  // value method cpu_dmem_master_aw_canPeek
-  output cpu_dmem_master_aw_canPeek;
+  // value method core_mem_master_aw_canPeek
+  output core_mem_master_aw_canPeek;
 
-  // value method cpu_dmem_master_aw_peek
-  output [98 : 0] cpu_dmem_master_aw_peek;
-  output RDY_cpu_dmem_master_aw_peek;
+  // value method core_mem_master_aw_peek
+  output [98 : 0] core_mem_master_aw_peek;
+  output RDY_core_mem_master_aw_peek;
 
-  // action method cpu_dmem_master_aw_drop
-  input  EN_cpu_dmem_master_aw_drop;
-  output RDY_cpu_dmem_master_aw_drop;
+  // action method core_mem_master_aw_drop
+  input  EN_core_mem_master_aw_drop;
+  output RDY_core_mem_master_aw_drop;
 
-  // value method cpu_dmem_master_w_canPeek
-  output cpu_dmem_master_w_canPeek;
+  // value method core_mem_master_w_canPeek
+  output core_mem_master_w_canPeek;
 
-  // value method cpu_dmem_master_w_peek
-  output [72 : 0] cpu_dmem_master_w_peek;
-  output RDY_cpu_dmem_master_w_peek;
+  // value method core_mem_master_w_peek
+  output [72 : 0] core_mem_master_w_peek;
+  output RDY_core_mem_master_w_peek;
 
-  // action method cpu_dmem_master_w_drop
-  input  EN_cpu_dmem_master_w_drop;
-  output RDY_cpu_dmem_master_w_drop;
+  // action method core_mem_master_w_drop
+  input  EN_core_mem_master_w_drop;
+  output RDY_core_mem_master_w_drop;
 
-  // value method cpu_dmem_master_b_canPut
-  output cpu_dmem_master_b_canPut;
+  // value method core_mem_master_b_canPut
+  output core_mem_master_b_canPut;
 
-  // action method cpu_dmem_master_b_put
-  input  [7 : 0] cpu_dmem_master_b_put_val;
-  input  EN_cpu_dmem_master_b_put;
-  output RDY_cpu_dmem_master_b_put;
+  // action method core_mem_master_b_put
+  input  [7 : 0] core_mem_master_b_put_val;
+  input  EN_core_mem_master_b_put;
+  output RDY_core_mem_master_b_put;
 
-  // value method cpu_dmem_master_ar_canPeek
-  output cpu_dmem_master_ar_canPeek;
+  // value method core_mem_master_ar_canPeek
+  output core_mem_master_ar_canPeek;
 
-  // value method cpu_dmem_master_ar_peek
-  output [98 : 0] cpu_dmem_master_ar_peek;
-  output RDY_cpu_dmem_master_ar_peek;
+  // value method core_mem_master_ar_peek
+  output [98 : 0] core_mem_master_ar_peek;
+  output RDY_core_mem_master_ar_peek;
 
-  // action method cpu_dmem_master_ar_drop
-  input  EN_cpu_dmem_master_ar_drop;
-  output RDY_cpu_dmem_master_ar_drop;
+  // action method core_mem_master_ar_drop
+  input  EN_core_mem_master_ar_drop;
+  output RDY_core_mem_master_ar_drop;
 
-  // value method cpu_dmem_master_r_canPut
-  output cpu_dmem_master_r_canPut;
+  // value method core_mem_master_r_canPut
+  output core_mem_master_r_canPut;
 
-  // action method cpu_dmem_master_r_put
-  input  [72 : 0] cpu_dmem_master_r_put_val;
-  input  EN_cpu_dmem_master_r_put;
-  output RDY_cpu_dmem_master_r_put;
+  // action method core_mem_master_r_put
+  input  [72 : 0] core_mem_master_r_put_val;
+  input  EN_core_mem_master_r_put;
+  output RDY_core_mem_master_r_put;
+
+  // value method dma_server_aw_canPut
+  output dma_server_aw_canPut;
+
+  // action method dma_server_aw_put
+  input  [98 : 0] dma_server_aw_put_val;
+  input  EN_dma_server_aw_put;
+  output RDY_dma_server_aw_put;
+
+  // value method dma_server_w_canPut
+  output dma_server_w_canPut;
+
+  // action method dma_server_w_put
+  input  [576 : 0] dma_server_w_put_val;
+  input  EN_dma_server_w_put;
+  output RDY_dma_server_w_put;
+
+  // value method dma_server_b_canPeek
+  output dma_server_b_canPeek;
+
+  // value method dma_server_b_peek
+  output [7 : 0] dma_server_b_peek;
+  output RDY_dma_server_b_peek;
+
+  // action method dma_server_b_drop
+  input  EN_dma_server_b_drop;
+  output RDY_dma_server_b_drop;
+
+  // value method dma_server_ar_canPut
+  output dma_server_ar_canPut;
+
+  // action method dma_server_ar_put
+  input  [98 : 0] dma_server_ar_put_val;
+  input  EN_dma_server_ar_put;
+  output RDY_dma_server_ar_put;
+
+  // value method dma_server_r_canPeek
+  output dma_server_r_canPeek;
+
+  // value method dma_server_r_peek
+  output [520 : 0] dma_server_r_peek;
+  output RDY_dma_server_r_peek;
+
+  // action method dma_server_r_drop
+  input  EN_dma_server_r_drop;
+  output RDY_dma_server_r_drop;
 
   // action method core_external_interrupt_sources_0_m_interrupt_req
   input  core_external_interrupt_sources_0_m_interrupt_req_set_not_clear;
@@ -452,19 +556,34 @@ module mkCore(CLK,
   input  EN_ndm_reset_client_response_put;
   output RDY_ndm_reset_client_response_put;
 
+  // action method set_verbosity
+  input  [3 : 0] set_verbosity_verbosity;
+  input  [63 : 0] set_verbosity_logdelay;
+  input  EN_set_verbosity;
+  output RDY_set_verbosity;
+
+  // action method ma_ddr4_ready
+  input  EN_ma_ddr4_ready;
+  output RDY_ma_ddr4_ready;
+
+  // value method mv_status
+  output [7 : 0] mv_status;
+
   // signals for module outputs
-  wire [98 : 0] cpu_dmem_master_ar_peek, cpu_dmem_master_aw_peek;
+  wire [520 : 0] dma_server_r_peek;
+  wire [98 : 0] core_mem_master_ar_peek, core_mem_master_aw_peek;
   wire [97 : 0] cpu_imem_master_ar_peek, cpu_imem_master_aw_peek;
-  wire [72 : 0] cpu_dmem_master_w_peek, cpu_imem_master_w_peek;
+  wire [72 : 0] core_mem_master_w_peek, cpu_imem_master_w_peek;
   wire [31 : 0] dm_dmi_read_data;
-  wire RDY_cpu_dmem_master_ar_drop,
-       RDY_cpu_dmem_master_ar_peek,
-       RDY_cpu_dmem_master_aw_drop,
-       RDY_cpu_dmem_master_aw_peek,
-       RDY_cpu_dmem_master_b_put,
-       RDY_cpu_dmem_master_r_put,
-       RDY_cpu_dmem_master_w_drop,
-       RDY_cpu_dmem_master_w_peek,
+  wire [7 : 0] dma_server_b_peek, mv_status;
+  wire RDY_core_mem_master_ar_drop,
+       RDY_core_mem_master_ar_peek,
+       RDY_core_mem_master_aw_drop,
+       RDY_core_mem_master_aw_peek,
+       RDY_core_mem_master_b_put,
+       RDY_core_mem_master_r_put,
+       RDY_core_mem_master_w_drop,
+       RDY_core_mem_master_w_peek,
        RDY_cpu_imem_master_ar_drop,
        RDY_cpu_imem_master_ar_peek,
        RDY_cpu_imem_master_aw_drop,
@@ -478,43 +597,56 @@ module mkCore(CLK,
        RDY_dm_dmi_read_addr,
        RDY_dm_dmi_read_data,
        RDY_dm_dmi_write,
+       RDY_dma_server_ar_put,
+       RDY_dma_server_aw_put,
+       RDY_dma_server_b_drop,
+       RDY_dma_server_b_peek,
+       RDY_dma_server_r_drop,
+       RDY_dma_server_r_peek,
+       RDY_dma_server_w_put,
+       RDY_ma_ddr4_ready,
        RDY_ndm_reset_client_request_get,
        RDY_ndm_reset_client_response_put,
        RDY_set_verbosity,
-       cpu_dmem_master_ar_canPeek,
-       cpu_dmem_master_aw_canPeek,
-       cpu_dmem_master_b_canPut,
-       cpu_dmem_master_r_canPut,
-       cpu_dmem_master_w_canPeek,
+       core_mem_master_ar_canPeek,
+       core_mem_master_aw_canPeek,
+       core_mem_master_b_canPut,
+       core_mem_master_r_canPut,
+       core_mem_master_w_canPeek,
        cpu_imem_master_ar_canPeek,
        cpu_imem_master_aw_canPeek,
        cpu_imem_master_b_canPut,
        cpu_imem_master_r_canPut,
        cpu_imem_master_w_canPeek,
        cpu_reset_server_response_get,
+       dma_server_ar_canPut,
+       dma_server_aw_canPut,
+       dma_server_b_canPeek,
+       dma_server_r_canPeek,
+       dma_server_w_canPut,
        ndm_reset_client_request_get;
 
   // inlined wires
   wire [172 : 0] split_0_doPut$wget, split_1_doPut$wget, split_2_doPut$wget;
   wire [171 : 0] merged_0_outflit$wget, merged_1_outflit$wget;
-  wire [99 : 0] axi4_dmem_shim_tmp_shimMaster_arff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__write_1,
-		axi4_dmem_shim_tmp_shimMaster_arff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimMaster_arff_rv$port3__read,
-		axi4_dmem_shim_tmp_shimMaster_awff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimMaster_awff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimMaster_awff_rv$port3__read;
-  wire [98 : 0] axi4_dmem_shim_tmp_shimSlave_arff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__write_1,
-		axi4_dmem_shim_tmp_shimSlave_arff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimSlave_arff_rv$port3__read,
-		axi4_dmem_shim_tmp_shimSlave_awff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimSlave_awff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimSlave_awff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimSlave_awff_rv$port3__read;
+  wire [99 : 0] axi4_mem_shim_tmp_shimMaster_arff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read,
+		axi4_mem_shim_tmp_shimMaster_arff_rv$port1__write_1,
+		axi4_mem_shim_tmp_shimMaster_arff_rv$port2__read,
+		axi4_mem_shim_tmp_shimMaster_arff_rv$port3__read,
+		axi4_mem_shim_tmp_shimMaster_awff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read,
+		axi4_mem_shim_tmp_shimMaster_awff_rv$port2__read,
+		axi4_mem_shim_tmp_shimMaster_awff_rv$port3__read;
+  wire [98 : 0] axi4_mem_shim_tmp_shimSlave_arff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read,
+		axi4_mem_shim_tmp_shimSlave_arff_rv$port1__write_1,
+		axi4_mem_shim_tmp_shimSlave_arff_rv$port2__read,
+		axi4_mem_shim_tmp_shimSlave_arff_rv$port3__read,
+		axi4_mem_shim_tmp_shimSlave_awff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimSlave_awff_rv$port1__read,
+		axi4_mem_shim_tmp_shimSlave_awff_rv$port2__read,
+		axi4_mem_shim_tmp_shimSlave_awff_rv$port3__read;
   wire [97 : 0] sinks_1_0_putWire_1$wget,
 		sinks_1_1_putWire_1$wget,
 		sinks_1_2_putWire$wget;
@@ -522,50 +654,50 @@ module mkCore(CLK,
 		ifcs_0_noRoute_inner_currentReq$port1__read,
 		ifcs_1_1_noRoute_currentReq$port1__read,
 		ifcs_1_noRoute_inner_currentReq$port1__read;
-  wire [74 : 0] axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__write_1,
-		axi4_dmem_shim_tmp_shimSlave_wff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimSlave_wff_rv$port3__read;
-  wire [73 : 0] axi4_dmem_shim_tmp_shimMaster_rff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1,
-		axi4_dmem_shim_tmp_shimMaster_rff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimMaster_rff_rv$port3__read,
-		axi4_dmem_shim_tmp_shimMaster_wff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimMaster_wff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimMaster_wff_rv$port3__read,
-		axi4_dmem_shim_tmp_shimSlave_rff_rv$port0__write_1,
-		axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read,
-		axi4_dmem_shim_tmp_shimSlave_rff_rv$port2__read,
-		axi4_dmem_shim_tmp_shimSlave_rff_rv$port3__read;
+  wire [74 : 0] axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read,
+		axi4_mem_shim_tmp_shimSlave_wff_rv$port1__write_1,
+		axi4_mem_shim_tmp_shimSlave_wff_rv$port2__read,
+		axi4_mem_shim_tmp_shimSlave_wff_rv$port3__read;
+  wire [73 : 0] axi4_mem_shim_tmp_shimMaster_rff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read,
+		axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1,
+		axi4_mem_shim_tmp_shimMaster_rff_rv$port2__read,
+		axi4_mem_shim_tmp_shimMaster_rff_rv$port3__read,
+		axi4_mem_shim_tmp_shimMaster_wff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read,
+		axi4_mem_shim_tmp_shimMaster_wff_rv$port2__read,
+		axi4_mem_shim_tmp_shimMaster_wff_rv$port3__read,
+		axi4_mem_shim_tmp_shimSlave_rff_rv$port0__write_1,
+		axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read,
+		axi4_mem_shim_tmp_shimSlave_rff_rv$port2__read,
+		axi4_mem_shim_tmp_shimSlave_rff_rv$port3__read;
   wire [71 : 0] ifcs_0_1_snk_putWire$wget, ifcs_1_1_snk_putWire$wget;
-  wire [8 : 0] axi4_dmem_shim_tmp_shimMaster_bff_rv$port0__write_1,
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__read,
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__write_1,
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port2__read,
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port3__read,
+  wire [8 : 0] axi4_mem_shim_tmp_shimMaster_bff_rv$port0__write_1,
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port1__read,
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port2__read,
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port2__write_1,
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port3__read,
 	       ifcs_0_1_noRoute_flitCount$port0__write_1,
 	       ifcs_0_1_noRoute_flitCount$port1__write_1,
 	       ifcs_0_1_noRoute_flitCount$port2__read,
 	       ifcs_1_1_noRoute_flitCount$port0__write_1,
 	       ifcs_1_1_noRoute_flitCount$port1__write_1,
 	       ifcs_1_1_noRoute_flitCount$port2__read;
-  wire [7 : 0] axi4_dmem_shim_tmp_shimSlave_bff_rv$port0__write_1,
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read,
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__write_1,
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port2__read,
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port3__read;
+  wire [7 : 0] axi4_mem_shim_tmp_shimSlave_bff_rv$port0__write_1,
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read,
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port1__write_1,
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port2__read,
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port3__read;
   wire [5 : 0] ifcs_0_snk_putWire$wget, ifcs_1_snk_putWire$wget;
-  wire axi4_dmem_shim_tmp_shimMaster_arff_rv$EN_port0__write,
-       axi4_dmem_shim_tmp_shimMaster_awff_rv$EN_port0__write,
-       axi4_dmem_shim_tmp_shimMaster_wff_rv$EN_port0__write,
-       axi4_dmem_shim_tmp_shimSlave_bff_rv$EN_port0__write,
-       axi4_dmem_shim_tmp_shimSlave_bff_rv$EN_port1__write,
-       axi4_dmem_shim_tmp_shimSlave_rff_rv$EN_port0__write,
-       axi4_dmem_shim_tmp_shimSlave_rff_rv$EN_port1__write,
-       axi4_dmem_shim_tmp_shimSlave_wff_rv$EN_port0__write,
+  wire axi4_mem_shim_tmp_shimMaster_arff_rv$EN_port0__write,
+       axi4_mem_shim_tmp_shimMaster_awff_rv$EN_port0__write,
+       axi4_mem_shim_tmp_shimMaster_wff_rv$EN_port0__write,
+       axi4_mem_shim_tmp_shimSlave_bff_rv$EN_port0__write,
+       axi4_mem_shim_tmp_shimSlave_bff_rv$EN_port1__write,
+       axi4_mem_shim_tmp_shimSlave_rff_rv$EN_port0__write,
+       axi4_mem_shim_tmp_shimSlave_rff_rv$EN_port1__write,
+       axi4_mem_shim_tmp_shimSlave_wff_rv$EN_port0__write,
        flitToSink_0$whas,
        flitToSink_1$whas,
        flitToSink_1_0$whas,
@@ -689,69 +821,69 @@ module mkCore(CLK,
   reg arbiter_lastSelect;
   wire arbiter_lastSelect$D_IN, arbiter_lastSelect$EN;
 
-  // register axi4_dmem_shim_tmp_addrOffset
-  reg [63 : 0] axi4_dmem_shim_tmp_addrOffset;
-  wire [63 : 0] axi4_dmem_shim_tmp_addrOffset$D_IN;
-  wire axi4_dmem_shim_tmp_addrOffset$EN;
+  // register axi4_mem_shim_tmp_addrOffset
+  reg [63 : 0] axi4_mem_shim_tmp_addrOffset;
+  wire [63 : 0] axi4_mem_shim_tmp_addrOffset$D_IN;
+  wire axi4_mem_shim_tmp_addrOffset$EN;
 
-  // register axi4_dmem_shim_tmp_doneSendingAW
-  reg axi4_dmem_shim_tmp_doneSendingAW;
-  wire axi4_dmem_shim_tmp_doneSendingAW$D_IN,
-       axi4_dmem_shim_tmp_doneSendingAW$EN;
+  // register axi4_mem_shim_tmp_doneSendingAW
+  reg axi4_mem_shim_tmp_doneSendingAW;
+  wire axi4_mem_shim_tmp_doneSendingAW$D_IN,
+       axi4_mem_shim_tmp_doneSendingAW$EN;
 
-  // register axi4_dmem_shim_tmp_reset_done
-  reg axi4_dmem_shim_tmp_reset_done;
-  wire axi4_dmem_shim_tmp_reset_done$D_IN, axi4_dmem_shim_tmp_reset_done$EN;
+  // register axi4_mem_shim_tmp_reset_done
+  reg axi4_mem_shim_tmp_reset_done;
+  wire axi4_mem_shim_tmp_reset_done$D_IN, axi4_mem_shim_tmp_reset_done$EN;
 
-  // register axi4_dmem_shim_tmp_shimMaster_arff_rv
-  reg [99 : 0] axi4_dmem_shim_tmp_shimMaster_arff_rv;
-  wire [99 : 0] axi4_dmem_shim_tmp_shimMaster_arff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimMaster_arff_rv$EN;
+  // register axi4_mem_shim_tmp_shimMaster_arff_rv
+  reg [99 : 0] axi4_mem_shim_tmp_shimMaster_arff_rv;
+  wire [99 : 0] axi4_mem_shim_tmp_shimMaster_arff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimMaster_arff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimMaster_awff_rv
-  reg [99 : 0] axi4_dmem_shim_tmp_shimMaster_awff_rv;
-  wire [99 : 0] axi4_dmem_shim_tmp_shimMaster_awff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimMaster_awff_rv$EN;
+  // register axi4_mem_shim_tmp_shimMaster_awff_rv
+  reg [99 : 0] axi4_mem_shim_tmp_shimMaster_awff_rv;
+  wire [99 : 0] axi4_mem_shim_tmp_shimMaster_awff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimMaster_awff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimMaster_bff_rv
-  reg [8 : 0] axi4_dmem_shim_tmp_shimMaster_bff_rv;
-  wire [8 : 0] axi4_dmem_shim_tmp_shimMaster_bff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimMaster_bff_rv$EN;
+  // register axi4_mem_shim_tmp_shimMaster_bff_rv
+  reg [8 : 0] axi4_mem_shim_tmp_shimMaster_bff_rv;
+  wire [8 : 0] axi4_mem_shim_tmp_shimMaster_bff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimMaster_bff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimMaster_rff_rv
-  reg [73 : 0] axi4_dmem_shim_tmp_shimMaster_rff_rv;
-  wire [73 : 0] axi4_dmem_shim_tmp_shimMaster_rff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimMaster_rff_rv$EN;
+  // register axi4_mem_shim_tmp_shimMaster_rff_rv
+  reg [73 : 0] axi4_mem_shim_tmp_shimMaster_rff_rv;
+  wire [73 : 0] axi4_mem_shim_tmp_shimMaster_rff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimMaster_rff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimMaster_wff_rv
-  reg [73 : 0] axi4_dmem_shim_tmp_shimMaster_wff_rv;
-  wire [73 : 0] axi4_dmem_shim_tmp_shimMaster_wff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimMaster_wff_rv$EN;
+  // register axi4_mem_shim_tmp_shimMaster_wff_rv
+  reg [73 : 0] axi4_mem_shim_tmp_shimMaster_wff_rv;
+  wire [73 : 0] axi4_mem_shim_tmp_shimMaster_wff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimMaster_wff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimSlave_arff_rv
-  reg [98 : 0] axi4_dmem_shim_tmp_shimSlave_arff_rv;
-  wire [98 : 0] axi4_dmem_shim_tmp_shimSlave_arff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimSlave_arff_rv$EN;
+  // register axi4_mem_shim_tmp_shimSlave_arff_rv
+  reg [98 : 0] axi4_mem_shim_tmp_shimSlave_arff_rv;
+  wire [98 : 0] axi4_mem_shim_tmp_shimSlave_arff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimSlave_arff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimSlave_awff_rv
-  reg [98 : 0] axi4_dmem_shim_tmp_shimSlave_awff_rv;
-  wire [98 : 0] axi4_dmem_shim_tmp_shimSlave_awff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimSlave_awff_rv$EN;
+  // register axi4_mem_shim_tmp_shimSlave_awff_rv
+  reg [98 : 0] axi4_mem_shim_tmp_shimSlave_awff_rv;
+  wire [98 : 0] axi4_mem_shim_tmp_shimSlave_awff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimSlave_awff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimSlave_bff_rv
-  reg [7 : 0] axi4_dmem_shim_tmp_shimSlave_bff_rv;
-  wire [7 : 0] axi4_dmem_shim_tmp_shimSlave_bff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimSlave_bff_rv$EN;
+  // register axi4_mem_shim_tmp_shimSlave_bff_rv
+  reg [7 : 0] axi4_mem_shim_tmp_shimSlave_bff_rv;
+  wire [7 : 0] axi4_mem_shim_tmp_shimSlave_bff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimSlave_bff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimSlave_rff_rv
-  reg [73 : 0] axi4_dmem_shim_tmp_shimSlave_rff_rv;
-  wire [73 : 0] axi4_dmem_shim_tmp_shimSlave_rff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimSlave_rff_rv$EN;
+  // register axi4_mem_shim_tmp_shimSlave_rff_rv
+  reg [73 : 0] axi4_mem_shim_tmp_shimSlave_rff_rv;
+  wire [73 : 0] axi4_mem_shim_tmp_shimSlave_rff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimSlave_rff_rv$EN;
 
-  // register axi4_dmem_shim_tmp_shimSlave_wff_rv
-  reg [74 : 0] axi4_dmem_shim_tmp_shimSlave_wff_rv;
-  wire [74 : 0] axi4_dmem_shim_tmp_shimSlave_wff_rv$D_IN;
-  wire axi4_dmem_shim_tmp_shimSlave_wff_rv$EN;
+  // register axi4_mem_shim_tmp_shimSlave_wff_rv
+  reg [74 : 0] axi4_mem_shim_tmp_shimSlave_wff_rv;
+  wire [74 : 0] axi4_mem_shim_tmp_shimSlave_wff_rv$D_IN;
+  wire axi4_mem_shim_tmp_shimSlave_wff_rv$EN;
 
   // register ifcs_0_1_noRoute_currentReq
   reg [96 : 0] ifcs_0_1_noRoute_currentReq;
@@ -878,53 +1010,57 @@ module mkCore(CLK,
   reg state_1_1_1;
   wire state_1_1_1$D_IN, state_1_1_1$EN;
 
-  // ports of submodule axi4_dmem_shim_tmp_awreqff
-  wire [97 : 0] axi4_dmem_shim_tmp_awreqff$D_IN,
-		axi4_dmem_shim_tmp_awreqff$D_OUT;
-  wire axi4_dmem_shim_tmp_awreqff$CLR,
-       axi4_dmem_shim_tmp_awreqff$DEQ,
-       axi4_dmem_shim_tmp_awreqff$EMPTY_N,
-       axi4_dmem_shim_tmp_awreqff$ENQ,
-       axi4_dmem_shim_tmp_awreqff$FULL_N;
+  // ports of submodule axi4_mem_shim_tmp_awreqff
+  wire [97 : 0] axi4_mem_shim_tmp_awreqff$D_IN,
+		axi4_mem_shim_tmp_awreqff$D_OUT;
+  wire axi4_mem_shim_tmp_awreqff$CLR,
+       axi4_mem_shim_tmp_awreqff$DEQ,
+       axi4_mem_shim_tmp_awreqff$EMPTY_N,
+       axi4_mem_shim_tmp_awreqff$ENQ,
+       axi4_mem_shim_tmp_awreqff$FULL_N;
 
-  // ports of submodule axi4_dmem_shim_tmp_newRst
-  wire axi4_dmem_shim_tmp_newRst$ASSERT_IN, axi4_dmem_shim_tmp_newRst$OUT_RST;
+  // ports of submodule axi4_mem_shim_tmp_newRst
+  wire axi4_mem_shim_tmp_newRst$ASSERT_IN, axi4_mem_shim_tmp_newRst$OUT_RST;
 
-  // ports of submodule axi4_dmem_shim_tmp_tagCon
-  wire [140 : 0] axi4_dmem_shim_tmp_tagCon$cache_request_put_val,
-		 axi4_dmem_shim_tmp_tagCon$memory_request_get;
-  wire [76 : 0] axi4_dmem_shim_tmp_tagCon$cache_response_get,
-		axi4_dmem_shim_tmp_tagCon$memory_response_put_val;
-  wire axi4_dmem_shim_tmp_tagCon$EN_cache_request_put,
-       axi4_dmem_shim_tmp_tagCon$EN_cache_response_get,
-       axi4_dmem_shim_tmp_tagCon$EN_memory_request_get,
-       axi4_dmem_shim_tmp_tagCon$EN_memory_response_put,
-       axi4_dmem_shim_tmp_tagCon$RDY_cache_request_put,
-       axi4_dmem_shim_tmp_tagCon$RDY_cache_response_get,
-       axi4_dmem_shim_tmp_tagCon$RDY_memory_request_get,
-       axi4_dmem_shim_tmp_tagCon$RDY_memory_response_put;
+  // ports of submodule axi4_mem_shim_tmp_tagCon
+  wire [140 : 0] axi4_mem_shim_tmp_tagCon$cache_request_put_val,
+		 axi4_mem_shim_tmp_tagCon$memory_request_get;
+  wire [76 : 0] axi4_mem_shim_tmp_tagCon$cache_response_get,
+		axi4_mem_shim_tmp_tagCon$memory_response_put_val;
+  wire axi4_mem_shim_tmp_tagCon$EN_cache_request_put,
+       axi4_mem_shim_tmp_tagCon$EN_cache_response_get,
+       axi4_mem_shim_tmp_tagCon$EN_memory_request_get,
+       axi4_mem_shim_tmp_tagCon$EN_memory_response_put,
+       axi4_mem_shim_tmp_tagCon$RDY_cache_request_put,
+       axi4_mem_shim_tmp_tagCon$RDY_cache_response_get,
+       axi4_mem_shim_tmp_tagCon$RDY_memory_request_get,
+       axi4_mem_shim_tmp_tagCon$RDY_memory_response_put;
 
   // ports of submodule cpu
+  wire [576 : 0] cpu$dma_server_w_put_val;
+  wire [520 : 0] cpu$dma_server_r_peek;
+  wire [98 : 0] cpu$dma_server_ar_put_val, cpu$dma_server_aw_put_val;
   wire [97 : 0] cpu$imem_master_ar_peek, cpu$imem_master_aw_peek;
-  wire [96 : 0] cpu$dmem_master_ar_peek, cpu$dmem_master_aw_peek;
+  wire [96 : 0] cpu$mem_master_ar_peek, cpu$mem_master_aw_peek;
   wire [76 : 0] cpu$hart0_csr_mem_server_request_put;
-  wire [73 : 0] cpu$dmem_master_w_peek, cpu$imem_master_w_peek;
+  wire [73 : 0] cpu$imem_master_w_peek, cpu$mem_master_w_peek;
   wire [72 : 0] cpu$imem_master_r_put_val;
-  wire [71 : 0] cpu$dmem_master_r_put_val;
+  wire [71 : 0] cpu$mem_master_r_put_val;
   wire [69 : 0] cpu$hart0_fpr_mem_server_request_put,
 		cpu$hart0_gpr_mem_server_request_put;
   wire [64 : 0] cpu$hart0_csr_mem_server_response_get,
 		cpu$hart0_fpr_mem_server_response_get,
 		cpu$hart0_gpr_mem_server_response_get;
   wire [63 : 0] cpu$set_verbosity_logdelay;
+  wire [7 : 0] cpu$dma_server_b_peek, cpu$mv_status;
   wire [6 : 0] cpu$imem_master_b_put_val;
-  wire [5 : 0] cpu$dmem_master_b_put_val;
+  wire [5 : 0] cpu$mem_master_b_put_val;
   wire [3 : 0] cpu$hart0_put_other_req_put, cpu$set_verbosity_verbosity;
-  wire cpu$EN_dmem_master_ar_drop,
-       cpu$EN_dmem_master_aw_drop,
-       cpu$EN_dmem_master_b_put,
-       cpu$EN_dmem_master_r_put,
-       cpu$EN_dmem_master_w_drop,
+  wire cpu$EN_dma_server_ar_put,
+       cpu$EN_dma_server_aw_put,
+       cpu$EN_dma_server_b_drop,
+       cpu$EN_dma_server_r_drop,
+       cpu$EN_dma_server_w_put,
        cpu$EN_hart0_csr_mem_server_request_put,
        cpu$EN_hart0_csr_mem_server_response_get,
        cpu$EN_hart0_fpr_mem_server_request_put,
@@ -941,15 +1077,17 @@ module mkCore(CLK,
        cpu$EN_imem_master_b_put,
        cpu$EN_imem_master_r_put,
        cpu$EN_imem_master_w_drop,
+       cpu$EN_ma_ddr4_ready,
+       cpu$EN_mem_master_ar_drop,
+       cpu$EN_mem_master_aw_drop,
+       cpu$EN_mem_master_b_put,
+       cpu$EN_mem_master_r_put,
+       cpu$EN_mem_master_w_drop,
        cpu$EN_set_verbosity,
-       cpu$RDY_dmem_master_ar_drop,
-       cpu$RDY_dmem_master_ar_peek,
-       cpu$RDY_dmem_master_aw_drop,
-       cpu$RDY_dmem_master_aw_peek,
-       cpu$RDY_dmem_master_b_put,
-       cpu$RDY_dmem_master_r_put,
-       cpu$RDY_dmem_master_w_drop,
-       cpu$RDY_dmem_master_w_peek,
+       cpu$RDY_dma_server_b_drop,
+       cpu$RDY_dma_server_b_peek,
+       cpu$RDY_dma_server_r_drop,
+       cpu$RDY_dma_server_r_peek,
        cpu$RDY_hart0_csr_mem_server_request_put,
        cpu$RDY_hart0_csr_mem_server_response_get,
        cpu$RDY_hart0_fpr_mem_server_request_put,
@@ -968,9 +1106,19 @@ module mkCore(CLK,
        cpu$RDY_imem_master_r_put,
        cpu$RDY_imem_master_w_drop,
        cpu$RDY_imem_master_w_peek,
-       cpu$dmem_master_ar_canPeek,
-       cpu$dmem_master_b_canPut,
-       cpu$dmem_master_r_canPut,
+       cpu$RDY_mem_master_ar_drop,
+       cpu$RDY_mem_master_ar_peek,
+       cpu$RDY_mem_master_aw_drop,
+       cpu$RDY_mem_master_aw_peek,
+       cpu$RDY_mem_master_b_put,
+       cpu$RDY_mem_master_r_put,
+       cpu$RDY_mem_master_w_drop,
+       cpu$RDY_mem_master_w_peek,
+       cpu$dma_server_ar_canPut,
+       cpu$dma_server_aw_canPut,
+       cpu$dma_server_b_canPeek,
+       cpu$dma_server_r_canPeek,
+       cpu$dma_server_w_canPut,
        cpu$hart0_server_reset_request_put,
        cpu$hart0_server_reset_response_get,
        cpu$hart0_server_run_halt_request_put,
@@ -981,6 +1129,9 @@ module mkCore(CLK,
        cpu$imem_master_r_canPut,
        cpu$imem_master_w_canPeek,
        cpu$m_external_interrupt_req_set_not_clear,
+       cpu$mem_master_ar_canPeek,
+       cpu$mem_master_b_canPut,
+       cpu$mem_master_r_canPut,
        cpu$nmi_req_set_not_clear,
        cpu$s_external_interrupt_req_set_not_clear,
        cpu$software_interrupt_req_set_not_clear,
@@ -1453,14 +1604,14 @@ module mkCore(CLK,
        CAN_FIRE_RL_arbitrate_1,
        CAN_FIRE_RL_arbitrate_2,
        CAN_FIRE_RL_arbitrate_3,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite,
-       CAN_FIRE_RL_axi4_dmem_shim_tmp_propagateReset,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_getCacheAW,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheRead,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite,
+       CAN_FIRE_RL_axi4_mem_shim_tmp_propagateReset,
        CAN_FIRE_RL_burst,
        CAN_FIRE_RL_burst_1,
        CAN_FIRE_RL_burst_2,
@@ -1680,11 +1831,11 @@ module mkCore(CLK,
        CAN_FIRE_core_external_interrupt_sources_7_m_interrupt_req,
        CAN_FIRE_core_external_interrupt_sources_8_m_interrupt_req,
        CAN_FIRE_core_external_interrupt_sources_9_m_interrupt_req,
-       CAN_FIRE_cpu_dmem_master_ar_drop,
-       CAN_FIRE_cpu_dmem_master_aw_drop,
-       CAN_FIRE_cpu_dmem_master_b_put,
-       CAN_FIRE_cpu_dmem_master_r_put,
-       CAN_FIRE_cpu_dmem_master_w_drop,
+       CAN_FIRE_core_mem_master_ar_drop,
+       CAN_FIRE_core_mem_master_aw_drop,
+       CAN_FIRE_core_mem_master_b_put,
+       CAN_FIRE_core_mem_master_r_put,
+       CAN_FIRE_core_mem_master_w_drop,
        CAN_FIRE_cpu_imem_master_ar_drop,
        CAN_FIRE_cpu_imem_master_aw_drop,
        CAN_FIRE_cpu_imem_master_b_put,
@@ -1695,6 +1846,12 @@ module mkCore(CLK,
        CAN_FIRE_dm_dmi_read_addr,
        CAN_FIRE_dm_dmi_read_data,
        CAN_FIRE_dm_dmi_write,
+       CAN_FIRE_dma_server_ar_put,
+       CAN_FIRE_dma_server_aw_put,
+       CAN_FIRE_dma_server_b_drop,
+       CAN_FIRE_dma_server_r_drop,
+       CAN_FIRE_dma_server_w_put,
+       CAN_FIRE_ma_ddr4_ready,
        CAN_FIRE_ndm_reset_client_request_get,
        CAN_FIRE_ndm_reset_client_response_put,
        CAN_FIRE_nmi_req,
@@ -1711,14 +1868,14 @@ module mkCore(CLK,
        WILL_FIRE_RL_arbitrate_1,
        WILL_FIRE_RL_arbitrate_2,
        WILL_FIRE_RL_arbitrate_3,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite,
-       WILL_FIRE_RL_axi4_dmem_shim_tmp_propagateReset,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_getCacheAW,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheRead,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite,
+       WILL_FIRE_RL_axi4_mem_shim_tmp_propagateReset,
        WILL_FIRE_RL_burst,
        WILL_FIRE_RL_burst_1,
        WILL_FIRE_RL_burst_2,
@@ -1938,11 +2095,11 @@ module mkCore(CLK,
        WILL_FIRE_core_external_interrupt_sources_7_m_interrupt_req,
        WILL_FIRE_core_external_interrupt_sources_8_m_interrupt_req,
        WILL_FIRE_core_external_interrupt_sources_9_m_interrupt_req,
-       WILL_FIRE_cpu_dmem_master_ar_drop,
-       WILL_FIRE_cpu_dmem_master_aw_drop,
-       WILL_FIRE_cpu_dmem_master_b_put,
-       WILL_FIRE_cpu_dmem_master_r_put,
-       WILL_FIRE_cpu_dmem_master_w_drop,
+       WILL_FIRE_core_mem_master_ar_drop,
+       WILL_FIRE_core_mem_master_aw_drop,
+       WILL_FIRE_core_mem_master_b_put,
+       WILL_FIRE_core_mem_master_r_put,
+       WILL_FIRE_core_mem_master_w_drop,
        WILL_FIRE_cpu_imem_master_ar_drop,
        WILL_FIRE_cpu_imem_master_aw_drop,
        WILL_FIRE_cpu_imem_master_b_put,
@@ -1953,6 +2110,12 @@ module mkCore(CLK,
        WILL_FIRE_dm_dmi_read_addr,
        WILL_FIRE_dm_dmi_read_data,
        WILL_FIRE_dm_dmi_write,
+       WILL_FIRE_dma_server_ar_put,
+       WILL_FIRE_dma_server_aw_put,
+       WILL_FIRE_dma_server_b_drop,
+       WILL_FIRE_dma_server_r_drop,
+       WILL_FIRE_dma_server_w_put,
+       WILL_FIRE_ma_ddr4_ready,
        WILL_FIRE_ndm_reset_client_request_get,
        WILL_FIRE_ndm_reset_client_response_put,
        WILL_FIRE_nmi_req,
@@ -1963,11 +2126,11 @@ module mkCore(CLK,
 	       MUX_ifcs_1_1_snk_putWire$wset_1__VAL_1;
   reg [5 : 0] MUX_ifcs_0_snk_putWire$wset_1__VAL_1,
 	      MUX_ifcs_1_snk_putWire$wset_1__VAL_1;
-  wire [140 : 0] MUX_axi4_dmem_shim_tmp_tagCon$cache_request_put_1__VAL_1,
-		 MUX_axi4_dmem_shim_tmp_tagCon$cache_request_put_1__VAL_2;
-  wire [76 : 0] MUX_axi4_dmem_shim_tmp_tagCon$memory_response_put_1__VAL_1,
-		MUX_axi4_dmem_shim_tmp_tagCon$memory_response_put_1__VAL_2;
-  wire [74 : 0] MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1;
+  wire [140 : 0] MUX_axi4_mem_shim_tmp_tagCon$cache_request_put_1__VAL_1,
+		 MUX_axi4_mem_shim_tmp_tagCon$cache_request_put_1__VAL_2;
+  wire [76 : 0] MUX_axi4_mem_shim_tmp_tagCon$memory_response_put_1__VAL_1,
+		MUX_axi4_mem_shim_tmp_tagCon$memory_response_put_1__VAL_2;
+  wire [74 : 0] MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1;
   wire [7 : 0] MUX_merged_0_flitLeft$write_1__VAL_2,
 	       MUX_merged_1_flitLeft$write_1__VAL_2,
 	       MUX_split_0_flitLeft$write_1__VAL_1,
@@ -1981,9 +2144,9 @@ module mkCore(CLK,
        MUX_activeSource_1_1_0$write_1__SEL_3,
        MUX_activeSource_1_1_0$write_1__VAL_1,
        MUX_activeSource_1_1_1_1$write_1__VAL_1,
-       MUX_activeSource_1_1_2$write_1__VAL_2,
-       MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1,
-       MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2,
+       MUX_activeSource_1_1_2$write_1__VAL_1,
+       MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1,
+       MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2,
        MUX_flitToSink_0$wset_1__SEL_1,
        MUX_flitToSink_0$wset_1__SEL_3,
        MUX_flitToSink_1$wset_1__SEL_1,
@@ -2043,79 +2206,79 @@ module mkCore(CLK,
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [63 : 0] v__h41142;
-  reg [63 : 0] v__h40531;
-  reg [63 : 0] v__h45151;
-  reg [63 : 0] v__h44540;
-  reg [63 : 0] v__h56317;
-  reg [63 : 0] v__h55936;
-  reg [63 : 0] v__h58387;
-  reg [63 : 0] v__h58006;
-  reg [63 : 0] v__h60286;
-  reg [63 : 0] v__h59905;
-  reg [63 : 0] v__h76768;
-  reg [63 : 0] v__h76157;
-  reg [63 : 0] v__h79661;
-  reg [63 : 0] v__h79050;
-  reg [63 : 0] v__h89448;
-  reg [63 : 0] v__h89067;
-  reg [63 : 0] v__h91939;
-  reg [63 : 0] v__h91558;
-  reg [63 : 0] v__h94249;
-  reg [63 : 0] v__h93868;
-  reg [31 : 0] v__h17028;
-  reg [31 : 0] v__h17206;
-  reg [31 : 0] v__h17572;
-  reg [31 : 0] v__h17022;
-  reg [31 : 0] v__h17200;
-  reg [31 : 0] v__h17566;
+  reg [63 : 0] v__h41277;
+  reg [63 : 0] v__h40666;
+  reg [63 : 0] v__h45286;
+  reg [63 : 0] v__h44675;
+  reg [63 : 0] v__h56452;
+  reg [63 : 0] v__h56071;
+  reg [63 : 0] v__h58522;
+  reg [63 : 0] v__h58141;
+  reg [63 : 0] v__h60421;
+  reg [63 : 0] v__h60040;
+  reg [63 : 0] v__h76957;
+  reg [63 : 0] v__h76346;
+  reg [63 : 0] v__h79850;
+  reg [63 : 0] v__h79239;
+  reg [63 : 0] v__h89637;
+  reg [63 : 0] v__h89256;
+  reg [63 : 0] v__h92128;
+  reg [63 : 0] v__h91747;
+  reg [63 : 0] v__h94438;
+  reg [63 : 0] v__h94057;
+  reg [31 : 0] v__h17119;
+  reg [31 : 0] v__h17297;
+  reg [31 : 0] v__h17663;
+  reg [31 : 0] v__h17113;
+  reg [31 : 0] v__h17291;
+  reg [31 : 0] v__h17657;
   // synopsys translate_on
 
   // remaining internal signals
   wire [171 : 0] IF_merged_0_outflit_whas__49_AND_NOT_merged_0__ETC___d598,
 		 IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d698;
-  wire [63 : 0] aw_awaddr__h10218,
+  wire [63 : 0] aw_awaddr__h10309,
 		merged_0_outflitwget_BITS_166_TO_103__q1,
 		merged_1_outflitwget_BITS_166_TO_103__q2,
-		tmp__h10001,
-		tmp__h7784,
-		v_araddr__h14967,
-		x__h25419,
-		x__h25444,
-		x__h28997,
-		x__h29022,
-		x__h63058,
-		x__h63083,
-		x__h65621,
-		x__h65646,
-		x__h7627;
-  wire [39 : 0] x__h10250;
-  wire [8 : 0] x_port1__read__h64181, x_port1__read__h66726;
-  wire [7 : 0] arlen__h14951, v_arlen__h14968;
-  wire [5 : 0] v_arid__h14966;
-  wire [3 : 0] _0_CONCAT_axi4_dmem_shim_tmp_tagCon_memory_requ_ETC___d233,
-	       arcache__h14955,
-	       x__h10293,
-	       x__h12027,
-	       x__h12039,
-	       x__h12051,
-	       x__h12063,
-	       x__h12075,
-	       x__h12087,
-	       x__h12099,
-	       x__h13623,
-	       x__h15031,
-	       y__h12028,
-	       y__h12040,
-	       y__h12052,
-	       y__h12064,
-	       y__h12076,
-	       y__h12088,
-	       y__h12100;
-  wire [2 : 0] aw_awsize_val__h11957, v_arsize_val__h15013;
+		tmp__h10092,
+		tmp__h7875,
+		v_araddr__h15058,
+		x__h25509,
+		x__h25534,
+		x__h29110,
+		x__h29135,
+		x__h63190,
+		x__h63215,
+		x__h65781,
+		x__h65806,
+		x__h7718;
+  wire [39 : 0] x__h10341;
+  wire [8 : 0] x__h64381, x__h66954;
+  wire [7 : 0] arlen__h15042, v_arlen__h15059;
+  wire [5 : 0] v_arid__h15057;
+  wire [3 : 0] _0_CONCAT_axi4_mem_shim_tmp_tagCon_memory_reque_ETC___d233,
+	       arcache__h15046,
+	       x__h10384,
+	       x__h12118,
+	       x__h12130,
+	       x__h12142,
+	       x__h12154,
+	       x__h12166,
+	       x__h12178,
+	       x__h12190,
+	       x__h13714,
+	       x__h15122,
+	       y__h12119,
+	       y__h12131,
+	       y__h12143,
+	       y__h12155,
+	       y__h12167,
+	       y__h12179,
+	       y__h12191;
+  wire [2 : 0] aw_awsize_val__h12048, v_arsize_val__h15104;
   wire [1 : 0] IF_IF_merged_0_outflit_whas__49_AND_NOT_merged_ETC___d587,
 	       IF_IF_merged_1_outflit_whas__49_AND_NOT_merged_ETC___d687,
-	       IF_cpu_dmem_master_ar_peek__251_BITS_92_TO_69__ETC___d1278,
+	       IF_cpu_mem_master_ar_peek__251_BITS_92_TO_69_2_ETC___d1278,
 	       IF_debug_module_master_ar_peek__340_BITS_92_TO_ETC___d1367,
 	       SEXT_SEXT_arbiter_1_1_firstHot_743_744_BIT_0_7_ETC__q20,
 	       SEXT_SEXT_arbiter_1_firstHot_079_080_BIT_0_081_ETC__q10,
@@ -2131,12 +2294,12 @@ module mkCore(CLK,
 	       SEXT_arbiter_1_lastSelect__q8,
 	       SEXT_arbiter_firstHot__q3,
 	       SEXT_arbiter_lastSelect__q4,
-	       SEXT_x4618__q11,
-	       SEXT_x4652__q12,
-	       SEXT_x5293__q16,
-	       SEXT_x7745__q21,
-	       SEXT_x7779__q22,
-	       SEXT_x9667__q6;
+	       SEXT_x4753__q11,
+	       SEXT_x4787__q12,
+	       SEXT_x5482__q16,
+	       SEXT_x7934__q21,
+	       SEXT_x7968__q22,
+	       SEXT_x9802__q6;
   wire IF_NOT_ifcs_0_1_innerRoute_first__500_BIT_1_50_ETC___d1522,
        IF_NOT_ifcs_0_innerRoute_first__26_BIT_1_35_36_ETC___d848,
        IF_NOT_ifcs_1_1_innerRoute_first__529_BIT_1_53_ETC___d1538,
@@ -2169,7 +2332,7 @@ module mkCore(CLK,
        IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d685,
        IF_merged_1_outflit_whas__49_THEN_NOT_merged_1_ETC___d703,
        IF_merged_1_outflit_whas__49_THEN_merged_1_out_ETC___d708,
-       IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794,
+       IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794,
        IF_split_1_flitLeft_86_EQ_0_87_THEN_near_mem_i_ETC___d806,
        IF_split_2_flitLeft_15_EQ_0_16_THEN_plic_axi4__ETC___d818,
        SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759,
@@ -2182,12 +2345,12 @@ module mkCore(CLK,
        SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_552__ETC___d1558,
        SEXT_arbiter_firstHot_80_81_BIT_0_82_AND_reqWi_ETC___d888,
        SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND_req_ETC___d884,
-       cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1255,
-       cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1257,
-       cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1260,
-       cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1262,
-       cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1266,
-       cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1276,
+       cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1255,
+       cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1257,
+       cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1260,
+       cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1262,
+       cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1266,
+       cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1276,
        debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1344,
        debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1346,
        debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1349,
@@ -2210,81 +2373,76 @@ module mkCore(CLK,
        state_1_1_547_AND_activeSource_1_1_1_654_655_A_ETC___d1657,
        state_73_AND_activeSource_0_46_47_AND_ifcs_0_i_ETC___d949,
        state_73_AND_activeSource_1_90_91_AND_ifcs_1_i_ETC___d993,
-       x__h39140,
-       x__h39243,
-       x__h39608,
-       x__h39667,
-       x__h39749,
-       x__h53797,
-       x__h53799,
-       x__h53948,
-       x__h53950,
-       x__h54084,
-       x__h54086,
-       x__h54556,
-       x__h54558,
-       x__h54618,
-       x__h54652,
-       x__h54744,
-       x__h54746,
-       x__h54925,
-       x__h54927,
-       x__h74766,
-       x__h74869,
-       x__h75234,
-       x__h75293,
-       x__h75375,
-       x__h86924,
-       x__h86926,
-       x__h87075,
-       x__h87077,
-       x__h87211,
-       x__h87213,
-       x__h87683,
-       x__h87685,
-       x__h87745,
-       x__h87779,
-       x__h87871,
-       x__h87873,
-       x__h88052,
-       x__h88054,
-       y__h39141,
-       y__h39244,
-       y__h39609,
-       y__h39750,
-       y__h53798,
-       y__h53800,
-       y__h53949,
-       y__h53951,
-       y__h54085,
-       y__h54087,
-       y__h54557,
-       y__h54559,
-       y__h54745,
-       y__h54747,
-       y__h54926,
-       y__h54928,
-       y__h74767,
-       y__h74870,
-       y__h75235,
-       y__h75376,
-       y__h86925,
-       y__h86927,
-       y__h87076,
-       y__h87078,
-       y__h87212,
-       y__h87214,
-       y__h87684,
-       y__h87686,
-       y__h87872,
-       y__h87874,
-       y__h88053,
-       y__h88055;
-
-  // action method set_verbosity
-  assign RDY_set_verbosity = 1'd1 ;
-  assign CAN_FIRE_set_verbosity = 1'd1 ;
-  assign WILL_FIRE_set_verbosity = EN_set_verbosity ;
+       x__h39275,
+       x__h39378,
+       x__h39743,
+       x__h39802,
+       x__h39884,
+       x__h53932,
+       x__h53934,
+       x__h54083,
+       x__h54085,
+       x__h54219,
+       x__h54221,
+       x__h54691,
+       x__h54693,
+       x__h54753,
+       x__h54787,
+       x__h54879,
+       x__h54881,
+       x__h55060,
+       x__h55062,
+       x__h74955,
+       x__h75058,
+       x__h75423,
+       x__h75482,
+       x__h75564,
+       x__h87113,
+       x__h87115,
+       x__h87264,
+       x__h87266,
+       x__h87400,
+       x__h87402,
+       x__h87872,
+       x__h87874,
+       x__h87934,
+       x__h87968,
+       x__h88060,
+       x__h88062,
+       x__h88241,
+       x__h88243,
+       y__h39276,
+       y__h39379,
+       y__h39744,
+       y__h39885,
+       y__h53933,
+       y__h53935,
+       y__h54084,
+       y__h54086,
+       y__h54220,
+       y__h54222,
+       y__h54692,
+       y__h54694,
+       y__h54880,
+       y__h54882,
+       y__h55061,
+       y__h55063,
+       y__h74956,
+       y__h75059,
+       y__h75424,
+       y__h75565,
+       y__h87114,
+       y__h87116,
+       y__h87265,
+       y__h87267,
+       y__h87401,
+       y__h87403,
+       y__h87873,
+       y__h87875,
+       y__h88061,
+       y__h88063,
+       y__h88242,
+       y__h88244;
 
   // action method cpu_reset_server_request_put
   assign RDY_cpu_reset_server_request_put = f_reset_reqs$FULL_N ;
@@ -2351,77 +2509,123 @@ module mkCore(CLK,
   assign CAN_FIRE_cpu_imem_master_r_put = delay_shim_rff$FULL_N ;
   assign WILL_FIRE_cpu_imem_master_r_put = EN_cpu_imem_master_r_put ;
 
-  // value method cpu_dmem_master_aw_canPeek
-  assign cpu_dmem_master_aw_canPeek =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
+  // value method core_mem_master_aw_canPeek
+  assign core_mem_master_aw_canPeek =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
 
-  // value method cpu_dmem_master_aw_peek
-  assign cpu_dmem_master_aw_peek =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read[98:0] ;
-  assign RDY_cpu_dmem_master_aw_peek =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
+  // value method core_mem_master_aw_peek
+  assign core_mem_master_aw_peek =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read[98:0] ;
+  assign RDY_core_mem_master_aw_peek =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
 
-  // action method cpu_dmem_master_aw_drop
-  assign RDY_cpu_dmem_master_aw_drop =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
-  assign CAN_FIRE_cpu_dmem_master_aw_drop =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
-  assign WILL_FIRE_cpu_dmem_master_aw_drop = EN_cpu_dmem_master_aw_drop ;
+  // action method core_mem_master_aw_drop
+  assign RDY_core_mem_master_aw_drop =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
+  assign CAN_FIRE_core_mem_master_aw_drop =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read[99] ;
+  assign WILL_FIRE_core_mem_master_aw_drop = EN_core_mem_master_aw_drop ;
 
-  // value method cpu_dmem_master_w_canPeek
-  assign cpu_dmem_master_w_canPeek =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
+  // value method core_mem_master_w_canPeek
+  assign core_mem_master_w_canPeek =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
 
-  // value method cpu_dmem_master_w_peek
-  assign cpu_dmem_master_w_peek =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read[72:0] ;
-  assign RDY_cpu_dmem_master_w_peek =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
+  // value method core_mem_master_w_peek
+  assign core_mem_master_w_peek =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read[72:0] ;
+  assign RDY_core_mem_master_w_peek =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
 
-  // action method cpu_dmem_master_w_drop
-  assign RDY_cpu_dmem_master_w_drop =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
-  assign CAN_FIRE_cpu_dmem_master_w_drop =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
-  assign WILL_FIRE_cpu_dmem_master_w_drop = EN_cpu_dmem_master_w_drop ;
+  // action method core_mem_master_w_drop
+  assign RDY_core_mem_master_w_drop =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
+  assign CAN_FIRE_core_mem_master_w_drop =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read[73] ;
+  assign WILL_FIRE_core_mem_master_w_drop = EN_core_mem_master_w_drop ;
 
-  // value method cpu_dmem_master_b_canPut
-  assign cpu_dmem_master_b_canPut = !axi4_dmem_shim_tmp_shimMaster_bff_rv[8] ;
+  // value method core_mem_master_b_canPut
+  assign core_mem_master_b_canPut = !axi4_mem_shim_tmp_shimMaster_bff_rv[8] ;
 
-  // action method cpu_dmem_master_b_put
-  assign RDY_cpu_dmem_master_b_put =
-	     !axi4_dmem_shim_tmp_shimMaster_bff_rv[8] ;
-  assign CAN_FIRE_cpu_dmem_master_b_put =
-	     !axi4_dmem_shim_tmp_shimMaster_bff_rv[8] ;
-  assign WILL_FIRE_cpu_dmem_master_b_put = EN_cpu_dmem_master_b_put ;
+  // action method core_mem_master_b_put
+  assign RDY_core_mem_master_b_put = !axi4_mem_shim_tmp_shimMaster_bff_rv[8] ;
+  assign CAN_FIRE_core_mem_master_b_put =
+	     !axi4_mem_shim_tmp_shimMaster_bff_rv[8] ;
+  assign WILL_FIRE_core_mem_master_b_put = EN_core_mem_master_b_put ;
 
-  // value method cpu_dmem_master_ar_canPeek
-  assign cpu_dmem_master_ar_canPeek =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
+  // value method core_mem_master_ar_canPeek
+  assign core_mem_master_ar_canPeek =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
 
-  // value method cpu_dmem_master_ar_peek
-  assign cpu_dmem_master_ar_peek =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read[98:0] ;
-  assign RDY_cpu_dmem_master_ar_peek =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
+  // value method core_mem_master_ar_peek
+  assign core_mem_master_ar_peek =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read[98:0] ;
+  assign RDY_core_mem_master_ar_peek =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
 
-  // action method cpu_dmem_master_ar_drop
-  assign RDY_cpu_dmem_master_ar_drop =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
-  assign CAN_FIRE_cpu_dmem_master_ar_drop =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
-  assign WILL_FIRE_cpu_dmem_master_ar_drop = EN_cpu_dmem_master_ar_drop ;
+  // action method core_mem_master_ar_drop
+  assign RDY_core_mem_master_ar_drop =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
+  assign CAN_FIRE_core_mem_master_ar_drop =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read[99] ;
+  assign WILL_FIRE_core_mem_master_ar_drop = EN_core_mem_master_ar_drop ;
 
-  // value method cpu_dmem_master_r_canPut
-  assign cpu_dmem_master_r_canPut =
-	     !axi4_dmem_shim_tmp_shimMaster_rff_rv[73] ;
+  // value method core_mem_master_r_canPut
+  assign core_mem_master_r_canPut = !axi4_mem_shim_tmp_shimMaster_rff_rv[73] ;
 
-  // action method cpu_dmem_master_r_put
-  assign RDY_cpu_dmem_master_r_put =
-	     !axi4_dmem_shim_tmp_shimMaster_rff_rv[73] ;
-  assign CAN_FIRE_cpu_dmem_master_r_put =
-	     !axi4_dmem_shim_tmp_shimMaster_rff_rv[73] ;
-  assign WILL_FIRE_cpu_dmem_master_r_put = EN_cpu_dmem_master_r_put ;
+  // action method core_mem_master_r_put
+  assign RDY_core_mem_master_r_put =
+	     !axi4_mem_shim_tmp_shimMaster_rff_rv[73] ;
+  assign CAN_FIRE_core_mem_master_r_put =
+	     !axi4_mem_shim_tmp_shimMaster_rff_rv[73] ;
+  assign WILL_FIRE_core_mem_master_r_put = EN_core_mem_master_r_put ;
+
+  // value method dma_server_aw_canPut
+  assign dma_server_aw_canPut = cpu$dma_server_aw_canPut ;
+
+  // action method dma_server_aw_put
+  assign RDY_dma_server_aw_put = 1'd1 ;
+  assign CAN_FIRE_dma_server_aw_put = 1'd1 ;
+  assign WILL_FIRE_dma_server_aw_put = EN_dma_server_aw_put ;
+
+  // value method dma_server_w_canPut
+  assign dma_server_w_canPut = cpu$dma_server_w_canPut ;
+
+  // action method dma_server_w_put
+  assign RDY_dma_server_w_put = 1'd1 ;
+  assign CAN_FIRE_dma_server_w_put = 1'd1 ;
+  assign WILL_FIRE_dma_server_w_put = EN_dma_server_w_put ;
+
+  // value method dma_server_b_canPeek
+  assign dma_server_b_canPeek = cpu$dma_server_b_canPeek ;
+
+  // value method dma_server_b_peek
+  assign dma_server_b_peek = cpu$dma_server_b_peek ;
+  assign RDY_dma_server_b_peek = cpu$RDY_dma_server_b_peek ;
+
+  // action method dma_server_b_drop
+  assign RDY_dma_server_b_drop = cpu$RDY_dma_server_b_drop ;
+  assign CAN_FIRE_dma_server_b_drop = cpu$RDY_dma_server_b_drop ;
+  assign WILL_FIRE_dma_server_b_drop = EN_dma_server_b_drop ;
+
+  // value method dma_server_ar_canPut
+  assign dma_server_ar_canPut = cpu$dma_server_ar_canPut ;
+
+  // action method dma_server_ar_put
+  assign RDY_dma_server_ar_put = 1'd1 ;
+  assign CAN_FIRE_dma_server_ar_put = 1'd1 ;
+  assign WILL_FIRE_dma_server_ar_put = EN_dma_server_ar_put ;
+
+  // value method dma_server_r_canPeek
+  assign dma_server_r_canPeek = cpu$dma_server_r_canPeek ;
+
+  // value method dma_server_r_peek
+  assign dma_server_r_peek = cpu$dma_server_r_peek ;
+  assign RDY_dma_server_r_peek = cpu$RDY_dma_server_r_peek ;
+
+  // action method dma_server_r_drop
+  assign RDY_dma_server_r_drop = cpu$RDY_dma_server_r_drop ;
+  assign CAN_FIRE_dma_server_r_drop = cpu$RDY_dma_server_r_drop ;
+  assign WILL_FIRE_dma_server_r_drop = EN_dma_server_r_drop ;
 
   // action method core_external_interrupt_sources_0_m_interrupt_req
   assign CAN_FIRE_core_external_interrupt_sources_0_m_interrupt_req = 1'd1 ;
@@ -2525,54 +2729,68 @@ module mkCore(CLK,
   assign WILL_FIRE_ndm_reset_client_response_put =
 	     EN_ndm_reset_client_response_put ;
 
-  // submodule axi4_dmem_shim_tmp_awreqff
+  // action method set_verbosity
+  assign RDY_set_verbosity = 1'd1 ;
+  assign CAN_FIRE_set_verbosity = 1'd1 ;
+  assign WILL_FIRE_set_verbosity = EN_set_verbosity ;
+
+  // action method ma_ddr4_ready
+  assign RDY_ma_ddr4_ready = 1'd1 ;
+  assign CAN_FIRE_ma_ddr4_ready = 1'd1 ;
+  assign WILL_FIRE_ma_ddr4_ready = EN_ma_ddr4_ready ;
+
+  // value method mv_status
+  assign mv_status = cpu$mv_status ;
+
+  // submodule axi4_mem_shim_tmp_awreqff
   FIFO2 #(.width(32'd98),
-	  .guarded(32'd1)) axi4_dmem_shim_tmp_awreqff(.RST(RST_N),
-						      .CLK(CLK),
-						      .D_IN(axi4_dmem_shim_tmp_awreqff$D_IN),
-						      .ENQ(axi4_dmem_shim_tmp_awreqff$ENQ),
-						      .DEQ(axi4_dmem_shim_tmp_awreqff$DEQ),
-						      .CLR(axi4_dmem_shim_tmp_awreqff$CLR),
-						      .D_OUT(axi4_dmem_shim_tmp_awreqff$D_OUT),
-						      .FULL_N(axi4_dmem_shim_tmp_awreqff$FULL_N),
-						      .EMPTY_N(axi4_dmem_shim_tmp_awreqff$EMPTY_N));
+	  .guarded(32'd1)) axi4_mem_shim_tmp_awreqff(.RST(RST_N),
+						     .CLK(CLK),
+						     .D_IN(axi4_mem_shim_tmp_awreqff$D_IN),
+						     .ENQ(axi4_mem_shim_tmp_awreqff$ENQ),
+						     .DEQ(axi4_mem_shim_tmp_awreqff$DEQ),
+						     .CLR(axi4_mem_shim_tmp_awreqff$CLR),
+						     .D_OUT(axi4_mem_shim_tmp_awreqff$D_OUT),
+						     .FULL_N(axi4_mem_shim_tmp_awreqff$FULL_N),
+						     .EMPTY_N(axi4_mem_shim_tmp_awreqff$EMPTY_N));
 
-  // submodule axi4_dmem_shim_tmp_newRst
-  MakeReset0 #(.init(1'd0)) axi4_dmem_shim_tmp_newRst(.CLK(CLK),
-						      .RST(RST_N),
-						      .ASSERT_IN(axi4_dmem_shim_tmp_newRst$ASSERT_IN),
-						      .ASSERT_OUT(),
-						      .OUT_RST(axi4_dmem_shim_tmp_newRst$OUT_RST));
+  // submodule axi4_mem_shim_tmp_newRst
+  MakeReset0 #(.init(1'd0)) axi4_mem_shim_tmp_newRst(.CLK(CLK),
+						     .RST(RST_N),
+						     .ASSERT_IN(axi4_mem_shim_tmp_newRst$ASSERT_IN),
+						     .ASSERT_OUT(),
+						     .OUT_RST(axi4_mem_shim_tmp_newRst$OUT_RST));
 
-  // submodule axi4_dmem_shim_tmp_tagCon
-  mkTagController axi4_dmem_shim_tmp_tagCon(.CLK(CLK),
-					    .RST_N(axi4_dmem_shim_tmp_newRst$OUT_RST),
-					    .cache_request_put_val(axi4_dmem_shim_tmp_tagCon$cache_request_put_val),
-					    .memory_response_put_val(axi4_dmem_shim_tmp_tagCon$memory_response_put_val),
-					    .EN_cache_request_put(axi4_dmem_shim_tmp_tagCon$EN_cache_request_put),
-					    .EN_cache_response_get(axi4_dmem_shim_tmp_tagCon$EN_cache_response_get),
-					    .EN_memory_request_get(axi4_dmem_shim_tmp_tagCon$EN_memory_request_get),
-					    .EN_memory_response_put(axi4_dmem_shim_tmp_tagCon$EN_memory_response_put),
-					    .cache_request_canPut(),
-					    .RDY_cache_request_put(axi4_dmem_shim_tmp_tagCon$RDY_cache_request_put),
-					    .cache_response_canGet(),
-					    .cache_response_peek(),
-					    .RDY_cache_response_peek(),
-					    .cache_response_get(axi4_dmem_shim_tmp_tagCon$cache_response_get),
-					    .RDY_cache_response_get(axi4_dmem_shim_tmp_tagCon$RDY_cache_response_get),
-					    .memory_request_canGet(),
-					    .memory_request_peek(),
-					    .RDY_memory_request_peek(),
-					    .memory_request_get(axi4_dmem_shim_tmp_tagCon$memory_request_get),
-					    .RDY_memory_request_get(axi4_dmem_shim_tmp_tagCon$RDY_memory_request_get),
-					    .memory_response_canPut(),
-					    .RDY_memory_response_put(axi4_dmem_shim_tmp_tagCon$RDY_memory_response_put));
+  // submodule axi4_mem_shim_tmp_tagCon
+  mkTagController axi4_mem_shim_tmp_tagCon(.CLK(CLK),
+					   .RST_N(axi4_mem_shim_tmp_newRst$OUT_RST),
+					   .cache_request_put_val(axi4_mem_shim_tmp_tagCon$cache_request_put_val),
+					   .memory_response_put_val(axi4_mem_shim_tmp_tagCon$memory_response_put_val),
+					   .EN_cache_request_put(axi4_mem_shim_tmp_tagCon$EN_cache_request_put),
+					   .EN_cache_response_get(axi4_mem_shim_tmp_tagCon$EN_cache_response_get),
+					   .EN_memory_request_get(axi4_mem_shim_tmp_tagCon$EN_memory_request_get),
+					   .EN_memory_response_put(axi4_mem_shim_tmp_tagCon$EN_memory_response_put),
+					   .cache_request_canPut(),
+					   .RDY_cache_request_put(axi4_mem_shim_tmp_tagCon$RDY_cache_request_put),
+					   .cache_response_canGet(),
+					   .cache_response_peek(),
+					   .RDY_cache_response_peek(),
+					   .cache_response_get(axi4_mem_shim_tmp_tagCon$cache_response_get),
+					   .RDY_cache_response_get(axi4_mem_shim_tmp_tagCon$RDY_cache_response_get),
+					   .memory_request_canGet(),
+					   .memory_request_peek(),
+					   .RDY_memory_request_peek(),
+					   .memory_request_get(axi4_mem_shim_tmp_tagCon$memory_request_get),
+					   .RDY_memory_request_get(axi4_mem_shim_tmp_tagCon$RDY_memory_request_get),
+					   .memory_response_canPut(),
+					   .RDY_memory_response_put(axi4_mem_shim_tmp_tagCon$RDY_memory_response_put));
 
   // submodule cpu
   mkCPU cpu(.CLK(CLK),
 	    .RST_N(RST_N),
-	    .dmem_master_b_put_val(cpu$dmem_master_b_put_val),
-	    .dmem_master_r_put_val(cpu$dmem_master_r_put_val),
+	    .dma_server_ar_put_val(cpu$dma_server_ar_put_val),
+	    .dma_server_aw_put_val(cpu$dma_server_aw_put_val),
+	    .dma_server_w_put_val(cpu$dma_server_w_put_val),
 	    .hart0_csr_mem_server_request_put(cpu$hart0_csr_mem_server_request_put),
 	    .hart0_fpr_mem_server_request_put(cpu$hart0_fpr_mem_server_request_put),
 	    .hart0_gpr_mem_server_request_put(cpu$hart0_gpr_mem_server_request_put),
@@ -2582,6 +2800,8 @@ module mkCore(CLK,
 	    .imem_master_b_put_val(cpu$imem_master_b_put_val),
 	    .imem_master_r_put_val(cpu$imem_master_r_put_val),
 	    .m_external_interrupt_req_set_not_clear(cpu$m_external_interrupt_req_set_not_clear),
+	    .mem_master_b_put_val(cpu$mem_master_b_put_val),
+	    .mem_master_r_put_val(cpu$mem_master_r_put_val),
 	    .nmi_req_set_not_clear(cpu$nmi_req_set_not_clear),
 	    .s_external_interrupt_req_set_not_clear(cpu$s_external_interrupt_req_set_not_clear),
 	    .set_verbosity_logdelay(cpu$set_verbosity_logdelay),
@@ -2595,12 +2815,16 @@ module mkCore(CLK,
 	    .EN_imem_master_b_put(cpu$EN_imem_master_b_put),
 	    .EN_imem_master_ar_drop(cpu$EN_imem_master_ar_drop),
 	    .EN_imem_master_r_put(cpu$EN_imem_master_r_put),
-	    .EN_dmem_master_aw_drop(cpu$EN_dmem_master_aw_drop),
-	    .EN_dmem_master_w_drop(cpu$EN_dmem_master_w_drop),
-	    .EN_dmem_master_b_put(cpu$EN_dmem_master_b_put),
-	    .EN_dmem_master_ar_drop(cpu$EN_dmem_master_ar_drop),
-	    .EN_dmem_master_r_put(cpu$EN_dmem_master_r_put),
-	    .EN_set_verbosity(cpu$EN_set_verbosity),
+	    .EN_mem_master_aw_drop(cpu$EN_mem_master_aw_drop),
+	    .EN_mem_master_w_drop(cpu$EN_mem_master_w_drop),
+	    .EN_mem_master_b_put(cpu$EN_mem_master_b_put),
+	    .EN_mem_master_ar_drop(cpu$EN_mem_master_ar_drop),
+	    .EN_mem_master_r_put(cpu$EN_mem_master_r_put),
+	    .EN_dma_server_aw_put(cpu$EN_dma_server_aw_put),
+	    .EN_dma_server_w_put(cpu$EN_dma_server_w_put),
+	    .EN_dma_server_b_drop(cpu$EN_dma_server_b_drop),
+	    .EN_dma_server_ar_put(cpu$EN_dma_server_ar_put),
+	    .EN_dma_server_r_drop(cpu$EN_dma_server_r_drop),
 	    .EN_hart0_server_run_halt_request_put(cpu$EN_hart0_server_run_halt_request_put),
 	    .EN_hart0_server_run_halt_response_get(cpu$EN_hart0_server_run_halt_response_get),
 	    .EN_hart0_put_other_req_put(cpu$EN_hart0_put_other_req_put),
@@ -2610,6 +2834,8 @@ module mkCore(CLK,
 	    .EN_hart0_fpr_mem_server_response_get(cpu$EN_hart0_fpr_mem_server_response_get),
 	    .EN_hart0_csr_mem_server_request_put(cpu$EN_hart0_csr_mem_server_request_put),
 	    .EN_hart0_csr_mem_server_response_get(cpu$EN_hart0_csr_mem_server_response_get),
+	    .EN_set_verbosity(cpu$EN_set_verbosity),
+	    .EN_ma_ddr4_ready(cpu$EN_ma_ddr4_ready),
 	    .RDY_hart0_server_reset_request_put(cpu$RDY_hart0_server_reset_request_put),
 	    .hart0_server_reset_response_get(cpu$hart0_server_reset_response_get),
 	    .RDY_hart0_server_reset_response_get(cpu$RDY_hart0_server_reset_response_get),
@@ -2629,23 +2855,36 @@ module mkCore(CLK,
 	    .RDY_imem_master_ar_drop(cpu$RDY_imem_master_ar_drop),
 	    .imem_master_r_canPut(cpu$imem_master_r_canPut),
 	    .RDY_imem_master_r_put(cpu$RDY_imem_master_r_put),
-	    .dmem_master_aw_canPeek(),
-	    .dmem_master_aw_peek(cpu$dmem_master_aw_peek),
-	    .RDY_dmem_master_aw_peek(cpu$RDY_dmem_master_aw_peek),
-	    .RDY_dmem_master_aw_drop(cpu$RDY_dmem_master_aw_drop),
-	    .dmem_master_w_canPeek(),
-	    .dmem_master_w_peek(cpu$dmem_master_w_peek),
-	    .RDY_dmem_master_w_peek(cpu$RDY_dmem_master_w_peek),
-	    .RDY_dmem_master_w_drop(cpu$RDY_dmem_master_w_drop),
-	    .dmem_master_b_canPut(cpu$dmem_master_b_canPut),
-	    .RDY_dmem_master_b_put(cpu$RDY_dmem_master_b_put),
-	    .dmem_master_ar_canPeek(cpu$dmem_master_ar_canPeek),
-	    .dmem_master_ar_peek(cpu$dmem_master_ar_peek),
-	    .RDY_dmem_master_ar_peek(cpu$RDY_dmem_master_ar_peek),
-	    .RDY_dmem_master_ar_drop(cpu$RDY_dmem_master_ar_drop),
-	    .dmem_master_r_canPut(cpu$dmem_master_r_canPut),
-	    .RDY_dmem_master_r_put(cpu$RDY_dmem_master_r_put),
-	    .RDY_set_verbosity(),
+	    .mem_master_aw_canPeek(),
+	    .mem_master_aw_peek(cpu$mem_master_aw_peek),
+	    .RDY_mem_master_aw_peek(cpu$RDY_mem_master_aw_peek),
+	    .RDY_mem_master_aw_drop(cpu$RDY_mem_master_aw_drop),
+	    .mem_master_w_canPeek(),
+	    .mem_master_w_peek(cpu$mem_master_w_peek),
+	    .RDY_mem_master_w_peek(cpu$RDY_mem_master_w_peek),
+	    .RDY_mem_master_w_drop(cpu$RDY_mem_master_w_drop),
+	    .mem_master_b_canPut(cpu$mem_master_b_canPut),
+	    .RDY_mem_master_b_put(cpu$RDY_mem_master_b_put),
+	    .mem_master_ar_canPeek(cpu$mem_master_ar_canPeek),
+	    .mem_master_ar_peek(cpu$mem_master_ar_peek),
+	    .RDY_mem_master_ar_peek(cpu$RDY_mem_master_ar_peek),
+	    .RDY_mem_master_ar_drop(cpu$RDY_mem_master_ar_drop),
+	    .mem_master_r_canPut(cpu$mem_master_r_canPut),
+	    .RDY_mem_master_r_put(cpu$RDY_mem_master_r_put),
+	    .dma_server_aw_canPut(cpu$dma_server_aw_canPut),
+	    .RDY_dma_server_aw_put(),
+	    .dma_server_w_canPut(cpu$dma_server_w_canPut),
+	    .RDY_dma_server_w_put(),
+	    .dma_server_b_canPeek(cpu$dma_server_b_canPeek),
+	    .dma_server_b_peek(cpu$dma_server_b_peek),
+	    .RDY_dma_server_b_peek(cpu$RDY_dma_server_b_peek),
+	    .RDY_dma_server_b_drop(cpu$RDY_dma_server_b_drop),
+	    .dma_server_ar_canPut(cpu$dma_server_ar_canPut),
+	    .RDY_dma_server_ar_put(),
+	    .dma_server_r_canPeek(cpu$dma_server_r_canPeek),
+	    .dma_server_r_peek(cpu$dma_server_r_peek),
+	    .RDY_dma_server_r_peek(cpu$RDY_dma_server_r_peek),
+	    .RDY_dma_server_r_drop(cpu$RDY_dma_server_r_drop),
 	    .RDY_hart0_server_run_halt_request_put(cpu$RDY_hart0_server_run_halt_request_put),
 	    .hart0_server_run_halt_response_get(cpu$hart0_server_run_halt_response_get),
 	    .RDY_hart0_server_run_halt_response_get(cpu$RDY_hart0_server_run_halt_response_get),
@@ -2658,7 +2897,10 @@ module mkCore(CLK,
 	    .RDY_hart0_fpr_mem_server_response_get(cpu$RDY_hart0_fpr_mem_server_response_get),
 	    .RDY_hart0_csr_mem_server_request_put(cpu$RDY_hart0_csr_mem_server_request_put),
 	    .hart0_csr_mem_server_response_get(cpu$hart0_csr_mem_server_response_get),
-	    .RDY_hart0_csr_mem_server_response_get(cpu$RDY_hart0_csr_mem_server_response_get));
+	    .RDY_hart0_csr_mem_server_response_get(cpu$RDY_hart0_csr_mem_server_response_get),
+	    .RDY_set_verbosity(),
+	    .RDY_ma_ddr4_ready(),
+	    .mv_status(cpu$mv_status));
 
   // submodule debug_module
   mkDebug_Module debug_module(.CLK(CLK),
@@ -3397,7 +3639,7 @@ module mkCore(CLK,
   // rule RL_sink_selected
   assign CAN_FIRE_RL_sink_selected =
 	     flitToSink_0$whas &&
-	     IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794 ;
+	     IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794 ;
   assign WILL_FIRE_RL_sink_selected = CAN_FIRE_RL_sink_selected ;
 
   // rule RL_sink_selected_1
@@ -3498,7 +3740,7 @@ module mkCore(CLK,
 
   // rule RL_sink_selected_3
   assign CAN_FIRE_RL_sink_selected_3 =
-	     flitToSink_1_0$whas && cpu$dmem_master_b_canPut ;
+	     flitToSink_1_0$whas && cpu$mem_master_b_canPut ;
   assign WILL_FIRE_RL_sink_selected_3 = CAN_FIRE_RL_sink_selected_3 ;
 
   // rule RL_sink_selected_4
@@ -3576,7 +3818,7 @@ module mkCore(CLK,
   // rule RL_sink_selected_5
   assign CAN_FIRE_RL_sink_selected_5 =
 	     flitToSink_1_0_1$whas &&
-	     !axi4_dmem_shim_tmp_shimSlave_arff_rv[98] ;
+	     !axi4_mem_shim_tmp_shimSlave_arff_rv[98] ;
   assign WILL_FIRE_RL_sink_selected_5 = CAN_FIRE_RL_sink_selected_5 ;
 
   // rule RL_sink_selected_6
@@ -3656,7 +3898,7 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_source_selected_9 =
 	     (!ifcs_2_1_routeBack$EMPTY_N || ifcs_2_1_rspBack$EMPTY_N) &&
 	     !state_1_1_1 &&
-	     MUX_activeSource_1_1_2$write_1__VAL_2 ;
+	     MUX_activeSource_1_1_2$write_1__VAL_1 ;
   assign WILL_FIRE_RL_source_selected_9 = CAN_FIRE_RL_source_selected_9 ;
 
   // rule RL_burst_9
@@ -3675,7 +3917,7 @@ module mkCore(CLK,
 
   // rule RL_sink_selected_8
   assign CAN_FIRE_RL_sink_selected_8 =
-	     flitToSink_1_1_0$whas && cpu$dmem_master_r_canPut ;
+	     flitToSink_1_1_0$whas && cpu$mem_master_r_canPut ;
   assign WILL_FIRE_RL_sink_selected_8 = CAN_FIRE_RL_sink_selected_8 ;
 
   // rule RL_sink_selected_9
@@ -3835,38 +4077,38 @@ module mkCore(CLK,
 	     cpu$RDY_imem_master_r_put && CAN_FIRE_RL_connect_4 ;
   assign WILL_FIRE_RL_ug_snk_4_doPut = CAN_FIRE_RL_ug_snk_4_doPut ;
 
-  // rule RL_axi4_dmem_shim_tmp_passCacheResponse
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse =
-	     axi4_dmem_shim_tmp_tagCon$RDY_cache_response_get &&
-	     !axi4_dmem_shim_tmp_shimSlave_bff_rv[7] &&
-	     !axi4_dmem_shim_tmp_shimSlave_rff_rv[73] ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse ;
+  // rule RL_axi4_mem_shim_tmp_passCacheResponse
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse =
+	     axi4_mem_shim_tmp_tagCon$RDY_cache_response_get &&
+	     !axi4_mem_shim_tmp_shimSlave_bff_rv[7] &&
+	     !axi4_mem_shim_tmp_shimSlave_rff_rv[73] ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse ;
 
-  // rule RL_axi4_dmem_shim_tmp_passMemoryRequest
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest =
-	     axi4_dmem_shim_tmp_tagCon$RDY_memory_request_get &&
-	     !axi4_dmem_shim_tmp_shimMaster_wff_rv[73] &&
-	     (axi4_dmem_shim_tmp_doneSendingAW ||
-	      !axi4_dmem_shim_tmp_shimMaster_awff_rv[99]) &&
-	     !axi4_dmem_shim_tmp_shimMaster_arff_rv[99] ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest ;
+  // rule RL_axi4_mem_shim_tmp_passMemoryRequest
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest =
+	     axi4_mem_shim_tmp_tagCon$RDY_memory_request_get &&
+	     !axi4_mem_shim_tmp_shimMaster_wff_rv[73] &&
+	     (axi4_mem_shim_tmp_doneSendingAW ||
+	      !axi4_mem_shim_tmp_shimMaster_awff_rv[99]) &&
+	     !axi4_mem_shim_tmp_shimMaster_arff_rv[99] ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest ;
 
-  // rule RL_axi4_dmem_shim_tmp_passMemoryResponseWrite
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite =
-	     axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__read[8] &&
-	     axi4_dmem_shim_tmp_tagCon$RDY_memory_response_put ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite &&
-	     !WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead ;
+  // rule RL_axi4_mem_shim_tmp_passMemoryResponseWrite
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite =
+	     axi4_mem_shim_tmp_shimMaster_bff_rv$port1__read[8] &&
+	     axi4_mem_shim_tmp_tagCon$RDY_memory_response_put ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite &&
+	     !WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead ;
 
-  // rule RL_axi4_dmem_shim_tmp_passMemoryResponseRead
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead =
-	     axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read[73] &&
-	     axi4_dmem_shim_tmp_tagCon$RDY_memory_response_put ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead ;
+  // rule RL_axi4_mem_shim_tmp_passMemoryResponseRead
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead =
+	     axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read[73] &&
+	     axi4_mem_shim_tmp_tagCon$RDY_memory_response_put ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead ;
 
   // rule RL_merged_0_passFlit
   assign CAN_FIRE_RL_merged_0_passFlit =
@@ -3964,7 +4206,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_firstFlit_1
   assign CAN_FIRE_RL_ifcs_0_firstFlit_1 =
-	     axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read[7] &&
+	     axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read[7] &&
 	     ifcs_0_rspBack$FULL_N &&
 	     ifcs_0_routeBack$FULL_N &&
 	     !ifcs_0_state_1 ;
@@ -3972,7 +4214,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_followFlits_1
   assign CAN_FIRE_RL_ifcs_0_followFlits_1 =
-	     axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read[7] &&
+	     axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read[7] &&
 	     ifcs_0_rspBack$FULL_N &&
 	     ifcs_0_state_1 ;
   assign WILL_FIRE_RL_ifcs_0_followFlits_1 =
@@ -4031,14 +4273,14 @@ module mkCore(CLK,
   assign CAN_FIRE_RL_sinks_0_warnDoPut =
 	     CAN_FIRE_RL_sink_selected &&
 	     ((split_0_flitLeft == 8'd0) ?
-		axi4_dmem_shim_tmp_shimSlave_awff_rv[98] ||
-		axi4_dmem_shim_tmp_shimSlave_wff_rv[74] :
-		axi4_dmem_shim_tmp_shimSlave_wff_rv[74]) ;
+		axi4_mem_shim_tmp_shimSlave_awff_rv[98] ||
+		axi4_mem_shim_tmp_shimSlave_wff_rv[74] :
+		axi4_mem_shim_tmp_shimSlave_wff_rv[74]) ;
   assign WILL_FIRE_RL_sinks_0_warnDoPut = CAN_FIRE_RL_sinks_0_warnDoPut ;
 
   // rule RL_sinks_0_doPut
   assign CAN_FIRE_RL_sinks_0_doPut =
-	     IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794 &&
+	     IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794 &&
 	     CAN_FIRE_RL_sink_selected ;
   assign WILL_FIRE_RL_sinks_0_doPut = CAN_FIRE_RL_sinks_0_doPut ;
 
@@ -4048,18 +4290,18 @@ module mkCore(CLK,
 	     split_0_flitLeft == 8'd0 ;
   assign WILL_FIRE_RL_split_0_putFirst = CAN_FIRE_RL_split_0_putFirst ;
 
-  // rule RL_axi4_dmem_shim_tmp_getCacheAW
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW =
-	     axi4_dmem_shim_tmp_shimSlave_awff_rv$port1__read[98] &&
-	     axi4_dmem_shim_tmp_awreqff$FULL_N ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW ;
+  // rule RL_axi4_mem_shim_tmp_getCacheAW
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_getCacheAW =
+	     axi4_mem_shim_tmp_shimSlave_awff_rv$port1__read[98] &&
+	     axi4_mem_shim_tmp_awreqff$FULL_N ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_getCacheAW =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_getCacheAW ;
 
   // rule RL_split_0_putOther
   assign CAN_FIRE_RL_split_0_putOther =
 	     CAN_FIRE_RL_sinks_0_doPut &&
 	     (!split_0_doPut$wget[172] ||
-	      !axi4_dmem_shim_tmp_shimSlave_wff_rv[74]) &&
+	      !axi4_mem_shim_tmp_shimSlave_wff_rv[74]) &&
 	     split_0_flitLeft != 8'd0 ;
   assign WILL_FIRE_RL_split_0_putOther = CAN_FIRE_RL_split_0_putOther ;
 
@@ -4094,18 +4336,18 @@ module mkCore(CLK,
 
   // rule RL_sinks_1_0_warnDoPut
   assign CAN_FIRE_RL_sinks_1_0_warnDoPut =
-	     CAN_FIRE_RL_sink_selected_3 && !cpu$dmem_master_b_canPut ;
+	     CAN_FIRE_RL_sink_selected_3 && !cpu$mem_master_b_canPut ;
   assign WILL_FIRE_RL_sinks_1_0_warnDoPut = CAN_FIRE_RL_sinks_1_0_warnDoPut ;
 
   // rule RL_sinks_1_0_doPut
   assign CAN_FIRE_RL_sinks_1_0_doPut =
-	     cpu$dmem_master_b_canPut && CAN_FIRE_RL_sink_selected_3 ;
+	     cpu$mem_master_b_canPut && CAN_FIRE_RL_sink_selected_3 ;
   assign WILL_FIRE_RL_sinks_1_0_doPut = CAN_FIRE_RL_sinks_1_0_doPut ;
 
   // rule RL_ifcs_0_drainNoRouteResponse
   assign CAN_FIRE_RL_ifcs_0_drainNoRouteResponse =
 	     ifcs_0_noRouteRsp$EMPTY_N && !CAN_FIRE_RL_sinks_1_0_doPut &&
-	     cpu$dmem_master_b_canPut ;
+	     cpu$mem_master_b_canPut ;
   assign WILL_FIRE_RL_ifcs_0_drainNoRouteResponse =
 	     CAN_FIRE_RL_ifcs_0_drainNoRouteResponse &&
 	     !WILL_FIRE_RL_sinks_1_0_doPut ;
@@ -4133,13 +4375,13 @@ module mkCore(CLK,
 
   // rule RL_merged_0_awFlit
   assign CAN_FIRE_RL_merged_0_awFlit =
-	     cpu$RDY_dmem_master_aw_drop && cpu$RDY_dmem_master_aw_peek &&
+	     cpu$RDY_mem_master_aw_drop && cpu$RDY_mem_master_aw_peek &&
 	     merged_0_awff$FULL_N ;
   assign WILL_FIRE_RL_merged_0_awFlit = CAN_FIRE_RL_merged_0_awFlit ;
 
   // rule RL_merged_0_wFlit
   assign CAN_FIRE_RL_merged_0_wFlit =
-	     cpu$RDY_dmem_master_w_drop && cpu$RDY_dmem_master_w_peek &&
+	     cpu$RDY_mem_master_w_drop && cpu$RDY_mem_master_w_peek &&
 	     merged_0_wff$FULL_N ;
   assign WILL_FIRE_RL_merged_0_wFlit = CAN_FIRE_RL_merged_0_wFlit ;
 
@@ -4158,13 +4400,13 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_snk_warnDoPut
   assign CAN_FIRE_RL_ifcs_0_snk_warnDoPut =
-	     ifcs_0_snk_putWire$whas && !cpu$dmem_master_b_canPut ;
+	     ifcs_0_snk_putWire$whas && !cpu$mem_master_b_canPut ;
   assign WILL_FIRE_RL_ifcs_0_snk_warnDoPut =
 	     CAN_FIRE_RL_ifcs_0_snk_warnDoPut ;
 
   // rule RL_ifcs_0_snk_doPut
   assign CAN_FIRE_RL_ifcs_0_snk_doPut =
-	     cpu$RDY_dmem_master_b_put && ifcs_0_snk_putWire$whas ;
+	     cpu$RDY_mem_master_b_put && ifcs_0_snk_putWire$whas ;
   assign WILL_FIRE_RL_ifcs_0_snk_doPut = CAN_FIRE_RL_ifcs_0_snk_doPut ;
 
   // rule RL_sinks_1_1_warnDoPut
@@ -4241,38 +4483,38 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_firstFlit
   assign CAN_FIRE_RL_ifcs_0_1_firstFlit =
-	     cpu$RDY_dmem_master_ar_drop && cpu$RDY_dmem_master_ar_peek &&
+	     cpu$RDY_mem_master_ar_drop && cpu$RDY_mem_master_ar_peek &&
 	     ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_innerRoute$FULL_N &&
 	     ifcs_0_1_state == 2'd0 &&
-	     cpu$dmem_master_ar_canPeek &&
-	     IF_cpu_dmem_master_ar_peek__251_BITS_92_TO_69__ETC___d1278 ==
+	     cpu$mem_master_ar_canPeek &&
+	     IF_cpu_mem_master_ar_peek__251_BITS_92_TO_69_2_ETC___d1278 ==
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_firstFlit = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
 
   // rule RL_ifcs_0_1_followFlits
   assign CAN_FIRE_RL_ifcs_0_1_followFlits =
-	     cpu$RDY_dmem_master_ar_drop && cpu$RDY_dmem_master_ar_peek &&
+	     cpu$RDY_mem_master_ar_drop && cpu$RDY_mem_master_ar_peek &&
 	     ifcs_0_1_innerReq$FULL_N &&
 	     ifcs_0_1_state == 2'd1 &&
-	     cpu$dmem_master_ar_canPeek ;
+	     cpu$mem_master_ar_canPeek ;
   assign WILL_FIRE_RL_ifcs_0_1_followFlits =
 	     CAN_FIRE_RL_ifcs_0_1_followFlits ;
 
   // rule RL_ifcs_0_1_nonRoutableFlit
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     ifcs_0_1_noRoute_flitCount == 9'd0 &&
-	     cpu$RDY_dmem_master_ar_peek &&
+	     cpu$RDY_mem_master_ar_peek &&
 	     ifcs_0_1_state == 2'd0 &&
-	     cpu$dmem_master_ar_canPeek &&
-	     IF_cpu_dmem_master_ar_peek__251_BITS_92_TO_69__ETC___d1278 !=
+	     cpu$mem_master_ar_canPeek &&
+	     IF_cpu_mem_master_ar_peek__251_BITS_92_TO_69_2_ETC___d1278 !=
 	     2'd1 ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableFlit =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ;
 
   // rule RL_ifcs_0_1_drainFlits
   assign CAN_FIRE_RL_ifcs_0_1_drainFlits =
-	     cpu$RDY_dmem_master_ar_drop && ifcs_0_1_state == 2'd2 ;
+	     cpu$RDY_mem_master_ar_drop && ifcs_0_1_state == 2'd2 ;
   assign WILL_FIRE_RL_ifcs_0_1_drainFlits = CAN_FIRE_RL_ifcs_0_1_drainFlits ;
 
   // rule __me_check_129
@@ -4323,7 +4565,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_firstFlit_1
   assign CAN_FIRE_RL_ifcs_0_1_firstFlit_1 =
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[73] &&
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[73] &&
 	     ifcs_0_1_rspBack$FULL_N &&
 	     ifcs_0_1_routeBack$FULL_N &&
 	     !ifcs_0_1_state_1 ;
@@ -4332,7 +4574,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_followFlits_1
   assign CAN_FIRE_RL_ifcs_0_1_followFlits_1 =
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[73] &&
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[73] &&
 	     ifcs_0_1_rspBack$FULL_N &&
 	     ifcs_0_1_state_1 ;
   assign WILL_FIRE_RL_ifcs_0_1_followFlits_1 =
@@ -4392,37 +4634,37 @@ module mkCore(CLK,
   // rule RL_sinks_1_0_warnDoPut_1
   assign CAN_FIRE_RL_sinks_1_0_warnDoPut_1 =
 	     CAN_FIRE_RL_sink_selected_5 &&
-	     axi4_dmem_shim_tmp_shimSlave_arff_rv[98] ;
+	     axi4_mem_shim_tmp_shimSlave_arff_rv[98] ;
   assign WILL_FIRE_RL_sinks_1_0_warnDoPut_1 =
 	     CAN_FIRE_RL_sinks_1_0_warnDoPut_1 ;
 
   // rule RL_sinks_1_0_doPut_1
   assign CAN_FIRE_RL_sinks_1_0_doPut_1 =
-	     !axi4_dmem_shim_tmp_shimSlave_arff_rv[98] &&
+	     !axi4_mem_shim_tmp_shimSlave_arff_rv[98] &&
 	     CAN_FIRE_RL_sink_selected_5 ;
   assign WILL_FIRE_RL_sinks_1_0_doPut_1 = CAN_FIRE_RL_sinks_1_0_doPut_1 ;
 
-  // rule RL_axi4_dmem_shim_tmp_passCacheWrite
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite =
-	     axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[74] &&
-	     axi4_dmem_shim_tmp_tagCon$RDY_cache_request_put &&
-	     axi4_dmem_shim_tmp_awreqff$EMPTY_N ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite &&
-	     !WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead ;
+  // rule RL_axi4_mem_shim_tmp_passCacheWrite
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite =
+	     axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[74] &&
+	     axi4_mem_shim_tmp_tagCon$RDY_cache_request_put &&
+	     axi4_mem_shim_tmp_awreqff$EMPTY_N ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite &&
+	     !WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheRead ;
 
-  // rule RL_axi4_dmem_shim_tmp_passCacheRead
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead =
-	     axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read[98] &&
-	     axi4_dmem_shim_tmp_tagCon$RDY_cache_request_put ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead ;
+  // rule RL_axi4_mem_shim_tmp_passCacheRead
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheRead =
+	     axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read[98] &&
+	     axi4_mem_shim_tmp_tagCon$RDY_cache_request_put ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheRead =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheRead ;
 
-  // rule RL_axi4_dmem_shim_tmp_propagateReset
-  assign CAN_FIRE_RL_axi4_dmem_shim_tmp_propagateReset =
-	     !axi4_dmem_shim_tmp_reset_done ;
-  assign WILL_FIRE_RL_axi4_dmem_shim_tmp_propagateReset =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_propagateReset ;
+  // rule RL_axi4_mem_shim_tmp_propagateReset
+  assign CAN_FIRE_RL_axi4_mem_shim_tmp_propagateReset =
+	     !axi4_mem_shim_tmp_reset_done ;
+  assign WILL_FIRE_RL_axi4_mem_shim_tmp_propagateReset =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_propagateReset ;
 
   // rule RL_sinks_1_1_warnDoPut_1
   assign CAN_FIRE_RL_sinks_1_1_warnDoPut_1 =
@@ -4462,27 +4704,27 @@ module mkCore(CLK,
 
   // rule RL_sinks_1_1_0_warnDoPut
   assign CAN_FIRE_RL_sinks_1_1_0_warnDoPut =
-	     CAN_FIRE_RL_sink_selected_8 && !cpu$dmem_master_r_canPut ;
+	     CAN_FIRE_RL_sink_selected_8 && !cpu$mem_master_r_canPut ;
   assign WILL_FIRE_RL_sinks_1_1_0_warnDoPut =
 	     CAN_FIRE_RL_sinks_1_1_0_warnDoPut ;
 
   // rule RL_sinks_1_1_0_doPut
   assign CAN_FIRE_RL_sinks_1_1_0_doPut =
-	     cpu$dmem_master_r_canPut && CAN_FIRE_RL_sink_selected_8 ;
+	     cpu$mem_master_r_canPut && CAN_FIRE_RL_sink_selected_8 ;
   assign WILL_FIRE_RL_sinks_1_1_0_doPut = CAN_FIRE_RL_sinks_1_1_0_doPut ;
 
   // rule RL_ifcs_0_1_drainNoRouteResponse
   assign CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse =
 	     ifcs_0_1_noRouteRsp$EMPTY_N && !CAN_FIRE_RL_sinks_1_1_0_doPut &&
-	     cpu$dmem_master_r_canPut ;
+	     cpu$mem_master_r_canPut ;
   assign WILL_FIRE_RL_ifcs_0_1_drainNoRouteResponse =
 	     CAN_FIRE_RL_ifcs_0_1_drainNoRouteResponse &&
 	     !WILL_FIRE_RL_sinks_1_1_0_doPut ;
 
   // rule RL_ifcs_0_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
-	     x_port1__read__h64181 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h64181 != 9'd1 || cpu$RDY_dmem_master_ar_drop) ;
+	     x__h64381 != 9'd0 && ifcs_0_1_noRouteRsp$FULL_N &&
+	     (x__h64381 != 9'd1 || cpu$RDY_mem_master_ar_drop) ;
   assign WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
 
@@ -4500,7 +4742,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_snk_warnDoPut
   assign CAN_FIRE_RL_ifcs_0_1_snk_warnDoPut =
-	     ifcs_0_1_snk_putWire$whas && !cpu$dmem_master_r_canPut ;
+	     ifcs_0_1_snk_putWire$whas && !cpu$mem_master_r_canPut ;
   assign WILL_FIRE_RL_ifcs_0_1_snk_warnDoPut =
 	     CAN_FIRE_RL_ifcs_0_1_snk_warnDoPut ;
 
@@ -4572,7 +4814,7 @@ module mkCore(CLK,
 
   // rule RL_ifcs_0_1_snk_doPut
   assign CAN_FIRE_RL_ifcs_0_1_snk_doPut =
-	     cpu$RDY_dmem_master_r_put && ifcs_0_1_snk_putWire$whas ;
+	     cpu$RDY_mem_master_r_put && ifcs_0_1_snk_putWire$whas ;
   assign WILL_FIRE_RL_ifcs_0_1_snk_doPut = CAN_FIRE_RL_ifcs_0_1_snk_doPut ;
 
   // rule RL_sinks_1_1_1_warnDoPut
@@ -4596,9 +4838,8 @@ module mkCore(CLK,
 
   // rule RL_ifcs_1_1_nonRoutableGenRsp
   assign CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
-	     x_port1__read__h66726 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
-	     (x_port1__read__h66726 != 9'd1 ||
-	      debug_module$RDY_master_ar_drop) ;
+	     x__h66954 != 9'd0 && ifcs_1_1_noRouteRsp$FULL_N &&
+	     (x__h66954 != 9'd1 || debug_module$RDY_master_ar_drop) ;
   assign WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
 
@@ -4643,9 +4884,9 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_0$write_1__SEL_3 =
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
-  assign MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1 =
+  assign MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1 =
 	     WILL_FIRE_RL_split_0_putOther && split_0_doPut$wget[172] ;
-  assign MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2 =
+  assign MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2 =
 	     WILL_FIRE_RL_split_0_putFirst && !split_0_doPut$wget[172] ;
   assign MUX_flitToSink_0$wset_1__SEL_1 =
 	     WILL_FIRE_RL_burst && ifcs_0_innerRoute$D_OUT[0] ;
@@ -4739,7 +4980,7 @@ module mkCore(CLK,
 	     ifcs_0_innerRoute$D_OUT[2] ;
   assign MUX_ifcs_0_1_state_1$write_1__SEL_1 =
 	     WILL_FIRE_RL_ifcs_0_1_followFlits_1 &&
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[1] ;
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[1] ;
   assign MUX_ifcs_0_state$write_1__SEL_1 =
 	     WILL_FIRE_RL_ifcs_0_firstFlit &&
 	     IF_merged_0_outflit_whas__49_THEN_NOT_merged_0_ETC___d603 ;
@@ -4799,44 +5040,44 @@ module mkCore(CLK,
   assign MUX_activeSource_1_1_1_1$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
 	     IF_SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_7_ETC___d1784 ;
-  assign MUX_activeSource_1_1_2$write_1__VAL_2 =
+  assign MUX_activeSource_1_1_2$write_1__VAL_1 =
 	     WILL_FIRE_RL_arbitrate_3 &&
 	     IF_SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_7_ETC___d1790 ;
-  assign MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 =
+  assign MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 =
 	     { 1'd1, split_0_doPut$wget[73:0] } ;
-  assign MUX_axi4_dmem_shim_tmp_tagCon$cache_request_put_1__VAL_1 =
-	     { tmp__h7784[39:3],
+  assign MUX_axi4_mem_shim_tmp_tagCon$cache_request_put_1__VAL_1 =
+	     { tmp__h7875[39:3],
 	       4'd0,
-	       axi4_dmem_shim_tmp_awreqff$D_OUT[97:93],
+	       axi4_mem_shim_tmp_awreqff$D_OUT[97:93],
 	       3'd1,
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[1],
-	       axi4_dmem_shim_tmp_awreqff$D_OUT[14:11] < 4'd4,
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[1],
+	       axi4_mem_shim_tmp_awreqff$D_OUT[14:11] < 4'd4,
 	       1'd0,
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[9:2],
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[9:2],
 	       8'd255,
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[0],
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[73:10],
-	       axi4_dmem_shim_tmp_awreqff$D_OUT[28:21] } ;
-  assign MUX_axi4_dmem_shim_tmp_tagCon$cache_request_put_1__VAL_2 =
-	     { axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read[68:29],
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[0],
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[73:10],
+	       axi4_mem_shim_tmp_awreqff$D_OUT[28:21] } ;
+  assign MUX_axi4_mem_shim_tmp_tagCon$cache_request_put_1__VAL_2 =
+	     { axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read[68:29],
 	       1'd0,
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read[97:93],
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read[97:93],
 	       3'd0,
 	       83'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read[14:11] < 4'd4,
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read[14:11] < 4'd4,
 	       2'd0,
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read[23:18] } ;
-  assign MUX_axi4_dmem_shim_tmp_tagCon$memory_response_put_1__VAL_1 =
-	     { axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__read[7:2],
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read[23:18] } ;
+  assign MUX_axi4_mem_shim_tmp_tagCon$memory_response_put_1__VAL_1 =
+	     { axi4_mem_shim_tmp_shimMaster_bff_rv$port1__read[7:2],
 	       4'd1,
 	       2'bxx /* unspecified value */ ,
 	       65'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign MUX_axi4_dmem_shim_tmp_tagCon$memory_response_put_1__VAL_2 =
-	     { axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read[72:67],
+  assign MUX_axi4_mem_shim_tmp_tagCon$memory_response_put_1__VAL_2 =
+	     { axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read[72:67],
 	       4'd0,
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read[0],
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read[0],
 	       1'd0,
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read[67:3] } ;
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read[67:3] } ;
   always@(MUX_flitToSink_1_1_0$wset_1__SEL_1 or
 	  MUX_flitToSink_1_1_0$wset_1__SEL_4 or
 	  ifcs_0_1_rspBack$D_OUT or
@@ -4965,12 +5206,12 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_ifcs_1_drainNoRouteResponse ;
   assign reqWires_0$wget =
 	     (!ifcs_0_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794) ?
+	      !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794) ?
 	       IF_NOT_ifcs_0_innerRoute_first__26_BIT_1_35_36_ETC___d848 :
 	       ifcs_0_innerRoute$D_OUT[0] ;
   assign reqWires_1$wget =
 	     (!ifcs_1_innerRoute$D_OUT[0] ||
-	      !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794) ?
+	      !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794) ?
 	       IF_NOT_ifcs_1_innerRoute_first__55_BIT_1_59_60_ETC___d864 :
 	       ifcs_1_innerRoute$D_OUT[0] ;
   assign flitToSink_0$whas =
@@ -4995,15 +5236,15 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_source_selected_1 && ifcs_1_innerRoute$EMPTY_N &&
 	     ifcs_1_innerRoute$D_OUT[2] ;
   assign reqWires_1_0$wget =
-	     (!ifcs_0_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
+	     (!ifcs_0_routeBack$D_OUT[0] || !cpu$mem_master_b_canPut) ?
 	       ifcs_0_routeBack$D_OUT[1] && debug_module$master_b_canPut :
 	       ifcs_0_routeBack$D_OUT[0] ;
   assign reqWires_1_1$wget =
-	     (!ifcs_1_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
+	     (!ifcs_1_routeBack$D_OUT[0] || !cpu$mem_master_b_canPut) ?
 	       ifcs_1_routeBack$D_OUT[1] && debug_module$master_b_canPut :
 	       ifcs_1_routeBack$D_OUT[0] ;
   assign reqWires_1_2$wget =
-	     (!ifcs_2_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
+	     (!ifcs_2_routeBack$D_OUT[0] || !cpu$mem_master_b_canPut) ?
 	       ifcs_2_routeBack$D_OUT[1] && debug_module$master_b_canPut :
 	       ifcs_2_routeBack$D_OUT[0] ;
   assign flitToSink_1_0$whas =
@@ -5057,12 +5298,12 @@ module mkCore(CLK,
 	       ifcs_1_1_innerReq$D_OUT ;
   assign reqWires_1_0_1$wget =
 	     (!ifcs_0_1_innerRoute$D_OUT[0] ||
-	      !(!axi4_dmem_shim_tmp_shimSlave_arff_rv[98])) ?
+	      !(!axi4_mem_shim_tmp_shimSlave_arff_rv[98])) ?
 	       IF_NOT_ifcs_0_1_innerRoute_first__500_BIT_1_50_ETC___d1522 :
 	       ifcs_0_1_innerRoute$D_OUT[0] ;
   assign reqWires_1_1_1$wget =
 	     (!ifcs_1_1_innerRoute$D_OUT[0] ||
-	      !(!axi4_dmem_shim_tmp_shimSlave_arff_rv[98])) ?
+	      !(!axi4_mem_shim_tmp_shimSlave_arff_rv[98])) ?
 	       IF_NOT_ifcs_1_1_innerRoute_first__529_BIT_1_53_ETC___d1538 :
 	       ifcs_1_1_innerRoute$D_OUT[0] ;
   assign flitToSink_1_0_1$whas =
@@ -5087,15 +5328,15 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N &&
 	     ifcs_1_1_innerRoute$D_OUT[2] ;
   assign reqWires_1_1_0$wget =
-	     (!ifcs_0_1_routeBack$D_OUT[0] || !cpu$dmem_master_r_canPut) ?
+	     (!ifcs_0_1_routeBack$D_OUT[0] || !cpu$mem_master_r_canPut) ?
 	       ifcs_0_1_routeBack$D_OUT[1] && debug_module$master_r_canPut :
 	       ifcs_0_1_routeBack$D_OUT[0] ;
   assign reqWires_1_1_1_1$wget =
-	     (!ifcs_1_1_routeBack$D_OUT[0] || !cpu$dmem_master_r_canPut) ?
+	     (!ifcs_1_1_routeBack$D_OUT[0] || !cpu$mem_master_r_canPut) ?
 	       ifcs_1_1_routeBack$D_OUT[1] && debug_module$master_r_canPut :
 	       ifcs_1_1_routeBack$D_OUT[0] ;
   assign reqWires_1_1_2$wget =
-	     (!ifcs_2_1_routeBack$D_OUT[0] || !cpu$dmem_master_r_canPut) ?
+	     (!ifcs_2_1_routeBack$D_OUT[0] || !cpu$mem_master_r_canPut) ?
 	       ifcs_2_1_routeBack$D_OUT[1] && debug_module$master_r_canPut :
 	       ifcs_2_1_routeBack$D_OUT[0] ;
   assign flitToSink_1_1_0$whas =
@@ -5143,215 +5384,215 @@ module mkCore(CLK,
   assign sourceSelect_1_1_1$whas =
 	     WILL_FIRE_RL_arbitrate_2 &&
 	     IF_SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_5_ETC___d1578 ;
-  assign axi4_dmem_shim_tmp_shimSlave_awff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_awff_rv$port0__write_1 =
 	     { 1'd1, split_0_doPut$wget[171:74] } ;
-  assign axi4_dmem_shim_tmp_shimSlave_awff_rv$port1__read =
-	     MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2 ?
-	       axi4_dmem_shim_tmp_shimSlave_awff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_awff_rv ;
-  assign axi4_dmem_shim_tmp_shimSlave_awff_rv$port2__read =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW ?
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_awff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_awff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_awff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$EN_port0__write =
+  assign axi4_mem_shim_tmp_shimSlave_awff_rv$port1__read =
+	     MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_2 ?
+	       axi4_mem_shim_tmp_shimSlave_awff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_awff_rv ;
+  assign axi4_mem_shim_tmp_shimSlave_awff_rv$port2__read =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_getCacheAW ?
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_awff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimSlave_awff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_awff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$EN_port0__write =
 	     WILL_FIRE_RL_split_0_putOther && split_0_doPut$wget[172] ||
 	     WILL_FIRE_RL_split_0_putFirst && !split_0_doPut$wget[172] ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1 =
-	     MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1 ?
-	       MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 :
-	       MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read =
-	     axi4_dmem_shim_tmp_shimSlave_wff_rv$EN_port0__write ?
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1 =
+	     MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1 ?
+	       MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 :
+	       MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__VAL_1 ;
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read =
+	     axi4_mem_shim_tmp_shimSlave_wff_rv$EN_port0__write ?
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_wff_rv ;
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$port1__write_1 =
 	     { 1'd0,
 	       74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$port2__read =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite ?
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_wff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$EN_port0__write =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse &&
-	     axi4_dmem_shim_tmp_tagCon$cache_response_get[68:67] != 2'd0 ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$port2__read =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite ?
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_wff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$EN_port0__write =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse &&
+	     axi4_mem_shim_tmp_tagCon$cache_response_get[68:67] != 2'd0 ;
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$port0__write_1 =
 	     { 1'd1,
-	       (axi4_dmem_shim_tmp_tagCon$cache_response_get[68:67] == 2'd1) ?
-		 axi4_dmem_shim_tmp_tagCon$cache_response_get[75:71] :
+	       (axi4_mem_shim_tmp_tagCon$cache_response_get[68:67] == 2'd1) ?
+		 axi4_mem_shim_tmp_tagCon$cache_response_get[75:71] :
 		 5'd0,
 	       2'd0 } ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read =
-	     axi4_dmem_shim_tmp_shimSlave_bff_rv$EN_port0__write ?
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$EN_port1__write =
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read =
+	     axi4_mem_shim_tmp_shimSlave_bff_rv$EN_port0__write ?
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_bff_rv ;
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$EN_port1__write =
 	     WILL_FIRE_RL_ifcs_0_followFlits_1 ||
 	     WILL_FIRE_RL_ifcs_0_firstFlit_1 ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$port1__write_1 =
 	     { 1'd0, 7'bxxxxxxx /* unspecified value */  } ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$port2__read =
-	     axi4_dmem_shim_tmp_shimSlave_bff_rv$EN_port1__write ?
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_bff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$port2__read =
+	     axi4_mem_shim_tmp_shimSlave_bff_rv$EN_port1__write ?
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_bff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$port0__write_1 =
 	     { 1'd1, sinks_1_0_putWire_1$wget } ;
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read =
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read =
 	     CAN_FIRE_RL_sinks_1_0_doPut_1 ?
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv ;
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__write_1 =
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_arff_rv ;
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$port1__write_1 =
 	     { 1'd0,
 	       98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$port2__read =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead ?
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_arff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$EN_port0__write =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse &&
-	     axi4_dmem_shim_tmp_tagCon$cache_response_get[68:67] == 2'd0 ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$port2__read =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheRead ?
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_arff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$EN_port0__write =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse &&
+	     axi4_mem_shim_tmp_tagCon$cache_response_get[68:67] == 2'd0 ;
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$port0__write_1 =
 	     { 1'd1,
-	       axi4_dmem_shim_tmp_tagCon$cache_response_get[75:71],
-	       axi4_dmem_shim_tmp_tagCon$cache_response_get[63:0],
+	       axi4_mem_shim_tmp_tagCon$cache_response_get[75:71],
+	       axi4_mem_shim_tmp_tagCon$cache_response_get[63:0],
 	       2'd0,
-	       axi4_dmem_shim_tmp_tagCon$cache_response_get[66],
-	       axi4_dmem_shim_tmp_tagCon$cache_response_get[64] } ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read =
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$EN_port0__write ?
-	       axi4_dmem_shim_tmp_shimSlave_rff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_rff_rv ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$EN_port1__write =
+	       axi4_mem_shim_tmp_tagCon$cache_response_get[66],
+	       axi4_mem_shim_tmp_tagCon$cache_response_get[64] } ;
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read =
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$EN_port0__write ?
+	       axi4_mem_shim_tmp_shimSlave_rff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_rff_rv ;
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$EN_port1__write =
 	     WILL_FIRE_RL_ifcs_0_1_followFlits_1 ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit_1 ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$port2__read =
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$EN_port1__write ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimSlave_rff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$EN_port0__write =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest &&
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd1 &&
-	     !axi4_dmem_shim_tmp_doneSendingAW ;
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$port2__read =
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$EN_port1__write ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimSlave_rff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$EN_port0__write =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest &&
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd1 &&
+	     !axi4_mem_shim_tmp_doneSendingAW ;
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$port0__write_1 =
 	     { 1'd1,
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[100:95],
-	       aw_awaddr__h10218,
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[7:0],
-	       aw_awsize_val__h11957,
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[100:95],
+	       aw_awaddr__h10309,
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[7:0],
+	       aw_awsize_val__h12048,
 	       3'd2,
-	       x__h13623,
+	       x__h13714,
 	       11'd0 } ;
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$EN_port0__write ?
-	       axi4_dmem_shim_tmp_shimMaster_awff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_awff_rv ;
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$port2__read =
-	     EN_cpu_dmem_master_aw_drop ?
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_awff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_awff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$EN_port0__write =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest &&
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd1 ;
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$EN_port0__write ?
+	       axi4_mem_shim_tmp_shimMaster_awff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_awff_rv ;
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$port2__read =
+	     EN_core_mem_master_aw_drop ?
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_awff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_awff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$EN_port0__write =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest &&
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd1 ;
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$port0__write_1 =
 	     { 1'd1,
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[71:8],
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[88:81],
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[91] } ;
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$EN_port0__write ?
-	       axi4_dmem_shim_tmp_shimMaster_wff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_wff_rv ;
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$port2__read =
-	     EN_cpu_dmem_master_w_drop ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_wff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_wff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$port0__write_1 =
-	     { 1'd1, cpu_dmem_master_b_put_val } ;
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__read =
-	     EN_cpu_dmem_master_b_put ?
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv ;
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__write_1 =
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[71:8],
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[88:81],
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[91] } ;
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$EN_port0__write ?
+	       axi4_mem_shim_tmp_shimMaster_wff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_wff_rv ;
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$port2__read =
+	     EN_core_mem_master_w_drop ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_wff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_wff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$port0__write_1 =
+	     { 1'd1, core_mem_master_b_put_val } ;
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$port1__read =
+	     EN_core_mem_master_b_put ?
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_bff_rv ;
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$port2__read =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite ?
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port2__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$port2__write_1 =
 	     { 1'd0, 8'bxxxxxxxx /* unspecified value */  } ;
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$port2__read =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite ?
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_bff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$EN_port0__write =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest &&
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] != 2'd1 ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$port0__write_1 =
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port2__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_bff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$EN_port0__write =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest &&
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] != 2'd1 ;
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$port0__write_1 =
 	     { 1'd1,
-	       v_arid__h14966,
-	       v_araddr__h14967,
-	       v_arlen__h14968,
-	       v_arsize_val__h15013,
+	       v_arid__h15057,
+	       v_araddr__h15058,
+	       v_arlen__h15059,
+	       v_arsize_val__h15104,
 	       3'd2,
-	       x__h15031,
+	       x__h15122,
 	       11'd0 } ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$EN_port0__write ?
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__write_1 =
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$EN_port0__write ?
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_arff_rv ;
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$port1__write_1 =
 	     { 1'd0,
 	       99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$port2__read =
-	     EN_cpu_dmem_master_ar_drop ?
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_arff_rv$port2__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$port0__write_1 =
-	     { 1'd1, cpu_dmem_master_r_put_val } ;
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read =
-	     EN_cpu_dmem_master_r_put ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port0__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv ;
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 =
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$port2__read =
+	     EN_core_mem_master_ar_drop ?
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_arff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$port0__write_1 =
+	     { 1'd1, core_mem_master_r_put_val } ;
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read =
+	     EN_core_mem_master_r_put ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port0__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_rff_rv ;
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 =
 	     { 1'd0,
 	       73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$port2__read =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$port3__read =
-	     (!axi4_dmem_shim_tmp_reset_done) ?
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
-	       axi4_dmem_shim_tmp_shimMaster_rff_rv$port2__read ;
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$port2__read =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__read ;
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$port3__read =
+	     (!axi4_mem_shim_tmp_reset_done) ?
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port1__write_1 :
+	       axi4_mem_shim_tmp_shimMaster_rff_rv$port2__read ;
   assign ifcs_0_noRoute_inner_currentReq$EN_port0__write =
 	     WILL_FIRE_RL_ifcs_0_nonRoutableFlit &&
 	     CAN_FIRE_RL_merged_0_passFlit &&
@@ -5390,28 +5631,26 @@ module mkCore(CLK,
 	     ifcs_1_noRoute_inner_pendingReq$port1__read ;
   assign ifcs_0_1_noRoute_currentReq$port1__read =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ?
-	       cpu$dmem_master_ar_peek :
+	       cpu$mem_master_ar_peek :
 	       ifcs_0_1_noRoute_currentReq ;
   assign ifcs_0_1_noRoute_flitCount$port0__write_1 =
-	     { 1'd0, cpu$dmem_master_ar_peek[28:21] } + 9'd1 ;
-  assign ifcs_0_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h64181 - 9'd1 ;
+	     { 1'd0, cpu$mem_master_ar_peek[28:21] } + 9'd1 ;
+  assign ifcs_0_1_noRoute_flitCount$port1__write_1 = x__h64381 - 9'd1 ;
   assign ifcs_0_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ?
 	       ifcs_0_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h64181 ;
+	       x__h64381 ;
   assign ifcs_1_1_noRoute_currentReq$port1__read =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ?
 	       debug_module$master_ar_peek :
 	       ifcs_1_1_noRoute_currentReq ;
   assign ifcs_1_1_noRoute_flitCount$port0__write_1 =
 	     { 1'd0, debug_module$master_ar_peek[28:21] } + 9'd1 ;
-  assign ifcs_1_1_noRoute_flitCount$port1__write_1 =
-	     x_port1__read__h66726 - 9'd1 ;
+  assign ifcs_1_1_noRoute_flitCount$port1__write_1 = x__h66954 - 9'd1 ;
   assign ifcs_1_1_noRoute_flitCount$port2__read =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ?
 	       ifcs_1_1_noRoute_flitCount$port1__write_1 :
-	       x_port1__read__h66726 ;
+	       x__h66954 ;
 
   // register activeSource_0
   assign activeSource_0$D_IN =
@@ -5501,17 +5740,17 @@ module mkCore(CLK,
 
   // register activeSource_1_1_2
   always@(MUX_activeSource_1_1_0$write_1__SEL_1 or
-	  MUX_activeSource_1_1_2$write_1__VAL_2 or
+	  MUX_activeSource_1_1_2$write_1__VAL_1 or
 	  MUX_activeSource_1_1_0$write_1__SEL_2 or
 	  MUX_activeSource_1_1_0$write_1__SEL_3)
   begin
     case (1'b1) // synopsys parallel_case
       MUX_activeSource_1_1_0$write_1__SEL_1:
-	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_2;
+	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_2:
-	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_2;
+	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       MUX_activeSource_1_1_0$write_1__SEL_3:
-	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_2;
+	  activeSource_1_1_2$D_IN = MUX_activeSource_1_1_2$write_1__VAL_1;
       default: activeSource_1_1_2$D_IN = 1'bx /* unspecified value */ ;
     endcase
   end
@@ -5577,75 +5816,75 @@ module mkCore(CLK,
 	     IF_SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND__ETC___d900 ;
   assign arbiter_lastSelect$EN = CAN_FIRE_RL_arbitrate ;
 
-  // register axi4_dmem_shim_tmp_addrOffset
-  assign axi4_dmem_shim_tmp_addrOffset$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[1] ?
+  // register axi4_mem_shim_tmp_addrOffset
+  assign axi4_mem_shim_tmp_addrOffset$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[1] ?
 	       64'd0 :
-	       x__h7627 ;
-  assign axi4_dmem_shim_tmp_addrOffset$EN =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite ;
+	       x__h7718 ;
+  assign axi4_mem_shim_tmp_addrOffset$EN =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite ;
 
-  // register axi4_dmem_shim_tmp_doneSendingAW
-  assign axi4_dmem_shim_tmp_doneSendingAW$D_IN =
-	     !axi4_dmem_shim_tmp_tagCon$memory_request_get[91] ;
-  assign axi4_dmem_shim_tmp_doneSendingAW$EN =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest &&
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd1 ;
+  // register axi4_mem_shim_tmp_doneSendingAW
+  assign axi4_mem_shim_tmp_doneSendingAW$D_IN =
+	     !axi4_mem_shim_tmp_tagCon$memory_request_get[91] ;
+  assign axi4_mem_shim_tmp_doneSendingAW$EN =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest &&
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd1 ;
 
-  // register axi4_dmem_shim_tmp_reset_done
-  assign axi4_dmem_shim_tmp_reset_done$D_IN = 1'd1 ;
-  assign axi4_dmem_shim_tmp_reset_done$EN =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_propagateReset ;
+  // register axi4_mem_shim_tmp_reset_done
+  assign axi4_mem_shim_tmp_reset_done$D_IN = 1'd1 ;
+  assign axi4_mem_shim_tmp_reset_done$EN =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_propagateReset ;
 
-  // register axi4_dmem_shim_tmp_shimMaster_arff_rv
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimMaster_arff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_arff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimMaster_arff_rv
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimMaster_arff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimMaster_arff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimMaster_awff_rv
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimMaster_awff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_awff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimMaster_awff_rv
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimMaster_awff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimMaster_awff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimMaster_bff_rv
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimMaster_bff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_bff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimMaster_bff_rv
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimMaster_bff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimMaster_bff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimMaster_rff_rv
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimMaster_rff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_rff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimMaster_rff_rv
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimMaster_rff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimMaster_rff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimMaster_wff_rv
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimMaster_wff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimMaster_wff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimMaster_wff_rv
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimMaster_wff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimMaster_wff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimSlave_arff_rv
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_arff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_arff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimSlave_arff_rv
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_arff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimSlave_arff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimSlave_awff_rv
-  assign axi4_dmem_shim_tmp_shimSlave_awff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_awff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_awff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimSlave_awff_rv
+  assign axi4_mem_shim_tmp_shimSlave_awff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_awff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimSlave_awff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimSlave_bff_rv
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_bff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_bff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimSlave_bff_rv
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_bff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimSlave_bff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimSlave_rff_rv
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_rff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimSlave_rff_rv
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimSlave_rff_rv$EN = 1'b1 ;
 
-  // register axi4_dmem_shim_tmp_shimSlave_wff_rv
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_wff_rv$port3__read ;
-  assign axi4_dmem_shim_tmp_shimSlave_wff_rv$EN = 1'b1 ;
+  // register axi4_mem_shim_tmp_shimSlave_wff_rv
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_wff_rv$port3__read ;
+  assign axi4_mem_shim_tmp_shimSlave_wff_rv$EN = 1'b1 ;
 
   // register ifcs_0_1_noRoute_currentReq
   assign ifcs_0_1_noRoute_currentReq$D_IN =
@@ -5667,9 +5906,9 @@ module mkCore(CLK,
   assign ifcs_0_1_state_1$D_IN = !MUX_ifcs_0_1_state_1$write_1__SEL_1 ;
   assign ifcs_0_1_state_1$EN =
 	     WILL_FIRE_RL_ifcs_0_1_followFlits_1 &&
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[1] ||
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[1] ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit_1 &&
-	     !axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[1] ;
+	     !axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[1] ;
 
   // register ifcs_0_noRoute_inner_currentReq
   assign ifcs_0_noRoute_inner_currentReq$D_IN =
@@ -5793,7 +6032,7 @@ module mkCore(CLK,
 
   // register split_0_flitLeft
   assign split_0_flitLeft$D_IN =
-	     MUX_axi4_dmem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1 ?
+	     MUX_axi4_mem_shim_tmp_shimSlave_wff_rv$port0__write_1__SEL_1 ?
 	       MUX_split_0_flitLeft$write_1__VAL_1 :
 	       split_0_doPut$wget[102:95] ;
   assign split_0_flitLeft$EN =
@@ -5854,43 +6093,44 @@ module mkCore(CLK,
 	     WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
 	     !ifcs_2_1_rspBack$D_OUT[1] ;
 
-  // submodule axi4_dmem_shim_tmp_awreqff
-  assign axi4_dmem_shim_tmp_awreqff$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_awff_rv$port1__read[97:0] ;
-  assign axi4_dmem_shim_tmp_awreqff$ENQ =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_getCacheAW ;
-  assign axi4_dmem_shim_tmp_awreqff$DEQ =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite &&
-	     axi4_dmem_shim_tmp_shimSlave_wff_rv$port1__read[1] ;
-  assign axi4_dmem_shim_tmp_awreqff$CLR = 1'b0 ;
+  // submodule axi4_mem_shim_tmp_awreqff
+  assign axi4_mem_shim_tmp_awreqff$D_IN =
+	     axi4_mem_shim_tmp_shimSlave_awff_rv$port1__read[97:0] ;
+  assign axi4_mem_shim_tmp_awreqff$ENQ =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_getCacheAW ;
+  assign axi4_mem_shim_tmp_awreqff$DEQ =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite &&
+	     axi4_mem_shim_tmp_shimSlave_wff_rv$port1__read[1] ;
+  assign axi4_mem_shim_tmp_awreqff$CLR = 1'b0 ;
 
-  // submodule axi4_dmem_shim_tmp_newRst
-  assign axi4_dmem_shim_tmp_newRst$ASSERT_IN =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_propagateReset ;
+  // submodule axi4_mem_shim_tmp_newRst
+  assign axi4_mem_shim_tmp_newRst$ASSERT_IN =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_propagateReset ;
 
-  // submodule axi4_dmem_shim_tmp_tagCon
-  assign axi4_dmem_shim_tmp_tagCon$cache_request_put_val =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite ?
-	       MUX_axi4_dmem_shim_tmp_tagCon$cache_request_put_1__VAL_1 :
-	       MUX_axi4_dmem_shim_tmp_tagCon$cache_request_put_1__VAL_2 ;
-  assign axi4_dmem_shim_tmp_tagCon$memory_response_put_val =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite ?
-	       MUX_axi4_dmem_shim_tmp_tagCon$memory_response_put_1__VAL_1 :
-	       MUX_axi4_dmem_shim_tmp_tagCon$memory_response_put_1__VAL_2 ;
-  assign axi4_dmem_shim_tmp_tagCon$EN_cache_request_put =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheWrite ||
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passCacheRead ;
-  assign axi4_dmem_shim_tmp_tagCon$EN_cache_response_get =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passCacheResponse ;
-  assign axi4_dmem_shim_tmp_tagCon$EN_memory_request_get =
-	     CAN_FIRE_RL_axi4_dmem_shim_tmp_passMemoryRequest ;
-  assign axi4_dmem_shim_tmp_tagCon$EN_memory_response_put =
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseWrite ||
-	     WILL_FIRE_RL_axi4_dmem_shim_tmp_passMemoryResponseRead ;
+  // submodule axi4_mem_shim_tmp_tagCon
+  assign axi4_mem_shim_tmp_tagCon$cache_request_put_val =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite ?
+	       MUX_axi4_mem_shim_tmp_tagCon$cache_request_put_1__VAL_1 :
+	       MUX_axi4_mem_shim_tmp_tagCon$cache_request_put_1__VAL_2 ;
+  assign axi4_mem_shim_tmp_tagCon$memory_response_put_val =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite ?
+	       MUX_axi4_mem_shim_tmp_tagCon$memory_response_put_1__VAL_1 :
+	       MUX_axi4_mem_shim_tmp_tagCon$memory_response_put_1__VAL_2 ;
+  assign axi4_mem_shim_tmp_tagCon$EN_cache_request_put =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheWrite ||
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passCacheRead ;
+  assign axi4_mem_shim_tmp_tagCon$EN_cache_response_get =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passCacheResponse ;
+  assign axi4_mem_shim_tmp_tagCon$EN_memory_request_get =
+	     CAN_FIRE_RL_axi4_mem_shim_tmp_passMemoryRequest ;
+  assign axi4_mem_shim_tmp_tagCon$EN_memory_response_put =
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseWrite ||
+	     WILL_FIRE_RL_axi4_mem_shim_tmp_passMemoryResponseRead ;
 
   // submodule cpu
-  assign cpu$dmem_master_b_put_val = ifcs_0_snk_putWire$wget ;
-  assign cpu$dmem_master_r_put_val = ifcs_0_1_snk_putWire$wget ;
+  assign cpu$dma_server_ar_put_val = dma_server_ar_put_val ;
+  assign cpu$dma_server_aw_put_val = dma_server_aw_put_val ;
+  assign cpu$dma_server_w_put_val = dma_server_w_put_val ;
   assign cpu$hart0_csr_mem_server_request_put =
 	     debug_module$hart0_csr_mem_client_request_get ;
   assign cpu$hart0_fpr_mem_server_request_put =
@@ -5907,6 +6147,8 @@ module mkCore(CLK,
   assign cpu$imem_master_b_put_val = delay_shim_bff$D_OUT ;
   assign cpu$imem_master_r_put_val = delay_shim_rff$D_OUT ;
   assign cpu$m_external_interrupt_req_set_not_clear = plic$v_targets_0_m_eip ;
+  assign cpu$mem_master_b_put_val = ifcs_0_snk_putWire$wget ;
+  assign cpu$mem_master_r_put_val = ifcs_0_1_snk_putWire$wget ;
   assign cpu$nmi_req_set_not_clear = nmi_req_set_not_clear ;
   assign cpu$s_external_interrupt_req_set_not_clear = plic$v_targets_1_m_eip ;
   assign cpu$set_verbosity_logdelay = set_verbosity_logdelay ;
@@ -5925,17 +6167,20 @@ module mkCore(CLK,
   assign cpu$EN_imem_master_b_put = CAN_FIRE_RL_ug_snk_2_doPut ;
   assign cpu$EN_imem_master_ar_drop = CAN_FIRE_RL_ug_src_3_doDrop ;
   assign cpu$EN_imem_master_r_put = CAN_FIRE_RL_ug_snk_4_doPut ;
-  assign cpu$EN_dmem_master_aw_drop = CAN_FIRE_RL_merged_0_awFlit ;
-  assign cpu$EN_dmem_master_w_drop = CAN_FIRE_RL_merged_0_wFlit ;
-  assign cpu$EN_dmem_master_b_put = CAN_FIRE_RL_ifcs_0_snk_doPut ;
-  assign cpu$EN_dmem_master_ar_drop =
-	     WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp &&
-	     x_port1__read__h64181 == 9'd1 ||
+  assign cpu$EN_mem_master_aw_drop = CAN_FIRE_RL_merged_0_awFlit ;
+  assign cpu$EN_mem_master_w_drop = CAN_FIRE_RL_merged_0_wFlit ;
+  assign cpu$EN_mem_master_b_put = CAN_FIRE_RL_ifcs_0_snk_doPut ;
+  assign cpu$EN_mem_master_ar_drop =
+	     WILL_FIRE_RL_ifcs_0_1_nonRoutableGenRsp && x__h64381 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_0_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit ;
-  assign cpu$EN_dmem_master_r_put = CAN_FIRE_RL_ifcs_0_1_snk_doPut ;
-  assign cpu$EN_set_verbosity = EN_set_verbosity ;
+  assign cpu$EN_mem_master_r_put = CAN_FIRE_RL_ifcs_0_1_snk_doPut ;
+  assign cpu$EN_dma_server_aw_put = EN_dma_server_aw_put ;
+  assign cpu$EN_dma_server_w_put = EN_dma_server_w_put ;
+  assign cpu$EN_dma_server_b_drop = EN_dma_server_b_drop ;
+  assign cpu$EN_dma_server_ar_put = EN_dma_server_ar_put ;
+  assign cpu$EN_dma_server_r_drop = EN_dma_server_r_drop ;
   assign cpu$EN_hart0_server_run_halt_request_put =
 	     CAN_FIRE_RL_ClientServerRequest ;
   assign cpu$EN_hart0_server_run_halt_response_get =
@@ -5954,6 +6199,8 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_ClientServerRequest_3 ;
   assign cpu$EN_hart0_csr_mem_server_response_get =
 	     CAN_FIRE_RL_ClientServerResponse_3 ;
+  assign cpu$EN_set_verbosity = EN_set_verbosity ;
+  assign cpu$EN_ma_ddr4_ready = EN_ma_ddr4_ready ;
 
   // submodule debug_module
   assign debug_module$dmi_read_addr_dm_addr = dm_dmi_read_addr_dm_addr ;
@@ -6007,8 +6254,7 @@ module mkCore(CLK,
   assign debug_module$EN_master_w_drop = CAN_FIRE_RL_merged_1_wFlit ;
   assign debug_module$EN_master_b_put = CAN_FIRE_RL_ifcs_1_snk_doPut ;
   assign debug_module$EN_master_ar_drop =
-	     WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp &&
-	     x_port1__read__h66726 == 9'd1 ||
+	     WILL_FIRE_RL_ifcs_1_1_nonRoutableGenRsp && x__h66954 == 9'd1 ||
 	     WILL_FIRE_RL_ifcs_1_1_drainFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_1_1_firstFlit ;
@@ -6070,7 +6316,7 @@ module mkCore(CLK,
   assign f_reset_rsps$CLR = 1'b0 ;
 
   // submodule ifcs_0_1_innerReq
-  assign ifcs_0_1_innerReq$D_IN = { 1'd0, cpu$dmem_master_ar_peek } ;
+  assign ifcs_0_1_innerReq$D_IN = { 1'd0, cpu$mem_master_ar_peek } ;
   assign ifcs_0_1_innerReq$ENQ =
 	     WILL_FIRE_RL_ifcs_0_1_followFlits ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit ;
@@ -6081,11 +6327,11 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_innerRoute
   assign ifcs_0_1_innerRoute$D_IN =
-	     { cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1276,
-	       cpu$dmem_master_ar_peek[92:69] == 24'd0 &&
-	       !cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1255 &&
-	       cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1257,
-	       cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1266 } ;
+	     { cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1276,
+	       cpu$mem_master_ar_peek[92:69] == 24'd0 &&
+	       !cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1255 &&
+	       cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1257,
+	       cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1266 } ;
   assign ifcs_0_1_innerRoute$ENQ = CAN_FIRE_RL_ifcs_0_1_firstFlit ;
   assign ifcs_0_1_innerRoute$DEQ =
 	     WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N ||
@@ -6097,7 +6343,7 @@ module mkCore(CLK,
 	     { ifcs_0_1_noRoute_currentReq$port1__read[96:93],
 	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       2'd3,
-	       x_port1__read__h64181 == 9'd1,
+	       x__h64381 == 9'd1,
 	       1'bx /* unspecified value */  } ;
   assign ifcs_0_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_0_1_nonRoutableGenRsp ;
   assign ifcs_0_1_noRouteRsp$DEQ =
@@ -6106,7 +6352,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_routeBack
   assign ifcs_0_1_routeBack$D_IN =
-	     2'd1 << axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[72] ;
+	     2'd1 << axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[72] ;
   assign ifcs_0_1_routeBack$ENQ = CAN_FIRE_RL_ifcs_0_1_firstFlit_1 ;
   assign ifcs_0_1_routeBack$DEQ =
 	     WILL_FIRE_RL_burst_7 && ifcs_0_1_rspBack$D_OUT[1] ||
@@ -6116,7 +6362,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_1_rspBack
   assign ifcs_0_1_rspBack$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_rff_rv$port1__read[71:0] ;
+	     axi4_mem_shim_tmp_shimSlave_rff_rv$port1__read[71:0] ;
   assign ifcs_0_1_rspBack$ENQ =
 	     WILL_FIRE_RL_ifcs_0_1_followFlits_1 ||
 	     WILL_FIRE_RL_ifcs_0_1_firstFlit_1 ;
@@ -6160,7 +6406,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_routeBack
   assign ifcs_0_routeBack$D_IN =
-	     2'd1 << axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read[6] ;
+	     2'd1 << axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read[6] ;
   assign ifcs_0_routeBack$ENQ = CAN_FIRE_RL_ifcs_0_firstFlit_1 ;
   assign ifcs_0_routeBack$DEQ =
 	     WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N ||
@@ -6169,7 +6415,7 @@ module mkCore(CLK,
 
   // submodule ifcs_0_rspBack
   assign ifcs_0_rspBack$D_IN =
-	     axi4_dmem_shim_tmp_shimSlave_bff_rv$port1__read[5:0] ;
+	     axi4_mem_shim_tmp_shimSlave_bff_rv$port1__read[5:0] ;
   assign ifcs_0_rspBack$ENQ =
 	     WILL_FIRE_RL_ifcs_0_followFlits_1 ||
 	     WILL_FIRE_RL_ifcs_0_firstFlit_1 ;
@@ -6206,7 +6452,7 @@ module mkCore(CLK,
 	     { ifcs_1_1_noRoute_currentReq$port1__read[96:93],
 	       64'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */ ,
 	       2'd3,
-	       x_port1__read__h66726 == 9'd1,
+	       x__h66954 == 9'd1,
 	       1'bx /* unspecified value */  } ;
   assign ifcs_1_1_noRouteRsp$ENQ = CAN_FIRE_RL_ifcs_1_1_nonRoutableGenRsp ;
   assign ifcs_1_1_noRouteRsp$DEQ =
@@ -6322,13 +6568,13 @@ module mkCore(CLK,
   assign ifcs_2_rspBack$CLR = 1'b0 ;
 
   // submodule merged_0_awff
-  assign merged_0_awff$D_IN = cpu$dmem_master_aw_peek ;
+  assign merged_0_awff$D_IN = cpu$mem_master_aw_peek ;
   assign merged_0_awff$ENQ = CAN_FIRE_RL_merged_0_awFlit ;
   assign merged_0_awff$DEQ = CAN_FIRE_RL_merged_0_genFirst ;
   assign merged_0_awff$CLR = 1'b0 ;
 
   // submodule merged_0_wff
-  assign merged_0_wff$D_IN = cpu$dmem_master_w_peek ;
+  assign merged_0_wff$D_IN = cpu$mem_master_w_peek ;
   assign merged_0_wff$ENQ = CAN_FIRE_RL_merged_0_wFlit ;
   assign merged_0_wff$DEQ =
 	     WILL_FIRE_RL_merged_0_genOther ||
@@ -6499,68 +6745,68 @@ module mkCore(CLK,
 	     (SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_736__ETC___d1747 ||
 	      SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 ||
 	      SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759) ?
-	       x__h87683 | y__h87684 :
+	       x__h87872 | y__h87873 :
 	       arbiter_1_1_lastSelect ;
   assign IF_SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_7_ETC___d1784 =
 	     (SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_736__ETC___d1747 ||
 	      SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 ||
 	      SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759) ?
-	       x__h87871 | y__h87872 :
+	       x__h88060 | y__h88061 :
 	       arbiter_1_1_lastSelect_1 ;
   assign IF_SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_7_ETC___d1790 =
 	     (SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_736__ETC___d1747 ||
 	      SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 ||
 	      SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759) ?
-	       x__h88052 | y__h88053 :
+	       x__h88241 | y__h88242 :
 	       arbiter_1_1_firstHot ;
   assign IF_SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_ETC___d1114 =
 	     (SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_AN_ETC___d1083 ||
 	      SEXT_arbiter_1_lastSelect_1_074_075_BIT_0_076__ETC___d1089 ||
 	      SEXT_arbiter_1_firstHot_079_080_BIT_0_081_AND__ETC___d1095) ?
-	       x__h54556 | y__h54557 :
+	       x__h54691 | y__h54692 :
 	       arbiter_1_lastSelect ;
   assign IF_SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_ETC___d1120 =
 	     (SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_AN_ETC___d1083 ||
 	      SEXT_arbiter_1_lastSelect_1_074_075_BIT_0_076__ETC___d1089 ||
 	      SEXT_arbiter_1_firstHot_079_080_BIT_0_081_AND__ETC___d1095) ?
-	       x__h54744 | y__h54745 :
+	       x__h54879 | y__h54880 :
 	       arbiter_1_lastSelect_1 ;
   assign IF_SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_ETC___d1126 =
 	     (SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_AN_ETC___d1083 ||
 	      SEXT_arbiter_1_lastSelect_1_074_075_BIT_0_076__ETC___d1089 ||
 	      SEXT_arbiter_1_firstHot_079_080_BIT_0_081_AND__ETC___d1095) ?
-	       x__h54925 | y__h54926 :
+	       x__h55060 | y__h55061 :
 	       arbiter_1_firstHot ;
   assign IF_SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_5_ETC___d1574 =
 	     (SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_552__ETC___d1558 ||
 	      SEXT_arbiter_1_firstHot_1_554_555_BIT_0_556_AN_ETC___d1562) ?
-	       x__h75234 | y__h75235 :
+	       x__h75423 | y__h75424 :
 	       arbiter_1_lastSelect_2 ;
   assign IF_SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_5_ETC___d1578 =
 	     (SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_552__ETC___d1558 ||
 	      SEXT_arbiter_1_firstHot_1_554_555_BIT_0_556_AN_ETC___d1562) ?
-	       x__h75375 | y__h75376 :
+	       x__h75564 | y__h75565 :
 	       arbiter_1_firstHot_1 ;
   assign IF_SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND__ETC___d900 =
 	     (SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND_req_ETC___d884 ||
 	      SEXT_arbiter_firstHot_80_81_BIT_0_82_AND_reqWi_ETC___d888) ?
-	       x__h39608 | y__h39609 :
+	       x__h39743 | y__h39744 :
 	       arbiter_lastSelect ;
   assign IF_SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND__ETC___d904 =
 	     (SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND_req_ETC___d884 ||
 	      SEXT_arbiter_firstHot_80_81_BIT_0_82_AND_reqWi_ETC___d888) ?
-	       x__h39749 | y__h39750 :
+	       x__h39884 | y__h39885 :
 	       arbiter_firstHot ;
-  assign IF_cpu_dmem_master_ar_peek__251_BITS_92_TO_69__ETC___d1278 =
-	     (cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1266 ?
+  assign IF_cpu_mem_master_ar_peek__251_BITS_92_TO_69_2_ETC___d1278 =
+	     (cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1266 ?
 		2'd1 :
 		2'd0) +
-	     ((cpu$dmem_master_ar_peek[92:69] == 24'd0 &&
-	       !cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1255 &&
-	       cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1257) ?
+	     ((cpu$mem_master_ar_peek[92:69] == 24'd0 &&
+	       !cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1255 &&
+	       cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1257) ?
 		2'd1 :
 		2'd0) +
-	     (cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1276 ?
+	     (cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1276 ?
 		2'd1 :
 		2'd0) ;
   assign IF_debug_module_master_ar_peek__340_BITS_92_TO_ETC___d1367 =
@@ -6583,12 +6829,12 @@ module mkCore(CLK,
 	     merged_0_outflit$wget[166:103] <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
   assign IF_merged_0_outflit_whas__49_AND_NOT_merged_0__ETC___d566 =
-	     x__h25419 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h25509 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign IF_merged_0_outflit_whas__49_AND_NOT_merged_0__ETC___d569 =
 	     merged_0_outflit$wget[166:103] <
 	     soc_map$m_plic_addr_range[127:64] ;
   assign IF_merged_0_outflit_whas__49_AND_NOT_merged_0__ETC___d571 =
-	     x__h25444 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h25534 < soc_map$m_plic_addr_range[63:0] ;
   assign IF_merged_0_outflit_whas__49_AND_NOT_merged_0__ETC___d575 =
 	     merged_0_outflitwget_BITS_166_TO_103__q1[63:40] == 24'd0 &&
 	     (IF_merged_0_outflit_whas__49_AND_NOT_merged_0__ETC___d564 ||
@@ -6624,12 +6870,12 @@ module mkCore(CLK,
 	     merged_1_outflit$wget[166:103] <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
   assign IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d666 =
-	     x__h28997 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h29110 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d669 =
 	     merged_1_outflit$wget[166:103] <
 	     soc_map$m_plic_addr_range[127:64] ;
   assign IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d671 =
-	     x__h29022 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h29135 < soc_map$m_plic_addr_range[63:0] ;
   assign IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d675 =
 	     merged_1_outflitwget_BITS_166_TO_103__q2[63:40] == 24'd0 &&
 	     (IF_merged_1_outflit_whas__49_AND_NOT_merged_1__ETC___d664 ||
@@ -6657,11 +6903,11 @@ module mkCore(CLK,
 	     CAN_FIRE_RL_merged_1_passFlit ?
 	       merged_1_outflit$wget[1] :
 	       merged_1_wff$D_OUT[1] ;
-  assign IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794 =
+  assign IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794 =
 	     (split_0_flitLeft == 8'd0) ?
-	       !axi4_dmem_shim_tmp_shimSlave_awff_rv[98] &&
-	       !axi4_dmem_shim_tmp_shimSlave_wff_rv[74] :
-	       !axi4_dmem_shim_tmp_shimSlave_wff_rv[74] ;
+	       !axi4_mem_shim_tmp_shimSlave_awff_rv[98] &&
+	       !axi4_mem_shim_tmp_shimSlave_wff_rv[74] :
+	       !axi4_mem_shim_tmp_shimSlave_wff_rv[74] ;
   assign IF_split_1_flitLeft_86_EQ_0_87_THEN_near_mem_i_ETC___d806 =
 	     (split_1_flitLeft == 8'd0) ?
 	       near_mem_io$axi4_slave_aw_canPut &&
@@ -6680,90 +6926,90 @@ module mkCore(CLK,
   assign SEXT_SEXT_arbiter_firstHot_80_81_BIT_0_82_AND__ETC__q5 =
 	     {2{SEXT_arbiter_firstHot_80_81_BIT_0_82_AND_reqWi_ETC___d888}} ;
   assign SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759 =
-	     x__h87211 | y__h87212 ;
+	     x__h87400 | y__h87401 ;
   assign SEXT_arbiter_1_1_firstHot__q17 = {2{arbiter_1_1_firstHot}} ;
   assign SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 =
-	     x__h87075 | y__h87076 ;
+	     x__h87264 | y__h87265 ;
   assign SEXT_arbiter_1_1_lastSelect_1__q19 = {2{arbiter_1_1_lastSelect_1}} ;
   assign SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_736__ETC___d1747 =
-	     x__h86924 | y__h86925 ;
+	     x__h87113 | y__h87114 ;
   assign SEXT_arbiter_1_1_lastSelect__q18 = {2{arbiter_1_1_lastSelect}} ;
   assign SEXT_arbiter_1_firstHot_079_080_BIT_0_081_AND__ETC___d1095 =
-	     x__h54084 | y__h54085 ;
+	     x__h54219 | y__h54220 ;
   assign SEXT_arbiter_1_firstHot_1_554_555_BIT_0_556_AN_ETC___d1562 =
-	     x__h74869 | y__h74870 ;
+	     x__h75058 | y__h75059 ;
   assign SEXT_arbiter_1_firstHot_1__q13 = {2{arbiter_1_firstHot_1}} ;
   assign SEXT_arbiter_1_firstHot__q7 = {2{arbiter_1_firstHot}} ;
   assign SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_AN_ETC___d1083 =
-	     x__h53797 | y__h53798 ;
+	     x__h53932 | y__h53933 ;
   assign SEXT_arbiter_1_lastSelect_1_074_075_BIT_0_076__ETC___d1089 =
-	     x__h53948 | y__h53949 ;
+	     x__h54083 | y__h54084 ;
   assign SEXT_arbiter_1_lastSelect_1__q9 = {2{arbiter_1_lastSelect_1}} ;
   assign SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_552__ETC___d1558 =
-	     x__h74766 | y__h74767 ;
+	     x__h74955 | y__h74956 ;
   assign SEXT_arbiter_1_lastSelect_2__q14 = {2{arbiter_1_lastSelect_2}} ;
   assign SEXT_arbiter_1_lastSelect__q8 = {2{arbiter_1_lastSelect}} ;
   assign SEXT_arbiter_firstHot_80_81_BIT_0_82_AND_reqWi_ETC___d888 =
-	     x__h39243 | y__h39244 ;
+	     x__h39378 | y__h39379 ;
   assign SEXT_arbiter_firstHot__q3 = {2{arbiter_firstHot}} ;
   assign SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND_req_ETC___d884 =
-	     x__h39140 | y__h39141 ;
+	     x__h39275 | y__h39276 ;
   assign SEXT_arbiter_lastSelect__q4 = {2{arbiter_lastSelect}} ;
-  assign SEXT_x4618__q11 = {2{x__h54618}} ;
-  assign SEXT_x4652__q12 = {2{x__h54652}} ;
-  assign SEXT_x5293__q16 = {2{x__h75293}} ;
-  assign SEXT_x7745__q21 = {2{x__h87745}} ;
-  assign SEXT_x7779__q22 = {2{x__h87779}} ;
-  assign SEXT_x9667__q6 = {2{x__h39667}} ;
-  assign _0_CONCAT_axi4_dmem_shim_tmp_tagCon_memory_requ_ETC___d233 =
-	     x__h12027 + y__h12028 ;
-  assign arcache__h14955 =
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
-  assign arlen__h14951 =
-	     { 5'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[5:3] } ;
-  assign aw_awaddr__h10218 = tmp__h10001 + { 60'd0, x__h10293 } ;
-  assign aw_awsize_val__h11957 =
-	     _0_CONCAT_axi4_dmem_shim_tmp_tagCon_memory_requ_ETC___d233[0] ?
+  assign SEXT_x4753__q11 = {2{x__h54753}} ;
+  assign SEXT_x4787__q12 = {2{x__h54787}} ;
+  assign SEXT_x5482__q16 = {2{x__h75482}} ;
+  assign SEXT_x7934__q21 = {2{x__h87934}} ;
+  assign SEXT_x7968__q22 = {2{x__h87968}} ;
+  assign SEXT_x9802__q6 = {2{x__h39802}} ;
+  assign _0_CONCAT_axi4_mem_shim_tmp_tagCon_memory_reque_ETC___d233 =
+	     x__h12118 + y__h12119 ;
+  assign arcache__h15046 =
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[8] ? 4'd0 : 4'd15 ;
+  assign arlen__h15042 =
+	     { 5'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[5:3] } ;
+  assign aw_awaddr__h10309 = tmp__h10092 + { 60'd0, x__h10384 } ;
+  assign aw_awsize_val__h12048 =
+	     _0_CONCAT_axi4_mem_shim_tmp_tagCon_memory_reque_ETC___d233[0] ?
 	       3'd0 :
-	       (_0_CONCAT_axi4_dmem_shim_tmp_tagCon_memory_requ_ETC___d233[1] ?
+	       (_0_CONCAT_axi4_mem_shim_tmp_tagCon_memory_reque_ETC___d233[1] ?
 		  3'd1 :
-		  (_0_CONCAT_axi4_dmem_shim_tmp_tagCon_memory_requ_ETC___d233[2] ?
+		  (_0_CONCAT_axi4_mem_shim_tmp_tagCon_memory_reque_ETC___d233[2] ?
 		     3'd2 :
-		     (_0_CONCAT_axi4_dmem_shim_tmp_tagCon_memory_requ_ETC___d233[3] ?
+		     (_0_CONCAT_axi4_mem_shim_tmp_tagCon_memory_reque_ETC___d233[3] ?
 			3'd3 :
 			3'd4))) ;
-  assign cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1255 =
-	     cpu$dmem_master_ar_peek[92:29] <
+  assign cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1255 =
+	     cpu$mem_master_ar_peek[92:29] <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1257 =
-	     x__h63058 < soc_map$m_near_mem_io_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1260 =
-	     cpu$dmem_master_ar_peek[92:29] <
+  assign cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1257 =
+	     x__h63190 < soc_map$m_near_mem_io_addr_range[63:0] ;
+  assign cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1260 =
+	     cpu$mem_master_ar_peek[92:29] <
 	     soc_map$m_plic_addr_range[127:64] ;
-  assign cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1262 =
-	     x__h63083 < soc_map$m_plic_addr_range[63:0] ;
-  assign cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1266 =
-	     cpu$dmem_master_ar_peek[92:69] == 24'd0 &&
-	     (cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1255 ||
-	      !cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1257) &&
-	     (cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1260 ||
-	      !cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1262) ;
-  assign cpu_dmem_master_ar_peek__251_BITS_92_TO_69_252_ETC___d1276 =
-	     cpu$dmem_master_ar_peek[92:69] == 24'd0 &&
-	     (cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1255 ||
-	      !cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1257) &&
-	     !cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1260 &&
-	     cpu_dmem_master_ar_peek__251_BITS_92_TO_29_254_ETC___d1262 ;
+  assign cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1262 =
+	     x__h63215 < soc_map$m_plic_addr_range[63:0] ;
+  assign cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1266 =
+	     cpu$mem_master_ar_peek[92:69] == 24'd0 &&
+	     (cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1255 ||
+	      !cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1257) &&
+	     (cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1260 ||
+	      !cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1262) ;
+  assign cpu_mem_master_ar_peek__251_BITS_92_TO_69_252__ETC___d1276 =
+	     cpu$mem_master_ar_peek[92:69] == 24'd0 &&
+	     (cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1255 ||
+	      !cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1257) &&
+	     !cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1260 &&
+	     cpu_mem_master_ar_peek__251_BITS_92_TO_29_254__ETC___d1262 ;
   assign debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1344 =
 	     debug_module$master_ar_peek[92:29] <
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
   assign debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1346 =
-	     x__h65621 < soc_map$m_near_mem_io_addr_range[63:0] ;
+	     x__h65781 < soc_map$m_near_mem_io_addr_range[63:0] ;
   assign debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1349 =
 	     debug_module$master_ar_peek[92:29] <
 	     soc_map$m_plic_addr_range[127:64] ;
   assign debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1351 =
-	     x__h65646 < soc_map$m_plic_addr_range[63:0] ;
+	     x__h65806 < soc_map$m_plic_addr_range[63:0] ;
   assign debug_module_master_ar_peek__340_BITS_92_TO_69_ETC___d1355 =
 	     debug_module$master_ar_peek[92:69] == 24'd0 &&
 	     (debug_module_master_ar_peek__340_BITS_92_TO_29_ETC___d1344 ||
@@ -6796,8 +7042,8 @@ module mkCore(CLK,
   assign split_0_doPut_whas__43_AND_split_0_doPut_wget__ETC___d454 =
 	     CAN_FIRE_RL_sinks_0_doPut &&
 	     (split_0_doPut$wget[172] ||
-	      !axi4_dmem_shim_tmp_shimSlave_awff_rv[98] &&
-	      !axi4_dmem_shim_tmp_shimSlave_wff_rv[74]) ;
+	      !axi4_mem_shim_tmp_shimSlave_awff_rv[98] &&
+	      !axi4_mem_shim_tmp_shimSlave_wff_rv[74]) ;
   assign split_1_doPut_whas__78_AND_split_1_doPut_wget__ETC___d485 =
 	     CAN_FIRE_RL_sinks_1_doPut &&
 	     (split_1_doPut$wget[172] ||
@@ -6809,317 +7055,316 @@ module mkCore(CLK,
 	      plic$RDY_axi4_slave_w_put && plic$RDY_axi4_slave_aw_put) ;
   assign state_1_067_AND_activeSource_1_0_155_156_AND_i_ETC___d1158 =
 	     state_1 && activeSource_1_0 && ifcs_0_routeBack$EMPTY_N &&
-	     ((!ifcs_0_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
+	     ((!ifcs_0_routeBack$D_OUT[0] || !cpu$mem_master_b_canPut) ?
 		ifcs_0_routeBack$D_OUT[1] && debug_module$master_b_canPut :
 		ifcs_0_routeBack$D_OUT[0]) ;
   assign state_1_067_AND_activeSource_1_1_188_189_AND_i_ETC___d1191 =
 	     state_1 && activeSource_1_1 && ifcs_1_routeBack$EMPTY_N &&
-	     ((!ifcs_1_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
+	     ((!ifcs_1_routeBack$D_OUT[0] || !cpu$mem_master_b_canPut) ?
 		ifcs_1_routeBack$D_OUT[1] && debug_module$master_b_canPut :
 		ifcs_1_routeBack$D_OUT[0]) ;
   assign state_1_067_AND_activeSource_1_2_222_223_AND_i_ETC___d1225 =
 	     state_1 && activeSource_1_2 && ifcs_2_routeBack$EMPTY_N &&
-	     ((!ifcs_2_routeBack$D_OUT[0] || !cpu$dmem_master_b_canPut) ?
+	     ((!ifcs_2_routeBack$D_OUT[0] || !cpu$mem_master_b_canPut) ?
 		ifcs_2_routeBack$D_OUT[1] && debug_module$master_b_canPut :
 		ifcs_2_routeBack$D_OUT[0]) ;
   assign state_1_1_1_731_AND_activeSource_1_1_0_825_826_ETC___d1828 =
 	     state_1_1_1 && activeSource_1_1_0 &&
 	     ifcs_0_1_routeBack$EMPTY_N &&
-	     ((!ifcs_0_1_routeBack$D_OUT[0] || !cpu$dmem_master_r_canPut) ?
+	     ((!ifcs_0_1_routeBack$D_OUT[0] || !cpu$mem_master_r_canPut) ?
 		ifcs_0_1_routeBack$D_OUT[1] && debug_module$master_r_canPut :
 		ifcs_0_1_routeBack$D_OUT[0]) ;
   assign state_1_1_1_731_AND_activeSource_1_1_1_1_861_8_ETC___d1864 =
 	     state_1_1_1 && activeSource_1_1_1_1 &&
 	     ifcs_1_1_routeBack$EMPTY_N &&
-	     ((!ifcs_1_1_routeBack$D_OUT[0] || !cpu$dmem_master_r_canPut) ?
+	     ((!ifcs_1_1_routeBack$D_OUT[0] || !cpu$mem_master_r_canPut) ?
 		ifcs_1_1_routeBack$D_OUT[1] && debug_module$master_r_canPut :
 		ifcs_1_1_routeBack$D_OUT[0]) ;
   assign state_1_1_1_731_AND_activeSource_1_1_2_897_898_ETC___d1900 =
 	     state_1_1_1 && activeSource_1_1_2 &&
 	     ifcs_2_1_routeBack$EMPTY_N &&
-	     ((!ifcs_2_1_routeBack$D_OUT[0] || !cpu$dmem_master_r_canPut) ?
+	     ((!ifcs_2_1_routeBack$D_OUT[0] || !cpu$mem_master_r_canPut) ?
 		ifcs_2_1_routeBack$D_OUT[1] && debug_module$master_r_canPut :
 		ifcs_2_1_routeBack$D_OUT[0]) ;
   assign state_1_1_547_AND_activeSource_1_0_1_614_615_A_ETC___d1617 =
 	     state_1_1 && activeSource_1_0_1 && ifcs_0_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_1_innerRoute$D_OUT[0] ||
-	       !(!axi4_dmem_shim_tmp_shimSlave_arff_rv[98])) ?
+	       !(!axi4_mem_shim_tmp_shimSlave_arff_rv[98])) ?
 		IF_NOT_ifcs_0_1_innerRoute_first__500_BIT_1_50_ETC___d1522 :
 		ifcs_0_1_innerRoute$D_OUT[0]) ;
   assign state_1_1_547_AND_activeSource_1_1_1_654_655_A_ETC___d1657 =
 	     state_1_1 && activeSource_1_1_1 && ifcs_1_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_1_innerRoute$D_OUT[0] ||
-	       !(!axi4_dmem_shim_tmp_shimSlave_arff_rv[98])) ?
+	       !(!axi4_mem_shim_tmp_shimSlave_arff_rv[98])) ?
 		IF_NOT_ifcs_1_1_innerRoute_first__529_BIT_1_53_ETC___d1538 :
 		ifcs_1_1_innerRoute$D_OUT[0]) ;
   assign state_73_AND_activeSource_0_46_47_AND_ifcs_0_i_ETC___d949 =
 	     state && activeSource_0 && ifcs_0_innerRoute$EMPTY_N &&
 	     ((!ifcs_0_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794) ?
+	       !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794) ?
 		IF_NOT_ifcs_0_innerRoute_first__26_BIT_1_35_36_ETC___d848 :
 		ifcs_0_innerRoute$D_OUT[0]) ;
   assign state_73_AND_activeSource_1_90_91_AND_ifcs_1_i_ETC___d993 =
 	     state && activeSource_1 && ifcs_1_innerRoute$EMPTY_N &&
 	     ((!ifcs_1_innerRoute$D_OUT[0] ||
-	       !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_d_ETC___d794) ?
+	       !IF_split_0_flitLeft_55_EQ_0_56_THEN_NOT_axi4_m_ETC___d794) ?
 		IF_NOT_ifcs_1_innerRoute_first__55_BIT_1_59_60_ETC___d864 :
 		ifcs_1_innerRoute$D_OUT[0]) ;
-  assign tmp__h10001 = { 24'd0, x__h10250 } ;
-  assign tmp__h7784 =
-	     axi4_dmem_shim_tmp_awreqff$D_OUT[92:29] +
-	     axi4_dmem_shim_tmp_addrOffset ;
-  assign v_araddr__h14967 =
-	     { 24'd0,
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[140:101] } ;
-  assign v_arid__h14966 =
-	     (axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[100:95] :
+  assign tmp__h10092 = { 24'd0, x__h10341 } ;
+  assign tmp__h7875 =
+	     axi4_mem_shim_tmp_awreqff$D_OUT[92:29] +
+	     axi4_mem_shim_tmp_addrOffset ;
+  assign v_araddr__h15058 =
+	     { 24'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[140:101] } ;
+  assign v_arid__h15057 =
+	     (axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[100:95] :
 	       6'd0 ;
-  assign v_arlen__h14968 =
-	     (axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arlen__h14951 :
+  assign v_arlen__h15059 =
+	     (axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
+	       arlen__h15042 :
 	       8'd0 ;
-  assign v_arsize_val__h15013 =
-	     (axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       axi4_dmem_shim_tmp_tagCon$memory_request_get[2:0] :
+  assign v_arsize_val__h15104 =
+	     (axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
+	       axi4_mem_shim_tmp_tagCon$memory_request_get[2:0] :
 	       3'b0 ;
-  assign x__h10250 =
-	     { axi4_dmem_shim_tmp_tagCon$memory_request_get[140:104], 3'd0 } ;
-  assign x__h10293 =
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[81] ?
+  assign x__h10341 =
+	     { axi4_mem_shim_tmp_tagCon$memory_request_get[140:104], 3'd0 } ;
+  assign x__h10384 =
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[81] ?
 	       4'd0 :
-	       (axi4_dmem_shim_tmp_tagCon$memory_request_get[82] ?
+	       (axi4_mem_shim_tmp_tagCon$memory_request_get[82] ?
 		  4'd1 :
-		  (axi4_dmem_shim_tmp_tagCon$memory_request_get[83] ?
+		  (axi4_mem_shim_tmp_tagCon$memory_request_get[83] ?
 		     4'd2 :
-		     (axi4_dmem_shim_tmp_tagCon$memory_request_get[84] ?
+		     (axi4_mem_shim_tmp_tagCon$memory_request_get[84] ?
 			4'd3 :
-			(axi4_dmem_shim_tmp_tagCon$memory_request_get[85] ?
+			(axi4_mem_shim_tmp_tagCon$memory_request_get[85] ?
 			   4'd4 :
-			   (axi4_dmem_shim_tmp_tagCon$memory_request_get[86] ?
+			   (axi4_mem_shim_tmp_tagCon$memory_request_get[86] ?
 			      4'd5 :
-			      (axi4_dmem_shim_tmp_tagCon$memory_request_get[87] ?
+			      (axi4_mem_shim_tmp_tagCon$memory_request_get[87] ?
 				 4'd6 :
-				 (axi4_dmem_shim_tmp_tagCon$memory_request_get[88] ?
+				 (axi4_mem_shim_tmp_tagCon$memory_request_get[88] ?
 				    4'd7 :
 				    4'd8))))))) ;
-  assign x__h12027 = x__h12039 + y__h12040 ;
-  assign x__h12039 = x__h12051 + y__h12052 ;
-  assign x__h12051 = x__h12063 + y__h12064 ;
-  assign x__h12063 = x__h12075 + y__h12076 ;
-  assign x__h12075 = x__h12087 + y__h12088 ;
-  assign x__h12087 = x__h12099 + y__h12100 ;
-  assign x__h12099 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[88] } ;
-  assign x__h13623 =
-	     axi4_dmem_shim_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
-  assign x__h15031 =
-	     (axi4_dmem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
-	       arcache__h14955 :
+  assign x__h12118 = x__h12130 + y__h12131 ;
+  assign x__h12130 = x__h12142 + y__h12143 ;
+  assign x__h12142 = x__h12154 + y__h12155 ;
+  assign x__h12154 = x__h12166 + y__h12167 ;
+  assign x__h12166 = x__h12178 + y__h12179 ;
+  assign x__h12178 = x__h12190 + y__h12191 ;
+  assign x__h12190 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[88] } ;
+  assign x__h13714 =
+	     axi4_mem_shim_tmp_tagCon$memory_request_get[90] ? 4'd0 : 4'd15 ;
+  assign x__h15122 =
+	     (axi4_mem_shim_tmp_tagCon$memory_request_get[93:92] == 2'd0) ?
+	       arcache__h15046 :
 	       4'd0 ;
-  assign x__h25419 =
+  assign x__h25509 =
 	     merged_0_outflit$wget[166:103] -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h25444 =
+  assign x__h25534 =
 	     merged_0_outflit$wget[166:103] -
 	     soc_map$m_plic_addr_range[127:64] ;
-  assign x__h28997 =
+  assign x__h29110 =
 	     merged_1_outflit$wget[166:103] -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h29022 =
+  assign x__h29135 =
 	     merged_1_outflit$wget[166:103] -
 	     soc_map$m_plic_addr_range[127:64] ;
-  assign x__h39140 =
+  assign x__h39275 =
 	     SEXT_arbiter_lastSelect__q4[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h39243 =
+  assign x__h39378 =
 	     SEXT_arbiter_firstHot__q3[0] &
 	     (CAN_FIRE_RL_craftReq && reqWires_0$wget) ;
-  assign x__h39608 =
+  assign x__h39743 =
 	     SEXT_SEXT_arbiter_firstHot_80_81_BIT_0_82_AND__ETC__q5[0] &
 	     arbiter_firstHot ;
-  assign x__h39667 =
+  assign x__h39802 =
 	     !SEXT_arbiter_firstHot_80_81_BIT_0_82_AND_reqWi_ETC___d888 &&
 	     SEXT_arbiter_lastSelect_76_77_BIT_0_78_AND_req_ETC___d884 ;
-  assign x__h39749 = SEXT_x9667__q6[0] & arbiter_firstHot ;
-  assign x__h53797 = x__h53799 | y__h53800 ;
-  assign x__h53799 =
+  assign x__h39884 = SEXT_x9802__q6[0] & arbiter_firstHot ;
+  assign x__h53932 = x__h53934 | y__h53935 ;
+  assign x__h53934 =
 	     SEXT_arbiter_1_lastSelect__q8[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h53948 = x__h53950 | y__h53951 ;
-  assign x__h53950 =
+  assign x__h54083 = x__h54085 | y__h54086 ;
+  assign x__h54085 =
 	     SEXT_arbiter_1_lastSelect_1__q9[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h54084 = x__h54086 | y__h54087 ;
-  assign x__h54086 =
+  assign x__h54219 = x__h54221 | y__h54222 ;
+  assign x__h54221 =
 	     SEXT_arbiter_1_firstHot__q7[0] &
 	     (CAN_FIRE_RL_craftReq_2 && reqWires_1_0$wget) ;
-  assign x__h54556 = x__h54558 | y__h54559 ;
-  assign x__h54558 =
+  assign x__h54691 = x__h54693 | y__h54694 ;
+  assign x__h54693 =
 	     SEXT_SEXT_arbiter_1_firstHot_079_080_BIT_0_081_ETC__q10[0] &
 	     arbiter_1_firstHot ;
-  assign x__h54618 =
+  assign x__h54753 =
 	     !SEXT_arbiter_1_firstHot_079_080_BIT_0_081_AND__ETC___d1095 &&
 	     SEXT_arbiter_1_lastSelect_1_074_075_BIT_0_076__ETC___d1089 ;
-  assign x__h54652 =
+  assign x__h54787 =
 	     !SEXT_arbiter_1_lastSelect_1_074_075_BIT_0_076__ETC___d1089 &&
 	     !SEXT_arbiter_1_firstHot_079_080_BIT_0_081_AND__ETC___d1095 &&
 	     SEXT_arbiter_1_lastSelect_070_071_BIT_0_072_AN_ETC___d1083 ;
-  assign x__h54744 = x__h54746 | y__h54747 ;
-  assign x__h54746 = SEXT_x4618__q11[0] & arbiter_1_firstHot ;
-  assign x__h54925 = x__h54927 | y__h54928 ;
-  assign x__h54927 = SEXT_x4652__q12[0] & arbiter_1_firstHot ;
-  assign x__h63058 =
-	     cpu$dmem_master_ar_peek[92:29] -
+  assign x__h54879 = x__h54881 | y__h54882 ;
+  assign x__h54881 = SEXT_x4753__q11[0] & arbiter_1_firstHot ;
+  assign x__h55060 = x__h55062 | y__h55063 ;
+  assign x__h55062 = SEXT_x4787__q12[0] & arbiter_1_firstHot ;
+  assign x__h63190 =
+	     cpu$mem_master_ar_peek[92:29] -
 	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h63083 =
-	     cpu$dmem_master_ar_peek[92:29] -
+  assign x__h63215 =
+	     cpu$mem_master_ar_peek[92:29] -
 	     soc_map$m_plic_addr_range[127:64] ;
-  assign x__h65621 =
-	     debug_module$master_ar_peek[92:29] -
-	     soc_map$m_near_mem_io_addr_range[127:64] ;
-  assign x__h65646 =
-	     debug_module$master_ar_peek[92:29] -
-	     soc_map$m_plic_addr_range[127:64] ;
-  assign x__h74766 =
-	     SEXT_arbiter_1_lastSelect_2__q14[0] &
-	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h74869 =
-	     SEXT_arbiter_1_firstHot_1__q13[0] &
-	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
-  assign x__h75234 =
-	     SEXT_SEXT_arbiter_1_firstHot_1_554_555_BIT_0_5_ETC__q15[0] &
-	     arbiter_1_firstHot_1 ;
-  assign x__h75293 =
-	     !SEXT_arbiter_1_firstHot_1_554_555_BIT_0_556_AN_ETC___d1562 &&
-	     SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_552__ETC___d1558 ;
-  assign x__h75375 = SEXT_x5293__q16[0] & arbiter_1_firstHot_1 ;
-  assign x__h7627 =
-	     axi4_dmem_shim_tmp_addrOffset +
-	     (64'd1 << axi4_dmem_shim_tmp_awreqff$D_OUT[20:18]) ;
-  assign x__h86924 = x__h86926 | y__h86927 ;
-  assign x__h86926 =
-	     SEXT_arbiter_1_1_lastSelect__q18[0] &
-	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h87075 = x__h87077 | y__h87078 ;
-  assign x__h87077 =
-	     SEXT_arbiter_1_1_lastSelect_1__q19[0] &
-	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h87211 = x__h87213 | y__h87214 ;
-  assign x__h87213 =
-	     SEXT_arbiter_1_1_firstHot__q17[0] &
-	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
-  assign x__h87683 = x__h87685 | y__h87686 ;
-  assign x__h87685 =
-	     SEXT_SEXT_arbiter_1_1_firstHot_743_744_BIT_0_7_ETC__q20[0] &
-	     arbiter_1_1_firstHot ;
-  assign x__h87745 =
-	     !SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759 &&
-	     SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 ;
-  assign x__h87779 =
-	     !SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 &&
-	     !SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759 &&
-	     SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_736__ETC___d1747 ;
-  assign x__h87871 = x__h87873 | y__h87874 ;
-  assign x__h87873 = SEXT_x7745__q21[0] & arbiter_1_1_firstHot ;
-  assign x__h88052 = x__h88054 | y__h88055 ;
-  assign x__h88054 = SEXT_x7779__q22[0] & arbiter_1_1_firstHot ;
-  assign x_port1__read__h64181 =
+  assign x__h64381 =
 	     CAN_FIRE_RL_ifcs_0_1_nonRoutableFlit ?
 	       ifcs_0_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_0_1_noRoute_flitCount ;
-  assign x_port1__read__h66726 =
+  assign x__h65781 =
+	     debug_module$master_ar_peek[92:29] -
+	     soc_map$m_near_mem_io_addr_range[127:64] ;
+  assign x__h65806 =
+	     debug_module$master_ar_peek[92:29] -
+	     soc_map$m_plic_addr_range[127:64] ;
+  assign x__h66954 =
 	     CAN_FIRE_RL_ifcs_1_1_nonRoutableFlit ?
 	       ifcs_1_1_noRoute_flitCount$port0__write_1 :
 	       ifcs_1_1_noRoute_flitCount ;
-  assign y__h12028 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[81] } ;
-  assign y__h12040 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[82] } ;
-  assign y__h12052 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[83] } ;
-  assign y__h12064 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[84] } ;
-  assign y__h12076 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[85] } ;
-  assign y__h12088 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[86] } ;
-  assign y__h12100 =
-	     { 3'd0, axi4_dmem_shim_tmp_tagCon$memory_request_get[87] } ;
-  assign y__h39141 =
+  assign x__h74955 =
+	     SEXT_arbiter_1_lastSelect_2__q14[0] &
+	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
+  assign x__h75058 =
+	     SEXT_arbiter_1_firstHot_1__q13[0] &
+	     (CAN_FIRE_RL_craftReq_5 && reqWires_1_0_1$wget) ;
+  assign x__h75423 =
+	     SEXT_SEXT_arbiter_1_firstHot_1_554_555_BIT_0_5_ETC__q15[0] &
+	     arbiter_1_firstHot_1 ;
+  assign x__h75482 =
+	     !SEXT_arbiter_1_firstHot_1_554_555_BIT_0_556_AN_ETC___d1562 &&
+	     SEXT_arbiter_1_lastSelect_2_550_551_BIT_0_552__ETC___d1558 ;
+  assign x__h75564 = SEXT_x5482__q16[0] & arbiter_1_firstHot_1 ;
+  assign x__h7718 =
+	     axi4_mem_shim_tmp_addrOffset +
+	     (64'd1 << axi4_mem_shim_tmp_awreqff$D_OUT[20:18]) ;
+  assign x__h87113 = x__h87115 | y__h87116 ;
+  assign x__h87115 =
+	     SEXT_arbiter_1_1_lastSelect__q18[0] &
+	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
+  assign x__h87264 = x__h87266 | y__h87267 ;
+  assign x__h87266 =
+	     SEXT_arbiter_1_1_lastSelect_1__q19[0] &
+	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
+  assign x__h87400 = x__h87402 | y__h87403 ;
+  assign x__h87402 =
+	     SEXT_arbiter_1_1_firstHot__q17[0] &
+	     (CAN_FIRE_RL_craftReq_7 && reqWires_1_1_0$wget) ;
+  assign x__h87872 = x__h87874 | y__h87875 ;
+  assign x__h87874 =
+	     SEXT_SEXT_arbiter_1_1_firstHot_743_744_BIT_0_7_ETC__q20[0] &
+	     arbiter_1_1_firstHot ;
+  assign x__h87934 =
+	     !SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759 &&
+	     SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 ;
+  assign x__h87968 =
+	     !SEXT_arbiter_1_1_lastSelect_1_738_739_BIT_0_74_ETC___d1753 &&
+	     !SEXT_arbiter_1_1_firstHot_743_744_BIT_0_745_AN_ETC___d1759 &&
+	     SEXT_arbiter_1_1_lastSelect_734_735_BIT_0_736__ETC___d1747 ;
+  assign x__h88060 = x__h88062 | y__h88063 ;
+  assign x__h88062 = SEXT_x7934__q21[0] & arbiter_1_1_firstHot ;
+  assign x__h88241 = x__h88243 | y__h88244 ;
+  assign x__h88243 = SEXT_x7968__q22[0] & arbiter_1_1_firstHot ;
+  assign y__h12119 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[81] } ;
+  assign y__h12131 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[82] } ;
+  assign y__h12143 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[83] } ;
+  assign y__h12155 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[84] } ;
+  assign y__h12167 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[85] } ;
+  assign y__h12179 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[86] } ;
+  assign y__h12191 =
+	     { 3'd0, axi4_mem_shim_tmp_tagCon$memory_request_get[87] } ;
+  assign y__h39276 =
 	     SEXT_arbiter_firstHot__q3[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h39244 =
+  assign y__h39379 =
 	     SEXT_arbiter_lastSelect__q4[0] &
 	     (CAN_FIRE_RL_craftReq_1 && reqWires_1$wget) ;
-  assign y__h39609 = SEXT_x9667__q6[0] & arbiter_lastSelect ;
-  assign y__h39750 =
+  assign y__h39744 = SEXT_x9802__q6[0] & arbiter_lastSelect ;
+  assign y__h39885 =
 	     SEXT_SEXT_arbiter_firstHot_80_81_BIT_0_82_AND__ETC__q5[0] &
 	     arbiter_lastSelect ;
-  assign y__h53798 =
+  assign y__h53933 =
 	     SEXT_arbiter_1_firstHot__q7[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h53800 =
+  assign y__h53935 =
 	     SEXT_arbiter_1_lastSelect_1__q9[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h53949 =
+  assign y__h54084 =
 	     SEXT_arbiter_1_lastSelect__q8[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h53951 =
+  assign y__h54086 =
 	     SEXT_arbiter_1_firstHot__q7[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h54085 =
+  assign y__h54220 =
 	     SEXT_arbiter_1_lastSelect_1__q9[0] &
 	     (CAN_FIRE_RL_craftReq_4 && reqWires_1_2$wget) ;
-  assign y__h54087 =
+  assign y__h54222 =
 	     SEXT_arbiter_1_lastSelect__q8[0] &
 	     (CAN_FIRE_RL_craftReq_3 && reqWires_1_1$wget) ;
-  assign y__h54557 = SEXT_x4652__q12[0] & arbiter_1_lastSelect ;
-  assign y__h54559 = SEXT_x4618__q11[0] & arbiter_1_lastSelect_1 ;
-  assign y__h54745 =
+  assign y__h54692 = SEXT_x4787__q12[0] & arbiter_1_lastSelect ;
+  assign y__h54694 = SEXT_x4753__q11[0] & arbiter_1_lastSelect_1 ;
+  assign y__h54880 =
 	     SEXT_SEXT_arbiter_1_firstHot_079_080_BIT_0_081_ETC__q10[0] &
 	     arbiter_1_lastSelect ;
-  assign y__h54747 = SEXT_x4652__q12[0] & arbiter_1_lastSelect_1 ;
-  assign y__h54926 = SEXT_x4618__q11[0] & arbiter_1_lastSelect ;
-  assign y__h54928 =
+  assign y__h54882 = SEXT_x4787__q12[0] & arbiter_1_lastSelect_1 ;
+  assign y__h55061 = SEXT_x4753__q11[0] & arbiter_1_lastSelect ;
+  assign y__h55063 =
 	     SEXT_SEXT_arbiter_1_firstHot_079_080_BIT_0_081_ETC__q10[0] &
 	     arbiter_1_lastSelect_1 ;
-  assign y__h74767 =
+  assign y__h74956 =
 	     SEXT_arbiter_1_firstHot_1__q13[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h74870 =
+  assign y__h75059 =
 	     SEXT_arbiter_1_lastSelect_2__q14[0] &
 	     (CAN_FIRE_RL_craftReq_6 && reqWires_1_1_1$wget) ;
-  assign y__h75235 = SEXT_x5293__q16[0] & arbiter_1_lastSelect_2 ;
-  assign y__h75376 =
+  assign y__h75424 = SEXT_x5482__q16[0] & arbiter_1_lastSelect_2 ;
+  assign y__h75565 =
 	     SEXT_SEXT_arbiter_1_firstHot_1_554_555_BIT_0_5_ETC__q15[0] &
 	     arbiter_1_lastSelect_2 ;
-  assign y__h86925 =
+  assign y__h87114 =
 	     SEXT_arbiter_1_1_firstHot__q17[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h86927 =
+  assign y__h87116 =
 	     SEXT_arbiter_1_1_lastSelect_1__q19[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h87076 =
+  assign y__h87265 =
 	     SEXT_arbiter_1_1_lastSelect__q18[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h87078 =
+  assign y__h87267 =
 	     SEXT_arbiter_1_1_firstHot__q17[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h87212 =
+  assign y__h87401 =
 	     SEXT_arbiter_1_1_lastSelect_1__q19[0] &
 	     (CAN_FIRE_RL_craftReq_9 && reqWires_1_1_2$wget) ;
-  assign y__h87214 =
+  assign y__h87403 =
 	     SEXT_arbiter_1_1_lastSelect__q18[0] &
 	     (CAN_FIRE_RL_craftReq_8 && reqWires_1_1_1_1$wget) ;
-  assign y__h87684 = SEXT_x7779__q22[0] & arbiter_1_1_lastSelect ;
-  assign y__h87686 = SEXT_x7745__q21[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h87872 =
+  assign y__h87873 = SEXT_x7968__q22[0] & arbiter_1_1_lastSelect ;
+  assign y__h87875 = SEXT_x7934__q21[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h88061 =
 	     SEXT_SEXT_arbiter_1_1_firstHot_743_744_BIT_0_7_ETC__q20[0] &
 	     arbiter_1_1_lastSelect ;
-  assign y__h87874 = SEXT_x7779__q22[0] & arbiter_1_1_lastSelect_1 ;
-  assign y__h88053 = SEXT_x7745__q21[0] & arbiter_1_1_lastSelect ;
-  assign y__h88055 =
+  assign y__h88063 = SEXT_x7968__q22[0] & arbiter_1_1_lastSelect_1 ;
+  assign y__h88242 = SEXT_x7934__q21[0] & arbiter_1_1_lastSelect ;
+  assign y__h88244 =
 	     SEXT_SEXT_arbiter_1_1_firstHot_743_744_BIT_0_7_ETC__q20[0] &
 	     arbiter_1_1_lastSelect_1 ;
 
@@ -7149,35 +7394,35 @@ module mkCore(CLK,
 	arbiter_1_lastSelect_2 <= `BSV_ASSIGNMENT_DELAY 1'd0;
 	arbiter_firstHot <= `BSV_ASSIGNMENT_DELAY 1'd1;
 	arbiter_lastSelect <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	axi4_dmem_shim_tmp_addrOffset <= `BSV_ASSIGNMENT_DELAY 64'd0;
-	axi4_dmem_shim_tmp_doneSendingAW <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	axi4_dmem_shim_tmp_reset_done <= `BSV_ASSIGNMENT_DELAY 1'd0;
-	axi4_dmem_shim_tmp_shimMaster_arff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_addrOffset <= `BSV_ASSIGNMENT_DELAY 64'd0;
+	axi4_mem_shim_tmp_doneSendingAW <= `BSV_ASSIGNMENT_DELAY 1'd0;
+	axi4_mem_shim_tmp_reset_done <= `BSV_ASSIGNMENT_DELAY 1'd0;
+	axi4_mem_shim_tmp_shimMaster_arff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimMaster_awff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimMaster_awff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      99'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0, 8'bxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimMaster_rff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimMaster_rff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimMaster_wff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimMaster_wff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimSlave_arff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimSlave_arff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimSlave_awff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimSlave_awff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      98'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0, 7'bxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimSlave_rff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimSlave_rff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      73'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
-	axi4_dmem_shim_tmp_shimSlave_wff_rv <= `BSV_ASSIGNMENT_DELAY
+	axi4_mem_shim_tmp_shimSlave_wff_rv <= `BSV_ASSIGNMENT_DELAY
 	    { 1'd0,
 	      74'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  };
 	ifcs_0_1_noRoute_currentReq <= `BSV_ASSIGNMENT_DELAY
@@ -7262,45 +7507,45 @@ module mkCore(CLK,
 	  arbiter_firstHot <= `BSV_ASSIGNMENT_DELAY arbiter_firstHot$D_IN;
 	if (arbiter_lastSelect$EN)
 	  arbiter_lastSelect <= `BSV_ASSIGNMENT_DELAY arbiter_lastSelect$D_IN;
-	if (axi4_dmem_shim_tmp_addrOffset$EN)
-	  axi4_dmem_shim_tmp_addrOffset <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_addrOffset$D_IN;
-	if (axi4_dmem_shim_tmp_doneSendingAW$EN)
-	  axi4_dmem_shim_tmp_doneSendingAW <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_doneSendingAW$D_IN;
-	if (axi4_dmem_shim_tmp_reset_done$EN)
-	  axi4_dmem_shim_tmp_reset_done <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_reset_done$D_IN;
-	if (axi4_dmem_shim_tmp_shimMaster_arff_rv$EN)
-	  axi4_dmem_shim_tmp_shimMaster_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimMaster_arff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimMaster_awff_rv$EN)
-	  axi4_dmem_shim_tmp_shimMaster_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimMaster_awff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimMaster_bff_rv$EN)
-	  axi4_dmem_shim_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimMaster_bff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimMaster_rff_rv$EN)
-	  axi4_dmem_shim_tmp_shimMaster_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimMaster_rff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimMaster_wff_rv$EN)
-	  axi4_dmem_shim_tmp_shimMaster_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimMaster_wff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimSlave_arff_rv$EN)
-	  axi4_dmem_shim_tmp_shimSlave_arff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimSlave_arff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimSlave_awff_rv$EN)
-	  axi4_dmem_shim_tmp_shimSlave_awff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimSlave_awff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimSlave_bff_rv$EN)
-	  axi4_dmem_shim_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimSlave_bff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimSlave_rff_rv$EN)
-	  axi4_dmem_shim_tmp_shimSlave_rff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimSlave_rff_rv$D_IN;
-	if (axi4_dmem_shim_tmp_shimSlave_wff_rv$EN)
-	  axi4_dmem_shim_tmp_shimSlave_wff_rv <= `BSV_ASSIGNMENT_DELAY
-	      axi4_dmem_shim_tmp_shimSlave_wff_rv$D_IN;
+	if (axi4_mem_shim_tmp_addrOffset$EN)
+	  axi4_mem_shim_tmp_addrOffset <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_addrOffset$D_IN;
+	if (axi4_mem_shim_tmp_doneSendingAW$EN)
+	  axi4_mem_shim_tmp_doneSendingAW <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_doneSendingAW$D_IN;
+	if (axi4_mem_shim_tmp_reset_done$EN)
+	  axi4_mem_shim_tmp_reset_done <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_reset_done$D_IN;
+	if (axi4_mem_shim_tmp_shimMaster_arff_rv$EN)
+	  axi4_mem_shim_tmp_shimMaster_arff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimMaster_arff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimMaster_awff_rv$EN)
+	  axi4_mem_shim_tmp_shimMaster_awff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimMaster_awff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimMaster_bff_rv$EN)
+	  axi4_mem_shim_tmp_shimMaster_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimMaster_bff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimMaster_rff_rv$EN)
+	  axi4_mem_shim_tmp_shimMaster_rff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimMaster_rff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimMaster_wff_rv$EN)
+	  axi4_mem_shim_tmp_shimMaster_wff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimMaster_wff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimSlave_arff_rv$EN)
+	  axi4_mem_shim_tmp_shimSlave_arff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimSlave_arff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimSlave_awff_rv$EN)
+	  axi4_mem_shim_tmp_shimSlave_awff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimSlave_awff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimSlave_bff_rv$EN)
+	  axi4_mem_shim_tmp_shimSlave_bff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimSlave_bff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimSlave_rff_rv$EN)
+	  axi4_mem_shim_tmp_shimSlave_rff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimSlave_rff_rv$D_IN;
+	if (axi4_mem_shim_tmp_shimSlave_wff_rv$EN)
+	  axi4_mem_shim_tmp_shimSlave_wff_rv <= `BSV_ASSIGNMENT_DELAY
+	      axi4_mem_shim_tmp_shimSlave_wff_rv$D_IN;
 	if (ifcs_0_1_noRoute_currentReq$EN)
 	  ifcs_0_1_noRoute_currentReq <= `BSV_ASSIGNMENT_DELAY
 	      ifcs_0_1_noRoute_currentReq$D_IN;
@@ -7388,19 +7633,19 @@ module mkCore(CLK,
     arbiter_1_lastSelect_2 = 1'h0;
     arbiter_firstHot = 1'h0;
     arbiter_lastSelect = 1'h0;
-    axi4_dmem_shim_tmp_addrOffset = 64'hAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_doneSendingAW = 1'h0;
-    axi4_dmem_shim_tmp_reset_done = 1'h0;
-    axi4_dmem_shim_tmp_shimMaster_arff_rv = 100'hAAAAAAAAAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimMaster_awff_rv = 100'hAAAAAAAAAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimMaster_bff_rv = 9'h0AA;
-    axi4_dmem_shim_tmp_shimMaster_rff_rv = 74'h2AAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimMaster_wff_rv = 74'h2AAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimSlave_arff_rv = 99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimSlave_awff_rv = 99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimSlave_bff_rv = 8'hAA;
-    axi4_dmem_shim_tmp_shimSlave_rff_rv = 74'h2AAAAAAAAAAAAAAAAAA;
-    axi4_dmem_shim_tmp_shimSlave_wff_rv = 75'h2AAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_addrOffset = 64'hAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_doneSendingAW = 1'h0;
+    axi4_mem_shim_tmp_reset_done = 1'h0;
+    axi4_mem_shim_tmp_shimMaster_arff_rv = 100'hAAAAAAAAAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimMaster_awff_rv = 100'hAAAAAAAAAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimMaster_bff_rv = 9'h0AA;
+    axi4_mem_shim_tmp_shimMaster_rff_rv = 74'h2AAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimMaster_wff_rv = 74'h2AAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimSlave_arff_rv = 99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimSlave_awff_rv = 99'h2AAAAAAAAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimSlave_bff_rv = 8'hAA;
+    axi4_mem_shim_tmp_shimSlave_rff_rv = 74'h2AAAAAAAAAAAAAAAAAA;
+    axi4_mem_shim_tmp_shimSlave_wff_rv = 75'h2AAAAAAAAAAAAAAAAAA;
     ifcs_0_1_noRoute_currentReq = 97'h0AAAAAAAAAAAAAAAAAAAAAAAA;
     ifcs_0_1_noRoute_flitCount = 9'h0AA;
     ifcs_0_1_state = 2'h2;
@@ -7455,7 +7700,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h41142 = $time;
+	  v__h41277 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -7465,7 +7710,7 @@ module mkCore(CLK,
 	  (ifcs_0_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h41142,
+	       v__h41277,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && ifcs_0_innerRoute$EMPTY_N &&
@@ -7574,13 +7819,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	begin
-	  v__h40531 = $time;
+	  v__h40666 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h40531,
+		 v__h40666,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected && !ifcs_0_innerRoute$EMPTY_N)
@@ -7592,7 +7837,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h45151 = $time;
+	  v__h45286 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -7602,7 +7847,7 @@ module mkCore(CLK,
 	  (ifcs_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h45151,
+	       v__h45286,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && ifcs_1_innerRoute$EMPTY_N &&
@@ -7711,13 +7956,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	begin
-	  v__h44540 = $time;
+	  v__h44675 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h44540,
+		 v__h44675,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_1 && !ifcs_1_innerRoute$EMPTY_N)
@@ -7757,7 +8002,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h56317 = $time;
+	  v__h56452 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -7766,7 +8011,7 @@ module mkCore(CLK,
 	  (ifcs_0_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h56317,
+	       v__h56452,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && ifcs_0_routeBack$EMPTY_N &&
@@ -7841,13 +8086,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	begin
-	  v__h55936 = $time;
+	  v__h56071 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h55936,
+		 v__h56071,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_2 && !ifcs_0_routeBack$EMPTY_N)
@@ -7858,7 +8103,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h58387 = $time;
+	  v__h58522 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -7867,7 +8112,7 @@ module mkCore(CLK,
 	  (ifcs_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h58387,
+	       v__h58522,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && ifcs_1_routeBack$EMPTY_N &&
@@ -7942,13 +8187,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	begin
-	  v__h58006 = $time;
+	  v__h58141 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h58006,
+		 v__h58141,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_3 && !ifcs_1_routeBack$EMPTY_N)
@@ -7962,7 +8207,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h60286 = $time;
+	  v__h60421 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -7971,7 +8216,7 @@ module mkCore(CLK,
 	  (ifcs_2_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h60286,
+	       v__h60421,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && ifcs_2_routeBack$EMPTY_N &&
@@ -8046,13 +8291,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	begin
-	  v__h59905 = $time;
+	  v__h60040 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h59905,
+		 v__h60040,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_4 && !ifcs_2_routeBack$EMPTY_N)
@@ -8093,7 +8338,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h76768 = $time;
+	  v__h76957 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8103,7 +8348,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h76768,
+	       v__h76957,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && ifcs_0_1_innerRoute$EMPTY_N &&
@@ -8212,13 +8457,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	begin
-	  v__h76157 = $time;
+	  v__h76346 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h76157,
+		 v__h76346,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_5 && !ifcs_0_1_innerRoute$EMPTY_N)
@@ -8230,7 +8475,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h79661 = $time;
+	  v__h79850 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8240,7 +8485,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_innerRoute$D_OUT[2] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h79661,
+	       v__h79850,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && ifcs_1_1_innerRoute$EMPTY_N &&
@@ -8349,13 +8594,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	begin
-	  v__h79050 = $time;
+	  v__h79239 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h79050,
+		 v__h79239,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_6 && !ifcs_1_1_innerRoute$EMPTY_N)
@@ -8395,7 +8640,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h89448 = $time;
+	  v__h89637 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8404,7 +8649,7 @@ module mkCore(CLK,
 	  (ifcs_0_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h89448,
+	       v__h89637,
 	       $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && ifcs_0_1_routeBack$EMPTY_N &&
@@ -8479,13 +8724,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	begin
-	  v__h89067 = $time;
+	  v__h89256 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h89067,
+		 v__h89256,
 		 $signed(32'd0));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_7 && !ifcs_0_1_routeBack$EMPTY_N)
@@ -8496,7 +8741,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h91939 = $time;
+	  v__h92128 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8505,7 +8750,7 @@ module mkCore(CLK,
 	  (ifcs_1_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h91939,
+	       v__h92128,
 	       $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && ifcs_1_1_routeBack$EMPTY_N &&
@@ -8580,13 +8825,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	begin
-	  v__h91558 = $time;
+	  v__h91747 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h91558,
+		 v__h91747,
 		 $signed(32'd1));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_8 && !ifcs_1_1_routeBack$EMPTY_N)
@@ -8600,7 +8845,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	begin
-	  v__h94249 = $time;
+	  v__h94438 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
@@ -8609,7 +8854,7 @@ module mkCore(CLK,
 	  (ifcs_2_1_routeBack$D_OUT[1] ? 2'd1 : 2'd0) !=
 	  2'd1)
 	$write("%0t -- mkOneWayBus error: input %0d was selected but the requested path ",
-	       v__h94249,
+	       v__h94438,
 	       $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && ifcs_2_1_routeBack$EMPTY_N &&
@@ -8684,13 +8929,13 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	begin
-	  v__h93868 = $time;
+	  v__h94057 = $time;
 	  #0;
 	end
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
 	$display("%0t -- mkOneWayBus error: input %0d was selected but there was no requested path.",
-		 v__h93868,
+		 v__h94057,
 		 $signed(32'd2));
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_source_selected_9 && !ifcs_2_1_routeBack$EMPTY_N)
@@ -8755,14 +9000,14 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_0_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 281, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit_1] and\n  [RL_ifcs_0_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_firstFlit_1] and\n  [RL_ifcs_0_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_1_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 281, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit_1] and\n  [RL_ifcs_1_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_firstFlit_1] and\n  [RL_ifcs_1_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_2_firstFlit && WILL_FIRE_RL_ifcs_2_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 280, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_firstFlit] and\n  [RL_ifcs_2_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 281, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_firstFlit] and\n  [RL_ifcs_2_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sinks_0_warnDoPut)
 	$display("WARNING: %m - putting into a Sink that can't be put into");
@@ -8917,15 +9162,15 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_0_1_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_0_1_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 281, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit_1] and\n  [RL_ifcs_0_1_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_0_1_firstFlit_1] and\n  [RL_ifcs_0_1_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_1_1_firstFlit_1 &&
 	  WILL_FIRE_RL_ifcs_1_1_followFlits_1)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 281, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit_1] and\n  [RL_ifcs_1_1_followFlits_1] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 282, column 10: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_1_1_firstFlit_1] and\n  [RL_ifcs_1_1_followFlits_1] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_ifcs_2_1_firstFlit &&
 	  WILL_FIRE_RL_ifcs_2_1_followFlits)
-	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 280, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_1_firstFlit] and\n  [RL_ifcs_2_1_followFlits] ) fired in the same clock cycle.\n");
+	$display("Error: \"../libs/BlueStuff/Interconnect.bsv\", line 281, column 30: (R0001)\n  Mutually exclusive rules (from the ME sets [RL_ifcs_2_1_firstFlit] and\n  [RL_ifcs_2_1_followFlits] ) fired in the same clock cycle.\n");
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_sinks_1_0_warnDoPut_1)
 	$display("WARNING: %m - putting into a Sink that can't be put into");
@@ -9007,33 +9252,33 @@ module mkCore(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
 	begin
-	  v__h17028 = $stime;
+	  v__h17119 = $stime;
 	  #0;
 	end
-    v__h17022 = v__h17028 / 32'd10;
+    v__h17113 = v__h17119 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h17022);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_soc_start", v__h17113);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
 	begin
-	  v__h17206 = $stime;
+	  v__h17297 = $stime;
 	  #0;
 	end
-    v__h17200 = v__h17206 / 32'd10;
+    v__h17291 = v__h17297 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start)
-	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h17200);
+	$display("%0d: Core.rl_cpu_hart0_reset_from_dm_start", v__h17291);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
 	begin
-	  v__h17572 = $stime;
+	  v__h17663 = $stime;
 	  #0;
 	end
-    v__h17566 = v__h17572 / 32'd10;
+    v__h17657 = v__h17663 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_cpu_hart0_reset_complete)
-	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h17566);
+	$display("%0d: Core.rl_cpu_hart0_reset_complete", v__h17657);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_split_2_putFirst && split_2_doPut$wget[172])
 	$display("splitWrite - Expecting FirstFlit of merged write");

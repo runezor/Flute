@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved
+// Copyright (c) 2016-2020 Bluespec, Inc. All Rights Reserved
 
 //-
 // AXI (user fields) modifications:
@@ -68,6 +68,26 @@ interface Boot_ROM_IFC;
 endinterface
 
 // ================================================================
+// Some local help-functions
+
+function Bool fn_addr_is_aligned (Fabric_Addr addr, AXI4_Size arsize);
+   if      (arsize == 1)  return True;
+   else if (arsize == 2)  return (addr [0] == 1'b_0);
+   else if (arsize == 4)  return (addr [1:0] == 2'b_00);
+   else if (arsize == 8)  return (addr [2:0] == 3'b_000);
+   else return False;
+endfunction
+
+function Bool fn_addr_is_in_range (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim);
+   return ((base <= addr) && (addr < lim));
+endfunction
+
+function Bool fn_addr_is_ok (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim, AXI4_Size arsize);
+   return (   fn_addr_is_aligned (addr, arsize)
+	   && fn_addr_is_in_range (base, addr, lim));
+endfunction
+
+// ================================================================
 
 (* synthesize *)
 module mkBoot_ROM (Boot_ROM_IFC);
@@ -87,24 +107,6 @@ module mkBoot_ROM (Boot_ROM_IFC);
 
    // ----------------
 
-   function Bool fn_addr_is_aligned (Fabric_Addr addr);
-      if (valueOf (Wd_Data_Periph) == 32)
-	 return (addr [1:0] == 2'b_00);
-      else if (valueOf (Wd_Data_Periph) == 64)
-	 return (addr [2:0] == 3'b_000);
-      else
-	 return False;
-   endfunction
-
-   function Bool fn_addr_is_in_range (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim);
-      return ((base <= addr) && (addr < lim));
-   endfunction
-
-   function Bool fn_addr_is_ok (Fabric_Addr base, Fabric_Addr addr, Fabric_Addr lim);
-      return (   fn_addr_is_aligned (addr)
-	      && fn_addr_is_in_range (base, addr, lim));
-   endfunction
-
    // ================================================================
    // BEHAVIOR
 
@@ -114,31 +116,34 @@ module mkBoot_ROM (Boot_ROM_IFC);
    rule rl_process_rd_req (rg_module_ready);
       let rda <- get(slavePortShim.master.ar);
 
-      let byte_addr = rda.araddr - rg_addr_base;
-
       AXI4_Resp  rresp  = OKAY;
       Bit #(64)  data64 = 0;
-      if (! fn_addr_is_ok (rg_addr_base, rda.araddr, rg_addr_lim)) begin
+
+      if (! fn_addr_is_ok (rg_addr_base, rda.araddr, rg_addr_lim, rda.arsize)) begin
 	 rresp = SLVERR;
-	 $display ("%0d: ERROR: Boot_ROM.rl_process_rd_req: unrecognized addr",  cur_cycle);
+	 $display ("%0d: ERROR: Boot_ROM.rl_process_rd_req: unrecognized or misaligned addr",
+		   cur_cycle);
 	 $display ("    ", fshow (rda));
       end
-      else if (rda.araddr [2:0] == 3'b0) begin
-	 Bit #(32) d0 = fn_read_ROM_0 (byte_addr);
-	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr + 4);
-	 data64 = { d1, d0 };
-      end
-      else begin    // ((valueOf (Wd_Data_Periph) == 32) && (rda.addr [1:0] == 2'b_00))
-	 Bit #(32) d1 = fn_read_ROM_4 (byte_addr);
-	 data64 = { 0, d1 };
+      else begin
+	 // Byte offset
+	 let byte_offset = rda.araddr - rg_addr_base;
+	 let rom_addr_0 = (byte_offset & (~ 'b_111));
+	 Bit #(32) d0 = fn_read_ROM_0 (rom_addr_0);
+	 let rom_addr_4 = (rom_addr_0 | 'b_100);
+	 Bit #(32) d4 = fn_read_ROM_4 (rom_addr_4);
+	 if ((valueOf (Wd_Data) == 32) && (byte_offset [2] == 1'b_1))
+	    data64 = { 0, d4 };
+	 else
+	    data64 = { d4, d0 };
       end
 
       Bit #(Wd_Data_Periph) rdata  = truncate (data64);
       AXI4_RFlit#(Wd_SId, Wd_Data_Periph, 0) rdr = AXI4_RFlit {rid:   rda.arid,
-			                                       rdata: rdata,
-			                                       rresp: rresp,
-			                                       rlast: True,
-			                                       ruser: 0};
+			      rdata: rdata,
+			      rresp: rresp,
+			      rlast: True,
+			      ruser: 0};
       slavePortShim.master.r.put(rdr);
 
       if (verbosity > 0) begin
@@ -156,9 +161,10 @@ module mkBoot_ROM (Boot_ROM_IFC);
       let wrd <- get(slavePortShim.master.w);
 
       AXI4_Resp  bresp = OKAY;
-      if (! fn_addr_is_ok (rg_addr_base, wra.awaddr, rg_addr_lim)) begin
+      if (! fn_addr_is_ok (rg_addr_base, wra.awaddr, rg_addr_lim, wra.awsize)) begin
 	 bresp = SLVERR;
-	 $display ("%0d: ERROR: Boot_ROM.rl_process_wr_req: unrecognized addr",  cur_cycle);
+	 $display ("%0d: ERROR: Boot_ROM.rl_process_wr_req: unrecognized or misaligned addr",
+		   cur_cycle);
 	 $display ("    ", fshow (wra));
       end
 

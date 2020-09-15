@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2019 Bluespec, Inc. All Rights Reserved.
+// Copyright (c) 2016-2020 Bluespec, Inc. All Rights Reserved.
 
 //-
 // RVFI_DII modifications:
@@ -54,9 +54,10 @@ import SoC_Map     :: *;
 
 // SoC components (CPU, mem, and IPs)
 
-import Core_IFC :: *;
-import Core     :: *;
-import PLIC     :: *;    // For interface to PLIC interrupt sources, in Core_IFC
+import Near_Mem_IFC :: *;    // For Wd_{Id,Addr,Data,User}_Dma
+import Core_IFC     :: *;
+import Core         :: *;
+import PLIC         :: *;    // For interface to PLIC interrupt sources, in Core_IFC
 
 import Boot_ROM       :: *;
 import Mem_Controller :: *;
@@ -89,9 +90,6 @@ import Debug_Module     :: *;
 // The outermost interface of the SoC
 
 interface SoC_Top_IFC;
-   // Set core's verbosity
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
-
 `ifdef INCLUDE_GDB_CONTROL
    // To external controller (E.g., GDB)
    interface Server #(Control_Req, Control_Rsp) server_external_control;
@@ -115,8 +113,29 @@ interface SoC_Top_IFC;
    (* always_ready *)
    method Bit #(8) status;
 
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+
+   // ----------------
    // For ISA tests: watch memory writes to <tohost> addr
+`ifdef WATCH_TOHOST
    method Action set_watch_tohost (Bool  watch_tohost, Fabric_Addr  tohost_addr);
+   method Bit #(64) mv_tohost_value;
+`endif
+
+   // ----------------
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+
+   // ----------------
+   // Misc. status; 0 = running, no error
+   (* always_ready *)
+   method Bit #(8) mv_status;
+
 endinterface
 
 // ================================================================
@@ -180,7 +199,19 @@ module mkSoC_Top (SoC_Top_IFC);
    master_vector[imem_master_num] = zeroMasterUserFields(extendIDFields(core.cpu_imem_master, 0));
 
    // CPU DMem master to fabric
-   master_vector[dmem_master_num] = core.cpu_dmem_master;
+   master_vector[dmem_master_num] = core.core_mem_master;
+
+   // Tie-off unused 'coherent DMA port' into optional L2 cache (LLC, Last Level Cache)
+   AXI4_Master #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+                , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
+                , Wd_AR_User_Dma, Wd_R_User_Dma)
+                   dummy_master = culDeSac;
+   mkConnection (dummy_master, core.dma_server);
+
+`ifdef INCLUDE_ACCEL0
+   // accel_aes0 to fabric
+   mkConnection (accel0.master,  fabric.v_from_masters [accel0_master_num]);
+`endif
 
    // ----------------
    // SoC fabric slave connections
@@ -466,10 +497,6 @@ module mkSoC_Top (SoC_Top_IFC);
    // ================================================================
    // INTERFACE
 
-   method Action  set_verbosity (Bit #(4)  verbosity1, Bit #(64)  logdelay);
-      core.set_verbosity (verbosity1, logdelay);
-   endmethod
-
    // To external controller (E.g., GDB)
 `ifdef INCLUDE_GDB_CONTROL
    interface server_external_control = toGPServer (f_external_control_reqs, f_external_control_rsps);
@@ -489,14 +516,32 @@ module mkSoC_Top (SoC_Top_IFC);
    interface get_to_console   = uart0.get_to_console;
    interface put_from_console = uart0.put_from_console;
 
-   // Catch-all status; return-value can identify the origin (0 = none)
-   method Bit #(8) status;
-      return mem0_controller.status;
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   method Action  set_verbosity (Bit #(4)  verbosity1, Bit #(64)  logdelay);
+      core.set_verbosity (verbosity1, logdelay);
    endmethod
 
+`ifdef WATCH_TOHOST
    // For ISA tests: watch memory writes to <tohost> addr
    method Action set_watch_tohost (Bool  watch_tohost, Fabric_Addr  tohost_addr);
-      mem0_controller.set_watch_tohost (watch_tohost, tohost_addr);
+      core.set_watch_tohost (watch_tohost, tohost_addr);
+   endmethod
+
+   method Bit #(64) mv_tohost_value;
+      Bit #(64) tohost_value = 0;
+      tohost_value = core.mv_tohost_value;
+      return tohost_value;
+   endmethod
+`endif
+
+   method Action ma_ddr4_ready;
+      core.ma_ddr4_ready;
+   endmethod
+
+   method Bit #(8) mv_status;
+      return core.mv_status;    // 0 = running, no error
    endmethod
 endmodule: mkSoC_Top
 

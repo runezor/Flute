@@ -45,6 +45,8 @@ import AXI4Lite :: *;
 // ================================================================
 // Project imports
 
+import Near_Mem_IFC :: *;    // For Wd_{Id,Addr,Data,User}_Dma
+
 // Main fabric
 import Fabric_Defs  :: *;
 
@@ -78,11 +80,6 @@ import Debug_Module  :: *;
 interface Core_IFC #(numeric type t_n_interrupt_sources);
 
    // ----------------------------------------------------------------
-   // Debugging: set core's verbosity
-
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
-
-   // ----------------------------------------------------------------
    // Soft reset
    // 'Bool' is initial 'running' state
 
@@ -99,7 +96,7 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    interface AXI4_Master #( Wd_MId_ext, Wd_Addr, Wd_Data
                           , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
                           , Wd_AR_User_ext, Wd_R_User_ext)
-      cpu_dmem_master;
+      core_mem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
@@ -108,6 +105,13 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    interface AXI4Lite_Slave #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
       cpu_dmem_slave;
 `endif
+
+   // ----------------------------------------------------------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+                         , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
+                         , Wd_AR_User_Dma, Wd_R_User_Dma)  dma_server;
 
    // ----------------------------------------------------------------
    // External interrupt sources
@@ -153,6 +157,29 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    (* always_ready, always_enabled *)
    method Action send_tag_cache_master_events (Vector #(6, Bit #(1)) events);
 `endif
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+
+   // ----------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+   method Bit #(64) mv_tohost_value;
+`endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+
+   // Misc. status; 0 = running, no error
+   (* always_ready *)
+   method Bit #(8) mv_status;
+
 endinterface
 
 // ================================================================
@@ -161,18 +188,21 @@ endinterface
 // The Synthesizable Core interface (same with Synth AXI)
 
 interface Core_IFC_Synth #(numeric type t_n_interrupt_sources);
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
    interface Server #(Bool, Bool)  cpu_reset_server;
    interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
       cpu_imem_master;
    interface AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
                                 , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
                                 , Wd_AR_User_ext, Wd_R_User_ext)
-      cpu_dmem_master;
+      core_mem_master;
 `ifdef INCLUDE_DMEM_SLAVE
    interface AXI4Lite_Slave_Synth #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
       cpu_dmem_slave;
 `endif
+   interface AXI4_Slave_Synth #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+                               , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
+                               , Wd_AR_User_Dma, Wd_R_User_Dma)
+      dma_server;
    interface Vector #(t_n_interrupt_sources, PLIC_Source_IFC)
       core_external_interrupt_sources;
    (* always_ready, always_enabled *)
@@ -190,6 +220,13 @@ interface Core_IFC_Synth #(numeric type t_n_interrupt_sources);
    (* always_ready, always_enabled *)
    method Action send_tag_cache_master_events (Vector #(6, Bit #(1)) events);
 `endif
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+`endif
+   method Action ma_ddr4_ready;
+   (* always_ready *)
+   method Bit #(8) mv_status;
 endinterface
 
 // ================================================================

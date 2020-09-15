@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 Bluespec, Inc. All Rights Reserved.
+// Copyright (c) 2018-2020 Bluespec, Inc. All Rights Reserved.
 
 //-
 // AXI (user fields) + CHERI modifications:
@@ -202,12 +202,12 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
 `ifdef ISA_CHERI
 `ifdef NO_TAG_CACHE
-   axi4_dmem_shim.clear;
+   axi4_mem_shim.clear;
 `else
-   //axi4_dmem_shim.clear; XXX Temporarily do not clear the tag cache to avoid hanging on pending transactions
+   //axi4_mem_shim.clear; XXX Temporarily do not clear the tag cache to avoid hanging on pending transactions
 `endif
 `else
-   axi4_dmem_shim.clear;
+   axi4_mem_shim.clear;
 `endif
 
       soc_reset_fired.send();
@@ -392,7 +392,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
            AXI4_Master#( Wd_MId_2x3, Wd_Addr, Wd_Data
                        , Wd_AW_User, Wd_W_User, Wd_B_User
                        , Wd_AR_User, Wd_R_User)) master_vector = newVector;
-   master_vector[cpu_dmem_master_num]         = cpu.dmem_master;
+   master_vector[cpu_dmem_master_num]         = cpu.mem_master;
    master_vector[debug_module_sba_master_num] = dm_master_local;
 
    // Slaves on the local 2x3 fabric
@@ -401,7 +401,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
            AXI4_Slave#( Wd_SId_2x3, Wd_Addr, Wd_Data
                       , Wd_AW_User, Wd_W_User, Wd_B_User
                       , Wd_AR_User, Wd_R_User)) slave_vector = newVector;
-   slave_vector[default_slave_num]     = axi4_dmem_shim_slave;
+   slave_vector[default_slave_num]     = axi4_mem_shim_slave;
    slave_vector[near_mem_io_slave_num] = zeroSlaveUserFields (near_mem_io.axi4_slave);
    slave_vector[plic_slave_num]        = zeroSlaveUserFields (plic.axi4_slave);
 
@@ -461,13 +461,6 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // INTERFACE
 
    // ----------------------------------------------------------------
-   // Debugging: set core's verbosity
-
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
-      cpu.set_verbosity (verbosity, logdelay);
-   endmethod
-
-   // ----------------------------------------------------------------
    // Soft reset
 
    interface Server  cpu_reset_server = toGPServer (f_reset_reqs, f_reset_rsps);
@@ -479,7 +472,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    interface cpu_imem_master = imem_master;
 
    // DMem to Fabric master interface
-   interface cpu_dmem_master = axi4_dmem_shim_master;
+   interface core_mem_master = axi4_mem_shim_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
@@ -487,6 +480,11 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `ifdef INCLUDE_DMEM_SLAVE
    interface AXI4Lite_Slave cpu_dmem_slave = cpu.dmem_slave;
 `endif
+
+   // ----------------------------------------------------------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave_IFC  dma_server = cpu.dma_server;
 
    // ----------------------------------------------------------------
    // External interrupt sources
@@ -532,19 +530,52 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    interface Client ndm_reset_client = debug_module.ndm_reset_client;
 `endif
 
+   // ----------------
+   // Debugging: performance monitoring events
+
 `ifdef TAG_CACHE_EVENTS_EXTERNAL
    method Action send_tag_cache_master_events (Vector #(6, Bit #(1)) events);
       w_tag_cache_master_evts <= events;
    endmethod
 `endif
 
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+      cpu.set_verbosity (verbosity, logdelay);
+   endmethod
+
+   // ----------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+      cpu.set_watch_tohost (watch_tohost, tohost_addr);
+   endmethod
+
+   method Bit #(64) mv_tohost_value = cpu.mv_tohost_value;
+`endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+      cpu.ma_ddr4_ready;
+   endmethod
+
+   // Misc. status; 0 = running, no error
+   method Bit #(8) mv_status;
+      return cpu.mv_status;
+   endmethod
 endmodule: mkCore
 
 (* synthesize *)
 module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
    let core <- mkCore;
    let cpu_imem_master_synth <- toAXI4_Master_Synth (core.cpu_imem_master);
-   let cpu_dmem_master_synth <- toAXI4_Master_Synth (core.cpu_dmem_master);
+   let core_mem_master_synth <- toAXI4_Master_Synth (core.core_mem_master);
 `ifdef INCLUDE_DMEM_SLAVE
    let cpu_dmem_slave_synth <- toAXI4Lite_Slave_Synth (core.cpu_dmem_slave);
 `endif
@@ -552,7 +583,7 @@ module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
    method set_verbosity = core.set_verbosity;
    interface cpu_reset_server = core.cpu_reset_server;
    interface cpu_imem_master = cpu_imem_master_synth;
-   interface cpu_dmem_master = cpu_dmem_master_synth;
+   interface core_mem_master = core_mem_master_synth;
 `ifdef INCLUDE_DMEM_SLAVE
    interface cpu_dmem_slave = cpu_dmem_slave_synth;
 `endif

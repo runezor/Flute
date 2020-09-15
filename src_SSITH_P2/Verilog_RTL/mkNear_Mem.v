@@ -37,30 +37,47 @@
 // dmem_st_amo_val                O   128
 // dmem_exc                       O     1
 // dmem_exc_code                  O     6 reg
-// dmem_master_aw_canPeek         O     1 reg
-// dmem_master_aw_peek            O    97 reg
-// RDY_dmem_master_aw_peek        O     1 reg
-// RDY_dmem_master_aw_drop        O     1 reg
-// dmem_master_w_canPeek          O     1 reg
-// dmem_master_w_peek             O    74 reg
-// RDY_dmem_master_w_peek         O     1 reg
-// RDY_dmem_master_w_drop         O     1 reg
-// dmem_master_b_canPut           O     1 reg
-// RDY_dmem_master_b_put          O     1 reg
-// dmem_master_ar_canPeek         O     1 reg
-// dmem_master_ar_peek            O    97 reg
-// RDY_dmem_master_ar_peek        O     1 reg
-// RDY_dmem_master_ar_drop        O     1 reg
-// dmem_master_r_canPut           O     1 reg
-// RDY_dmem_master_r_put          O     1 reg
+// mem_master_aw_canPeek          O     1 reg
+// mem_master_aw_peek             O    97 reg
+// RDY_mem_master_aw_peek         O     1 reg
+// RDY_mem_master_aw_drop         O     1 reg
+// mem_master_w_canPeek           O     1 reg
+// mem_master_w_peek              O    74 reg
+// RDY_mem_master_w_peek          O     1 reg
+// RDY_mem_master_w_drop          O     1 reg
+// mem_master_b_canPut            O     1 reg
+// RDY_mem_master_b_put           O     1 reg
+// mem_master_ar_canPeek          O     1 reg
+// mem_master_ar_peek             O    97 reg
+// RDY_mem_master_ar_peek         O     1 reg
+// RDY_mem_master_ar_drop         O     1 reg
+// mem_master_r_canPut            O     1 reg
+// RDY_mem_master_r_put           O     1 reg
 // RDY_server_fence_i_request_put  O     1
 // RDY_server_fence_i_response_get  O     1
 // RDY_server_fence_request_put   O     1 reg
 // RDY_server_fence_response_get  O     1
-// RDY_sfence_vma                 O     1 const
+// RDY_sfence_vma_server_request_put  O     1 reg
+// RDY_sfence_vma_server_response_get  O     1 reg
+// dma_server_aw_canPut           O     1 const
+// RDY_dma_server_aw_put          O     1 const
+// dma_server_w_canPut            O     1 const
+// RDY_dma_server_w_put           O     1 const
+// dma_server_b_canPeek           O     1 const
+// dma_server_b_peek              O     8
+// RDY_dma_server_b_peek          O     1 const
+// RDY_dma_server_b_drop          O     1 const
+// dma_server_ar_canPut           O     1 const
+// RDY_dma_server_ar_put          O     1 const
+// dma_server_r_canPeek           O     1 const
+// dma_server_r_peek              O   521
+// RDY_dma_server_r_peek          O     1 const
+// RDY_dma_server_r_drop          O     1 const
+// RDY_ma_ddr4_ready              O     1 const
+// mv_status                      O     8
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
-// imem_req_width_code            I     3
+// imem_req_f3                    I     3
 // imem_req_addr                  I    64
 // imem_req_priv                  I     2 reg
 // imem_req_sstatus_SUM           I     1 reg
@@ -69,7 +86,7 @@
 // imem_master_b_put_val          I     7 reg
 // imem_master_r_put_val          I    73 reg
 // dmem_req_op                    I     2
-// dmem_req_width_code            I     3
+// dmem_req_f3                    I     3
 // dmem_req_is_unsigned           I     1 reg
 // dmem_req_amo_funct5            I     5 reg
 // dmem_req_addr                  I    64
@@ -78,9 +95,12 @@
 // dmem_req_sstatus_SUM           I     1 reg
 // dmem_req_mstatus_MXR           I     1 reg
 // dmem_req_satp                  I    64 reg
-// dmem_master_b_put_val          I     6 reg
-// dmem_master_r_put_val          I    72 reg
+// mem_master_b_put_val           I     6 reg
+// mem_master_r_put_val           I    72 reg
 // server_fence_request_put       I     8 unused
+// dma_server_aw_put_val          I    99 unused
+// dma_server_w_put_val           I   577 unused
+// dma_server_ar_put_val          I    99 unused
 // EN_server_reset_request_put    I     1
 // EN_server_reset_response_get   I     1
 // EN_imem_req                    I     1
@@ -92,16 +112,23 @@
 // EN_imem_master_r_put           I     1
 // EN_dmem_req                    I     1
 // EN_dmem_commit                 I     1
-// EN_dmem_master_aw_drop         I     1
-// EN_dmem_master_w_drop          I     1
-// EN_dmem_master_b_put           I     1
-// EN_dmem_master_ar_drop         I     1
-// EN_dmem_master_r_put           I     1
+// EN_mem_master_aw_drop          I     1
+// EN_mem_master_w_drop           I     1
+// EN_mem_master_b_put            I     1
+// EN_mem_master_ar_drop          I     1
+// EN_mem_master_r_put            I     1
 // EN_server_fence_i_request_put  I     1
 // EN_server_fence_i_response_get  I     1
 // EN_server_fence_request_put    I     1
 // EN_server_fence_response_get   I     1
-// EN_sfence_vma                  I     1
+// EN_sfence_vma_server_request_put  I     1
+// EN_sfence_vma_server_response_get  I     1
+// EN_dma_server_aw_put           I     1 unused
+// EN_dma_server_w_put            I     1 unused
+// EN_dma_server_b_drop           I     1 unused
+// EN_dma_server_ar_put           I     1 unused
+// EN_dma_server_r_drop           I     1 unused
+// EN_ma_ddr4_ready               I     1
 //
 // Combinational paths from inputs to outputs:
 //   EN_imem_commit -> imem_valid
@@ -135,7 +162,7 @@ module mkNear_Mem(CLK,
 		  EN_server_reset_response_get,
 		  RDY_server_reset_response_get,
 
-		  imem_req_width_code,
+		  imem_req_f3,
 		  imem_req_addr,
 		  imem_req_priv,
 		  imem_req_sstatus_SUM,
@@ -196,7 +223,7 @@ module mkNear_Mem(CLK,
 		  RDY_imem_master_r_put,
 
 		  dmem_req_op,
-		  dmem_req_width_code,
+		  dmem_req_f3,
 		  dmem_req_is_unsigned,
 		  dmem_req_amo_funct5,
 		  dmem_req_addr,
@@ -221,41 +248,41 @@ module mkNear_Mem(CLK,
 
 		  dmem_exc_code,
 
-		  dmem_master_aw_canPeek,
+		  mem_master_aw_canPeek,
 
-		  dmem_master_aw_peek,
-		  RDY_dmem_master_aw_peek,
+		  mem_master_aw_peek,
+		  RDY_mem_master_aw_peek,
 
-		  EN_dmem_master_aw_drop,
-		  RDY_dmem_master_aw_drop,
+		  EN_mem_master_aw_drop,
+		  RDY_mem_master_aw_drop,
 
-		  dmem_master_w_canPeek,
+		  mem_master_w_canPeek,
 
-		  dmem_master_w_peek,
-		  RDY_dmem_master_w_peek,
+		  mem_master_w_peek,
+		  RDY_mem_master_w_peek,
 
-		  EN_dmem_master_w_drop,
-		  RDY_dmem_master_w_drop,
+		  EN_mem_master_w_drop,
+		  RDY_mem_master_w_drop,
 
-		  dmem_master_b_canPut,
+		  mem_master_b_canPut,
 
-		  dmem_master_b_put_val,
-		  EN_dmem_master_b_put,
-		  RDY_dmem_master_b_put,
+		  mem_master_b_put_val,
+		  EN_mem_master_b_put,
+		  RDY_mem_master_b_put,
 
-		  dmem_master_ar_canPeek,
+		  mem_master_ar_canPeek,
 
-		  dmem_master_ar_peek,
-		  RDY_dmem_master_ar_peek,
+		  mem_master_ar_peek,
+		  RDY_mem_master_ar_peek,
 
-		  EN_dmem_master_ar_drop,
-		  RDY_dmem_master_ar_drop,
+		  EN_mem_master_ar_drop,
+		  RDY_mem_master_ar_drop,
 
-		  dmem_master_r_canPut,
+		  mem_master_r_canPut,
 
-		  dmem_master_r_put_val,
-		  EN_dmem_master_r_put,
-		  RDY_dmem_master_r_put,
+		  mem_master_r_put_val,
+		  EN_mem_master_r_put,
+		  RDY_mem_master_r_put,
 
 		  EN_server_fence_i_request_put,
 		  RDY_server_fence_i_request_put,
@@ -270,8 +297,50 @@ module mkNear_Mem(CLK,
 		  EN_server_fence_response_get,
 		  RDY_server_fence_response_get,
 
-		  EN_sfence_vma,
-		  RDY_sfence_vma);
+		  EN_sfence_vma_server_request_put,
+		  RDY_sfence_vma_server_request_put,
+
+		  EN_sfence_vma_server_response_get,
+		  RDY_sfence_vma_server_response_get,
+
+		  dma_server_aw_canPut,
+
+		  dma_server_aw_put_val,
+		  EN_dma_server_aw_put,
+		  RDY_dma_server_aw_put,
+
+		  dma_server_w_canPut,
+
+		  dma_server_w_put_val,
+		  EN_dma_server_w_put,
+		  RDY_dma_server_w_put,
+
+		  dma_server_b_canPeek,
+
+		  dma_server_b_peek,
+		  RDY_dma_server_b_peek,
+
+		  EN_dma_server_b_drop,
+		  RDY_dma_server_b_drop,
+
+		  dma_server_ar_canPut,
+
+		  dma_server_ar_put_val,
+		  EN_dma_server_ar_put,
+		  RDY_dma_server_ar_put,
+
+		  dma_server_r_canPeek,
+
+		  dma_server_r_peek,
+		  RDY_dma_server_r_peek,
+
+		  EN_dma_server_r_drop,
+		  RDY_dma_server_r_drop,
+
+		  EN_ma_ddr4_ready,
+		  RDY_ma_ddr4_ready,
+
+		  mv_status);
   input  CLK;
   input  RST_N;
 
@@ -284,7 +353,7 @@ module mkNear_Mem(CLK,
   output RDY_server_reset_response_get;
 
   // action method imem_req
-  input  [2 : 0] imem_req_width_code;
+  input  [2 : 0] imem_req_f3;
   input  [63 : 0] imem_req_addr;
   input  [1 : 0] imem_req_priv;
   input  imem_req_sstatus_SUM;
@@ -367,7 +436,7 @@ module mkNear_Mem(CLK,
 
   // action method dmem_req
   input  [1 : 0] dmem_req_op;
-  input  [2 : 0] dmem_req_width_code;
+  input  [2 : 0] dmem_req_f3;
   input  dmem_req_is_unsigned;
   input  [4 : 0] dmem_req_amo_funct5;
   input  [63 : 0] dmem_req_addr;
@@ -399,54 +468,54 @@ module mkNear_Mem(CLK,
   // value method dmem_exc_code
   output [5 : 0] dmem_exc_code;
 
-  // value method dmem_master_aw_canPeek
-  output dmem_master_aw_canPeek;
+  // value method mem_master_aw_canPeek
+  output mem_master_aw_canPeek;
 
-  // value method dmem_master_aw_peek
-  output [96 : 0] dmem_master_aw_peek;
-  output RDY_dmem_master_aw_peek;
+  // value method mem_master_aw_peek
+  output [96 : 0] mem_master_aw_peek;
+  output RDY_mem_master_aw_peek;
 
-  // action method dmem_master_aw_drop
-  input  EN_dmem_master_aw_drop;
-  output RDY_dmem_master_aw_drop;
+  // action method mem_master_aw_drop
+  input  EN_mem_master_aw_drop;
+  output RDY_mem_master_aw_drop;
 
-  // value method dmem_master_w_canPeek
-  output dmem_master_w_canPeek;
+  // value method mem_master_w_canPeek
+  output mem_master_w_canPeek;
 
-  // value method dmem_master_w_peek
-  output [73 : 0] dmem_master_w_peek;
-  output RDY_dmem_master_w_peek;
+  // value method mem_master_w_peek
+  output [73 : 0] mem_master_w_peek;
+  output RDY_mem_master_w_peek;
 
-  // action method dmem_master_w_drop
-  input  EN_dmem_master_w_drop;
-  output RDY_dmem_master_w_drop;
+  // action method mem_master_w_drop
+  input  EN_mem_master_w_drop;
+  output RDY_mem_master_w_drop;
 
-  // value method dmem_master_b_canPut
-  output dmem_master_b_canPut;
+  // value method mem_master_b_canPut
+  output mem_master_b_canPut;
 
-  // action method dmem_master_b_put
-  input  [5 : 0] dmem_master_b_put_val;
-  input  EN_dmem_master_b_put;
-  output RDY_dmem_master_b_put;
+  // action method mem_master_b_put
+  input  [5 : 0] mem_master_b_put_val;
+  input  EN_mem_master_b_put;
+  output RDY_mem_master_b_put;
 
-  // value method dmem_master_ar_canPeek
-  output dmem_master_ar_canPeek;
+  // value method mem_master_ar_canPeek
+  output mem_master_ar_canPeek;
 
-  // value method dmem_master_ar_peek
-  output [96 : 0] dmem_master_ar_peek;
-  output RDY_dmem_master_ar_peek;
+  // value method mem_master_ar_peek
+  output [96 : 0] mem_master_ar_peek;
+  output RDY_mem_master_ar_peek;
 
-  // action method dmem_master_ar_drop
-  input  EN_dmem_master_ar_drop;
-  output RDY_dmem_master_ar_drop;
+  // action method mem_master_ar_drop
+  input  EN_mem_master_ar_drop;
+  output RDY_mem_master_ar_drop;
 
-  // value method dmem_master_r_canPut
-  output dmem_master_r_canPut;
+  // value method mem_master_r_canPut
+  output mem_master_r_canPut;
 
-  // action method dmem_master_r_put
-  input  [71 : 0] dmem_master_r_put_val;
-  input  EN_dmem_master_r_put;
-  output RDY_dmem_master_r_put;
+  // action method mem_master_r_put
+  input  [71 : 0] mem_master_r_put_val;
+  input  EN_mem_master_r_put;
+  output RDY_mem_master_r_put;
 
   // action method server_fence_i_request_put
   input  EN_server_fence_i_request_put;
@@ -465,26 +534,84 @@ module mkNear_Mem(CLK,
   input  EN_server_fence_response_get;
   output RDY_server_fence_response_get;
 
-  // action method sfence_vma
-  input  EN_sfence_vma;
-  output RDY_sfence_vma;
+  // action method sfence_vma_server_request_put
+  input  EN_sfence_vma_server_request_put;
+  output RDY_sfence_vma_server_request_put;
+
+  // action method sfence_vma_server_response_get
+  input  EN_sfence_vma_server_response_get;
+  output RDY_sfence_vma_server_response_get;
+
+  // value method dma_server_aw_canPut
+  output dma_server_aw_canPut;
+
+  // action method dma_server_aw_put
+  input  [98 : 0] dma_server_aw_put_val;
+  input  EN_dma_server_aw_put;
+  output RDY_dma_server_aw_put;
+
+  // value method dma_server_w_canPut
+  output dma_server_w_canPut;
+
+  // action method dma_server_w_put
+  input  [576 : 0] dma_server_w_put_val;
+  input  EN_dma_server_w_put;
+  output RDY_dma_server_w_put;
+
+  // value method dma_server_b_canPeek
+  output dma_server_b_canPeek;
+
+  // value method dma_server_b_peek
+  output [7 : 0] dma_server_b_peek;
+  output RDY_dma_server_b_peek;
+
+  // action method dma_server_b_drop
+  input  EN_dma_server_b_drop;
+  output RDY_dma_server_b_drop;
+
+  // value method dma_server_ar_canPut
+  output dma_server_ar_canPut;
+
+  // action method dma_server_ar_put
+  input  [98 : 0] dma_server_ar_put_val;
+  input  EN_dma_server_ar_put;
+  output RDY_dma_server_ar_put;
+
+  // value method dma_server_r_canPeek
+  output dma_server_r_canPeek;
+
+  // value method dma_server_r_peek
+  output [520 : 0] dma_server_r_peek;
+  output RDY_dma_server_r_peek;
+
+  // action method dma_server_r_drop
+  input  EN_dma_server_r_drop;
+  output RDY_dma_server_r_drop;
+
+  // action method ma_ddr4_ready
+  input  EN_ma_ddr4_ready;
+  output RDY_ma_ddr4_ready;
+
+  // value method mv_status
+  output [7 : 0] mv_status;
 
   // signals for module outputs
+  wire [520 : 0] dma_server_r_peek;
   wire [127 : 0] dmem_st_amo_val, dmem_word128_snd;
   wire [97 : 0] imem_master_ar_peek, imem_master_aw_peek;
-  wire [96 : 0] dmem_master_ar_peek, dmem_master_aw_peek;
-  wire [73 : 0] dmem_master_w_peek, imem_master_w_peek;
+  wire [96 : 0] mem_master_ar_peek, mem_master_aw_peek;
+  wire [73 : 0] imem_master_w_peek, mem_master_w_peek;
   wire [63 : 0] imem_pc, imem_tval;
   wire [31 : 0] imem_instr;
+  wire [7 : 0] dma_server_b_peek, mv_status;
   wire [5 : 0] dmem_exc_code, imem_exc_code;
-  wire RDY_dmem_master_ar_drop,
-       RDY_dmem_master_ar_peek,
-       RDY_dmem_master_aw_drop,
-       RDY_dmem_master_aw_peek,
-       RDY_dmem_master_b_put,
-       RDY_dmem_master_r_put,
-       RDY_dmem_master_w_drop,
-       RDY_dmem_master_w_peek,
+  wire RDY_dma_server_ar_put,
+       RDY_dma_server_aw_put,
+       RDY_dma_server_b_drop,
+       RDY_dma_server_b_peek,
+       RDY_dma_server_r_drop,
+       RDY_dma_server_r_peek,
+       RDY_dma_server_w_put,
        RDY_imem_master_ar_drop,
        RDY_imem_master_ar_peek,
        RDY_imem_master_aw_drop,
@@ -493,19 +620,29 @@ module mkNear_Mem(CLK,
        RDY_imem_master_r_put,
        RDY_imem_master_w_drop,
        RDY_imem_master_w_peek,
+       RDY_ma_ddr4_ready,
+       RDY_mem_master_ar_drop,
+       RDY_mem_master_ar_peek,
+       RDY_mem_master_aw_drop,
+       RDY_mem_master_aw_peek,
+       RDY_mem_master_b_put,
+       RDY_mem_master_r_put,
+       RDY_mem_master_w_drop,
+       RDY_mem_master_w_peek,
        RDY_server_fence_i_request_put,
        RDY_server_fence_i_response_get,
        RDY_server_fence_request_put,
        RDY_server_fence_response_get,
        RDY_server_reset_request_put,
        RDY_server_reset_response_get,
-       RDY_sfence_vma,
+       RDY_sfence_vma_server_request_put,
+       RDY_sfence_vma_server_response_get,
+       dma_server_ar_canPut,
+       dma_server_aw_canPut,
+       dma_server_b_canPeek,
+       dma_server_r_canPeek,
+       dma_server_w_canPut,
        dmem_exc,
-       dmem_master_ar_canPeek,
-       dmem_master_aw_canPeek,
-       dmem_master_b_canPut,
-       dmem_master_r_canPut,
-       dmem_master_w_canPeek,
        dmem_valid,
        dmem_word128_fst,
        imem_exc,
@@ -515,7 +652,12 @@ module mkNear_Mem(CLK,
        imem_master_b_canPut,
        imem_master_r_canPut,
        imem_master_w_canPeek,
-       imem_valid;
+       imem_valid,
+       mem_master_ar_canPeek,
+       mem_master_aw_canPeek,
+       mem_master_b_canPut,
+       mem_master_r_canPut,
+       mem_master_w_canPeek;
 
   // register cfg_verbosity
   reg [3 : 0] cfg_verbosity;
@@ -529,17 +671,19 @@ module mkNear_Mem(CLK,
 
   // ports of submodule dcache
   wire [128 : 0] dcache$req_st_value;
-  wire [127 : 0] dcache$st_amo_val_snd, dcache$word128_snd;
+  wire [127 : 0] dcache$cword_snd, dcache$st_amo_val_snd;
   wire [96 : 0] dcache$mem_master_ar_peek, dcache$mem_master_aw_peek;
   wire [73 : 0] dcache$mem_master_w_peek;
   wire [71 : 0] dcache$mem_master_r_put_val;
   wire [63 : 0] dcache$req_addr, dcache$req_satp;
+  wire [7 : 0] dcache$mv_status;
   wire [5 : 0] dcache$exc_code, dcache$mem_master_b_put_val;
   wire [4 : 0] dcache$req_amo_funct5;
   wire [3 : 0] dcache$set_verbosity_verbosity;
   wire [2 : 0] dcache$req_width_code;
   wire [1 : 0] dcache$req_op, dcache$req_priv;
   wire dcache$EN_commit,
+       dcache$EN_ma_ddr4_ready,
        dcache$EN_mem_master_ar_drop,
        dcache$EN_mem_master_aw_drop,
        dcache$EN_mem_master_b_put,
@@ -564,6 +708,7 @@ module mkNear_Mem(CLK,
        dcache$RDY_server_flush_response_get,
        dcache$RDY_server_reset_request_put,
        dcache$RDY_server_reset_response_get,
+       dcache$cword_fst,
        dcache$exc,
        dcache$mem_master_ar_canPeek,
        dcache$mem_master_aw_canPeek,
@@ -573,8 +718,7 @@ module mkNear_Mem(CLK,
        dcache$req_is_unsigned,
        dcache$req_mstatus_MXR,
        dcache$req_sstatus_SUM,
-       dcache$valid,
-       dcache$word128_fst;
+       dcache$valid;
 
   // ports of submodule f_reset_rsps
   wire f_reset_rsps$CLR,
@@ -583,9 +727,23 @@ module mkNear_Mem(CLK,
        f_reset_rsps$ENQ,
        f_reset_rsps$FULL_N;
 
+  // ports of submodule f_sfence_vma_reqs
+  wire f_sfence_vma_reqs$CLR,
+       f_sfence_vma_reqs$DEQ,
+       f_sfence_vma_reqs$EMPTY_N,
+       f_sfence_vma_reqs$ENQ,
+       f_sfence_vma_reqs$FULL_N;
+
+  // ports of submodule f_sfence_vma_rsps
+  wire f_sfence_vma_rsps$CLR,
+       f_sfence_vma_rsps$DEQ,
+       f_sfence_vma_rsps$EMPTY_N,
+       f_sfence_vma_rsps$ENQ,
+       f_sfence_vma_rsps$FULL_N;
+
   // ports of submodule icache
   wire [128 : 0] icache$req_st_value;
-  wire [127 : 0] icache$word128_snd;
+  wire [127 : 0] icache$cword_snd;
   wire [97 : 0] icache$mem_master_ar_peek, icache$mem_master_aw_peek;
   wire [73 : 0] icache$mem_master_w_peek;
   wire [72 : 0] icache$mem_master_r_put_val;
@@ -597,6 +755,7 @@ module mkNear_Mem(CLK,
   wire [2 : 0] icache$req_width_code;
   wire [1 : 0] icache$req_op, icache$req_priv;
   wire icache$EN_commit,
+       icache$EN_ma_ddr4_ready,
        icache$EN_mem_master_ar_drop,
        icache$EN_mem_master_aw_drop,
        icache$EN_mem_master_b_put,
@@ -640,12 +799,13 @@ module mkNear_Mem(CLK,
   // rule scheduling signals
   wire CAN_FIRE_RL_rl_reset,
        CAN_FIRE_RL_rl_reset_complete,
+       CAN_FIRE_RL_rl_sfence_vma,
+       CAN_FIRE_dma_server_ar_put,
+       CAN_FIRE_dma_server_aw_put,
+       CAN_FIRE_dma_server_b_drop,
+       CAN_FIRE_dma_server_r_drop,
+       CAN_FIRE_dma_server_w_put,
        CAN_FIRE_dmem_commit,
-       CAN_FIRE_dmem_master_ar_drop,
-       CAN_FIRE_dmem_master_aw_drop,
-       CAN_FIRE_dmem_master_b_put,
-       CAN_FIRE_dmem_master_r_put,
-       CAN_FIRE_dmem_master_w_drop,
        CAN_FIRE_dmem_req,
        CAN_FIRE_imem_commit,
        CAN_FIRE_imem_master_ar_drop,
@@ -654,21 +814,29 @@ module mkNear_Mem(CLK,
        CAN_FIRE_imem_master_r_put,
        CAN_FIRE_imem_master_w_drop,
        CAN_FIRE_imem_req,
+       CAN_FIRE_ma_ddr4_ready,
+       CAN_FIRE_mem_master_ar_drop,
+       CAN_FIRE_mem_master_aw_drop,
+       CAN_FIRE_mem_master_b_put,
+       CAN_FIRE_mem_master_r_put,
+       CAN_FIRE_mem_master_w_drop,
        CAN_FIRE_server_fence_i_request_put,
        CAN_FIRE_server_fence_i_response_get,
        CAN_FIRE_server_fence_request_put,
        CAN_FIRE_server_fence_response_get,
        CAN_FIRE_server_reset_request_put,
        CAN_FIRE_server_reset_response_get,
-       CAN_FIRE_sfence_vma,
+       CAN_FIRE_sfence_vma_server_request_put,
+       CAN_FIRE_sfence_vma_server_response_get,
        WILL_FIRE_RL_rl_reset,
        WILL_FIRE_RL_rl_reset_complete,
+       WILL_FIRE_RL_rl_sfence_vma,
+       WILL_FIRE_dma_server_ar_put,
+       WILL_FIRE_dma_server_aw_put,
+       WILL_FIRE_dma_server_b_drop,
+       WILL_FIRE_dma_server_r_drop,
+       WILL_FIRE_dma_server_w_put,
        WILL_FIRE_dmem_commit,
-       WILL_FIRE_dmem_master_ar_drop,
-       WILL_FIRE_dmem_master_aw_drop,
-       WILL_FIRE_dmem_master_b_put,
-       WILL_FIRE_dmem_master_r_put,
-       WILL_FIRE_dmem_master_w_drop,
        WILL_FIRE_dmem_req,
        WILL_FIRE_imem_commit,
        WILL_FIRE_imem_master_ar_drop,
@@ -677,23 +845,30 @@ module mkNear_Mem(CLK,
        WILL_FIRE_imem_master_r_put,
        WILL_FIRE_imem_master_w_drop,
        WILL_FIRE_imem_req,
+       WILL_FIRE_ma_ddr4_ready,
+       WILL_FIRE_mem_master_ar_drop,
+       WILL_FIRE_mem_master_aw_drop,
+       WILL_FIRE_mem_master_b_put,
+       WILL_FIRE_mem_master_r_put,
+       WILL_FIRE_mem_master_w_drop,
        WILL_FIRE_server_fence_i_request_put,
        WILL_FIRE_server_fence_i_response_get,
        WILL_FIRE_server_fence_request_put,
        WILL_FIRE_server_fence_response_get,
        WILL_FIRE_server_reset_request_put,
        WILL_FIRE_server_reset_response_get,
-       WILL_FIRE_sfence_vma;
+       WILL_FIRE_sfence_vma_server_request_put,
+       WILL_FIRE_sfence_vma_server_response_get;
 
   // inputs to muxes for submodule ports
   wire MUX_rg_state$write_1__SEL_2, MUX_rg_state$write_1__SEL_3;
 
   // declarations used by system tasks
   // synopsys translate_off
-  reg [31 : 0] v__h1160;
-  reg [31 : 0] v__h1311;
-  reg [31 : 0] v__h1154;
-  reg [31 : 0] v__h1305;
+  reg [31 : 0] v__h1180;
+  reg [31 : 0] v__h1331;
+  reg [31 : 0] v__h1174;
+  reg [31 : 0] v__h1325;
   // synopsys translate_on
 
   // remaining internal signals
@@ -727,7 +902,7 @@ module mkNear_Mem(CLK,
   assign imem_pc = icache$addr ;
 
   // value method imem_instr
-  assign imem_instr = icache$word128_snd[31:0] ;
+  assign imem_instr = icache$cword_snd[31:0] ;
 
   // value method imem_exc
   assign imem_exc = icache$exc ;
@@ -802,10 +977,10 @@ module mkNear_Mem(CLK,
   assign dmem_valid = dcache$valid ;
 
   // value method dmem_word128_fst
-  assign dmem_word128_fst = dcache$word128_fst ;
+  assign dmem_word128_fst = dcache$cword_fst ;
 
   // value method dmem_word128_snd
-  assign dmem_word128_snd = dcache$word128_snd ;
+  assign dmem_word128_snd = dcache$cword_snd ;
 
   // value method dmem_st_amo_val
   assign dmem_st_amo_val = dcache$st_amo_val_snd ;
@@ -816,64 +991,64 @@ module mkNear_Mem(CLK,
   // value method dmem_exc_code
   assign dmem_exc_code = dcache$exc_code ;
 
-  // value method dmem_master_aw_canPeek
-  assign dmem_master_aw_canPeek = dcache$mem_master_aw_canPeek ;
+  // value method mem_master_aw_canPeek
+  assign mem_master_aw_canPeek = dcache$mem_master_aw_canPeek ;
 
-  // value method dmem_master_aw_peek
-  assign dmem_master_aw_peek = dcache$mem_master_aw_peek ;
-  assign RDY_dmem_master_aw_peek = dcache$RDY_mem_master_aw_peek ;
+  // value method mem_master_aw_peek
+  assign mem_master_aw_peek = dcache$mem_master_aw_peek ;
+  assign RDY_mem_master_aw_peek = dcache$RDY_mem_master_aw_peek ;
 
-  // action method dmem_master_aw_drop
-  assign RDY_dmem_master_aw_drop = dcache$RDY_mem_master_aw_drop ;
-  assign CAN_FIRE_dmem_master_aw_drop = dcache$RDY_mem_master_aw_drop ;
-  assign WILL_FIRE_dmem_master_aw_drop = EN_dmem_master_aw_drop ;
+  // action method mem_master_aw_drop
+  assign RDY_mem_master_aw_drop = dcache$RDY_mem_master_aw_drop ;
+  assign CAN_FIRE_mem_master_aw_drop = dcache$RDY_mem_master_aw_drop ;
+  assign WILL_FIRE_mem_master_aw_drop = EN_mem_master_aw_drop ;
 
-  // value method dmem_master_w_canPeek
-  assign dmem_master_w_canPeek = dcache$mem_master_w_canPeek ;
+  // value method mem_master_w_canPeek
+  assign mem_master_w_canPeek = dcache$mem_master_w_canPeek ;
 
-  // value method dmem_master_w_peek
-  assign dmem_master_w_peek = dcache$mem_master_w_peek ;
-  assign RDY_dmem_master_w_peek = dcache$RDY_mem_master_w_peek ;
+  // value method mem_master_w_peek
+  assign mem_master_w_peek = dcache$mem_master_w_peek ;
+  assign RDY_mem_master_w_peek = dcache$RDY_mem_master_w_peek ;
 
-  // action method dmem_master_w_drop
-  assign RDY_dmem_master_w_drop = dcache$RDY_mem_master_w_drop ;
-  assign CAN_FIRE_dmem_master_w_drop = dcache$RDY_mem_master_w_drop ;
-  assign WILL_FIRE_dmem_master_w_drop = EN_dmem_master_w_drop ;
+  // action method mem_master_w_drop
+  assign RDY_mem_master_w_drop = dcache$RDY_mem_master_w_drop ;
+  assign CAN_FIRE_mem_master_w_drop = dcache$RDY_mem_master_w_drop ;
+  assign WILL_FIRE_mem_master_w_drop = EN_mem_master_w_drop ;
 
-  // value method dmem_master_b_canPut
-  assign dmem_master_b_canPut = dcache$mem_master_b_canPut ;
+  // value method mem_master_b_canPut
+  assign mem_master_b_canPut = dcache$mem_master_b_canPut ;
 
-  // action method dmem_master_b_put
-  assign RDY_dmem_master_b_put = dcache$RDY_mem_master_b_put ;
-  assign CAN_FIRE_dmem_master_b_put = dcache$RDY_mem_master_b_put ;
-  assign WILL_FIRE_dmem_master_b_put = EN_dmem_master_b_put ;
+  // action method mem_master_b_put
+  assign RDY_mem_master_b_put = dcache$RDY_mem_master_b_put ;
+  assign CAN_FIRE_mem_master_b_put = dcache$RDY_mem_master_b_put ;
+  assign WILL_FIRE_mem_master_b_put = EN_mem_master_b_put ;
 
-  // value method dmem_master_ar_canPeek
-  assign dmem_master_ar_canPeek = dcache$mem_master_ar_canPeek ;
+  // value method mem_master_ar_canPeek
+  assign mem_master_ar_canPeek = dcache$mem_master_ar_canPeek ;
 
-  // value method dmem_master_ar_peek
-  assign dmem_master_ar_peek = dcache$mem_master_ar_peek ;
-  assign RDY_dmem_master_ar_peek = dcache$RDY_mem_master_ar_peek ;
+  // value method mem_master_ar_peek
+  assign mem_master_ar_peek = dcache$mem_master_ar_peek ;
+  assign RDY_mem_master_ar_peek = dcache$RDY_mem_master_ar_peek ;
 
-  // action method dmem_master_ar_drop
-  assign RDY_dmem_master_ar_drop = dcache$RDY_mem_master_ar_drop ;
-  assign CAN_FIRE_dmem_master_ar_drop = dcache$RDY_mem_master_ar_drop ;
-  assign WILL_FIRE_dmem_master_ar_drop = EN_dmem_master_ar_drop ;
+  // action method mem_master_ar_drop
+  assign RDY_mem_master_ar_drop = dcache$RDY_mem_master_ar_drop ;
+  assign CAN_FIRE_mem_master_ar_drop = dcache$RDY_mem_master_ar_drop ;
+  assign WILL_FIRE_mem_master_ar_drop = EN_mem_master_ar_drop ;
 
-  // value method dmem_master_r_canPut
-  assign dmem_master_r_canPut = dcache$mem_master_r_canPut ;
+  // value method mem_master_r_canPut
+  assign mem_master_r_canPut = dcache$mem_master_r_canPut ;
 
-  // action method dmem_master_r_put
-  assign RDY_dmem_master_r_put = dcache$RDY_mem_master_r_put ;
-  assign CAN_FIRE_dmem_master_r_put = dcache$RDY_mem_master_r_put ;
-  assign WILL_FIRE_dmem_master_r_put = EN_dmem_master_r_put ;
+  // action method mem_master_r_put
+  assign RDY_mem_master_r_put = dcache$RDY_mem_master_r_put ;
+  assign CAN_FIRE_mem_master_r_put = dcache$RDY_mem_master_r_put ;
+  assign WILL_FIRE_mem_master_r_put = EN_mem_master_r_put ;
 
   // action method server_fence_i_request_put
   assign RDY_server_fence_i_request_put =
-	     rg_state != 2'd0 && icache$RDY_server_flush_request_put &&
+	     icache$RDY_server_flush_request_put &&
 	     dcache$RDY_server_flush_request_put ;
   assign CAN_FIRE_server_fence_i_request_put =
-	     rg_state != 2'd0 && icache$RDY_server_flush_request_put &&
+	     icache$RDY_server_flush_request_put &&
 	     dcache$RDY_server_flush_request_put ;
   assign WILL_FIRE_server_fence_i_request_put =
 	     EN_server_fence_i_request_put ;
@@ -901,10 +1076,74 @@ module mkNear_Mem(CLK,
 	     dcache$RDY_server_flush_response_get ;
   assign WILL_FIRE_server_fence_response_get = EN_server_fence_response_get ;
 
-  // action method sfence_vma
-  assign RDY_sfence_vma = 1'd1 ;
-  assign CAN_FIRE_sfence_vma = 1'd1 ;
-  assign WILL_FIRE_sfence_vma = EN_sfence_vma ;
+  // action method sfence_vma_server_request_put
+  assign RDY_sfence_vma_server_request_put = f_sfence_vma_reqs$FULL_N ;
+  assign CAN_FIRE_sfence_vma_server_request_put = f_sfence_vma_reqs$FULL_N ;
+  assign WILL_FIRE_sfence_vma_server_request_put =
+	     EN_sfence_vma_server_request_put ;
+
+  // action method sfence_vma_server_response_get
+  assign RDY_sfence_vma_server_response_get = f_sfence_vma_rsps$EMPTY_N ;
+  assign CAN_FIRE_sfence_vma_server_response_get = f_sfence_vma_rsps$EMPTY_N ;
+  assign WILL_FIRE_sfence_vma_server_response_get =
+	     EN_sfence_vma_server_response_get ;
+
+  // value method dma_server_aw_canPut
+  assign dma_server_aw_canPut = 1'd1 ;
+
+  // action method dma_server_aw_put
+  assign RDY_dma_server_aw_put = 1'd1 ;
+  assign CAN_FIRE_dma_server_aw_put = 1'd1 ;
+  assign WILL_FIRE_dma_server_aw_put = EN_dma_server_aw_put ;
+
+  // value method dma_server_w_canPut
+  assign dma_server_w_canPut = 1'd1 ;
+
+  // action method dma_server_w_put
+  assign RDY_dma_server_w_put = 1'd1 ;
+  assign CAN_FIRE_dma_server_w_put = 1'd1 ;
+  assign WILL_FIRE_dma_server_w_put = EN_dma_server_w_put ;
+
+  // value method dma_server_b_canPeek
+  assign dma_server_b_canPeek = 1'd0 ;
+
+  // value method dma_server_b_peek
+  assign dma_server_b_peek = 8'bxxxxxxxx /* unspecified value */  ;
+  assign RDY_dma_server_b_peek = 1'd0 ;
+
+  // action method dma_server_b_drop
+  assign RDY_dma_server_b_drop = 1'd0 ;
+  assign CAN_FIRE_dma_server_b_drop = 1'd0 ;
+  assign WILL_FIRE_dma_server_b_drop = EN_dma_server_b_drop ;
+
+  // value method dma_server_ar_canPut
+  assign dma_server_ar_canPut = 1'd1 ;
+
+  // action method dma_server_ar_put
+  assign RDY_dma_server_ar_put = 1'd1 ;
+  assign CAN_FIRE_dma_server_ar_put = 1'd1 ;
+  assign WILL_FIRE_dma_server_ar_put = EN_dma_server_ar_put ;
+
+  // value method dma_server_r_canPeek
+  assign dma_server_r_canPeek = 1'd0 ;
+
+  // value method dma_server_r_peek
+  assign dma_server_r_peek =
+	     521'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
+  assign RDY_dma_server_r_peek = 1'd0 ;
+
+  // action method dma_server_r_drop
+  assign RDY_dma_server_r_drop = 1'd0 ;
+  assign CAN_FIRE_dma_server_r_drop = 1'd0 ;
+  assign WILL_FIRE_dma_server_r_drop = EN_dma_server_r_drop ;
+
+  // action method ma_ddr4_ready
+  assign RDY_ma_ddr4_ready = 1'd1 ;
+  assign CAN_FIRE_ma_ddr4_ready = 1'd1 ;
+  assign WILL_FIRE_ma_ddr4_ready = EN_ma_ddr4_ready ;
+
+  // value method mv_status
+  assign mv_status = dcache$mv_status ;
 
   // submodule dcache
   mkMMU_DCache dcache(.CLK(CLK),
@@ -935,13 +1174,14 @@ module mkNear_Mem(CLK,
 		      .EN_mem_master_b_put(dcache$EN_mem_master_b_put),
 		      .EN_mem_master_ar_drop(dcache$EN_mem_master_ar_drop),
 		      .EN_mem_master_r_put(dcache$EN_mem_master_r_put),
+		      .EN_ma_ddr4_ready(dcache$EN_ma_ddr4_ready),
 		      .RDY_set_verbosity(),
 		      .RDY_server_reset_request_put(dcache$RDY_server_reset_request_put),
 		      .RDY_server_reset_response_get(dcache$RDY_server_reset_response_get),
 		      .valid(dcache$valid),
 		      .addr(),
-		      .word128_fst(dcache$word128_fst),
-		      .word128_snd(dcache$word128_snd),
+		      .cword_fst(dcache$cword_fst),
+		      .cword_snd(dcache$cword_snd),
 		      .st_amo_val_fst(),
 		      .st_amo_val_snd(dcache$st_amo_val_snd),
 		      .exc(dcache$exc),
@@ -964,7 +1204,9 @@ module mkNear_Mem(CLK,
 		      .RDY_mem_master_ar_peek(dcache$RDY_mem_master_ar_peek),
 		      .RDY_mem_master_ar_drop(dcache$RDY_mem_master_ar_drop),
 		      .mem_master_r_canPut(dcache$mem_master_r_canPut),
-		      .RDY_mem_master_r_put(dcache$RDY_mem_master_r_put));
+		      .RDY_mem_master_r_put(dcache$RDY_mem_master_r_put),
+		      .RDY_ma_ddr4_ready(),
+		      .mv_status(dcache$mv_status));
 
   // submodule f_reset_rsps
   FIFO20 #(.guarded(32'd1)) f_reset_rsps(.RST(RST_N),
@@ -974,6 +1216,24 @@ module mkNear_Mem(CLK,
 					 .CLR(f_reset_rsps$CLR),
 					 .FULL_N(f_reset_rsps$FULL_N),
 					 .EMPTY_N(f_reset_rsps$EMPTY_N));
+
+  // submodule f_sfence_vma_reqs
+  FIFO20 #(.guarded(32'd1)) f_sfence_vma_reqs(.RST(RST_N),
+					      .CLK(CLK),
+					      .ENQ(f_sfence_vma_reqs$ENQ),
+					      .DEQ(f_sfence_vma_reqs$DEQ),
+					      .CLR(f_sfence_vma_reqs$CLR),
+					      .FULL_N(f_sfence_vma_reqs$FULL_N),
+					      .EMPTY_N(f_sfence_vma_reqs$EMPTY_N));
+
+  // submodule f_sfence_vma_rsps
+  FIFO20 #(.guarded(32'd1)) f_sfence_vma_rsps(.RST(RST_N),
+					      .CLK(CLK),
+					      .ENQ(f_sfence_vma_rsps$ENQ),
+					      .DEQ(f_sfence_vma_rsps$DEQ),
+					      .CLR(f_sfence_vma_rsps$CLR),
+					      .FULL_N(f_sfence_vma_rsps$FULL_N),
+					      .EMPTY_N(f_sfence_vma_rsps$EMPTY_N));
 
   // submodule icache
   mkMMU_ICache icache(.CLK(CLK),
@@ -1004,13 +1264,14 @@ module mkNear_Mem(CLK,
 		      .EN_mem_master_b_put(icache$EN_mem_master_b_put),
 		      .EN_mem_master_ar_drop(icache$EN_mem_master_ar_drop),
 		      .EN_mem_master_r_put(icache$EN_mem_master_r_put),
+		      .EN_ma_ddr4_ready(icache$EN_ma_ddr4_ready),
 		      .RDY_set_verbosity(),
 		      .RDY_server_reset_request_put(icache$RDY_server_reset_request_put),
 		      .RDY_server_reset_response_get(icache$RDY_server_reset_response_get),
 		      .valid(icache$valid),
 		      .addr(icache$addr),
-		      .word128_fst(),
-		      .word128_snd(icache$word128_snd),
+		      .cword_fst(),
+		      .cword_snd(icache$cword_snd),
 		      .st_amo_val_fst(),
 		      .st_amo_val_snd(),
 		      .exc(icache$exc),
@@ -1033,7 +1294,9 @@ module mkNear_Mem(CLK,
 		      .RDY_mem_master_ar_peek(icache$RDY_mem_master_ar_peek),
 		      .RDY_mem_master_ar_drop(icache$RDY_mem_master_ar_drop),
 		      .mem_master_r_canPut(icache$mem_master_r_canPut),
-		      .RDY_mem_master_r_put(icache$RDY_mem_master_r_put));
+		      .RDY_mem_master_r_put(icache$RDY_mem_master_r_put),
+		      .RDY_ma_ddr4_ready(),
+		      .mv_status());
 
   // submodule soc_map
   mkSoC_Map soc_map(.CLK(CLK),
@@ -1078,9 +1341,15 @@ module mkNear_Mem(CLK,
   assign CAN_FIRE_RL_rl_reset_complete = MUX_rg_state$write_1__SEL_3 ;
   assign WILL_FIRE_RL_rl_reset_complete = MUX_rg_state$write_1__SEL_3 ;
 
+  // rule RL_rl_sfence_vma
+  assign CAN_FIRE_RL_rl_sfence_vma =
+	     f_sfence_vma_reqs$EMPTY_N && f_sfence_vma_rsps$FULL_N ;
+  assign WILL_FIRE_RL_rl_sfence_vma = CAN_FIRE_RL_rl_sfence_vma ;
+
   // inputs to muxes for submodule ports
   assign MUX_rg_state$write_1__SEL_2 =
-	     CAN_FIRE_RL_rl_reset && !EN_server_fence_request_put ;
+	     CAN_FIRE_RL_rl_reset && !EN_server_fence_request_put &&
+	     !EN_server_fence_i_request_put ;
   assign MUX_rg_state$write_1__SEL_3 =
 	     icache$RDY_server_reset_response_get &&
 	     dcache$RDY_server_reset_response_get &&
@@ -1107,8 +1376,8 @@ module mkNear_Mem(CLK,
 	     WILL_FIRE_RL_rl_reset_complete ;
 
   // submodule dcache
-  assign dcache$mem_master_b_put_val = dmem_master_b_put_val ;
-  assign dcache$mem_master_r_put_val = dmem_master_r_put_val ;
+  assign dcache$mem_master_b_put_val = mem_master_b_put_val ;
+  assign dcache$mem_master_r_put_val = mem_master_r_put_val ;
   assign dcache$req_addr = dmem_req_addr ;
   assign dcache$req_amo_funct5 = dmem_req_amo_funct5 ;
   assign dcache$req_is_unsigned = dmem_req_is_unsigned ;
@@ -1118,7 +1387,7 @@ module mkNear_Mem(CLK,
   assign dcache$req_satp = dmem_req_satp ;
   assign dcache$req_sstatus_SUM = dmem_req_sstatus_SUM ;
   assign dcache$req_st_value = dmem_req_store_value ;
-  assign dcache$req_width_code = dmem_req_width_code ;
+  assign dcache$req_width_code = dmem_req_f3 ;
   assign dcache$set_verbosity_verbosity = 4'h0 ;
   assign dcache$EN_set_verbosity = 1'b0 ;
   assign dcache$EN_server_reset_request_put = MUX_rg_state$write_1__SEL_2 ;
@@ -1129,17 +1398,28 @@ module mkNear_Mem(CLK,
 	     EN_server_fence_i_request_put || EN_server_fence_request_put ;
   assign dcache$EN_server_flush_response_get =
 	     EN_server_fence_i_response_get || EN_server_fence_response_get ;
-  assign dcache$EN_tlb_flush = EN_sfence_vma ;
-  assign dcache$EN_mem_master_aw_drop = EN_dmem_master_aw_drop ;
-  assign dcache$EN_mem_master_w_drop = EN_dmem_master_w_drop ;
-  assign dcache$EN_mem_master_b_put = EN_dmem_master_b_put ;
-  assign dcache$EN_mem_master_ar_drop = EN_dmem_master_ar_drop ;
-  assign dcache$EN_mem_master_r_put = EN_dmem_master_r_put ;
+  assign dcache$EN_tlb_flush = CAN_FIRE_RL_rl_sfence_vma ;
+  assign dcache$EN_mem_master_aw_drop = EN_mem_master_aw_drop ;
+  assign dcache$EN_mem_master_w_drop = EN_mem_master_w_drop ;
+  assign dcache$EN_mem_master_b_put = EN_mem_master_b_put ;
+  assign dcache$EN_mem_master_ar_drop = EN_mem_master_ar_drop ;
+  assign dcache$EN_mem_master_r_put = EN_mem_master_r_put ;
+  assign dcache$EN_ma_ddr4_ready = EN_ma_ddr4_ready ;
 
   // submodule f_reset_rsps
   assign f_reset_rsps$ENQ = MUX_rg_state$write_1__SEL_3 ;
   assign f_reset_rsps$DEQ = EN_server_reset_response_get ;
   assign f_reset_rsps$CLR = 1'b0 ;
+
+  // submodule f_sfence_vma_reqs
+  assign f_sfence_vma_reqs$ENQ = EN_sfence_vma_server_request_put ;
+  assign f_sfence_vma_reqs$DEQ = CAN_FIRE_RL_rl_sfence_vma ;
+  assign f_sfence_vma_reqs$CLR = 1'b0 ;
+
+  // submodule f_sfence_vma_rsps
+  assign f_sfence_vma_rsps$ENQ = CAN_FIRE_RL_rl_sfence_vma ;
+  assign f_sfence_vma_rsps$DEQ = EN_sfence_vma_server_response_get ;
+  assign f_sfence_vma_rsps$CLR = 1'b0 ;
 
   // submodule icache
   assign icache$mem_master_b_put_val = imem_master_b_put_val ;
@@ -1155,7 +1435,7 @@ module mkNear_Mem(CLK,
   assign icache$req_st_value =
 	     { 1'd0,
 	       128'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  } ;
-  assign icache$req_width_code = imem_req_width_code ;
+  assign icache$req_width_code = imem_req_f3 ;
   assign icache$set_verbosity_verbosity = 4'h0 ;
   assign icache$EN_set_verbosity = 1'b0 ;
   assign icache$EN_server_reset_request_put = MUX_rg_state$write_1__SEL_2 ;
@@ -1165,12 +1445,13 @@ module mkNear_Mem(CLK,
   assign icache$EN_server_flush_request_put = EN_server_fence_i_request_put ;
   assign icache$EN_server_flush_response_get =
 	     EN_server_fence_i_response_get ;
-  assign icache$EN_tlb_flush = EN_sfence_vma ;
+  assign icache$EN_tlb_flush = CAN_FIRE_RL_rl_sfence_vma ;
   assign icache$EN_mem_master_aw_drop = EN_imem_master_aw_drop ;
   assign icache$EN_mem_master_w_drop = EN_imem_master_w_drop ;
   assign icache$EN_mem_master_b_put = EN_imem_master_b_put ;
   assign icache$EN_mem_master_ar_drop = EN_imem_master_ar_drop ;
   assign icache$EN_mem_master_r_put = EN_imem_master_r_put ;
+  assign icache$EN_ma_ddr4_ready = EN_ma_ddr4_ready ;
 
   // submodule soc_map
   assign soc_map$m_is_IO_addr_addr = 64'h0 ;
@@ -1217,23 +1498,23 @@ module mkNear_Mem(CLK,
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset && NOT_cfg_verbosity_read_ULE_1___d9)
 	begin
-	  v__h1160 = $stime;
+	  v__h1180 = $stime;
 	  #0;
 	end
-    v__h1154 = v__h1160 / 32'd10;
+    v__h1174 = v__h1180 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset && NOT_cfg_verbosity_read_ULE_1___d9)
-	$display("%0d: Near_Mem.rl_reset", v__h1154);
+	$display("%0d: Near_Mem.rl_reset", v__h1174);
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset_complete && NOT_cfg_verbosity_read_ULE_1___d9)
 	begin
-	  v__h1311 = $stime;
+	  v__h1331 = $stime;
 	  #0;
 	end
-    v__h1305 = v__h1311 / 32'd10;
+    v__h1325 = v__h1331 / 32'd10;
     if (RST_N != `BSV_RESET_VALUE)
       if (WILL_FIRE_RL_rl_reset_complete && NOT_cfg_verbosity_read_ULE_1___d9)
-	$display("%0d: Near_Mem.rl_reset_complete", v__h1305);
+	$display("%0d: Near_Mem.rl_reset_complete", v__h1325);
   end
   // synopsys translate_on
 endmodule  // mkNear_Mem

@@ -6,7 +6,6 @@
 //
 // Ports:
 // Name                         I/O  size props
-// RDY_set_verbosity              O     1 const
 // RDY_cpu_reset_server_request_put  O     1 reg
 // cpu_reset_server_response_get  O     1 reg
 // RDY_cpu_reset_server_response_get  O     1 reg
@@ -38,34 +37,45 @@
 // cpu_imem_master_arregion       O     4 reg
 // cpu_imem_master_arvalid        O     1 reg
 // cpu_imem_master_rready         O     1 reg
-// cpu_dmem_master_awid           O     6
-// cpu_dmem_master_awaddr         O    64
-// cpu_dmem_master_awlen          O     8
-// cpu_dmem_master_awsize         O     3
-// cpu_dmem_master_awburst        O     2
-// cpu_dmem_master_awlock         O     1
-// cpu_dmem_master_awcache        O     4
-// cpu_dmem_master_awprot         O     3
-// cpu_dmem_master_awqos          O     4
-// cpu_dmem_master_awregion       O     4
-// cpu_dmem_master_awvalid        O     1
-// cpu_dmem_master_wdata          O    64
-// cpu_dmem_master_wstrb          O     8
-// cpu_dmem_master_wlast          O     1
-// cpu_dmem_master_wvalid         O     1
-// cpu_dmem_master_bready         O     1
-// cpu_dmem_master_arid           O     6
-// cpu_dmem_master_araddr         O    64
-// cpu_dmem_master_arlen          O     8
-// cpu_dmem_master_arsize         O     3
-// cpu_dmem_master_arburst        O     2
-// cpu_dmem_master_arlock         O     1
-// cpu_dmem_master_arcache        O     4
-// cpu_dmem_master_arprot         O     3
-// cpu_dmem_master_arqos          O     4
-// cpu_dmem_master_arregion       O     4
-// cpu_dmem_master_arvalid        O     1
-// cpu_dmem_master_rready         O     1
+// core_mem_master_awid           O     6
+// core_mem_master_awaddr         O    64
+// core_mem_master_awlen          O     8
+// core_mem_master_awsize         O     3
+// core_mem_master_awburst        O     2
+// core_mem_master_awlock         O     1
+// core_mem_master_awcache        O     4
+// core_mem_master_awprot         O     3
+// core_mem_master_awqos          O     4
+// core_mem_master_awregion       O     4
+// core_mem_master_awvalid        O     1
+// core_mem_master_wdata          O    64
+// core_mem_master_wstrb          O     8
+// core_mem_master_wlast          O     1
+// core_mem_master_wvalid         O     1
+// core_mem_master_bready         O     1
+// core_mem_master_arid           O     6
+// core_mem_master_araddr         O    64
+// core_mem_master_arlen          O     8
+// core_mem_master_arsize         O     3
+// core_mem_master_arburst        O     2
+// core_mem_master_arlock         O     1
+// core_mem_master_arcache        O     4
+// core_mem_master_arprot         O     3
+// core_mem_master_arqos          O     4
+// core_mem_master_arregion       O     4
+// core_mem_master_arvalid        O     1
+// core_mem_master_rready         O     1
+// dma_server_awready             O     1
+// dma_server_wready              O     1
+// dma_server_bid                 O     6
+// dma_server_bresp               O     2
+// dma_server_bvalid              O     1
+// dma_server_arready             O     1
+// dma_server_rid                 O     6
+// dma_server_rdata               O   512
+// dma_server_rresp               O     2
+// dma_server_rlast               O     1
+// dma_server_rvalid              O     1
 // RDY_dm_dmi_read_addr           O     1
 // dm_dmi_read_data               O    32
 // RDY_dm_dmi_read_data           O     1
@@ -73,10 +83,11 @@
 // ndm_reset_client_request_get   O     1 reg
 // RDY_ndm_reset_client_request_get  O     1 reg
 // RDY_ndm_reset_client_response_put  O     1 reg
+// RDY_set_verbosity              O     1 const
+// RDY_ma_ddr4_ready              O     1 const
+// mv_status                      O     8
 // CLK                            I     1 clock
 // RST_N                          I     1 reset
-// set_verbosity_verbosity        I     4
-// set_verbosity_logdelay         I    64 reg
 // cpu_reset_server_request_put   I     1 reg
 // cpu_imem_master_awready        I     1
 // cpu_imem_master_wready         I     1
@@ -89,17 +100,45 @@
 // cpu_imem_master_rdata          I    64 reg
 // cpu_imem_master_rresp          I     2 reg
 // cpu_imem_master_rlast          I     1 reg
-// cpu_dmem_master_awready        I     1
-// cpu_dmem_master_wready         I     1
-// cpu_dmem_master_bvalid         I     1
-// cpu_dmem_master_bid            I     6
-// cpu_dmem_master_bresp          I     2
-// cpu_dmem_master_arready        I     1
-// cpu_dmem_master_rvalid         I     1
-// cpu_dmem_master_rid            I     6
-// cpu_dmem_master_rdata          I    64
-// cpu_dmem_master_rresp          I     2
-// cpu_dmem_master_rlast          I     1
+// core_mem_master_awready        I     1
+// core_mem_master_wready         I     1
+// core_mem_master_bvalid         I     1
+// core_mem_master_bid            I     6
+// core_mem_master_bresp          I     2
+// core_mem_master_arready        I     1
+// core_mem_master_rvalid         I     1
+// core_mem_master_rid            I     6
+// core_mem_master_rdata          I    64
+// core_mem_master_rresp          I     2
+// core_mem_master_rlast          I     1
+// dma_server_awvalid             I     1 unused
+// dma_server_awid                I     6 unused
+// dma_server_awaddr              I    64 unused
+// dma_server_awlen               I     8 unused
+// dma_server_awsize              I     3 unused
+// dma_server_awburst             I     2 unused
+// dma_server_awlock              I     1 unused
+// dma_server_awcache             I     4 unused
+// dma_server_awprot              I     3 unused
+// dma_server_awqos               I     4 unused
+// dma_server_awregion            I     4 unused
+// dma_server_wvalid              I     1 unused
+// dma_server_wdata               I   512 unused
+// dma_server_wstrb               I    64 unused
+// dma_server_wlast               I     1 unused
+// dma_server_bready              I     1 unused
+// dma_server_arvalid             I     1 unused
+// dma_server_arid                I     6 unused
+// dma_server_araddr              I    64 unused
+// dma_server_arlen               I     8 unused
+// dma_server_arsize              I     3 unused
+// dma_server_arburst             I     2 unused
+// dma_server_arlock              I     1 unused
+// dma_server_arcache             I     4 unused
+// dma_server_arprot              I     3 unused
+// dma_server_arqos               I     4 unused
+// dma_server_arregion            I     4 unused
+// dma_server_rready              I     1 unused
 // core_external_interrupt_sources_0_m_interrupt_req_set_not_clear  I     1
 // core_external_interrupt_sources_1_m_interrupt_req_set_not_clear  I     1
 // core_external_interrupt_sources_2_m_interrupt_req_set_not_clear  I     1
@@ -121,11 +160,14 @@
 // dm_dmi_write_dm_addr           I     7
 // dm_dmi_write_dm_word           I    32
 // ndm_reset_client_response_put  I     1 reg
-// EN_set_verbosity               I     1
+// set_verbosity_verbosity        I     4
+// set_verbosity_logdelay         I    64 reg
 // EN_cpu_reset_server_request_put  I     1
 // EN_dm_dmi_read_addr            I     1
 // EN_dm_dmi_write                I     1
 // EN_ndm_reset_client_response_put  I     1
+// EN_set_verbosity               I     1
+// EN_ma_ddr4_ready               I     1 unused
 // EN_cpu_reset_server_response_get  I     1
 // EN_dm_dmi_read_data            I     1
 // EN_ndm_reset_client_request_get  I     1
@@ -150,11 +192,6 @@
 
 module mkCore_Synth(CLK,
 		    RST_N,
-
-		    set_verbosity_verbosity,
-		    set_verbosity_logdelay,
-		    EN_set_verbosity,
-		    RDY_set_verbosity,
 
 		    cpu_reset_server_request_put,
 		    EN_cpu_reset_server_request_put,
@@ -236,77 +273,132 @@ module mkCore_Synth(CLK,
 
 		    cpu_imem_master_rready,
 
-		    cpu_dmem_master_awid,
+		    core_mem_master_awid,
 
-		    cpu_dmem_master_awaddr,
+		    core_mem_master_awaddr,
 
-		    cpu_dmem_master_awlen,
+		    core_mem_master_awlen,
 
-		    cpu_dmem_master_awsize,
+		    core_mem_master_awsize,
 
-		    cpu_dmem_master_awburst,
+		    core_mem_master_awburst,
 
-		    cpu_dmem_master_awlock,
+		    core_mem_master_awlock,
 
-		    cpu_dmem_master_awcache,
+		    core_mem_master_awcache,
 
-		    cpu_dmem_master_awprot,
+		    core_mem_master_awprot,
 
-		    cpu_dmem_master_awqos,
+		    core_mem_master_awqos,
 
-		    cpu_dmem_master_awregion,
+		    core_mem_master_awregion,
 
-		    cpu_dmem_master_awvalid,
+		    core_mem_master_awvalid,
 
-		    cpu_dmem_master_awready,
+		    core_mem_master_awready,
 
-		    cpu_dmem_master_wdata,
+		    core_mem_master_wdata,
 
-		    cpu_dmem_master_wstrb,
+		    core_mem_master_wstrb,
 
-		    cpu_dmem_master_wlast,
+		    core_mem_master_wlast,
 
-		    cpu_dmem_master_wvalid,
+		    core_mem_master_wvalid,
 
-		    cpu_dmem_master_wready,
+		    core_mem_master_wready,
 
-		    cpu_dmem_master_bvalid,
-		    cpu_dmem_master_bid,
-		    cpu_dmem_master_bresp,
+		    core_mem_master_bvalid,
+		    core_mem_master_bid,
+		    core_mem_master_bresp,
 
-		    cpu_dmem_master_bready,
+		    core_mem_master_bready,
 
-		    cpu_dmem_master_arid,
+		    core_mem_master_arid,
 
-		    cpu_dmem_master_araddr,
+		    core_mem_master_araddr,
 
-		    cpu_dmem_master_arlen,
+		    core_mem_master_arlen,
 
-		    cpu_dmem_master_arsize,
+		    core_mem_master_arsize,
 
-		    cpu_dmem_master_arburst,
+		    core_mem_master_arburst,
 
-		    cpu_dmem_master_arlock,
+		    core_mem_master_arlock,
 
-		    cpu_dmem_master_arcache,
+		    core_mem_master_arcache,
 
-		    cpu_dmem_master_arprot,
+		    core_mem_master_arprot,
 
-		    cpu_dmem_master_arqos,
+		    core_mem_master_arqos,
 
-		    cpu_dmem_master_arregion,
+		    core_mem_master_arregion,
 
-		    cpu_dmem_master_arvalid,
+		    core_mem_master_arvalid,
 
-		    cpu_dmem_master_arready,
+		    core_mem_master_arready,
 
-		    cpu_dmem_master_rvalid,
-		    cpu_dmem_master_rid,
-		    cpu_dmem_master_rdata,
-		    cpu_dmem_master_rresp,
-		    cpu_dmem_master_rlast,
+		    core_mem_master_rvalid,
+		    core_mem_master_rid,
+		    core_mem_master_rdata,
+		    core_mem_master_rresp,
+		    core_mem_master_rlast,
 
-		    cpu_dmem_master_rready,
+		    core_mem_master_rready,
+
+		    dma_server_awvalid,
+		    dma_server_awid,
+		    dma_server_awaddr,
+		    dma_server_awlen,
+		    dma_server_awsize,
+		    dma_server_awburst,
+		    dma_server_awlock,
+		    dma_server_awcache,
+		    dma_server_awprot,
+		    dma_server_awqos,
+		    dma_server_awregion,
+
+		    dma_server_awready,
+
+		    dma_server_wvalid,
+		    dma_server_wdata,
+		    dma_server_wstrb,
+		    dma_server_wlast,
+
+		    dma_server_wready,
+
+		    dma_server_bid,
+
+		    dma_server_bresp,
+
+		    dma_server_bvalid,
+
+		    dma_server_bready,
+
+		    dma_server_arvalid,
+		    dma_server_arid,
+		    dma_server_araddr,
+		    dma_server_arlen,
+		    dma_server_arsize,
+		    dma_server_arburst,
+		    dma_server_arlock,
+		    dma_server_arcache,
+		    dma_server_arprot,
+		    dma_server_arqos,
+		    dma_server_arregion,
+
+		    dma_server_arready,
+
+		    dma_server_rid,
+
+		    dma_server_rdata,
+
+		    dma_server_rresp,
+
+		    dma_server_rlast,
+
+		    dma_server_rvalid,
+
+		    dma_server_rready,
 
 		    core_external_interrupt_sources_0_m_interrupt_req_set_not_clear,
 
@@ -361,15 +453,19 @@ module mkCore_Synth(CLK,
 
 		    ndm_reset_client_response_put,
 		    EN_ndm_reset_client_response_put,
-		    RDY_ndm_reset_client_response_put);
+		    RDY_ndm_reset_client_response_put,
+
+		    set_verbosity_verbosity,
+		    set_verbosity_logdelay,
+		    EN_set_verbosity,
+		    RDY_set_verbosity,
+
+		    EN_ma_ddr4_ready,
+		    RDY_ma_ddr4_ready,
+
+		    mv_status);
   input  CLK;
   input  RST_N;
-
-  // action method set_verbosity
-  input  [3 : 0] set_verbosity_verbosity;
-  input  [63 : 0] set_verbosity_logdelay;
-  input  EN_set_verbosity;
-  output RDY_set_verbosity;
 
   // action method cpu_reset_server_request_put
   input  cpu_reset_server_request_put;
@@ -492,116 +588,191 @@ module mkCore_Synth(CLK,
   // value method cpu_imem_master_r_rready
   output cpu_imem_master_rready;
 
-  // value method cpu_dmem_master_aw_awid
-  output [5 : 0] cpu_dmem_master_awid;
+  // value method core_mem_master_aw_awid
+  output [5 : 0] core_mem_master_awid;
 
-  // value method cpu_dmem_master_aw_awaddr
-  output [63 : 0] cpu_dmem_master_awaddr;
+  // value method core_mem_master_aw_awaddr
+  output [63 : 0] core_mem_master_awaddr;
 
-  // value method cpu_dmem_master_aw_awlen
-  output [7 : 0] cpu_dmem_master_awlen;
+  // value method core_mem_master_aw_awlen
+  output [7 : 0] core_mem_master_awlen;
 
-  // value method cpu_dmem_master_aw_awsize
-  output [2 : 0] cpu_dmem_master_awsize;
+  // value method core_mem_master_aw_awsize
+  output [2 : 0] core_mem_master_awsize;
 
-  // value method cpu_dmem_master_aw_awburst
-  output [1 : 0] cpu_dmem_master_awburst;
+  // value method core_mem_master_aw_awburst
+  output [1 : 0] core_mem_master_awburst;
 
-  // value method cpu_dmem_master_aw_awlock
-  output cpu_dmem_master_awlock;
+  // value method core_mem_master_aw_awlock
+  output core_mem_master_awlock;
 
-  // value method cpu_dmem_master_aw_awcache
-  output [3 : 0] cpu_dmem_master_awcache;
+  // value method core_mem_master_aw_awcache
+  output [3 : 0] core_mem_master_awcache;
 
-  // value method cpu_dmem_master_aw_awprot
-  output [2 : 0] cpu_dmem_master_awprot;
+  // value method core_mem_master_aw_awprot
+  output [2 : 0] core_mem_master_awprot;
 
-  // value method cpu_dmem_master_aw_awqos
-  output [3 : 0] cpu_dmem_master_awqos;
+  // value method core_mem_master_aw_awqos
+  output [3 : 0] core_mem_master_awqos;
 
-  // value method cpu_dmem_master_aw_awregion
-  output [3 : 0] cpu_dmem_master_awregion;
+  // value method core_mem_master_aw_awregion
+  output [3 : 0] core_mem_master_awregion;
 
-  // value method cpu_dmem_master_aw_awuser
+  // value method core_mem_master_aw_awuser
 
-  // value method cpu_dmem_master_aw_awvalid
-  output cpu_dmem_master_awvalid;
+  // value method core_mem_master_aw_awvalid
+  output core_mem_master_awvalid;
 
-  // action method cpu_dmem_master_aw_awready
-  input  cpu_dmem_master_awready;
+  // action method core_mem_master_aw_awready
+  input  core_mem_master_awready;
 
-  // value method cpu_dmem_master_w_wdata
-  output [63 : 0] cpu_dmem_master_wdata;
+  // value method core_mem_master_w_wdata
+  output [63 : 0] core_mem_master_wdata;
 
-  // value method cpu_dmem_master_w_wstrb
-  output [7 : 0] cpu_dmem_master_wstrb;
+  // value method core_mem_master_w_wstrb
+  output [7 : 0] core_mem_master_wstrb;
 
-  // value method cpu_dmem_master_w_wlast
-  output cpu_dmem_master_wlast;
+  // value method core_mem_master_w_wlast
+  output core_mem_master_wlast;
 
-  // value method cpu_dmem_master_w_wuser
+  // value method core_mem_master_w_wuser
 
-  // value method cpu_dmem_master_w_wvalid
-  output cpu_dmem_master_wvalid;
+  // value method core_mem_master_w_wvalid
+  output core_mem_master_wvalid;
 
-  // action method cpu_dmem_master_w_wready
-  input  cpu_dmem_master_wready;
+  // action method core_mem_master_w_wready
+  input  core_mem_master_wready;
 
-  // action method cpu_dmem_master_b_bflit
-  input  cpu_dmem_master_bvalid;
-  input  [5 : 0] cpu_dmem_master_bid;
-  input  [1 : 0] cpu_dmem_master_bresp;
+  // action method core_mem_master_b_bflit
+  input  core_mem_master_bvalid;
+  input  [5 : 0] core_mem_master_bid;
+  input  [1 : 0] core_mem_master_bresp;
 
-  // value method cpu_dmem_master_b_bready
-  output cpu_dmem_master_bready;
+  // value method core_mem_master_b_bready
+  output core_mem_master_bready;
 
-  // value method cpu_dmem_master_ar_arid
-  output [5 : 0] cpu_dmem_master_arid;
+  // value method core_mem_master_ar_arid
+  output [5 : 0] core_mem_master_arid;
 
-  // value method cpu_dmem_master_ar_araddr
-  output [63 : 0] cpu_dmem_master_araddr;
+  // value method core_mem_master_ar_araddr
+  output [63 : 0] core_mem_master_araddr;
 
-  // value method cpu_dmem_master_ar_arlen
-  output [7 : 0] cpu_dmem_master_arlen;
+  // value method core_mem_master_ar_arlen
+  output [7 : 0] core_mem_master_arlen;
 
-  // value method cpu_dmem_master_ar_arsize
-  output [2 : 0] cpu_dmem_master_arsize;
+  // value method core_mem_master_ar_arsize
+  output [2 : 0] core_mem_master_arsize;
 
-  // value method cpu_dmem_master_ar_arburst
-  output [1 : 0] cpu_dmem_master_arburst;
+  // value method core_mem_master_ar_arburst
+  output [1 : 0] core_mem_master_arburst;
 
-  // value method cpu_dmem_master_ar_arlock
-  output cpu_dmem_master_arlock;
+  // value method core_mem_master_ar_arlock
+  output core_mem_master_arlock;
 
-  // value method cpu_dmem_master_ar_arcache
-  output [3 : 0] cpu_dmem_master_arcache;
+  // value method core_mem_master_ar_arcache
+  output [3 : 0] core_mem_master_arcache;
 
-  // value method cpu_dmem_master_ar_arprot
-  output [2 : 0] cpu_dmem_master_arprot;
+  // value method core_mem_master_ar_arprot
+  output [2 : 0] core_mem_master_arprot;
 
-  // value method cpu_dmem_master_ar_arqos
-  output [3 : 0] cpu_dmem_master_arqos;
+  // value method core_mem_master_ar_arqos
+  output [3 : 0] core_mem_master_arqos;
 
-  // value method cpu_dmem_master_ar_arregion
-  output [3 : 0] cpu_dmem_master_arregion;
+  // value method core_mem_master_ar_arregion
+  output [3 : 0] core_mem_master_arregion;
 
-  // value method cpu_dmem_master_ar_aruser
+  // value method core_mem_master_ar_aruser
 
-  // value method cpu_dmem_master_ar_arvalid
-  output cpu_dmem_master_arvalid;
+  // value method core_mem_master_ar_arvalid
+  output core_mem_master_arvalid;
 
-  // action method cpu_dmem_master_ar_arready
-  input  cpu_dmem_master_arready;
+  // action method core_mem_master_ar_arready
+  input  core_mem_master_arready;
 
-  // action method cpu_dmem_master_r_rflit
-  input  cpu_dmem_master_rvalid;
-  input  [5 : 0] cpu_dmem_master_rid;
-  input  [63 : 0] cpu_dmem_master_rdata;
-  input  [1 : 0] cpu_dmem_master_rresp;
-  input  cpu_dmem_master_rlast;
+  // action method core_mem_master_r_rflit
+  input  core_mem_master_rvalid;
+  input  [5 : 0] core_mem_master_rid;
+  input  [63 : 0] core_mem_master_rdata;
+  input  [1 : 0] core_mem_master_rresp;
+  input  core_mem_master_rlast;
 
-  // value method cpu_dmem_master_r_rready
-  output cpu_dmem_master_rready;
+  // value method core_mem_master_r_rready
+  output core_mem_master_rready;
+
+  // action method dma_server_aw_awflit
+  input  dma_server_awvalid;
+  input  [5 : 0] dma_server_awid;
+  input  [63 : 0] dma_server_awaddr;
+  input  [7 : 0] dma_server_awlen;
+  input  [2 : 0] dma_server_awsize;
+  input  [1 : 0] dma_server_awburst;
+  input  dma_server_awlock;
+  input  [3 : 0] dma_server_awcache;
+  input  [2 : 0] dma_server_awprot;
+  input  [3 : 0] dma_server_awqos;
+  input  [3 : 0] dma_server_awregion;
+
+  // value method dma_server_aw_awready
+  output dma_server_awready;
+
+  // action method dma_server_w_wflit
+  input  dma_server_wvalid;
+  input  [511 : 0] dma_server_wdata;
+  input  [63 : 0] dma_server_wstrb;
+  input  dma_server_wlast;
+
+  // value method dma_server_w_wready
+  output dma_server_wready;
+
+  // value method dma_server_b_bid
+  output [5 : 0] dma_server_bid;
+
+  // value method dma_server_b_bresp
+  output [1 : 0] dma_server_bresp;
+
+  // value method dma_server_b_buser
+
+  // value method dma_server_b_bvalid
+  output dma_server_bvalid;
+
+  // action method dma_server_b_bready
+  input  dma_server_bready;
+
+  // action method dma_server_ar_arflit
+  input  dma_server_arvalid;
+  input  [5 : 0] dma_server_arid;
+  input  [63 : 0] dma_server_araddr;
+  input  [7 : 0] dma_server_arlen;
+  input  [2 : 0] dma_server_arsize;
+  input  [1 : 0] dma_server_arburst;
+  input  dma_server_arlock;
+  input  [3 : 0] dma_server_arcache;
+  input  [2 : 0] dma_server_arprot;
+  input  [3 : 0] dma_server_arqos;
+  input  [3 : 0] dma_server_arregion;
+
+  // value method dma_server_ar_arready
+  output dma_server_arready;
+
+  // value method dma_server_r_rid
+  output [5 : 0] dma_server_rid;
+
+  // value method dma_server_r_rdata
+  output [511 : 0] dma_server_rdata;
+
+  // value method dma_server_r_rresp
+  output [1 : 0] dma_server_rresp;
+
+  // value method dma_server_r_rlast
+  output dma_server_rlast;
+
+  // value method dma_server_r_ruser
+
+  // value method dma_server_r_rvalid
+  output dma_server_rvalid;
+
+  // action method dma_server_r_rready
+  input  dma_server_rready;
 
   // action method core_external_interrupt_sources_0_m_interrupt_req
   input  core_external_interrupt_sources_0_m_interrupt_req_set_not_clear;
@@ -680,62 +851,83 @@ module mkCore_Synth(CLK,
   input  EN_ndm_reset_client_response_put;
   output RDY_ndm_reset_client_response_put;
 
+  // action method set_verbosity
+  input  [3 : 0] set_verbosity_verbosity;
+  input  [63 : 0] set_verbosity_logdelay;
+  input  EN_set_verbosity;
+  output RDY_set_verbosity;
+
+  // action method ma_ddr4_ready
+  input  EN_ma_ddr4_ready;
+  output RDY_ma_ddr4_ready;
+
+  // value method mv_status
+  output [7 : 0] mv_status;
+
   // signals for module outputs
-  wire [63 : 0] cpu_dmem_master_araddr,
-		cpu_dmem_master_awaddr,
-		cpu_dmem_master_wdata,
+  wire [511 : 0] dma_server_rdata;
+  wire [63 : 0] core_mem_master_araddr,
+		core_mem_master_awaddr,
+		core_mem_master_wdata,
 		cpu_imem_master_araddr,
 		cpu_imem_master_awaddr,
 		cpu_imem_master_wdata;
   wire [31 : 0] dm_dmi_read_data;
-  wire [7 : 0] cpu_dmem_master_arlen,
-	       cpu_dmem_master_awlen,
-	       cpu_dmem_master_wstrb,
+  wire [7 : 0] core_mem_master_arlen,
+	       core_mem_master_awlen,
+	       core_mem_master_wstrb,
 	       cpu_imem_master_arlen,
 	       cpu_imem_master_awlen,
-	       cpu_imem_master_wstrb;
-  wire [5 : 0] cpu_dmem_master_arid, cpu_dmem_master_awid;
+	       cpu_imem_master_wstrb,
+	       mv_status;
+  wire [5 : 0] core_mem_master_arid,
+	       core_mem_master_awid,
+	       dma_server_bid,
+	       dma_server_rid;
   wire [4 : 0] cpu_imem_master_arid, cpu_imem_master_awid;
-  wire [3 : 0] cpu_dmem_master_arcache,
-	       cpu_dmem_master_arqos,
-	       cpu_dmem_master_arregion,
-	       cpu_dmem_master_awcache,
-	       cpu_dmem_master_awqos,
-	       cpu_dmem_master_awregion,
+  wire [3 : 0] core_mem_master_arcache,
+	       core_mem_master_arqos,
+	       core_mem_master_arregion,
+	       core_mem_master_awcache,
+	       core_mem_master_awqos,
+	       core_mem_master_awregion,
 	       cpu_imem_master_arcache,
 	       cpu_imem_master_arqos,
 	       cpu_imem_master_arregion,
 	       cpu_imem_master_awcache,
 	       cpu_imem_master_awqos,
 	       cpu_imem_master_awregion;
-  wire [2 : 0] cpu_dmem_master_arprot,
-	       cpu_dmem_master_arsize,
-	       cpu_dmem_master_awprot,
-	       cpu_dmem_master_awsize,
+  wire [2 : 0] core_mem_master_arprot,
+	       core_mem_master_arsize,
+	       core_mem_master_awprot,
+	       core_mem_master_awsize,
 	       cpu_imem_master_arprot,
 	       cpu_imem_master_arsize,
 	       cpu_imem_master_awprot,
 	       cpu_imem_master_awsize;
-  wire [1 : 0] cpu_dmem_master_arburst,
-	       cpu_dmem_master_awburst,
+  wire [1 : 0] core_mem_master_arburst,
+	       core_mem_master_awburst,
 	       cpu_imem_master_arburst,
-	       cpu_imem_master_awburst;
+	       cpu_imem_master_awburst,
+	       dma_server_bresp,
+	       dma_server_rresp;
   wire RDY_cpu_reset_server_request_put,
        RDY_cpu_reset_server_response_get,
        RDY_dm_dmi_read_addr,
        RDY_dm_dmi_read_data,
        RDY_dm_dmi_write,
+       RDY_ma_ddr4_ready,
        RDY_ndm_reset_client_request_get,
        RDY_ndm_reset_client_response_put,
        RDY_set_verbosity,
-       cpu_dmem_master_arlock,
-       cpu_dmem_master_arvalid,
-       cpu_dmem_master_awlock,
-       cpu_dmem_master_awvalid,
-       cpu_dmem_master_bready,
-       cpu_dmem_master_rready,
-       cpu_dmem_master_wlast,
-       cpu_dmem_master_wvalid,
+       core_mem_master_arlock,
+       core_mem_master_arvalid,
+       core_mem_master_awlock,
+       core_mem_master_awvalid,
+       core_mem_master_bready,
+       core_mem_master_rready,
+       core_mem_master_wlast,
+       core_mem_master_wvalid,
        cpu_imem_master_arlock,
        cpu_imem_master_arvalid,
        cpu_imem_master_awlock,
@@ -745,18 +937,24 @@ module mkCore_Synth(CLK,
        cpu_imem_master_wlast,
        cpu_imem_master_wvalid,
        cpu_reset_server_response_get,
+       dma_server_arready,
+       dma_server_awready,
+       dma_server_bvalid,
+       dma_server_rlast,
+       dma_server_rvalid,
+       dma_server_wready,
        ndm_reset_client_request_get;
 
   // inlined wires
-  wire [72 : 0] cpu_dmem_master_synth_rSynth_snk_putWire$wget;
+  wire [72 : 0] core_mem_master_synth_rSynth_snk_putWire$wget;
   wire [71 : 0] cpu_imem_master_synth_rSynth_snk_putWire$wget;
-  wire [7 : 0] cpu_dmem_master_synth_bSynth_snk_putWire$wget;
+  wire [7 : 0] core_mem_master_synth_bSynth_snk_putWire$wget;
   wire [6 : 0] cpu_imem_master_synth_bSynth_snk_putWire$wget;
-  wire cpu_dmem_master_synth_arSynth_src_dropWire$whas,
-       cpu_dmem_master_synth_awSynth_src_dropWire$whas,
-       cpu_dmem_master_synth_bSynth_snk_putWire$whas,
-       cpu_dmem_master_synth_rSynth_snk_putWire$whas,
-       cpu_dmem_master_synth_wSynth_src_dropWire$whas,
+  wire core_mem_master_synth_arSynth_src_dropWire$whas,
+       core_mem_master_synth_awSynth_src_dropWire$whas,
+       core_mem_master_synth_bSynth_snk_putWire$whas,
+       core_mem_master_synth_rSynth_snk_putWire$whas,
+       core_mem_master_synth_wSynth_src_dropWire$whas,
        cpu_imem_master_synth_arSynth_src_dropWire$whas,
        cpu_imem_master_synth_awSynth_src_dropWire$whas,
        cpu_imem_master_synth_bSynth_snk_putWire$whas,
@@ -764,24 +962,28 @@ module mkCore_Synth(CLK,
        cpu_imem_master_synth_wSynth_src_dropWire$whas;
 
   // ports of submodule core
-  wire [98 : 0] core$cpu_dmem_master_ar_peek, core$cpu_dmem_master_aw_peek;
+  wire [576 : 0] core$dma_server_w_put_val;
+  wire [98 : 0] core$core_mem_master_ar_peek,
+		core$core_mem_master_aw_peek,
+		core$dma_server_ar_put_val,
+		core$dma_server_aw_put_val;
   wire [97 : 0] core$cpu_imem_master_ar_peek, core$cpu_imem_master_aw_peek;
-  wire [72 : 0] core$cpu_dmem_master_r_put_val,
-		core$cpu_dmem_master_w_peek,
+  wire [72 : 0] core$core_mem_master_r_put_val,
+		core$core_mem_master_w_peek,
 		core$cpu_imem_master_w_peek;
   wire [71 : 0] core$cpu_imem_master_r_put_val;
   wire [63 : 0] core$set_verbosity_logdelay;
   wire [31 : 0] core$dm_dmi_read_data, core$dm_dmi_write_dm_word;
-  wire [7 : 0] core$cpu_dmem_master_b_put_val;
+  wire [7 : 0] core$core_mem_master_b_put_val;
   wire [6 : 0] core$cpu_imem_master_b_put_val,
 	       core$dm_dmi_read_addr_dm_addr,
 	       core$dm_dmi_write_dm_addr;
   wire [3 : 0] core$set_verbosity_verbosity;
-  wire core$EN_cpu_dmem_master_ar_drop,
-       core$EN_cpu_dmem_master_aw_drop,
-       core$EN_cpu_dmem_master_b_put,
-       core$EN_cpu_dmem_master_r_put,
-       core$EN_cpu_dmem_master_w_drop,
+  wire core$EN_core_mem_master_ar_drop,
+       core$EN_core_mem_master_aw_drop,
+       core$EN_core_mem_master_b_put,
+       core$EN_core_mem_master_r_put,
+       core$EN_core_mem_master_w_drop,
        core$EN_cpu_imem_master_ar_drop,
        core$EN_cpu_imem_master_aw_drop,
        core$EN_cpu_imem_master_b_put,
@@ -792,17 +994,23 @@ module mkCore_Synth(CLK,
        core$EN_dm_dmi_read_addr,
        core$EN_dm_dmi_read_data,
        core$EN_dm_dmi_write,
+       core$EN_dma_server_ar_put,
+       core$EN_dma_server_aw_put,
+       core$EN_dma_server_b_drop,
+       core$EN_dma_server_r_drop,
+       core$EN_dma_server_w_put,
+       core$EN_ma_ddr4_ready,
        core$EN_ndm_reset_client_request_get,
        core$EN_ndm_reset_client_response_put,
        core$EN_set_verbosity,
-       core$RDY_cpu_dmem_master_ar_drop,
-       core$RDY_cpu_dmem_master_ar_peek,
-       core$RDY_cpu_dmem_master_aw_drop,
-       core$RDY_cpu_dmem_master_aw_peek,
-       core$RDY_cpu_dmem_master_b_put,
-       core$RDY_cpu_dmem_master_r_put,
-       core$RDY_cpu_dmem_master_w_drop,
-       core$RDY_cpu_dmem_master_w_peek,
+       core$RDY_core_mem_master_ar_drop,
+       core$RDY_core_mem_master_ar_peek,
+       core$RDY_core_mem_master_aw_drop,
+       core$RDY_core_mem_master_aw_peek,
+       core$RDY_core_mem_master_b_put,
+       core$RDY_core_mem_master_r_put,
+       core$RDY_core_mem_master_w_drop,
+       core$RDY_core_mem_master_w_peek,
        core$RDY_cpu_imem_master_ar_drop,
        core$RDY_cpu_imem_master_ar_peek,
        core$RDY_cpu_imem_master_aw_drop,
@@ -834,11 +1042,11 @@ module mkCore_Synth(CLK,
        core$core_external_interrupt_sources_7_m_interrupt_req_set_not_clear,
        core$core_external_interrupt_sources_8_m_interrupt_req_set_not_clear,
        core$core_external_interrupt_sources_9_m_interrupt_req_set_not_clear,
-       core$cpu_dmem_master_ar_canPeek,
-       core$cpu_dmem_master_aw_canPeek,
-       core$cpu_dmem_master_b_canPut,
-       core$cpu_dmem_master_r_canPut,
-       core$cpu_dmem_master_w_canPeek,
+       core$core_mem_master_ar_canPeek,
+       core$core_mem_master_aw_canPeek,
+       core$core_mem_master_b_canPut,
+       core$core_mem_master_r_canPut,
+       core$core_mem_master_w_canPeek,
        core$cpu_imem_master_ar_canPeek,
        core$cpu_imem_master_aw_canPeek,
        core$cpu_imem_master_b_canPut,
@@ -851,19 +1059,19 @@ module mkCore_Synth(CLK,
        core$nmi_req_set_not_clear;
 
   // rule scheduling signals
-  wire CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_doDrop,
-       CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_setPeek,
-       CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop,
-       CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_doDrop,
-       CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_setPeek,
-       CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop,
-       CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_doPut,
-       CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut,
-       CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_doPut,
-       CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut,
-       CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_doDrop,
-       CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_setPeek,
-       CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop,
+  wire CAN_FIRE_RL_core_mem_master_synth_arSynth_src_doDrop,
+       CAN_FIRE_RL_core_mem_master_synth_arSynth_src_setPeek,
+       CAN_FIRE_RL_core_mem_master_synth_arSynth_src_warnDoDrop,
+       CAN_FIRE_RL_core_mem_master_synth_awSynth_src_doDrop,
+       CAN_FIRE_RL_core_mem_master_synth_awSynth_src_setPeek,
+       CAN_FIRE_RL_core_mem_master_synth_awSynth_src_warnDoDrop,
+       CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_doPut,
+       CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_warnDoPut,
+       CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_doPut,
+       CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_warnDoPut,
+       CAN_FIRE_RL_core_mem_master_synth_wSynth_src_doDrop,
+       CAN_FIRE_RL_core_mem_master_synth_wSynth_src_setPeek,
+       CAN_FIRE_RL_core_mem_master_synth_wSynth_src_warnDoDrop,
        CAN_FIRE_RL_cpu_imem_master_synth_arSynth_src_doDrop,
        CAN_FIRE_RL_cpu_imem_master_synth_arSynth_src_setPeek,
        CAN_FIRE_RL_cpu_imem_master_synth_arSynth_src_warnDoDrop,
@@ -893,11 +1101,11 @@ module mkCore_Synth(CLK,
        CAN_FIRE_core_external_interrupt_sources_7_m_interrupt_req,
        CAN_FIRE_core_external_interrupt_sources_8_m_interrupt_req,
        CAN_FIRE_core_external_interrupt_sources_9_m_interrupt_req,
-       CAN_FIRE_cpu_dmem_master_ar_arready,
-       CAN_FIRE_cpu_dmem_master_aw_awready,
-       CAN_FIRE_cpu_dmem_master_b_bflit,
-       CAN_FIRE_cpu_dmem_master_r_rflit,
-       CAN_FIRE_cpu_dmem_master_w_wready,
+       CAN_FIRE_core_mem_master_ar_arready,
+       CAN_FIRE_core_mem_master_aw_awready,
+       CAN_FIRE_core_mem_master_b_bflit,
+       CAN_FIRE_core_mem_master_r_rflit,
+       CAN_FIRE_core_mem_master_w_wready,
        CAN_FIRE_cpu_imem_master_ar_arready,
        CAN_FIRE_cpu_imem_master_aw_awready,
        CAN_FIRE_cpu_imem_master_b_bflit,
@@ -908,23 +1116,29 @@ module mkCore_Synth(CLK,
        CAN_FIRE_dm_dmi_read_addr,
        CAN_FIRE_dm_dmi_read_data,
        CAN_FIRE_dm_dmi_write,
+       CAN_FIRE_dma_server_ar_arflit,
+       CAN_FIRE_dma_server_aw_awflit,
+       CAN_FIRE_dma_server_b_bready,
+       CAN_FIRE_dma_server_r_rready,
+       CAN_FIRE_dma_server_w_wflit,
+       CAN_FIRE_ma_ddr4_ready,
        CAN_FIRE_ndm_reset_client_request_get,
        CAN_FIRE_ndm_reset_client_response_put,
        CAN_FIRE_nmi_req,
        CAN_FIRE_set_verbosity,
-       WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_doDrop,
-       WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_setPeek,
-       WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop,
-       WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_doDrop,
-       WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_setPeek,
-       WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop,
-       WILL_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_doPut,
-       WILL_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut,
-       WILL_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_doPut,
-       WILL_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut,
-       WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_doDrop,
-       WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_setPeek,
-       WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop,
+       WILL_FIRE_RL_core_mem_master_synth_arSynth_src_doDrop,
+       WILL_FIRE_RL_core_mem_master_synth_arSynth_src_setPeek,
+       WILL_FIRE_RL_core_mem_master_synth_arSynth_src_warnDoDrop,
+       WILL_FIRE_RL_core_mem_master_synth_awSynth_src_doDrop,
+       WILL_FIRE_RL_core_mem_master_synth_awSynth_src_setPeek,
+       WILL_FIRE_RL_core_mem_master_synth_awSynth_src_warnDoDrop,
+       WILL_FIRE_RL_core_mem_master_synth_bSynth_snk_doPut,
+       WILL_FIRE_RL_core_mem_master_synth_bSynth_snk_warnDoPut,
+       WILL_FIRE_RL_core_mem_master_synth_rSynth_snk_doPut,
+       WILL_FIRE_RL_core_mem_master_synth_rSynth_snk_warnDoPut,
+       WILL_FIRE_RL_core_mem_master_synth_wSynth_src_doDrop,
+       WILL_FIRE_RL_core_mem_master_synth_wSynth_src_setPeek,
+       WILL_FIRE_RL_core_mem_master_synth_wSynth_src_warnDoDrop,
        WILL_FIRE_RL_cpu_imem_master_synth_arSynth_src_doDrop,
        WILL_FIRE_RL_cpu_imem_master_synth_arSynth_src_setPeek,
        WILL_FIRE_RL_cpu_imem_master_synth_arSynth_src_warnDoDrop,
@@ -954,11 +1168,11 @@ module mkCore_Synth(CLK,
        WILL_FIRE_core_external_interrupt_sources_7_m_interrupt_req,
        WILL_FIRE_core_external_interrupt_sources_8_m_interrupt_req,
        WILL_FIRE_core_external_interrupt_sources_9_m_interrupt_req,
-       WILL_FIRE_cpu_dmem_master_ar_arready,
-       WILL_FIRE_cpu_dmem_master_aw_awready,
-       WILL_FIRE_cpu_dmem_master_b_bflit,
-       WILL_FIRE_cpu_dmem_master_r_rflit,
-       WILL_FIRE_cpu_dmem_master_w_wready,
+       WILL_FIRE_core_mem_master_ar_arready,
+       WILL_FIRE_core_mem_master_aw_awready,
+       WILL_FIRE_core_mem_master_b_bflit,
+       WILL_FIRE_core_mem_master_r_rflit,
+       WILL_FIRE_core_mem_master_w_wready,
        WILL_FIRE_cpu_imem_master_ar_arready,
        WILL_FIRE_cpu_imem_master_aw_awready,
        WILL_FIRE_cpu_imem_master_b_bflit,
@@ -969,15 +1183,16 @@ module mkCore_Synth(CLK,
        WILL_FIRE_dm_dmi_read_addr,
        WILL_FIRE_dm_dmi_read_data,
        WILL_FIRE_dm_dmi_write,
+       WILL_FIRE_dma_server_ar_arflit,
+       WILL_FIRE_dma_server_aw_awflit,
+       WILL_FIRE_dma_server_b_bready,
+       WILL_FIRE_dma_server_r_rready,
+       WILL_FIRE_dma_server_w_wflit,
+       WILL_FIRE_ma_ddr4_ready,
        WILL_FIRE_ndm_reset_client_request_get,
        WILL_FIRE_ndm_reset_client_response_put,
        WILL_FIRE_nmi_req,
        WILL_FIRE_set_verbosity;
-
-  // action method set_verbosity
-  assign RDY_set_verbosity = 1'd1 ;
-  assign CAN_FIRE_set_verbosity = 1'd1 ;
-  assign WILL_FIRE_set_verbosity = EN_set_verbosity ;
 
   // action method cpu_reset_server_request_put
   assign RDY_cpu_reset_server_request_put =
@@ -1100,109 +1315,163 @@ module mkCore_Synth(CLK,
   // value method cpu_imem_master_r_rready
   assign cpu_imem_master_rready = core$cpu_imem_master_r_canPut ;
 
-  // value method cpu_dmem_master_aw_awid
-  assign cpu_dmem_master_awid = core$cpu_dmem_master_aw_peek[98:93] ;
+  // value method core_mem_master_aw_awid
+  assign core_mem_master_awid = core$core_mem_master_aw_peek[98:93] ;
 
-  // value method cpu_dmem_master_aw_awaddr
-  assign cpu_dmem_master_awaddr = core$cpu_dmem_master_aw_peek[92:29] ;
+  // value method core_mem_master_aw_awaddr
+  assign core_mem_master_awaddr = core$core_mem_master_aw_peek[92:29] ;
 
-  // value method cpu_dmem_master_aw_awlen
-  assign cpu_dmem_master_awlen = core$cpu_dmem_master_aw_peek[28:21] ;
+  // value method core_mem_master_aw_awlen
+  assign core_mem_master_awlen = core$core_mem_master_aw_peek[28:21] ;
 
-  // value method cpu_dmem_master_aw_awsize
-  assign cpu_dmem_master_awsize = core$cpu_dmem_master_aw_peek[20:18] ;
+  // value method core_mem_master_aw_awsize
+  assign core_mem_master_awsize = core$core_mem_master_aw_peek[20:18] ;
 
-  // value method cpu_dmem_master_aw_awburst
-  assign cpu_dmem_master_awburst = core$cpu_dmem_master_aw_peek[17:16] ;
+  // value method core_mem_master_aw_awburst
+  assign core_mem_master_awburst = core$core_mem_master_aw_peek[17:16] ;
 
-  // value method cpu_dmem_master_aw_awlock
-  assign cpu_dmem_master_awlock = core$cpu_dmem_master_aw_peek[15] ;
+  // value method core_mem_master_aw_awlock
+  assign core_mem_master_awlock = core$core_mem_master_aw_peek[15] ;
 
-  // value method cpu_dmem_master_aw_awcache
-  assign cpu_dmem_master_awcache = core$cpu_dmem_master_aw_peek[14:11] ;
+  // value method core_mem_master_aw_awcache
+  assign core_mem_master_awcache = core$core_mem_master_aw_peek[14:11] ;
 
-  // value method cpu_dmem_master_aw_awprot
-  assign cpu_dmem_master_awprot = core$cpu_dmem_master_aw_peek[10:8] ;
+  // value method core_mem_master_aw_awprot
+  assign core_mem_master_awprot = core$core_mem_master_aw_peek[10:8] ;
 
-  // value method cpu_dmem_master_aw_awqos
-  assign cpu_dmem_master_awqos = core$cpu_dmem_master_aw_peek[7:4] ;
+  // value method core_mem_master_aw_awqos
+  assign core_mem_master_awqos = core$core_mem_master_aw_peek[7:4] ;
 
-  // value method cpu_dmem_master_aw_awregion
-  assign cpu_dmem_master_awregion = core$cpu_dmem_master_aw_peek[3:0] ;
+  // value method core_mem_master_aw_awregion
+  assign core_mem_master_awregion = core$core_mem_master_aw_peek[3:0] ;
 
-  // value method cpu_dmem_master_aw_awvalid
-  assign cpu_dmem_master_awvalid = core$cpu_dmem_master_aw_canPeek ;
+  // value method core_mem_master_aw_awvalid
+  assign core_mem_master_awvalid = core$core_mem_master_aw_canPeek ;
 
-  // action method cpu_dmem_master_aw_awready
-  assign CAN_FIRE_cpu_dmem_master_aw_awready = 1'd1 ;
-  assign WILL_FIRE_cpu_dmem_master_aw_awready = 1'd1 ;
+  // action method core_mem_master_aw_awready
+  assign CAN_FIRE_core_mem_master_aw_awready = 1'd1 ;
+  assign WILL_FIRE_core_mem_master_aw_awready = 1'd1 ;
 
-  // value method cpu_dmem_master_w_wdata
-  assign cpu_dmem_master_wdata = core$cpu_dmem_master_w_peek[72:9] ;
+  // value method core_mem_master_w_wdata
+  assign core_mem_master_wdata = core$core_mem_master_w_peek[72:9] ;
 
-  // value method cpu_dmem_master_w_wstrb
-  assign cpu_dmem_master_wstrb = core$cpu_dmem_master_w_peek[8:1] ;
+  // value method core_mem_master_w_wstrb
+  assign core_mem_master_wstrb = core$core_mem_master_w_peek[8:1] ;
 
-  // value method cpu_dmem_master_w_wlast
-  assign cpu_dmem_master_wlast = core$cpu_dmem_master_w_peek[0] ;
+  // value method core_mem_master_w_wlast
+  assign core_mem_master_wlast = core$core_mem_master_w_peek[0] ;
 
-  // value method cpu_dmem_master_w_wvalid
-  assign cpu_dmem_master_wvalid = core$cpu_dmem_master_w_canPeek ;
+  // value method core_mem_master_w_wvalid
+  assign core_mem_master_wvalid = core$core_mem_master_w_canPeek ;
 
-  // action method cpu_dmem_master_w_wready
-  assign CAN_FIRE_cpu_dmem_master_w_wready = 1'd1 ;
-  assign WILL_FIRE_cpu_dmem_master_w_wready = 1'd1 ;
+  // action method core_mem_master_w_wready
+  assign CAN_FIRE_core_mem_master_w_wready = 1'd1 ;
+  assign WILL_FIRE_core_mem_master_w_wready = 1'd1 ;
 
-  // action method cpu_dmem_master_b_bflit
-  assign CAN_FIRE_cpu_dmem_master_b_bflit = 1'd1 ;
-  assign WILL_FIRE_cpu_dmem_master_b_bflit = 1'd1 ;
+  // action method core_mem_master_b_bflit
+  assign CAN_FIRE_core_mem_master_b_bflit = 1'd1 ;
+  assign WILL_FIRE_core_mem_master_b_bflit = 1'd1 ;
 
-  // value method cpu_dmem_master_b_bready
-  assign cpu_dmem_master_bready = core$cpu_dmem_master_b_canPut ;
+  // value method core_mem_master_b_bready
+  assign core_mem_master_bready = core$core_mem_master_b_canPut ;
 
-  // value method cpu_dmem_master_ar_arid
-  assign cpu_dmem_master_arid = core$cpu_dmem_master_ar_peek[98:93] ;
+  // value method core_mem_master_ar_arid
+  assign core_mem_master_arid = core$core_mem_master_ar_peek[98:93] ;
 
-  // value method cpu_dmem_master_ar_araddr
-  assign cpu_dmem_master_araddr = core$cpu_dmem_master_ar_peek[92:29] ;
+  // value method core_mem_master_ar_araddr
+  assign core_mem_master_araddr = core$core_mem_master_ar_peek[92:29] ;
 
-  // value method cpu_dmem_master_ar_arlen
-  assign cpu_dmem_master_arlen = core$cpu_dmem_master_ar_peek[28:21] ;
+  // value method core_mem_master_ar_arlen
+  assign core_mem_master_arlen = core$core_mem_master_ar_peek[28:21] ;
 
-  // value method cpu_dmem_master_ar_arsize
-  assign cpu_dmem_master_arsize = core$cpu_dmem_master_ar_peek[20:18] ;
+  // value method core_mem_master_ar_arsize
+  assign core_mem_master_arsize = core$core_mem_master_ar_peek[20:18] ;
 
-  // value method cpu_dmem_master_ar_arburst
-  assign cpu_dmem_master_arburst = core$cpu_dmem_master_ar_peek[17:16] ;
+  // value method core_mem_master_ar_arburst
+  assign core_mem_master_arburst = core$core_mem_master_ar_peek[17:16] ;
 
-  // value method cpu_dmem_master_ar_arlock
-  assign cpu_dmem_master_arlock = core$cpu_dmem_master_ar_peek[15] ;
+  // value method core_mem_master_ar_arlock
+  assign core_mem_master_arlock = core$core_mem_master_ar_peek[15] ;
 
-  // value method cpu_dmem_master_ar_arcache
-  assign cpu_dmem_master_arcache = core$cpu_dmem_master_ar_peek[14:11] ;
+  // value method core_mem_master_ar_arcache
+  assign core_mem_master_arcache = core$core_mem_master_ar_peek[14:11] ;
 
-  // value method cpu_dmem_master_ar_arprot
-  assign cpu_dmem_master_arprot = core$cpu_dmem_master_ar_peek[10:8] ;
+  // value method core_mem_master_ar_arprot
+  assign core_mem_master_arprot = core$core_mem_master_ar_peek[10:8] ;
 
-  // value method cpu_dmem_master_ar_arqos
-  assign cpu_dmem_master_arqos = core$cpu_dmem_master_ar_peek[7:4] ;
+  // value method core_mem_master_ar_arqos
+  assign core_mem_master_arqos = core$core_mem_master_ar_peek[7:4] ;
 
-  // value method cpu_dmem_master_ar_arregion
-  assign cpu_dmem_master_arregion = core$cpu_dmem_master_ar_peek[3:0] ;
+  // value method core_mem_master_ar_arregion
+  assign core_mem_master_arregion = core$core_mem_master_ar_peek[3:0] ;
 
-  // value method cpu_dmem_master_ar_arvalid
-  assign cpu_dmem_master_arvalid = core$cpu_dmem_master_ar_canPeek ;
+  // value method core_mem_master_ar_arvalid
+  assign core_mem_master_arvalid = core$core_mem_master_ar_canPeek ;
 
-  // action method cpu_dmem_master_ar_arready
-  assign CAN_FIRE_cpu_dmem_master_ar_arready = 1'd1 ;
-  assign WILL_FIRE_cpu_dmem_master_ar_arready = 1'd1 ;
+  // action method core_mem_master_ar_arready
+  assign CAN_FIRE_core_mem_master_ar_arready = 1'd1 ;
+  assign WILL_FIRE_core_mem_master_ar_arready = 1'd1 ;
 
-  // action method cpu_dmem_master_r_rflit
-  assign CAN_FIRE_cpu_dmem_master_r_rflit = 1'd1 ;
-  assign WILL_FIRE_cpu_dmem_master_r_rflit = 1'd1 ;
+  // action method core_mem_master_r_rflit
+  assign CAN_FIRE_core_mem_master_r_rflit = 1'd1 ;
+  assign WILL_FIRE_core_mem_master_r_rflit = 1'd1 ;
 
-  // value method cpu_dmem_master_r_rready
-  assign cpu_dmem_master_rready = core$cpu_dmem_master_r_canPut ;
+  // value method core_mem_master_r_rready
+  assign core_mem_master_rready = core$core_mem_master_r_canPut ;
+
+  // action method dma_server_aw_awflit
+  assign CAN_FIRE_dma_server_aw_awflit = 1'd1 ;
+  assign WILL_FIRE_dma_server_aw_awflit = 1'd1 ;
+
+  // value method dma_server_aw_awready
+  assign dma_server_awready = 1'bx /* unspecified value */  ;
+
+  // action method dma_server_w_wflit
+  assign CAN_FIRE_dma_server_w_wflit = 1'd1 ;
+  assign WILL_FIRE_dma_server_w_wflit = 1'd1 ;
+
+  // value method dma_server_w_wready
+  assign dma_server_wready = 1'bx /* unspecified value */  ;
+
+  // value method dma_server_b_bid
+  assign dma_server_bid = 6'bxxxxxx /* unspecified value */  ;
+
+  // value method dma_server_b_bresp
+  assign dma_server_bresp = 2'bxx /* unspecified value */  ;
+
+  // value method dma_server_b_bvalid
+  assign dma_server_bvalid = 1'bx /* unspecified value */  ;
+
+  // action method dma_server_b_bready
+  assign CAN_FIRE_dma_server_b_bready = 1'd1 ;
+  assign WILL_FIRE_dma_server_b_bready = 1'd1 ;
+
+  // action method dma_server_ar_arflit
+  assign CAN_FIRE_dma_server_ar_arflit = 1'd1 ;
+  assign WILL_FIRE_dma_server_ar_arflit = 1'd1 ;
+
+  // value method dma_server_ar_arready
+  assign dma_server_arready = 1'bx /* unspecified value */  ;
+
+  // value method dma_server_r_rid
+  assign dma_server_rid = 6'bxxxxxx /* unspecified value */  ;
+
+  // value method dma_server_r_rdata
+  assign dma_server_rdata =
+	     512'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /* unspecified value */  ;
+
+  // value method dma_server_r_rresp
+  assign dma_server_rresp = 2'bxx /* unspecified value */  ;
+
+  // value method dma_server_r_rlast
+  assign dma_server_rlast = 1'bx /* unspecified value */  ;
+
+  // value method dma_server_r_rvalid
+  assign dma_server_rvalid = 1'bx /* unspecified value */  ;
+
+  // action method dma_server_r_rready
+  assign CAN_FIRE_dma_server_r_rready = 1'd1 ;
+  assign WILL_FIRE_dma_server_r_rready = 1'd1 ;
 
   // action method core_external_interrupt_sources_0_m_interrupt_req
   assign CAN_FIRE_core_external_interrupt_sources_0_m_interrupt_req = 1'd1 ;
@@ -1305,6 +1574,19 @@ module mkCore_Synth(CLK,
   assign WILL_FIRE_ndm_reset_client_response_put =
 	     EN_ndm_reset_client_response_put ;
 
+  // action method set_verbosity
+  assign RDY_set_verbosity = 1'd1 ;
+  assign CAN_FIRE_set_verbosity = 1'd1 ;
+  assign WILL_FIRE_set_verbosity = EN_set_verbosity ;
+
+  // action method ma_ddr4_ready
+  assign RDY_ma_ddr4_ready = 1'd1 ;
+  assign CAN_FIRE_ma_ddr4_ready = 1'd1 ;
+  assign WILL_FIRE_ma_ddr4_ready = EN_ma_ddr4_ready ;
+
+  // value method mv_status
+  assign mv_status = 8'bxxxxxxxx /* unspecified value */  ;
+
   // submodule core
   mkCore core(.CLK(CLK),
 	      .RST_N(RST_N),
@@ -1324,19 +1606,21 @@ module mkCore_Synth(CLK,
 	      .core_external_interrupt_sources_7_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_7_m_interrupt_req_set_not_clear),
 	      .core_external_interrupt_sources_8_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_8_m_interrupt_req_set_not_clear),
 	      .core_external_interrupt_sources_9_m_interrupt_req_set_not_clear(core$core_external_interrupt_sources_9_m_interrupt_req_set_not_clear),
-	      .cpu_dmem_master_b_put_val(core$cpu_dmem_master_b_put_val),
-	      .cpu_dmem_master_r_put_val(core$cpu_dmem_master_r_put_val),
+	      .core_mem_master_b_put_val(core$core_mem_master_b_put_val),
+	      .core_mem_master_r_put_val(core$core_mem_master_r_put_val),
 	      .cpu_imem_master_b_put_val(core$cpu_imem_master_b_put_val),
 	      .cpu_imem_master_r_put_val(core$cpu_imem_master_r_put_val),
 	      .cpu_reset_server_request_put(core$cpu_reset_server_request_put),
 	      .dm_dmi_read_addr_dm_addr(core$dm_dmi_read_addr_dm_addr),
 	      .dm_dmi_write_dm_addr(core$dm_dmi_write_dm_addr),
 	      .dm_dmi_write_dm_word(core$dm_dmi_write_dm_word),
+	      .dma_server_ar_put_val(core$dma_server_ar_put_val),
+	      .dma_server_aw_put_val(core$dma_server_aw_put_val),
+	      .dma_server_w_put_val(core$dma_server_w_put_val),
 	      .ndm_reset_client_response_put(core$ndm_reset_client_response_put),
 	      .nmi_req_set_not_clear(core$nmi_req_set_not_clear),
 	      .set_verbosity_logdelay(core$set_verbosity_logdelay),
 	      .set_verbosity_verbosity(core$set_verbosity_verbosity),
-	      .EN_set_verbosity(core$EN_set_verbosity),
 	      .EN_cpu_reset_server_request_put(core$EN_cpu_reset_server_request_put),
 	      .EN_cpu_reset_server_response_get(core$EN_cpu_reset_server_response_get),
 	      .EN_cpu_imem_master_aw_drop(core$EN_cpu_imem_master_aw_drop),
@@ -1344,17 +1628,23 @@ module mkCore_Synth(CLK,
 	      .EN_cpu_imem_master_b_put(core$EN_cpu_imem_master_b_put),
 	      .EN_cpu_imem_master_ar_drop(core$EN_cpu_imem_master_ar_drop),
 	      .EN_cpu_imem_master_r_put(core$EN_cpu_imem_master_r_put),
-	      .EN_cpu_dmem_master_aw_drop(core$EN_cpu_dmem_master_aw_drop),
-	      .EN_cpu_dmem_master_w_drop(core$EN_cpu_dmem_master_w_drop),
-	      .EN_cpu_dmem_master_b_put(core$EN_cpu_dmem_master_b_put),
-	      .EN_cpu_dmem_master_ar_drop(core$EN_cpu_dmem_master_ar_drop),
-	      .EN_cpu_dmem_master_r_put(core$EN_cpu_dmem_master_r_put),
+	      .EN_core_mem_master_aw_drop(core$EN_core_mem_master_aw_drop),
+	      .EN_core_mem_master_w_drop(core$EN_core_mem_master_w_drop),
+	      .EN_core_mem_master_b_put(core$EN_core_mem_master_b_put),
+	      .EN_core_mem_master_ar_drop(core$EN_core_mem_master_ar_drop),
+	      .EN_core_mem_master_r_put(core$EN_core_mem_master_r_put),
+	      .EN_dma_server_aw_put(core$EN_dma_server_aw_put),
+	      .EN_dma_server_w_put(core$EN_dma_server_w_put),
+	      .EN_dma_server_b_drop(core$EN_dma_server_b_drop),
+	      .EN_dma_server_ar_put(core$EN_dma_server_ar_put),
+	      .EN_dma_server_r_drop(core$EN_dma_server_r_drop),
 	      .EN_dm_dmi_read_addr(core$EN_dm_dmi_read_addr),
 	      .EN_dm_dmi_read_data(core$EN_dm_dmi_read_data),
 	      .EN_dm_dmi_write(core$EN_dm_dmi_write),
 	      .EN_ndm_reset_client_request_get(core$EN_ndm_reset_client_request_get),
 	      .EN_ndm_reset_client_response_put(core$EN_ndm_reset_client_response_put),
-	      .RDY_set_verbosity(),
+	      .EN_set_verbosity(core$EN_set_verbosity),
+	      .EN_ma_ddr4_ready(core$EN_ma_ddr4_ready),
 	      .RDY_cpu_reset_server_request_put(core$RDY_cpu_reset_server_request_put),
 	      .cpu_reset_server_response_get(core$cpu_reset_server_response_get),
 	      .RDY_cpu_reset_server_response_get(core$RDY_cpu_reset_server_response_get),
@@ -1374,29 +1664,46 @@ module mkCore_Synth(CLK,
 	      .RDY_cpu_imem_master_ar_drop(core$RDY_cpu_imem_master_ar_drop),
 	      .cpu_imem_master_r_canPut(core$cpu_imem_master_r_canPut),
 	      .RDY_cpu_imem_master_r_put(core$RDY_cpu_imem_master_r_put),
-	      .cpu_dmem_master_aw_canPeek(core$cpu_dmem_master_aw_canPeek),
-	      .cpu_dmem_master_aw_peek(core$cpu_dmem_master_aw_peek),
-	      .RDY_cpu_dmem_master_aw_peek(core$RDY_cpu_dmem_master_aw_peek),
-	      .RDY_cpu_dmem_master_aw_drop(core$RDY_cpu_dmem_master_aw_drop),
-	      .cpu_dmem_master_w_canPeek(core$cpu_dmem_master_w_canPeek),
-	      .cpu_dmem_master_w_peek(core$cpu_dmem_master_w_peek),
-	      .RDY_cpu_dmem_master_w_peek(core$RDY_cpu_dmem_master_w_peek),
-	      .RDY_cpu_dmem_master_w_drop(core$RDY_cpu_dmem_master_w_drop),
-	      .cpu_dmem_master_b_canPut(core$cpu_dmem_master_b_canPut),
-	      .RDY_cpu_dmem_master_b_put(core$RDY_cpu_dmem_master_b_put),
-	      .cpu_dmem_master_ar_canPeek(core$cpu_dmem_master_ar_canPeek),
-	      .cpu_dmem_master_ar_peek(core$cpu_dmem_master_ar_peek),
-	      .RDY_cpu_dmem_master_ar_peek(core$RDY_cpu_dmem_master_ar_peek),
-	      .RDY_cpu_dmem_master_ar_drop(core$RDY_cpu_dmem_master_ar_drop),
-	      .cpu_dmem_master_r_canPut(core$cpu_dmem_master_r_canPut),
-	      .RDY_cpu_dmem_master_r_put(core$RDY_cpu_dmem_master_r_put),
+	      .core_mem_master_aw_canPeek(core$core_mem_master_aw_canPeek),
+	      .core_mem_master_aw_peek(core$core_mem_master_aw_peek),
+	      .RDY_core_mem_master_aw_peek(core$RDY_core_mem_master_aw_peek),
+	      .RDY_core_mem_master_aw_drop(core$RDY_core_mem_master_aw_drop),
+	      .core_mem_master_w_canPeek(core$core_mem_master_w_canPeek),
+	      .core_mem_master_w_peek(core$core_mem_master_w_peek),
+	      .RDY_core_mem_master_w_peek(core$RDY_core_mem_master_w_peek),
+	      .RDY_core_mem_master_w_drop(core$RDY_core_mem_master_w_drop),
+	      .core_mem_master_b_canPut(core$core_mem_master_b_canPut),
+	      .RDY_core_mem_master_b_put(core$RDY_core_mem_master_b_put),
+	      .core_mem_master_ar_canPeek(core$core_mem_master_ar_canPeek),
+	      .core_mem_master_ar_peek(core$core_mem_master_ar_peek),
+	      .RDY_core_mem_master_ar_peek(core$RDY_core_mem_master_ar_peek),
+	      .RDY_core_mem_master_ar_drop(core$RDY_core_mem_master_ar_drop),
+	      .core_mem_master_r_canPut(core$core_mem_master_r_canPut),
+	      .RDY_core_mem_master_r_put(core$RDY_core_mem_master_r_put),
+	      .dma_server_aw_canPut(),
+	      .RDY_dma_server_aw_put(),
+	      .dma_server_w_canPut(),
+	      .RDY_dma_server_w_put(),
+	      .dma_server_b_canPeek(),
+	      .dma_server_b_peek(),
+	      .RDY_dma_server_b_peek(),
+	      .RDY_dma_server_b_drop(),
+	      .dma_server_ar_canPut(),
+	      .RDY_dma_server_ar_put(),
+	      .dma_server_r_canPeek(),
+	      .dma_server_r_peek(),
+	      .RDY_dma_server_r_peek(),
+	      .RDY_dma_server_r_drop(),
 	      .RDY_dm_dmi_read_addr(core$RDY_dm_dmi_read_addr),
 	      .dm_dmi_read_data(core$dm_dmi_read_data),
 	      .RDY_dm_dmi_read_data(core$RDY_dm_dmi_read_data),
 	      .RDY_dm_dmi_write(core$RDY_dm_dmi_write),
 	      .ndm_reset_client_request_get(core$ndm_reset_client_request_get),
 	      .RDY_ndm_reset_client_request_get(core$RDY_ndm_reset_client_request_get),
-	      .RDY_ndm_reset_client_response_put(core$RDY_ndm_reset_client_response_put));
+	      .RDY_ndm_reset_client_response_put(core$RDY_ndm_reset_client_response_put),
+	      .RDY_set_verbosity(),
+	      .RDY_ma_ddr4_ready(),
+	      .mv_status());
 
   // rule RL_cpu_imem_master_synth_awSynth_src_setPeek
   assign CAN_FIRE_RL_cpu_imem_master_synth_awSynth_src_setPeek =
@@ -1489,96 +1796,96 @@ module mkCore_Synth(CLK,
   assign WILL_FIRE_RL_cpu_imem_master_synth_rSynth_snk_doPut =
 	     CAN_FIRE_RL_cpu_imem_master_synth_rSynth_snk_doPut ;
 
-  // rule RL_cpu_dmem_master_synth_awSynth_src_setPeek
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_setPeek =
-	     core$RDY_cpu_dmem_master_aw_peek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_setPeek =
-	     core$RDY_cpu_dmem_master_aw_peek ;
+  // rule RL_core_mem_master_synth_awSynth_src_setPeek
+  assign CAN_FIRE_RL_core_mem_master_synth_awSynth_src_setPeek =
+	     core$RDY_core_mem_master_aw_peek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_awSynth_src_setPeek =
+	     core$RDY_core_mem_master_aw_peek ;
 
-  // rule RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop =
-	     cpu_dmem_master_synth_awSynth_src_dropWire$whas &&
-	     !core$cpu_dmem_master_aw_canPeek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop ;
+  // rule RL_core_mem_master_synth_awSynth_src_warnDoDrop
+  assign CAN_FIRE_RL_core_mem_master_synth_awSynth_src_warnDoDrop =
+	     core_mem_master_synth_awSynth_src_dropWire$whas &&
+	     !core$core_mem_master_aw_canPeek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_awSynth_src_warnDoDrop =
+	     CAN_FIRE_RL_core_mem_master_synth_awSynth_src_warnDoDrop ;
 
-  // rule RL_cpu_dmem_master_synth_awSynth_src_doDrop
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_doDrop =
-	     core$RDY_cpu_dmem_master_aw_drop &&
-	     cpu_dmem_master_synth_awSynth_src_dropWire$whas &&
-	     core$cpu_dmem_master_aw_canPeek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_doDrop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_doDrop ;
+  // rule RL_core_mem_master_synth_awSynth_src_doDrop
+  assign CAN_FIRE_RL_core_mem_master_synth_awSynth_src_doDrop =
+	     core$RDY_core_mem_master_aw_drop &&
+	     core_mem_master_synth_awSynth_src_dropWire$whas &&
+	     core$core_mem_master_aw_canPeek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_awSynth_src_doDrop =
+	     CAN_FIRE_RL_core_mem_master_synth_awSynth_src_doDrop ;
 
-  // rule RL_cpu_dmem_master_synth_wSynth_src_setPeek
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_setPeek =
-	     core$RDY_cpu_dmem_master_w_peek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_setPeek =
-	     core$RDY_cpu_dmem_master_w_peek ;
+  // rule RL_core_mem_master_synth_wSynth_src_setPeek
+  assign CAN_FIRE_RL_core_mem_master_synth_wSynth_src_setPeek =
+	     core$RDY_core_mem_master_w_peek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_wSynth_src_setPeek =
+	     core$RDY_core_mem_master_w_peek ;
 
-  // rule RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop =
-	     cpu_dmem_master_synth_wSynth_src_dropWire$whas &&
-	     !core$cpu_dmem_master_w_canPeek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop ;
+  // rule RL_core_mem_master_synth_wSynth_src_warnDoDrop
+  assign CAN_FIRE_RL_core_mem_master_synth_wSynth_src_warnDoDrop =
+	     core_mem_master_synth_wSynth_src_dropWire$whas &&
+	     !core$core_mem_master_w_canPeek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_wSynth_src_warnDoDrop =
+	     CAN_FIRE_RL_core_mem_master_synth_wSynth_src_warnDoDrop ;
 
-  // rule RL_cpu_dmem_master_synth_wSynth_src_doDrop
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_doDrop =
-	     core$RDY_cpu_dmem_master_w_drop &&
-	     cpu_dmem_master_synth_wSynth_src_dropWire$whas &&
-	     core$cpu_dmem_master_w_canPeek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_doDrop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_doDrop ;
+  // rule RL_core_mem_master_synth_wSynth_src_doDrop
+  assign CAN_FIRE_RL_core_mem_master_synth_wSynth_src_doDrop =
+	     core$RDY_core_mem_master_w_drop &&
+	     core_mem_master_synth_wSynth_src_dropWire$whas &&
+	     core$core_mem_master_w_canPeek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_wSynth_src_doDrop =
+	     CAN_FIRE_RL_core_mem_master_synth_wSynth_src_doDrop ;
 
-  // rule RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut =
-	     cpu_dmem_master_synth_bSynth_snk_putWire$whas &&
-	     !core$cpu_dmem_master_b_canPut ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut ;
+  // rule RL_core_mem_master_synth_bSynth_snk_warnDoPut
+  assign CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_warnDoPut =
+	     core_mem_master_synth_bSynth_snk_putWire$whas &&
+	     !core$core_mem_master_b_canPut ;
+  assign WILL_FIRE_RL_core_mem_master_synth_bSynth_snk_warnDoPut =
+	     CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_warnDoPut ;
 
-  // rule RL_cpu_dmem_master_synth_bSynth_snk_doPut
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_doPut =
-	     core$RDY_cpu_dmem_master_b_put &&
-	     cpu_dmem_master_synth_bSynth_snk_putWire$whas ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_doPut =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_doPut ;
+  // rule RL_core_mem_master_synth_bSynth_snk_doPut
+  assign CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_doPut =
+	     core$RDY_core_mem_master_b_put &&
+	     core_mem_master_synth_bSynth_snk_putWire$whas ;
+  assign WILL_FIRE_RL_core_mem_master_synth_bSynth_snk_doPut =
+	     CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_doPut ;
 
-  // rule RL_cpu_dmem_master_synth_arSynth_src_setPeek
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_setPeek =
-	     core$RDY_cpu_dmem_master_ar_peek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_setPeek =
-	     core$RDY_cpu_dmem_master_ar_peek ;
+  // rule RL_core_mem_master_synth_arSynth_src_setPeek
+  assign CAN_FIRE_RL_core_mem_master_synth_arSynth_src_setPeek =
+	     core$RDY_core_mem_master_ar_peek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_arSynth_src_setPeek =
+	     core$RDY_core_mem_master_ar_peek ;
 
-  // rule RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop =
-	     cpu_dmem_master_synth_arSynth_src_dropWire$whas &&
-	     !core$cpu_dmem_master_ar_canPeek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop ;
+  // rule RL_core_mem_master_synth_arSynth_src_warnDoDrop
+  assign CAN_FIRE_RL_core_mem_master_synth_arSynth_src_warnDoDrop =
+	     core_mem_master_synth_arSynth_src_dropWire$whas &&
+	     !core$core_mem_master_ar_canPeek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_arSynth_src_warnDoDrop =
+	     CAN_FIRE_RL_core_mem_master_synth_arSynth_src_warnDoDrop ;
 
-  // rule RL_cpu_dmem_master_synth_arSynth_src_doDrop
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_doDrop =
-	     core$RDY_cpu_dmem_master_ar_drop &&
-	     cpu_dmem_master_synth_arSynth_src_dropWire$whas &&
-	     core$cpu_dmem_master_ar_canPeek ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_doDrop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_doDrop ;
+  // rule RL_core_mem_master_synth_arSynth_src_doDrop
+  assign CAN_FIRE_RL_core_mem_master_synth_arSynth_src_doDrop =
+	     core$RDY_core_mem_master_ar_drop &&
+	     core_mem_master_synth_arSynth_src_dropWire$whas &&
+	     core$core_mem_master_ar_canPeek ;
+  assign WILL_FIRE_RL_core_mem_master_synth_arSynth_src_doDrop =
+	     CAN_FIRE_RL_core_mem_master_synth_arSynth_src_doDrop ;
 
-  // rule RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut =
-	     cpu_dmem_master_synth_rSynth_snk_putWire$whas &&
-	     !core$cpu_dmem_master_r_canPut ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut ;
+  // rule RL_core_mem_master_synth_rSynth_snk_warnDoPut
+  assign CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_warnDoPut =
+	     core_mem_master_synth_rSynth_snk_putWire$whas &&
+	     !core$core_mem_master_r_canPut ;
+  assign WILL_FIRE_RL_core_mem_master_synth_rSynth_snk_warnDoPut =
+	     CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_warnDoPut ;
 
-  // rule RL_cpu_dmem_master_synth_rSynth_snk_doPut
-  assign CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_doPut =
-	     core$RDY_cpu_dmem_master_r_put &&
-	     cpu_dmem_master_synth_rSynth_snk_putWire$whas ;
-  assign WILL_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_doPut =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_doPut ;
+  // rule RL_core_mem_master_synth_rSynth_snk_doPut
+  assign CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_doPut =
+	     core$RDY_core_mem_master_r_put &&
+	     core_mem_master_synth_rSynth_snk_putWire$whas ;
+  assign WILL_FIRE_RL_core_mem_master_synth_rSynth_snk_doPut =
+	     CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_doPut ;
 
   // inlined wires
   assign cpu_imem_master_synth_bSynth_snk_putWire$wget =
@@ -1592,29 +1899,29 @@ module mkCore_Synth(CLK,
 	       cpu_imem_master_rlast } ;
   assign cpu_imem_master_synth_rSynth_snk_putWire$whas =
 	     cpu_imem_master_rvalid && core$cpu_imem_master_r_canPut ;
-  assign cpu_dmem_master_synth_bSynth_snk_putWire$wget =
-	     { cpu_dmem_master_bid, cpu_dmem_master_bresp } ;
-  assign cpu_dmem_master_synth_bSynth_snk_putWire$whas =
-	     cpu_dmem_master_bvalid && core$cpu_dmem_master_b_canPut ;
-  assign cpu_dmem_master_synth_rSynth_snk_putWire$wget =
-	     { cpu_dmem_master_rid,
-	       cpu_dmem_master_rdata,
-	       cpu_dmem_master_rresp,
-	       cpu_dmem_master_rlast } ;
-  assign cpu_dmem_master_synth_rSynth_snk_putWire$whas =
-	     cpu_dmem_master_rvalid && core$cpu_dmem_master_r_canPut ;
+  assign core_mem_master_synth_bSynth_snk_putWire$wget =
+	     { core_mem_master_bid, core_mem_master_bresp } ;
+  assign core_mem_master_synth_bSynth_snk_putWire$whas =
+	     core_mem_master_bvalid && core$core_mem_master_b_canPut ;
+  assign core_mem_master_synth_rSynth_snk_putWire$wget =
+	     { core_mem_master_rid,
+	       core_mem_master_rdata,
+	       core_mem_master_rresp,
+	       core_mem_master_rlast } ;
+  assign core_mem_master_synth_rSynth_snk_putWire$whas =
+	     core_mem_master_rvalid && core$core_mem_master_r_canPut ;
   assign cpu_imem_master_synth_awSynth_src_dropWire$whas =
 	     core$cpu_imem_master_aw_canPeek && cpu_imem_master_awready ;
   assign cpu_imem_master_synth_wSynth_src_dropWire$whas =
 	     core$cpu_imem_master_w_canPeek && cpu_imem_master_wready ;
   assign cpu_imem_master_synth_arSynth_src_dropWire$whas =
 	     core$cpu_imem_master_ar_canPeek && cpu_imem_master_arready ;
-  assign cpu_dmem_master_synth_awSynth_src_dropWire$whas =
-	     core$cpu_dmem_master_aw_canPeek && cpu_dmem_master_awready ;
-  assign cpu_dmem_master_synth_wSynth_src_dropWire$whas =
-	     core$cpu_dmem_master_w_canPeek && cpu_dmem_master_wready ;
-  assign cpu_dmem_master_synth_arSynth_src_dropWire$whas =
-	     core$cpu_dmem_master_ar_canPeek && cpu_dmem_master_arready ;
+  assign core_mem_master_synth_awSynth_src_dropWire$whas =
+	     core$core_mem_master_aw_canPeek && core_mem_master_awready ;
+  assign core_mem_master_synth_wSynth_src_dropWire$whas =
+	     core$core_mem_master_w_canPeek && core_mem_master_wready ;
+  assign core_mem_master_synth_arSynth_src_dropWire$whas =
+	     core$core_mem_master_ar_canPeek && core_mem_master_arready ;
 
   // submodule core
   assign core$core_external_interrupt_sources_0_m_interrupt_req_set_not_clear =
@@ -1649,10 +1956,10 @@ module mkCore_Synth(CLK,
 	     core_external_interrupt_sources_8_m_interrupt_req_set_not_clear ;
   assign core$core_external_interrupt_sources_9_m_interrupt_req_set_not_clear =
 	     core_external_interrupt_sources_9_m_interrupt_req_set_not_clear ;
-  assign core$cpu_dmem_master_b_put_val =
-	     cpu_dmem_master_synth_bSynth_snk_putWire$wget ;
-  assign core$cpu_dmem_master_r_put_val =
-	     cpu_dmem_master_synth_rSynth_snk_putWire$wget ;
+  assign core$core_mem_master_b_put_val =
+	     core_mem_master_synth_bSynth_snk_putWire$wget ;
+  assign core$core_mem_master_r_put_val =
+	     core_mem_master_synth_rSynth_snk_putWire$wget ;
   assign core$cpu_imem_master_b_put_val =
 	     cpu_imem_master_synth_bSynth_snk_putWire$wget ;
   assign core$cpu_imem_master_r_put_val =
@@ -1661,11 +1968,13 @@ module mkCore_Synth(CLK,
   assign core$dm_dmi_read_addr_dm_addr = dm_dmi_read_addr_dm_addr ;
   assign core$dm_dmi_write_dm_addr = dm_dmi_write_dm_addr ;
   assign core$dm_dmi_write_dm_word = dm_dmi_write_dm_word ;
+  assign core$dma_server_ar_put_val = 99'h0 ;
+  assign core$dma_server_aw_put_val = 99'h0 ;
+  assign core$dma_server_w_put_val = 577'h0 ;
   assign core$ndm_reset_client_response_put = ndm_reset_client_response_put ;
   assign core$nmi_req_set_not_clear = nmi_req_set_not_clear ;
   assign core$set_verbosity_logdelay = set_verbosity_logdelay ;
   assign core$set_verbosity_verbosity = set_verbosity_verbosity ;
-  assign core$EN_set_verbosity = EN_set_verbosity ;
   assign core$EN_cpu_reset_server_request_put =
 	     EN_cpu_reset_server_request_put ;
   assign core$EN_cpu_reset_server_response_get =
@@ -1680,16 +1989,21 @@ module mkCore_Synth(CLK,
 	     CAN_FIRE_RL_cpu_imem_master_synth_arSynth_src_doDrop ;
   assign core$EN_cpu_imem_master_r_put =
 	     CAN_FIRE_RL_cpu_imem_master_synth_rSynth_snk_doPut ;
-  assign core$EN_cpu_dmem_master_aw_drop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_awSynth_src_doDrop ;
-  assign core$EN_cpu_dmem_master_w_drop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_wSynth_src_doDrop ;
-  assign core$EN_cpu_dmem_master_b_put =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_doPut ;
-  assign core$EN_cpu_dmem_master_ar_drop =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_arSynth_src_doDrop ;
-  assign core$EN_cpu_dmem_master_r_put =
-	     CAN_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_doPut ;
+  assign core$EN_core_mem_master_aw_drop =
+	     CAN_FIRE_RL_core_mem_master_synth_awSynth_src_doDrop ;
+  assign core$EN_core_mem_master_w_drop =
+	     CAN_FIRE_RL_core_mem_master_synth_wSynth_src_doDrop ;
+  assign core$EN_core_mem_master_b_put =
+	     CAN_FIRE_RL_core_mem_master_synth_bSynth_snk_doPut ;
+  assign core$EN_core_mem_master_ar_drop =
+	     CAN_FIRE_RL_core_mem_master_synth_arSynth_src_doDrop ;
+  assign core$EN_core_mem_master_r_put =
+	     CAN_FIRE_RL_core_mem_master_synth_rSynth_snk_doPut ;
+  assign core$EN_dma_server_aw_put = 1'b0 ;
+  assign core$EN_dma_server_w_put = 1'b0 ;
+  assign core$EN_dma_server_b_drop = 1'b0 ;
+  assign core$EN_dma_server_ar_put = 1'b0 ;
+  assign core$EN_dma_server_r_drop = 1'b0 ;
   assign core$EN_dm_dmi_read_addr = EN_dm_dmi_read_addr ;
   assign core$EN_dm_dmi_read_data = EN_dm_dmi_read_data ;
   assign core$EN_dm_dmi_write = EN_dm_dmi_write ;
@@ -1697,6 +2011,8 @@ module mkCore_Synth(CLK,
 	     EN_ndm_reset_client_request_get ;
   assign core$EN_ndm_reset_client_response_put =
 	     EN_ndm_reset_client_response_put ;
+  assign core$EN_set_verbosity = EN_set_verbosity ;
+  assign core$EN_ma_ddr4_ready = 1'b0 ;
 
   // handling of system tasks
 
@@ -1720,19 +2036,19 @@ module mkCore_Synth(CLK,
       if (WILL_FIRE_RL_cpu_imem_master_synth_rSynth_snk_warnDoPut)
 	$display("WARNING: %m - putting into a Sink that can't be put into");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_cpu_dmem_master_synth_awSynth_src_warnDoDrop)
+      if (WILL_FIRE_RL_core_mem_master_synth_awSynth_src_warnDoDrop)
 	$display("WARNING: %m - dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_cpu_dmem_master_synth_wSynth_src_warnDoDrop)
+      if (WILL_FIRE_RL_core_mem_master_synth_wSynth_src_warnDoDrop)
 	$display("WARNING: %m - dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_cpu_dmem_master_synth_bSynth_snk_warnDoPut)
+      if (WILL_FIRE_RL_core_mem_master_synth_bSynth_snk_warnDoPut)
 	$display("WARNING: %m - putting into a Sink that can't be put into");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_cpu_dmem_master_synth_arSynth_src_warnDoDrop)
+      if (WILL_FIRE_RL_core_mem_master_synth_arSynth_src_warnDoDrop)
 	$display("WARNING: %m - dropping from Source that can't be dropped from");
     if (RST_N != `BSV_RESET_VALUE)
-      if (WILL_FIRE_RL_cpu_dmem_master_synth_rSynth_snk_warnDoPut)
+      if (WILL_FIRE_RL_core_mem_master_synth_rSynth_snk_warnDoPut)
 	$display("WARNING: %m - putting into a Sink that can't be put into");
   end
   // synopsys translate_on

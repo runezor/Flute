@@ -417,7 +417,7 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
    Exc_Code exc_code = ?;
 
    if (priv_deny || (! access_ok) || (access_cap_ok && pte_a_d_fault)) begin
-      exc_code = fn_page_fault_default_exc_code (dmem_not_imem, read_not_write);
+      exc_code = fn_page_fault_exc_code (dmem_not_imem, read_not_write);
    end
    else if (! access_cap_ok) begin
       // Note that we cannot trap on loads for this reason.
@@ -432,7 +432,7 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
 endfunction
 
 // Exception code to give in case of invalid PTEs etc only depends on access type
-function Exc_Code  fn_page_fault_default_exc_code (Bool dmem_not_imem, Bool read_not_write);
+function Exc_Code  fn_page_fault_exc_code (Bool dmem_not_imem, Bool read_not_write);
    return ((! dmem_not_imem) ? exc_code_INSTR_PAGE_FAULT
 	   :(read_not_write  ? exc_code_LOAD_PAGE_FAULT
 	     :                 exc_code_STORE_AMO_PAGE_FAULT));

@@ -417,12 +417,11 @@ module mkCPU (CPU_IFC);
    // ================================================================
    // Debugging: print instruction trace info
 
-   function fa_emit_instr_trace (instret, pcc, instr, priv);
-      action
-	 if (cur_verbosity >= 1)
-	    $display ("instret:%0d  PC:0x%0h  instr:0x%0h  priv:%0d", instret, getPC(pcc), instr, priv);
-      endaction
-   endfunction
+   function fa_emit_instr_trace (instret, pcc, instr, priv) = action
+      if (cur_verbosity >= 1)
+         $display ( "instret:%0d  PC:0x%0h  instr:0x%0h  priv:%0d"
+                  , instret, getPC(pcc), instr, priv);
+   endaction;
 
    // ================================================================
    // Transform the instruction to an event for counting
@@ -522,7 +521,7 @@ module mkCPU (CPU_IFC);
 
 	 if (cur_verbosity > 1)
 	    $display ("    fa_stageF_redirect: minstret:%0d  new_pc:%0x  cur_priv:%0d, epoch %0d->%0d",
-		      mcycle, minstret, new_fetch_addr, rg_cur_priv, rg_epoch, new_epoch);
+		      minstret, new_fetch_addr, rg_cur_priv, rg_epoch, new_epoch);
       endaction
    endfunction
 
@@ -787,10 +786,13 @@ module mkCPU (CPU_IFC);
 
    // Halting conditions
    Bool halting = (stop_step_halt || mip_cmd_needed || (interrupt_pending && stage1_has_arch_instr));
-   // Stage1 can halt only when actually contains an instruction and downstream is empty
+   // Stage1 can halt only when actually contains an instruction, downstream is
+   // empty and, if a branch misprediction, StageF is able to be redirected.
    Bool stage1_halted = (   halting
 			 && (   (stage1.out.ostatus == OSTATUS_PIPE)
 			     || (stage1.out.ostatus == OSTATUS_NONPIPE))
+			 && (   (! stage1.out.redirect)
+			     || (stageF.out.ostatus != OSTATUS_BUSY))
 			 && (stage2.out.ostatus == OSTATUS_EMPTY)
 			 && (stage3.out.ostatus == OSTATUS_EMPTY));
 
@@ -1806,7 +1808,7 @@ module mkCPU (CPU_IFC);
 			   && f_run_halt_reqs_empty);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_stage1_FENCE_I", mcycle);
 
-      // Save stage1.out.next_pc since it will be destroyed by FENCE.I op
+      // Save stage1.out.next_pc since it can be destroyed by FENCE.I op
 `ifdef ISA_CHERI
       rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
@@ -1851,6 +1853,17 @@ module mkCPU (CPU_IFC);
       // Await mem system FENCE.I completion
       let dummy <- near_mem.server_fence_i.response.get;
 
+      // Accounting
+      csr_regfile.csr_minstret_incr;
+      // Debug
+      fa_emit_instr_trace (minstret,
+               stage1.out.data_to_stage2.pcc,
+			   stage1.out.data_to_stage2.instr,
+			   rg_cur_priv);
+`ifdef INCLUDE_TANDEM_VERIF
+      let trace_data = stage1.out.data_to_stage2.trace_data;
+      f_trace_data.enq (trace_data);
+`endif
       // Resume pipe
       stageD.set_full (False);
       stage1.set_full (False);    fa_step_check;
@@ -1876,6 +1889,7 @@ module mkCPU (CPU_IFC);
 `ifdef ISA_CHERI
       rg_next_pcc <= toCapPipe(stage1.out.next_pcc);
 `else
+      // Save stage1.out.next_pc since it can be destroyed by FENCE op
       rg_next_pc <= stage1.out.next_pc;
 `endif
 
@@ -1909,10 +1923,9 @@ module mkCPU (CPU_IFC);
 `endif
       if (cur_verbosity > 1)
 	 $display ("%0d: %m.rl_stage1_FENCE", mcycle);
-   endrule
+   endrule: rl_stage1_FENCE
 
    // ----------------
-   // Finish FENCE
 
    rule rl_finish_FENCE (   (rg_state == CPU_FENCE)
 			 && f_run_halt_reqs_empty);
@@ -1920,6 +1933,18 @@ module mkCPU (CPU_IFC);
 
       // Await mem system FENCE completion
       let dummy <- near_mem.server_fence.response.get;
+
+      // Accounting
+      csr_regfile.csr_minstret_incr;
+      // Debug
+      fa_emit_instr_trace (minstret, stage1.out.data_to_stage2.pcc,
+			   stage1.out.data_to_stage2.instr,
+			   rg_cur_priv);
+`ifdef INCLUDE_TANDEM_VERIF
+      // Trace data
+      let trace_data = stage1.out.data_to_stage2.trace_data;
+      f_trace_data.enq (trace_data);
+`endif
 
       // Resume pipe
       stageD.set_full (False);
@@ -1932,6 +1957,17 @@ module mkCPU (CPU_IFC);
 
    // ================================================================
    // Stage1: nonpipe special: SFENCE.VMA
+
+`ifdef ISA_PRIV_S
+`ifndef RVFI_DII
+`ifdef ISA_C
+   // TODO: analyze this carefully; added to resolve a blockage
+   // imem_rl_fetch_next_32b is in CPU_Fetch_C.bsv, and calls imem32.req (near_mem.imem_req).
+   // fa_stageF_redirect calls stageF.enq which also calls imem.req which calls imem32.req.
+   // But cond_i32_odd_fetch_next should make these rules mutually exclusive; why doesn't bsc realize this?
+   (* descending_urgency = "imem_rl_fetch_next_32b, rl_stage1_SFENCE_VMA" *)
+`endif
+`endif
 
    rule rl_stage1_SFENCE_VMA (   (rg_state== CPU_RUNNING)
 			      && (! halting)
@@ -1954,7 +1990,7 @@ module mkCPU (CPU_IFC);
 `endif
 
       // Tell Near_Mem to do its SFENCE_VMA
-      near_mem.sfence_vma;
+      near_mem.sfence_vma_server.request.put (?);
       rg_state <= CPU_SFENCE_VMA;
 
       // Accounting
@@ -1979,14 +2015,26 @@ module mkCPU (CPU_IFC);
    endrule: rl_stage1_SFENCE_VMA
 
    // ----------------
-   // Finish SFENCE.VMA
 
    rule rl_finish_SFENCE_VMA (   (rg_state == CPU_SFENCE_VMA)
 			      && f_run_halt_reqs_empty);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_finish_SFENCE_VMA", mcycle);
 
-      // Note: Await mem system SFENCE.VMA completion, if SFENCE.VMA becomes split-phase
+      // Await SFENCE.VMA completion
+      let dummy <- near_mem.sfence_vma_server.response.get;
 
+      // Accounting
+      csr_regfile.csr_minstret_incr;
+      // Debug
+      fa_emit_instr_trace (minstret,
+			   stage1.out.data_to_stage2.pcc,
+			   stage1.out.data_to_stage2.instr,
+			   rg_cur_priv);
+`ifdef INCLUDE_TANDEM_VERIF
+      // Trace data
+      let trace_data = stage1.out.data_to_stage2.trace_data;
+      f_trace_data.enq (trace_data);
+`endif
       // Resume pipe
       stageD.set_full (False);
       stage1.set_full (False);    fa_step_check;
@@ -1995,6 +2043,7 @@ module mkCPU (CPU_IFC);
       if (cur_verbosity > 1)
 	 $display ("    CPU.rl_finish_SFENCE_VMA");
    endrule: rl_finish_SFENCE_VMA
+`endif
 
    // ================================================================
    // Stage1: nonpipe special: WFI
@@ -2441,7 +2490,7 @@ module mkCPU (CPU_IFC);
    interface  imem_master = near_mem.imem_master;
 
    // DMem to fabric master interface
-   interface  dmem_master = near_mem.dmem_master;
+   interface Near_Mem_Fabric_IFC  mem_master = near_mem.mem_master;
 
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
@@ -2451,6 +2500,11 @@ module mkCPU (CPU_IFC);
 `endif
 
    // ----------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave_IFC dma_server = near_mem.dma_server;
+
+   // ----------------------------------------------------------------
    // External interrupts
 
    method Action  m_external_interrupt_req (x) = csr_regfile.m_external_interrupt_req (x);
@@ -2475,14 +2529,6 @@ module mkCPU (CPU_IFC);
       return csr_regfile.read_csr_minstret;
    endmethod
 `endif
-
-   // ----------------
-   // For tracing
-
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
-      cfg_verbosity <= verbosity;
-      cfg_logdelay  <= logdelay;
-   endmethod
 
    // ----------------
    // Optional interface to Tandem Verifier
@@ -2524,6 +2570,39 @@ module mkCPU (CPU_IFC);
       w_external_evts  <= external_evts;
    endmethod
 `endif
+
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+      cfg_verbosity <= verbosity;
+      cfg_logdelay  <= logdelay;
+   endmethod
+
+   // ----------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+      near_mem.set_watch_tohost (watch_tohost, tohost_addr);
+   endmethod
+
+   method Bit #(64) mv_tohost_value = near_mem.mv_tohost_value;
+`endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+      near_mem.ma_ddr4_ready;
+   endmethod
+
+   // Misc. status; 0 = running, no error
+   method Bit #(8) mv_status;
+      return near_mem.mv_status;
+   endmethod
+
 endmodule: mkCPU
 
 // ================================================================

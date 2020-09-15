@@ -75,12 +75,15 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
    rule rl_step0 (! rg_banner_printed);
 `ifndef RVFI_DII
       $display ("================================================================");
-      $display ("Bluespec RISC-V standalone system simulation v1.2");
-      $display ("Copyright (c) 2017-2019 Bluespec, Inc. All Rights Reserved.");
+      $display ("Bluespec RISC-V WindSoC simulation v1.2");
+      $display ("Copyright (c) 2017-2020 Bluespec, Inc. All Rights Reserved.");
       $display ("================================================================");
 `endif
 
       rg_banner_printed <= True;
+
+      // Set DDR4 'ready'
+      soc_top.ma_ddr4_ready;
 
       // Set CPU verbosity and logdelay (simulation only)
       Bool v1 <- $test$plusargs ("v1");
@@ -132,15 +135,35 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
    // ================================================================
    // Terminate on any non-zero status
 
-   rule rl_terminate (soc_top.status != 0);
+   rule rl_terminate (soc_top.mv_status != 0);
       $display ("%0d: %m:.rl_terminate: soc_top status is 0x%0h (= 0d%0d)",
-		cur_cycle, soc_top.status, soc_top.status);
+		cur_cycle, soc_top.mv_status, soc_top.mv_status);
 
       // End timing the simulation
       Bit #(32) cycle_num <- cur_cycle;
       c_end_timing (zeroExtend (cycle_num));
       $finish (0);
    endrule
+
+   // Terminate on ISA test writing non-zero to <tohost_addr>
+
+`ifdef WATCH_TOHOST
+   rule rl_terminate_tohost (soc_top.mv_tohost_value != 0);
+      let tohost_value = soc_top.mv_tohost_value;
+
+      $display ("****************************************************************");
+      $display ("%0d: %m:.rl_terminate_tohost: tohost_value is 0x%0h (= 0d%0d)",
+		cur_cycle, tohost_value, tohost_value);
+      let test_num = (tohost_value >> 1);
+      if (test_num == 0) $display ("    PASS");
+      else               $display ("    FAIL <test_%0d>", test_num);
+
+      // End timing the simulation
+      Bit #(32) cycle_num <- cur_cycle;
+      c_end_timing (zeroExtend (cycle_num));
+      $finish (0);
+   endrule
+`endif
 
    // ================================================================
    // Tandem verifier: drain and output vectors of bytes

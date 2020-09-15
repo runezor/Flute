@@ -30,12 +30,52 @@ help:
 	@echo '    make  full_clean   Restore to pristine state (pre-building anything)'
 
 .PHONY: all
-all: simulator
+all: compile  simulator
+
+# ================================================================
+# Near-mem (Cache and optional MMU for VM)
+# WT = Write-through; WB = write-back
+# L1 = L1 only; L1_L2 = L1 + coherent L2
+
+CACHES ?= WT_L1
+#CACHES ?= WB_L1_L2
+
+ifeq ($(CACHES),WB_L1)
+  NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
+else ifeq ($(CACHES),WB_L1_L2)
+  NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
+  # core size
+  CORE_SIZE ?= SMALL
+  # default 1 core
+  CORE_NUM ?= 1
+  # cache size
+  CACHE_SIZE ?= LARGE
+
+  BSC_COMPILATION_FLAGS += \
+  	-D CORE_$(CORE_SIZE) \
+  	-D NUM_CORES=$(CORE_NUM) \
+  	-D CACHE_$(CACHE_SIZE) \
+
+  LLCACHE_DIR   = $(REPO)/src_Core/Near_Mem_VM_WB_L1_L2/src_LLCache
+  PROCS_LIB_DIR = $(LLCACHE_DIR)/procs/lib
+  PROCS_OOO_DIR = $(LLCACHE_DIR)/procs/RV64G_OOO
+  COHERENCE_DIR = $(LLCACHE_DIR)/coherence/src
+
+  LLCACHE_DIRS = $(LLCACHE_DIR):$(PROCS_LIB_DIR):$(PROCS_OOO_DIR):$(COHERENCE_DIR)
+else
+  NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1
+endif
+
+# ================================================================
+# CORE
+
+SRC_CORE ?= $(REPO)/src_Core/Core
+# SRC_CORE ?= $(REPO)/src_Core/Core_v2
 
 # ================================================================
 # Search path for bsc for .bsv files
 
-CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(REPO)/src_Core/Core:$(REPO)/src_Core/Near_Mem_VM:$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
+CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(REPO)/src_Core/Core:$(REPO)/src_Core/Cache_Config:$(REPO)/src_Core/$(NEAR_MEM_VM_DIR):$(LLCACHE_DIRS):$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
 
 TESTBENCH_DIRS  = $(REPO)/src_Testbench/Top:$(REPO)/src_Testbench/SoC
 
@@ -56,21 +96,13 @@ TOPMODULE ?= mkTop_HW_Side
 # ================================================================
 # bsc compilation flags
 
-# XXX
-# Using '-no-show-timestamps' with
-# Bluespec Compiler, version 2017.07.A (build 1da80f1, 2017-07-21)
-# results in
-# Error: Command line: (S0008)
-#   Unrecognized flag: -no-show-timestamps
-# XXX
 BSC_COMPILATION_FLAGS += \
 	-D CheriBusBytes=8 \
 	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
 	-D RISCV -D BLUESIM \
-	-keep-fires -aggressive-conditions -no-warn-action-shadowing -check-assert \
+	-keep-fires -aggressive-conditions -no-warn-action-shadowing -no-show-timestamps -check-assert \
 	-suppress-warnings G0020    \
 	+RTS -K128M -RTS  -show-range-conflict
-	#-D NOTAG
 
 # ================================================================
 # Runs simulation executable on ELF given by EXAMPLE
@@ -113,7 +145,6 @@ isa_tests:
 tagsparams: $(REPO)/libs/TagController/tagsparams.py
 	@echo "INFO: Re-generating CHERI tag controller parameters"
 	$^ -v -c $(CAPSIZE) -s $(TAGS_STRUCT:"%"=%) -a $(TAGS_ALIGN) --covered-start-addr 0x80000000 --covered-mem-size 0x3fffc000 --top-addr 0xbffff000 -b TagTableStructure.bsv
-
 	@echo "INFO: Re-generated CHERI tag controller parameters"
 compile: tagsparams
 
@@ -126,6 +157,6 @@ clean:
 
 .PHONY: full_clean
 full_clean: clean
-	rm -r -f  $(SIM_EXE_FILE)*  *.log  *.vcd  *.hex  Logs/
+	rm -r -f  $(SIM_EXE_FILE)*  *.log  *.vcd  *.hex  Logs/  worker_*
 
 # ================================================================
