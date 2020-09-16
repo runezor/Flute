@@ -2102,11 +2102,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       end
    endrule
 
-   rule do_set_req_valid;
 `ifdef PERFORMANCE_MONITORING
+   rule do_set_req_valid;
       rg_mem_req_sent <= wr_mem_req_sent;
-`endif
    endrule
+`endif
 
    (* fire_when_enabled *)
    rule do_reset_req (rw_reset_req.wget matches tagged Valid .req);

@@ -112,11 +112,11 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    Vector #(7, Bit #(1)) tag_cache_evts = replicate (0);
    Vector #(6, Bit #(1)) tag_cache_master_evts = replicate (0);
 `endif
-   // set the appropriate axi4_dmem_shim_{master, slave} ifc
+   // set the appropriate axi4_mem_shim_{master, slave} ifc
 `ifdef ISA_CHERI
 `ifdef NO_TAG_CACHE
    // CHERI, export the tags on the interface
-   let axi4_dmem_shim <- mkAXI4Shim;
+   let axi4_mem_shim <- mkAXI4Shim;
 `ifdef PERFORMANCE_MONITORING
 `define TAG_CACHE_EVENTS_EXTERNAL
    Wire #(Vector #(6, Bit #(1))) w_tag_cache_master_evts <- mkBypassWire ();
@@ -124,26 +124,26 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `endif
 `else
    // CHERI, handle tags internally with a tagController
-   let axi4_dmem_shim <- mkTagControllerAXI;
+   let axi4_mem_shim <- mkTagControllerAXI;
 `ifdef PERFORMANCE_MONITORING
-   tag_cache_evts = axi4_dmem_shim.events;
+   tag_cache_evts = axi4_mem_shim.events;
 `endif
 `endif
 `else
    // No CHERI, no tags
-   let axi4_dmem_shim <- mkAXI4Shim;
+   let axi4_mem_shim <- mkAXI4Shim;
 `endif
-   let axi4_dmem_shim_slave  = axi4_dmem_shim.slave;
-   let axi4_dmem_shim_master = axi4_dmem_shim.master;
+   let axi4_mem_shim_slave  = axi4_mem_shim.slave;
+   let axi4_mem_shim_master = axi4_mem_shim.master;
 
 `ifdef PERFORMANCE_MONITORING
-   let axi4_dmem_shim_slave_monitor <- monitorAXI4_Slave (axi4_dmem_shim_slave);
-   axi4_dmem_shim_slave = axi4_dmem_shim_slave_monitor.ifc;
+   let axi4_mem_shim_slave_monitor <- monitorAXI4_Slave (axi4_mem_shim_slave);
+   axi4_mem_shim_slave = axi4_mem_shim_slave_monitor.ifc;
 `ifdef ISA_CHERI
 `ifndef NO_TAG_CACHE
-   let axi4_dmem_shim_master_monitor <- monitorAXI4_Master (axi4_dmem_shim_master);
-   axi4_dmem_shim_master = axi4_dmem_shim_master_monitor.ifc;
-   tag_cache_master_evts = to_vector (axi4_dmem_shim_master_monitor.events);
+   let axi4_mem_shim_master_monitor <- monitorAXI4_Master (axi4_mem_shim_master);
+   axi4_mem_shim_master = axi4_mem_shim_master_monitor.ifc;
+   tag_cache_master_evts = to_vector (axi4_mem_shim_master_monitor.events);
 `endif
 `endif
 `endif
@@ -447,11 +447,11 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    endrule
 
    // ================================================================
-   // Connect performance events from axi4_dmem_shim to CPU
+   // Connect performance events from axi4_mem_shim to CPU
 
 `ifdef PERFORMANCE_MONITORING
    rule rl_relay_external_events;
-      let slave_events = to_vector (axi4_dmem_shim_slave_monitor.events);
+      let slave_events = to_vector (axi4_mem_shim_slave_monitor.events);
       let events = append (tag_cache_evts, append (slave_events, tag_cache_master_evts));
       cpu.relay_external_events (to_large_vector (events));
    endrule
