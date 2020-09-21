@@ -66,6 +66,14 @@ import ISA_Decls      :: *;
 import Debug_Module  :: *;
 `endif
 
+`ifdef PERFORMANCE_MONITORING
+`ifdef ISA_CHERI
+`ifdef NO_TAG_CACHE
+`define TAG_CACHE_EVENTS_EXTERNAL
+`endif
+`endif
+`endif
+
 // ================================================================
 // The Core interface
 
@@ -145,6 +153,10 @@ interface Core_IFC #(numeric type t_n_interrupt_sources);
    interface Client #(Bool, Bool) ndm_reset_client;
 `endif
 
+`ifdef TAG_CACHE_EVENTS_EXTERNAL
+   (* always_ready, always_enabled *)
+   method Action send_tag_cache_master_events (Vector #(6, Bit #(1)) events);
+`endif
    // ----------------------------------------------------------------
    // Misc. control and status
 
@@ -203,6 +215,10 @@ interface Core_IFC_Synth #(numeric type t_n_interrupt_sources);
 `ifdef INCLUDE_GDB_CONTROL
    interface DMI dm_dmi;
    interface Client #(Bool, Bool) ndm_reset_client;
+`endif
+`ifdef TAG_CACHE_EVENTS_EXTERNAL
+   (* always_ready, always_enabled *)
+   method Action send_tag_cache_master_events (Vector #(6, Bit #(1)) events);
 `endif
    method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
 `ifdef WATCH_TOHOST

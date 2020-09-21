@@ -142,6 +142,8 @@ CSR_Addr   csr_addr_mhpmcounter29h = 12'hB9D;    // Upper 32 bits of machine per
 CSR_Addr   csr_addr_mhpmcounter30h = 12'hB9E;    // Upper 32 bits of machine performance-monitoring counter
 CSR_Addr   csr_addr_mhpmcounter31h = 12'hB9F;    // Upper 32 bits of machine performance-monitoring counter
 
+CSR_Addr   csr_addr_mcountinhibit  = 12'h320;    // Machine Counter-Inhibit
+
 CSR_Addr   csr_addr_mhpmevent3     = 12'h323;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent4     = 12'h324;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent5     = 12'h325;    // Machine performance-monitoring event selector
@@ -732,5 +734,23 @@ function Maybe #(Exc_Code) fv_interrupt_pending (MISA       misa,
 
    return m_ec;
 endfunction
+
+// ================================================================
+// The width of individual counters
+
+`ifndef COUNTER_WIDTH
+`define COUNTER_WIDTH 64
+`endif
+typedef `COUNTER_WIDTH Counter_Width;
+
+`ifndef NO_OF_CTRS
+`define NO_OF_CTRS 29
+`endif
+typedef `NO_OF_CTRS No_Of_Ctrs;
+
+`ifndef NO_OF_EVTS
+`define NO_OF_EVTS 96
+`endif
+typedef `NO_OF_EVTS No_Of_Evts;
 
 // ================================================================

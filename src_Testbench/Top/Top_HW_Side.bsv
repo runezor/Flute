@@ -92,6 +92,7 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
       Bit #(64) logdelay  = 0;    // # of instructions after which to set verbosity
       soc_top.set_verbosity  (verbosity, logdelay);
 
+`ifdef WATCH_TOHOST
       // ----------------
       // Load tohost addr from symbol-table file
       Bool watch_tohost <- $test$plusargs ("tohost");
@@ -100,6 +101,7 @@ module mkPre_Top_HW_Side(Flute_RVFI_DII_Server);
       $display ("INFO: watch_tohost = %0d, tohost_addr = 0x%0h",
 		pack (watch_tohost), tohost_addr);
       soc_top.set_watch_tohost (watch_tohost, tohost_addr);
+`endif
 
       // ----------------
       // Start timing the simulation
