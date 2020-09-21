@@ -478,7 +478,8 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `endif // ISA_A
 `ifdef ISA_CHERI
 	 perf.ld_cap = (rg_stage2.mem_width_code == w_SIZE_CAP);
-	 // TODO_P: Should 'rg_stage2.mem_allow_cap' also be set?
+	 // Note: 'ld_cap_tag_set' will only count when 'mem_allow_cap' is set
+	 // To count 'mem_tag' set, regardless of 'mem_allow_cap', use caps loaded from L1
 	 perf.ld_cap_tag_set = (rg_stage2.mem_width_code == w_SIZE_CAP) && mem_tag && rg_stage2.mem_allow_cap;
 `endif
 	 perf.ld_wait = (! dcache.valid);

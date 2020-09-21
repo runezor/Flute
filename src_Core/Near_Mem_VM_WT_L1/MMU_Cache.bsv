@@ -984,8 +984,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       let tlb_miss = rg_mem_req_sent && vm_xlate_result.outcome == VM_XLATE_TLB_MISS;
       events.evt_TLB_MISS = tlb_miss;
       events.evt_TLB_MISS_LAT = tlb_miss;
-      //if (rg_mem_req_sent)
-	 //$display ("DMEM: %0d, TLB_MISS: %0d", dmem_not_imem, tlb_miss);
 `endif
 `else
       // In non-VM, PA is always WordXL
@@ -1042,7 +1040,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 // Memory requests. Note: it's ok that this can go to non-memory space.
 	 else begin
 `ifdef PERFORMANCE_MONITORING
-      //$display ("DMEM: %0d, LD_MISS: %0d, AMO_MISS: %0d", dmem_not_imem, (rg_op == CACHE_LD && !hit), (rg_op == CACHE_AMO && !hit));
       events.evt_LD_MISS = rg_mem_req_sent && rg_op == CACHE_LD && !hit;
 `ifdef ISA_A
       events.evt_AMO_MISS = rg_mem_req_sent && rg_op == CACHE_AMO && !hit;
@@ -1238,7 +1235,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `ifdef PERFORMANCE_MONITORING
    // Similar to rl_count_miss_lat but for TLB miss
    rule rl_count_tlb_latency (rg_state == PTW_START || rg_tlb_walk);
-      //$display ("DMEM: %0d, TLB_LAT", dmem_not_imem);
       EventsCache events = unpack (0);
       events.evt_TLB_MISS_LAT = True;
       aw_events [2] <= events;
@@ -1551,7 +1547,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // First cycle of miss is not counted, but overcounts by one at the end to compensate
    rule rl_count_miss_lat (!resetting && (rg_state == CACHE_START_REFILL || rg_cache_rereq_data));
       EventsCache events = unpack (0);
-      //$display ("DMEM: %0d, LD_LAT: %0d, AMO_LAT: %0d", dmem_not_imem, rg_op == CACHE_LD, rg_op == CACHE_AMO);
       events.evt_LD_MISS_LAT = rg_op == CACHE_LD;
 `ifdef ISA_A
       events.evt_AMO_MISS_LAT = rg_op == CACHE_AMO;
@@ -1693,7 +1688,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 // response and not an error)
 	 if ((cword_in_cline == 0) && (! err_rsp)) begin
 `ifdef PERFORMANCE_MONITORING
-	    //if (state_and_ctag_cset[rg_victim_way].state == CTAG_CLEAN) $display ("EVT_EVICT, DMEM: %0d", dmem_not_imem);
 	    EventsCache events = unpack (0);
 	    events.evt_EVICT = (state_and_ctag_cset [rg_victim_way].state == CTAG_CLEAN);
 	    aw_events [4] <= events;
@@ -2181,7 +2175,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `ifdef PERFORMANCE_MONITORING
       EventsCache events = unpack (0);
       wr_mem_req_sent <= True;
-      //$display ("DMEM: %0d, MEM_OP: %0d", dmem_not_imem, op);
       events.evt_LD = op == CACHE_LD;
       events.evt_ST = op == CACHE_ST;
 `ifdef ISA_A
