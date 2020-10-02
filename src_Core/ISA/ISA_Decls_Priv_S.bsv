@@ -284,6 +284,7 @@ Integer  pte_PPN_2_offset  = 28;
 `ifdef RV64
 Integer  pte_StoreCap_offset = 63;
 Integer  pte_LoadCap_offset  = 62;
+Integer  pte_CapDirty_offset = 61;
 `endif
 
 function Bit #(1) fn_PTE_to_V (PTE pte);
@@ -354,12 +355,20 @@ endfunction
 function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
    return pte [pte_LoadCap_offset];
 endfunction
+
+function Bit #(1) fn_PTE_to_CapDirty (PTE pte);
+   return pte [pte_CapDirty_offset];
+endfunction
 `else
 function Bit #(1) fn_PTE_to_StoreCap (PTE pte);
    return 1'b1;
 endfunction
 
 function Bit #(1) fn_PTE_to_LoadCap (PTE pte);
+   return 1'b1;
+endfunction
+
+function Bit #(1) fn_PTE_to_CapDirty (PTE pte);
    return 1'b1;
 endfunction
 `endif
@@ -399,7 +408,6 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
    Bool access_fetch = ((! dmem_not_imem) && read_not_write);
    Bool access_load  = (dmem_not_imem && read_not_write);
    Bool access_store = (dmem_not_imem && (! read_not_write));
-   Bool access_cap   = (dmem_not_imem && capability);
 
    let pte_r_mxr = (pte_r | (mstatus_MXR & pte_x));
 
@@ -411,15 +419,19 @@ function Tuple2#(Bool,Exc_Code) is_pte_fault
 			 || access_load
 			 || (access_store && (pte_StoreCap == 1'b1)));
 
-   Bool pte_a_d_fault = (   fn_PTE_to_A (pte) == 0)
-			 || ((! read_not_write) && (fn_PTE_to_D (pte) == 0));
+   Bool pte_a_d_fault = (   (fn_PTE_to_A (pte) == 0)
+			 || ((! read_not_write) && (fn_PTE_to_D (pte) == 0)));
+
+   Bool pte_cd_fault = (   capability
+			&& (! read_not_write)
+			&& (fn_PTE_to_CapDirty (pte) == 0));
 
    Exc_Code exc_code = ?;
 
    if (priv_deny || (! access_ok) || (access_cap_ok && pte_a_d_fault)) begin
       exc_code = fn_page_fault_default_exc_code (dmem_not_imem, read_not_write);
    end
-   else if (! access_cap_ok) begin
+   else if ((! access_cap_ok) || pte_cd_fault) begin
       // Note that we cannot trap on loads for this reason.
       // However, with additional revocation PTE modes, we may trap here, and
       // will need separate read and write signals to behave correctly for
