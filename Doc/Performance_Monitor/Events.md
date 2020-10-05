@@ -1,3 +1,5 @@
+Refer to `Performance_Monitoring.md` for implementation details.
+
 ## Flute counters
 ### Mem
 - [ ] L1 I$ Load count
