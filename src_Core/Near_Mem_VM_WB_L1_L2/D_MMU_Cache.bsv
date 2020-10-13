@@ -723,7 +723,9 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 			       width_code:          ((xlen == 32) ? 3'b010 : 3'b011),
 			       va:          truncate (rg_ptw_mem_req.pte_pa),
 			       st_value:    ?,
+`ifdef ISA_A
 			       amo_funct5:  0,
+`endif
 			       priv:        m_Priv_Mode,
 			       sstatus_SUM: 0,
 			       mstatus_MXR: 0,
@@ -817,7 +819,9 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 			       width_code:  ((xlen == 32) ? 3'b010 : 3'b011),
 			       va:          truncate (pte_writeback_pa),
 			       st_value:    tuple2 (False, zeroExtend (pte_writeback_pte)),
+`ifdef ISA_A
 			       amo_funct5:  0,
+`endif
 			       priv:        m_Priv_Mode,
 			       sstatus_SUM: 0,
 			       mstatus_MXR: 0,
