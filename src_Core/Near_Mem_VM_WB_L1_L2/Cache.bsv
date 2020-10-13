@@ -1226,10 +1226,12 @@ module mkCache #(parameter Bool      dcache_not_icache,
 				   final_ld_val: tuple2 (False, 0),
 				   final_st_val: req.st_value};
 
+`ifdef ISA_A
 	    // Cancel LR/SC reservation if this store is for this addr
 	    // TODO: should we cancel it on ANY store?
 	    if (rg_lrsc_pa == pa)
 	       rg_lrsc_valid <= False;
+`endif
 	 end
 
 `ifdef ISA_A
