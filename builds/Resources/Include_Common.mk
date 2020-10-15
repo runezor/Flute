@@ -36,12 +36,15 @@ all: compile  simulator
 # Near-mem (Cache and optional MMU for VM)
 # WT = Write-through; WB = write-back
 # L1 = L1 only; L1_L2 = L1 + coherent L2
+# TCM = No caches, only TCM
 
 #CACHES ?= WT_L1
 CACHES ?= WB_L1_L2
 
 ifeq ($(CACHES),WB_L1)
   NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
+else ifeq ($(CACHES),TCM)
+  NEAR_MEM_VM_DIR=Near_Mem_TCM
 else ifeq ($(CACHES),WB_L1_L2)
   NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
   # core size
@@ -77,7 +80,7 @@ SRC_CORE ?= $(REPO)/src_Core/Core
 
 CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(REPO)/src_Core/Core:$(REPO)/src_Core/Cache_Config:$(REPO)/src_Core/$(NEAR_MEM_VM_DIR):$(LLCACHE_DIRS):$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
 
-TESTBENCH_DIRS  = $(REPO)/src_Testbench/Top:$(REPO)/src_Testbench/SoC
+TESTBENCH_DIRS = $(REPO)/src_Testbench/Top:$(REPO)/src_Testbench/SoC
 
 RVFI_DII_DIRS = $(REPO)/src_Verifier:$(REPO)/src_Verifier/BSV-RVFI-DII
 

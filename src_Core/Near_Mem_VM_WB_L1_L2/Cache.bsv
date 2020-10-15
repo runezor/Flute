@@ -558,6 +558,7 @@ module mkCache #(parameter Bool      dcache_not_icache,
 	    $display ("%0d: %m.rl_writeback_loop", cur_cycle);
 	    $display ("    cset %0h way %0h centry %0h data %0h",
 		      rg_cset_in_cache, rg_way_in_cset, rg_cword_in_cline, centry);
+	    $display ("    cword_set: ", fshow (cword_set));
 	 end
 
       // If last cword_set in cline, return to continuation
@@ -681,7 +682,7 @@ module mkCache #(parameter Bool      dcache_not_icache,
 				       can_up_to_E: dcache_not_icache};
       f_L1_to_L2_reqs.enq (l1_to_l2_req);
 
-      // Request read of first CSet_CWord in CLine (BRAM port B)
+      // Request read of first CSet_CWord in CLine
       // for cset_cword read-modify-write
       let                 cword_in_cline       = 0;
       CSet_CWord_in_Cache cset_cword_in_cache  = { rg_cset_in_cache, cword_in_cline };
@@ -789,6 +790,7 @@ module mkCache #(parameter Bool      dcache_not_icache,
 	 let next_cword_in_cline      = rg_cword_in_cline + 1;
 	 let next_cset_cword_in_cache = { va_cset_in_cache, next_cword_in_cline };
 	 ram_cset_cword.a.put (bram_cmd_read, next_cset_cword_in_cache, ?);
+
 	 rg_cword_in_cline <= next_cword_in_cline;
 	 if (verbosity >= 2)
 	    $display ("    Requesting ram_cset_cword.a cword-in-cache: 0x%0h",
@@ -975,7 +977,8 @@ module mkCache #(parameter Bool      dcache_not_icache,
    // Start downgrade by probing cache for downgrade addr
 
    rule rl_downgrade_req_from_L2_A (   (rg_fsm_state == FSM_IDLE)
-				    || (rg_fsm_state == FSM_UPGRADE_REFILL));
+				    || (   (rg_fsm_state == FSM_UPGRADE_REFILL)
+					&& (rg_cword_in_cline == 0)));
       let l2_to_l1_req = f_L2_to_L1_reqs.first;
       let addr         = l2_to_l1_req.addr;
       if (verbosity >= 1) begin
@@ -985,9 +988,8 @@ module mkCache #(parameter Bool      dcache_not_icache,
 	 $display ("    Save rg_cset_in_cache  = %0h", rg_cset_in_cache);
 	 $display ("    Save rg_cword_in_cline = %0h", rg_cword_in_cline);
 	 $display ("    Save rg_way_in_cset    = %0h", rg_way_in_cset);
-	 $display ("    Save rg_va = %0h", rg_va);
 	 $display ("    Probe RAMs for: ", fshow (l2_to_l1_req));
-	 $display ("    -> ", FSM_DOWNGRADE_B);
+	 $display ("    -> FSM_DOWNGRADE_B");
       end
 
       // 'push' state for after downgrade:
@@ -1030,32 +1032,19 @@ module mkCache #(parameter Bool      dcache_not_icache,
 	 $finish (1);
       end
 
-      /*
-      // Assertion: must have a hit
-      // No, the line may have been evicted before this request
       if (valid_info.num_valids == 0) begin
-	 $display ("%0d: %m.rl_downgrade_req_from_L2_B", cur_cycle);
-	 $display ("    INTERNAL ERROR pa %0h is MISS (downgrade request from L2 must HIT)",
-		   rg_pa);
-	 $write   ("    ", fshow_cset_meta (rg_cset_in_cache, ram_A_cset_meta));
-	 $finish (1);
-      end
-      */
-
-      if (valid_info.num_valids == 0) begin
-	 // MISS: equivalent to I, so the 'downgrade' is already satisfied
-
-	 // TODO: do we need to respond explicitly?  L2 thought that
-	 // this L1 had this line.  A MISS means it must have been
-	 // evicted (voluntary downgrade), and the L1 must have
-	 // informed L2 already with a respond.
-	 let rsp = L1_to_L2_Rsp {addr:     rg_pa,
-				 to_state: META_INVALID,
-				 m_cline:  tagged Invalid};
+	 // MISS: equivalent to I, so 'downgrade' is already satisfied.
+	 // No response needed: L2 thought that this L1 had this line.
+	 // MISS means it must have been recently evicted (voluntary
+	 // downgrade) and this L1 must have informed L2 already with
+	 // a response (the messages crossed).
+	 // let rsp = L1_to_L2_Rsp {addr: rg_pa, to_state: META_INVALID, m_cline: tagged Invalid};
 	 // f_L1_to_L2_rsps.enq (rsp);
+	 // if (verbosity >= 1)
+	 //    $display ("    Send ", fshow (rsp), " -> FSM_DOWNGRADE_C");
 	 rg_fsm_state <= FSM_DOWNGRADE_C;
 	 if (verbosity >= 1)
-	    $display ("    Send ", fshow (rsp), " -> FSM_DOWNGRADE_C");
+	    $display ("    MISS (= INVALID already); ignoring; -> FSM_DOWNGRADE_C");
       end
       else begin
 	 // HIT (valid_info.num_valids == 1)
@@ -1118,8 +1107,16 @@ module mkCache #(parameter Bool      dcache_not_icache,
       rg_cset_in_cache  <= rg_save_cset_in_cache;
       rg_cword_in_cline <= rg_save_cword_in_cline;
       rg_way_in_cset    <= rg_save_way_in_cset;
-      fa_req_rams_A (rg_save_va);
 
+      // Re-Request meta RAM
+      ram_cset_meta.a.put (bram_cmd_read, rg_save_cset_in_cache, ?);
+
+      // Re-Request data RAM
+      CSet_CWord_in_Cache  cset_cword_in_cache = fn_Addr_to_CSet_CWord_in_Cache (rg_save_va);
+      if (rg_save_fsm_state == FSM_UPGRADE_REFILL)
+	 cset_cword_in_cache  = { rg_save_cset_in_cache, rg_save_cword_in_cline };
+
+      ram_cset_cword.a.put (bram_cmd_read, cset_cword_in_cache, ?);
    endrule: rl_downgrade_req_from_L2_C
 
    // ****************************************************************
@@ -1161,8 +1158,8 @@ module mkCache #(parameter Bool      dcache_not_icache,
    // while the virt addr is being translated to a phys addr
    method Action ma_request_va (WordXL va);    // if (rg_fsm_state == FSM_IDLE);
       fa_req_rams_A (va);
-      rg_va <= va;
-      rg_error_during_refill <= False;
+      rg_va                  <= va;
+      rg_cset_in_cache       <= fn_Addr_to_CSet_in_Cache (va);
       if (verbosity >= 1)
 	 $display ("%0d: %m.ma_request_va: %0h", cur_cycle, va);
    endmethod
