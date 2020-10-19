@@ -1786,8 +1786,10 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
             f7_cap_TwoOp: begin
                 case (funct5rs2)
                 f5rs2_cap_CGetLen: begin
-                    Bit#(XLEN) length = truncate(getLength(cs1_val));
-                    alu_outputs.val1 = zeroExtend(length);
+                    Bit#(TAdd#(XLEN,2)) length = getLength(cs1_val);
+                    Bit#(2) length_carry = truncateLSB(length);
+                    Bit#(XLEN) length_low = truncate(length);
+                    alu_outputs.val1 = length_carry == 0 ? zeroExtend(length_low) : ~0;
                 end
                 f5rs2_cap_CGetBase: begin
                     alu_outputs.val1 = zeroExtend(cs1_base);
