@@ -19,10 +19,31 @@ REPO ?= ..
 ARCH ?= RV64ACDFIMSUxCHERI
 
 # ================================================================
+# Cache implementation options
+#     WT_L1:    Write-Through, L1 only
+#     WB_L1:    Write-Back, L1 only
+#     WB_L1_L2: Write-Back, L1 and L2, cache coherent
+#     TCM:      Tightly-coupled memory (no caches)
+
+# NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1
+# NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
+NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
+# NEAR_MEM_VM_DIR=Near_Mem_TCM
+
+# ================================================================
+# CORE implementation options
+#   Use 'Core_v2' with WB_L1_L2 cache, otherwise use 'Core'
+#   XXX no cherification work has happened in Core_v2 XXX
+
+SRC_CORE ?= $(REPO)/src_Core/Core
+#SRC_CORE ?= $(REPO)/src_Core/Core_v2
+
+# ================================================================
 # RISC-V config macros passed into Bluespec 'bsc' compiler
 
 BSC_COMPILATION_FLAGS += \
 	-D RV64 \
+	-D ISA_PRIV_M  -D ISA_PRIV_U  -D ISA_PRIV_S  \
 	-D SV39 \
 	-D RISCV \
 	-D CapWidth=128 -D CheriBusBytes=8 \
@@ -43,6 +64,35 @@ BSC_COMPILATION_FLAGS += \
 CAPSIZE = 128
 TAGS_STRUCT = 0 64
 TAGS_ALIGN = 32
+#================================================================
+# For LLCache
+
+# core size
+CORE_SIZE ?= SMALL
+# default 1 core
+CORE_NUM ?= 1
+# cache size
+CACHE_SIZE ?= LARGE
+
+BSC_COMPILATION_FLAGS += \
+	-D CORE_$(CORE_SIZE) \
+	-D NUM_CORES=$(CORE_NUM) \
+	-D CACHE_$(CACHE_SIZE) \
+
+LLCACHE_DIR   = $(REPO)/src_Core/Near_Mem_VM_WB_L1_L2/src_LLCache
+PROCS_LIB_DIR = $(LLCACHE_DIR)/procs/lib
+PROCS_OOO_DIR = $(LLCACHE_DIR)/procs/RV64G_OOO
+COHERENCE_DIR = $(LLCACHE_DIR)/coherence/src
+
+CUSTOM_DIRS = $(LLCACHE_DIR):$(PROCS_LIB_DIR):$(PROCS_OOO_DIR):$(COHERENCE_DIR)
+
+# ================================================================
+# bsc compilation flags
+
+BSC_COMPILATION_FLAGS += \
+	-keep-fires -aggressive-conditions -no-warn-action-shadowing -no-show-timestamps -check-assert \
+	-suppress-warnings G0020    \
+	+RTS -K128M -RTS  -show-range-conflict
 
 # ================================================================
 # Search path for bsc for .bsv files
@@ -65,14 +115,13 @@ endif
 SRC_CORE ?= $(REPO)/src_Core/Core
 
 CONTRIB_DIRS = %/Libraries/Bus
-
-CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(SRC_CORE):$(REPO)/src_Core/Cache_Config:$(REPO)/src_Core/$(NEAR_MEM_VM_DIR):$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs:$(REPO)/src_SSITH_P2/src_BSV
+CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(SRC_CORE):$(REPO)/src_Core/Cache_Config:$(REPO)/src_Core/$(NEAR_MEM_VM_DIR):$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
 
 CHERI_DIRS = $(REPO)/libs/cheri-cap-lib:$(REPO)/libs/TagController/TagController:$(REPO)/libs/TagController/TagController/CacheCore:$(REPO)/libs/BlueStuff/BlueUtils
 
 AXI_DIRS = $(REPO)/libs/BlueStuff/AXI:$(REPO)/libs/BlueStuff/BlueBasics:$(REPO)/libs/BlueStuff
 
-BSC_PATH = -p $(CONTRIB_DIRS):$(CUSTOM_DIRS):$(CORE_DIRS):$(TESTBENCH_DIRS):$(AXI_DIRS):$(RVFI_DII_DIRS):$(CHERI_DIRS):+
+BSC_PATH = $(CONTRIB_DIRS):$(CUSTOM_DIRS):src_BSV:$(CORE_DIRS):$(TESTBENCH_DIRS):$(AXI_DIRS):$(RVFI_DII_DIRS):$(CHERI_DIRS):+
 
 # ----------------
 # Top-level file and module
@@ -114,7 +163,7 @@ Verilog_RTL:
 .PHONY: compile
 compile:  build_dir tagsparams Verilog_RTL
 	@echo  "INFO: Generating RTL into Verilog_RTL ..."
-	bsc -u -elab -verilog  $(RTL_GEN_DIRS)  $(BSC_COMPILATION_FLAGS)  $(BSC_PATH)  $(TOPFILE)
+	bsc -u -elab -verilog  $(RTL_GEN_DIRS)  $(BSC_COMPILATION_FLAGS)  -p $(BSC_PATH)  $(TOPFILE)
 	@echo  "INFO: Generated RTL into Verilog_RTL"
 	cp  Verilog_RTL/*  xilinx_ip/hdl/
 	@echo  "INFO: Copied RTL from  Verilog_RTL/  to  xilinx_ip/hdl/"
