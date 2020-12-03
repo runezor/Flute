@@ -934,7 +934,7 @@ module mkCPU (CPU_IFC);
 	 // CSRRx is done off-pipe
 	 csr_regfile.csr_minstret_incr;
 	 fa_emit_instr_trace (minstret, stage2.out.data_to_stage3.pcc, stage2.out.data_to_stage3.instr, rg_cur_priv);
-	 
+
 `ifdef PERFORMANCE_MONITORING
        events.evt_SC_SUCCESS = stage2.out.perf.sc_success;
        events.evt_MEM_CAP_LOAD = stage2.out.perf.ld_cap;
@@ -1245,10 +1245,6 @@ module mkCPU (CPU_IFC);
 `endif
 
       fa_emit_instr_trace (minstret, epcc, instr, rg_cur_priv);
-
-`ifdef PERFORMANCE_MONITORING
-      fa_gather_instr_event (instr, rg_cur_priv, 3);
-`endif
 
       // Debug
       if (cur_verbosity != 0)
