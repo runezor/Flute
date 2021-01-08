@@ -295,6 +295,8 @@ def make_build_dir (repo, repobase, arch, sim, debug, tv, rvfi_dii):
     else:
         fo.write ("\t-D CapWidth=128\\\n")
 
+    fo.write("\t-D PERFORMANCE_MONITORING\\\n")
+
     # RISC-V arch features
     arch_flags = ""
     if ("G" in arch_std):
