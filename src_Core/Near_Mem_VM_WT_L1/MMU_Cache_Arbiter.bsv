@@ -18,19 +18,21 @@ import ClientServer :: *;
 import ISA_Decls    :: *;
 import Near_Mem_IFC :: *;
 import MMU_Cache    :: *;
+import MMU_Cache_Common :: *;
 
 // ================================================================
 // Interface
 
-interface MMU_Cache_Arbiter_IFC #(numeric type num_masters);
-   interface Vector #(num_masters, MMU_Cache_IFC) v_from_masters;
+interface MMU_Cache_Arbiter_IFC #(numeric type num_masters,
+				  numeric type mID);
+   interface Vector #(num_masters, MMU_Cache_IFC #(mID)) v_from_masters;
 endinterface
 
 // ================================================================
 // Implementation module
 
-module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
-			   (MMU_Cache_Arbiter_IFC #(num_masters))
+module mkMMU_Cache_Arbiter #(MMU_Cache_IFC #(mID) cache)
+			   (MMU_Cache_Arbiter_IFC #(num_masters, mID))
 
    provisos (Add#(a__, 1, num_masters));
 
@@ -73,6 +75,12 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
    // Enforce priority order for taking control of the cache. Masters consult
    // every element preceding their PulseWire before they acquire.
    Vector #(num_masters, PulseWire) v_master_acquired <- replicateM (mkPulseWireOR);
+
+`ifdef ISA_CHERI
+    // Pulsed at the start of a cycle when the active master wishes to commit
+    // the last request it issued to the cache.
+    PulseWire pw_commit <- mkPulseWireOR;
+`endif
 
    // Call when a master has consumed a response at the beginning of a cycle
    // and should release the cache.
@@ -122,12 +130,13 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
    // until the first available opportunity.
    Vector #(num_masters, Array #(Reg #(Bool)))      v_req_valid       <- replicateM (mkCReg (2, False));
    Vector #(num_masters, Array #(Reg #(CacheOp)))   v_req_op          <- replicateM (mkCRegU (2));
-   Vector #(num_masters, Array #(Reg #(Bit #(3))))  v_req_f3          <- replicateM (mkCRegU (2));
+   Vector #(num_masters, Array #(Reg #(Bit #(3))))  v_req_width_code  <- replicateM (mkCRegU (2));
+   Vector #(num_masters, Array #(Reg #(Bool)))      v_req_is_unsigned <- replicateM (mkCRegU (2));
 `ifdef ISA_A
-   Vector #(num_masters, Array #(Reg #(Bit #(7))))  v_req_amo_funct7  <- replicateM (mkCRegU (2));
+   Vector #(num_masters, Array #(Reg #(Bit #(5))))  v_req_amo_funct5  <- replicateM (mkCRegU (2));
 `endif
    Vector #(num_masters, Array #(Reg #(WordXL)))    v_req_addr        <- replicateM (mkCRegU (2));
-   Vector #(num_masters, Array #(Reg #(Bit #(64)))) v_req_st_value    <- replicateM (mkCRegU (2));
+   Vector #(num_masters, Array #(Reg #(Tuple2 #(Bool, Bit #(128))))) v_req_st_value <- replicateM (mkCRegU (2));
    Vector #(num_masters, Array #(Reg #(Priv_Mode))) v_req_priv        <- replicateM (mkCRegU (2));
    Vector #(num_masters, Array #(Reg #(Bit #(1))))  v_req_sstatus_SUM <- replicateM (mkCRegU (2));
    Vector #(num_masters, Array #(Reg #(Bit #(1))))  v_req_mstatus_MXR <- replicateM (mkCRegU (2));
@@ -137,8 +146,8 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
    // master.
    Vector #(num_masters, Reg #(Bool))      v_rsp_valid      <- replicateM (mkReg (False));
    Vector #(num_masters, Reg #(WordXL))    v_rsp_addr       <- replicateM (mkRegU);
-   Vector #(num_masters, Reg #(Bit #(64))) v_rsp_word64     <- replicateM (mkRegU);
-   Vector #(num_masters, Reg #(Bit #(64))) v_rsp_st_amo_val <- replicateM (mkRegU);
+   Vector #(num_masters, Reg #(Tuple2 #(Bool, Bit #(128)))) v_rsp_cword      <- replicateM (mkRegU);
+   Vector #(num_masters, Reg #(Tuple2 #(Bool, Bit #(128)))) v_rsp_st_amo_val <- replicateM (mkRegU);
    Vector #(num_masters, Reg #(Bool))      v_rsp_exc        <- replicateM (mkReg (False));
    Vector #(num_masters, Reg #(Exc_Code))  v_rsp_exc_code   <- replicateM (mkRegU);
 
@@ -157,8 +166,11 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
 	 fa_master_acquire (i);
 	 v_req_valid [i][1] <= False;
 	 cache.req (v_req_op          [i][1],
-		    v_req_f3          [i][1],
-		    v_req_amo_funct7  [i][1],
+		    v_req_width_code  [i][1],
+		    v_req_is_unsigned [i][1],
+`ifdef ISA_A
+		    v_req_amo_funct5  [i][1],
+`endif
 		    v_req_addr        [i][1],
 		    v_req_st_value    [i][1],
 		    v_req_priv        [i][1],
@@ -171,7 +183,7 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
       rule rl_latch_rsp (fn_master_is_active (i) && cache.valid && (! rg_resetting_or_flushing));
 	 fa_master_release_early;
 	 v_rsp_addr        [i] <= cache.addr;
-	 v_rsp_word64      [i] <= cache.word64;
+	 v_rsp_cword       [i] <= cache.cword;
 	 v_rsp_st_amo_val  [i] <= cache.st_amo_val;
 	 v_rsp_exc         [i] <= cache.exc;
 	 v_rsp_exc_code    [i] <= cache.exc_code;
@@ -194,6 +206,14 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
 	    v_rsp_valid [i] <= True;
       endrule
    end
+
+
+`ifdef ISA_CHERI
+   (* no_implicit_conditions, fire_when_enabled *)
+   rule rl_commit (pw_commit);
+      cache.commit;
+   endrule
+`endif
 
    // Various bookkeeping for shared state
 
@@ -235,7 +255,7 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
       rg_resetting_or_flushing <= resetting || flushing;
    endrule
 
-   function MMU_Cache_IFC gen (Integer i);
+   function MMU_Cache_IFC #(mID) gen (Integer i);
       return
       interface MMU_Cache_IFC;
 	 method Action set_verbosity (Bit #(4) verbosity) if (fn_master_can_acquire (i));
@@ -266,21 +286,23 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
 	 endinterface
 
 	 method Action req (CacheOp   op,
-			    Bit #(3)  f3,
+			    Bit #(3)  width_code,
+			    Bool      is_unsigned,
 `ifdef ISA_A
-			    Bit #(7)  amo_funct7,
+			    Bit #(5)  amo_funct5,
 `endif
 			    WordXL    addr,
-			    Bit #(64) st_value,
+			    Tuple2 #(Bool, Bit #(128)) st_value,
 			    Priv_Mode priv,
 			    Bit #(1)  sstatus_SUM,
 			    Bit #(1)  mstatus_MXR,
 			    WordXL    satp);
 	    v_req_valid       [i][0] <= True;
 	    v_req_op          [i][0] <= op;
-	    v_req_f3          [i][0] <= f3;
+	    v_req_width_code  [i][0] <= width_code;
+	    v_req_is_unsigned [i][0] <= is_unsigned;
 `ifdef ISA_A
-	    v_req_amo_funct7  [i][0] <= amo_funct7;
+	    v_req_amo_funct5  [i][0] <= amo_funct5;
 `endif
 	    v_req_addr        [i][0] <= addr;
 	    v_req_st_value    [i][0] <= st_value;
@@ -297,6 +319,19 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
 	 // cycle then the current output of the cache corresponds to
 	 // this master's actions (regardless of whether we've gone
 	 // idle). Otherwise, use whatever was latched.
+	 //
+	 // For CHERI commits we don't need to do any buffering, as the
+	 // master will keep calling commit every cycle whilst its request is
+	 // outstanding and it believes the request should be committed, so
+	 // forward on if this master last touched the cache, otherwise just
+	 // drop it.
+
+`ifdef ISA_CHERI
+	 method Action commit;
+	    if (rg_master [i])
+	       pw_commit.send;
+	 endmethod
+`endif
 
 	 method Bool valid;
 	    return rg_master [i] ? cache.valid : v_rsp_valid [i];
@@ -306,11 +341,11 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC cache)
 	    return rg_master [i] ? cache.addr : v_rsp_addr [i];
 	 endmethod
 
-	 method Bit #(64) word64;
-	    return rg_master [i] ? cache.word64 : v_rsp_word64 [i];
+	 method Tuple2 #(Bool, Bit #(128)) cword;
+	    return rg_master [i] ? cache.cword : v_rsp_cword [i];
 	 endmethod
 
-	 method Bit #(64) st_amo_val;
+	 method Tuple2 #(Bool, Bit #(128)) st_amo_val;
 	    return rg_master [i] ? cache.st_amo_val : v_rsp_st_amo_val [i];
 	 endmethod
 

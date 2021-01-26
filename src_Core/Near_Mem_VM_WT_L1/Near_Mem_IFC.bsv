@@ -115,7 +115,7 @@ interface Near_Mem_IFC;
    // Optional AXI4-Lite DMem slave interface
 
 `ifdef INCLUDE_DMEM_SLAVE
-   interface AXI4_Lite_Slave_IFC #(Wd_Addr, Wd_Data, Wd_User) dmem_slave;
+   interface AXI4Lite_Slave #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) dmem_slave;
 `endif
 
    // ----------------

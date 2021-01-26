@@ -28,10 +28,11 @@ import AXI4Lite   :: *;
 // ================================================================
 // Project imports
 
-import ISA_Decls       :: *;
-import Near_Mem_IFC    :: *;
-import MMU_Cache       :: *;
-import Fabric_Defs     :: *;
+import ISA_Decls        :: *;
+import Near_Mem_IFC     :: *;
+import MMU_Cache        :: *;
+import MMU_Cache_Common :: *;
+import Fabric_Defs      :: *;
 
 // ================================================================
 // Local constants and types
@@ -215,7 +216,7 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
    rule rl_rd_resp (f_req.first matches tagged CacheRead &&& cache.valid);
       let rdr = AXI4Lite_RFlit {
 	    rresp: cache.exc ? SLVERR : OKAY,
-	    rdata: truncate (tpl_2 (cache.word128)),
+	    rdata: truncate (tpl_2 (cache.cword)),
 	    ruser: 0
       };
       slavePortShim.master.r.put (rdr);

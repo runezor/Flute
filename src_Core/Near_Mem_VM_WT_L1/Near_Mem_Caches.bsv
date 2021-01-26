@@ -80,7 +80,7 @@ module mkNear_Mem (Near_Mem_IFC);
    MMU_ICache_IFC  icache <- mkMMU_ICache;
    MMU_DCache_IFC  dcache <- mkMMU_DCache;
 `ifdef INCLUDE_DMEM_SLAVE
-   MMU_Cache_Arbiter_IFC #(2) dcache_arbiter <- mkMMU_Cache_Arbiter (dcache);
+   MMU_Cache_Arbiter_IFC #(2, Wd_MId_2x3) dcache_arbiter <- mkMMU_Cache_Arbiter (dcache);
    dcache = dcache_arbiter.v_from_masters [0];
 
    AXI4_Lite_MMU_Cache_Adapter_IFC dmem_slave_adapter <- mkAXI4_Lite_MMU_Cache_Adapter(dcache_arbiter.v_from_masters [1]);
