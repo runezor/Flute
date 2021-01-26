@@ -40,7 +40,7 @@ import AXI4_Types       :: *;
 import Fabric_Defs      :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
-import AXI4_Lite_Types :: *;
+import AXI4Lite_Types   :: *;
 `endif
 
 // ================================================================

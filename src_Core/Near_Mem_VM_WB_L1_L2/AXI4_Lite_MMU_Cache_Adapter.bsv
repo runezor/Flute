@@ -21,7 +21,9 @@ import SpecialFIFOs :: *;
 // ----------------
 // BSV additional libs
 
-import Semi_FIFOF :: *;
+import GetPut_Aux :: *;
+import SourceSink :: *;
+import AXI4Lite   :: *;
 
 // ================================================================
 // Project imports
@@ -30,7 +32,6 @@ import ISA_Decls       :: *;
 import Near_Mem_IFC    :: *;
 import MMU_Cache       :: *;
 import Fabric_Defs     :: *;
-import AXI4_Lite_Types :: *;
 
 // ================================================================
 // Local constants and types
@@ -46,16 +47,16 @@ typedef union tagged {
 // Interface
 
 interface AXI4_Lite_MMU_Cache_Adapter_IFC;
-   interface AXI4_Lite_Slave_IFC #(Wd_Addr, Wd_Data, Wd_User) from_master;
+   interface AXI4Lite_Slave #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) from_master;
 endinterface
 
 // ================================================================
 // Implementation module
 
-module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
+module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC #(mID) cache)
 				     (AXI4_Lite_MMU_Cache_Adapter_IFC);
 
-   AXI4_Lite_Slave_Xactor_IFC #(Wd_Addr, Wd_Data, Wd_User) xactor_from_master <- mkAXI4_Lite_Slave_Xactor;
+   let slavePortShim <- mkAXI4LiteShimFF;
 
    // Stores information associated with the outstanding request. We
    // want all the properties of a pipeline FIFO, namely that there is
@@ -66,47 +67,48 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
    // For unnatural writes, we track the last byte processed as we
    // iterate through byte-by-byte, as well as make errors sticky,
    Reg #(Bit #(ZLSBs_Aligned_Fabric_Addr)) rg_unnatural_last_offset <- mkReg (0);
-   Reg #(AXI4_Lite_Resp) rg_unnatural_bresp <- mkReg (AXI4_LITE_OKAY);
+   Reg #(AXI4_Resp) rg_unnatural_bresp <- mkReg (OKAY);
 
    (* descending_urgency = "rl_rd_xaction, rl_wr_xaction" *)
    rule rl_wr_xaction;
-      AXI4_Lite_Wr_Addr #(Wd_Addr, Wd_User) wra <- pop_o (xactor_from_master.o_wr_addr);
-      AXI4_Lite_Wr_Data #(Wd_Data)          wrd <- pop_o (xactor_from_master.o_wr_data);
+      AXI4Lite_AWFlit #(Wd_Addr, 0) wra <- get (slavePortShim.master.aw);
+      AXI4Lite_WFlit  #(Wd_Data, 0) wrd <- get (slavePortShim.master.w);
 
       Bit #(ZLSBs_Aligned_Fabric_Addr) offset = 0;
       Fabric_Data mask    = 'hFF;
-      Bit #(3)    f3      = f3_SB;
+      Bit #(3)    width_code = w_SIZE_B;
       Bool        natural = False;
       case (wrd.wstrb)
 `ifdef FABRIC64
-	 'hFF: begin offset=0; mask = 'hFFFF_FFFF_FFFF_FFFF; f3=f3_SD; natural=True; end
-	 'hF0: begin offset=4; mask =           'hFFFF_FFFF; f3=f3_SW; natural=True; end
-	 'hC0: begin offset=6; mask =                'hFFFF; f3=f3_SH; natural=True; end
-	 'h30: begin offset=4; mask =                'hFFFF; f3=f3_SH; natural=True; end
-	 'h80: begin offset=7; mask =                  'hFF; f3=f3_SB; natural=True; end
-	 'h40: begin offset=6; mask =                  'hFF; f3=f3_SB; natural=True; end
-	 'h20: begin offset=5; mask =                  'hFF; f3=f3_SB; natural=True; end
-	 'h10: begin offset=4; mask =                  'hFF; f3=f3_SB; natural=True; end
+	 'hFF: begin offset=0; mask = 'hFFFF_FFFF_FFFF_FFFF; width_code=w_SIZE_D; natural=True; end
+	 'hF0: begin offset=4; mask =           'hFFFF_FFFF; width_code=w_SIZE_W; natural=True; end
+	 'hC0: begin offset=6; mask =                'hFFFF; width_code=w_SIZE_H; natural=True; end
+	 'h30: begin offset=4; mask =                'hFFFF; width_code=w_SIZE_H; natural=True; end
+	 'h80: begin offset=7; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
+	 'h40: begin offset=6; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
+	 'h20: begin offset=5; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
+	 'h10: begin offset=4; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
 `endif
-	 'hF:  begin offset=0; mask =           'hFFFF_FFFF; f3=f3_SW; natural=True; end
-	 'hC:  begin offset=2; mask =                'hFFFF; f3=f3_SH; natural=True; end
-	 'h3:  begin offset=0; mask =                'hFFFF; f3=f3_SH; natural=True; end
-	 'h8:  begin offset=3; mask =                  'hFF; f3=f3_SB; natural=True; end
-	 'h4:  begin offset=2; mask =                  'hFF; f3=f3_SB; natural=True; end
-	 'h2:  begin offset=1; mask =                  'hFF; f3=f3_SB; natural=True; end
-	 'h1:  begin offset=0; mask =                  'hFF; f3=f3_SB; natural=True; end
+	 'hF:  begin offset=0; mask =           'hFFFF_FFFF; width_code=w_SIZE_W; natural=True; end
+	 'hC:  begin offset=2; mask =                'hFFFF; width_code=w_SIZE_H; natural=True; end
+	 'h3:  begin offset=0; mask =                'hFFFF; width_code=w_SIZE_H; natural=True; end
+	 'h8:  begin offset=3; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
+	 'h4:  begin offset=2; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
+	 'h2:  begin offset=1; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
+	 'h1:  begin offset=0; mask =                  'hFF; width_code=w_SIZE_B; natural=True; end
       endcase
       Bit #(64) addr64 = zeroExtend (wra.awaddr);
       addr64 [zlsbs_aligned_fabric_addr-1:0] = offset;
       Bit #(64) st_value = ((zeroExtend (wrd.wdata) >> {offset, 3'b0}) & mask);
       if (natural || (wrd.wstrb [0] == 1'b1)) begin
 	 cache.req (CACHE_ST,
-		    f3,
+		    width_code,
+		    ?,
 `ifdef ISA_A
 		    ?,
 `endif
 		    truncate (addr64),
-		    st_value,
+		    tuple2 (False, zeroExtend (st_value)),
 		    m_Priv_Mode,
 		    ?,
 		    ?,
@@ -123,20 +125,20 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
    endrule
 
    rule rl_wr_resp_cache (f_req.first matches tagged CacheWrite &&& cache.valid);
-      let wrr = AXI4_Lite_Wr_Resp {
-	    bresp: cache.exc ? AXI4_LITE_SLVERR : AXI4_LITE_OKAY,
+      let wrr = AXI4Lite_BFlit {
+	    bresp: cache.exc ? SLVERR : OKAY,
 	    buser: 0
       };
-      xactor_from_master.i_wr_resp.enq (wrr);
+      slavePortShim.master.b.put (wrr);
       f_req.deq;
    endrule
 
    rule rl_wr_resp_skipped (f_req.first matches tagged SkippedWrite);
-      let wrr = AXI4_Lite_Wr_Resp {
-	    bresp: AXI4_LITE_OKAY,
+      let wrr = AXI4Lite_BFlit {
+	    bresp: OKAY,
 	    buser: 0
       };
-      xactor_from_master.i_wr_resp.enq (wrr);
+      slavePortShim.master.b.put (wrr);
       f_req.deq;
    endrule
 
@@ -147,16 +149,16 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
 			 &&& (cache.valid || (wstrb [rg_unnatural_last_offset] == 1'b0)));
       let bresp = rg_unnatural_bresp;
       if ((wstrb [rg_unnatural_last_offset] == 1'b1) && cache.valid && cache.exc)
-	 bresp = AXI4_LITE_SLVERR;
+	 bresp = SLVERR;
 
       if (rg_unnatural_last_offset == maxBound) begin
-	 let wrr = AXI4_Lite_Wr_Resp {
+	 let wrr = AXI4Lite_BFlit {
 	       bresp: bresp,
 	       buser: 0
 	 };
-	 xactor_from_master.i_wr_resp.enq (wrr);
+	 slavePortShim.master.b.put (wrr);
 	 rg_unnatural_last_offset <= 0;
-	 rg_unnatural_bresp <= AXI4_LITE_OKAY;
+	 rg_unnatural_bresp <= OKAY;
 	 f_req.deq;
       end
       else begin
@@ -166,12 +168,13 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
 	 Bit #(64) st_value = ((zeroExtend (wdata) >> {offset, 3'b0}) & 'hFF);
 	 if (wstrb [offset] == 1'b1) begin
 	    cache.req (CACHE_ST,
-		       f3_SB,
+		       w_SIZE_B,
+		       ?,
 `ifdef ISA_A
 		       ?,
 `endif
 		       truncate (addr64),
-		       st_value,
+		       tuple2 (False, zeroExtend (st_value)),
 		       m_Priv_Mode,
 		       ?,
 		       ?,
@@ -183,19 +186,20 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
    endrule
 
    rule rl_rd_xaction;
-      AXI4_Lite_Rd_Addr #(Wd_Addr, Wd_User) rda <- pop_o (xactor_from_master.o_rd_addr);
+      AXI4Lite_ARFlit #(Wd_Addr, 0) rda <- get (slavePortShim.master.ar);
 
 `ifdef FABRIC32
-      Bit #(3) f3 = f3_LW;
+      Bit #(3) width_code = w_SIZE_W;
 `endif
 `ifdef FABRIC64
-      Bit #(3) f3 = f3_LD;
+      Bit #(3) width_code = w_SIZE_D;
 `endif
       Bit #(64) addr64 = zeroExtend (rda.araddr);
       Bit #(ZLSBs_Aligned_Fabric_Addr) offset = 0;
       addr64 [zlsbs_aligned_fabric_addr-1:0] = offset;
       cache.req (CACHE_LD,
-		 f3,
+		 width_code,
+		 False,
 `ifdef ISA_A
 		 ?,
 `endif
@@ -209,16 +213,22 @@ module mkAXI4_Lite_MMU_Cache_Adapter #(MMU_Cache_IFC cache)
    endrule
 
    rule rl_rd_resp (f_req.first matches tagged CacheRead &&& cache.valid);
-      let rdr = AXI4_Lite_Rd_Data {
-	    rresp: cache.exc ? AXI4_LITE_SLVERR : AXI4_LITE_OKAY,
-	    rdata: truncate (cache.word64),
+      let rdr = AXI4Lite_RFlit {
+	    rresp: cache.exc ? SLVERR : OKAY,
+	    rdata: truncate (tpl_2 (cache.word128)),
 	    ruser: 0
       };
-      xactor_from_master.i_rd_data.enq (rdr);
+      slavePortShim.master.r.put (rdr);
       f_req.deq;
    endrule
 
-   interface from_master = xactor_from_master.axi_side;
+`ifdef ISA_CHERI
+   rule rl_commit;
+      cache.commit;
+   endrule
+`endif
+
+   interface from_master = slavePortShim.slave;
 endmodule
 
 endpackage : AXI4_Lite_MMU_Cache_Adapter
