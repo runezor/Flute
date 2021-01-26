@@ -70,14 +70,6 @@ import Cache_Decls      :: *;
 import TLB :: *;
 `endif
 
-/* DELETE
-`ifdef RV32
-import Cache_Decls_RV32 :: *;
-`elsif RV64
-import Cache_Decls_RV64 :: *;
-`endif
-*/
-
 import SoC_Map      :: *;
 import AXI4         :: *;
 import SourceSink   :: *;
