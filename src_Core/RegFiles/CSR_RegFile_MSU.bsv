@@ -395,7 +395,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(Word)       rg_sscratch  <- mkCSRReg;
    Reg #(MCause)     rg_scause    <- mkCSRReg;
 `ifdef ISA_CHERI
-   Reg #(XCCSR)      rg_sccsr     <- mkReg(XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0});
+   Reg #(XCCSR)      rg_sccsr     <- mkCSRReg;
    Reg #(CapReg)     rg_stcc      <- mkReg(nullCap);
    CapPipe           rg_stcc_unpacked = cast(rg_stcc);
    Reg #(CapReg)     rg_stdc      <- mkReg(nullCap);
@@ -441,7 +441,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(Word)       rg_mtval    <- mkCSRReg;
 
 `ifdef ISA_CHERI
-   Reg #(XCCSR)      rg_mccsr     <- mkReg(XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0});
+   Reg #(XCCSR)      rg_mccsr     <- mkCSRReg;
    Reg #(CapReg)     rg_mtcc      <- mkReg(nullCap);
    CapPipe           rg_mtcc_unpacked = cast(rg_mtcc);
    Reg #(CapReg)     rg_mtdc      <- mkReg(nullCap);
@@ -525,7 +525,6 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       // Supervisor-level CSRs
 `ifdef ISA_PRIV_S
 `ifdef ISA_CHERI
-      rg_sccsr      <= XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0};
       rg_stcc       <= soc_map.m_mtcc_reset_value;
       rg_stdc       <= nullCap;
       rg_sscratchc  <= nullCap;
@@ -544,7 +543,6 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       csr_mip.reset;
 
 `ifdef ISA_CHERI
-      rg_mccsr      <= XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0};
       rg_mtcc       <= soc_map.m_mtcc_reset_value;
       rg_mtdc       <= nullCap;
       rg_mscratchc  <= nullCap;
