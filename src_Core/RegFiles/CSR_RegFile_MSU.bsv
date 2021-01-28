@@ -362,9 +362,9 @@ endmodule
 module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef RVFI_DII
-    let mkCSRReg = mkReg(unpack(0));
+   let mkCSRReg = mkReg(unpack(0));
 `else
-    let mkCSRReg = mkRegU;
+   let mkCSRReg = mkRegU;
 `endif
 
    Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (0);
@@ -395,7 +395,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(Word)       rg_sscratch  <- mkCSRReg;
    Reg #(MCause)     rg_scause    <- mkCSRReg;
 `ifdef ISA_CHERI
-   Reg #(XCCSR)      rg_sccsr     <- mkCSRReg;
+   Reg #(XCCSR)      rg_sccsr     <- mkReg(XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0});
    Reg #(CapReg)     rg_stcc      <- mkReg(nullCap);
    CapPipe           rg_stcc_unpacked = cast(rg_stcc);
    Reg #(CapReg)     rg_stdc      <- mkReg(nullCap);
@@ -441,7 +441,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(Word)       rg_mtval    <- mkCSRReg;
 
 `ifdef ISA_CHERI
-   Reg #(XCCSR)      rg_mccsr    <- mkCSRReg;
+   Reg #(XCCSR)      rg_mccsr     <- mkReg(XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0});
    Reg #(CapReg)     rg_mtcc      <- mkReg(nullCap);
    CapPipe           rg_mtcc_unpacked = cast(rg_mtcc);
    Reg #(CapReg)     rg_mtdc      <- mkReg(nullCap);
@@ -525,9 +525,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       // Supervisor-level CSRs
 `ifdef ISA_PRIV_S
 `ifdef ISA_CHERI
-      rg_stcc       <= soc_map.m_mtcc_reset_value;
-      rg_sepcc      <= soc_map.m_mepcc_reset_value;
       rg_sccsr      <= XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0};
+      rg_stcc       <= soc_map.m_mtcc_reset_value;
+      rg_stdc       <= nullCap;
+      rg_sscratchc  <= nullCap;
+      rg_sepcc      <= soc_map.m_mepcc_reset_value;
 `else
       rg_stvec    <= word_to_mtvec (truncate (soc_map.m_mtvec_reset_value));
 `endif
@@ -542,9 +544,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       csr_mip.reset;
 
 `ifdef ISA_CHERI
-      rg_mtcc       <= soc_map.m_mtcc_reset_value;
-      rg_mepcc      <= soc_map.m_mepcc_reset_value;
       rg_mccsr      <= XCCSR{cheri_exc_code: 0, cheri_exc_reg: 0};
+      rg_mtcc       <= soc_map.m_mtcc_reset_value;
+      rg_mtdc       <= nullCap;
+      rg_mscratchc  <= nullCap;
+      rg_mepcc      <= soc_map.m_mepcc_reset_value;
 `else
       rg_mtvec      <= word_to_mtvec (truncate (soc_map.m_mtvec_reset_value));
 `endif
