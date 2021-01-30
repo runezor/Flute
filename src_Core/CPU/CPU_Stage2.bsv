@@ -308,6 +308,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 `ifdef RVFI
           let info_RVFI_s2 = info_RVFI_s2_base;
           data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
+`endif
           output_stage2 = Output_Stage2 {ostatus:         ostatus,
                  trap_info:       trap_info_dmem,
 `ifdef PERFORMANCE_MONITORING
@@ -319,7 +320,6 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
                , trace_data:      ?
 `endif
                                         };
-`endif
       end
 `endif
 
