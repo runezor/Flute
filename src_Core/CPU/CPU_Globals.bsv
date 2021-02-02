@@ -520,6 +520,7 @@ typedef enum {  OP_Stage2_ALU         // Pass-through (non mem, M, FD, AMO)
 `endif
 `ifdef ISA_CHERI
               , OP_Stage2_TestSubset
+`endif
    } Op_Stage2
 deriving (Eq, Bits, FShow);
 
