@@ -657,15 +657,6 @@ typedef enum {
    , FPNMAdd
    , FPNMSub } FpuOp deriving (Bits, Eq, FShow);
 
-// Enumeration of rounding modes
-typedef enum {
-     Rnd_Nearest_Even
-   , Rnd_Zero
-   , Rnd_Minus_Inf
-   , Rnd_Plus_Inf
-   , Rnd_Nearest_Max_Mag
-} RoundMode deriving (Bits, Eq, FShow);
-
 // Funct2 encoding
 Bit #(2) f2_S           = 2'b00;
 Bit #(2) f2_D           = 2'b01;
