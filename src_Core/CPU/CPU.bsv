@@ -26,7 +26,6 @@ import GetPut       :: *;
 import ClientServer :: *;
 import Connectable  :: *;
 import ConfigReg    :: *;
-import SpecialWires  :: *;
 
 // ----------------
 // BSV additional libs
@@ -36,8 +35,8 @@ import Semi_FIFOF :: *;
 
 `ifdef PERFORMANCE_MONITORING
 import PerformanceMonitor :: *;
-import Vector :: *;
-import SpecialRegs :: *;
+import Vector             :: *;
+import SpecialRegs        :: *;
 `endif
 
 // ================================================================

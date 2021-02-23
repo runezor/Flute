@@ -47,7 +47,6 @@ import ConfigReg    :: *;
 import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
-import SpecialWires  :: *;
 
 // ----------------
 // BSV additional libs
@@ -57,6 +56,10 @@ import GetPut_Aux    :: *;
 import Semi_FIFOF    :: *;
 import CreditCounter :: *;
 import SourceSink    :: *;
+
+`ifdef PERFORMANCE_MONITORING
+import SpecialRegs :: *;
+`endif
 
 // ================================================================
 // Project imports
@@ -564,6 +567,14 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
    // the victim is picked 'randomly' according to this register
    Reg #(Way_in_CSet)  rg_victim_way <- mkRegU;
 
+`ifdef PERFORMANCE_MONITORING
+   Array #(Reg #(EventsCache)) aw_events <- mkDRegOR (7, unpack (0));
+   Wire #(Bool) wr_mem_req_sent <- mkDWire (False);
+   Reg #(Bool)  rg_mem_req_sent <- mkReg (False);
+   Reg #(Bool)  rg_cache_rereq_data <- mkReg (False);
+   Reg #(Bool)  rg_tlb_walk <- mkReg (False);
+`endif
+
 `ifdef WATCH_TOHOST
    // See NOTE: "tohost" above.
    // "tohost" addr on which to monitor writes, for standard ISA tests.
@@ -571,13 +582,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
    Reg #(Bool)      rg_watch_tohost <- mkReg (False);
    Reg #(Bit #(64)) rg_tohost_addr  <- mkReg ('h_8000_1000);
    Reg #(Bit #(64)) rg_tohost_value <- mkReg (0);
-`endif
-`ifdef PERFORMANCE_MONITORING
-   Array #(Wire #(EventsCache)) w_cacheEvents <- mkDWireOR (7, unpack (0));
-   Wire #(Bool) wr_mem_req_sent <- mkDWire (False);
-   Reg #(Bool)  rg_mem_req_sent <- mkReg (False);
-   Reg #(Bool)  rg_cache_rereq_data <- mkReg (False);
-   Reg #(Bool)  rg_tlb_walk <- mkReg (False);
 `endif
 
    // ----------------------------------------------------------------
@@ -825,7 +829,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 `ifdef PERFORMANCE_MONITORING
       let cacheEvents = unpack (0);
       cacheEvents.evt_TLB_FLUSH = True;
-      w_cacheEvents [0] <= cacheEvents;
+      aw_events [0] <= cacheEvents;
 `endif
 `endif
 
@@ -1157,7 +1161,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
       rg_state <= new_state;
       rg_exc_code <= new_exc_code;
 `ifdef PERFORMANCE_MONITORING
-      w_cacheEvents [1] <= cacheEvents;
+      aw_events [1] <= cacheEvents;
 `endif
    endrule: rl_probe_and_immed_rsp
 
@@ -1172,7 +1176,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
       //$display ("DMEM: %0d, TLB_LAT", dmem_not_imem);
       let cacheEvents = unpack (0);
       cacheEvents.evt_TLB_MISS_LAT = True;
-      w_cacheEvents [2] <= cacheEvents;
+      aw_events [2] <= cacheEvents;
 
       rg_tlb_walk <= rg_state != MODULE_RUNNING;
    endrule
@@ -1483,7 +1487,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 `ifdef ISA_A
       cacheEvents.evt_AMO_MISS_LAT = rg_op == CACHE_AMO;
 `endif
-      w_cacheEvents [3] <= cacheEvents;
+      aw_events [3] <= cacheEvents;
 
       rg_cache_rereq_data <= rg_state != MODULE_RUNNING;
    endrule
@@ -1626,7 +1630,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 	    //if (state_and_ctag_cset[rg_victim_way].state == CTAG_CLEAN) $display ("EVT_EVICT, DMEM: %0d", dmem_not_imem);
 	    let cacheEvents = unpack (0);
 	    cacheEvents.evt_EVICT = (state_and_ctag_cset [rg_victim_way].state == CTAG_CLEAN);
-	    w_cacheEvents [4] <= cacheEvents;
+	    aw_events [4] <= cacheEvents;
 `endif
 	    let new_state_and_ctag_cset = state_and_ctag_cset;
 	    new_state_and_ctag_cset [rg_victim_way] = State_and_CTag {state: CTAG_CLEAN,
@@ -2007,7 +2011,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 `ifdef ISA_A
       events.evt_AMO = op == CACHE_AMO;
 `endif
-      w_cacheEvents [6] <= events;
+      aw_events [6] <= events;
 `endif
    endmethod
 
@@ -2060,7 +2064,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 `ifdef PERFORMANCE_MONITORING
       let cacheEvents = unpack(0);
       cacheEvents.evt_TLB_FLUSH = True;
-      w_cacheEvents[5] <= cacheEvents;
+      aw_events[5] <= cacheEvents;
 `endif
 `else
       noAction;
@@ -2072,7 +2076,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 
 `ifdef PERFORMANCE_MONITORING
    // Cache event reporting interface.
-   interface EventsCache events = w_cacheEvents[0];
+   interface EventsCache events = aw_events[0];
 `endif
 
    // ----------------------------------------------------------------
