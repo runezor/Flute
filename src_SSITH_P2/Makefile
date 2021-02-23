@@ -43,7 +43,7 @@ SRC_CORE ?= $(REPO)/src_Core/Core
 CONTRIB_DIRS = %/Libraries/Bus
 TESTBENCH_DIRS  = $(REPO)/src_Testbench/Fabrics/AXI4
 CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(SRC_CORE):$(REPO)/src_Core/Near_Mem_VM:$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
-AXI_DIRS = %/Libraries/TLM3:%/Libraries/Axi:%/Libraries/Axi4
+AXI_DIRS = %/Libraries/AMBA_TLM3/TLM3:%/Libraries/AMBA_TLM3/Axi:%/Libraries/AMBA_TLM3/Axi4
 
 BSC_PATH = $(CONTRIB_DIRS):src_BSV:$(TESTBENCH_DIRS):$(CORE_DIRS):$(AXI_DIRS):+
 
