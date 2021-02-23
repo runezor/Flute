@@ -42,7 +42,6 @@ import GetPut       :: *;
 import ClientServer :: *;
 import Connectable  :: *;
 import ConfigReg    :: *;
-import SpecialWires  :: *;
 
 // ----------------
 // BSV additional libs
@@ -57,7 +56,8 @@ import AXI4Lite   :: *;
 
 `ifdef PERFORMANCE_MONITORING
 import PerformanceMonitor :: *;
-import Vector :: *;
+import Vector             :: *;
+import SpecialRegs        :: *;
 `endif
 
 // ================================================================
@@ -260,8 +260,8 @@ module mkCPU (CPU_IFC);
    Bit #(4)  cur_verbosity = ((minstret < cfg_logdelay) ? 0 : cfg_verbosity);
 
 `ifdef PERFORMANCE_MONITORING
-   Array #(Wire #(EventsCore)) aw_events <- mkDWireOR (5, unpack (0));
-   Wire #(Vector #(ExternalEvtCount, Bit#(1))) w_external_evts <- mkDWire (unpack (0));
+   Array #(Wire #(EventsCore)) aw_events <- mkDRegOR (5, unpack (0));
+   Array #(Reg #(Vector #(ExternalEvtCount, Bit #(1)))) crg_external_evts <- mkCReg (2, unpack (0));
 `endif
 
    // ----------------
@@ -1260,7 +1260,7 @@ module mkCPU (CPU_IFC);
    Vector #(31, Bit #(Counter_Width)) core_evts_vec = to_large_vector (aw_events [0]);
    Vector #(16, Bit #(Counter_Width)) imem_evts_vec = to_large_vector (near_mem.imem.events);
    Vector #(16, Bit #(Counter_Width)) dmem_evts_vec = to_large_vector (near_mem.dmem.events);
-   Vector #(32, Bit #(Counter_Width)) external_evts_vec = to_large_vector (w_external_evts);
+   Vector #(32, Bit #(Counter_Width)) external_evts_vec = to_large_vector (crg_external_evts [0]);
 
    let events = append (null_evt, core_evts_vec);
    events = append (events, imem_evts_vec);
@@ -1270,6 +1270,7 @@ module mkCPU (CPU_IFC);
    (* fire_when_enabled, no_implicit_conditions *)
    rule rl_send_perf_evts;
       csr_regfile.send_performance_events (events);
+      crg_external_evts [0] <= unpack (0);
    endrule
 `endif
 
@@ -2564,7 +2565,7 @@ module mkCPU (CPU_IFC);
 
 `ifdef PERFORMANCE_MONITORING
    method Action relay_external_events (Vector #(ExternalEvtCount, Bit #(1)) external_evts);
-      w_external_evts  <= external_evts;
+      crg_external_evts [1] <= external_evts;
    endmethod
 `endif
 
