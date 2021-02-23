@@ -2314,11 +2314,6 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/mkDM_CSR_Tap.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
-      </spirit:file>
-      <spirit:file>
         <spirit:name>hdl/ClockGen.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
