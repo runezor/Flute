@@ -2323,11 +2323,6 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/mkDM_GPR_Tap.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
-      </spirit:file>
-      <spirit:file>
         <spirit:name>hdl/mkIntMul_64.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
