@@ -780,7 +780,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_fcsr)
 `endif
 		     || (csr_addr == csr_addr_cycle && read_not_write)
-                     || (csr_addr == csr_addr_time && read_not_write)
+		     || (csr_addr == csr_addr_time && read_not_write)
 		     || (csr_addr == csr_addr_instret && read_not_write)
 `ifdef RV32
 		     || (csr_addr == csr_addr_cycleh && read_not_write)
