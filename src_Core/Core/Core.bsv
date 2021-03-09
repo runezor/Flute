@@ -581,14 +581,15 @@ module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
 `ifdef INCLUDE_DMEM_SLAVE
    let cpu_dmem_slave_synth <- toAXI4Lite_Slave_Synth (core.cpu_dmem_slave);
 `endif
+   let dma_server_synth <- toAXI4_Slave_Synth (core.dma_server);
 
-   method set_verbosity = core.set_verbosity;
    interface cpu_reset_server = core.cpu_reset_server;
    interface cpu_imem_master = cpu_imem_master_synth;
    interface core_mem_master = core_mem_master_synth;
 `ifdef INCLUDE_DMEM_SLAVE
    interface cpu_dmem_slave = cpu_dmem_slave_synth;
 `endif
+   interface dma_server = dma_server_synth;
    interface core_external_interrupt_sources = core.core_external_interrupt_sources;
    method nmi_req = core.nmi_req;
 `ifdef INCLUDE_TANDEM_VERIF
@@ -603,6 +604,12 @@ module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
 `ifdef TAG_CACHE_EVENTS_EXTERNAL
    method send_tag_cache_master_events = core.send_tag_cache_master_events;
 `endif
+   method set_verbosity = core.set_verbosity;
+`ifdef WATCH_TOHOST
+   method set_watch_tohost = core.set_watch_tohost;
+`endif
+   method ma_ddr4_ready = core.ma_ddr4_ready;
+   method mv_status = core.mv_status;
 endmodule
 
 
