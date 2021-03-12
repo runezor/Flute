@@ -471,6 +471,7 @@ endfunction
 // ================================================================
 // Logical view of csr_mcounteren register
 typedef struct {
+   Bit#(29) hpm;
    Bit#(1) ir;
    Bit#(1) tm;
    Bit#(1) cy;
@@ -478,21 +479,17 @@ typedef struct {
 deriving (Bits, FShow);
 
 function WordXL mcounteren_to_word (MCounteren mc);
-   return {0,
-           mc.ir,
-	   mc.tm,
-	   mc.cy};
+   return zeroExtend (pack (mc));
 endfunction
 
 function MCounteren word_to_mcounteren (WordXL x);
-   return MCounteren {ir: x[2],
-                      tm: x[1],
-		      cy: x[0]};
+   return unpack (truncate (x));
 endfunction
 
 function MCounteren mcounteren_reset_value;
-   return MCounteren {ir: 1'b0,
-                      tm: 1'b0,
+   return MCounteren {hpm: 29'b0,
+		      ir: 1'b0,
+		      tm: 1'b0,
 		      cy: 1'b0};
 endfunction
 
