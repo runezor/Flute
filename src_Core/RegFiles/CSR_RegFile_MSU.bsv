@@ -1839,14 +1839,17 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    endmethod
 
    // Fault on reading counters?
+   // XXX: No scounteren implemented properly (and hardwired to 0 yet treated as all 1s)
    method Bool csr_counter_read_fault (Priv_Mode  priv, CSR_Addr  csr_addr);
       return (   ((priv == s_Priv_Mode) || (priv == u_Priv_Mode))
 	      && (   ((csr_addr == csr_addr_cycle)   && (rg_mcounteren.cy == 0))
 		  || ((csr_addr == csr_addr_time)    && (rg_mcounteren.tm == 0))
 		  || ((csr_addr == csr_addr_instret) && (rg_mcounteren.ir == 0))
-		  || ((csr_addr_hpmcounter3  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
+		  || (   (csr_addr_hpmcounter3  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)
+		      && (rg_mcounteren.hpm[csr_addr - csr_addr_hpmcounter3] == 0))
 `ifdef RV32
-		  || ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h))
+		  || (   (csr_addr_hpmcounter3h  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)
+		      && (rg_mcounteren.hpm[csr_addr - csr_addr_hpmcounter3h] == 0))
 `endif
 		  ));
    endmethod
