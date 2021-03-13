@@ -66,7 +66,7 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoCondensed(
         rvfi_trap:      isTrap,
         rvfi_halt:      halted,
         rvfi_intr:      handler,
-        rvfi_insn:      data_s2_s3.instr,
+        rvfi_insn:      s1.instr,
         rvfi_rs1_addr:  s1.rs1_addr,
         rvfi_rs2_addr:  s1.rs2_addr,
 `ifdef ISA_F
@@ -123,7 +123,7 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoS1 (
         rvfi_trap:      isTrap,
         rvfi_halt:      halted,
         rvfi_intr:      handler,
-        rvfi_insn:      data_s1_s2.instr,
+        rvfi_insn:      s1.instr,
         rvfi_rs1_addr:  s1.rs1_addr,
         rvfi_rs2_addr:  s1.rs2_addr,
         rvfi_rs1_data:  s1.rs1_data,

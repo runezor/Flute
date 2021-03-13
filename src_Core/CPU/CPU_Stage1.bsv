@@ -229,7 +229,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    CapReg tmp_val2 = cast(alu_outputs.cap_val2);
    CapMem cap_val2 = cast(tmp_val2);
    let info_RVFI = Data_RVFI_Stage1 {
-                       instr:          rg_stage_input.instr,
+                       instr:          rg_stage_input.instr_or_instr_C,
                        rs1_addr:       rs1,
                        rs2_addr:       rs2,
 `ifdef ISA_CHERI
