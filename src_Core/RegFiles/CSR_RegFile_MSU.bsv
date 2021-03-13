@@ -377,16 +377,18 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    // RegFile #(Bit #(2), WordXL)  rf_pmpcfg   <- mkRegFileFull;
    // Vector #(16, Reg #(WordXL))  vrg_pmpaddr <- replicateM (mkRegU);
 
+   // mcycle is needed even for user-mode RDCYCLE instruction
+   // It can be updated by a CSR instruction (in Priv_M), and by the clock
+   Reg #(Bit #(64))   rg_mcycle <- mkReg (0);
+   RWire #(Bit #(64)) rw_mcycle <- mkRWire;    // Driven on CSRRx write to mcycle
+
+   Reg #(Bit #(64))   rg_mtime <- mkReg (0);
 
    // minstret is needed even for user-mode RDINSTRET instructions
    // It can be updated by a CSR instruction (in Priv_M), and by retirement of any other instruction
    Reg #(Bit #(64))   rg_minstret      <- mkReg (0);    // Needed even for user-mode instrs
    RWire #(Bit #(64)) rw_minstret      <- mkRWire;      // Driven on CSRRx write to minstret
    PulseWire          pw_minstret_incr <- mkPulseWire;
-   // mcycle is needed even for user-mode RDCYCLE instruction
-   // It can be updated by a CSR instruction (in Priv_M), and by the clock
-   Reg #(Bit #(64))   rg_mcycle <- mkReg (0);
-   RWire #(Bit #(64)) rw_mcycle <- mkRWire;    // Driven on CSRRx write to mcycle
 
 `ifdef PERFORMANCE_MONITORING
    PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, Counter_Width, No_Of_Evts) perf_counters <- mkPerfCountersFlute;
@@ -500,6 +502,14 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 rg_mcycle <= rg_mcycle + 1;
    endrule
 
+   (* no_implicit_conditions, fire_when_enabled *)
+   rule rl_mtime_incr;
+`ifdef DETERMINISTIC_TIMING
+      if (pw_minstret_incr)
+`endif
+	 rg_mtime <= rg_mtime + 1;
+   endrule
+
    // ----------------------------------------------------------------
    // INSTRET
 
@@ -510,8 +520,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    endrule
 
    (* no_implicit_conditions, fire_when_enabled *)
-   rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr);
-      if (! unpack (ctr_inhibit[2])) rg_minstret <= rg_minstret + 1;
+   rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr && (! unpack (ctr_inhibit [2])));
+      rg_minstret <= rg_minstret + 1;
       // $display ("%0d: CSR_RegFile_UM.rl_upd_minstret_incr: new value is %0d", rg_mcycle, rg_minstret + 1);
    endrule
 
@@ -549,15 +559,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_fcsr)
 `endif
 		     || (csr_addr == csr_addr_cycle)
-
-		     /*
-		     // NOTE: CSR_TIME should be a 'shadow copy' of the MTIME
-		     // mem-mapped location; but since both increment at the
-		     // same rate, and MTIME is never written, this is ok.
-
 		     || (csr_addr == csr_addr_time)
-		     */
-
 		     || (csr_addr == csr_addr_instret)
 `ifdef RV32
 		     || (csr_addr == csr_addr_cycleh)
@@ -701,19 +703,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_fcsr:     m_csr_value = tagged Valid ({ 0, rg_frm, rg_fflags });
 `endif
 	    csr_addr_cycle:    m_csr_value = tagged Valid (truncate (rg_mcycle));
-
-	    /*
-	    // NOTE: CSR_TIME should be a 'shadow copy' of the MTIME
-	    // mem-mapped location; but since both increment at the
-	    // same rate, and MTIME is never written, this is ok.
-
-	    csr_addr_time:     m_csr_value = tagged Valid (truncate (rg_mcycle));
-	    */
-
+	    csr_addr_time:     m_csr_value = tagged Valid (truncate (rg_mtime));
 	    csr_addr_instret:  m_csr_value = tagged Valid (truncate (rg_minstret));
 `ifdef RV32
 	    csr_addr_cycleh:   m_csr_value = tagged Valid (rg_mcycle   [63:32]);
-	    csr_addr_timeh:    m_csr_value = tagged Invalid;
+	    csr_addr_timeh:    m_csr_value = tagged Valid (rg_mtime    [63:32]);
 	    csr_addr_instreth: m_csr_value = tagged Valid (rg_minstret [63:32]);
 `endif
 
@@ -1428,8 +1422,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    // Read MTIME
    method Bit #(64) read_csr_mtime;
-      // We use mcycle as a proxy for time
-      return rg_mcycle;
+      return rg_mtime;
    endmethod
 
 `ifdef PERFORMANCE_MONITORING
