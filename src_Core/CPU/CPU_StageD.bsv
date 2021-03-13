@@ -74,10 +74,13 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
    Bit #(2) xl = ((xlen == 32) ? misa_mxl_32 : misa_mxl_64);
 
    Instr instr = rg_data.instr;
+   Instr instr_or_instr_C = instr;
 `ifdef ISA_C
    Instr_C instr_C = instr [15:0];
-   if (! rg_data.is_i32_not_i16)
+   if (! rg_data.is_i32_not_i16) begin
       instr = fv_decode_C (misa, xl, instr_C);
+      instr_or_instr_C = zeroExtend(instr_C);
+   end
 `endif
 
    // ----------------------------------------------------------------
@@ -118,9 +121,7 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 							       exc_code:       rg_data.exc_code,
 							       tval:           rg_data.tval,
 							       instr:          instr,
-`ifdef ISA_C
-							       instr_C:        instr_C,
-`endif
+							       instr_or_instr_C: instr_or_instr_C,
 							       pred_fetch_addr:rg_data.pred_fetch_addr,
 							       decoded_instr:  decoded_instr};
       end

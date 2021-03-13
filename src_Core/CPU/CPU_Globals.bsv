@@ -394,7 +394,7 @@ typedef struct {
    WordXL         tval;               // Trap value; can be different from PC, with 'C' extension
 
    Instr          instr;              // Valid if no exception
-   Instr_C        instr_C;            // Valid if no exception; original compressed instruction
+   Instr          instr_or_instr_C;   // Valid if no exception; original (possibly compressed) instruction
    WordXL         pred_fetch_addr;    // Predicted next pc
    Decoded_Instr  decoded_instr;
    } Data_StageD_to_Stage1
@@ -406,8 +406,8 @@ instance FShow #(Data_StageD_to_Stage1);
       if (x.exc)
 	 fmt = fmt + $format ("  ", fshow_trap_Exc_Code (x.exc_code), " tval %0h", x.tval);
       else begin
-	 if (x.is_i32_not_i16)
-	    fmt = fmt + $format ("  instr_C:%0h", x.instr_C);
+	 if (!x.is_i32_not_i16)
+	    fmt = fmt + $format ("  instr_C:%0h", x.instr_or_instr_C);
 	 fmt = fmt + $format ("  instr:%0h  pred_fetch_addr:%0h", x.instr, x.pred_fetch_addr);
       end
       fmt = fmt + $format ("}");

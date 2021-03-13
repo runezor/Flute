@@ -63,7 +63,7 @@ typedef struct {
    Bool           is_i32_not_i16;
    Instr          instr;
 `ifdef ISA_C
-   Instr_C        instr_C;
+   Instr          instr_or_instr_C;
 `endif
    Decoded_Instr  decoded_instr;
    WordXL         rs1_val;
@@ -95,12 +95,11 @@ function ISize  fv_trace_isize (ALU_Inputs  inputs);
 endfunction
 
 function Bit #(32)  fv_trace_instr (ALU_Inputs  inputs);
-   Bit #(32) result = inputs.instr;
 `ifdef ISA_C
-   if (! inputs.is_i32_not_i16)
-      result = zeroExtend (inputs.instr_C);
+   return inputs.instr_or_instr_C;
+`else
+   return inputs.instr;
 `endif
-   return result;
 endfunction
 
 // ================================================================
