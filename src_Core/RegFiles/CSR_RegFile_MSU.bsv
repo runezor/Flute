@@ -899,7 +899,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_sip:        m_csr_value = tagged Valid (csr_mip.mv_sip_read);
 
 `ifdef ISA_CHERI
-      csr_addr_sccsr:      m_csr_value = tagged Valid (capexc_to_xccsr(rg_sccsr));
+	    csr_addr_sccsr:      m_csr_value = tagged Valid (capexc_to_xccsr (rg_sccsr));
 `endif
 	    csr_addr_satp:       m_csr_value = tagged Valid rg_satp;
 
@@ -926,7 +926,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_mip:        m_csr_value = tagged Valid (csr_mip.mv_read);
 
 `ifdef ISA_CHERI
-      csr_addr_mccsr:      m_csr_value = tagged Valid (capexc_to_xccsr(rg_mccsr));
+	    csr_addr_mccsr:      m_csr_value = tagged Valid (capexc_to_xccsr (rg_mccsr));
 `endif
 
 	    // TODO: Phys Mem Protection regs
