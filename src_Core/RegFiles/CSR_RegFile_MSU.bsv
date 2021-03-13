@@ -362,7 +362,7 @@ endmodule
 module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef RVFI_DII
-   let mkCSRReg = mkReg(unpack(0));
+   let mkCSRReg = mkReg (unpack (0));
 `else
    let mkCSRReg = mkRegU;
 `endif
@@ -396,17 +396,17 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(MCause)     rg_scause    <- mkCSRReg;
 `ifdef ISA_CHERI
    Reg #(XCCSR)      rg_sccsr     <- mkCSRReg;
-   Reg #(CapReg)     rg_stcc      <- mkReg(nullCap);
-   CapPipe           rg_stcc_unpacked = cast(rg_stcc);
-   Reg #(CapReg)     rg_stdc      <- mkReg(nullCap);
-   CapPipe           rg_stdc_unpacked = cast(rg_stdc);
-   Reg #(CapReg)     rg_sscratchc <- mkReg(nullCap);
-   CapPipe           rg_sscratchc_unpacked = cast(rg_sscratchc);
-   Reg #(CapReg)     rg_sepcc     <- mkReg(nullCap);
-   CapPipe           rg_sepcc_unpacked = cast(rg_sepcc);
+   Reg #(CapReg)     rg_stcc      <- mkReg (nullCap);
+   CapPipe           rg_stcc_unpacked = cast (rg_stcc);
+   Reg #(CapReg)     rg_stdc      <- mkReg (nullCap);
+   CapPipe           rg_stdc_unpacked = cast (rg_stdc);
+   Reg #(CapReg)     rg_sscratchc <- mkReg (nullCap);
+   CapPipe           rg_sscratchc_unpacked = cast (rg_sscratchc);
+   Reg #(CapReg)     rg_sepcc     <- mkReg (nullCap);
+   CapPipe           rg_sepcc_unpacked = cast (rg_sepcc);
 
-   let               rg_stvec = word_to_mtvec(getOffset(rg_stcc_unpacked));
-   let               rg_sepc  = getOffset(rg_sepcc_unpacked);
+   let               rg_stvec = word_to_mtvec (getOffset (rg_stcc_unpacked));
+   let               rg_sepc  = getOffset (rg_sepcc_unpacked);
 `else
    Reg #(MTVec)      rg_stvec     <- mkCSRReg;
    Reg #(Word)       rg_sepc      <- mkCSRReg;
@@ -442,17 +442,17 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef ISA_CHERI
    Reg #(XCCSR)      rg_mccsr     <- mkCSRReg;
-   Reg #(CapReg)     rg_mtcc      <- mkReg(nullCap);
-   CapPipe           rg_mtcc_unpacked = cast(rg_mtcc);
-   Reg #(CapReg)     rg_mtdc      <- mkReg(nullCap);
-   CapPipe           rg_mtdc_unpacked = cast(rg_mtdc);
-   Reg #(CapReg)     rg_mscratchc <- mkReg(nullCap);
-   CapPipe           rg_mscratchc_unpacked = cast(rg_mscratchc);
-   Reg #(CapReg)     rg_mepcc     <- mkReg(nullCap);
-   CapPipe           rg_mepcc_unpacked = cast(rg_mepcc);
+   Reg #(CapReg)     rg_mtcc      <- mkReg (nullCap);
+   CapPipe           rg_mtcc_unpacked = cast (rg_mtcc);
+   Reg #(CapReg)     rg_mtdc      <- mkReg (nullCap);
+   CapPipe           rg_mtdc_unpacked = cast (rg_mtdc);
+   Reg #(CapReg)     rg_mscratchc <- mkReg (nullCap);
+   CapPipe           rg_mscratchc_unpacked = cast (rg_mscratchc);
+   Reg #(CapReg)     rg_mepcc     <- mkReg (nullCap);
+   CapPipe           rg_mepcc_unpacked = cast (rg_mepcc);
 
-   let               rg_mtvec = word_to_mtvec(getOffset(rg_mtcc_unpacked));
-   let               rg_mepc  = getOffset(rg_mepcc_unpacked);
+   let               rg_mtvec = word_to_mtvec (getOffset (rg_mtcc_unpacked));
+   let               rg_mepc  = getOffset (rg_mepcc_unpacked);
 `else
    Reg #(MTVec)      rg_mtvec    <- mkCSRReg;
    Reg #(Word)       rg_mepc     <- mkCSRReg;
@@ -480,7 +480,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Vector #(No_Of_Ctrs, ReadOnly #(Bit #(Counter_Width))) ctrs = perf_counters.read_counters;
    let ctr_sels = perf_counters.read_ctr_sels;
 
-   Reg #(Bit #(2)) rg_ctr_inhib_lsb   <- mkReg (0);
+   Reg #(Bit #(2)) rg_ctr_inhib_lsb <- mkReg (0);
    Wire #(Bit #(2)) w_ctr_inhib_lsb <- mkWire;
    Bit #(3) ctr_inhibit_lsb = { rg_ctr_inhib_lsb [1], 0, rg_ctr_inhib_lsb [0] };
    Word ctr_inhibit = zeroExtend ({ perf_counters.read_ctr_inhibit, ctr_inhibit_lsb });
@@ -561,7 +561,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef INCLUDE_GDB_CONTROL
 `ifdef ISA_CHERI
-      rg_dpcc <= cast(soc_map.m_pcc_reset_value);
+      rg_dpcc <= cast (soc_map.m_pcc_reset_value);
 `else
       rg_dpc  <= truncate (soc_map.m_pc_reset_value);
 `endif
@@ -762,22 +762,22 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `endif
 	 );
       Bool whitelisted =
-                       ((read_not_write && ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)))
+                    (   (((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)) && read_not_write)
 `ifdef RV32
-		     || (read_not_write && ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)))
+		     || (((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)) && read_not_write)
 `endif
 `ifdef ISA_F
 		     || (csr_addr == csr_addr_fflags)
 		     || (csr_addr == csr_addr_frm)
 		     || (csr_addr == csr_addr_fcsr)
 `endif
-		     || (csr_addr == csr_addr_cycle && read_not_write)
-		     || (csr_addr == csr_addr_time && read_not_write)
-		     || (csr_addr == csr_addr_instret && read_not_write)
+		     || ((csr_addr == csr_addr_cycle) && read_not_write)
+		     || ((csr_addr == csr_addr_time) && read_not_write)
+		     || ((csr_addr == csr_addr_instret) && read_not_write)
 `ifdef RV32
-		     || (csr_addr == csr_addr_cycleh && read_not_write)
-		     || (csr_addr == csr_addr_timeh && read_not_write)
-		     || (csr_addr == csr_addr_instreth && read_not_write)
+		     || ((csr_addr == csr_addr_cycleh) && read_not_write)
+		     || ((csr_addr == csr_addr_timeh) && read_not_write)
+		     || ((csr_addr == csr_addr_instreth) && read_not_write)
 `endif
          );
       return AccessPerms {exists: exists, requires_asr: !whitelisted};
@@ -785,22 +785,23 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef ISA_CHERI
    function AccessPerms fv_scr_exists_and_asr (SCR_Addr scr_addr, Bool read_not_write);
-     Bool exists =
-         scr_addr == scr_addr_PCC ||
-         scr_addr == scr_addr_DDC ||
+     Bool exists = (   (scr_addr == scr_addr_PCC)
+		    || (scr_addr == scr_addr_DDC)
 `ifdef ISA_PRIV_S
-         scr_addr == scr_addr_STCC ||
-         scr_addr == scr_addr_STDC ||
-         scr_addr == scr_addr_SEPCC ||
-         scr_addr == scr_addr_SScratchC ||
+		    || (scr_addr == scr_addr_STCC)
+		    || (scr_addr == scr_addr_STDC)
+		    || (scr_addr == scr_addr_SEPCC)
+		    || (scr_addr == scr_addr_SScratchC)
 `endif
-         scr_addr == scr_addr_MTCC ||
-         scr_addr == scr_addr_MTDC ||
-         scr_addr == scr_addr_MEPCC ||
-         scr_addr == scr_addr_MScratchC;
+		    || (scr_addr == scr_addr_MTCC)
+		    || (scr_addr == scr_addr_MTDC)
+		    || (scr_addr == scr_addr_MEPCC)
+		    || (scr_addr == scr_addr_MScratchC)
+         );
 
-     Bool whitelisted = False ||
-         scr_addr == scr_addr_DDC;
+     Bool whitelisted =
+		   (   (scr_addr == scr_addr_DDC)
+         );
 
      return AccessPerms {exists: exists, requires_asr: !whitelisted};
    endfunction
@@ -808,25 +809,25 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef ISA_CHERI
    function Maybe #(CapReg) fv_scr_read (SCR_Addr scr_addr);
-       Maybe #(CapReg) m_scr_value = tagged Invalid;
+      Maybe #(CapReg) m_scr_value = tagged Invalid;
 
-       case (scr_addr)
-           //pcc and ddc handled externally
+      case (scr_addr)
+	 // PCC and DDC handled externally
 
 `ifdef ISA_PRIV_S
-           scr_addr_STCC: m_scr_value = tagged Valid rg_stcc;
-           scr_addr_STDC: m_scr_value = tagged Valid rg_stdc;
-           scr_addr_SScratchC: m_scr_value = tagged Valid rg_sscratchc;
-           scr_addr_SEPCC: m_scr_value = tagged Valid rg_sepcc;
+	 scr_addr_STCC: m_scr_value = tagged Valid rg_stcc;
+	 scr_addr_STDC: m_scr_value = tagged Valid rg_stdc;
+	 scr_addr_SScratchC: m_scr_value = tagged Valid rg_sscratchc;
+	 scr_addr_SEPCC: m_scr_value = tagged Valid rg_sepcc;
 `endif
 
-           scr_addr_MTCC: m_scr_value = tagged Valid rg_mtcc;
-           scr_addr_MTDC: m_scr_value = tagged Valid rg_mtdc;
-           scr_addr_MScratchC: m_scr_value = tagged Valid rg_mscratchc;
-           scr_addr_MEPCC: m_scr_value = tagged Valid rg_mepcc;
-       endcase
+	 scr_addr_MTCC: m_scr_value = tagged Valid rg_mtcc;
+	 scr_addr_MTDC: m_scr_value = tagged Valid rg_mtdc;
+	 scr_addr_MScratchC: m_scr_value = tagged Valid rg_mscratchc;
+	 scr_addr_MEPCC: m_scr_value = tagged Valid rg_mepcc;
+      endcase
 
-       return m_scr_value;
+      return m_scr_value;
    endfunction
 `endif
 
@@ -974,7 +975,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 						      : (rg_dcsr & (~ dcsr_nmip_mask)));
 				    m_csr_value = tagged Valid zeroExtend (dcsr);
 				 end
-	    csr_addr_dpc:        m_csr_value = tagged Valid getOffset(rg_dpcc);
+	    csr_addr_dpc:        m_csr_value = tagged Valid getOffset (rg_dpcc);
 	    csr_addr_dscratch0:  m_csr_value = tagged Valid rg_dscratch0;
 	    csr_addr_dscratch1:  m_csr_value = tagged Valid rg_dscratch1;
 `endif
@@ -1097,7 +1098,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       let stvec     = word_to_mtvec (wordxl);
 				       new_csr_value = mtvec_to_word (stvec);
 `ifdef ISA_CHERI
-				       rg_stcc      <= cast(update_scr_via_csr(rg_stcc_unpacked, new_csr_value, False));
+				       rg_stcc      <= cast (update_scr_via_csr (rg_stcc_unpacked, new_csr_value, False));
 `else
 				       rg_stvec     <= stvec;
 `endif
@@ -1115,7 +1116,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       new_csr_value = (wordxl & (~ 3));    // sepc [1:0] always zero
 `endif
 `ifdef ISA_CHERI
-				       rg_sepcc     <= cast(update_scr_via_csr(rg_sepcc_unpacked, new_csr_value, False));
+				       rg_sepcc     <= cast (update_scr_via_csr (rg_sepcc_unpacked, new_csr_value, False));
 `else
 				       rg_sepc      <= new_csr_value;
 `endif
@@ -1172,7 +1173,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       let mtvec     = word_to_mtvec (wordxl);
 				       new_csr_value = mtvec_to_word (mtvec);
 `ifdef ISA_CHERI
-				       rg_mtcc      <= cast(update_scr_via_csr(rg_mtcc_unpacked, new_csr_value, False));
+				       rg_mtcc      <= cast (update_scr_via_csr (rg_mtcc_unpacked, new_csr_value, False));
 `else
 				       rg_mtvec     <= mtvec;
 `endif
@@ -1193,7 +1194,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       new_csr_value = (wordxl & (~ 3));    // mepc [1:0] always zero
 `endif
 `ifdef ISA_CHERI
-				       rg_mepcc     <= cast(update_scr_via_csr(rg_mepcc_unpacked, new_csr_value, False));
+				       rg_mepcc     <= cast (update_scr_via_csr (rg_mepcc_unpacked, new_csr_value, False));
 `else
 				       rg_mepc      <= new_csr_value;
 `endif
@@ -1312,7 +1313,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				    end
 	       csr_addr_dpc:        begin
 				       new_csr_value = wordxl;
-				       rg_dpcc      <= setOffset(rg_dpcc, new_csr_value).value; //TODO unrepresentable?
+				       rg_dpcc      <= setOffset (rg_dpcc, new_csr_value).value; // TODO unrepresentable?
 				    end
 	       csr_addr_dscratch0:  begin
 				       new_csr_value = wordxl;
@@ -1345,74 +1346,76 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       actionvalue
 	 Bool    success = True;
 	 CapReg  result  = nullCap;
-	 CapPipe capUnpacked = cast(cap);
+	 CapPipe cap_unpacked = cast (cap);
 
-	    case (scr_addr)
+	 case (scr_addr)
 `ifdef ISA_PRIV_S
-         scr_addr_STCC: begin
-             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))), False);
-             // This can be done much more efficiently by breaking into the compressed cap format
-             if (getBaseAlignment(capUnpacked) == 0) begin
-                rg_stcc <= cast(capUnpacked);
-                result = cast(capUnpacked);
-             end
-         end
-         scr_addr_STDC: begin
-             rg_stdc <= cap;
-             result = cap;
-         end
-         scr_addr_SEPCC: begin
-             let newOffset = getOffset(capUnpacked);
+	    scr_addr_STCC: begin
+	       let new_offset = mtvec_to_word (word_to_mtvec (getOffset (cap_unpacked)));
+	       cap_unpacked = update_scr_via_csr (cap_unpacked, new_offset, False);
+	       // This can be done much more efficiently by breaking into the compressed cap format
+	       if (getBaseAlignment (cap_unpacked) == 0) begin
+		  rg_stcc <= cast (cap_unpacked);
+		  result = cast (cap_unpacked);
+	       end
+	    end
+	    scr_addr_STDC: begin
+	       rg_stdc <= cap;
+	       result = cap;
+	    end
+	    scr_addr_SEPCC: begin
+	       let new_offset = getOffset (cap_unpacked);
 `ifdef ISA_C
-             Bool changeMade = newOffset[0] != 1'b0;
-             newOffset[0] = 1'b0;
+	       Bool change_made = new_offset [0] != 1'b0;
+	       new_offset [0] = 1'b0;
 `else
-             Bool changeMade = newOffset[1:0] != 2'b0;
-             newOffset[1:0] = 2'b0;
+	       Bool change_made = new_offset [1:0] != 2'b0;
+	       new_offset [1:0] = 2'b0;
 `endif
-             capUnpacked = update_scr_via_csr(capUnpacked, newOffset, !changeMade);
-             rg_sepcc <= cast(capUnpacked);
-             result = cast(capUnpacked);
-         end
-         scr_addr_SScratchC: begin
-             rg_sscratchc <= cap;
-             result = cap;
-         end
+	       cap_unpacked = update_scr_via_csr (cap_unpacked, new_offset, (! change_made));
+	       rg_sepcc <= cast (cap_unpacked);
+	       result = cast (cap_unpacked);
+	    end
+	    scr_addr_SScratchC: begin
+	       rg_sscratchc <= cap;
+	       result = cap;
+	    end
 `endif
-         scr_addr_MTCC: begin
-             capUnpacked = update_scr_via_csr(capUnpacked, mtvec_to_word(word_to_mtvec(getOffset(capUnpacked))), False);
-             // This can be done much more efficiently by breaking into the compressed cap format
-             if (getBaseAlignment(capUnpacked) == 0) begin
-                rg_mtcc <= cast(capUnpacked);
-                result = cast(capUnpacked);
-             end
-         end
-         scr_addr_MTDC: begin
-             rg_mtdc <= cap;
-             result = cap;
-         end
-         scr_addr_MEPCC: begin
-             let newOffset = getOffset(capUnpacked);
+	    scr_addr_MTCC: begin
+	       let new_offset = mtvec_to_word (word_to_mtvec (getOffset (cap_unpacked)));
+	       cap_unpacked = update_scr_via_csr (cap_unpacked, new_offset, False);
+	       // This can be done much more efficiently by breaking into the compressed cap format
+	       if (getBaseAlignment (cap_unpacked) == 0) begin
+		  rg_mtcc <= cast (cap_unpacked);
+		  result = cast (cap_unpacked);
+	       end
+	    end
+	    scr_addr_MTDC: begin
+	       rg_mtdc <= cap;
+	       result = cap;
+	    end
+	    scr_addr_MEPCC: begin
+	       let new_offset = getOffset (cap_unpacked);
 `ifdef ISA_C
-             Bool changeMade = newOffset[0] != 1'b0;
-             newOffset[0] = 1'b0;
+	       Bool change_made = new_offset [0] != 1'b0;
+	       new_offset [0] = 1'b0;
 `else
-             Bool changeMade = newOffset[1:0] != 2'b0;
-             newOffset[1:0] = 2'b0;
+	       Bool change_made = new_offset [1:0] != 2'b0;
+	       new_offset [1:0] = 2'b0;
 `endif
-             capUnpacked = update_scr_via_csr(capUnpacked, newOffset, !changeMade);
-             rg_mepcc <= cast(capUnpacked);
-             result = cast(capUnpacked);
-         end
-         scr_addr_MScratchC: begin
-             rg_mscratchc <= cap;
-             result = cap;
-         end
-	       default: success = False;
-	    endcase
+	       cap_unpacked = update_scr_via_csr (cap_unpacked, new_offset, (! change_made));
+	       rg_mepcc <= cast (cap_unpacked);
+	       result = cast (cap_unpacked);
+	    end
+	    scr_addr_MScratchC: begin
+	       rg_mscratchc <= cap;
+	       result = cap;
+	    end
+	    default: success = False;
+	 endcase
 
 	 if ((! success) && (cfg_verbosity > 1))
-	    $display ("%0d: ERROR: SCR-write addr 0x%0h val ", rg_mcycle, scr_addr, fshow(cap), " not successful");
+	    $display ("%0d: ERROR: SCR-write addr 0x%0h val ", rg_mcycle, scr_addr, fshow (cap), " not successful");
 
 	 return result;
       endactionvalue
@@ -1444,10 +1447,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       AccessPerms access  = fv_scr_exists_and_asr (scr_addr, read_not_write);    // Is this SCR implemented?
 
       Bool exists = access.exists;
-      Bool priv_ok = priv >= scr_addr[4:3];
-      Bool access_PCC = scr_addr == scr_addr_PCC; //Accesses to PCC that reach this point must be writes, so are illegal
+      Bool priv_ok = priv >= scr_addr [4:3];
+      Bool access_PCC = scr_addr == scr_addr_PCC; // Accesses to PCC that reach this point must be writes, so are illegal
 
-      return AccessPerms {exists: access.exists && priv_ok && !access_PCC, requires_asr: access.requires_asr};
+      return AccessPerms {exists: access.exists && priv_ok && (! access_PCC), requires_asr: access.requires_asr};
    endfunction: fv_access_permitted_scr
 `endif
 
@@ -1614,17 +1617,17 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    // CSR Trap actions
    method ActionValue #(Trap_Info_CSR)
-          csr_trap_actions (Priv_Mode  from_priv,
+	  csr_trap_actions (Priv_Mode  from_priv,
 `ifdef ISA_CHERI
-          CapPipe    pcc,
+			    CapPipe    pcc,
 `else
 			    WordXL     pc,
 `endif
 			    Bool       nmi,          // non-maskable interrupt
 			    Bool       interrupt,    // other interrupt
 `ifdef ISA_CHERI
-          CHERI_Exc_Code cheri_exc_code,
-          Bit#(6)        cheri_exc_reg,
+			    CHERI_Exc_Code cheri_exc_code,
+			    Bit#(6)        cheri_exc_reg,
 `endif
 			    Exc_Code   exc_code,
 			    WordXL     xtval);
@@ -1634,11 +1637,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 $display ("    from priv %0d  pc 0x%0h  interrupt %0d  exc_code %0d  xtval 0x%0h",
 		   from_priv,
 `ifdef ISA_CHERI
-       getOffset(pcc)
+		   getOffset (pcc),
 `else
-       pc
+		   pc,
 `endif
-                     , pack (interrupt), exc_code, xtval);
+		   pack (interrupt), exc_code, xtval);
 `ifdef ISA_PRIV_S
 	 fa_show_trap_csrs (s_Priv_Mode, csr_mip.mv_read, csr_mie.mv_read, 0, 0, rg_scause,
 			    csr_mstatus.mv_sstatus_read,
@@ -1664,7 +1667,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef ISA_CHERI
       let capexc = XCCSR {cheri_exc_reg: cheri_exc_reg, cheri_exc_code: cheri_exc_code};
-      if (exc_code == exc_code_CHERI) xtval = capexc_to_xtval(capexc);
+      if (exc_code == exc_code_CHERI) xtval = capexc_to_xtval (capexc);
       let xtcc = ?;
 `endif
 
@@ -1676,7 +1679,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
       if (nmi) begin
 `ifdef ISA_CHERI
-   rg_mepcc   <= cast(pcc);
+	 rg_mepcc   <= cast (pcc);
 `else
 	 rg_mepc    <= pc;
 `endif
@@ -1687,9 +1690,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       end
       else if (new_priv == m_Priv_Mode) begin
 `ifdef ISA_CHERI
-   rg_mepcc   <= cast(pcc);
-   xtcc        = rg_mtcc_unpacked;
-	 if (exc_code == exc_code_CHERI) rg_mccsr   <= capexc;
+	 rg_mepcc   <= cast (pcc);
+	 xtcc        = rg_mtcc_unpacked;
+	 if (exc_code == exc_code_CHERI)
+	    rg_mccsr <= capexc;
 `else
 	 rg_mepc    <= pc;
 `endif
@@ -1699,9 +1703,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `ifdef ISA_PRIV_S
       else if (new_priv == s_Priv_Mode) begin
 `ifdef ISA_CHERI
-   rg_sepcc   <= cast(pcc);
-   xtcc        = rg_stcc_unpacked;
-   if (exc_code == exc_code_CHERI) rg_sccsr   <= capexc;
+	 rg_sepcc   <= cast (pcc);
+	 xtcc        = rg_stcc_unpacked;
+	 if (exc_code == exc_code_CHERI)
+	    rg_sccsr <= capexc;
 `else
 	 rg_sepc    <= pc;
 `endif
@@ -1719,7 +1724,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       Addr vector_offset = (extend (exc_code)) << 2;
       if (interrupt && is_vectored)
 	 exc_pc = exc_pc + vector_offset;
-   CapPipe exc_pcc  = setOffset(xtcc, exc_pc).value; //TODO representability check
+      CapPipe exc_pcc  = setOffset (xtcc, exc_pc).value; // TODO representability check
 
       if (cfg_verbosity > 1) begin
 	 $write ("    Return: new pc 0x%0h  ", exc_pc);
@@ -1731,9 +1736,9 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
       return (Trap_Info_CSR {
 `ifdef ISA_CHERI
-                         pcc      : cast(exc_pcc),  //New PCC
+			 pcc      : cast (exc_pcc),             // New PCC
 `else
-                         pc       : exc_pc,                     // New PC
+			 pc       : exc_pc,                     // New PC
 `endif
 			 mstatus  : new_status,                 // New mstatus/sstatus/ustatus
 			 mcause   : mcause_to_word  (xcause),   // New mcause
@@ -1755,8 +1760,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       if (from_priv != m_Priv_Mode)
 	 next_pcc = rg_sepcc_unpacked;
 `endif
-      if (getKind(next_pcc) == SENTRY)
-         next_pcc = setKind(next_pcc, UNSEALED);
+      if (getKind (next_pcc) == SENTRY)
+	 next_pcc = setKind (next_pcc, UNSEALED);
       return tuple3 (
 `ifdef ISA_CHERI
 		     next_pcc,
@@ -1788,7 +1793,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef PERFORMANCE_MONITORING
    method Action send_performance_events (Vector #(No_Of_Evts, Bit #(Counter_Width)) evts);
-      perf_counters.send_performance_events(evts);
+      perf_counters.send_performance_events (evts);
    endmethod
 `endif
 
