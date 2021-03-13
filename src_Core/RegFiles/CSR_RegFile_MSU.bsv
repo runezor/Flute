@@ -659,41 +659,35 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    function Maybe #(Word) fv_csr_read (CSR_Addr csr_addr);
       Maybe #(Word)  m_csr_value = tagged Invalid;
 
-      if ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
-	 begin
-	    let idx = csr_addr - csr_addr_hpmcounter3;
-	    if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncate(ctrs[idx]));
-	    else m_csr_value = tagged Valid 0;
-	 end
+      if ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)) begin
+	 let idx = csr_addr - csr_addr_hpmcounter3;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncate (ctrs [idx]));
+	 else m_csr_value = tagged Valid 0;
+      end
 `ifdef RV32
-      else if ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h))
-	 begin
-	    let idx = csr_addr - csr_addr_hpmcounter3h;
-	    if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncateLSB(ctrs[idx]));
-	    else m_csr_value = tagged Valid 0;
-	 end
+      else if ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)) begin
+	 let idx = csr_addr - csr_addr_hpmcounter3h;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (ctrs [idx][63:32]);
+	 else m_csr_value = tagged Valid 0;
+      end
 `endif
-      else if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	 begin
-	    let idx = csr_addr - csr_addr_mhpmcounter3;
-	    if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncate(ctrs[idx]));
-	    else m_csr_value = tagged Valid 0;
-	 end
+      else if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	 let idx = csr_addr - csr_addr_mhpmcounter3;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncate (ctrs [idx]));
+	 else m_csr_value = tagged Valid 0;
+      end
 `ifdef RV32
-      else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
-	 begin
-	    let idx = csr_addr - csr_addr_mhpmcounter3h;
-	    if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncateLSB(ctrs[idx]));
-	    else m_csr_value = tagged Valid 0;
-	 end
+      else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
+	 let idx = csr_addr - csr_addr_mhpmcounter3h;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (ctrs [idx][63:32]);
+	 else m_csr_value = tagged Valid 0;
+      end
 `endif
-      else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
-	 begin
-	    let idx = csr_addr - csr_addr_mhpmevent3;
-	    if (idx < no_of_ctrs) m_csr_value = tagged Valid (zeroExtend(ctr_sels[idx]));
-	    else m_csr_value = tagged Valid 0;
-   end
-
+      else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31)) begin
+	 let idx = csr_addr - csr_addr_mhpmevent3;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (zeroExtend (ctr_sels [idx]));
+	 else m_csr_value = tagged Valid 0;
+      end
       else begin
 	 case (csr_addr)
 	    // User mode csrs
@@ -823,46 +817,39 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef PERFORMANCE_MONITORING
 `ifdef RV32
-	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	    begin
-	       let new_value = { ctrs[csr_addr - csr_addr_mhpmcounter3][63:32], wordxl };
-	       perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3, new_value);
-	       new_csr_value = wordxl;
-	    end
-	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
-	    begin
-	       let new_value = { wordxl, ctrs[csr_addr - csr_addr_mhpmcounter3h][31:0] };
-	       perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3h, new_value);
-	       new_csr_value = wordxl;
-	    end
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	    let new_value = { ctrs [csr_addr - csr_addr_mhpmcounter3][63:32], wordxl };
+	    perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3, new_value);
+	    new_csr_value = wordxl;
+	 end
+	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
+	    let new_value = { wordxl, ctrs [csr_addr - csr_addr_mhpmcounter3h][31:0] };
+	    perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3h, new_value);
+	    new_csr_value = wordxl;
+	 end
 `else
-	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	    begin
-          perf_counters.write_counter (truncate (pack (csr_addr - csr_addr_mhpmcounter3)), wordxl);
-	        new_csr_value = wordxl;
-	    end
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	    perf_counters.write_counter (truncate (pack (csr_addr - csr_addr_mhpmcounter3)), wordxl);
+	    new_csr_value = wordxl;
+	 end
 `endif
-	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
-	    begin
-	       Bit #(TLog #(No_Of_Evts)) new_val = truncate (wordxl);
-	       perf_counters.write_ctr_sel (truncate (pack (csr_addr - csr_addr_mhpmevent3)), new_val);
-	       new_csr_value = zeroExtend (new_val);
-	    end
+	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31)) begin
+	    Bit #(TLog #(No_Of_Evts)) new_val = truncate (wordxl);
+	    perf_counters.write_ctr_sel (truncate (pack (csr_addr - csr_addr_mhpmevent3)), new_val);
+	    new_csr_value = zeroExtend (new_val);
+	 end
 `else // !PERFORMANCE_MONITORING
-	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	    begin
-	       new_csr_value = 0;    // hardwired
-	    end
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	    new_csr_value = 0;    // hardwired
+	 end
 `ifdef RV32
-	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
-	    begin
-	       new_csr_value = 0;    // hardwired
-	    end
+	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
+	    new_csr_value = 0;    // hardwired
+	 end
 `endif
-	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
-	    begin
-	       new_csr_value = 0;    // hardwired
-	    end
+	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31)) begin
+	    new_csr_value = 0;    // hardwired
+	 end
 `endif // PERFORMANCE_MONITORING
 	 else
 	    case (csr_addr)
@@ -986,7 +973,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       rg_mtvec     <= mtvec;
 				    end
 	       csr_addr_mcounteren: begin
-				       let mcounteren = word_to_mcounteren(wordxl);
+				       let mcounteren = word_to_mcounteren (wordxl);
 				       new_csr_value  = mcounteren_to_word (mcounteren);
 				       rg_mcounteren <= mcounteren;
 				    end
@@ -1067,7 +1054,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	       csr_addr_mcountinhibit: begin
 `ifdef PERFORMANCE_MONITORING
 				       Bit #(TAdd #(No_Of_Ctrs, 3)) new_ctr_inhibit = truncate (wordxl);
-				       new_ctr_inhibit[1] = 0;
+				       new_ctr_inhibit [1] = 0;
 				       new_csr_value = zeroExtend (new_ctr_inhibit);
 
 				       rw_ctr_inhib_ir_cy.wset ({new_ctr_inhibit[2], new_ctr_inhibit[0]});
@@ -1448,10 +1435,10 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		  || ((csr_addr == csr_addr_time)    && (rg_mcounteren.tm == 0))
 		  || ((csr_addr == csr_addr_instret) && (rg_mcounteren.ir == 0))
 		  || (   (csr_addr_hpmcounter3  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)
-		      && (rg_mcounteren.hpm[csr_addr - csr_addr_hpmcounter3] == 0))
+		      && (rg_mcounteren.hpm [csr_addr - csr_addr_hpmcounter3] == 0))
 `ifdef RV32
 		  || (   (csr_addr_hpmcounter3h  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)
-		      && (rg_mcounteren.hpm[csr_addr - csr_addr_hpmcounter3h] == 0))
+		      && (rg_mcounteren.hpm [csr_addr - csr_addr_hpmcounter3h] == 0))
 `endif
 		  ));
    endmethod
