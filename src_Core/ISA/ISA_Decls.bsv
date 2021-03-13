@@ -36,6 +36,7 @@ package ISA_Decls;
 import DefaultValue :: *;
 import Vector       :: *;
 import BuildVector  :: *;
+import Reserved     :: *;
 `ifdef RVFI_DII
 import GetPut       :: *;
 import RVFI_DII     :: *;

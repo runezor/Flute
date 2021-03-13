@@ -476,20 +476,27 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    PulseWire          pw_minstret_incr <- mkPulseWire;
 
 `ifdef PERFORMANCE_MONITORING
-   PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, Counter_Width, No_Of_Evts) perf_counters <- mkPerfCountersFlute;
-   Vector #(No_Of_Ctrs, ReadOnly #(Bit #(Counter_Width))) ctrs = perf_counters.read_counters;
+   PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, Counter_Width, No_Of_Evts)
+      perf_counters <- mkPerfCountersFlute;
+
+   let ctrs     = perf_counters.read_counters;
    let ctr_sels = perf_counters.read_ctr_sels;
 
-   Reg #(Bit #(2)) rg_ctr_inhib_lsb <- mkReg (0);
-   Wire #(Bit #(2)) w_ctr_inhib_lsb <- mkWire;
-   Bit #(3) ctr_inhibit_lsb = { rg_ctr_inhib_lsb [1], 0, rg_ctr_inhib_lsb [0] };
-   Word ctr_inhibit = zeroExtend ({ perf_counters.read_ctr_inhibit, ctr_inhibit_lsb });
-   CSR_Addr no_of_ctrs = fromInteger (valueOf (No_Of_Ctrs));
+   Reg #(Bit #(2))  rg_ctr_inhib_ir_cy <- mkReg (0);
+   Wire #(Bit #(2)) w_ctr_inhib_ir_cy  <- mkWire;
+
+   MCountinhibit ctr_inhibit = MCountinhibit {reserved:  ?,
+					      hpm:       perf_counters.read_ctr_inhibit,
+					      ir:        rg_ctr_inhib_ir_cy [1],
+					      reserved2: ?,
+					      cy:        rg_ctr_inhib_ir_cy [0]};
+   CSR_Addr      no_of_ctrs  = fromInteger (valueOf (No_Of_Ctrs));
 `else
-   Vector #(0, ReadOnly #(Bit #(Counter_Width))) ctrs = newVector;
-   Vector #(0, ReadOnly #(Word)) ctr_sels = newVector;
-   Word ctr_inhibit = 0;
-   CSR_Addr no_of_ctrs = 0;
+   Vector #(0, ReadOnly #(Bit #(Counter_Width))) ctrs     = newVector;
+   Vector #(0, ReadOnly #(Word))                 ctr_sels = newVector;
+
+   MCountinhibit ctr_inhibit = word_to_mcountinhibit (0);
+   CSR_Addr      no_of_ctrs  = 0;
 `endif
 
    // Debug/Trace
@@ -603,7 +610,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 rg_mcycle <= v;
 
       // Update due to clock
-      else if (! unpack (ctr_inhibit [0]))
+      else if (! unpack (ctr_inhibit.cy))
 	 rg_mcycle <= rg_mcycle + 1;
    endrule
 
@@ -625,7 +632,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    endrule
 
    (* no_implicit_conditions, fire_when_enabled *)
-   rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr && (! unpack (ctr_inhibit [2])));
+   rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr && (! unpack (ctr_inhibit.ir)));
       rg_minstret <= rg_minstret + 1;
       // $display ("%0d: CSR_RegFile_UM.rl_upd_minstret_incr: new value is %0d", rg_mcycle, rg_minstret + 1);
    endrule
@@ -638,7 +645,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
 `ifdef PERFORMANCE_MONITORING
    rule rl_upd_ctr_inhib_csrrx;
-      rg_ctr_inhib_lsb <= w_ctr_inhib_lsb;
+      rg_ctr_inhib_ir_cy <= w_ctr_inhib_ir_cy;
    endrule
 `endif
 
@@ -960,7 +967,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_minstreth: m_csr_value = tagged Valid (rg_minstret [63:32]);
 `endif
 
-	    csr_addr_mcountinhibit: m_csr_value = tagged Valid ctr_inhibit;
+	    csr_addr_mcountinhibit: m_csr_value = tagged Valid (mcountinhibit_to_word (ctr_inhibit));
 
 	    csr_addr_tselect:  m_csr_value = tagged Valid rg_tselect;
 	    csr_addr_tdata1:   m_csr_value = tagged Valid rg_tdata1;
@@ -1263,12 +1270,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `endif
 	       csr_addr_mcountinhibit: begin
 `ifdef PERFORMANCE_MONITORING
-				       Bit #(TAdd #(No_Of_Ctrs, 3)) new_ctr_inhibit = truncate (wordxl);
-				       new_ctr_inhibit [1] = 0;
-				       new_csr_value = zeroExtend (new_ctr_inhibit);
+				       let mcountinhibit = word_to_mcountinhibit (wordxl);
+				       new_csr_value = mcountinhibit_to_word (mcountinhibit);
 
-				       w_ctr_inhib_lsb <= { new_ctr_inhibit [2], new_ctr_inhibit [0] };
-				       perf_counters.write_ctr_inhibit (truncateLSB (new_ctr_inhibit));
+				       w_ctr_inhib_ir_cy <= { mcountinhibit.ir, mcountinhibit.cy };
+				       perf_counters.write_ctr_inhibit (mcountinhibit.hpm);
 `else
 				       new_csr_value = 0;
 `endif
