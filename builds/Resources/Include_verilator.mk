@@ -36,6 +36,12 @@ SIM_EXE_FILE = exe_HW_sim
 
 VERILATOR_FLAGS = --stats -O3 -CFLAGS -O3 -LDFLAGS -static --x-assign fast --x-initial fast --noassert
 
+# XXX: Allow lint_off DEPRECATED for older Verilator versions.
+#      This was added around the same time as -msg was deprecated, so we need
+#      to suppress the deprecation messages without breaking older versions.
+#      See verilator_config.vlt. Remove once 4.026 can be relied upon.
+VERILATOR_FLAGS += -Wfuture-DEPRECATED
+
 # Verilator flags: use the following to include code to generate VCDs
 # Select trace-depth according to your module hierarchy
 # VERILATOR_FLAGS += --trace  --trace-depth 2  -CFLAGS -DVM_TRACE
@@ -57,7 +63,8 @@ simulator: compile
 		$(VERILATOR_FLAGS) \
 		--cc  $(TOPMODULE)_edited.v \
 		--exe  sim_main.cpp \
-		$(REPO)/src_Testbench/Top/C_Imported_Functions.c
+		$(REPO)/src_Testbench/Top/C_Imported_Functions.c \
+		$(REPO)/src_Verifier/BSV-RVFI-DII/SocketPacketUtils/socket_packet_utils.c
 	@echo "INFO: Linking verilated files"
 	cp  -p  $(VERILATOR_RESOURCES)/sim_main.cpp  obj_dir/sim_main.cpp
 	cd obj_dir; \
