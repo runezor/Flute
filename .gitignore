@@ -19,3 +19,4 @@ Aux_files
 worker_*
 log_*.txt
 src_SSITH_P2/Verilog_RTL
+**/TagTableStructure.bsv
