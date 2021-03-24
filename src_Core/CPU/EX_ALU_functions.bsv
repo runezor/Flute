@@ -1764,7 +1764,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 `endif
                     end
                 end
-                if ((widthCode > w_SIZE_MAX) || (is_unsigned && widthCode == w_SIZE_MAX)) illegal = True;
+                if ((widthCode > w_SIZE_MAX) || (is_unsigned && widthCode >= w_SIZE_INT_MAX)) illegal = True;
                 if (illegal) begin
                     // exc_code defaults to exc_code_ILLEGAL_INSTRUCTION
                     alu_outputs.control = CONTROL_TRAP;

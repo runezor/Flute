@@ -228,9 +228,11 @@ Bit #(3) f3_SQ = 3'b100;
 `ifdef RV64
 Bit #(3) w_SIZE_CAP = w_SIZE_Q;
 Bit #(3) w_SIZE_MAX = w_SIZE_Q;
+Bit #(3) w_SIZE_INT_MAX = w_SIZE_D;
 `else //RV32
 Bit #(3) w_SIZE_CAP = w_SIZE_D;
 Bit #(3) w_SIZE_MAX = w_SIZE_D;
+Bit #(3) w_SIZE_INT_MAX = w_SIZE_W;
 `endif
 
 Bit #(3) f3_AMO_CAP = w_SIZE_CAP;
