@@ -390,6 +390,19 @@ module mkMMU_Cache_Arbiter #(MMU_Cache_IFC #(mID) cache)
 	 //       unfortunately part of the interface we need to
 	 //       provide. Consumers should only connect the first!
 	 interface mem_master = cache.mem_master;
+
+	 // NOTE: No arbitration on any of these; status signals don't
+	 //       make sense to arbitrate, and config/initialisation
+	 //       methods should only be driven by the primary master.
+`ifdef PERFORMANCE_MONITORING
+	 method events           = cache.events;
+`endif
+`ifdef WATCH_TOHOST
+	 method set_watch_tohost = cache.set_watch_tohost;
+	 method mv_tohost_value  = cache.mv_tohost_value;
+`endif
+	 method ma_ddr4_ready    = cache.ma_ddr4_ready;
+	 method mv_status        = cache.mv_status;
       endinterface;
    endfunction
 
