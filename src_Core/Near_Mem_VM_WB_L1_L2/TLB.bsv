@@ -162,6 +162,7 @@ function VM_Xlate_Result  fv_vm_xlate (WordXL             addr,
 			      exc_code:     exc_code,
 			      pte_modified: pte_modified,
                pte_level:    tlb_result.pte_level,
+               pte_pa:       tlb_result.pte_pa,
 			      pte:          pte};
 endfunction: fv_vm_xlate
 
@@ -200,10 +201,6 @@ endfunction: fv_vm_xlate
 
 typedef Bit#(TSub #(TMul #(TSub#(3,lvl), VPN_J_sz), idx_sz))
    TLB_Tag#(numeric type lvl, numeric type idx_sz);
-typedef struct {
-   t tag;
-   i idx;
-} TLB_Level_Addr#(type t, type i);
 
 // ----------------
 // Level 2 tags and indexes (for RV64 only)
@@ -212,8 +209,6 @@ typedef  4                           TLB2_Size;  // # of entries in TLB2
 typedef  TLog #(TLB2_Size)           TLB2_Index_sz;
 typedef  Bit #(TLB2_Index_sz)        TLB2_Index;
 typedef  TLB_Tag#(2, TLB2_Index_sz)  TLB2_Tag;
-typedef  TLB_Level_Addr#(TLB2_Tag, TLB2_Index) TLB2_Addr;
-
 // ----------------
 // Level 1 tags and indexes
 
@@ -221,16 +216,13 @@ typedef  8                           TLB1_Size;    // # of entries in TLB1
 typedef  TLog #(TLB1_Size)           TLB1_Index_sz;
 typedef  Bit #(TLB1_Index_sz)        TLB1_Index;
 typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
-typedef  TLB_Level_Addr#(TLB1_Tag, TLB1_Index) TLB1_Addr;
-
 // ----------------
 // Level 0 tags and indexes
 
 typedef  16                          TLB0_Size;    // # of entries in TLB0
 typedef  TLog #(TLB0_Size)           TLB0_Index_sz;
 typedef  Bit #(TLB0_Index_sz)        TLB0_Index;
-typedef  TLB_Tag#(1, TLB0_Index_sz)  TLB0_Tag;
-typedef  TLB_Level_Addr#(TLB0_Tag, TLB0_Index) TLB0_Addr;
+typedef  TLB_Tag#(0, TLB0_Index_sz)  TLB0_Tag;
 
 // ----------------
 // Each of the 3 sub-TLBs contains TLBEs (TLB Entries)
@@ -274,6 +266,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // Level 0 TLB (for pages)
    MapSplit#(TLB0_Tag, TLB0_Index, TLBE, 1) tlb0_entries <- mkMapLossyBRAM;
 
+   Reg#(WordXL) rg_va <- mkRegU;
    // ----------------------------------------------------------------
    // Lookup functions for each sub-page
    // In each case 2-tuple results is (HIT/MISS, index into TLB array)
@@ -284,9 +277,9 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 
    function Maybe#(TLBE) fn_lookup (ASID asid, Maybe#(TLBE) mtlbe);
       let ret = mtlbe;
-      if (mtlbe matches Tagged Valid .tlbe) begin
+      if (mtlbe matches tagged Valid .tlbe) begin
          Bool global_mapping = (tlbe.pte [pte_G_offset] == 1'b1);
-         if ((tlbe.asid_tag != asid) || !global_mapping) ret = Invalid;
+         if ((tlbe.asid_tag != asid) && !global_mapping) ret = Invalid;
       end
       return ret;
    endfunction
@@ -313,12 +306,10 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // INTERFACE
    // Put the virtual address that mv_vm_xlate will see at least the cycle before.
    method Action mv_vm_put_va (WordXL va);
-      TLB0_Addr ta = unpack(truncateLSB(va));
-      tlb0_entries.lookupStart(unpack(pack(ta)));
-      TLB1_Addr ta = unpack(truncateLSB(va));
-      tlb1_entries.lookupStart(unpack(pack(ta)));
-      TLB2_Addr ta = unpack(truncateLSB(va));
-      tlb2_entries.lookupStart(unpack(pack(ta)));
+      tlb0_entries.lookupStart(unpack(truncateLSB(va)));
+      tlb1_entries.lookupStart(unpack(truncateLSB(va)));
+      tlb2_entries.lookupStart(unpack(truncateLSB(va)));
+      rg_va <= va;
    endmethod
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
@@ -331,8 +322,6 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 					Bit #(1)           mstatus_MXR);
 
       ASID asid = fn_satp_to_ASID (satp);
-      VPN  vpn  = fn_Addr_to_VPN  (va);
-
       // ----------------
       // Look for a matching entry for a given va in the three TLBs
       let tlbe0 = fn_lookup (asid, tlb0_entries.lookupRead);
@@ -356,7 +345,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
       TLB_Lookup_Result tlb_result = unpack ((pack (result0) | pack (result1) | pack (result2)));
 
       // Translate, based on TLB probe
-      VM_Xlate_Result   result = fv_vm_xlate (va, satp, dmem_not_imem, read_not_write,
+      VM_Xlate_Result   result = fv_vm_xlate (rg_va, satp, dmem_not_imem, read_not_write,
 					      cap, priv, sstatus_SUM, mstatus_MXR, tlb_result);
       return result;
    endmethod
@@ -366,24 +355,15 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 
    method Action ma_insert (ASID asid, VPN vpn, PTE pte, Bit #(2) level, PA pte_pa);
       if (verbosity > 1)
-	 $display ("%0d: %m.ma_insert: asid 0x%0h  vpn 0x%0h  pa 0x%0h  level %0d  pte 0x%0h",
+	 $display ("%0d: %m.ma_insert: asid 0x%0h  vpn 0x%0h  pte 0x%0h  level %0d  pa 0x%0h",
 		   cur_cycle, asid, vpn, pte, level, pte_pa);
 
       TLBE tlbe = TLBE {asid_tag: asid, pte: pte, pte_pa: pte_pa};
       case (level)
-         0: begin
-            TLB0_Addr ta = unpack(truncateLSB(vpn));
-            tlb0_entries.update(unpack(pack(ta)), tlbe);
-         end
-         1: begin
-            TLB1_Addr ta = unpack(truncateLSB(vpn));
-            tlb1_entries.update(unpack(pack(ta)), tlbe);
-         end
+         0: tlb0_entries.update(unpack(pack(vpn)), tlbe);
+         1: tlb1_entries.update(unpack(truncateLSB(vpn)), tlbe);
 `ifdef RV64
-         2: begin
-            TLB2_Addr ta = unpack(truncateLSB(vpn));
-            tlb2_entries.update(unpack(pack(ta)), tlbe);
-         end
+         2: tlb2_entries.update(unpack(truncateLSB(vpn)), tlbe);
 `endif
       endcase
    endmethod
