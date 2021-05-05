@@ -41,7 +41,7 @@ import ISA_Decls        :: *;
 import Near_Mem_IFC     :: *;
 import MMU_Cache_Common :: *;
 import MMU_Cache        :: *;
-import AXI4_Types       :: *;
+import AXI4             :: *;
 import Fabric_Defs      :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
