@@ -243,9 +243,9 @@ endfunction
 module mkD_MMU_Cache (D_MMU_Cache_IFC);
 
    // For debugging
-   Integer verbosity       = 0;    // 1: Requests and responses; 2: rules; 3: detail
-   Integer verbosity_ptw   = 0;    // 1: rule firings
-   Integer verbosity_cache = 0;    // 1: rules; 2: detail
+   Integer verbosity       = 3;    // 1: Requests and responses; 2: rules; 3: detail
+   Integer verbosity_ptw   = 1;    // 1: rule firings
+   Integer verbosity_cache = 2;    // 1: rules; 2: detail
    Integer verbosity_mmio  = 0;    // 1: rules
 
    // ----------------------------------------------------------------
@@ -403,6 +403,9 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       end
 
       cache.ma_request_va (mmu_cache_req.va);
+`ifdef ISA_PRIV_S
+      tlb.mv_vm_put_va(mmu_cache_req.va);
+`endif
       crg_mmu_cache_req_state [0] <= REQ_STATE_FULL_B;
    endrule
 
@@ -411,7 +414,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 
 `ifdef ISA_PRIV_S
    // VM translation (VA to PA)
-   VM_Xlate_Result vm_xlate_result = tlb.mv_vm_xlate (crg_mmu_cache_req [0].va,
+   VM_Xlate_Result vm_xlate_result = tlb.mv_vm_get_xlate (
 						      crg_mmu_cache_req [0].satp,
 						      ((crg_mmu_cache_req [0].op == CACHE_LD)
 						       || fv_is_AMO_LR (crg_mmu_cache_req [0])),

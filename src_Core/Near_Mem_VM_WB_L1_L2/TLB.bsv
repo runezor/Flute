@@ -13,6 +13,7 @@ package TLB;
 import RegFile :: *;
 import Vector  :: *;
 import FIFOF   :: *;
+import Map     :: *;
 
 // ----------------
 // BSV additional libs
@@ -46,9 +47,11 @@ export  VM_Xlate_Outcome (..);
 // TLB interface
 
 interface TLB_IFC;
+   // Put the virtual address that mv_vm_get_xlate will see at least the cycle before.
+   method Action mv_vm_put_va (WordXL va);
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
-   method VM_Xlate_Result  mv_vm_xlate (WordXL             va,
+   method VM_Xlate_Result  mv_vm_get_xlate (
 					WordXL             satp,
 					Bool               read_not_write,
                     Bool               cap,
@@ -158,6 +161,7 @@ function VM_Xlate_Result  fv_vm_xlate (WordXL             addr,
 			      pa:           pa,
 			      exc_code:     exc_code,
 			      pte_modified: pte_modified,
+               pte_level:    tlb_result.pte_level,
 			      pte:          pte};
 endfunction: fv_vm_xlate
 
@@ -194,41 +198,39 @@ endfunction: fv_vm_xlate
 // The index is a few bits from VPN [level]
 // The tag is (asid, remaining bits from VPN)
 
+typedef Bit#(TSub #(TMul #(TSub#(3,lvl), VPN_J_sz), idx_sz))
+   TLB_Tag#(numeric type lvl, numeric type idx_sz);
+typedef struct {
+   t tag;
+   i idx;
+} TLB_Level_Addr#(type t, type i);
+
 // ----------------
 // Level 2 tags and indexes (for RV64 only)
 
-typedef  4                     TLB2_Size;    // # of entries in TLB2
-typedef  TLog #(TLB2_Size)     TLB2_Index_sz;
-typedef  Bit #(TLB2_Index_sz)  TLB2_Index;
-Integer  tlb2_index_sz = valueOf (TLB2_Index_sz);
-
-typedef  TSub #(VPN_J_sz, TLB2_Index_sz)  TLB2_Tag_sz;
-typedef  Bit #(TLB2_Tag_sz)  TLB2_Tag;
-Integer  tlb2_tag_sz = valueOf (TLB2_Tag_sz);
+typedef  4                           TLB2_Size;  // # of entries in TLB2
+typedef  TLog #(TLB2_Size)           TLB2_Index_sz;
+typedef  Bit #(TLB2_Index_sz)        TLB2_Index;
+typedef  TLB_Tag#(2, TLB2_Index_sz)  TLB2_Tag;
+typedef  TLB_Level_Addr#(TLB2_Tag, TLB2_Index) TLB2_Addr;
 
 // ----------------
 // Level 1 tags and indexes
 
-typedef  8                     TLB1_Size;    // # of entries in TLB1
-typedef  TLog #(TLB1_Size)     TLB1_Index_sz;
-typedef  Bit #(TLB1_Index_sz)  TLB1_Index;
-Integer  tlb1_index_sz = valueOf (TLB1_Index_sz);
-
-typedef  TSub #(TMul #(2, VPN_J_sz), TLB1_Index_sz)  TLB1_Tag_sz;
-typedef  Bit #(TLB1_Tag_sz)  TLB1_Tag;
-Integer  tlb1_tag_sz = valueOf (TLB1_Tag_sz);
+typedef  8                           TLB1_Size;    // # of entries in TLB1
+typedef  TLog #(TLB1_Size)           TLB1_Index_sz;
+typedef  Bit #(TLB1_Index_sz)        TLB1_Index;
+typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
+typedef  TLB_Level_Addr#(TLB1_Tag, TLB1_Index) TLB1_Addr;
 
 // ----------------
 // Level 0 tags and indexes
 
-typedef  16                    TLB0_Size;    // # of entries in TLB0
-typedef  TLog #(TLB0_Size)     TLB0_Index_sz;
-typedef  Bit #(TLB0_Index_sz)  TLB0_Index;
-Integer  tlb0_index_sz = valueOf (TLB0_Index_sz);
-
-typedef  TSub #(TMul #(3, VPN_J_sz), TLB0_Index_sz)  TLB0_Tag_sz;
-typedef  Bit #(TLB0_Tag_sz)  TLB0_Tag;
-Integer  tlb0_tag_sz = valueOf (TLB0_Tag_sz);
+typedef  16                          TLB0_Size;    // # of entries in TLB0
+typedef  TLog #(TLB0_Size)           TLB0_Index_sz;
+typedef  Bit #(TLB0_Index_sz)        TLB0_Index;
+typedef  TLB_Tag#(1, TLB0_Index_sz)  TLB0_Tag;
+typedef  TLB_Level_Addr#(TLB0_Tag, TLB0_Index) TLB0_Addr;
 
 // ----------------
 // Each of the 3 sub-TLBs contains TLBEs (TLB Entries)
@@ -240,10 +242,10 @@ Integer  tlb0_tag_sz = valueOf (TLB0_Tag_sz);
 
 typedef struct {
    ASID           asid_tag;   // Address-space tag
-   Bit #(tag_sz)  vpn_tag;    // VPN tag (Tag_sz MSBs of VPN)
+   //Bit #(tag_sz)  vpn_tag;    // VPN tag (Tag_sz MSBs of VPN)
    PTE            pte;        // Contains PPN + control bits
    PA             pte_pa;     // For future writes-back of this PTE
-   } TLBE #(numeric type tag_sz)
+   } TLBE // #(numeric type tag_sz)
 deriving (Bits, FShow);
 
 // ================================================================
@@ -260,23 +262,17 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 
    // ----------------
    // Level 2 TLB (for gigapages)
-
 `ifdef RV64
-   Vector  #(TLB2_Size,  Reg #(Bool))         tlb2_valids  <- replicateM (mkRegU);
-   RegFile #(TLB2_Index, TLBE #(TLB2_Tag_sz)) tlb2_entries <- mkRegFileFull;
+   MapSplit#(TLB2_Tag, TLB2_Index, TLBE, 1) tlb2_entries <- mkMapLossyBRAM;
 `endif
 
    // ----------------
    // Level 1 TLB (for megapages)
-
-   Vector  #(TLB1_Size,   Reg #(Bool))        tlb1_valids  <- replicateM (mkRegU);
-   RegFile #(TLB1_Index, TLBE #(TLB1_Tag_sz)) tlb1_entries <- mkRegFileFull;
+   MapSplit#(TLB1_Tag, TLB1_Index, TLBE, 1) tlb1_entries <- mkMapLossyBRAM;
 
    // ----------------
    // Level 0 TLB (for pages)
-
-   Vector  #(TLB0_Size,   Reg #(Bool))        tlb0_valids  <- replicateM (mkRegU);
-   RegFile #(TLB0_Index, TLBE #(TLB0_Tag_sz)) tlb0_entries <- mkRegFileFull;
+   MapSplit#(TLB0_Tag, TLB0_Index, TLBE, 1) tlb0_entries <- mkMapLossyBRAM;
 
    // ----------------------------------------------------------------
    // Lookup functions for each sub-page
@@ -286,60 +282,13 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // polymorphic function because of the different types for tags,
    // indexes and tlb_entries.
 
-`ifdef RV64
-   function Tuple2 #(Bool, TLB2_Index) fn_lookup2 (ASID asid, VPN vpn);
-      Integer index_lo = 2 * vpn_j_sz;
-      Integer index_hi = (2 * vpn_j_sz) + tlb2_index_sz - 1;
-      Integer tag_lo   = (2 * vpn_j_sz) + tlb2_index_sz;
-      Integer tag_hi   = vpn_sz - 1;
-
-      TLB2_Index idx   = vpn [index_hi : index_lo];
-      TLB2_Tag   tag   = vpn [  tag_hi :   tag_lo];
-
-      let  tlbe           = tlb2_entries.sub (idx);
-      Bool global_mapping = (tlbe.pte [pte_G_offset] == 1'b1);
-
-      Bool match2 = (   (tlb2_valids [idx])
-		     && ((tlbe.asid_tag == asid) || global_mapping)
-		     && (tlbe.vpn_tag  == tag));
-      return tuple2 (match2, idx);
-   endfunction
-`endif
-
-   function Tuple2 #(Bool, TLB1_Index) fn_lookup1 (ASID asid, VPN vpn);
-      Integer index_lo = vpn_j_sz;
-      Integer index_hi = vpn_j_sz + tlb1_index_sz - 1;
-      Integer tag_lo   = vpn_j_sz + tlb1_index_sz;
-      Integer tag_hi   = vpn_sz - 1;
-
-      TLB1_Index idx   = vpn [index_hi : index_lo];
-      TLB1_Tag   tag   = vpn [  tag_hi : tag_lo];
-
-      let  tlbe           = tlb1_entries.sub (idx);
-      Bool global_mapping = (tlbe.pte [pte_G_offset] == 1'b1);
-
-      Bool match1 = (   (tlb1_valids [idx])
-		     && ((tlbe.asid_tag == asid) || global_mapping)
-		     && (tlbe.vpn_tag  == tag));
-      return tuple2 (match1, idx);
-   endfunction
-
-   function Tuple2 #(Bool, TLB0_Index) fn_lookup0 (ASID asid, VPN vpn);
-      Integer index_lo = 0;
-      Integer index_hi = tlb0_index_sz - 1;
-      Integer tag_lo   = tlb0_index_sz;
-      Integer tag_hi   = vpn_sz - 1;
-
-      TLB0_Index idx   = vpn [index_hi : index_lo];
-      TLB0_Tag   tag   = vpn [  tag_hi :   tag_lo];
-
-      let  tlbe           = tlb0_entries.sub (idx);
-      Bool global_mapping = (tlbe.pte [pte_G_offset] == 1'b1);
-
-      Bool match0 = (   (tlb0_valids [idx])
-		     && ((tlbe.asid_tag == asid) || global_mapping)
-		     && (tlbe.vpn_tag  == tag));
-      return tuple2 (match0, idx);
+   function Maybe#(TLBE) fn_lookup (ASID asid, Maybe#(TLBE) mtlbe);
+      let ret = mtlbe;
+      if (mtlbe matches Tagged Valid .tlbe) begin
+         Bool global_mapping = (tlbe.pte [pte_G_offset] == 1'b1);
+         if ((tlbe.asid_tag != asid) || !global_mapping) ret = Invalid;
+      end
+      return ret;
    endfunction
 
    // ================================================================
@@ -352,20 +301,28 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    rule rl_flush (pw_flushing);
       // Invalidate all tlb entries
 `ifdef RV64
-      writeVReg (tlb2_valids, replicate (False));
+      tlb2_entries.clear;
 `endif
-      writeVReg (tlb1_valids, replicate (False));
-      writeVReg (tlb0_valids, replicate (False));
+      tlb1_entries.clear;
+      tlb0_entries.clear;
       if (verbosity > 1)
 	 $display ("%0d: %m.rl_flush", cur_cycle);
    endrule
 
    // ================================================================
    // INTERFACE
-
+   // Put the virtual address that mv_vm_xlate will see at least the cycle before.
+   method Action mv_vm_put_va (WordXL va);
+      TLB0_Addr ta = unpack(truncateLSB(va));
+      tlb0_entries.lookupStart(unpack(pack(ta)));
+      TLB1_Addr ta = unpack(truncateLSB(va));
+      tlb1_entries.lookupStart(unpack(pack(ta)));
+      TLB2_Addr ta = unpack(truncateLSB(va));
+      tlb2_entries.lookupStart(unpack(pack(ta)));
+   endmethod
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
-   method VM_Xlate_Result  mv_vm_xlate (WordXL             va,
+   method VM_Xlate_Result  mv_vm_get_xlate (
 					WordXL             satp,
 					Bool               read_not_write,
                     Bool               cap,
@@ -378,33 +335,23 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 
       // ----------------
       // Look for a matching entry for a given va in the three TLBs
-      match { .match0, .idx0 } = fn_lookup0 (asid, vpn);
-      match { .match1, .idx1 } = fn_lookup1 (asid, vpn);
+      let tlbe0 = fn_lookup (asid, tlb0_entries.lookupRead);
+      let tlbe1 = fn_lookup (asid, tlb1_entries.lookupRead);
 `ifdef RV64
-      match { .match2, .idx2 } = fn_lookup2 (asid, vpn);
-`else
-      let match2 = False;
+      let tlbe2 = fn_lookup (asid, tlb2_entries.lookupRead);
 `endif
 
       TLB_Lookup_Result  result0 = unpack (0);
       TLB_Lookup_Result  result1 = unpack (0);
       TLB_Lookup_Result  result2 = unpack (0);
 
-      if (match0) begin
-	 let tlbe0 = tlb0_entries.sub (idx0);
-	 result0 = TLB_Lookup_Result {hit: True, pte: tlbe0.pte, pte_level: 0, pte_pa: tlbe0.pte_pa};
-      end
-
-      if (match1) begin
-	 let tlbe1 = tlb1_entries.sub (idx1);
-	 result1 = TLB_Lookup_Result {hit: True, pte: tlbe1.pte, pte_level: 1, pte_pa: tlbe1.pte_pa};
-      end
-
+      if (tlbe0 matches tagged Valid .e)
+         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
+      if (tlbe1 matches tagged Valid .e)
+         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
 `ifdef RV64
-      if (match2) begin
-	 let tlbe2 = tlb2_entries.sub (idx2);
-	 result2 = TLB_Lookup_Result {hit: True, pte: tlbe2.pte, pte_level: 2, pte_pa: tlbe2.pte_pa};
-      end
+      if (tlbe2 matches tagged Valid .e)
+         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
 `endif
       TLB_Lookup_Result tlb_result = unpack ((pack (result0) | pack (result1) | pack (result2)));
 
@@ -422,32 +369,23 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 	 $display ("%0d: %m.ma_insert: asid 0x%0h  vpn 0x%0h  pa 0x%0h  level %0d  pte 0x%0h",
 		   cur_cycle, asid, vpn, pte, level, pte_pa);
 
-      if (level == 0) begin
-	 TLB0_Tag            tag  = vpn [(vpn_sz - 1) : tlb0_index_sz + (0 * vpn_j_sz)];
-	 TLB0_Index          idx  = vpn [(tlb0_index_sz + (0 * vpn_j_sz) - 1) : (0 * vpn_j_sz)];
-	 TLBE #(TLB0_Tag_sz) tlbe = TLBE {asid_tag: asid, vpn_tag: tag, pte: pte, pte_pa: pte_pa};
-
-	 tlb0_valids [idx] <= True;
-	 tlb0_entries.upd (idx, tlbe);
-      end
-      else if (level == 1) begin
-	 TLB1_Tag            tag  = vpn [(vpn_sz - 1) : tlb1_index_sz + (1 * vpn_j_sz)];
-	 TLB1_Index          idx  = vpn [(tlb1_index_sz + (1 * vpn_j_sz) - 1) : (1 * vpn_j_sz)];
-	 TLBE #(TLB1_Tag_sz) tlbe = TLBE {asid_tag: asid, vpn_tag: tag, pte: pte, pte_pa: pte_pa};
-
-	 tlb1_valids [idx] <= True;
-	 tlb1_entries.upd (idx, tlbe);
-      end
+      TLBE tlbe = TLBE {asid_tag: asid, pte: pte, pte_pa: pte_pa};
+      case (level)
+         0: begin
+            TLB0_Addr ta = unpack(truncateLSB(vpn));
+            tlb0_entries.update(unpack(pack(ta)), tlbe);
+         end
+         1: begin
+            TLB1_Addr ta = unpack(truncateLSB(vpn));
+            tlb1_entries.update(unpack(pack(ta)), tlbe);
+         end
 `ifdef RV64
-      else begin // (level == 2)
-	 TLB2_Tag            tag  = vpn [(vpn_sz - 1) : tlb2_index_sz + (2 * vpn_j_sz)];
-	 TLB2_Index          idx  = vpn [(tlb2_index_sz + (2 * vpn_j_sz) - 1) : (2 * vpn_j_sz)];
-	 TLBE #(TLB2_Tag_sz) tlbe = TLBE {asid_tag: asid, vpn_tag: tag, pte: pte, pte_pa: pte_pa};
-
-	 tlb2_valids [idx] <= True;
-	 tlb2_entries.upd (idx, tlbe);
-      end
+         2: begin
+            TLB2_Addr ta = unpack(truncateLSB(vpn));
+            tlb2_entries.update(unpack(pack(ta)), tlbe);
+         end
 `endif
+      endcase
    endmethod
 
    // Invalidate all entries, in 1 cycle

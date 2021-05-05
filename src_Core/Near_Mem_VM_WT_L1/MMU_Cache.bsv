@@ -136,7 +136,7 @@ interface MMU_Cache_IFC #(numeric type mID);
    interface AXI4_Master #( mID, Wd_Addr, Wd_Data
                           , Wd_AW_User, Wd_W_User, Wd_B_User
                           , Wd_AR_User, Wd_R_User) mem_master;
-   
+
 `ifdef PERFORMANCE_MONITORING
    method EventsCache events;
 `endif
@@ -213,37 +213,6 @@ Bool bram_cmd_write = True;
 // The reset-loop is run based on requests for reset and requests for flush
 typedef enum {REQUESTOR_RESET_IFC, REQUESTOR_FLUSH_IFC} Requestor
 deriving (Bits, Eq, FShow);
-
-`ifndef ISA_PRIV_S
-
-// VM Xlate related definitions which are only for the case where there is no
-// VM, effectively making the following definitions, dummy ones. If VM, these
-// definitions are taken from the TLB package, and include fields like the PTE
-
-typedef enum { VM_XLATE_OK, VM_XLATE_TLB_MISS, VM_XLATE_EXCEPTION } VM_Xlate_Outcome
-deriving (Bits, Eq, FShow);
-
-typedef struct {
-   VM_Xlate_Outcome   outcome;
-   Bool               allow_cap;     // whether we will be allowed to load a cap
-   PA                 pa;            // phys addr, if VM_XLATE_OK
-   Exc_Code           exc_code;      // if VM_XLATE_EXC
-   } VM_Xlate_Result
-deriving (Bits, FShow);
-
-`endif
-
-// ================================================================
-// Check if addr is aligned
-
-function Bool fn_is_aligned (Bit #(3) width_code, Bit #(n) addr);
-   return (    (width_code == w_SIZE_B)                                // B, BU
-	   || ((width_code == w_SIZE_H) && (addr [0] == 1'b0))         // H, HU
-	   || ((width_code == w_SIZE_W) && (addr [1:0] == 2'b00))      // W, WU
-	   || ((width_code == w_SIZE_D) && (addr [2:0] == 3'b000))     // D
-	   || ((width_code == w_SIZE_Q) && (addr [3:0] == 4'b0000))    // Q
-	   );
-endfunction
 
 // ================================================================
 // Convert RISC-V funct3 code into AXI4_Size code (number of bytes in a beat)
@@ -474,7 +443,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    String d_or_i = (dmem_not_imem ? "D_MMU_Cache" : "I_MMU_Cache");
 
    // Verbosity: 0: quiet; 1 reset info; 2: + detail; 3: cache refill loop detail
-   Integer verbosity = (dmem_not_imem ? 0 : 0);
+   Integer verbosity = (dmem_not_imem ? 2 : 2);
    Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (fromInteger (verbosity));
 
    // Overall state of this module
@@ -504,7 +473,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 `ifdef ISA_PRIV_S
    // The TLB
-   TLB_IFC  tlb <- mkTLB (dmem_not_imem);
+   TLB_IFC    tlb   <- mkTLB (dmem_not_imem, fromInteger (verbosity));
 `endif
 
    // For discarding write-responses
@@ -574,6 +543,17 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    CWord_in_CLine                cword_in_cline      = fn_Addr_to_CWord_in_CLine (rg_addr);
    Bit #(Bits_per_Byte_in_CWord) byte_in_cword       = fn_Addr_to_Byte_in_CWord  (rg_addr);
 
+// Abbreviations testing for LR and SC (avoids ifdef clutter later)
+`ifdef ISA_A
+   Bool is_AMO    = (rg_op == CACHE_AMO) && dmem_not_imem;
+   Bool is_AMO_LR = ((rg_op == CACHE_AMO) && (rg_amo_funct5 == f5_AMO_LR)) && dmem_not_imem;
+   Bool is_AMO_SC = ((rg_op == CACHE_AMO) && (rg_amo_funct5 == f5_AMO_SC)) && dmem_not_imem;
+`else
+   Bool is_AMO    = False;
+   Bool is_AMO_LR = False;
+   Bool is_AMO_SC = False;
+`endif
+
 `ifdef ISA_PRIV_S
    // Derivations from rg_satp
    VM_Mode  vm_mode  = fn_satp_to_VM_Mode (rg_satp);
@@ -582,7 +562,17 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    PA       satp_pa  = fn_PPN_and_Offset_to_PA (satp_ppn, 12'b0);
 
    // We continuously probe the TLB with (asid, vpn)
-   TLB_Lookup_Result  tlb_result = tlb.lookup (asid, vpn);
+   VM_Xlate_Result vm_xlate_result = tlb.mv_vm_get_xlate (
+						      rg_satp,
+						      ((rg_op == CACHE_LD) || is_AMO_LR),
+                        ((rg_op == CACHE_LD) ? rg_width_code == w_SIZE_CAP : tpl_1(rg_st_amo_val)), // Is capability
+						      rg_priv,
+						      rg_sstatus_SUM,
+						      rg_mstatus_MXR);
+`else
+   // In non-VM, translation result (PA) is same as VA
+   VM_Xlate_Result vm_xlate_result = VM_Xlate_Result {outcome: VM_XLATE_OK,
+						      pa:      crg_mmu_cache_req [0].va};
 `endif
 
    // Outputs
@@ -687,17 +677,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 return tuple3 (hit, way_hit, centry);
       endactionvalue
    endfunction
-
-   // Abbreviations testing for LR and SC (avoids ifdef clutter later)
-`ifdef ISA_A
-   Bool is_AMO    = (rg_op == CACHE_AMO) && dmem_not_imem;
-   Bool is_AMO_LR = ((rg_op == CACHE_AMO) && (rg_amo_funct5 == f5_AMO_LR)) && dmem_not_imem;
-   Bool is_AMO_SC = ((rg_op == CACHE_AMO) && (rg_amo_funct5 == f5_AMO_SC)) && dmem_not_imem;
-`else
-   Bool is_AMO    = False;
-   Bool is_AMO_LR = False;
-   Bool is_AMO_SC = False;
-`endif
 
    Exc_Code access_exc_code     = fn_access_exc_code     (dmem_not_imem, ((rg_op == CACHE_LD) || is_AMO_LR));
 
@@ -832,16 +811,15 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `ifdef ISA_PRIV_S
    FIFOF #(Tuple2 #(PA, PTE)) f_pte_writebacks <- mkFIFOF;
 
-   function Action fa_record_pte_A_D_updates (TLB_Lookup_Result  tlb_result1,  VM_Xlate_Result  vm_xlate_result);
+   function Action fa_record_pte_A_D_updates;
       action
 	 if (vm_xlate_result.pte_modified) begin
 	    // Update the TLB
-	    tlb.insert (asid, vpn, vm_xlate_result.pte, tlb_result1.pte_level, tlb_result1.pte_pa);
+	    tlb.ma_insert (asid, vpn, vm_xlate_result.pte, vm_xlate_result.pte_level, vm_xlate_result.pa);
 	    // Enqueue it to be written back to memory
-	    f_pte_writebacks.enq (tuple2 (tlb_result1.pte_pa, vm_xlate_result.pte));
+	    f_pte_writebacks.enq (tuple2 (vm_xlate_result.pte_pa, vm_xlate_result.pte));
 	    if (cfg_verbosity >= 2) begin
 	       $display ("    fa_record_pte_A_D_updates:");
-	       $display ("      ", fshow (tlb_result1));
 	       $display ("      ", fshow (vm_xlate_result));
 	    end
 	 end
@@ -868,7 +846,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Flush the TLB
 `ifdef ISA_PRIV_S
-      tlb.flush;
+      //tlb.ma_flush;
 `ifdef PERFORMANCE_MONITORING
       EventsCache events = unpack (0);
       events.evt_TLB_FLUSH = True;
@@ -964,28 +942,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Virtual Memory translation
 
 `ifdef ISA_PRIV_S
-      VM_Xlate_Result vm_xlate_result <- fav_vm_xlate (rg_addr,
-						       rg_satp,
-						       tlb_result,
-						       dmem_not_imem,
-						       ((rg_op == CACHE_LD) || is_AMO_LR),
-                               tpl_1 (rg_st_amo_val),
-						       rg_priv,
-						       rg_sstatus_SUM,
-						       rg_mstatus_MXR);
-
 `ifdef PERFORMANCE_MONITORING
       events.evt_TLB = rg_mem_req_sent;
       let tlb_miss = rg_mem_req_sent && vm_xlate_result.outcome == VM_XLATE_TLB_MISS;
       events.evt_TLB_MISS = tlb_miss;
       events.evt_TLB_MISS_LAT = tlb_miss;
 `endif
-`else
-      // In non-VM, PA is always WordXL
-      VM_Xlate_Result vm_xlate_result = VM_Xlate_Result {outcome:      VM_XLATE_OK,
-							 allow_cap:    True,
-							 pa:           rg_addr,
-							 exc_code:     ?};
 `endif
 
 	    // Compute cache hit/miss. If hit, also compute Way_in_CSet and Word64
@@ -1016,12 +978,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // ---- vm_xlate_result.outcome == VM_XLATE_OK
       else begin
 `ifdef ISA_PRIV_S
-	 fa_record_pte_A_D_updates (tlb_result, vm_xlate_result);
+	 fa_record_pte_A_D_updates;
 `endif
 
 	 rg_pa <= vm_xlate_result.pa;
 	 rg_allow_cap <= vm_xlate_result.allow_cap;
-	 let is_mem_addr = soc_map.m_is_mem_addr (fn_PA_to_Fabric_Addr (vm_xlate_result.pa));
+	 let is_mem_addr = soc_map.m_is_mem_addr (fv_PA_to_Fabric_Addr (vm_xlate_result.pa));
 
 	 // Access to non-memory
 	 if (dmem_not_imem && (! is_mem_addr)) begin
@@ -1254,7 +1216,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       PA           vpn_1_pa            = (zeroExtend (vpn_1) << bits_per_byte_in_wordxl);
       PA           lev_1_pte_pa        = satp_pa + vpn_1_pa;
       PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
-      Fabric_Addr  lev_1_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
+      Fabric_Addr  lev_1_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
       fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 4, 0);
 
       rg_pte_pa <= lev_1_pte_pa;
@@ -1270,7 +1232,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       PA           vpn_2_pa            = (zeroExtend (vpn_2) << bits_per_byte_in_wordxl);
       PA           lev_2_pte_pa        = satp_pa + vpn_2_pa;
       PA           lev_2_pte_pa_w64    = { lev_2_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
-      Fabric_Addr  lev_2_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_2_pte_pa_w64);
+      Fabric_Addr  lev_2_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_2_pte_pa_w64);
       fa_fabric_send_read_req (lev_2_pte_pa_w64_fa, 8, 0);
 
       rg_pte_pa <= lev_2_pte_pa;
@@ -1327,7 +1289,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 PA           vpn_1_pa            = (zeroExtend (vpn_1) << bits_per_byte_in_wordxl);
 	 PA           lev_1_pte_pa        = lev_1_PTN_pa + vpn_1_pa;
 	 PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
-	 Fabric_Addr  lev_1_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
+	 Fabric_Addr  lev_1_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
 	 fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 8, 0);
 
 	 rg_pte_pa <= lev_1_pte_pa;
@@ -1352,7 +1314,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	 // Insert gigapage PTE in TLB (permissions will be checked on subsequent TLB hit)
 	 else begin
-	    tlb.insert (asid, vpn, pte, /* level */ 2, rg_pte_pa);
+	    tlb.ma_insert (asid, vpn, pte, /* level */ 2, rg_pte_pa);
 	    rg_state <= CACHE_REREQ;
 
 	    if (cfg_verbosity > 1) begin
@@ -1420,7 +1382,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 PA           vpn_0_pa            = (zeroExtend (vpn_0) << bits_per_byte_in_wordxl);
 	 PA           lev_0_pte_pa        = lev_0_PTN_pa + vpn_0_pa;
 	 PA           lev_0_pte_pa_w64    = { lev_0_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
-	 Fabric_Addr  lev_0_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_0_pte_pa_w64);
+	 Fabric_Addr  lev_0_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_0_pte_pa_w64);
 `ifdef SV32
 	 AXI4_Size    axi4_size           = 4;
 `else
@@ -1451,7 +1413,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	 // Insert gigapage PTE in TLB (permissions will be checked on subsequent TLB hit)
 	 else begin
-	    tlb.insert (asid, vpn, pte, /* level */ 1, rg_pte_pa);
+	    tlb.ma_insert (asid, vpn, pte, /* level */ 1, rg_pte_pa);
 	    rg_state <= CACHE_REREQ;
 
 	    if (cfg_verbosity > 1) begin
@@ -1518,7 +1480,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Leaf PTE pointing at address-space page; insert in TLB
       // (permissions will be checked on next TLB hit)
       else begin
-	 tlb.insert (asid, vpn, pte, /* level */ 0, rg_pte_pa);
+	 tlb.ma_insert (asid, vpn, pte, /* level */ 0, rg_pte_pa);
 	 rg_state <= CACHE_REREQ;
 
 	 if (cfg_verbosity > 1) begin
@@ -1563,7 +1525,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Send burst request into fabric for full cache line
       PA             cline_addr        = fn_align_Addr_to_CLine (rg_pa);
-      Fabric_Addr    cline_fabric_addr = fn_PA_to_Fabric_Addr (cline_addr);
+      Fabric_Addr    cline_fabric_addr = fv_PA_to_Fabric_Addr (cline_addr);
       fa_fabric_send_read_req (cline_fabric_addr, ((bytes_per_fabric_data == 8) ? 8 : 16), fromInteger ((bytes_per_cline / bytes_per_fabric_data) - 1));
 
       // Pick a victim 'way'
@@ -1605,7 +1567,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Send request into fabric for next fabric-word of cache line
       PA          cline_addr        = fn_align_Addr_to_CLine (rg_pa);
-      Fabric_Addr cline_fabric_addr = (fn_PA_to_Fabric_Addr (cline_addr) | rg_req_byte_in_cline);
+      Fabric_Addr cline_fabric_addr = (fv_PA_to_Fabric_Addr (cline_addr) | rg_req_byte_in_cline);
       AXI4_Size   axi4_size         = ((bytes_per_fabric_data == 4) ? 4 : 8);
       fa_fabric_send_read_req (cline_fabric_addr, axi4_size);
 
@@ -1789,7 +1751,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("%0d: %s.rl_io_read_req; width_code 0x%0h vaddr %0h  paddr %0h",
 		   cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa);
 
-      Fabric_Addr fabric_addr = fn_PA_to_Fabric_Addr (rg_pa);
+      Fabric_Addr fabric_addr = fv_PA_to_Fabric_Addr (rg_pa);
       if (fromInteger(bytes_per_fabric_data) >= fromAXI4_Size(fn_width_code_to_AXI4_Size(rg_width_code)))
         fa_fabric_send_read_req (fabric_addr, fn_width_code_to_AXI4_Size(rg_width_code), 1 - 1);
       else
@@ -1911,7 +1873,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("%0d: %s.rl_io_AMO_op_req; width_code 0x%0h vaddr %0h  paddr %0h",
 		   cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa);
 
-      Fabric_Addr fabric_addr = fn_PA_to_Fabric_Addr (rg_pa);
+      Fabric_Addr fabric_addr = fv_PA_to_Fabric_Addr (rg_pa);
       if (fromInteger(bytes_per_fabric_data) >= fromAXI4_Size(fn_width_code_to_AXI4_Size(rg_width_code)))
         fa_fabric_send_read_req (fabric_addr, fn_width_code_to_AXI4_Size(rg_width_code), 1 - 1);
       else
@@ -2070,6 +2032,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       rg_amo_funct5  <= amo_funct5;
       `endif
       rg_addr        <= addr;
+`ifdef ISA_PRIV_S
+      tlb.mv_vm_put_va(addr);
+`endif
       rg_st_amo_val  <= st_value;
 
       rg_priv        <= priv;
@@ -2105,7 +2070,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    (* no_implicit_conditions, fire_when_enabled *)
    rule do_tlb_flush if (pw_tlb_flush_req);
       `ifdef ISA_PRIV_S
-      tlb.flush;
+      tlb.ma_flush;
       rg_state <= MODULE_READY;
       if (cfg_verbosity > 1) $display ("%0d: %s.tlb_flush", cur_cycle, d_or_i);
 `ifdef PERFORMANCE_MONITORING
@@ -2167,6 +2132,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       w_req_sstatus_SUM <= sstatus_SUM;
       w_req_mstatus_MXR <= mstatus_MXR;
       w_req_satp <= satp;
+      $display("MMU_Cache req for addr %x, data_not_instruction %d, resetting %d", addr, dmem_not_imem, resetting);
 `ifdef PERFORMANCE_MONITORING
       EventsCache events = unpack (0);
       wr_mem_req_sent <= True;

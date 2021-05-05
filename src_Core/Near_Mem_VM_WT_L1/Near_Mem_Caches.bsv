@@ -41,7 +41,7 @@ import ISA_Decls        :: *;
 import Near_Mem_IFC     :: *;
 import MMU_Cache_Common :: *;
 import MMU_Cache        :: *;
-import AXI4_Types       :: *;
+import AXI4             :: *;
 import Fabric_Defs      :: *;
 
 `ifdef INCLUDE_DMEM_SLAVE
@@ -67,7 +67,7 @@ deriving (Bits, Eq, FShow);
 (* synthesize *)
 module mkNear_Mem (Near_Mem_IFC);
 
-   Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (0);
+   Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (2);
    Reg #(State)    rg_state      <- mkReg (STATE_READY);
 
    // ----------------
