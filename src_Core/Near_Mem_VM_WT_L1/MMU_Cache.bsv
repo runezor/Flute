@@ -572,7 +572,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `else
    // In non-VM, translation result (PA) is same as VA
    VM_Xlate_Result vm_xlate_result = VM_Xlate_Result {outcome: VM_XLATE_OK,
-						      pa:      crg_mmu_cache_req [0].va};
+						      pa:      rg_addr};
 `endif
 
    // Outputs
