@@ -48,7 +48,7 @@ export  VM_Xlate_Outcome (..);
 
 interface TLB_IFC;
    // Put the virtual address that mv_vm_get_xlate will see at least the cycle before.
-   method Action mv_vm_put_va (WordXL va);
+   method Action mv_vm_put_va (WordXL full_va);
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
    method VM_Xlate_Result  mv_vm_get_xlate (
@@ -305,11 +305,12 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // ================================================================
    // INTERFACE
    // Put the virtual address that mv_vm_xlate will see at least the cycle before.
-   method Action mv_vm_put_va (WordXL va);
+   method Action mv_vm_put_va (WordXL full_va);
+      Bit#(VA_sz) va = truncate(full_va);
       tlb0_entries.lookupStart(unpack(truncateLSB(va)));
       tlb1_entries.lookupStart(unpack(truncateLSB(va)));
       tlb2_entries.lookupStart(unpack(truncateLSB(va)));
-      rg_va <= va;
+      rg_va <= full_va;
    endmethod
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
@@ -337,10 +338,10 @@ module mkTLB #(parameter Bool      dmem_not_imem,
       if (tlbe0 matches tagged Valid .e)
          result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
       if (tlbe1 matches tagged Valid .e)
-         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
+         result1 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 1, pte_pa: e.pte_pa};
 `ifdef RV64
       if (tlbe2 matches tagged Valid .e)
-         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
+         result2 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 2, pte_pa: e.pte_pa};
 `endif
       TLB_Lookup_Result tlb_result = unpack ((pack (result0) | pack (result1) | pack (result2)));
 
