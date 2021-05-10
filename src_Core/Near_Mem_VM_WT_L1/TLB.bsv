@@ -203,14 +203,14 @@ typedef Bit#(TSub #(TMul #(TSub#(3,lvl), VPN_J_sz), idx_sz))
 // ----------------
 // Level 2 tags and indexes (for RV64 only)
 
-typedef  1024                        TLB2_Size;  // # of entries in TLB2
+typedef  32                        TLB2_Size;  // # of entries in TLB2
 typedef  TLog #(TLB2_Size)           TLB2_Index_sz;
 typedef  Bit #(TLB2_Index_sz)        TLB2_Index;
 typedef  TLB_Tag#(2, TLB2_Index_sz)  TLB2_Tag;
 // ----------------
 // Level 1 tags and indexes
 
-typedef  1024                        TLB1_Size;    // # of entries in TLB1
+typedef  64                        TLB1_Size;    // # of entries in TLB1
 typedef  TLog #(TLB1_Size)           TLB1_Index_sz;
 typedef  Bit #(TLB1_Index_sz)        TLB1_Index;
 typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
