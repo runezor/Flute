@@ -109,7 +109,7 @@ Bitwise#(ix), Eq#(ix), Arith#(ix));
         Maybe#(vl) ret = Invalid;
         for (Integer i = 0; i < a; i = i + 1) begin
             let rd = mem[i].sub(lu.index);
-            if (rd.key == lu.key) ret = Valid(rd.value);
+            if (rd.key == lu.key && !clearReg) ret = Valid(rd.value);
         end
         return ret;
     endmethod
