@@ -133,15 +133,20 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
     Vector#(as, MEM#(ix, ky)) updateKeys <- replicateM(mkMEMCore);
     Reg#(MapKeyIndex#(ky,ix)) lookupReg <- mkConfigRegU;
     RWire#(MapKeyIndex#(ky,ix)) lookupWire <- mkRWire;
+    PulseWire clearWire <- mkPulseWire;
+    RWire#(MapKeyIndexValue#(ky,ix,vl)) updateWire <- mkRWire;
     Reg#(Maybe#(MapKeyIndexValue#(ky,ix,vl))) updateReg <- mkConfigReg(Invalid);
-    Reg#(Bool) updateFresh <- mkDReg(False);
     Reg#(Bit#(TLog#(as))) wayNext <- mkConfigReg(0);
     Integer a = valueof(as);
 
     Reg#(Bit#(TAdd#(TLog#(as),ix_sz))) validReg <- mkConfigReg(0);
     (* fire_when_enabled, no_implicit_conditions *)
     rule updateCanon;
-        if (updateReg matches tagged Valid .u &&& updateFresh) begin
+        if (clearWire) begin
+            validReg <= (0);
+            updateReg <= Invalid;
+        end else if (updateWire.wget matches tagged Valid .u) begin
+            updateReg <= Valid(u);
             Bit#(TLog#(as)) way = wayNext;
             for (Integer i = 0; i < a; i = i + 1)
                 if (updateKeys[i].read.peek() == u.key) way = fromInteger(i);
@@ -158,10 +163,8 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
         lookupReg <= ki;
     endrule
 
-    method Action update(MapKeyIndex#(ky,ix) ki, vl value);
-        updateReg <= Valid(MapKeyIndexValue{key: ki.key, index: ki.index, value: value});
-        updateFresh <= True;
-    endmethod
+    method Action update(MapKeyIndex#(ky,ix) ki, vl value) =
+        updateWire.wset(MapKeyIndexValue{key: ki.key, index: ki.index, value: value});
     method Action lookupStart(MapKeyIndex#(ky,ix) ki);
         lookupWire.wset(ki);
         $display("MapLookup - index: %x, key: %x",
@@ -180,9 +183,6 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
             readVal = Valid(u.value);
         return readVal;
     endmethod
-    method Action clear;
-        validReg <= (0);
-        updateReg <= Invalid;
-    endmethod
+    method Action clear = clearWire.send();
     method clearDone = True;
 endmodule
