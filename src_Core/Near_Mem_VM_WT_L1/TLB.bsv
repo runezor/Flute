@@ -287,7 +287,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // The actions in this rule are technically in the ma_flush method
    // but are decoupled via pw_flushing to relax scheduling constraints.
 
-   PulseWire pw_flushing <- mkPulseWire;
+   PulseWire pw_flushing <- mkPulseWireOR;
 
    rule rl_flush (pw_flushing);
       // Invalidate all tlb entries

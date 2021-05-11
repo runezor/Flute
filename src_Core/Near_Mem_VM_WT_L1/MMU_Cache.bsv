@@ -846,7 +846,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Flush the TLB
 `ifdef ISA_PRIV_S
-      //tlb.ma_flush;
+      tlb.ma_flush;
 `ifdef PERFORMANCE_MONITORING
       EventsCache events = unpack (0);
       events.evt_TLB_FLUSH = True;
