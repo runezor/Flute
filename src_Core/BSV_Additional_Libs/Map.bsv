@@ -114,7 +114,7 @@ Bitwise#(ix), Eq#(ix), Arith#(ix));
         return ret;
     endmethod
     method clear if (!clearReg) = clearReg._write(True);
-    method clearDone = clearReg;
+    method clearDone = !clearReg;
 endmodule
 
 interface MapSplit#(type ky, type ix, type vl, numeric type as);
