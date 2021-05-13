@@ -565,7 +565,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    VM_Xlate_Result vm_xlate_result = tlb.mv_vm_get_xlate (
 						      rg_satp,
 						      ((rg_op == CACHE_LD) || is_AMO_LR),
-                        ((rg_op == CACHE_LD) ? rg_width_code == w_SIZE_CAP : tpl_1(rg_st_amo_val)), // Is capability
+                  tpl_1(rg_st_amo_val), // Store value is a capability
 						      rg_priv,
 						      rg_sstatus_SUM,
 						      rg_mstatus_MXR);
