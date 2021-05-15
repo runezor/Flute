@@ -288,16 +288,18 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // but are decoupled via pw_flushing to relax scheduling constraints.
 
    //PulseWire pw_flushing <- mkPulseWireOR;
-   Reg#(Bool) rg_flushing <- mkReg(True);
+   Reg#(Bit#(4)) rg_flushing <- mkReg(0);
 
-   rule rl_flush (rg_flushing);
+   rule rl_flush (rg_flushing!=0);
       // Invalidate all tlb entries
+      if (rg_flushing == 8) begin
 `ifdef RV64
-      tlb2_entries.clear;
+          tlb2_entries.clear;
 `endif
-      tlb1_entries.clear;
-      tlb0_entries.clear;
-      rg_flushing <= False;
+          tlb1_entries.clear;
+          tlb0_entries.clear;
+      end
+      rg_flushing <= rg_flushing + 1;
       if (verbosity > 1)
 	 $display ("%0d: %m.rl_flush", cur_cycle);
    endrule
@@ -320,7 +322,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
                     Bool               cap,
 					Priv_Mode          priv,
 					Bit #(1)           sstatus_SUM,
-					Bit #(1)           mstatus_MXR) if (! rg_flushing);
+					Bit #(1)           mstatus_MXR) if (rg_flushing==0);
 
       ASID asid = fn_satp_to_ASID (satp);
       // ----------------
@@ -354,7 +356,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // ----------------
    // Insert a PTE into the TLB
 
-   method Action ma_insert (ASID asid, VPN vpn, PTE pte, Bit #(2) level, PA pte_pa) if (! rg_flushing );
+   method Action ma_insert (ASID asid, VPN vpn, PTE pte, Bit #(2) level, PA pte_pa) if (rg_flushing==0);
       if (verbosity > 1)
 	 $display ("%0d: %m.ma_insert: asid 0x%0h  vpn 0x%0h  pte 0x%0h  level %0d  pa 0x%0h",
 		   cur_cycle, asid, vpn, pte, level, pte_pa);
@@ -372,7 +374,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // Invalidate all entries, in 1 cycle
    method Action ma_flush;
       //pw_flushing.send;
-      rg_flushing <= True;
+      rg_flushing <= 1;
    endmethod
 
 endmodule: mkTLB
