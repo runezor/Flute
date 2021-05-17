@@ -36,6 +36,7 @@ import ConfigReg::*;
 import RegFile::*;
 import Vector::*;
 import MEM::*;
+import FIFOF::*;
 
 typedef struct {
     ky key;
@@ -129,33 +130,34 @@ module mkMapLossyBRAM(MapSplit#(ky,ix,vl,as)) provisos (
 Bits#(ky,ky_sz), Bits#(vl,vl_sz), Eq#(ky), Arith#(ky),
 Bounded#(ix), Literal#(ix), Bits#(ix, ix_sz),
 Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
-    Vector#(as, MEM#(ix, MapKeyValue#(ky,vl))) mem <- replicateM(mkMEMCore);
-    Vector#(as, MEM#(ix, ky)) updateKeys <- replicateM(mkMEMCore);
-    Reg#(MapKeyIndex#(ky,ix)) lookupReg <- mkConfigRegU;
+    Vector#(as, MEM#(ix, Maybe#(MapKeyValue#(ky,vl)))) mem <- replicateM(mkMEMCore);
+    Vector#(as, MEM#(ix, Maybe#(ky))) updateKeys <- replicateM(mkMEMCore);
+    Reg#(MapKeyIndex#(ky,ix)) lookupReg <- mkConfigReg(unpack(0));
     RWire#(MapKeyIndex#(ky,ix)) lookupWire <- mkRWire;
-    PulseWire clearWire <- mkPulseWire;
-    RWire#(MapKeyIndexValue#(ky,ix,vl)) updateWire <- mkRWire;
-    Reg#(Maybe#(MapKeyIndexValue#(ky,ix,vl))) updateReg <- mkConfigReg(Invalid);
+    FIFOF#(void) clearReqQ <- mkUGFIFOF1;
+    Reg#(Maybe#(MapKeyIndexValue#(ky,ix,vl))) updateReg <- mkDReg(Invalid);
+    Wire#(MapKeyIndexValue#(ky,ix,vl)) updateWire <- mkWire;
     Reg#(Bit#(TLog#(as))) wayNext <- mkConfigReg(0);
     Integer a = valueof(as);
 
-    Reg#(Bit#(TAdd#(TLog#(as),ix_sz))) validReg <- mkConfigReg(0);
+    Reg#(ix) clearIx <- mkConfigReg(0);
     (* fire_when_enabled, no_implicit_conditions *)
-    rule updateCanon;
-        if (clearWire) begin
-            validReg <= (0);
-            updateReg <= Invalid;
-        end else if (updateWire.wget matches tagged Valid .u) begin
-            updateReg <= Valid(u);
+    rule updateCanonClear;
+        if (clearReqQ.notEmpty) begin
+            for (Integer i = 0; i < a; i = i + 1) mem[i].write(clearIx, Invalid);
+            for (Integer i = 0; i < a; i = i + 1) updateKeys[i].write(clearIx, Invalid);
+            clearIx <= clearIx + 1;
+            if (clearIx == ~0) clearReqQ.deq;
+        end else if (updateReg matches tagged Valid .u) begin
             Bit#(TLog#(as)) way = wayNext;
             for (Integer i = 0; i < a; i = i + 1)
-                if (updateKeys[i].read.peek() == u.key) way = fromInteger(i);
+                if (updateKeys[i].read.peek() matches tagged Valid .k &&& k == u.key)
+                    way = fromInteger(i);
             // Always write to both the main memory bank and the copy used for updates.
             $display("MapUpdate - index: %x, key: %x, value: %x, way: %x",
                      u.index, u.key, u.value, way);
-            mem[way].write(u.index, MapKeyValue{key: u.key, value: u.value});
-            updateKeys[way].write(u.index, u.key);
-            validReg[{pack(u.index),way}] <= 1'b1;
+            mem[way].write(u.index, Valid(MapKeyValue{key: u.key, value: u.value}));
+            updateKeys[way].write(u.index, Valid(u.key));
             wayNext <= (wayNext == fromInteger(a-1)) ? 0 : (wayNext + 1);
         end
         MapKeyIndex#(ky,ix) ki = fromMaybe(lookupReg, lookupWire.wget);
@@ -163,8 +165,14 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
         lookupReg <= ki;
     endrule
 
-    method Action update(MapKeyIndex#(ky,ix) ki, vl value) =
-        updateWire.wset(MapKeyIndexValue{key: ki.key, index: ki.index, value: value});
+    rule writeUpdateReg;
+        updateReg <= Valid(updateWire);
+        for (Integer i = 0; i < a; i = i + 1) updateKeys[i].read.put(updateWire.index);
+    endrule
+
+    method Action update(MapKeyIndex#(ky,ix) ki, vl value);
+        updateWire <= MapKeyIndexValue{key: ki.key, index: ki.index, value: value};
+    endmethod
     method Action lookupStart(MapKeyIndex#(ky,ix) ki);
         lookupWire.wset(ki);
         $display("MapLookup - index: %x, key: %x",
@@ -172,17 +180,16 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
     endmethod
     method Maybe#(vl) lookupRead;
         Maybe#(vl) readVal = Invalid;
-        for (Integer i = 0; i < a; i = i + 1) begin
-            let resp = mem[i].read.peek();
-            Bit#(TLog#(as)) way = fromInteger(i);
-            if (lookupReg.key == resp.key && validReg[{pack(lookupReg.index),way}] == 1'b1)
-                readVal = Valid(resp.value);
+        if (!clearReqQ.notEmpty) begin
+            for (Integer i = 0; i < a; i = i + 1) begin
+                if (mem[i].read.peek() matches tagged Valid .r &&& lookupReg.key == r.key)
+                    readVal = Valid(r.value);
+            end
         end
-        // If there has been a recent write, take that one.
-        if (updateReg matches tagged Valid .u &&& u.index == lookupReg.index && u.key == lookupReg.key)
-            readVal = Valid(u.value);
         return readVal;
     endmethod
-    method Action clear = clearWire.send();
-    method clearDone = True;
+    method Action clear;
+        if (clearReqQ.notFull) clearReqQ.enq(?);
+    endmethod
+    method clearDone = !clearReqQ.notEmpty;
 endmodule
