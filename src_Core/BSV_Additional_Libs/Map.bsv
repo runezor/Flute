@@ -135,8 +135,8 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
     Reg#(MapKeyIndex#(ky,ix)) lookupReg <- mkConfigReg(unpack(0));
     RWire#(MapKeyIndex#(ky,ix)) lookupWire <- mkRWire;
     FIFOF#(void) clearReqQ <- mkUGFIFOF1;
-    Reg#(Maybe#(MapKeyIndexValue#(ky,ix,vl))) updateReg <- mkDReg(Invalid);
-    Wire#(MapKeyIndexValue#(ky,ix,vl)) updateWire <- mkWire;
+    Reg#(Maybe#(MapKeyIndexValue#(ky,ix,vl))) updateReg <- mkReg(Invalid);
+    RWire#(MapKeyIndexValue#(ky,ix,vl)) updateWire <- mkRWire;
     Reg#(Bit#(TLog#(as))) wayNext <- mkConfigReg(0);
     Integer a = valueof(as);
 
@@ -166,12 +166,14 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
     endrule
 
     rule writeUpdateReg;
-        updateReg <= Valid(updateWire);
-        for (Integer i = 0; i < a; i = i + 1) updateKeys[i].read.put(updateWire.index);
+        if (clearReqQ.notEmpty) updateReg <= Invalid;
+        else updateReg <= updateWire.wget;
+        if (updateWire.wget matches tagged Valid .uw)
+            for (Integer i = 0; i < a; i = i + 1) updateKeys[i].read.put(uw.index);
     endrule
 
     method Action update(MapKeyIndex#(ky,ix) ki, vl value);
-        updateWire <= MapKeyIndexValue{key: ki.key, index: ki.index, value: value};
+        updateWire.wset(MapKeyIndexValue{key: ki.key, index: ki.index, value: value});
     endmethod
     method Action lookupStart(MapKeyIndex#(ky,ix) ki);
         lookupWire.wset(ki);
@@ -186,6 +188,8 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
                     readVal = Valid(r.value);
             end
         end
+        if (updateReg matches tagged Valid .u &&& lookupReg.index == u.index && lookupReg.key == u.key)
+            readVal = Valid(u.value);
         return readVal;
     endmethod
     method Action clear;
