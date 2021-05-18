@@ -167,9 +167,10 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
 
     rule writeUpdateReg;
         if (clearReqQ.notEmpty) updateReg <= Invalid;
-        else updateReg <= updateWire.wget;
-        if (updateWire.wget matches tagged Valid .uw)
+        else if (updateWire.wget matches tagged Valid .uw) begin
+            updateReg <= Valid(uw);
             for (Integer i = 0; i < a; i = i + 1) updateKeys[i].read.put(uw.index);
+        end
     endrule
 
     method Action update(MapKeyIndex#(ky,ix) ki, vl value);
