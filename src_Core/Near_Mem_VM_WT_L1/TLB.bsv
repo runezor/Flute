@@ -197,16 +197,17 @@ endfunction: fv_vm_xlate
 // The index is a few bits from VPN [level]
 // The tag is (asid, remaining bits from VPN)
 
-typedef Bit#(TSub #(TMul #(TSub#(3,lvl), VPN_J_sz), idx_sz))
+typedef Bit#(TSub #(TMul #(TSub#(VPN_max_levels,lvl), VPN_J_sz), idx_sz))
    TLB_Tag#(numeric type lvl, numeric type idx_sz);
 
 // ----------------
 // Level 2 tags and indexes (for RV64 only)
-
+`ifdef RV64
 typedef  4                           TLB2_Size;  // # of entries in TLB2
 typedef  TLog #(TLB2_Size)           TLB2_Index_sz;
 typedef  Bit #(TLB2_Index_sz)        TLB2_Index;
 typedef  TLB_Tag#(2, TLB2_Index_sz)  TLB2_Tag;
+`endif
 // ----------------
 // Level 1 tags and indexes
 

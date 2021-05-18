@@ -120,6 +120,7 @@ Bit #(4)  satp_mode_RV64_sv64 = 4'd_11;
 typedef  32  VA_sz;
 typedef  20  VPN_sz;
 typedef  10  VPN_J_sz;
+typedef   2  VPN_max_levels;
 
 // Physical addrs
 typedef  34  PA_sz;
@@ -155,6 +156,7 @@ function VPN_J fn_Addr_to_VPN_0 (Bit #(n) addr) = addr [21:12];
 typedef   39  VA_sz;
 typedef   27  VPN_sz;
 typedef    9  VPN_J_sz;
+typedef    3  VPN_max_levels;
 
 // Physical addrs
 typedef   64  PA_sz;        // need 56b in Sv39 mode and 64b in Bare mode
