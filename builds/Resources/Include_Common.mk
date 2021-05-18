@@ -100,7 +100,7 @@ TOPMODULE ?= mkTop_HW_Side
 # bsc compilation flags
 
 BSC_COMPILATION_FLAGS += \
-	-D CheriBusBytes=8 \
+	-D CheriBusBytes=8 -D SMALL_TAG_CACHE \
 	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
 	-D RISCV -D BLUESIM \
 	-keep-fires -aggressive-conditions -no-warn-action-shadowing -no-show-timestamps -check-assert \
