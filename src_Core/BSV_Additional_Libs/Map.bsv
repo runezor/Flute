@@ -136,6 +136,7 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
     RWire#(MapKeyIndex#(ky,ix)) lookupWire <- mkRWire;
     FIFOF#(void) clearReqQ <- mkUGFIFOF1;
     Reg#(Maybe#(MapKeyIndexValue#(ky,ix,vl))) updateReg <- mkReg(Invalid);
+    Reg#(Bool)                                updateRegFresh <- mkDReg(False);
     RWire#(MapKeyIndexValue#(ky,ix,vl)) updateWire <- mkRWire;
     Reg#(Bit#(TLog#(as))) wayNext <- mkConfigReg(0);
     Integer a = valueof(as);
@@ -148,10 +149,10 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
             for (Integer i = 0; i < a; i = i + 1) updateKeys[i].write(clearIx, Invalid);
             clearIx <= clearIx + 1;
             if (clearIx == ~0) clearReqQ.deq;
-        end else if (updateReg matches tagged Valid .u) begin
+        end else if (updateReg matches tagged Valid .u &&& updateRegFresh) begin
             Bit#(TLog#(as)) way = wayNext;
             for (Integer i = 0; i < a; i = i + 1)
-                if (updateKeys[i].read.peek() matches tagged Valid .k &&& k == u.key)
+                if (updateKeys[i].read.peek() matches tagged Valid .k &&& u.key == k)
                     way = fromInteger(i);
             // Always write to both the main memory bank and the copy used for updates.
             $display("MapUpdate - index: %x, key: %x, value: %x, way: %x",
@@ -166,11 +167,14 @@ Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
     endrule
 
     rule writeUpdateReg;
+        ix updateIdx = (fromMaybe(?,updateReg)).index;
         if (clearReqQ.notEmpty) updateReg <= Invalid;
         else if (updateWire.wget matches tagged Valid .uw) begin
             updateReg <= Valid(uw);
-            for (Integer i = 0; i < a; i = i + 1) updateKeys[i].read.put(uw.index);
+            updateRegFresh <= True;
+            updateIdx = uw.index;
         end
+        for (Integer i = 0; i < a; i = i + 1) updateKeys[i].read.put(updateIdx);
     endrule
 
     method Action update(MapKeyIndex#(ky,ix) ki, vl value);
