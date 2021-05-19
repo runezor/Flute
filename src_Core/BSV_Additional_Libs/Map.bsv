@@ -66,7 +66,7 @@ module mkMapLossy#(vl default_value)(Map#(ky,ix,vl,as)) provisos (
 Bits#(ky,ky_sz), Bits#(vl,vl_sz), Eq#(ky), Arith#(ky),
 Bounded#(ix), Literal#(ix), Bits#(ix, ix_sz),
 Bitwise#(ix), Eq#(ix), Arith#(ix));
-    Vector#(as, RegFile#(ix, MapKeyValue#(ky,vl))) mem
+    Vector#(as, RegFile#(ix, Maybe#(MapKeyValue#(ky,vl)))) mem
         <- replicateM(mkRegFileWCF(0, maxBound));
     Reg#(Bit#(TLog#(as))) wayNext <- mkReg(0);
     Integer a = valueof(as);
@@ -75,7 +75,7 @@ Bitwise#(ix), Eq#(ix), Arith#(ix));
     Reg#(ix) clearCount <- mkReg(0);
     PulseWire didUpdate <- mkPulseWire;
     rule doClear(clearReg && !didUpdate);
-        for (Integer i = 0; i < a; i = i + 1) mem[i].upd(clearCount, unpack(0));
+        for (Integer i = 0; i < a; i = i + 1) mem[i].upd(clearCount, Invalid);
         clearCount <= clearCount + 1;
         if (clearCount == ~0) clearReg <= False;
     endrule
@@ -87,15 +87,15 @@ Bitwise#(ix), Eq#(ix), Arith#(ix));
         vl old_value = default_value;
         if (a > 1) begin
             for (Integer i = 0; i < a; i = i + 1) begin
-                MapKeyValue#(ky,vl) entry = mem[i].sub(ki.index);
-                if (entry.key == ki.key) begin
+                Maybe#(MapKeyValue#(ky,vl)) entry = mem[i].sub(ki.index);
+                if (entry matches tagged Valid .e &&& e.key == ki.key) begin
                     found = True;
                     way = fromInteger(i);
-                    old_value = entry.value;
+                    old_value = e.value;
                 end
             end
         end
-        if (found || insert) mem[way].upd(ki.index, MapKeyValue{key: ki.key, value: up(old_value, value)});
+        if (found || insert) mem[way].upd(ki.index, Valid(MapKeyValue{key: ki.key, value: up(old_value, value)}));
         wayNext <= (wayNext == fromInteger(a-1)) ? 0: wayNext + 1;
         didUpdate.send;
     endaction
@@ -108,10 +108,8 @@ Bitwise#(ix), Eq#(ix), Arith#(ix));
 
     method Maybe#(vl) lookup(MapKeyIndex#(ky,ix) lu);
         Maybe#(vl) ret = Invalid;
-        for (Integer i = 0; i < a; i = i + 1) begin
-            let rd = mem[i].sub(lu.index);
-            if (rd.key == lu.key && !clearReg) ret = Valid(rd.value);
-        end
+        for (Integer i = 0; i < a; i = i + 1)
+            if (mem[i].sub(lu.index) matches tagged Valid .r &&& r.key == lu.key && !clearReg) ret = Valid(r.value);
         return ret;
     endmethod
     method clear if (!clearReg) = clearReg._write(True);

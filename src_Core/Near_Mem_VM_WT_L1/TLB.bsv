@@ -211,7 +211,7 @@ typedef  TLB_Tag#(2, TLB2_Index_sz)  TLB2_Tag;
 // ----------------
 // Level 1 tags and indexes
 
-typedef  8                           TLB1_Size;    // # of entries in TLB1
+typedef  4                           TLB1_Size;    // # of entries in TLB1
 typedef  TLog #(TLB1_Size)           TLB1_Index_sz;
 typedef  Bit #(TLB1_Index_sz)        TLB1_Index;
 typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
@@ -255,12 +255,12 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // ----------------
    // Level 2 TLB (for gigapages)
 `ifdef RV64
-   MapSplit#(TLB2_Tag, TLB2_Index, TLBE, 1) tlb2_entries <- mkMapLossyBRAM;
+   Map#(TLB2_Tag, TLB2_Index, TLBE, 1) tlb2_entries <- mkMapLossy(?);
 `endif
 
    // ----------------
    // Level 1 TLB (for megapages)
-   MapSplit#(TLB1_Tag, TLB1_Index, TLBE, 1) tlb1_entries <- mkMapLossyBRAM;
+   Map#(TLB1_Tag, TLB1_Index, TLBE, 1) tlb1_entries <- mkMapLossy(?);
 
    // ----------------
    // Level 0 TLB (for pages)
@@ -308,8 +308,8 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    method Action mv_vm_put_va (WordXL full_va);
       Bit#(VA_sz) va = truncate(full_va);
       tlb0_entries.lookupStart(unpack(truncateLSB(va)));
-      tlb1_entries.lookupStart(unpack(truncateLSB(va)));
-      tlb2_entries.lookupStart(unpack(truncateLSB(va)));
+      //tlb1_entries.lookupStart(unpack(truncateLSB(va)));
+      //tlb2_entries.lookupStart(unpack(truncateLSB(va)));
       rg_va <= full_va;
    endmethod
    // Translate a VA to a PA (or exception)
@@ -326,9 +326,10 @@ module mkTLB #(parameter Bool      dmem_not_imem,
       // ----------------
       // Look for a matching entry for a given va in the three TLBs
       let tlbe0 = fn_lookup (asid, tlb0_entries.lookupRead);
-      let tlbe1 = fn_lookup (asid, tlb1_entries.lookupRead);
+      Bit#(VA_sz) va = truncate(rg_va);
+      let tlbe1 = fn_lookup (asid, tlb1_entries.lookup(unpack(truncateLSB(va))));
 `ifdef RV64
-      let tlbe2 = fn_lookup (asid, tlb2_entries.lookupRead);
+      let tlbe2 = fn_lookup (asid, tlb2_entries.lookup(unpack(truncateLSB(va))));
 `endif
 
       TLB_Lookup_Result  result0 = unpack (0);
