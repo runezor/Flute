@@ -218,10 +218,11 @@ typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
 // ----------------
 // Level 0 tags and indexes
 
-typedef  16                          TLB0_Size;    // # of entries in TLB0
-typedef  TLog #(TLB0_Size)           TLB0_Index_sz;
-typedef  Bit #(TLB0_Index_sz)        TLB0_Index;
-typedef  TLB_Tag#(0, TLB0_Index_sz)  TLB0_Tag;
+typedef  16                                     TLB0_Size;    // # of entries in TLB0
+typedef   2                                     TLB0_Assos;
+typedef  TLog #(TDiv#(TLB0_Size,TLB0_Assos))    TLB0_Index_sz;
+typedef  Bit #(TLB0_Index_sz)                   TLB0_Index;
+typedef  TLB_Tag#(0, TLB0_Index_sz)             TLB0_Tag;
 
 // ----------------
 // Each of the 3 sub-TLBs contains TLBEs (TLB Entries)
@@ -263,7 +264,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
 
    // ----------------
    // Level 0 TLB (for pages)
-   MapSplit#(TLB0_Tag, TLB0_Index, TLBE, 1) tlb0_entries <- mkMapLossyBRAM;
+   MapSplit#(TLB0_Tag, TLB0_Index, TLBE, TLB0_Assos) tlb0_entries <- mkMapLossyBRAM;
 
    Reg#(WordXL) rg_va <- mkRegU;
    // ----------------------------------------------------------------

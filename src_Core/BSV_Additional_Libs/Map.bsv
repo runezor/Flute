@@ -130,8 +130,8 @@ module mkMapLossyBRAM(MapSplit#(ky,ix,vl,as)) provisos (
 Bits#(ky,ky_sz), Bits#(vl,vl_sz), Eq#(ky), Arith#(ky),
 Bounded#(ix), Literal#(ix), Bits#(ix, ix_sz),
 Bitwise#(ix), Eq#(ix), Arith#(ix), PrimIndex#(ix, a__));
-    Vector#(as, MEM#(ix, Maybe#(MapKeyValue#(ky,vl)))) mem <- replicateM(mkMEMNoFlow);
-    Vector#(as, MEM#(ix, Maybe#(ky))) updateKeys <- replicateM(mkMEMNoFlow);
+    Vector#(as, MEM#(ix, Maybe#(MapKeyValue#(ky,vl)))) mem <- replicateM(mkMEMCore);
+    Vector#(as, MEM#(ix, Maybe#(ky))) updateKeys <- replicateM(mkMEMCore);
     Reg#(MapKeyIndex#(ky,ix)) lookupReg <- mkConfigReg(unpack(0));
     RWire#(MapKeyIndex#(ky,ix)) lookupWire <- mkRWire;
     FIFOF#(void) clearReqQ <- mkUGFIFOF1;
