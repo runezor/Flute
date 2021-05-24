@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 Bluespec, Inc. All Rights Reserved.
+// Copyright (c) 2018-2020 Bluespec, Inc. All Rights Reserved.
 
 package P2_Core;
 
@@ -39,6 +39,7 @@ import SoC_Map  :: *;
 // The basic core
 import Core_IFC :: *;
 import Core     :: *;
+import Near_Mem_IFC :: *;    // For Wd_{Id,Addr,Data,User}_Dma
 
 // External interrupt request interface
 import PLIC :: *;    // for PLIC_Source_IFC type which is exposed at P2_Core interface
@@ -47,6 +48,10 @@ import PLIC :: *;    // for PLIC_Source_IFC type which is exposed at P2_Core int
 import AXI4_Types   :: *;
 import AXI4_Fabric  :: *;
 import Fabric_Defs  :: *;
+
+`ifdef INCLUDE_DMEM_SLAVE
+import AXI4_Lite_Types :: *;
+`endif
 
 `ifdef INCLUDE_TANDEM_VERIF
 import TV_Info :: *;
@@ -76,6 +81,13 @@ interface P2_Core_IFC;
    // External interrupt sources
    (* always_ready, always_enabled, prefix="" *)
    method  Action interrupt_reqs ((* port="cpu_external_interrupt_req" *) Bit #(N_External_Interrupt_Sources)  reqs);
+
+`ifdef INCLUDE_DMEM_SLAVE
+   // ----------------------------------------------------------------
+   // Optional AXI4-Lite D-cache slave interface
+
+   interface AXI4_Lite_Slave_IFC #(Wd_Addr, Wd_Data, Wd_User) slave0;
+`endif
 
 `ifdef INCLUDE_TANDEM_VERIF
    // ----------------------------------------------------------------
@@ -118,6 +130,10 @@ module mkP2_Core (P2_Core_IFC);
       core.nmi_req (False);
    endrule
 
+   AXI4_Master_IFC #(Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma, Wd_User_Dma)
+   dummy = dummy_AXI4_Master_ifc;
+   mkConnection (dummy, core.dma_server);
+
    // ================================================================
    // Reset on startup, and also on NDM reset from Debug Module
    // (NDM reset from Debug Module = "non-debug-module-reset" = reset all except Debug Module)
@@ -130,6 +146,7 @@ module mkP2_Core (P2_Core_IFC);
       if (rg_ndm_reset matches tagged Valid False)
 	 running = False;
       core.cpu_reset_server.request.put (running);
+      core.ma_ddr4_ready;
       rg_once <= True;
    endrule
 
@@ -230,7 +247,7 @@ module mkP2_Core (P2_Core_IFC);
    interface AXI4_Master_IFC master0 = core.cpu_imem_master;
 
    // CPU DMem to Fabric master interface
-   interface AXI4_Master_IFC master1 = core.cpu_dmem_master;
+   interface AXI4_Master_IFC master1 = core.core_mem_master;
 
    // External interrupts
    method  Action interrupt_reqs (Bit #(N_External_Interrupt_Sources) reqs);
@@ -239,6 +256,13 @@ module mkP2_Core (P2_Core_IFC);
 	 core.core_external_interrupt_sources [j].m_interrupt_req (req_j);
       end
    endmethod
+
+`ifdef INCLUDE_DMEM_SLAVE
+   // ----------------------------------------------------------------
+   // Optional AXI4-Lite D-cache slave interface
+
+   interface AXI4_Lite_Slave_IFC slave0 = core.cpu_dmem_slave;
+`endif
 
 `ifdef INCLUDE_TANDEM_VERIF
    // ----------------------------------------------------------------

@@ -411,7 +411,7 @@ function ALU_Outputs fv_OP_and_OP_IMM_shifts (ALU_Inputs inputs);
    if (funct3 == f3_SLLI)
       rd_val = fn_shl (rs1_val, shamt);  // in LUTRAMs/DSPs
    else begin // assert: (funct3 == f3_SRxI)
-      if (instr_b30 == 1'b0) begin
+      if (instr_b30 == 1'b0) 
 	 // SRL/SRLI
 	 rd_val = fn_shrl (rs1_val, shamt);  // in LUTRAMs/DSPs
       else
@@ -874,6 +874,7 @@ function ALU_Outputs fv_SYSTEM (ALU_Inputs inputs);
 		  alu_outputs.control = CONTROL_MRET;
 	       end
 
+`ifdef ISA_PRIV_S
 	    // SRET instruction
 	    else if (   (   (inputs.cur_priv == m_Priv_Mode)
 			 || (   (inputs.cur_priv == s_Priv_Mode)
@@ -882,7 +883,7 @@ function ALU_Outputs fv_SYSTEM (ALU_Inputs inputs);
 	       begin
 		  alu_outputs.control = CONTROL_SRET;
 	       end
-
+`endif
 
 	    /*
 	    // URET instruction (future: Piccolo does not support 'N' extension)

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 Bluespec, Inc. All Rights Reserved.
+// Copyright (c) 2018-2020 Bluespec, Inc. All Rights Reserved.
 
 package Core;
 
@@ -40,6 +40,10 @@ import AXI4_Fabric  :: *;
 import Fabric_Defs  :: *;    // for Wd_Id, Wd_Addr, Wd_Data, Wd_User
 import SoC_Map      :: *;
 
+`ifdef INCLUDE_DMEM_SLAVE
+import AXI4_Lite_Types :: *;
+`endif
+
 `ifdef INCLUDE_GDB_CONTROL
 import Debug_Module     :: *;
 `endif
@@ -50,6 +54,7 @@ import CPU               :: *;
 
 import Fabric_2x3        :: *;
 
+import Near_Mem_IFC      :: *;    // For Wd_{Id,Addr,Data,User}_Dma
 import Near_Mem_IO_AXI4  :: *;
 import PLIC              :: *;
 import PLIC_16_2_7       :: *;
@@ -231,7 +236,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       f_trace_data_merged.enq (tmp);
    endrule
 
-`ifdef ISA_F_OR_D
+`ifdef ISA_F
    // Create a tap for DM's FPR writes to the CPU, and merge-in the trace data.
    DM_FPR_Tap_IFC  dm_fpr_tap_ifc <- mkDM_FPR_Tap;
    mkConnection (debug_module.hart0_fpr_mem_client, dm_fpr_tap_ifc.server);
@@ -242,14 +247,13 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       f_trace_data_merged.enq (tmp);
    endrule
 `endif
-   // for ifdef ISA_F_OR_D
 
    // Create a tap for DM's CSR writes, and merge-in the trace data.
    DM_CSR_Tap_IFC  dm_csr_tap <- mkDM_CSR_Tap;
    mkConnection(debug_module.hart0_csr_mem_client, dm_csr_tap.server);
    mkConnection(dm_csr_tap.client, cpu.hart0_csr_mem_server);
 
-`ifdef ISA_F_OR_D
+`ifdef ISA_F
    (* descending_urgency = "merge_dm_fpr_trace_data, merge_dm_gpr_trace_data" *)
 `endif
    (* descending_urgency = "merge_dm_gpr_trace_data, merge_dm_csr_trace_data" *)
@@ -269,7 +273,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Connect DM's GPR interface directly to CPU
    mkConnection (debug_module.hart0_gpr_mem_client, cpu.hart0_gpr_mem_server);
 
-`ifdef ISA_F_OR_D
+`ifdef ISA_F
    // Connect DM's FPR interface directly to CPU
    mkConnection (debug_module.hart0_fpr_mem_client, cpu.hart0_fpr_mem_server);
 `endif
@@ -307,7 +311,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Connect the local 2x3 fabric
 
    // Masters on the local 2x3 fabric
-   mkConnection (cpu.dmem_master,  fabric_2x3.v_from_masters [cpu_dmem_master_num]);
+   mkConnection (cpu.mem_master,  fabric_2x3.v_from_masters [cpu_dmem_master_num]);
    mkConnection (dm_master_local, fabric_2x3.v_from_masters [debug_module_sba_master_num]);
 
    // Slaves on the local 2x3 fabric
@@ -345,13 +349,6 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // INTERFACE
 
    // ----------------------------------------------------------------
-   // Debugging: set core's verbosity
-
-   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
-      cpu.set_verbosity (verbosity, logdelay);
-   endmethod
-
-   // ----------------------------------------------------------------
    // Soft reset
 
    interface Server  cpu_reset_server = toGPServer (f_reset_reqs, f_reset_rsps);
@@ -363,7 +360,19 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    interface AXI4_Master_IFC  cpu_imem_master = cpu.imem_master;
 
    // DMem to Fabric master interface
-   interface AXI4_Master_IFC  cpu_dmem_master = fabric_2x3.v_to_slaves [default_slave_num];
+   interface AXI4_Master_IFC  core_mem_master = fabric_2x3.v_to_slaves [default_slave_num];
+
+   // ----------------------------------------------------------------
+   // Optional AXI4-Lite D-cache slave interface
+
+`ifdef INCLUDE_DMEM_SLAVE
+   interface AXI4_Lite_Slave_IFC  cpu_dmem_slave = cpu.dmem_slave;
+`endif
+
+   // ----------------------------------------------------------------
+   // Interface to 'coherent DMA' port of optional L2 cache
+
+   interface AXI4_Slave_IFC  dma_server = cpu.dma_server;
 
    // ----------------------------------------------------------------
    // External interrupt sources
@@ -405,6 +414,36 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    interface Client ndm_reset_client = debug_module.ndm_reset_client;
 `endif
 
+   // ----------------------------------------------------------------
+   // Misc. control and status
+
+   // ----------------
+   // Debugging: set core's verbosity
+
+   method Action  set_verbosity (Bit #(4)  verbosity, Bit #(64)  logdelay);
+      cpu.set_verbosity (verbosity, logdelay);
+   endmethod
+
+   // ----------------
+   // For ISA tests: watch memory writes to <tohost> addr
+
+`ifdef WATCH_TOHOST
+   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
+      cpu.set_watch_tohost (watch_tohost, tohost_addr);
+   endmethod
+
+   method Bit #(64) mv_tohost_value = cpu.mv_tohost_value;
+`endif
+
+   // Inform core that DDR4 has been initialized and is ready to accept requests
+   method Action ma_ddr4_ready;
+      cpu.ma_ddr4_ready;
+   endmethod
+
+   // Misc. status; 0 = running, no error
+   method Bit #(8) mv_status;
+      return cpu.mv_status;
+   endmethod
 endmodule: mkCore
 
 endpackage

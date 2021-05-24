@@ -42,6 +42,7 @@ import sys
 import os
 import stat
 import subprocess
+import shutil
 
 import multiprocessing
 
@@ -322,6 +323,16 @@ def do_worker (worker_num, args_dict):
         sys.stdout.write ("ERROR: Worker {0}: {1} exists but is not a dir".format (worker_num, tmpdir))
         return
 
+    # For iverilog simulations, copy the 'directc' files into the worker dir
+    # This is necessary because it seems that iverilog assumes these are in
+    # the current working dir.
+    if os.path.exists ("./directc_mkTop_HW_Side.so"):
+        sys.stdout.write ("Copying ./directc_mkTop_HW_Side.so to dir {0}\n".format (tmpdir))
+        shutil.copy ("./directc_mkTop_HW_Side.so", tmpdir);
+    if os.path.exists ("./directc_mkTop_HW_Side.sft"):
+        sys.stdout.write ("Copying ./directc_mkTop_HW_Side.sft to dir {0}\n".format (tmpdir))
+        shutil.copy ("./directc_mkTop_HW_Side.sft", tmpdir);
+
     os.chdir (tmpdir)
     sys.stdout.write ("Worker {0} using dir: {1}\n".format (worker_num, tmpdir))
 
@@ -379,6 +390,14 @@ def do_isa_test (args_dict, full_filename):
     command2 = [args_dict ['sim_path'],  "+tohost"]
     if (args_dict ['verbosity'] == 1): command2.append ("+v1")
     elif (args_dict ['verbosity'] == 2): command2.append ("+v2")
+
+    # ---- These are useful for identifying a test that hangs
+    # command1_string = "    TEMPORARY: Exec:"
+    # for x in command1:
+    #    command1_string += " {0}".format (x)
+    # command1_string += "\n"
+    # sys.stdout.write (command1_string)
+    # sys.stdout.flush ()
 
     message = message + "    Exec:"
     for x in command1:
