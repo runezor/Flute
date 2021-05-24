@@ -1722,7 +1722,7 @@ module mkCore(CLK,
   // synopsys translate_on
 
   // remaining internal signals
-  wire plic_RDY_server_reset_request_put_AND_cpu_RDY__ETC___d9;
+  wire fabric_2x3_RDY_reset_AND_cpu_RDY_hart0_server__ETC___d9;
 
   // action method cpu_reset_server_request_put
   assign RDY_cpu_reset_server_request_put = f_reset_reqs$FULL_N ;
@@ -2941,18 +2941,18 @@ module mkCore(CLK,
 
   // rule RL_rl_cpu_hart0_reset_from_soc_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
-	     fabric_2x3$RDY_reset &&
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put_AND_cpu_RDY__ETC___d9 ;
+	     plic$RDY_server_reset_request_put &&
+	     fabric_2x3_RDY_reset_AND_cpu_RDY_hart0_server__ETC___d9 ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_soc_start =
 	     CAN_FIRE_RL_rl_cpu_hart0_reset_from_soc_start ;
 
   // rule RL_rl_cpu_hart0_reset_from_dm_start
   assign CAN_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
-	     fabric_2x3$RDY_reset &&
 	     near_mem_io$RDY_server_reset_request_put &&
 	     plic$RDY_server_reset_request_put &&
 	     debug_module$RDY_hart0_reset_client_request_get &&
+	     fabric_2x3$RDY_reset &&
 	     cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_requestor$FULL_N ;
   assign WILL_FIRE_RL_rl_cpu_hart0_reset_from_dm_start =
@@ -3132,9 +3132,9 @@ module mkCore(CLK,
   assign f_reset_reqs$D_IN = cpu_reset_server_request_put ;
   assign f_reset_reqs$ENQ = EN_cpu_reset_server_request_put ;
   assign f_reset_reqs$DEQ =
-	     fabric_2x3$RDY_reset &&
 	     near_mem_io$RDY_server_reset_request_put &&
-	     plic_RDY_server_reset_request_put_AND_cpu_RDY__ETC___d9 ;
+	     plic$RDY_server_reset_request_put &&
+	     fabric_2x3_RDY_reset_AND_cpu_RDY_hart0_server__ETC___d9 ;
   assign f_reset_reqs$CLR = 1'b0 ;
 
   // submodule f_reset_requestor
@@ -3373,9 +3373,8 @@ module mkCore(CLK,
   assign soc_map$m_is_near_mem_IO_addr_addr = 64'h0 ;
 
   // remaining internal signals
-  assign plic_RDY_server_reset_request_put_AND_cpu_RDY__ETC___d9 =
-	     plic$RDY_server_reset_request_put &&
-	     cpu$RDY_hart0_server_reset_request_put &&
+  assign fabric_2x3_RDY_reset_AND_cpu_RDY_hart0_server__ETC___d9 =
+	     fabric_2x3$RDY_reset && cpu$RDY_hart0_server_reset_request_put &&
 	     f_reset_reqs$EMPTY_N &&
 	     f_reset_requestor$FULL_N ;
 

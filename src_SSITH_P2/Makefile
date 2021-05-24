@@ -92,7 +92,18 @@ TESTBENCH_DIRS  = $(REPO)/src_Testbench/Fabrics/AXI4
 CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(SRC_CORE):$(REPO)/src_Core/$(NEAR_MEM_VM_DIR):$(REPO)/src_Core/Cache_Config:$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
 AXI_DIRS = %/Libraries/TLM3:%/Libraries/Axi:%/Libraries/Axi4
 
-BSC_PATH = $(CONTRIB_DIRS):src_BSV:$(TESTBENCH_DIRS):$(CORE_DIRS):$(AXI_DIRS):+
+# ----------------
+# Please use one of the following defs of BSC_PATH (and comment out the other)
+
+# If you are using one of the older bsc 'releases'
+BSC_PATH = $(CUSTOM_DIRS):src_BSV:$(CORE_DIRS):$(TESTBENCH_DIRS):+:%/Libraries/TLM3:%/Libraries/Axi:%/Libraries/Axi4
+
+# If you are using a new 'bsc' build from these open-source repos:
+#     https://github.com/B-Lang-org/bsc
+#     https://github.com/B-Lang-org/bsc-contrib
+# CONTRIB_LIBS=$(HOME)/git_clones/bsc-contrib/Libraries
+# TLM_LIBS=$(CONTRIB_LIBS)/Bus:$(CONTRIB_LIBS)/AMBA_TLM3/TLM3:$(CONTRIB_LIBS)/AMBA_TLM3/Axi:$(CONTRIB_LIBS)/AMBA_TLM3/Axi4
+# BSC_PATH = $(CUSTOM_DIRS):src_BSV:$(CORE_DIRS):$(TESTBENCH_DIRS):+:$(TLM_LIBS)
 
 # ----------------
 # Top-level file and module
