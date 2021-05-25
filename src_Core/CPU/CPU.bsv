@@ -155,7 +155,7 @@ typedef struct {
 } EventsCore deriving (Bits, FShow);
 
 instance BitVectorable #(EventsCore, n, 30) provisos (Add #(a__, 1, n));
-   function Vector #(30, Bit #(n)) toVector (EventsCore e);
+   function Vector #(30, Bit #(n)) to_vector (EventsCore e);
       Vector #(30, Bit #(n)) list = replicate (0);
       list [0] = zeroExtend (pack (e.evt_REDIRECT));
       list [1] = zeroExtend (pack (e.evt_TLB_EXC));
