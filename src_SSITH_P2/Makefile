@@ -52,6 +52,7 @@ BSC_COMPILATION_FLAGS += \
 	-D FABRIC64    \
 	-D INCLUDE_GDB_CONTROL \
 	-D INCLUDE_TANDEM_VERIF \
+	-D PERFORMANCE_MONITORING \
 	-D BRVF_TRACE \
 	-D XILINX_BSCAN  -D XILINX_XCVU9P  -D JTAG_TAP
 
@@ -90,13 +91,15 @@ BSC_COMPILATION_FLAGS += \
 
 CORE_DIRS = $(REPO)/src_Core/CPU:$(REPO)/src_Core/ISA:$(REPO)/src_Core/RegFiles:$(SRC_CORE):$(REPO)/src_Core/Cache_Config:$(REPO)/src_Core/$(NEAR_MEM_VM_DIR):$(REPO)/src_Core/PLIC:$(REPO)/src_Core/Near_Mem_IO:$(REPO)/src_Core/Debug_Module:$(REPO)/src_Core/BSV_Additional_Libs
 
+BLUESTUFF_DIRS = $(REPO)/libs/BlueStuff/BlueUtils:$(REPO)/libs/BlueStuff/BlueBasics:$(REPO)/libs/BlueStuff
+
 TESTBENCH_DIRS  = $(REPO)/src_Testbench/Fabrics/AXI4
 
 # ----------------
 # Please use one of the following defs of BSC_PATH (and comment out the other)
 
 # If you are using one of the older bsc 'releases'
-BSC_PATH = $(CUSTOM_DIRS):src_BSV:$(CORE_DIRS):$(TESTBENCH_DIRS):+:%/Libraries/TLM3:%/Libraries/Axi:%/Libraries/Axi4
+BSC_PATH = $(CUSTOM_DIRS):src_BSV:$(CORE_DIRS):$(BLUESTUFF_DIRS):$(TESTBENCH_DIRS):+:%/Libraries/TLM3:%/Libraries/Axi:%/Libraries/Axi4
 
 # If you are using a new 'bsc' build from these open-source repos:
 #     https://github.com/B-Lang-org/bsc
