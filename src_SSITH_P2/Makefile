@@ -25,17 +25,17 @@ ARCH ?= RV64ACDFIMSU
 #     WB_L1_L2: Write-Back, L1 and L2, cache coherent
 #     TCM:      Tightly-coupled memory (no caches)
 
-# NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1
+NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1
 # NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
-NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
+# NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
 # NEAR_MEM_VM_DIR=Near_Mem_TCM
 
 # ================================================================
 # CORE implementation options
 #   Use 'Core_v2' with WB_L1_L2 cache, otherwise use 'Core'
 
-# SRC_CORE ?= $(REPO)/src_Core/Core
-SRC_CORE ?= $(REPO)/src_Core/Core_v2
+SRC_CORE ?= $(REPO)/src_Core/Core
+# SRC_CORE ?= $(REPO)/src_Core/Core_v2
 
 # ================================================================
 # RISC-V config macros passed into Bluespec 'bsc' compiler
