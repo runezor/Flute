@@ -2437,7 +2437,7 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../Verilog_RTL/mkPerfCountersFlute.v</spirit:name>
+        <spirit:name>hdl/mkPerfCountersFlute.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -2644,7 +2644,7 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../Verilog_RTL/mkPerfCountersFlute.v</spirit:name>
+        <spirit:name>hdl/mkPerfCountersFlute.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
