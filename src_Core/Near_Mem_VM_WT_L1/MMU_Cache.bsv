@@ -1062,9 +1062,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem)  (MMU_Cache_IFC);
 	       end
 `endif
 	       if (do_write) begin
-`ifdef PERFORMANCE_MONITORING
-		  cacheEvents.evt_ST = True;
-`endif
 		  // ST, or successful SC
 		  if (hit) begin
 		     // Update cache line in cache
