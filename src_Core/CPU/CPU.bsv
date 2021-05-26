@@ -33,6 +33,12 @@ import ConfigReg    :: *;
 import GetPut_Aux :: *;
 import Semi_FIFOF :: *;
 
+`ifdef PERFORMANCE_MONITORING
+import PerformanceMonitor :: *;
+import Vector             :: *;
+import SpecialRegs        :: *;
+`endif
+
 // ================================================================
 // Project imports
 
@@ -120,6 +126,46 @@ endfunction
 
 // ================================================================
 
+`ifdef PERFORMANCE_MONITORING
+typedef struct {
+   Bool evt_REDIRECT;
+   Bool evt_TLB_EXC; // TODO: Misleading name
+   Bool evt_BR;
+   Bool evt_JAL;
+   Bool evt_JALR;
+   Bool evt_AUIPC;
+   Bool evt_LD;
+   Bool evt_ST;
+   Bool evt_LR;
+   Bool evt_SC;
+   Bool evt_AMO;
+   Bool evt_SERIAL_SHIFT;
+   Bool evt_INT_MUL_DIV_REM;
+   Bool evt_FP;
+   Bool evt_SC_SUCCESS;
+   Bool evt_LD_WAIT;
+   Bool evt_ST_WAIT;
+   Bool evt_FENCE;
+   Bool evt_F_BUSY_NO_CONSUME;
+   Bool evt_D_BUSY_NO_CONSUME;
+   Bool evt_1_BUSY_NO_CONSUME;
+   Bool evt_2_BUSY_NO_CONSUME;
+   Bool evt_3_BUSY_NO_CONSUME;
+   Bool evt_IMPRECISE_SETBOUND;
+   Bool evt_UNREPRESENTABLE_CAP;
+   Bool evt_MEM_CAP_LOAD;
+   Bool evt_MEM_CAP_STORE;
+   Bool evt_MEM_CAP_LOAD_TAG_SET;
+   Bool evt_MEM_CAP_STORE_TAG_SET;
+} EventsCore deriving (Bits, FShow);
+
+instance BitVectorable #(EventsCore, 1, m) provisos (Bits #(EventsCore, m));
+   function to_vector = struct_to_vector;
+endinstance
+`endif
+
+// ================================================================
+
 (* synthesize *)
 module mkCPU (CPU_IFC);
 
@@ -173,6 +219,10 @@ module mkCPU (CPU_IFC);
 
    // Current verbosity, taking into account log delay
    Bit #(4)  cur_verbosity = ((minstret < cfg_logdelay) ? 0 : cfg_verbosity);
+
+`ifdef PERFORMANCE_MONITORING
+   Array #(Wire #(EventsCore)) aw_events <- mkDRegOR (5, unpack (0));
+`endif
 
    // ----------------
    // Major CPU states
@@ -635,6 +685,10 @@ module mkCPU (CPU_IFC);
 
       if (cur_verbosity > 1) $display ("%0d: %m.rl_pipe", mcycle);
 
+`ifdef PERFORMANCE_MONITORING
+      let coreEvents = unpack (0);
+`endif
+
       Bool stage3_full = (stage3.out.ostatus != OSTATUS_EMPTY);
       Bool stage2_full = (stage2.out.ostatus != OSTATUS_EMPTY);
       Bool stage1_full = (stage1.out.ostatus != OSTATUS_EMPTY);
@@ -667,7 +721,21 @@ module mkCPU (CPU_IFC);
 	 // CSRRx is done off-pipe
 	 csr_regfile.csr_minstret_incr;
 	 fa_emit_instr_trace (minstret, stage2.out.data_to_stage3.pc, stage2.out.data_to_stage3.instr, rg_cur_priv);
+	 
+`ifdef PERFORMANCE_MONITORING
+	 coreEvents.evt_SC_SUCCESS = stage2.perf.sc_success;
+`endif
       end
+
+`ifdef PERFORMANCE_MONITORING
+      coreEvents.evt_LD_WAIT = stage2.perf.ld_wait;
+      coreEvents.evt_ST_WAIT = stage2.perf.st_wait;
+      coreEvents.evt_F_BUSY_NO_CONSUME = (stageF.out.ostatus != OSTATUS_PIPE) && (stageF.out.ostatus != OSTATUS_EMPTY);
+      coreEvents.evt_D_BUSY_NO_CONSUME = (stageD.out.ostatus != OSTATUS_PIPE) && (stageD.out.ostatus != OSTATUS_EMPTY) && (stageF.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_1_BUSY_NO_CONSUME = (stage1.out.ostatus != OSTATUS_PIPE) && (stage1.out.ostatus != OSTATUS_EMPTY) && (stageD.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_2_BUSY_NO_CONSUME = (stage2.out.ostatus != OSTATUS_PIPE) && (stage2.out.ostatus != OSTATUS_EMPTY) && (stage1.out.ostatus == OSTATUS_PIPE);
+      coreEvents.evt_3_BUSY_NO_CONSUME = (stage3.out.ostatus != OSTATUS_PIPE) && (stage3.out.ostatus != OSTATUS_EMPTY) && (stage2.out.ostatus == OSTATUS_PIPE);
+`endif
 
       // ----------------
       // Move instruction from Stage1 to Stage2, except:
@@ -691,6 +759,9 @@ module mkCPU (CPU_IFC);
 	       if (stage1.out.redirect) begin
 		  rg_next_pc <= stage1.out.next_pc;
 		  redirect    = True;
+`ifdef PERFORMANCE_MONITORING
+		  coreEvents.evt_REDIRECT = True;
+`endif
 	       end
 	    end
 	 end
@@ -700,6 +771,37 @@ module mkCPU (CPU_IFC);
       if (   (! stage1_full)
 	  && (stageD.out.ostatus == OSTATUS_PIPE))
 	 begin
+`ifdef PERFORMANCE_MONITORING
+	    let instr = stageD.out.data_to_stage1.decoded_instr;
+	    coreEvents.evt_LD = (instr.opcode == op_LOAD)
+`ifdef ISA_F
+				   || (instr.opcode == op_LOAD_FP)
+`endif
+	    ;
+	    coreEvents.evt_ST = (instr.opcode == op_STORE)
+`ifdef ISA_F
+				   || (instr.opcode == op_STORE_FP)
+`endif
+	    ;
+`ifdef ISA_A
+	    coreEvents.evt_LR = (instr.opcode == op_AMO) && (instr.funct5 == f5_AMO_LR);
+	    coreEvents.evt_SC = (instr.opcode == op_AMO) && (instr.funct5 == f5_AMO_SC);
+	    coreEvents.evt_AMO = (instr.opcode == op_AMO) && (instr.funct5 != f5_AMO_LR) && (instr.funct5 != f5_AMO_SC);
+`endif
+	    coreEvents.evt_BR = instr.opcode == op_BRANCH;
+	    coreEvents.evt_JAL = instr.opcode == op_JAL;
+	    coreEvents.evt_JALR = instr.opcode == op_JALR;
+	    coreEvents.evt_AUIPC = instr.opcode == op_AUIPC;
+	    coreEvents.evt_SERIAL_SHIFT = ((instr.opcode == op_OP_IMM) || (instr.opcode == op_OP))
+						 && ((instr.funct3 == f3_SLLI) || (instr.funct3 == f3_SRLI) || (instr.funct3 == f3_SRAI));
+`ifdef ISA_M
+	    coreEvents.evt_INT_MUL_DIV_REM = ((instr.opcode == op_OP) || (instr.opcode == op_OP_32)) && f7_is_OP_MUL_DIV_REM (instr.funct7);
+`endif
+`ifdef ISA_F
+	    coreEvents.evt_FP = (instr.opcode == op_FP) || (instr.opcode == op_FMADD) || (instr.opcode == op_FMSUB)
+				   || (instr.opcode == op_FNMSUB) || (instr.opcode == op_FNMADD);
+`endif
+`endif
 	    stage1.enq (stageD.out.data_to_stage1);  stage1_full = True;
 	    stageD.deq;                              stageD_full = False;
 	 end
@@ -747,6 +849,10 @@ module mkCPU (CPU_IFC);
       stage1.set_full (stage1_full);    fa_step_check;
       stageD.set_full (stageD_full);
       stageF.set_full (stageF_full);
+
+`ifdef PERFORMANCE_MONITORING
+      aw_events [0] <= coreEvents;
+`endif
    endrule: rl_pipe
 
    // ================================================================
@@ -757,6 +863,12 @@ module mkCPU (CPU_IFC);
 			   && (stage2.out.ostatus == OSTATUS_NONPIPE));
       if (cur_verbosity > 1)
 	 $display ("%0d: %m.rl_stage2_nonpipe -> CPU_TRAP", mcycle);
+
+`ifdef PERFORMANCE_MONITORING
+      let coreEvents = unpack (0);
+      coreEvents.evt_TLB_EXC = True;
+      aw_events [1] <= coreEvents;
+`endif
 
       // Just save relevant info and handle in next clock
       rg_trap_info       <= stage2.out.trap_info;
@@ -879,6 +991,43 @@ module mkCPU (CPU_IFC);
 	 $display ("    mcause:0x%0h  epc 0x%0h  tval:0x%0h  next_pc 0x%0h, new_priv %0d new_mstatus 0x%0h",
 		   mcause, epc, tval, next_pc, new_priv, new_mstatus);
    endrule: rl_trap
+
+`ifdef PERFORMANCE_MONITORING
+   // ================================================================
+   // Performance counters
+   Vector #(1, Bit #(Counter_Width)) null_evt = replicate (0);
+   Vector #(31, Bit #(Counter_Width)) core_evts_vec = to_large_vector (aw_events [0]);
+   Vector #(16, Bit #(Counter_Width)) imem_evts_vec = to_large_vector (near_mem.imem.events);
+   Vector #(16, Bit #(Counter_Width)) dmem_evts_vec = to_large_vector (near_mem.dmem.events);
+   Vector #(32, Bit #(Counter_Width)) external_evts_vec = replicate (0); // No external events in this design
+
+   let events = append (null_evt, core_evts_vec);
+   events = append (events, imem_evts_vec);
+   events = append (events, dmem_evts_vec);
+   events = append (events, external_evts_vec);
+
+   (* fire_when_enabled, no_implicit_conditions *)
+   rule rl_send_perf_evts;
+      csr_regfile.send_performance_events (events);
+   endrule
+
+   // Example usage:
+   //  csrwi 0x320, 24       // Write to mcountinhibit csr (not in rv-gcc though)
+   //  csrwi mhpmcounter3, 0
+   //  csrwi mhpmcounter4, 0 // Initialize counters
+   //  csrwi mhpmevent3, 2   // Count Data Cache Load Misses
+   //  csrwi mhpmevent4, 3   // Count Data Cache Load Miss Latency
+   //  csrwi 0x320, 0        // Start counting
+   //
+   //  la x1, <data>;
+   //  ld x2, 0(x1);
+   //
+   //  csrwi 0x320, 24        // Atomically stop counting
+   //  csrr x3, mhpmcounter3
+   //  csrr x4, mhpmcounter4
+   // Ratio eg. (x4 / x3)
+`endif
+
 
    // ================================================================
    // Stage1: nonpipe special: CSRRW and CSRRWI
@@ -1239,6 +1388,7 @@ module mkCPU (CPU_IFC);
    endrule: rl_stage1_FENCE
 
    // ----------------
+   // Finish FENCE
 
    rule rl_finish_FENCE (rg_state == CPU_FENCE);
       if (cur_verbosity > 1) $display ("%0d: %m.rl_finish_FENCE", mcycle);
@@ -1256,6 +1406,12 @@ module mkCPU (CPU_IFC);
       // Trace data
       let trace_data = stage1.out.data_to_stage2.trace_data;
       f_trace_data.enq (trace_data);
+`endif
+
+`ifdef PERFORMANCE_MONITORING
+      let coreEvents = unpack (0);
+      coreEvents.evt_FENCE = True;
+      aw_events [2] <= coreEvents;
 `endif
 
       // Resume pipe

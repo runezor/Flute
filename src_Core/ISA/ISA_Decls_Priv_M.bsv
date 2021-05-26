@@ -172,6 +172,8 @@ CSR_Addr   csr_addr_mhpmevent29    = 12'h33D;    // Machine performance-monitori
 CSR_Addr   csr_addr_mhpmevent30    = 12'h33E;    // Machine performance-monitoring event selector
 CSR_Addr   csr_addr_mhpmevent31    = 12'h33F;    // Machine performance-monitoring event selector
 
+CSR_Addr   csr_addr_mcountinhibit  = 12'h320;    // Machine Counter-Inhibit
+
 CSR_Addr   csr_addr_tselect   = 12'h7A0;    // Debug/Trace trigger register select
 CSR_Addr   csr_addr_tdata1    = 12'h7A1;    // First Debug/Trace trigger data
 CSR_Addr   csr_addr_tdata2    = 12'h7A2;    // Secont Debug/Trace trigger data
@@ -181,6 +183,24 @@ CSR_Addr   csr_addr_dcsr      = 12'h7B0;    // Debug control and status
 CSR_Addr   csr_addr_dpc       = 12'h7B1;    // Debug PC
 CSR_Addr   csr_addr_dscratch0 = 12'h7B2;    // Debug scratch0
 CSR_Addr   csr_addr_dscratch1 = 12'h7B3;    // Debug scratch1
+
+// ================================================================
+// The width of individual counters
+
+`ifndef COUNTER_WIDTH
+`define COUNTER_WIDTH 64
+`endif
+typedef `COUNTER_WIDTH Counter_Width;
+
+`ifndef NO_OF_CTRS
+`define NO_OF_CTRS 29
+`endif
+typedef `NO_OF_CTRS No_Of_Ctrs;
+
+`ifndef NO_OF_EVTS
+`define NO_OF_EVTS 96
+`endif
+typedef `NO_OF_EVTS No_Of_Evts;
 
 // ================================================================
 // MISA
@@ -469,6 +489,7 @@ endfunction
 // ================================================================
 // Logical view of csr_mcounteren register
 typedef struct {
+   Bit#(29) hpm;
    Bit#(1) ir;
    Bit#(1) tm;
    Bit#(1) cy;
@@ -476,22 +497,45 @@ typedef struct {
 deriving (Bits, FShow);
 
 function WordXL mcounteren_to_word (MCounteren mc);
-   return {0,
-           mc.ir,
-	   mc.tm,
-	   mc.cy};
+   return zeroExtend (pack (mc));
 endfunction
 
 function MCounteren word_to_mcounteren (WordXL x);
-   return MCounteren {ir: x[2],
-                      tm: x[1],
-		      cy: x[0]};
+   return unpack (truncate (x));
 endfunction
 
 function MCounteren mcounteren_reset_value;
-   return MCounteren {ir: 1'b0,
-                      tm: 1'b0,
+   return MCounteren {hpm: 29'b0,
+		      ir: 1'b0,
+		      tm: 1'b0,
 		      cy: 1'b0};
+endfunction
+
+// ================================================================
+// Logical view of csr_mcountinhibit register
+typedef struct {
+   ReservedZero#(TSub#(29, No_Of_Ctrs)) reserved;
+   Bit#(No_Of_Ctrs) hpm;
+   Bit#(1) ir;
+   ReservedZero#(1) reserved2;
+   Bit#(1) cy;
+} MCountinhibit
+deriving (Bits, FShow);
+
+function WordXL mcountinhibit_to_word (MCountinhibit mc);
+   return zeroExtend (pack (mc));
+endfunction
+
+function MCountinhibit word_to_mcountinhibit (WordXL x);
+   return unpack (truncate (x));
+endfunction
+
+function MCountinhibit mcountinhibit_reset_value;
+   return MCountinhibit {reserved:  ?,
+			 hpm:       29'b0,
+			 ir:        1'b0,
+			 reserved2: ?,
+			 cy:        1'b0};
 endfunction
 
 // ================================================================

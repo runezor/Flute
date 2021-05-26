@@ -177,6 +177,9 @@ module mkNear_Mem (Near_Mem_IFC);
       method Bool     exc            = icache.exc;
       method Exc_Code exc_code       = icache.exc_code;
       method WordXL   tval           = icache.addr;
+`ifdef PERFORMANCE_MONITORING
+      method EventsCache events = icache.events;
+`endif
    endinterface
 
    // Fabric side
@@ -215,6 +218,9 @@ module mkNear_Mem (Near_Mem_IFC);
 `endif
       method Bool       exc        = dcache.exc;
       method Exc_Code   exc_code   = dcache.exc_code;
+`ifdef PERFORMANCE_MONITORING
+      method EventsCache events = dcache.events;
+`endif
    endinterface
 
    // Fabric side

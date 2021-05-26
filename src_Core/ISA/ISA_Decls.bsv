@@ -24,6 +24,7 @@ package ISA_Decls;
 import DefaultValue :: *;
 import Vector       :: *;
 import BuildVector  :: *;
+import Reserved     :: *;
 
 // ================================================================
 // BSV project imports

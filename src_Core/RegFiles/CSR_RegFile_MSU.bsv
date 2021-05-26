@@ -28,6 +28,10 @@ import ClientServer :: *;
 
 import GetPut_Aux :: *;
 
+`ifdef PERFORMANCE_MONITORING
+import PerformanceMonitor :: *;
+`endif
+
 // ================================================================
 // Project imports
 
@@ -147,6 +151,11 @@ interface CSR_RegFile_IFC;
    // Read MTIME
    (* always_ready *)
    method Bit #(64) read_csr_mtime;
+
+`ifdef PERFORMANCE_MONITORING
+   (* always_ready, always_enabled *)
+   method Action send_performance_events (Vector #(No_Of_Evts, Bit #(64)) evts);
+`endif
 
    // Access permission
    (* always_ready *)
@@ -289,6 +298,16 @@ deriving (Eq, Bits, FShow);
 
 // ================================================================
 
+`ifdef PERFORMANCE_MONITORING
+(* synthesize *)
+module mkPerfCountersFlute (PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, Counter_Width, No_Of_Evts));
+  PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, Counter_Width, No_Of_Evts) perf_counters <- mkPerfCounters;
+  return perf_counters;
+endmodule
+`endif
+
+// ================================================================
+
 (* synthesize *)
 module mkCSR_RegFile (CSR_RegFile_IFC);
 
@@ -360,11 +379,37 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(Bit #(64))   rg_mcycle <- mkReg (0);
    RWire #(Bit #(64)) rw_mcycle <- mkRWire;    // Driven on CSRRx write to mcycle
 
+   Reg #(Bit #(64))   rg_mtime <- mkReg (0);
+
    // minstret is needed even for user-mode RDINSTRET instructions
    // It can be updated by a CSR instruction (in Priv_M), and by retirement of any other instruction
    Reg #(Bit #(64))   rg_minstret      <- mkReg (0);    // Needed even for user-mode instrs
    RWire #(Bit #(64)) rw_minstret      <- mkRWire;      // Driven on CSRRx write to minstret
    PulseWire          pw_minstret_incr <- mkPulseWire;
+
+`ifdef PERFORMANCE_MONITORING
+   PerfCounters_IFC #(No_Of_Ctrs, Counter_Width, Counter_Width, No_Of_Evts)
+      perf_counters <- mkPerfCountersFlute;
+
+   let ctrs     = perf_counters.read_counters;
+   let ctr_sels = perf_counters.read_ctr_sels;
+
+   Reg #(Bit #(2))  rg_ctr_inhib_ir_cy <- mkReg (0);
+   Wire #(Bit #(2)) w_ctr_inhib_ir_cy  <- mkWire;
+
+   MCountinhibit ctr_inhibit = MCountinhibit {reserved:  ?,
+					      hpm:       perf_counters.read_ctr_inhibit,
+					      ir:        rg_ctr_inhib_ir_cy [1],
+					      reserved2: ?,
+					      cy:        rg_ctr_inhib_ir_cy [0]};
+   CSR_Addr      no_of_ctrs  = fromInteger (valueOf (No_Of_Ctrs));
+`else
+   Vector #(0, ReadOnly #(Bit #(Counter_Width))) ctrs     = newVector;
+   Vector #(0, ReadOnly #(Word))                 ctr_sels = newVector;
+
+   MCountinhibit ctr_inhibit = word_to_mcountinhibit (0);
+   CSR_Addr      no_of_ctrs  = 0;
+`endif
 
    // Debug/Trace
    Reg #(WordXL)    rg_tselect <- mkRegU;
@@ -456,11 +501,23 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    rule rl_mcycle_incr;
       // Update due to CSRRx    TODO: fix this
       if (rw_mcycle.wget matches tagged Valid .v)
-	 rg_mcycle <= rg_mcycle + 1;
+	 rg_mcycle <= v;
 
       // Update due to clock
-      else
+<<<<<<< HEAD
+      else if (! unpack (ctr_inhibit[0]))
+=======
+      else if (! unpack (ctr_inhibit.cy))
+>>>>>>> 0c179cf... Provide and use an MCountinhibit struct
 	 rg_mcycle <= rg_mcycle + 1;
+   endrule
+
+   (* no_implicit_conditions, fire_when_enabled *)
+   rule rl_mtime_incr;
+`ifdef DETERMINISTIC_TIMING
+      if (pw_minstret_incr)
+`endif
+	 rg_mtime <= rg_mtime + 1;
    endrule
 
    // ----------------------------------------------------------------
@@ -473,10 +530,28 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    endrule
 
    (* no_implicit_conditions, fire_when_enabled *)
-   rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr);
+   rule rl_upd_minstret_incr ((! isValid (rw_minstret.wget)) && pw_minstret_incr && (! unpack (ctr_inhibit.ir)));
       rg_minstret <= rg_minstret + 1;
       // $display ("%0d: CSR_RegFile_UM.rl_upd_minstret_incr: new value is %0d", rg_mcycle, rg_minstret + 1);
    endrule
+
+`ifdef PERFORMANCE_MONITORING
+   // ----------------------------------------------------------------
+   // CTR INHIB
+   // Must do it this roundabout way so that rules above aren't blocked by
+   // fav_csr_write due to accessing both a wire (rw_minstret) and a reg (ctr_inhibit)
+   // This way ctr_inhibit is not written in fav_csr_write
+
+<<<<<<< HEAD
+   rule rl_upd_ctr_inhib_csrrx (rw_ctr_inhib_ir_cy.wget matches tagged Valid .v);
+      rg_ctr_inhib_ir_cy <= v;
+=======
+`ifdef PERFORMANCE_MONITORING
+   rule rl_upd_ctr_inhib_csrrx;
+      rg_ctr_inhib_ir_cy <= w_ctr_inhib_ir_cy;
+>>>>>>> 0c179cf... Provide and use an MCountinhibit struct
+   endrule
+`endif
 
    // ----------------------------------------------------------------
    // Help functions for interface methods
@@ -500,15 +575,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_fcsr)
 `endif
 		     || (csr_addr == csr_addr_cycle)
-
-		     /*
-		     // NOTE: CSR_TIME should be a 'shadow copy' of the MTIME
-		     // mem-mapped location; but since both increment at the
-		     // same rate, and MTIME is never written, this is ok.
-
 		     || (csr_addr == csr_addr_time)
-		     */
-
 		     || (csr_addr == csr_addr_instret)
 `ifdef RV32
 		     || (csr_addr == csr_addr_cycleh)
@@ -584,6 +651,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_mcycleh)
 		     || (csr_addr == csr_addr_minstreth)
 `endif
+		     || (csr_addr == csr_addr_mcountinhibit)
 
 		     || (csr_addr == csr_addr_tselect)
 		     || (csr_addr == csr_addr_tdata1)
@@ -607,21 +675,35 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    function Maybe #(Word) fv_csr_read (CSR_Addr csr_addr);
       Maybe #(Word)  m_csr_value = tagged Invalid;
 
-      if ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
-	 m_csr_value = tagged Valid 0;
+      if ((csr_addr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)) begin
+	 let idx = csr_addr - csr_addr_hpmcounter3;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncate (ctrs [idx]));
+	 else m_csr_value = tagged Valid 0;
+      end
 `ifdef RV32
-      else if ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h))
-	 m_csr_value = tagged Valid 0;
+      else if ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)) begin
+	 let idx = csr_addr - csr_addr_hpmcounter3h;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (ctrs [idx][63:32]);
+	 else m_csr_value = tagged Valid 0;
+      end
 `endif
-      else if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	 m_csr_value = tagged Valid 0;
+      else if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	 let idx = csr_addr - csr_addr_mhpmcounter3;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (truncate (ctrs [idx]));
+	 else m_csr_value = tagged Valid 0;
+      end
 `ifdef RV32
-      else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
-	 m_csr_value = tagged Valid 0;
+      else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
+	 let idx = csr_addr - csr_addr_mhpmcounter3h;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (ctrs [idx][63:32]);
+	 else m_csr_value = tagged Valid 0;
+      end
 `endif
-      else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
-	 m_csr_value = tagged Valid 0;
-
+      else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31)) begin
+	 let idx = csr_addr - csr_addr_mhpmevent3;
+	 if (idx < no_of_ctrs) m_csr_value = tagged Valid (zeroExtend (ctr_sels [idx]));
+	 else m_csr_value = tagged Valid 0;
+      end
       else begin
 	 case (csr_addr)
 	    // User mode csrs
@@ -631,19 +713,11 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_fcsr:     m_csr_value = tagged Valid ({ 0, rg_frm, rg_fflags });
 `endif
 	    csr_addr_cycle:    m_csr_value = tagged Valid (truncate (rg_mcycle));
-
-	    /*
-	    // NOTE: CSR_TIME should be a 'shadow copy' of the MTIME
-	    // mem-mapped location; but since both increment at the
-	    // same rate, and MTIME is never written, this is ok.
-
-	    csr_addr_time:     m_csr_value = tagged Valid (truncate (rg_mcycle));
-	    */
-
+	    csr_addr_time:     m_csr_value = tagged Valid (truncate (rg_mtime));
 	    csr_addr_instret:  m_csr_value = tagged Valid (truncate (rg_minstret));
 `ifdef RV32
 	    csr_addr_cycleh:   m_csr_value = tagged Valid (rg_mcycle   [63:32]);
-	    csr_addr_timeh:    m_csr_value = tagged Invalid;
+	    csr_addr_timeh:    m_csr_value = tagged Valid (rg_mtime    [63:32]);
 	    csr_addr_instreth: m_csr_value = tagged Valid (rg_minstret [63:32]);
 `endif
 
@@ -716,6 +790,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_minstreth: m_csr_value = tagged Valid (rg_minstret [63:32]);
 `endif
 
+	    csr_addr_mcountinhibit: m_csr_value = tagged Valid (mcountinhibit_to_word (ctr_inhibit));
+
 	    csr_addr_tselect:  m_csr_value = tagged Valid rg_tselect;
 	    csr_addr_tdata1:   m_csr_value = tagged Valid rg_tdata1;
 	    csr_addr_tdata2:   m_csr_value = tagged Valid rg_tdata2;
@@ -755,20 +831,42 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 WordXL          new_csr_value  = ?;
 	 Maybe #(WordXL) m_new_csr_value2 = tagged Invalid;
 
-	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31))
-	    begin
-	       new_csr_value = 0;    // hardwired
-	    end
+`ifdef PERFORMANCE_MONITORING
 `ifdef RV32
-	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h))
-	    begin
-	       new_csr_value = 0;    // hardwired
-	    end
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	    let new_value = { ctrs [csr_addr - csr_addr_mhpmcounter3][63:32], wordxl };
+	    perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3, new_value);
+	    new_csr_value = wordxl;
+	 end
+	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
+	    let new_value = { wordxl, ctrs [csr_addr - csr_addr_mhpmcounter3h][31:0] };
+	    perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3h, new_value);
+	    new_csr_value = wordxl;
+	 end
+`else
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	    perf_counters.write_counter (truncate (pack (csr_addr - csr_addr_mhpmcounter3)), wordxl);
+	    new_csr_value = wordxl;
+	 end
 `endif
-	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31))
-	    begin
-	       new_csr_value = 0;    // hardwired
-	    end
+	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31)) begin
+	    Bit #(TLog #(No_Of_Evts)) new_val = truncate (wordxl);
+	    perf_counters.write_ctr_sel (truncate (pack (csr_addr - csr_addr_mhpmevent3)), new_val);
+	    new_csr_value = zeroExtend (new_val);
+	 end
+`else // !PERFORMANCE_MONITORING
+	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
+	    new_csr_value = 0;    // hardwired
+	 end
+`ifdef RV32
+	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
+	    new_csr_value = 0;    // hardwired
+	 end
+`endif
+	 else if ((csr_addr_mhpmevent3 <= csr_addr) && (csr_addr <= csr_addr_mhpmevent31)) begin
+	    new_csr_value = 0;    // hardwired
+	 end
+`endif // PERFORMANCE_MONITORING
 	 else
 	    case (csr_addr)
 	       // User mode csrs
@@ -891,7 +989,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       rg_mtvec     <= mtvec;
 				    end
 	       csr_addr_mcounteren: begin
-				       let mcounteren = word_to_mcounteren(wordxl);
+				       let mcounteren = word_to_mcounteren (wordxl);
 				       new_csr_value  = mcounteren_to_word (mcounteren);
 				       rg_mcounteren <= mcounteren;
 				    end
@@ -969,6 +1067,22 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       rw_minstret.wset (new_csr_value);
 				    end
 `endif
+	       csr_addr_mcountinhibit: begin
+`ifdef PERFORMANCE_MONITORING
+				       let mcountinhibit = word_to_mcountinhibit (wordxl);
+				       new_csr_value = mcountinhibit_to_word (mcountinhibit);
+
+<<<<<<< HEAD
+				       rw_ctr_inhib_ir_cy.wset ({new_ctr_inhibit[2], new_ctr_inhibit[0]});
+				       perf_counters.write_ctr_inhibit (truncateLSB (new_ctr_inhibit));
+=======
+				       w_ctr_inhib_ir_cy <= { mcountinhibit.ir, mcountinhibit.cy };
+				       perf_counters.write_ctr_inhibit (mcountinhibit.hpm);
+>>>>>>> 0c179cf... Provide and use an MCountinhibit struct
+`else
+				       new_csr_value = 0;
+`endif
+				   end
 	       csr_addr_tselect:   begin
 				      // Until we implement trigger functionality,
 				      // return tselect always contains 0
@@ -1315,9 +1429,14 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 
    // Read MTIME
    method Bit #(64) read_csr_mtime;
-      // We use mcycle as a proxy for time
-      return rg_mcycle;
+      return rg_mtime;
    endmethod
+
+`ifdef PERFORMANCE_MONITORING
+   method Action send_performance_events (Vector #(No_Of_Evts, Bit #(64)) evts);
+      perf_counters.send_performance_events(evts);
+   endmethod
+`endif
 
    // Access permission
    method Bool access_permitted_1 (Priv_Mode  priv, CSR_Addr  csr_addr,  Bool read_not_write);
@@ -1329,14 +1448,17 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    endmethod
 
    // Fault on reading counters?
+   // XXX: No scounteren implemented properly (and hardwired to 0 yet treated as all 1s)
    method Bool csr_counter_read_fault (Priv_Mode  priv, CSR_Addr  csr_addr);
       return (   ((priv == s_Priv_Mode) || (priv == u_Priv_Mode))
 	      && (   ((csr_addr == csr_addr_cycle)   && (rg_mcounteren.cy == 0))
 		  || ((csr_addr == csr_addr_time)    && (rg_mcounteren.tm == 0))
 		  || ((csr_addr == csr_addr_instret) && (rg_mcounteren.ir == 0))
-		  || ((csr_addr_hpmcounter3  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31))
+		  || (   (csr_addr_hpmcounter3  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31)
+		      && (rg_mcounteren.hpm [csr_addr - csr_addr_hpmcounter3] == 0))
 `ifdef RV32
-		  || ((csr_addr_hpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h))
+		  || (   (csr_addr_hpmcounter3h  <= csr_addr) && (csr_addr <= csr_addr_hpmcounter31h)
+		      && (rg_mcounteren.hpm [csr_addr - csr_addr_hpmcounter3h] == 0))
 `endif
 		  ));
    endmethod
