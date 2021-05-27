@@ -78,7 +78,7 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 `ifdef ISA_C
    Instr_C instr_C = instr [15:0];
    if (! rg_data.is_i32_not_i16) begin
-      instr = fv_decode_C (misa, xl, instr_C);
+      instr = fv_decode_C (misa, xl, rg_data.is_cap_mode, instr_C);
       instr_or_instr_C = zeroExtend(instr_C);
    end
 `endif
