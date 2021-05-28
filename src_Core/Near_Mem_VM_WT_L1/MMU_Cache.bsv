@@ -1564,7 +1564,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // Send burst request into fabric for full cache line
       PA             cline_addr        = fn_align_Addr_to_CLine (rg_pa);
       Fabric_Addr    cline_fabric_addr = fn_PA_to_Fabric_Addr (cline_addr);
-      fa_fabric_send_read_req (cline_fabric_addr, ((bytes_per_fabric_data == 8) ? 7 : 15), fromInteger ((bytes_per_cline / bytes_per_fabric_data) - 1));
+      fa_fabric_send_read_req (cline_fabric_addr, ((bytes_per_fabric_data == 8) ? 8 : 16), fromInteger ((bytes_per_cline / bytes_per_fabric_data) - 1));
 
       // Pick a victim 'way'
       // TODO: prioritize picking an EMPTY slot over a CLEAN slot
