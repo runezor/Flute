@@ -453,7 +453,8 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
 `ifdef PERFORMANCE_MONITORING
    rule rl_relay_external_events;
-      let slave_events = to_vector (axi4_mem_shim_slave_monitor.events);
+      Vector #(7, Bit #(1)) slave_events = to_vector (axi4_mem_shim_slave_monitor.events);
+      // Append 3 7-bit vectors.  tag_cache_master_evts at index 0x0, slave_events at offset 0x7, and tag_cache_evts at offset 0xE.
       let events = append (tag_cache_evts, append (slave_events, tag_cache_master_evts));
       cpu.relay_external_events (to_large_vector (events));
    endrule
