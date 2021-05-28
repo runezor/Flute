@@ -70,23 +70,24 @@ IMem and DMem L1 Cache, events identical for both, though some are irrelevant fo
 External events:
 Not generic for non-cheri setups but one should try to count all events between any two connected AXI4 master/slave pairs.
 For `ISA_CHERI` enabled builds, the `EventsAXI4` struct counts AXI4 events in and out of the tag cache. With IDs in the format (Slave/Master):
-- AR Flit (0x40/0x46)
-- AW Flit (0x41/0x47)
-- W Flit (0x42/0x48)
-- R Flit (0x43/0x49)
-- R Flit Final (0x44/0x4a)
-- B Flit (0x45/0x4b)
+- AW Flit (0x47/0x4e)
+- W Flit (0x48/0x4f)
+- W Flit Final (0x49/0x50)
+- B Flit (0x4a/0x51)
+- AR Flit (0x4b/0x52)
+- R Flit (0x4c/0x53)
+- R Flit Final (0x4d/0x54)
 
 That is, to count the extra read requests the tag cache generates, one can count ((0x46) - (0x40)).
 
 If `NO_TAG_CACHE` is NOT defined (i.e. using the `mkTagControllerAXI` tag cache) then the following events will also be counted:
-- Write &ndash; count writes to tag cache (0x4c)
-- Write miss (0x4d)
-- Read (0x4e)
-- Read miss (0x4f)
-- Evict (0x50)
-- Set tag write (0x51)
-- Set tag read (0x52)
+- Write &ndash; count writes to tag cache (0x40)
+- Write miss (0x41)
+- Read (0x42)
+- Read miss (0x43)
+- Evict (0x44)
+- Set tag write (0x45)
+- Set tag read (0x46)
 
 Missing events are:
 - L1 WT CHERI events
