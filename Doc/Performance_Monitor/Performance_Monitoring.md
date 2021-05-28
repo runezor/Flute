@@ -78,7 +78,7 @@ For `ISA_CHERI` enabled builds, the `EventsAXI4` struct counts AXI4 events in an
 - R Flit (0x4c/0x53)
 - R Flit Final (0x4d/0x54)
 
-That is, to count the extra read requests the tag cache generates, one can count ((0x4b) - (0x52)).
+That is, to count the extra read requests the tag cache generates, one can count ((0x52) - (0x4b)).
 
 If `NO_TAG_CACHE` is NOT defined (i.e. using the `mkTagControllerAXI` tag cache) then the following events will also be counted:
 - Write &ndash; count writes to tag cache (0x40)
