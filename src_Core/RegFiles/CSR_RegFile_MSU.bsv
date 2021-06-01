@@ -504,11 +504,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 rg_mcycle <= v;
 
       // Update due to clock
-<<<<<<< HEAD
-      else if (! unpack (ctr_inhibit[0]))
-=======
       else if (! unpack (ctr_inhibit.cy))
->>>>>>> 0c179cf... Provide and use an MCountinhibit struct
 	 rg_mcycle <= rg_mcycle + 1;
    endrule
 
@@ -535,21 +531,14 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
       // $display ("%0d: CSR_RegFile_UM.rl_upd_minstret_incr: new value is %0d", rg_mcycle, rg_minstret + 1);
    endrule
 
-`ifdef PERFORMANCE_MONITORING
    // ----------------------------------------------------------------
    // CTR INHIB
    // Must do it this roundabout way so that rules above aren't blocked by
    // fav_csr_write due to accessing both a wire (rw_minstret) and a reg (ctr_inhibit)
    // This way ctr_inhibit is not written in fav_csr_write
-
-<<<<<<< HEAD
-   rule rl_upd_ctr_inhib_csrrx (rw_ctr_inhib_ir_cy.wget matches tagged Valid .v);
-      rg_ctr_inhib_ir_cy <= v;
-=======
 `ifdef PERFORMANCE_MONITORING
    rule rl_upd_ctr_inhib_csrrx;
       rg_ctr_inhib_ir_cy <= w_ctr_inhib_ir_cy;
->>>>>>> 0c179cf... Provide and use an MCountinhibit struct
    endrule
 `endif
 
@@ -1072,13 +1061,8 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 				       let mcountinhibit = word_to_mcountinhibit (wordxl);
 				       new_csr_value = mcountinhibit_to_word (mcountinhibit);
 
-<<<<<<< HEAD
-				       rw_ctr_inhib_ir_cy.wset ({new_ctr_inhibit[2], new_ctr_inhibit[0]});
-				       perf_counters.write_ctr_inhibit (truncateLSB (new_ctr_inhibit));
-=======
 				       w_ctr_inhib_ir_cy <= { mcountinhibit.ir, mcountinhibit.cy };
 				       perf_counters.write_ctr_inhibit (mcountinhibit.hpm);
->>>>>>> 0c179cf... Provide and use an MCountinhibit struct
 `else
 				       new_csr_value = 0;
 `endif
