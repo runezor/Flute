@@ -86,6 +86,10 @@ typedef struct {
    } ALU_Inputs
 deriving (Bits, FShow);
 
+function Bool is_cap_mode (ALU_Inputs inputs);
+   return getFlags(toCapPipe(inputs.pcc))[0] == 1;
+endfunction
+
 // ----------------
 // These functions pick the instruction size and instruction bits to
 // be sent in the trace to a tandem verifier
@@ -815,9 +819,11 @@ function ALU_Outputs fv_LD (ALU_Inputs inputs, Maybe#(Bit#(3)) size);
 `ifdef ISA_CHERI
    if (valueOf(XLEN) == 32 && inputs.decoded_instr.funct3 == f3_LD) size = Valid(w_SIZE_D);
 
-   let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_DDC} : {0,inputs.rs1_idx};
-   WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
+   Bool cap_mode = is_cap_mode(inputs);
+
+   let authority = cap_mode ? inputs.cap_rs1_val : inputs.ddc;
+   let authorityIdx = cap_mode ? {0,inputs.rs1_idx} : {1,scr_addr_DDC};
+   WordXL eaddr = cap_mode ? getAddr(inputs.cap_rs1_val) + pack(imm_s) : getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s);
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
 `endif
@@ -899,9 +905,11 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
    IntXL  s_rs1_val = unpack (inputs.rs1_val);
    IntXL  imm_s     = extend (unpack (inputs.decoded_instr.imm12_S));
 `ifdef ISA_CHERI
-   let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_DDC} : {0,inputs.rs1_idx};
-   WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s) : getAddr(inputs.cap_rs1_val) + pack(imm_s);
+   Bool cap_mode = is_cap_mode(inputs);
+
+   let authority = cap_mode ? inputs.cap_rs1_val : inputs.ddc;
+   let authorityIdx = cap_mode ? {0,inputs.rs1_idx} : {1,scr_addr_DDC};
+   WordXL eaddr = cap_mode ? getAddr(inputs.cap_rs1_val) + pack(imm_s) : getAddr(inputs.ddc) + inputs.rs1_val + pack(imm_s);
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
 `endif
@@ -1230,9 +1238,11 @@ endfunction
 function ALU_Outputs fv_AMO (ALU_Inputs inputs);
    IntXL  s_rs1_val = unpack (inputs.rs1_val);
 `ifdef ISA_CHERI
-   let authority = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? inputs.ddc : inputs.cap_rs1_val;
-   let authorityIdx = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? {1,scr_addr_DDC} : {0,inputs.rs1_idx};
-   WordXL eaddr = getFlags(toCapPipe(inputs.pcc))[0] == 1'b0 ? getAddr(inputs.ddc) + inputs.rs1_val : getAddr(inputs.cap_rs1_val);
+   Bool cap_mode = is_cap_mode(inputs);
+
+   let authority = cap_mode ? inputs.cap_rs1_val : inputs.ddc;
+   let authorityIdx = cap_mode ? {0,inputs.rs1_idx} : {1,scr_addr_DDC};
+   WordXL eaddr = cap_mode ? getAddr(inputs.cap_rs1_val) : getAddr(inputs.ddc) + inputs.rs1_val;
 `else
    WordXL eaddr = pack (s_rs1_val);
 `endif
@@ -1454,7 +1464,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
     let check_cs2_perm_subset_ddc     = False;
 
     if (inputs.decoded_instr.opcode == op_AUIPC) begin
-        if (getFlags(toCapPipe(inputs.pcc))[0] == 1'b1) begin
+        if (is_cap_mode(inputs)) begin
             val1_source = MODIFY_OFFSET;
             modify_offset_cap = toCapPipe(inputs.pcc);
             IntXL iv = extend (unpack ({ inputs.decoded_instr.imm20_U, 12'b0}));
