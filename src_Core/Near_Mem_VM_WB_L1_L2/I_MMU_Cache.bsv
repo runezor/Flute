@@ -273,6 +273,9 @@ module mkI_MMU_Cache (I_MMU_Cache_IFC);
 
       // Register it here and in MMIO module
       crg_mmu_cache_req [1] <= mmu_cache_req;
+`ifdef ISA_PRIV_S
+      tlb.mv_vm_put_va(mmu_cache_req.va);
+`endif
       mmio.req (mmu_cache_req);
 
       crg_valid [1] <= False;
@@ -320,13 +323,12 @@ module mkI_MMU_Cache (I_MMU_Cache_IFC);
 
 `ifdef ISA_PRIV_S
    // VM translation (VA to PA)
-   VM_Xlate_Result vm_xlate_result = tlb.mv_vm_xlate (crg_mmu_cache_req [0].va,
-						      crg_mmu_cache_req [0].satp,
-						      True,     // read_not_write
-                                                      False,    // No cap
-						      crg_mmu_cache_req [0].priv,
-						      crg_mmu_cache_req [0].sstatus_SUM,
-						      crg_mmu_cache_req [0].mstatus_MXR);
+   VM_Xlate_Result vm_xlate_result = tlb.mv_vm_get_xlate (crg_mmu_cache_req [0].satp,
+						          True,     // read_not_write
+                                                          False,    // No cap
+						          crg_mmu_cache_req [0].priv,
+						          crg_mmu_cache_req [0].sstatus_SUM,
+						          crg_mmu_cache_req [0].mstatus_MXR);
 `else
    // In non-VM, translation result (PA) is same as VA
    VM_Xlate_Result vm_xlate_result = VM_Xlate_Result {outcome: VM_XLATE_OK,

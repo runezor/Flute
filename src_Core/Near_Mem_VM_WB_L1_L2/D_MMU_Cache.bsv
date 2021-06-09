@@ -365,6 +365,9 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       // Register it here and in MMIO module
       crg_mmu_cache_req [1] <= mmu_cache_req;
       mmio.req (mmu_cache_req);
+`ifdef ISA_PRIV_S
+      tlb.mv_vm_put_va(mmu_cache_req.va);
+`endif
 
       crg_valid [1] <= False;
 
@@ -403,9 +406,6 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       end
 
       cache.ma_request_va (mmu_cache_req.va);
-`ifdef ISA_PRIV_S
-      tlb.mv_vm_put_va(mmu_cache_req.va);
-`endif
       crg_mmu_cache_req_state [0] <= REQ_STATE_FULL_B;
    endrule
 

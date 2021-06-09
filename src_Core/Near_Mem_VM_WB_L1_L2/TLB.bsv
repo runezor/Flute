@@ -48,7 +48,7 @@ export  VM_Xlate_Outcome (..);
 
 interface TLB_IFC;
    // Put the virtual address that mv_vm_get_xlate will see at least the cycle before.
-   method Action mv_vm_put_va (WordXL va);
+   method Action mv_vm_put_va (WordXL full_va);
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
    method VM_Xlate_Result  mv_vm_get_xlate (
@@ -133,15 +133,13 @@ function VM_Xlate_Result  fv_vm_xlate (WordXL             addr,
 	 // $display ("    fav_vm_xlate: PTE.A = %0d", fn_PTE_to_A (pte));
 	 if (fn_PTE_to_A (pte) == 1'b0) begin
 	    pte_modified = True;
-	    WordXL tmp = 1;
-	    pte = (pte | (tmp << pte_A_offset));
+	    pte[pte_A_offset] = 1'b1;
 	 end
 
 	 // $display ("    fav_vm_xlate: PTE.D = %0d  read = %0d", fn_PTE_to_D (pte), pack (read_not_write));
 	 if ((fn_PTE_to_D (pte) == 1'b0) && (! read_not_write)) begin
 	    pte_modified = True;
-	    WordXL tmp = 1;
-	    pte = (pte | (tmp << pte_D_offset));
+	    pte[pte_D_offset] = 1'b1;
 	 end
 
 	 if (fn_PTE_to_LoadCap (pte) == 1'b0)
@@ -199,30 +197,32 @@ endfunction: fv_vm_xlate
 // The index is a few bits from VPN [level]
 // The tag is (asid, remaining bits from VPN)
 
-typedef Bit#(TSub #(TMul #(TSub#(3,lvl), VPN_J_sz), idx_sz))
+typedef Bit#(TSub #(TMul #(TSub#(VPN_max_levels,lvl), VPN_J_sz), idx_sz))
    TLB_Tag#(numeric type lvl, numeric type idx_sz);
 
 // ----------------
 // Level 2 tags and indexes (for RV64 only)
-
+`ifdef RV64
 typedef  4                           TLB2_Size;  // # of entries in TLB2
 typedef  TLog #(TLB2_Size)           TLB2_Index_sz;
 typedef  Bit #(TLB2_Index_sz)        TLB2_Index;
 typedef  TLB_Tag#(2, TLB2_Index_sz)  TLB2_Tag;
+`endif
 // ----------------
 // Level 1 tags and indexes
 
-typedef  8                           TLB1_Size;    // # of entries in TLB1
+typedef  4                           TLB1_Size;    // # of entries in TLB1
 typedef  TLog #(TLB1_Size)           TLB1_Index_sz;
 typedef  Bit #(TLB1_Index_sz)        TLB1_Index;
 typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
 // ----------------
 // Level 0 tags and indexes
 
-typedef  16                          TLB0_Size;    // # of entries in TLB0
-typedef  TLog #(TLB0_Size)           TLB0_Index_sz;
-typedef  Bit #(TLB0_Index_sz)        TLB0_Index;
-typedef  TLB_Tag#(0, TLB0_Index_sz)  TLB0_Tag;
+typedef  512                                    TLB0_Size;    // # of entries in TLB0
+typedef   2                                     TLB0_Assos;
+typedef  TLog #(TDiv#(TLB0_Size,TLB0_Assos))    TLB0_Index_sz;
+typedef  Bit #(TLB0_Index_sz)                   TLB0_Index;
+typedef  TLB_Tag#(0, TLB0_Index_sz)             TLB0_Tag;
 
 // ----------------
 // Each of the 3 sub-TLBs contains TLBEs (TLB Entries)
@@ -255,16 +255,16 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // ----------------
    // Level 2 TLB (for gigapages)
 `ifdef RV64
-   MapSplit#(TLB2_Tag, TLB2_Index, TLBE, 1) tlb2_entries <- mkMapLossyBRAM;
+   Map#(TLB2_Tag, TLB2_Index, TLBE, 1) tlb2_entries <- mkMapLossy(?);
 `endif
 
    // ----------------
    // Level 1 TLB (for megapages)
-   MapSplit#(TLB1_Tag, TLB1_Index, TLBE, 1) tlb1_entries <- mkMapLossyBRAM;
+   Map#(TLB1_Tag, TLB1_Index, TLBE, 1) tlb1_entries <- mkMapLossy(?);
 
    // ----------------
    // Level 0 TLB (for pages)
-   MapSplit#(TLB0_Tag, TLB0_Index, TLBE, 1) tlb0_entries <- mkMapLossyBRAM;
+   MapSplit#(TLB0_Tag, TLB0_Index, TLBE, TLB0_Assos) tlb0_entries <- mkMapLossyBRAM;
 
    Reg#(WordXL) rg_va <- mkRegU;
    // ----------------------------------------------------------------
@@ -289,7 +289,7 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // The actions in this rule are technically in the ma_flush method
    // but are decoupled via pw_flushing to relax scheduling constraints.
 
-   PulseWire pw_flushing <- mkPulseWire;
+   PulseWire pw_flushing <- mkPulseWireOR;
 
    rule rl_flush (pw_flushing);
       // Invalidate all tlb entries
@@ -305,11 +305,12 @@ module mkTLB #(parameter Bool      dmem_not_imem,
    // ================================================================
    // INTERFACE
    // Put the virtual address that mv_vm_xlate will see at least the cycle before.
-   method Action mv_vm_put_va (WordXL va);
+   method Action mv_vm_put_va (WordXL full_va);
+      Bit#(VA_sz) va = truncate(full_va);
       tlb0_entries.lookupStart(unpack(truncateLSB(va)));
-      tlb1_entries.lookupStart(unpack(truncateLSB(va)));
-      tlb2_entries.lookupStart(unpack(truncateLSB(va)));
-      rg_va <= va;
+      //tlb1_entries.lookupStart(unpack(truncateLSB(va)));
+      //tlb2_entries.lookupStart(unpack(truncateLSB(va)));
+      rg_va <= full_va;
    endmethod
    // Translate a VA to a PA (or exception)
    // plus additional info for PTE writeback (if A,D bits modified)
@@ -325,9 +326,10 @@ module mkTLB #(parameter Bool      dmem_not_imem,
       // ----------------
       // Look for a matching entry for a given va in the three TLBs
       let tlbe0 = fn_lookup (asid, tlb0_entries.lookupRead);
-      let tlbe1 = fn_lookup (asid, tlb1_entries.lookupRead);
+      Bit#(VA_sz) va = truncate(rg_va);
+      let tlbe1 = fn_lookup (asid, tlb1_entries.lookup(unpack(truncateLSB(va))));
 `ifdef RV64
-      let tlbe2 = fn_lookup (asid, tlb2_entries.lookupRead);
+      let tlbe2 = fn_lookup (asid, tlb2_entries.lookup(unpack(truncateLSB(va))));
 `endif
 
       TLB_Lookup_Result  result0 = unpack (0);
@@ -337,10 +339,10 @@ module mkTLB #(parameter Bool      dmem_not_imem,
       if (tlbe0 matches tagged Valid .e)
          result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
       if (tlbe1 matches tagged Valid .e)
-         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
+         result1 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 1, pte_pa: e.pte_pa};
 `ifdef RV64
       if (tlbe2 matches tagged Valid .e)
-         result0 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 0, pte_pa: e.pte_pa};
+         result2 = TLB_Lookup_Result {hit: True, pte: e.pte, pte_level: 2, pte_pa: e.pte_pa};
 `endif
       TLB_Lookup_Result tlb_result = unpack ((pack (result0) | pack (result1) | pack (result2)));
 
