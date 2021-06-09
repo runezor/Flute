@@ -957,6 +957,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       if (cfg_verbosity > 1)
 	 $display ("    TLB result: ", fshow (vm_xlate_result));
 
+`ifdef ISA_PRIV_S
       // ---- TLB miss
       if (vm_xlate_result.outcome == VM_XLATE_TLB_MISS) begin
 	 new_state = PTW_START;
@@ -966,23 +967,27 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       else if (vm_xlate_result.outcome == VM_XLATE_EXCEPTION) begin
 	 new_state = MODULE_EXCEPTION_RSP;
 	 new_exc_code = vm_xlate_result.exc_code;
-      end
+      end else
+`endif
 `ifdef RVFI_DII
-   else if (vm_xlate_result.pa < fromInteger (valueOf (RVFI_DII_Mem_Start)) || vm_xlate_result.pa >= fromInteger (valueOf (RVFI_DII_Mem_End))) begin
+   if (vm_xlate_result.pa < fromInteger (valueOf (RVFI_DII_Mem_Start)) || vm_xlate_result.pa >= fromInteger (valueOf (RVFI_DII_Mem_End))) begin
 	 // We detect accesses outside of the assigned RVFI_DII range and trap on them
 	 new_state    = MODULE_EXCEPTION_RSP;
 	 new_exc_code = (((rg_op == CACHE_LD) || is_AMO_LR) ? exc_code_LOAD_ACCESS_FAULT : exc_code_STORE_AMO_ACCESS_FAULT);
-      end
+      end else
 `endif
 
       // ---- vm_xlate_result.outcome == VM_XLATE_OK
-      else begin
+      begin
 `ifdef ISA_PRIV_S
 	 fa_record_pte_A_D_updates;
+     Bool vm_allow_cap = vm_xlate_result.allow_cap;
+`else
+     Bool vm_allow_cap = True;
 `endif
 
 	 rg_pa <= vm_xlate_result.pa;
-	 rg_allow_cap <= vm_xlate_result.allow_cap;
+	 rg_allow_cap <= vm_allow_cap;
 	 let is_mem_addr = soc_map.m_is_mem_addr (fv_PA_to_Fabric_Addr (vm_xlate_result.pa));
 
 	 // Access to non-memory
@@ -1007,7 +1012,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    if ((rg_op == CACHE_LD) || is_AMO_LR || (! dmem_not_imem)) begin
 	       if (hit) begin
 		  // Cache hit; drive response
-          fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, centry, unpack(0), vm_xlate_result.allow_cap, dw_commit);
+          fa_drive_mem_rsp (rg_width_code, rg_is_unsigned, rg_addr, centry, unpack(0), vm_allow_cap, dw_commit);
 
 `ifdef ISA_A
 		  if (is_AMO_LR) begin
