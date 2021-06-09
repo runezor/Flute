@@ -67,7 +67,7 @@ deriving (Bits, Eq, FShow);
 (* synthesize *)
 module mkNear_Mem (Near_Mem_IFC);
 
-   Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (0);
+   Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (2);
    Reg #(State)    rg_state      <- mkReg (STATE_READY);
 
    // ----------------
