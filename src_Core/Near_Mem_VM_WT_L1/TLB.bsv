@@ -218,7 +218,7 @@ typedef  TLB_Tag#(1, TLB1_Index_sz)  TLB1_Tag;
 // ----------------
 // Level 0 tags and indexes
 
-typedef  16                                     TLB0_Size;    // # of entries in TLB0
+typedef  512                                    TLB0_Size;    // # of entries in TLB0
 typedef   2                                     TLB0_Assos;
 typedef  TLog #(TDiv#(TLB0_Size,TLB0_Assos))    TLB0_Index_sz;
 typedef  Bit #(TLB0_Index_sz)                   TLB0_Index;
