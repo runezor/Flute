@@ -2309,11 +2309,6 @@
         <spirit:userFileType>CHECKSUM_d463a775</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/mkDM_Mem_Tap.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
-      </spirit:file>
-      <spirit:file>
         <spirit:name>hdl/mkIntMul_32.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
