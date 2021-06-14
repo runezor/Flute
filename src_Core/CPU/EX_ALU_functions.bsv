@@ -1424,6 +1424,8 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
     alu_outputs.rd = inputs.decoded_instr.rd;
     alu_outputs.op_stage2 = OP_Stage2_ALU;
 
+    Maybe#(Bool) m_jalr_cap_mode = Invalid; // Valid if performing JALR. True if capmode, false otherwise
+
     Output_Select val1_source = LITERAL;
 
     // MODIFY_OFFSET signals
@@ -1499,57 +1501,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         modify_offset_seal_entry = True;
         alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
     end else if (inputs.decoded_instr.opcode == op_JALR) begin
-        // Signed version of rs1_val
-        IntXL s_rs1_val = unpack (inputs.rs1_val);
-        IntXL offset    = extend (unpack (inputs.decoded_instr.imm12_I));
-        Addr  next_pc   = pack (s_rs1_val + offset);
-        Addr  ret_pc    = fall_through_pc (inputs);
-        Addr  pcc_addr  = getAddr(toCapPipe(inputs.pcc));
-
-        WordXL auth_base = getPCCBase(inputs.pcc);
-        Bit#(6) auth_idx = {1,scr_addr_PCC};
-        CapPipe auth_cap = toCapPipe(inputs.pcc);
-        CapPipe maskedTarget = setKind(maskAddr(cs1_val, signExtend(2'b10)), UNSEALED);
-
-        alu_outputs.val1      = extend (ret_pc);
-
-        modify_offset_cap = toCapPipe(inputs.pcc);
-        modify_offset_off_or_inc = fall_through_pc_inc(inputs);
-        modify_offset_inc_not_set = True;
-        modify_offset_seal_entry = True;
-        alu_outputs.pcc = fromCapPipe(maskedTarget);
-
-        if (is_cap_mode(inputs)) begin
-            check_cs1_tagged = True;
-            check_cs1_unsealed = True;
-            check_cs1_permit_x = True;
-            check_cs1_unsealed_or_imm_0 = True;
-
-            alu_outputs.control = CONTROL_CAPBRANCH;
-
-            val1_source = MODIFY_OFFSET;
-
-            next_pc   = cs1_offset;
-            auth_base = cs1_base;
-            auth_idx  = {0,inputs.rs1_idx};
-            auth_cap  = cs1_val;
-        end else begin
-            alu_outputs.control = CONTROL_BRANCH;
-
-            val1_source = LITERAL;
-        end
-
-        next_pc [0] = 1'b0;
-        alu_outputs.addr      = next_pc;
-
-        let cf_info   = CF_Info {cf_op       : CF_JALR,
-                                 from_PC     : pcc_addr,
-                                 taken       : True,
-                                 fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
-                                 taken_PC    : getAddr(maskedTarget) };
-        alu_outputs.cf_info   = cf_info;
-
-        alu_outputs = checkValidJump(alu_outputs, True, auth_cap, auth_base, auth_idx, auth_base + next_pc);
+        m_jalr_cap_mode = Valid (is_cap_mode(inputs));
     end else begin
         case (funct3)
         f3_cap_CIncOffsetImmediate: begin
@@ -1928,37 +1880,11 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                 f5rs2_cap_CGetPerm: begin
                     alu_outputs.val1 = zeroExtend(getPerms(cs1_val));
                 end
-                f5rs2_cap_CJALR: begin
-                    check_cs1_tagged = True;
-                    check_cs1_unsealed_or_sentry = True;
-                    check_cs1_permit_x = True;
-
-                    Addr  next_pc   = cs1_offset;
-                    Addr  ret_pc    = fall_through_pc (inputs);
-
-                    let maskedTarget = maskAddr(cs1_val, signExtend(2'b10));
-
-                    let pcc_addr = getAddr(toCapPipe(inputs.pcc));
-                    let target_addr = getPCCBase(inputs.pcc) + next_pc;
-                    let cf_info   = CF_Info {cf_op       : CF_JALR,
-                                             from_PC     : pcc_addr,
-                                             taken       : True,
-                                             fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
-                                             taken_PC    : getAddr(maskedTarget) };
-
-                    next_pc[0] = 1'b0;
-
-                    alu_outputs.control   = CONTROL_CAPBRANCH;
-                    alu_outputs.cf_info   = cf_info;
-
-                    alu_outputs.addr      = next_pc;
-                    alu_outputs.pcc       = fromCapPipe(setKind(maskedTarget, UNSEALED));
-                    val1_source = MODIFY_OFFSET;
-                    modify_offset_cap = toCapPipe(inputs.pcc);
-                    modify_offset_off_or_inc = fall_through_pc_inc(inputs);
-                    modify_offset_inc_not_set = True;
-                    modify_offset_seal_entry = True;
-                    alu_outputs = checkValidJump(alu_outputs, True, cs1_val, cs1_base, {0,inputs.rs1_idx}, getAddr(maskedTarget));
+                f5rs2_cap_JALR_CAP: begin
+                    m_jalr_cap_mode = Valid (True);
+                end
+                f5rs2_cap_JALR_PCC: begin
+                    m_jalr_cap_mode = Valid (False);
                 end
                 f5rs2_cap_CGetType: begin
                     case (getKind(cs1_val)) matches
@@ -1987,6 +1913,60 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         end
         default: alu_outputs.control = CONTROL_TRAP;
         endcase
+    end
+
+    if (m_jalr_cap_mode matches tagged Valid .cap_mode) begin
+        // Signed version of rs1_val
+        IntXL s_rs1_val = unpack (inputs.rs1_val);
+        IntXL offset    = extend (unpack (inputs.decoded_instr.imm12_I));
+        Addr  next_pc   = pack (s_rs1_val + offset);
+        Addr  ret_pc    = fall_through_pc (inputs);
+        Addr  pcc_addr  = getAddr(toCapPipe(inputs.pcc));
+
+        WordXL auth_base = getPCCBase(inputs.pcc);
+        Bit#(6) auth_idx = {1,scr_addr_PCC};
+        CapPipe auth_cap = toCapPipe(inputs.pcc);
+        CapPipe maskedTarget = setKind(maskAddr(cs1_val, signExtend(2'b10)), UNSEALED);
+
+        alu_outputs.val1      = extend (ret_pc);
+
+        modify_offset_cap = toCapPipe(inputs.pcc);
+        modify_offset_off_or_inc = fall_through_pc_inc(inputs);
+        modify_offset_inc_not_set = True;
+        modify_offset_seal_entry = True;
+        alu_outputs.pcc = fromCapPipe(maskedTarget);
+
+        if (cap_mode) begin
+            check_cs1_tagged = True;
+            check_cs1_unsealed = True;
+            check_cs1_permit_x = True;
+            check_cs1_unsealed_or_imm_0 = True;
+
+            alu_outputs.control = CONTROL_CAPBRANCH;
+
+            val1_source = MODIFY_OFFSET;
+
+            next_pc   = cs1_offset;
+            auth_base = cs1_base;
+            auth_idx  = {0,inputs.rs1_idx};
+            auth_cap  = cs1_val;
+        end else begin
+            alu_outputs.control = CONTROL_BRANCH;
+
+            val1_source = LITERAL;
+        end
+
+        next_pc [0] = 1'b0;
+        alu_outputs.addr      = next_pc;
+
+        let cf_info   = CF_Info {cf_op       : CF_JALR,
+                                 from_PC     : pcc_addr,
+                                 taken       : True,
+                                 fallthru_PC : pcc_addr + fall_through_pc_inc(inputs),
+                                 taken_PC    : getAddr(maskedTarget) };
+        alu_outputs.cf_info   = cf_info;
+
+        alu_outputs = checkValidJump(alu_outputs, True, auth_cap, auth_base, auth_idx, auth_base + next_pc);
     end
 
     case(val1_source)
