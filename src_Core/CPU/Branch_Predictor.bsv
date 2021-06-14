@@ -131,7 +131,8 @@ function Tuple3 #(Bool, Bool, WordXL) fn_ras_actions (WordXL  pc,
    instr_is_JALR = instr_is_JALR || (   (instr_opcode(instr) == op_cap_Manip)
                                      && (instr_funct3(instr) == f3_cap_ThreeOp)
                                      && (instr_funct7(instr) == f7_cap_TwoOp)
-                                     && (instr_cap_funct5rs2(instr) == f5rs2_cap_CJALR));
+                                     && (   (instr_cap_funct5rs2(instr) == f5rs2_cap_JALR_CAP)
+                                         || (instr_cap_funct5rs2(instr) == f5rs2_cap_JALR_PCC)));
 `endif
 
 `ifdef ISA_C
