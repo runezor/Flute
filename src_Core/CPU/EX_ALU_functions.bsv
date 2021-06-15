@@ -1424,7 +1424,9 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
     alu_outputs.rd = inputs.decoded_instr.rd;
     alu_outputs.op_stage2 = OP_Stage2_ALU;
 
-    Maybe#(Bool) m_jalr_cap_mode = Invalid; // Valid if performing JALR. True if capmode, false otherwise
+    Bool jalr_enable = False;
+    Bool jalr_immediate = False;
+    Bool jalr_cap_mode = False;
 
     Output_Select val1_source = LITERAL;
 
@@ -1501,7 +1503,9 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         modify_offset_seal_entry = True;
         alu_outputs = checkValidJump(alu_outputs, True, toCapPipe(inputs.pcc), getPCCBase(inputs.pcc), {1,scr_addr_PCC}, getPCCBase(inputs.pcc) + next_pc);
     end else if (inputs.decoded_instr.opcode == op_JALR) begin
-        m_jalr_cap_mode = Valid (is_cap_mode(inputs));
+        jalr_enable = True;
+        jalr_immediate = True;
+        jalr_cap_mode = is_cap_mode(inputs);
     end else begin
         case (funct3)
         f3_cap_CIncOffsetImmediate: begin
@@ -1881,10 +1885,14 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
                     alu_outputs.val1 = zeroExtend(getPerms(cs1_val));
                 end
                 f5rs2_cap_JALR_CAP: begin
-                    m_jalr_cap_mode = Valid (True);
+                    jalr_enable = True;
+                    jalr_cap_mode = True;
+                    jalr_immediate = False;
                 end
                 f5rs2_cap_JALR_PCC: begin
-                    m_jalr_cap_mode = Valid (False);
+                    jalr_enable = True;
+                    jalr_cap_mode = False;
+                    jalr_immediate = False;
                 end
                 f5rs2_cap_CGetType: begin
                     case (getKind(cs1_val)) matches
@@ -1915,10 +1923,10 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         endcase
     end
 
-    if (m_jalr_cap_mode matches tagged Valid .cap_mode) begin
+    if (jalr_enable) begin
         // Signed version of rs1_val
         IntXL s_rs1_val = unpack (inputs.rs1_val);
-        IntXL offset    = extend (unpack (inputs.decoded_instr.imm12_I));
+        IntXL offset    = jalr_immediate ? extend (unpack (inputs.decoded_instr.imm12_I)) : 0;
         Addr  next_pc   = pack (s_rs1_val + offset);
         Addr  ret_pc    = fall_through_pc (inputs);
         Addr  pcc_addr  = getAddr(toCapPipe(inputs.pcc));
@@ -1926,7 +1934,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         WordXL auth_base = getPCCBase(inputs.pcc);
         Bit#(6) auth_idx = {1,scr_addr_PCC};
         CapPipe auth_cap = toCapPipe(inputs.pcc);
-        CapPipe maskedTarget = setKind(maskAddr(cs1_val, signExtend(2'b10)), UNSEALED);
+        CapPipe maskedTarget = setKind(maskAddr(setAddrUnsafe(cs1_val, getAddr(cs1_val) + pack(offset)), signExtend(2'b10)), UNSEALED);
 
         alu_outputs.val1      = extend (ret_pc);
 
@@ -1934,9 +1942,8 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         modify_offset_off_or_inc = fall_through_pc_inc(inputs);
         modify_offset_inc_not_set = True;
         modify_offset_seal_entry = True;
-        alu_outputs.pcc = fromCapPipe(maskedTarget);
 
-        if (cap_mode) begin
+        if (jalr_cap_mode) begin
             check_cs1_tagged = True;
             check_cs1_unsealed = True;
             check_cs1_permit_x = True;
