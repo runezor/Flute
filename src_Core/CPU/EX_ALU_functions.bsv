@@ -1947,7 +1947,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
             check_cs1_tagged = True;
             check_cs1_unsealed = True;
             check_cs1_permit_x = True;
-            check_cs1_unsealed_or_imm_0 = True;
+            check_cs1_unsealed_or_imm_0 = jalr_immediate;
 
             alu_outputs.control = CONTROL_CAPBRANCH;
 
