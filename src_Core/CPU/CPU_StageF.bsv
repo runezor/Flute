@@ -59,6 +59,7 @@ interface CPU_StageF_IFC;
    (* always_ready *)
    method Action enq (Epoch            epoch,
 		      WordXL           fetch_addr,
+		      Bool             is_cap_mode,
 `ifdef ISA_CHERI
                       Bool             refresh_pcc,
 `endif
@@ -94,6 +95,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 
    Reg #(Bool)       rg_full  <- mkReg (False);
 `ifdef ISA_CHERI
+   Reg #(Bool)       rg_is_cap_mode <- mkReg(False);
    Reg #(Bool)       rg_refresh_pcc <- mkReg(False);
 `endif
    Reg #(Epoch)      rg_epoch <- mkReg (0);               // Toggles on redirections
@@ -128,7 +130,9 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
       let imem_instr = imem.instr;
 `endif
       let pred_fetch_addr = branch_predictor.predict_rsp (imem.is_i32_not_i16, imem_instr);
+      let pred_is_cap_mode = rg_is_cap_mode; // XXX Predicts cap_mode is unchanged. This could be added to branch predictor
       let d = Data_StageF_to_StageD {fetch_addr:      imem.pc,
+                                     is_cap_mode:     rg_is_cap_mode,
 `ifdef ISA_CHERI
                                      refresh_pcc:     rg_refresh_pcc,
 `endif
@@ -142,7 +146,8 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 `ifdef RVFI_DII
                                      instr_seq:       tpl_2(imem.instr),
 `endif
-				     pred_fetch_addr: pred_fetch_addr};
+				     pred_fetch_addr: pred_fetch_addr,
+				     pred_is_cap_mode: pred_is_cap_mode};
 
       let ostatus = (  (! rg_full) ? OSTATUS_EMPTY
 		     : (  (! imem.valid) ? OSTATUS_BUSY
@@ -171,6 +176,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
    // ---- Input
    method Action enq (Epoch            epoch,
                       WordXL           fetch_addr,
+                      Bool             is_cap_mode,
 `ifdef ISA_CHERI
                       Bool             refresh_pcc,
 `endif
@@ -182,7 +188,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 		      Bit #(1)         mstatus_MXR,
 		      WordXL           satp);
       if (verbosity > 1) begin
-	 $write ("    %m.enq:  fetch_addr:0x%0h  epoch:%0d  priv:%0d", fetch_addr, epoch, priv);
+	 $write ("    %m.enq:  fetch_addr:0x%0h  is_cap_mode:%b  epoch:%0d  priv:%0d", fetch_addr, is_cap_mode, epoch, priv);
 	 $write ("  sstatus_SUM:%0d  mstatus_MXR:%0d  satp:0x%0h",
 		 sstatus_SUM, mstatus_MXR, satp);
 	 $display ("");
@@ -196,6 +202,7 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 
       rg_epoch <= epoch;
       rg_priv  <= priv;
+      rg_is_cap_mode <= is_cap_mode;
 `ifdef ISA_CHERI
       rg_refresh_pcc <= refresh_pcc;
 `endif

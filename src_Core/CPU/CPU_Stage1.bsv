@@ -222,7 +222,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
      : setPC(rg_pcc, next_pc_local).value); //TODO unrepresentable?
 
    let redirect = (alu_outputs.control == CONTROL_CAPBRANCH)
-     ? (getAddr(toCapPipe(alu_outputs.pcc)) != rg_stage_input.pred_fetch_addr)
+     ? (    {getAddr(toCapPipe(alu_outputs.pcc)), getFlags(toCapPipe(alu_outputs.pcc))[0]}
+         != {rg_stage_input.pred_fetch_addr     , pack(rg_stage_input.pred_is_cap_mode)})
      : (next_pc_local != rg_stage_input.pred_fetch_addr - getPCCBase(rg_pcc));
 
 `ifdef RVFI

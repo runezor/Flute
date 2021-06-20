@@ -317,6 +317,7 @@ endinstance
 
 typedef struct {
    Addr       fetch_addr;
+   Bool       is_cap_mode;
 `ifdef ISA_CHERI
    Bool       refresh_pcc;
 `endif
@@ -331,16 +332,17 @@ typedef struct {
    WordXL     tval;               // Trap value; can be different from PC, with 'C' extension
    Instr      instr;              // Valid if no exception
    WordXL     pred_fetch_addr;    // Predicted next pc
+   Bool       pred_is_cap_mode;   // Predicted encoding mode (cap or integer)
    } Data_StageF_to_StageD
 deriving (Bits);
 
 instance FShow #(Data_StageF_to_StageD);
    function Fmt fshow (Data_StageF_to_StageD x);
-      Fmt fmt = $format ("data_to_StageD {fetch_addr:%h  priv:%0d  epoch:%0d", x.fetch_addr, x.priv, x.epoch);
+      Fmt fmt = $format ("data_to_StageD {fetch_addr:%h is_cap_mode:%b  priv:%0d  epoch:%0d", x.fetch_addr, x.is_cap_mode, x.priv, x.epoch);
       if (x.exc)
 	 fmt = fmt + $format ("  ", fshow_trap_Exc_Code (x.exc_code));
       else
-	 fmt = fmt + $format ("  instr:%h  pred_fetch_addr:%h", x.instr, x.pred_fetch_addr);
+	 fmt = fmt + $format ("  instr:%h  pred_fetch_addr:%h  pred_is_cap_mode:%b", x.instr, x.pred_fetch_addr, x.pred_is_cap_mode);
       fmt = fmt + $format ("}");
       return fmt;
    endfunction
@@ -364,7 +366,7 @@ instance FShow #(Output_StageD);
       if (x.ostatus == OSTATUS_EMPTY)
 	 fmt = fmt + $format (" EMPTY");
       else if (x.ostatus == OSTATUS_BUSY)
-	 fmt = fmt + $format (" BUSY: fetch_addr:%h", x.data_to_stage1.fetch_addr);
+	 fmt = fmt + $format (" BUSY: fetch_addr:%h is_cap_mode:%b", x.data_to_stage1.fetch_addr, x.data_to_stage1.is_cap_mode);
       else if (x.ostatus == OSTATUS_NONPIPE)
 	 fmt = fmt + $format (" NONPIPE: fetch_addr:%h [***** IMPOSSIBLE! *****]", x.data_to_stage1.fetch_addr);
       else
@@ -378,6 +380,7 @@ endinstance
 
 typedef struct {
    Addr           fetch_addr;
+   Bool           is_cap_mode;
 `ifdef ISA_CHERI
    Bool           refresh_pcc;
 `endif
@@ -396,19 +399,20 @@ typedef struct {
    Instr          instr;              // Valid if no exception
    Instr          instr_or_instr_C;   // Valid if no exception; original (possibly compressed) instruction
    WordXL         pred_fetch_addr;    // Predicted next pc
+   Bool           pred_is_cap_mode;   // Predicted encoding mode (cap or integer)
    Decoded_Instr  decoded_instr;
    } Data_StageD_to_Stage1
 deriving (Bits);
 
 instance FShow #(Data_StageD_to_Stage1);
    function Fmt fshow (Data_StageD_to_Stage1 x);
-      Fmt fmt = $format ("data_to_Stage1 {pc:%0h  priv:%0d  epoch:%0d", x.fetch_addr, x.priv, x.epoch);
+      Fmt fmt = $format ("data_to_Stage1 {pc:%0h cap_mode:%b  priv:%0d  epoch:%0d", x.fetch_addr, x.is_cap_mode, x.priv, x.epoch);
       if (x.exc)
 	 fmt = fmt + $format ("  ", fshow_trap_Exc_Code (x.exc_code), " tval %0h", x.tval);
       else begin
 	 if (!x.is_i32_not_i16)
 	    fmt = fmt + $format ("  instr_C:%0h", x.instr_or_instr_C);
-	 fmt = fmt + $format ("  instr:%0h  pred_fetch_addr:%0h", x.instr, x.pred_fetch_addr);
+	 fmt = fmt + $format ("  instr:%0h  pred_fetch_addr:%0h  pred_is_cap_mode:%b", x.instr, x.pred_fetch_addr, x.pred_is_cap_mode);
       end
       fmt = fmt + $format ("}");
       return fmt;

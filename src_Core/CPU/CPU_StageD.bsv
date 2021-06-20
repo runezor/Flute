@@ -108,6 +108,7 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 	 output_stageD.ostatus        = OSTATUS_PIPE;
 	 output_stageD.data_to_stage1 = Data_StageD_to_Stage1 {
                                                                fetch_addr:     rg_data.fetch_addr,
+                                                               is_cap_mode:    rg_data.is_cap_mode,
 `ifdef ISA_CHERI
                                                                refresh_pcc:    rg_data.refresh_pcc,
 `endif
@@ -123,6 +124,7 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 							       instr:          instr,
 							       instr_or_instr_C: instr_or_instr_C,
 							       pred_fetch_addr:rg_data.pred_fetch_addr,
+							       pred_is_cap_mode:rg_data.pred_is_cap_mode,
 							       decoded_instr:  decoded_instr};
       end
 

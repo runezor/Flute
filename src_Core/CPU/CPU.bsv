@@ -498,6 +498,7 @@ module mkCPU (CPU_IFC);
    // We re-initialize CPI_instrs and CPI_cycles.
 
    function Action fa_stageF_redirect (Addr new_fetch_addr
+				       , Bool new_is_cap_mode
 `ifdef RVFI_DII
 				       , Dii_Id next_seq
 `endif
@@ -509,6 +510,7 @@ module mkCPU (CPU_IFC);
 
 	 stageF.enq (new_epoch,
 		     new_fetch_addr,
+		     new_is_cap_mode,
 		     True,
 		     rg_cur_priv,
 `ifdef RVFI_DII
@@ -521,8 +523,8 @@ module mkCPU (CPU_IFC);
 	 rg_state <= CPU_RUNNING;
 
 	 if (cur_verbosity > 1)
-	    $display ("    fa_stageF_redirect: minstret:%0d  new_pc:%0x  cur_priv:%0d, epoch %0d->%0d",
-		      minstret, new_fetch_addr, rg_cur_priv, rg_epoch, new_epoch);
+	    $display ("    fa_stageF_redirect: minstret:%0d  new_is_cap_mode:%b  new_pc:%0x  cur_priv:%0d, epoch %0d->%0d",
+		      minstret, new_fetch_addr, new_is_cap_mode, rg_cur_priv, rg_epoch, new_epoch);
       endaction
    endfunction
 
@@ -535,6 +537,7 @@ module mkCPU (CPU_IFC);
 `endif
 
 	 fa_stageF_redirect (next_pc
+			     , unpack(getFlags (rg_next_pcc)[0])
 `ifdef RVFI_DII
 			     , rg_next_seq
 `endif
@@ -567,6 +570,7 @@ module mkCPU (CPU_IFC);
 `else
 			     resume_pc
 `endif
+			     , unpack(getFlags (resume_pcc)[0])
 `ifdef RVFI_DII
 			     , 0
 `endif
@@ -1037,6 +1041,7 @@ module mkCPU (CPU_IFC);
 	    else begin
 	       stageF.enq (stageF.out.data_to_stageD.epoch,
 			   stageF.out.data_to_stageD.pred_fetch_addr,
+			   stageF.out.data_to_stageD.pred_is_cap_mode,
 			   False,
 			   rg_cur_priv,
 `ifdef RVFI_DII
