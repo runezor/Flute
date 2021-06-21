@@ -1936,7 +1936,8 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
         CapPipe auth_cap = toCapPipe(inputs.pcc);
         CapPipe maskedTarget = setKind(maskAddr(setAddrUnsafe(cs1_val, getAddr(cs1_val) + pack(offset)), signExtend(2'b10)), UNSEALED);
 
-        alu_outputs.val1      = extend (ret_pc);
+        alu_outputs.val1 = extend (ret_pc);
+        alu_outputs.pcc = fromCapPipe(maskedTarget);
 
         modify_offset_cap = toCapPipe(inputs.pcc);
         modify_offset_off_or_inc = fall_through_pc_inc(inputs);
