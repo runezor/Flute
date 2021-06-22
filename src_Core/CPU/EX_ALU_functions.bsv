@@ -1946,7 +1946,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
         if (jalr_cap_mode) begin
             check_cs1_tagged = True;
-            check_cs1_unsealed = True;
+            check_cs1_unsealed_or_sentry = True;
             check_cs1_permit_x = True;
             check_cs1_unsealed_or_imm_0 = jalr_immediate;
 
