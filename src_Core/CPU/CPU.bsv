@@ -434,6 +434,7 @@ module mkCPU (CPU_IFC);
 	 let funct3 = instr_funct3 (instr_enc);
 	 let funct5 = instr_funct5 (instr_enc);
 	 let funct7 = instr_funct7 (instr_enc);
+	 let funct5rs2 = instr_cap_funct5rs2 (instr_enc);
 	 EventsCore events = unpack (0);
 	 events.evt_LOAD = (   (opcode == op_LOAD)
 `ifdef ISA_F
@@ -452,7 +453,9 @@ module mkCPU (CPU_IFC);
 `endif
 	 events.evt_BRANCH = (opcode == op_BRANCH);
 	 events.evt_JAL = (opcode == op_JAL);
-	 events.evt_JALR = (opcode == op_JALR);
+	 events.evt_JALR =    (opcode == op_JALR)
+                       || (   (funct7 == f7_cap_TwoOp && funct3 == f3_cap_ThreeOp && opcode == op_cap_Manip)
+                           && (funct5rs2 == f5rs2_cap_JALR_CAP || funct5rs2 == f5rs2_cap_JALR_PCC));
 	 events.evt_AUIPC = (opcode == op_AUIPC);
 	 events.evt_SERIAL_SHIFT = (   (   (opcode == op_OP_IMM) || (opcode == op_OP)   )
 					&& (   (funct3 == f3_SLLI) || (funct3 == f3_SRLI) || (funct3 == f3_SRAI)   )   );
