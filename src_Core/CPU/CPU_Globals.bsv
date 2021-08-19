@@ -485,6 +485,9 @@ instance FShow #(Output_Stage1);
 	 else begin
 	    fmt = fmt + $format (" PIPE: ", fshow (x.control), " ", fshow (x.cf_info), fshow (x.data_to_stage2));
 	 end
+`ifdef RVFI_DII
+         fmt = fmt + $format ("\n        rvfi data:", fshow (x.data_to_stage2.info_RVFI_s1));
+`endif
 
 	 if (x.redirect)
 	    fmt = fmt + $format ("\n        redirect next_pc:%h", getPC(x.next_pcc));
@@ -656,7 +659,7 @@ typedef struct {
 
     Bit#(XLEN)  mem_addr;
 
-} Data_RVFI_Stage1 deriving (Bits, Eq);
+} Data_RVFI_Stage1 deriving (Bits, Eq, FShow);
 
 
 `endif
@@ -676,6 +679,10 @@ instance FShow #(Data_Stage1_to_Stage2);
       fmt = fmt + $format ("\n");
       fmt = fmt + $format ("            fval1:%h  fval2:%h  fval3:%h}",
 			   x.fval1, x.fval2, x.fval3);
+`endif
+`ifdef RVFI_DII
+      fmt = fmt + $format ("\n");
+      fmt = fmt + $format ("            rvfi data: ", fshow (x.info_RVFI_s1));
 `endif
       return fmt;
    endfunction
@@ -731,6 +738,9 @@ instance FShow #(Output_Stage2);
       end
       else
 	 fmt = fmt + $format (" PIPE: ") + fshow (x.data_to_stage3);
+`ifdef RVFI_DII
+      fmt = fmt + $format ("\n        rvfi data:", fshow (x.data_to_stage3.info_RVFI_s2));
+`endif
       return fmt;
    endfunction
 endinstance
@@ -777,7 +787,7 @@ typedef struct {
     Bit#(TDiv#(MEMWIDTH,8))       mem_rmask;
     Bit#(TDiv#(MEMWIDTH,8))       mem_wmask;
 
-}   Data_RVFI_Stage2 deriving (Bits);
+}   Data_RVFI_Stage2 deriving (Bits, FShow);
 
 `endif
 
@@ -795,6 +805,10 @@ instance FShow #(Data_Stage2_to_Stage3);
       else
 `endif
          fmt = fmt + $format ("  grd:%0d  rd_val:\n", x.rd, fshow(x.rd_val));
+`ifdef RVFI_DII
+      fmt = fmt + $format ("\n");
+      fmt = fmt + $format ("            rvfi data: ", fshow (x.info_RVFI_s2));
+`endif
       return fmt;
    endfunction
 endinstance

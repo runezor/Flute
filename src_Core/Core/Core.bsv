@@ -105,6 +105,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // The CPU
    CPU_IFC  cpu <- mkCPU;
    let cpu_imem = cpu.imem_master;
+   //AXI4_Shim#(5,64,64,0,1,0,0,1) delay_shim <- mkAXI4ShimSizedFIFOF4; // Prevent a combinatorial path after the icache
    AXI4_Shim#(5,64,64,0,1,0,0,1) delay_shim <- mkAXI4ShimSizedFIFOF4; // Prevent a combinatorial path after the icache
    mkConnection(delay_shim.slave, cpu_imem);
    let imem_master = extendIDFields(zeroMasterUserFields(delay_shim.master), 0);
@@ -389,8 +390,10 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // Connect the local 2x3 fabric
 
    // Masters on the local 2x3 fabric
-   Vector#(Num_Masters_2x3,
-           AXI4_Master#( Wd_MId_2x3, Wd_Addr, Wd_Data
+   //Vector#(Num_Masters_2x3,
+   Vector#(Num_Masters_2x4,
+           //AXI4_Master#( Wd_MId_2x3, Wd_Addr, Wd_Data
+           AXI4_Master#( Wd_MId_2x4, Wd_Addr, Wd_Data
                        , Wd_AW_User, Wd_W_User, Wd_B_User
                        , Wd_AR_User, Wd_R_User)) master_vector = newVector;
    //Vector#(Num_Masters_2x3, Near_Mem_Fabric_IFC) master_vector = newVector;
@@ -399,20 +402,27 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
    // Slaves on the local 2x3 fabric
    // default slave is forwarded out directly to the Core interface
-   Vector#(Num_Slaves_2x3,
-           AXI4_Slave#( Wd_SId_2x3, Wd_Addr, Wd_Data
+   //Vector#(Num_Slaves_2x3,
+   Vector#(Num_Slaves_2x4,
+           //AXI4_Slave#( Wd_SId_2x3, Wd_Addr, Wd_Data
+           AXI4_Slave#( Wd_SId_2x4, Wd_Addr, Wd_Data
                       , Wd_AW_User, Wd_W_User, Wd_B_User
                       , Wd_AR_User, Wd_R_User)) slave_vector = newVector;
    slave_vector[default_slave_num]     = axi4_mem_shim_slave;
    slave_vector[near_mem_io_slave_num] = zeroSlaveUserFields (near_mem_io.axi4_slave);
    slave_vector[plic_slave_num]        = zeroSlaveUserFields (plic.axi4_slave);
+   slave_vector[tcm_slave_num]         = cpu.dma_server;
 
-   function Vector#(Num_Slaves_2x3, Bool) route_2x3 (Bit#(Wd_Addr) addr);
-      Vector#(Num_Slaves_2x3, Bool) res = replicate(False);
+   //function Vector#(Num_Slaves_2x3, Bool) route_2x3 (Bit#(Wd_Addr) addr);
+   function Vector#(Num_Slaves_2x4, Bool) route_2x4 (Bit#(Wd_Addr) addr);
+      //Vector#(Num_Slaves_2x3, Bool) res = replicate(False);
+      Vector#(Num_Slaves_2x4, Bool) res = replicate(False);
       if (inRange(soc_map.m_near_mem_io_addr_range, addr))
         res[near_mem_io_slave_num] = True;
       else if (inRange(soc_map.m_plic_addr_range, addr))
         res[plic_slave_num] = True;
+      else if (inRange(soc_map.m_tcm_addr_range, addr))
+        res[tcm_slave_num] = True;
       else
         res[default_slave_num] = True;
       Bit #(24) topBits = truncateLSB(addr); //XXX TODO Tag controller masks to 40 bits
@@ -420,7 +430,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       return res;
    endfunction
 
-   mkAXI4Bus (route_2x3, master_vector, slave_vector);
+   mkAXI4Bus (route_2x4, master_vector, slave_vector);
 
    // ================================================================
    // Connect interrupt lines from near_mem_io and PLIC to CPU
@@ -487,7 +497,8 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // ----------------------------------------------------------------
    // Interface to 'coherent DMA' port of optional L2 cache
 
-   interface AXI4_Slave_IFC  dma_server = cpu.dma_server;
+   //interface AXI4_Slave_IFC  dma_server = cpu.dma_server;
+   interface AXI4_Slave_IFC  dma_server = culDeSac;
 
    // ----------------------------------------------------------------
    // External interrupt sources
@@ -627,9 +638,13 @@ Master_Num_2x3  debug_module_sba_master_num = 1;
 // ----------------
 // Fabric port numbers for slaves
 
-Slave_Num_2x3  default_slave_num     = 0;
-Slave_Num_2x3  near_mem_io_slave_num = 1;
-Slave_Num_2x3  plic_slave_num        = 2;
+//Slave_Num_2x3  default_slave_num     = 0;
+//Slave_Num_2x3  near_mem_io_slave_num = 1;
+//Slave_Num_2x3  plic_slave_num        = 2;
+Slave_Num_2x4  default_slave_num     = 0;
+Slave_Num_2x4  near_mem_io_slave_num = 1;
+Slave_Num_2x4  plic_slave_num        = 2;
+Slave_Num_2x4  tcm_slave_num         = 3;
 
 // ================================================================
 

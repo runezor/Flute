@@ -132,9 +132,9 @@ interface Near_Mem_IFC;
    // ----------------------------------------------------------------
    // Interface to 'coherent DMA' port of optional L2 cache
 
-   interface AXI4_Slave #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
-                         , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
-                         , Wd_AR_User_Dma, Wd_R_User_Dma)  dma_server;
+   interface AXI4_Slave #( Wd_SId_2x4, Wd_Addr, Wd_Data
+                         , Wd_AW_User, Wd_W_User, Wd_B_User
+                         , Wd_AR_User, Wd_R_User)  dma_server;
 
    // ----------------------------------------------------------------
    // Misc. control and status
@@ -172,12 +172,14 @@ interface IMem_IFC;
    // CPU side: IMem request
    (* always_ready *)
    method Action  req (Bit #(3) f3,
-		       WordXL addr,
+		       WordXL addr
+`ifdef ISA_PRIV_S
 		       // The following  args for VM
-		       Priv_Mode  priv,
+		       ,Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
 		       Bit #(1)   mstatus_MXR,
 		       WordXL     satp
+`endif
 `ifdef RVFI_DII
              , Dii_Id seq_req
 `endif
@@ -219,12 +221,15 @@ interface DMem_IFC;
 		       Bit #(5) amo_funct5,
 `endif
 		       Addr addr,
-               Tuple2#(Bool, Bit #(128)) store_value,
+               Tuple2#(Bool, Bit #(128)) store_value
+`ifdef ISA_PRIV_S
 		       // The following  args for VM
-		       Priv_Mode  priv,
+		       ,Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
 		       Bit #(1)   mstatus_MXR,
-		       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+		       WordXL     satp
+`endif
+                       );    // { VM_Mode, ASID, PPN_for_page_table }
    (* always_ready *)  method Action commit;
 
    // CPU side: DMem response

@@ -105,12 +105,15 @@ interface MMU_Cache_IFC #(numeric type mID);
 		       Bit #(5) amo_funct5,
 `endif
 		       Addr addr,
-               Tuple2#(Bool, Bit#(128)) st_value,
+               Tuple2#(Bool, Bit#(128)) st_value
 		       // The following  args for VM
-		       Priv_Mode  priv,
+`ifdef ISA_PRIV_S
+		       , Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
 		       Bit #(1)   mstatus_MXR,
-		       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+		       WordXL     satp
+`endif
+                       );    // { VM_Mode, ASID, PPN_for_page_table }
 
 `ifdef ISA_CHERI
    // CPU interface: commit previous request
@@ -443,7 +446,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    String d_or_i = (dmem_not_imem ? "D_MMU_Cache" : "I_MMU_Cache");
 
    // Verbosity: 0: quiet; 1 reset info; 2: + detail; 3: cache refill loop detail
-   Integer verbosity = (dmem_not_imem ? 2 : 2);
+   Integer verbosity = (dmem_not_imem ? 0 : 0);
    Reg #(Bit #(4)) cfg_verbosity <- mkConfigReg (fromInteger (verbosity));
 
    // Overall state of this module
@@ -749,11 +752,17 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    (* descending_urgency = "rl_fabric_send_second_write_req, rl_fabric_send_write_req" *)
    rule rl_fabric_send_second_write_req (dmem_not_imem);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_fabric_send_second_write_req");
+      end
       masterPortShim.slave.w.put(f_fabric_second_write_reqs.first);
       f_fabric_second_write_reqs.deq;
    endrule
 
    rule rl_fabric_send_write_req;
+      if (cfg_verbosity > 0) begin
+         $display ("rl_fabric_send_write_req");
+      end
       match { .width_code, .pa, .st_val } <- pop (f_fabric_write_reqs);
 
       match {.fabric_addr,
@@ -827,6 +836,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    endfunction
 
    rule rl_writeback_updated_PTE;
+      if (cfg_verbosity > 0) begin
+         $display ("rl_writeback_updated_PTE");
+      end
       match { .pa, .pte } <- pop (f_pte_writebacks);
       let width_code = ((xlen == 32) ? 3'b010 : 3'b011);
       fa_fabric_send_write_req (width_code, pa, tuple2(False, zeroExtend (pte)));
@@ -840,6 +852,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Reset
 
    rule rl_start_reset (resetting && (rg_state != MODULE_RESETTING));
+      if (cfg_verbosity > 0) begin
+         $display ("rl_start_reset ");
+      end
       rg_state             <= MODULE_RESETTING;
       rg_cset_in_cache     <= 0;
       rg_lower_word64_full <= False;
@@ -876,6 +891,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    // This rule loops over csets, setting state of each cline in the set to EMPTY
    rule rl_reset (rg_state == MODULE_RESETTING);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_reset ");
+      end
       let state_and_ctag = State_and_CTag { state: CTAG_EMPTY, ctag: ? };
       ram_state_and_ctag_cset.a.put (bram_cmd_write, rg_cset_in_cache, replicate (state_and_ctag));
 
@@ -1197,6 +1215,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `ifdef PERFORMANCE_MONITORING
    // Similar to rl_count_miss_lat but for TLB miss
    rule rl_count_tlb_latency (rg_state == PTW_START || rg_tlb_walk);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_count_tlb_latency ");
+      end
       EventsCache events = unpack (0);
       events.evt_TLB_MISS_LAT = True;
       aw_events [2] <= events;
@@ -1209,6 +1230,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    //       or does that worsen critical path?
 
    rule rl_start_tlb_refill ((rg_state == PTW_START) && (ctr_wr_rsps_pending.value == 0));
+      if (cfg_verbosity > 0) begin
+         $display ("rl_start_tlb_refill ");
+      end
 
 `ifdef RV32
 
@@ -1251,6 +1275,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 `ifdef SV39
    rule rl_ptw_level_2 (rg_state == PTW_LEVEL_2);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_ptw_level_2 ");
+      end
       // Memory read-response is a level 1 PTE
       let mem_rsp <- get (masterPortShim.slave.r);
 
@@ -1338,6 +1365,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Receive Level 1 PTE and process it (Sv32, Sv39 or Sv48)
 
    rule rl_ptw_level_1 (rg_state == PTW_LEVEL_1);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_ptw_level_1 ");
+      end
       // Memory read-response is a level 1 PTE
       let  mem_rsp <- get (masterPortShim.slave.r);
 
@@ -1436,6 +1466,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Receive Level 0 PTE and process it
 
    rule rl_ptw_level_0 (rg_state == PTW_LEVEL_0);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_ptw_level_0 ");
+      end
       // Memory read-response is a level 0 PTE
       let mem_rsp <- get (masterPortShim.slave.r);
 
@@ -1508,6 +1541,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // and stops firing once state returns to MODULE_RUNNING
    // First cycle of miss is not counted, but overcounts by one at the end to compensate
    rule rl_count_miss_lat (!resetting && (rg_state == CACHE_START_REFILL || rg_cache_rereq_data));
+      if (cfg_verbosity > 0) begin
+         $display ("rl_count_miss_lat ");
+      end
       EventsCache events = unpack (0);
       events.evt_LD_MISS_LAT = rg_op == CACHE_LD;
 `ifdef ISA_A
@@ -1525,6 +1561,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Initiate read of cword_set in cache for read-modify-write of word64
 
    rule rl_start_cache_refill (!resetting && (rg_state == CACHE_START_REFILL) && (ctr_wr_rsps_pending.value == 0));
+      if (cfg_verbosity > 0) begin
+         $display ("rl_start_cache_refill ");
+      end
       if (cfg_verbosity > 1)
 	 $display ("%0d: %s.rl_start_cache_refill: ", cur_cycle, d_or_i);
 
@@ -1704,6 +1743,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // i.e., probe the TLB and cache (BRAM port B) again
 
    rule rl_rereq (!resetting && rg_state == CACHE_REREQ);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_rereq ");
+      end
       rg_state <= MODULE_RUNNING;
       fa_req_ram_B (rg_addr);
    endrule
@@ -1713,6 +1755,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Stays in this state until CPU's next request puts it back into RUNNING state
 
    rule rl_ST_AMO_response (rg_state == CACHE_ST_AMO_RSP && dmem_not_imem);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_ST_AMO_response ");
+      end
       dw_valid <= True;
       let ld_val = rg_ld_val;
       if (! rg_allow_cap) ld_val = tuple2 (False, tpl_2 (ld_val));
@@ -1773,7 +1818,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Receive I/O read response from fabric
 
    rule rl_io_read_rsp (!resetting && (rg_state == IO_AWAITING_READ_RSP) && dmem_not_imem);
-
       let rd_data <- get(masterPortShim.slave.r);
 
       if (cfg_verbosity > 1) begin
@@ -1824,6 +1868,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // Stays in this state until CPU's next request puts it back into RUNNING state
 
    rule rl_maintain_io_read_rsp (!resetting && rg_state == IO_READ_RSP && dmem_not_imem);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_maintain_io_read_rsp ");
+      end
       fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, rg_ld_val, rg_allow_cap);
    endrule
 
@@ -1854,7 +1901,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 `ifdef ISA_A
    rule rl_io_AMO_SC_req (!resetting && (rg_state == IO_REQ) && is_AMO_SC && dmem_not_imem);
-
       rg_ld_val <= tuple2 (False, 1);    // 1 is LR/SC failure value
       rg_state  <= CACHE_ST_AMO_RSP;
 
@@ -1982,6 +2028,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // into MODULE_RUNNING state by the next request.
 
    rule rl_drive_exception_rsp (!resetting && rg_state == MODULE_EXCEPTION_RSP);
+      if (cfg_verbosity > 0) begin
+         $display ("rl_drive_exception_rsp ");
+      end
       dw_valid    <= True;
       dw_exc      <= True;
       dw_exc_code <= rg_exc_code;
@@ -1995,17 +2044,21 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    `endif
    Wire#(Addr) w_req_addr <- mkWire;
    Wire#(Tuple2#(Bool,Bit#(128))) w_req_st_value <- mkWire;
+`ifdef ISA_PRIV_S
    Wire#(Priv_Mode) w_req_priv <- mkWire;
    Wire#(Bit#(1)) w_req_sstatus_SUM <- mkWire;
    Wire#(Bit#(1)) w_req_mstatus_MXR <- mkWire;
    Wire#(WordXL) w_req_satp <- mkWire;
+`endif
 
    (* mutually_exclusive = "do_req, rl_cache_refill_rsps_loop" *)
    (* mutually_exclusive = "do_req, rl_rereq" *)
    (* mutually_exclusive = "do_req, rl_start_cache_refill" *)
    (* mutually_exclusive = "do_req, do_reset_req" *)
    (* mutually_exclusive = "do_req, do_tlb_flush" *)
+   (* mutually_exclusive = "do_req, rl_reset" *)
    rule do_req (! resetting);
+      $display ("do_req_");
       let op = w_req_op;
       let width_code = w_req_width_code;
       let is_unsigned = w_req_is_unsigned;
@@ -2014,17 +2067,21 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       `endif
       let addr = w_req_addr;
       let st_value = w_req_st_value;
+`ifdef ISA_PRIV_S
       let priv = w_req_priv;
       let sstatus_SUM = w_req_sstatus_SUM;
       let mstatus_MXR = w_req_mstatus_MXR;
       let satp = w_req_satp;
+`endif
 
       if (cfg_verbosity > 1) begin
               $display ("%0d: %m.req: op:", cur_cycle, fshow (op),
               " width_code:%0d addr:0x%0h st_value:0x%0h", width_code, addr, st_value);
+`ifdef ISA_PRIV_S
               $display ("    priv:", fshow_Priv_Mode (priv),
               " sstatus_SUM:%0d mstatus_MXR:%0d satp:0x%0h",
               sstatus_SUM,    mstatus_MXR,    satp);
+`endif
       `ifdef ISA_A
               $display ("    amo_funct5 = 0x%0h", amo_funct5);
       `endif
@@ -2042,10 +2099,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
       rg_st_amo_val  <= st_value;
 
+`ifdef ISA_PRIV_S
       rg_priv        <= priv;
       rg_sstatus_SUM <= sstatus_SUM;
       rg_mstatus_MXR <= mstatus_MXR;
       rg_satp        <= satp;
+`endif
 
       // Initial default PA assumes no VM translation
       rg_pa <= fn_WordXL_to_PA (addr);
@@ -2063,17 +2122,24 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 `ifdef PERFORMANCE_MONITORING
    rule do_set_req_valid;
+      if (cfg_verbosity > 0) begin
+         $display ("do_set_req_valid");
+      end
       rg_mem_req_sent <= wr_mem_req_sent;
    endrule
 `endif
 
    (* fire_when_enabled *)
    rule do_reset_req (rw_reset_req.wget matches tagged Valid .req);
+      $display ("do_reset_req ");
       f_reset_reqs.enq (req);
    endrule
 
    (* no_implicit_conditions, fire_when_enabled *)
    rule do_tlb_flush if (pw_tlb_flush_req);
+      if (cfg_verbosity > 0) begin
+         $display ("do_tlb_flush ");
+      end
       `ifdef ISA_PRIV_S
       tlb.ma_flush;
       rg_state <= MODULE_READY;
@@ -2119,12 +2185,15 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
            Bit #(5) amo_funct5,
            `endif
            Addr addr,
-           Tuple2#(Bool, Bit#(128)) st_value,
+           Tuple2#(Bool, Bit#(128)) st_value
+`ifdef ISA_PRIV_S
            // The following  args for VM
            Priv_Mode  priv,
            Bit #(1)   sstatus_SUM,
            Bit #(1)   mstatus_MXR,
-           WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+           WordXL     satp
+`endif
+           );    // { VM_Mode, ASID, PPN_for_page_table }
       w_req_op <= op;
       w_req_width_code <= width_code;
       w_req_is_unsigned <= is_unsigned;
@@ -2133,10 +2202,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       `endif
       w_req_addr <= addr;
       w_req_st_value <= st_value;
+`ifdef ISA_PRIV_S
       w_req_priv <= priv;
       w_req_sstatus_SUM <= sstatus_SUM;
       w_req_mstatus_MXR <= mstatus_MXR;
       w_req_satp <= satp;
+`endif
       $display("MMU_Cache req for addr %x, data_not_instruction %d, resetting %d", addr, dmem_not_imem, resetting);
 `ifdef PERFORMANCE_MONITORING
       EventsCache events = unpack (0);

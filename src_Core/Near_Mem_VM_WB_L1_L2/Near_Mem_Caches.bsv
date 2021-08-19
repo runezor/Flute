@@ -337,11 +337,13 @@ module mkNear_Mem (Near_Mem_IFC);
       // CPU side: IMem request
       method Action  req (Bit #(3) f3,
 			  WordXL addr,
+`ifdef ISA_PRIV_S
 			  // The following  args for VM
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
 			  WordXL     satp
+`endif
 `ifdef RVFI_DII
              , Dii_Id seq_req
 `endif

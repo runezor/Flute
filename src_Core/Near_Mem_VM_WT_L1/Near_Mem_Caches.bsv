@@ -154,12 +154,14 @@ module mkNear_Mem (Near_Mem_IFC);
    interface IMem_IFC imem;
       // CPU side: IMem request
       method Action  req (Bit #(3) f3,
-			  WordXL addr,
+			  WordXL addr
 			  // The following  args for VM
-			  Priv_Mode  priv,
+`ifdef ISA_PRIV_S
+			  , Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
 			  WordXL     satp
+`endif
 `ifdef RVFI_DII
             , Dii_Id seq_req
 `endif
@@ -168,7 +170,11 @@ module mkNear_Mem (Near_Mem_IFC);
 `ifdef ISA_A
 		     ?,
 `endif
-		     addr, tuple2 (False, ?), priv, sstatus_SUM, mstatus_MXR, satp);
+		     addr, tuple2 (False, ?)
+`ifdef ISA_PRIV_S
+                                            , priv, sstatus_SUM, mstatus_MXR, satp
+`endif
+                                                                                  );
       endmethod
       method Action commit = icache.commit;
 
@@ -207,17 +213,24 @@ module mkNear_Mem (Near_Mem_IFC);
 			  Bit #(5) amo_funct5,
 `endif
 			  Addr addr,
-              Tuple2#(Bool, Bit #(128)) store_value,
+              Tuple2#(Bool, Bit #(128)) store_value
 			  // The following  args for VM
-			  Priv_Mode  priv,
+`ifdef ISA_PRIV_S
+			  , Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
 			  Bit #(1)   mstatus_MXR,
-			  WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+			  WordXL     satp
+`endif
+                          );    // { VM_Mode, ASID, PPN_for_page_table }
 	 dcache.req (op, f3, is_unsigned,
 `ifdef ISA_A
 		     amo_funct5,
 `endif
-		     addr, store_value, priv, sstatus_SUM, mstatus_MXR, satp);
+		     addr, store_value
+`ifdef ISA_PRIV_S
+                                      , priv, sstatus_SUM, mstatus_MXR, satp
+`endif
+                                                                            );
       endmethod
       method Action commit = dcache.commit;
 

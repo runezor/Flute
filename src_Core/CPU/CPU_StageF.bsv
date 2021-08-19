@@ -193,7 +193,10 @@ module mkCPU_StageF #(Bit #(4)  verbosity,
 		 sstatus_SUM, mstatus_MXR, satp);
 	 $display ("");
       end
-      imem.req (f3_LW, fetch_addr, priv, sstatus_SUM, mstatus_MXR, satp
+      imem.req (f3_LW, fetch_addr
+`ifdef ISA_PRIV_S
+                                 , priv, sstatus_SUM, mstatus_MXR, satp
+`endif
 `ifdef RVFI_DII
                                                                        , next_seq
 `endif

@@ -101,9 +101,11 @@ import Near_Mem_IFC :: *;    // Caches or TCM
 import Near_Mem_Caches :: *;
 `endif
 
-`ifdef Near_Mem_TCM
-import Near_Mem_TCM :: *;
-`endif
+//`ifdef Near_Mem_TCM
+import Near_Mem_TCM_Merged :: *;
+import Near_Mem_TCM_IFC :: *;
+import Near_Mem_Join :: *;
+//`endif
 
 `ifdef INCLUDE_GDB_CONTROL
 import Debug_Module   :: *;
@@ -230,7 +232,8 @@ module mkCPU (CPU_IFC);
 
    // ----------------
    // Near mem (caches or TCM, for example)
-   Near_Mem_IFC  near_mem <- mkNear_Mem;
+   //Near_Mem_IFC  near_mem <- Near_Mem_Caches::mkNear_Mem;
+   Near_Mem_IFC  near_mem <- Near_Mem_Join::mkNear_Mem_Join;
 
    // ----------------
    // If using Direct Instruction Injection then make a
@@ -251,7 +254,7 @@ module mkCPU (CPU_IFC);
    // For debugging
 
    // Verbosity: 0=quiet; 1=instruction trace; 2=more detail
-   Reg #(Bit #(4))  cfg_verbosity <- mkConfigReg (1);
+   Reg #(Bit #(4))  cfg_verbosity <- mkConfigReg (0);
 
    // Verbosity is 0 as long as # of instrs retired is <= cfg_logdelay
    Reg #(Bit #(64))  cfg_logdelay <- mkConfigReg (0);
@@ -1405,6 +1408,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(rg_trap_trace_data.Left,Invalid,rd == 0 ? Invalid : Valid(getAddr(new_rd_val)),minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -1554,6 +1558,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(rg_trap_trace_data.Left,Invalid,rd==0 ? Invalid : Valid(new_rd_val),minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -1702,6 +1707,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(rg_trap_trace_data.Left,Invalid,rd==0 ? Invalid : Valid (new_rd_val),minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -1791,6 +1797,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(stage1.out.data_to_stage2,Valid(next_pc),Invalid,minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -1839,6 +1846,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(stage1.out.data_to_stage2,Invalid,Invalid,minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -1917,6 +1925,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(stage1.out.data_to_stage2,Invalid,Invalid,minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -2010,6 +2019,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(stage1.out.data_to_stage2,Invalid,Invalid,minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 
@@ -2109,6 +2119,7 @@ module mkCPU (CPU_IFC);
       let outpacket = getRVFIInfoS1(stage1.out.data_to_stage2,Invalid,Invalid,minstret,False,0,rg_handler,rg_donehalt);
       rg_donehalt <= outpacket.rvfi_halt;
       f_to_verifier.enq(outpacket);
+      $display ("outpacket: ", fshow (outpacket));
       rg_handler <= False;
 `endif
 

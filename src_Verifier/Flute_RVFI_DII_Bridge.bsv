@@ -80,10 +80,12 @@ import RVFI_DII  :: *;
         interface IMem_IFC instr_CPU;
             method Action req (Bit #(3) f3,
                 WordXL         addr,
+`ifdef ISA_PRIV_S
                 Priv_Mode      priv,
                 Bit #(1)       sstatus_SUM,
                 Bit #(1)       mstatus_MXR,
                 WordXL         satp,
+`endif
                 Dii_Id seq_request);
                 fake_addr <= Valid(addr);
                 seq_req[1] <= Valid(seq_request);

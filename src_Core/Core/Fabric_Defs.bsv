@@ -36,16 +36,24 @@ import ISA_Decls :: *;
 // Core local Fabric parameters
 
 typedef 2  Num_Masters_2x3;
+typedef 2  Num_Masters_2x4;
 typedef 3  Num_Slaves_2x3;
+typedef 4  Num_Slaves_2x4;
 
 typedef Bit#(TLog #(Num_Masters_2x3))  Master_Num_2x3;
 typedef Bit#(TLog #(Num_Slaves_2x3))  Slave_Num_2x3;
+typedef Bit#(TLog #(Num_Masters_2x4))  Master_Num_2x4;
+typedef Bit#(TLog #(Num_Slaves_2x4))  Slave_Num_2x4;
 
 // ----------------
 // Width of fabric 'Id' buses
 typedef 4 Wd_MId_2x3;
+typedef 4 Wd_MId_2x4;
 typedef TAdd#(Wd_MId_2x3, TLog#(Num_Masters_2x3)) Wd_SId_2x3;
-typedef Wd_SId_2x3 Wd_MId;
+typedef TAdd#(Wd_MId_2x4, TLog#(Num_Masters_2x4)) Wd_SId_2x4;
+//typedef Wd_SId_2x3 Wd_MId;
+typedef Wd_SId_2x4 Wd_MId;
+typedef Wd_SId_2x4 Wd_SId;
 `ifdef ISA_CHERI
 `ifdef NO_TAG_CACHE
 typedef Wd_MId Wd_MId_ext;
@@ -154,7 +162,8 @@ typedef 4   Wd_R_User_Mem;
 
 `else
 
-typedef Wd_MId_2x3 Wd_Id_Mem;
+//typedef Wd_MId_2x3 Wd_Id_Mem;
+typedef Wd_MId_2x4 Wd_Id_Mem;
 typedef Wd_Addr    Wd_Addr_Mem;
 typedef Wd_Data    Wd_Data_Mem;
 typedef Wd_AW_User Wd_AW_User_Mem;
@@ -177,6 +186,7 @@ typedef AXI4_Master #(Wd_Id_Mem,
 // ================================================================
 // AXI4 defaults for this project
 Bit#(Wd_MId_2x3) fabric_2x3_default_mid = 0;
+Bit#(Wd_MId_2x4) fabric_2x4_default_mid = 0;
 Bit#(Wd_MId)     fabric_default_mid     = 0;
 AXI4_Burst       fabric_default_burst   = INCR;
 AXI4_Lock        fabric_default_lock    = NORMAL;

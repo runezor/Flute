@@ -76,6 +76,7 @@ import ISA_Decls :: *;
 interface SoC_Map_IFC;
    (* always_ready *)   method  Range#(Wd_Addr)  m_plic_addr_range;
    (* always_ready *)   method  Range#(Wd_Addr)  m_near_mem_io_addr_range;
+   (* always_ready *)   method  Range#(Wd_Addr)  m_tcm_addr_range;
 
    /* REMOVED?
    (* always_ready *)   method  Fabric_Addr  m_pcie_ecam_slave_bridge_addr_base;
@@ -142,6 +143,11 @@ module mkSoC_Map (SoC_Map_IFC);
    let near_mem_io_addr_range = Range {
       base: 'h_1000_0000,
       size: 'h_0001_0000    // 64K
+   };
+
+   let tcm_addr_range = Range {
+      base: 'h_C000_0000,
+      size: 512 * 1024
    };
 
    // ----------------------------------------------------------------
@@ -330,6 +336,7 @@ module mkSoC_Map (SoC_Map_IFC);
 
    method  Range#(Wd_Addr)  m_plic_addr_range = plic_addr_range;
    method  Range#(Wd_Addr)  m_near_mem_io_addr_range = near_mem_io_addr_range;
+   method  Range#(Wd_Addr)  m_tcm_addr_range = tcm_addr_range;
 
    /* REMOVED?
    method  Fabric_Addr  m_pcie_ecam_slave_bridge_addr_base = pcie_ecam_slave_bridge_addr_base;

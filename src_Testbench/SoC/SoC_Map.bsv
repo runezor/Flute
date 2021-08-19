@@ -177,16 +177,20 @@ module mkSoC_Map (SoC_Map_IFC);
 // Integer kB_per_TCM = 'h4;         // 4KB
 // Integer kB_per_TCM = 'h40;     // 64KB
 // Integer kB_per_TCM = 'h80;     // 128KB
+   Integer kB_per_TCM = 'h200;     // 512KB
 // Integer kB_per_TCM = 'h400;    // 1 MB
-   Integer kB_per_TCM = 'h4000;    // 16 MB
+// Integer kB_per_TCM = 'h4000;    // 16 MB
 `else
-   Integer kB_per_TCM = 0;
+   //Integer kB_per_TCM = 0;
+   Integer kB_per_TCM = 'h200;     // 512KB
 `endif
    Integer bytes_per_TCM = kB_per_TCM * 'h400;
 
    let tcm_addr_range = Range {
-      base: 'h_0000_0000,
-      size: fromInteger (bytes_per_TCM)
+      base: 'h_8000_0000,
+      //size: fromInteger (bytes_per_TCM)
+      //size: 'h40 * 'h400
+      size: 512 * 1024
    };
 
 `ifdef RVFI_DII

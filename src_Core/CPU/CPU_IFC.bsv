@@ -90,9 +90,9 @@ interface CPU_IFC;
    // ----------------
    // Interface to 'coherent DMA' port of optional L2 cache
 
-   interface AXI4_Slave #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
-                         , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
-                         , Wd_AR_User_Dma, Wd_R_User_Dma)  dma_server;
+   interface AXI4_Slave #( Wd_SId_2x4, Wd_Addr, Wd_Data
+                         , Wd_AW_User, Wd_W_User, Wd_B_User
+                         , Wd_AR_User, Wd_R_User)  dma_server;
 
    // ----------------------------------------------------------------
 

@@ -496,7 +496,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 					   , fbypass       : fbypass
 `endif
 					   };
-	 end
+	 end // LD
 
       // This stage is doing a STORE
       else if (rg_stage2.op_stage2 == OP_Stage2_ST) begin
@@ -765,25 +765,31 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
         Bit#(TSub#(SizeOf#(CapMem),1)) tagless = truncate(capMem);
 `endif
 
-        dcache.req (cache_op,
-			x.mem_width_code,
-            x.mem_unsigned,
+        dcache.req (cache_op
+			, x.mem_width_code
+                        , x.mem_unsigned
 `ifdef ISA_A
-			amo_funct5,
+			, amo_funct5
 `endif
-			x.addr,
+			, x.addr
 `ifdef ISA_F
-			x.rs_frm_fpr ? tuple2(False,zeroExtend(x.fval2)) :
+			, x.rs_frm_fpr ? tuple2(False,zeroExtend(x.fval2)) :
+`else
+                        // TODO this is wrong if there is no CHERI...
+                        ,
 `endif
 `ifdef ISA_CHERI
-      tuple2(x.mem_width_code == w_SIZE_CAP && isValidCap(capMem), zeroExtend(tagless)),
+                          tuple2(x.mem_width_code == w_SIZE_CAP && isValidCap(capMem), zeroExtend(tagless))
 `else
-      tuple2(False, zeroExtend(x.val2)),
+                          tuple2(False, zeroExtend(x.val2))
 `endif
-			mem_priv,
-			sstatus_SUM,
-			mstatus_MXR,
-			csr_regfile.read_satp);
+`ifdef ISA_PRIV_S
+			, mem_priv,
+			, sstatus_SUM,
+			, mstatus_MXR,
+			, csr_regfile.read_satp
+`endif
+                        );
 	 end
 
 `ifdef SHIFT_SERIAL
