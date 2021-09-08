@@ -10,3 +10,6 @@
 [submodule "src_Verifier/BSV-RVFI-DII"]
 	path = src_Verifier/BSV-RVFI-DII
 	url = https://github.com/CTSRD-CHERI/BSV-RVFI-DII.git
+[submodule "src_Core/Near_Mem_TCM_Join"]
+	path = src_Core/Near_Mem_TCM_Join
+	url = git@github.com:CTSRD-CHERI/Near_Mem_TCM_Join.git
