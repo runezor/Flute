@@ -38,13 +38,16 @@ all: compile  simulator
 # L1 = L1 only; L1_L2 = L1 + coherent L2
 # TCM = No caches, only TCM
 
-CACHES ?= WT_L1
+CACHES ?= TCM_PLUS_WT_L1
+#CACHES ?= WT_L1
 #CACHES ?= WB_L1_L2
 
 ifeq ($(CACHES),WB_L1)
   NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
 else ifeq ($(CACHES),TCM)
   NEAR_MEM_VM_DIR=Near_Mem_TCM
+else ifeq ($(CACHES),TCM_PLUS_WT_L1)
+  NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1:$(REPO)/src_Core/Near_Mem_TCM_Join
 else ifeq ($(CACHES),WB_L1_L2)
   NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
   # core size

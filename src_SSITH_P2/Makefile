@@ -44,16 +44,13 @@ SRC_CORE ?= $(REPO)/src_Core/Core
 
 BSC_COMPILATION_FLAGS += \
 	-D RV64 \
-	-D ISA_PRIV_M  -D ISA_PRIV_U  -D ISA_PRIV_S  \
-	-D SV39 \
+	-D ISA_PRIV_M  -D ISA_PRIV_U  \
 	-D RISCV \
 	-D CapWidth=128 -D CheriBusBytes=8 -D SMALL_TAG_CACHE \
 	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
 	-D ISA_CHERI \
 	-D PERFORMANCE_MONITORING \
-	-D ISA_PRIV_M  -D ISA_PRIV_S  -D ISA_PRIV_U  \
 	-D ISA_I  -D ISA_M  -D ISA_A  -D ISA_C  \
-	-D ISA_F -D ISA_D -D INCLUDE_FDIV  -D INCLUDE_FSQRT \
 	-D SHIFT_BARREL    \
 	-D MULT_SYNTH     \
 	-D Near_Mem_Caches    \
@@ -101,15 +98,18 @@ BSC_COMPILATION_FLAGS += \
 
 # ================================================================
 # Near-mem (Cache and optional MMU for VM)
+# TCM_PLUS = use TCMs as well as other caches
 # WT = Write-through; WB = write-back
 # L1 = L1 only; L1_L2 = L1 + coherent L2
 
-CACHES ?= WT_L1
+CACHES ?= TCM_PLUS_WT_L1
 
 ifeq ($(CACHES),WB_L1)
   NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
 else ifeq ($(CACHES),WB_L1_L2)
   NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
+else ifeq ($(CACHES),TCM_PLUS_WT_L1)
+  NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1:$(REPO)/src_Core/Near_Mem_TCM_Join
 else
   NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1
 endif
