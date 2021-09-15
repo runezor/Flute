@@ -127,7 +127,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    // CHERI, handle tags internally with a tagController
    let axi4_mem_shim <- mkTagControllerAXI;
 `ifdef PERFORMANCE_MONITORING
-   tag_cache_evts = axi4_mem_shim.events;
+   //tag_cache_evts = axi4_mem_shim.events;
 `endif
 `endif
 `else
@@ -145,6 +145,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    let axi4_mem_shim_master_monitor <- monitorAXI4_Master (axi4_mem_shim_master);
    axi4_mem_shim_master = axi4_mem_shim_master_monitor.ifc;
    tag_cache_master_evts = to_vector (axi4_mem_shim_master_monitor.events);
+   //tag_cache_master_evts = replicate(0);
 `endif
 `endif
 `endif
@@ -454,6 +455,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `ifdef PERFORMANCE_MONITORING
    rule rl_relay_external_events;
       Vector #(7, Bit #(1)) slave_events = to_vector (axi4_mem_shim_slave_monitor.events);
+      //Vector #(7, Bit #(1)) slave_events = replicate(0);
       // Append 3 7-bit vectors.  tag_cache_master_evts at index 0x0, slave_events at offset 0x7, and tag_cache_evts at offset 0xE.
       let events = append (tag_cache_evts, append (slave_events, tag_cache_master_evts));
       cpu.relay_external_events (to_large_vector (events));
@@ -577,12 +579,12 @@ endmodule: mkCore
 (* synthesize *)
 module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
    let core <- mkCore;
-   let cpu_imem_master_synth <- toAXI4_Master_Synth (core.cpu_imem_master);
-   let core_mem_master_synth <- toAXI4_Master_Synth (core.core_mem_master);
+   let cpu_imem_master_synth <- toAXI4_Master_Sig (core.cpu_imem_master);
+   let core_mem_master_synth <- toAXI4_Master_Sig (core.core_mem_master);
 `ifdef INCLUDE_DMEM_SLAVE
    let cpu_dmem_slave_synth <- toAXI4Lite_Slave_Synth (core.cpu_dmem_slave);
 `endif
-   let dma_server_synth <- toAXI4_Slave_Synth (core.dma_server);
+   let dma_server_synth <- toAXI4_Slave_Sig (core.dma_server);
 
    interface cpu_reset_server = core.cpu_reset_server;
    interface cpu_imem_master = cpu_imem_master_synth;

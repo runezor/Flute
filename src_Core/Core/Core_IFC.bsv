@@ -189,9 +189,9 @@ endinterface
 
 interface Core_IFC_Synth #(numeric type t_n_interrupt_sources);
    interface Server #(Bool, Bool)  cpu_reset_server;
-   interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
+   interface AXI4_Master_Sig #(Wd_MId, Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
       cpu_imem_master;
-   interface AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
+   interface AXI4_Master_Sig #( Wd_MId_ext, Wd_Addr, Wd_Data
                                 , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
                                 , Wd_AR_User_ext, Wd_R_User_ext)
       core_mem_master;
@@ -199,7 +199,7 @@ interface Core_IFC_Synth #(numeric type t_n_interrupt_sources);
    interface AXI4Lite_Slave_Synth #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0)
       cpu_dmem_slave;
 `endif
-   interface AXI4_Slave_Synth #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+   interface AXI4_Slave_Sig #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
                                , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
                                , Wd_AR_User_Dma, Wd_R_User_Dma)
       dma_server;
