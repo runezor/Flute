@@ -576,20 +576,20 @@ endmodule: mkCore
 (* synthesize *)
 module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
    let core <- mkCore;
-   let cpu_imem_master_synth <- toAXI4_Master_Sig (core.cpu_imem_master);
-   let core_mem_master_synth <- toAXI4_Master_Sig (core.core_mem_master);
+   let cpu_imem_master_sig <- toAXI4_Master_Sig (core.cpu_imem_master);
+   let core_mem_master_sig <- toAXI4_Master_Sig (core.core_mem_master);
 `ifdef INCLUDE_DMEM_SLAVE
-   let cpu_dmem_slave_synth <- toAXI4Lite_Slave_Sig (core.cpu_dmem_slave);
+   let cpu_dmem_slave_sig <- toAXI4Lite_Slave_Sig (core.cpu_dmem_slave);
 `endif
-   let dma_server_synth <- toAXI4_Slave_Sig (core.dma_server);
+   let dma_server_sig <- toAXI4_Slave_Sig (core.dma_server);
 
    interface cpu_reset_server = core.cpu_reset_server;
-   interface cpu_imem_master = cpu_imem_master_synth;
-   interface core_mem_master = core_mem_master_synth;
+   interface cpu_imem_master = cpu_imem_master_sig;
+   interface core_mem_master = core_mem_master_sig;
 `ifdef INCLUDE_DMEM_SLAVE
-   interface cpu_dmem_slave = cpu_dmem_slave_synth;
+   interface cpu_dmem_slave = cpu_dmem_slave_sig;
 `endif
-   interface dma_server = dma_server_synth;
+   interface dma_server = dma_server_sig;
    interface core_external_interrupt_sources = core.core_external_interrupt_sources;
    method nmi_req = core.nmi_req;
 `ifdef INCLUDE_TANDEM_VERIF

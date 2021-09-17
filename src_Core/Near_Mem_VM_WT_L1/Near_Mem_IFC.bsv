@@ -83,9 +83,6 @@ typedef struct {
    Bool evt_EVICT;
 } EventsCache deriving (Bits, FShow);
 
-//instance BitVectorable #(EventsCache, 1, m) provisos (Bits #(EventsCache, m));
-//      function to_vector = struct_to_vector;
-//endinstance
 `endif
 
 interface Near_Mem_IFC;
