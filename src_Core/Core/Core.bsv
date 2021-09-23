@@ -145,7 +145,15 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `ifndef NO_TAG_CACHE
    let axi4_mem_shim_master_monitor <- monitorAXI4_Master (axi4_mem_shim_master);
    axi4_mem_shim_master = axi4_mem_shim_master_monitor.ifc;
-   master_evts = axi4_mem_shim_master_monitor.events;
+   AXI4_Events ext_master_evts = axi4_mem_shim_master_monitor.events;
+   master_evts.evt_AW_FLIT = zeroExtend(pack(ext_master_evts.evt_AW_FLIT));
+   master_evts.evt_W_FLIT = zeroExtend(pack(ext_master_evts.evt_W_FLIT));
+   master_evts.evt_W_FLIT_FINAL = zeroExtend(pack(ext_master_evts.evt_W_FLIT_FINAL));
+   master_evts.evt_B_FLIT = zeroExtend(pack(ext_master_evts.evt_B_FLIT));
+   master_evts.evt_AR_FLIT = zeroExtend(pack(ext_master_evts.evt_AR_FLIT));
+   master_evts.evt_R_FLIT = zeroExtend(pack(ext_master_evts.evt_R_FLIT));
+   master_evts.evt_R_FLIT_FINAL = zeroExtend(pack(ext_master_evts.evt_R_FLIT_FINAL));
+
 `endif
 `endif
 `endif
@@ -454,8 +462,16 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
 `ifdef PERFORMANCE_MONITORING
    rule rl_relay_external_events;
-      AXI4_Slave_Events slave_evts= axi4_mem_shim_slave_monitor.events;
-      cpu.relay_external_events (slave_evts, master_evts, tag_cache_evts);
+      AXI4_Events ext_slave_evts= axi4_mem_shim_slave_monitor.events;
+      AXI4_Slave_Events slave_evts = unpack(0);
+      slave_evts.evt_AW_FLIT = zeroExtend(pack(ext_slave_evts.evt_AW_FLIT));
+   slave_evts.evt_W_FLIT = zeroExtend(pack(ext_slave_evts.evt_W_FLIT));
+   slave_evts.evt_W_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_W_FLIT_FINAL));
+   slave_evts.evt_B_FLIT = zeroExtend(pack(ext_slave_evts.evt_B_FLIT));
+   slave_evts.evt_AR_FLIT = zeroExtend(pack(ext_slave_evts.evt_AR_FLIT));
+   slave_evts.evt_R_FLIT = zeroExtend(pack(ext_slave_evts.evt_R_FLIT));
+   slave_evts.evt_R_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_R_FLIT_FINAL));
+   cpu.relay_external_events (slave_evts, master_evts, tag_cache_evts);
    endrule
 `endif
 
