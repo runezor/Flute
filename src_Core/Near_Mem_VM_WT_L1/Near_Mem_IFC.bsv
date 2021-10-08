@@ -219,7 +219,7 @@ interface DMem_IFC;
 		       Bit #(5) amo_funct5,
 `endif
 		       Addr addr,
-               Tuple2#(Bool, Bit #(128)) store_value,
+               Tuple2#(Bool, Bit #(XLEN_2)) store_value,
 		       // The following  args for VM
 		       Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
@@ -229,8 +229,8 @@ interface DMem_IFC;
 
    // CPU side: DMem response
    (* always_ready *)  method Bool       valid;
-   (* always_ready *)  method Tuple2#(Bool, Bit #(128))  word128;      // Load-value
-   (* always_ready *)  method Bit #(128)  st_amo_val;  // Final store-value for ST, SC, AMO
+   (* always_ready *)  method Tuple2#(Bool, Bit #(XLEN_2))  word128;      // Load-value
+   (* always_ready *)  method Bit #(XLEN_2)  st_amo_val;  // Final store-value for ST, SC, AMO
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
 
@@ -356,16 +356,16 @@ endfunction
 // Returns the value to be stored back to mem.
 
 `ifdef ISA_A
-function Tuple2 #(Tuple2#(Bool, Bit #(128)),
-		  Tuple2 #(Bool, Bit#(128))) fn_amo_op (
+function Tuple2 #(Tuple2#(Bool, Bit #(XLEN_2)),
+		  Tuple2 #(Bool, Bit #(XLEN_2))) fn_amo_op (
 		                        Bit #(3)   funct3,    // encodes data size (.W or .D)
 					Bit #(5)   funct5,    // encodes the AMO op
 					WordXL     addr,      // lsbs indicate which 32b W in 64b D (.W)
 					Cache_Entry ld_val,   // value loaded from mem
-					Tuple2#(Bool, Bit #(128)) st_val);   // Value from CPU reg Rs2
+					Tuple2#(Bool, Bit #(XLEN_2)) st_val);   // Value from CPU reg Rs2
    let extracted_q1 = fn_extract_and_extend_bytes(funct3, False, addr, ld_val);
    Bit #(128) q1    = tpl_2(extracted_q1);
-   Bit #(128) q2    = tpl_2(st_val);
+   Bit #(128) q2    = zeroExtend (tpl_2(st_val));
    Bit #(64) w1     = truncate(q1);
    Bit #(64) w2     = truncate(q2);
    Int #(64) i1     = unpack (w1);    // Signed, for signed ops
@@ -404,8 +404,8 @@ function Tuple2 #(Tuple2#(Bool, Bit #(128)),
      new_st_val_128 = zeroExtend(new_st_val_64);
    end
 
-   return tuple2 (tuple2(old_ld_tag, q1),
-                  tuple2(new_st_tag, zeroExtend(new_st_val_128)));
+   return tuple2 (tuple2(old_ld_tag, truncate (q1)),
+                  tuple2(new_st_tag, truncate (new_st_val_128)));
 endfunction: fn_amo_op
 `endif
 

@@ -105,7 +105,7 @@ interface MMU_Cache_IFC #(numeric type mID);
 		       Bit #(5) amo_funct5,
 `endif
 		       Addr addr,
-               Tuple2#(Bool, Bit#(128)) st_value,
+               Tuple2#(Bool, Bit#(XLEN_2)) st_value,
 		       // The following  args for VM
 		       Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
@@ -500,7 +500,8 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    Reg #(Bit #(5))   rg_amo_funct5  <- mkRegU;    // specifies which kind of AMO op
 `endif
    Reg #(WordXL)     rg_addr        <- mkRegU;    // VA or PA
-   Reg #(Tuple2#(Bool, Bit #(128))) rg_st_amo_val  <- mkRegU;    // Store-value for ST, SC, AMO
+   Reg #(Tuple2#(Bool, Bit #(XLEN_2))) rg_st_amo_val  <- mkRegU;    // Store-value for ST, SC, AMO
+   Tuple2 #(Bool, Bit #(128)) ext_st_amo_val = tuple2 (tpl_1 (rg_st_amo_val), zeroExtend (tpl_2 (rg_st_amo_val)));
    Reg #(Bool)       rg_allow_cap <- mkRegU;      // Whether load result is allowed to be tagged by VM page bits
 
    // The following are needed for VM
@@ -1082,25 +1083,25 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
                   if (dw_commit) begin
 		    if (hit) begin
 		       // Update cache line in cache
-		      let new_word128_set = fn_update_cword_set (cword_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
+		      let new_word128_set = fn_update_cword_set (cword_set, way_hit, vm_xlate_result.pa, rg_width_code, ext_st_amo_val);
                       ram_cword_set.a.put (bram_cmd_write, cset_cword_in_cache, new_word128_set);
 
 		      if (cfg_verbosity > 1) begin
-		         $display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
+		         $display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, ext_st_amo_val);
 		         $write   ("        New Word128_Set:");
 		         fa_display_cword_set (cset_in_cache, cword_in_cline, new_word128_set);
 		      end
 		    end
 		    else begin
 		       if (cfg_verbosity > 1)
-		          $display ("        Write-Cache-Miss: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
+		          $display ("        Write-Cache-Miss: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, ext_st_amo_val);
 		    end
 
 		    if (cfg_verbosity > 1)
-		       $display ("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h", rg_addr, rg_st_amo_val);
+		       $display ("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h", rg_addr, ext_st_amo_val);
 
 		    // For write-hits and write-misses, writeback data to memory (so cache remains clean)
-		    fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, rg_st_amo_val);
+		    fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, ext_st_amo_val);
 
 		    // Provide write-response after 1-cycle delay (thus locking the cset for 1 cycle),
 		    // in case the next incoming request tries to read from the same SRAM address.
@@ -1140,9 +1141,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		  // Do the AMO op on the loaded value and the store value
 		  match {.new_ld_val,
 		    	 .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct5, rg_addr, centry, rg_st_amo_val);
+		  let ext_new_ld_val = tuple2 (tpl_1 (new_ld_val), zeroExtend (tpl_2 (new_ld_val)));
+		  let ext_new_st_val = tuple2 (tpl_1 (new_st_val), zeroExtend (tpl_2 (new_st_val)));
 
 		  // Update cache line in cache
-		  let new_cword_set = fn_update_cword_set (cword_set, way_hit, vm_xlate_result.pa, rg_width_code, new_st_val);
+		  let new_cword_set = fn_update_cword_set (cword_set, way_hit, vm_xlate_result.pa, rg_width_code, ext_new_st_val);
 		  ram_cword_set.a.put (bram_cmd_write, cset_cword_in_cache, new_cword_set);
 
 		  if (cfg_verbosity > 1) begin
@@ -1152,7 +1155,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		  end
 
 		  // Writeback data to memory (so cache remains clean)
-		  fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, new_st_val);
+		  fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, ext_new_st_val);
 
 		  // If this is to the LR/SC reserved address, invalidate the reservation
 		  // TODO: should we invalidate even if to a different
@@ -1166,7 +1169,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 		  // Provide amo response after 1-cycle delay (thus locking the cset for 1 cycle),
 		  // in case the next incoming request tries to read from the same address.
-		  rg_ld_val     <= new_ld_val;
+		  rg_ld_val     <= ext_new_ld_val;
 		  rg_st_amo_val <= new_st_val;
 		  new_state      = CACHE_ST_AMO_RSP;
 	       end
@@ -1641,7 +1644,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Refill 128b of cache line
       else begin
-      Cache_Entry new_word128 = tuple2(mem_rsp.ruser, zeroExtend(mem_rsp.rdata));
+      Cache_Entry new_word128 = tuple2(zeroExtend (mem_rsp.ruser), zeroExtend(mem_rsp.rdata));
 
       // Assert: rg_lower_64_full == True
       new_word128 = tuple2(tpl_1(new_word128), { truncate(tpl_2(new_word128)) , rg_lower_word64 });
@@ -1722,7 +1725,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       let ld_val = rg_ld_val;
       if (! rg_allow_cap) ld_val = tuple2 (False, tpl_2 (ld_val));
       dw_output_ld_val     <= ld_val;        // Irrelevant for ST; relevant for SC, AMO
-      dw_output_st_amo_val <= rg_st_amo_val;
+      dw_output_st_amo_val <= ext_st_amo_val;
 
 `ifdef WATCH_TOHOST
       // ----------------
@@ -1846,7 +1849,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("%0d: %s: rl_io_write_req; width_code 0x%0h  vaddr %0h  paddr %0h  word64 0x%0h",
 		   cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa, rg_st_amo_val);
 
-       fa_fabric_send_write_req (rg_width_code, rg_pa, rg_st_amo_val);
+       fa_fabric_send_write_req (rg_width_code, rg_pa, ext_st_amo_val);
 
       rg_state <= CACHE_ST_AMO_RSP;
 
@@ -1939,12 +1942,14 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    // Do the AMO op on the loaded value and the store value
 	    match {.new_ld_val,
 	           .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct5, rg_addr, tuple2(0, tpl_2(ld_val)), rg_st_amo_val);
+	    let ext_new_ld_val = tuple2 (tpl_1 (new_ld_val), zeroExtend (tpl_2 (new_ld_val)));
+	    let ext_new_st_val = tuple2 (tpl_1 (new_st_val), zeroExtend (tpl_2 (new_st_val)));
 
 	    // Write back new st_val to fabric
-	    fa_fabric_send_write_req (rg_width_code, rg_pa, new_st_val);
+	    fa_fabric_send_write_req (rg_width_code, rg_pa, ext_new_st_val);
 
-	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, new_ld_val, rg_allow_cap);
-	    rg_ld_val <= new_ld_val;
+	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, ext_new_ld_val, rg_allow_cap);
+	    rg_ld_val <= ext_new_ld_val;
 	    rg_state  <= IO_READ_RSP;
 
 	    if (cfg_verbosity > 1)
@@ -2045,7 +2050,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `ifdef ISA_PRIV_S
       tlb.mv_vm_put_va(addr);
 `endif
-      rg_st_amo_val  <= st_value;
+      rg_st_amo_val  <= tuple2 (tpl_1 (st_value), truncate (tpl_2 (st_value)));
 
       rg_priv        <= priv;
       rg_sstatus_SUM <= sstatus_SUM;
@@ -2124,7 +2129,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
            Bit #(5) amo_funct5,
            `endif
            Addr addr,
-           Tuple2#(Bool, Bit#(128)) st_value,
+           Tuple2#(Bool, Bit#(XLEN_2)) st_value,
            // The following  args for VM
            Priv_Mode  priv,
            Bit #(1)   sstatus_SUM,
@@ -2137,7 +2142,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       w_req_amo_funct5 <= amo_funct5;
       `endif
       w_req_addr <= addr;
-      w_req_st_value <= st_value;
+      w_req_st_value <= tuple2 (tpl_1 (st_value), zeroExtend (tpl_2 (st_value)));
       w_req_priv <= priv;
       w_req_sstatus_SUM <= sstatus_SUM;
       w_req_mstatus_MXR <= mstatus_MXR;
