@@ -534,7 +534,7 @@ module mkMMU_DCache(MMU_DCache_IFC);
   interface server_flush = cache.server_flush;
   method tlb_flush = cache.tlb_flush;
   interface mem_master = cache.mem_master;
-`ifdef WATCH_HOST
+`ifdef WATCH_TOHOST
   method set_watch_tohost = cache.set_watch_tohost;
   method mv_tohost_value = cache.mv_tohost_value;
 `endif
@@ -568,7 +568,7 @@ module mkMMU_ICache(MMU_ICache_IFC);
   interface server_flush = cache.server_flush;
   method tlb_flush = cache.tlb_flush;
   interface mem_master = cache.mem_master;
-`ifdef WATCH_HOST
+`ifdef WATCH_TOHOST
   method set_watch_tohost = cache.set_watch_tohost;
   method mv_tohost_value = cache.mv_tohost_value;
 `endif
