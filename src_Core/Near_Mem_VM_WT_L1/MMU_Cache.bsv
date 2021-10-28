@@ -604,6 +604,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    // In 64b fabrics, these hold the lower word64 while we're fetching the upper word64 of a word128
    Reg #(Bool)      rg_lower_word64_full <- mkReg (False);
    Reg #(Bit #(64)) rg_lower_word64      <- mkRegU;
+   Reg #(Bit #(1))  rg_lower_word64_user <- mkRegU;
 
    // When a CSet is full and we need to replace a cache line due to a refill,
    // the victim is picked 'randomly' according to this register
@@ -1637,6 +1638,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       // For 64b fabrics, if this is lower Word64, just register it to hold until upper Word64 arrives
       if (! rg_lower_word64_full) begin
 	 rg_lower_word64      <= mem_rsp.rdata;
+         rg_lower_word64_user <= mem_rsp.ruser;
 	 rg_lower_word64_full <= True;
 	 if (cfg_verbosity > 2)
 	    $display ("        Recording rdata in rg_lower_word64");
@@ -1644,10 +1646,16 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       // Refill 128b of cache line
       else begin
-      Cache_Entry new_word128 = tuple2(zeroExtend (mem_rsp.ruser), zeroExtend(mem_rsp.rdata));
-
       // Assert: rg_lower_64_full == True
-      new_word128 = tuple2(tpl_1(new_word128), { truncate(tpl_2(new_word128)) , rg_lower_word64 });
+
+`ifdef RV32
+      Bit#(Cache_Cap_Tag_Width) tags = zeroExtend ({mem_rsp.ruser, rg_lower_word64_user});
+`else
+      Bit#(Cache_Cap_Tag_Width) tags = mem_rsp.ruser & rg_lower_word64_user;
+`endif
+
+      Cache_Entry new_word128 = tuple2(tags, zeroExtend({mem_rsp.rdata, rg_lower_word64}));
+
       rg_lower_word64_full <= False;
       if (cfg_verbosity > 2)
          $display ("        64b fabric: concat with rg_lower_word64: new_word128 0x%0x", new_word128);
@@ -1811,6 +1819,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
         if (!rd_data.rlast) begin
           rg_lower_word64_full <= True;
           rg_lower_word64 <= rd_data.rdata;
+          rg_lower_word64_user <= 0; // No tags from IO mem
         end else begin // rg_lower_word64_full && rd_data.rlast
           if (rd_data.rresp == OKAY) begin
             fa_drive_IO_read_rsp(rg_width_code, rg_is_unsigned, rg_addr, tuple2(False, {rd_data.rdata, rg_lower_word64}), rg_allow_cap); // No tags from IO mem
@@ -1928,6 +1937,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
          if (!rg_lower_word64_full && !rd_data.rlast) begin
            rg_lower_word64_full <= True;
            rg_lower_word64 <= rd_data.rdata;
+           rg_lower_word64_user <= 0; // No tags from IO mem
          end else begin
             if (rg_lower_word64_full) begin
                ld_val = tuple2(False, {rd_data.rdata, rg_lower_word64});
