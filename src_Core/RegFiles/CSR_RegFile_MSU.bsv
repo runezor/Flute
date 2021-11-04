@@ -224,16 +224,16 @@ interface CSR_RegFile_IFC;
    // ----------------
    // Interrupts
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action m_external_interrupt_req (Bool set_not_clear);
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action s_external_interrupt_req (Bool set_not_clear);
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action timer_interrupt_req    (Bool set_not_clear);
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action software_interrupt_req (Bool set_not_clear);
 
    (* always_ready *)
@@ -246,7 +246,7 @@ interface CSR_RegFile_IFC;
    // ----------------
    // Non-maskable interrupts
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action nmi_req (Bool set_not_clear);
 
    (* always_ready *)
