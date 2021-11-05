@@ -1635,6 +1635,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		      cur_cycle, d_or_i, access_exc_code);
       end
 
+      Bool do_write = False;
+      Bit #(Cache_Cap_Tag_Width) tags = ?;
+      Cache_Entry new_centry = ?;
+      CWord_in_CLine cword_in_cline = truncate (rg_cset_cword_in_cache);
+
       // if our fabric is smaller than the size of a cache word then we need multiple flits per cache word
       // at the moment the fabric must be either the size of a cache word, or must be half the size
       if (bits_per_cword > valueOf (Wd_Data)) begin
@@ -1651,80 +1656,32 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
          else begin
             // Assert: rg_lower_64_full == True
 
-            // at the moment we support only 128b cword + 64b fabric with 128-bit capabilities
+            // at the moment, the only way we support the fabric being smaller than the size of a
+            // cache word is if we are using 128bit cache words and a 64bit fabric
             // this means that each cword needs 2 flits from memory, and for it to be tagged valid
             // then both sets of tags must be true
-            Bit#(Cache_Cap_Tag_Width) tags = zeroExtend (mem_rsp.ruser & rg_lower_word64_user);
-            Cache_Entry new_centry = tuple2(tags, extend_or_truncate({mem_rsp.rdata, rg_lower_word64}, valueOf (SizeOf #(CWord))));
+            // the zeroExtend is so that bsc is happy when compiling for RV32
+            tags = mem_rsp.ruser & rg_lower_word64_user;
+            new_centry = tuple2(tags, extend_or_truncate({mem_rsp.rdata, rg_lower_word64}, valueOf (SizeOf #(CWord))));
+            do_write = True;
 
             rg_lower_word64_full <= False;
             if (cfg_verbosity > 2)
                $display ("        64b fabric: concat with rg_lower_word64: new_centry 0x%0x", new_centry);
-
-	    CWord_in_CLine cword_in_cline = truncate (rg_cset_cword_in_cache);
-
-	 // Update the State_and_CTag_CSet (BRAM port A) (if this is the first
-	 // response and not an error)
-	    if ((cword_in_cline == 0) && (! err_rsp)) begin
-`ifdef PERFORMANCE_MONITORING
-	       EventsCache events = unpack (0);
-	       events.evt_EVICT = (state_and_ctag_cset [rg_victim_way].state == CTAG_CLEAN);
-	       aw_events [4] <= events;
-`endif
-	       let new_state_and_ctag_cset = state_and_ctag_cset;
-	       new_state_and_ctag_cset [rg_victim_way] = State_and_CTag {state: CTAG_CLEAN,
-								         ctag : fn_PA_to_CTag (rg_pa)};
-	       ram_state_and_ctag_cset.a.put (bram_cmd_write, cset_in_cache, new_state_and_ctag_cset);
-	    end
-
-	    // Update the Word128_Set (BRAM port A) (if this response was not an error)
-	    let new_cword_set = cword_set;
-	    new_cword_set [rg_victim_way] = new_centry;
-	    if (! err_rsp)
-	       ram_cword_set.a.put (bram_cmd_write, rg_cset_cword_in_cache, new_cword_set);
-
-	    // If more word64_sets in cacheline, initiate RAM read for next word64_set
-	    if (cword_in_cline != fromInteger (cwords_per_cline - 1)) begin
-	       let next_word128_set_in_cache = rg_cset_cword_in_cache + 1;
-	       ram_cword_set.b.put (bram_cmd_read, next_word128_set_in_cache, ?);
-	       rg_cset_cword_in_cache <= next_word128_set_in_cache;
-	    end
-
-	    // else final Word128 of CLine; raise exception if pending,
-	    // or redo original missing request on port B.
-	    // The word128 we just wrote in port A may be the word128 we request on port B,
-	    // so we do it a cycle later, in rl_rereq.
-	    else if (err_rsp || rg_error_during_refill) begin
-	       rg_state    <= MODULE_EXCEPTION_RSP;
-	       if (cfg_verbosity > 1)
-	          $display ("    => MODULE_EXCEPTION_RSP");
-	    end
-
-	    else begin
-	       rg_state <= CACHE_REREQ;
-	       if (cfg_verbosity > 1)
-	          $display ("    => CACHE_REREQ");
-	    end
-
-	    if (cfg_verbosity > 2) begin
-	       $display ("        Updating Cache cword_set 0x%0h, cword_in_cline %0d) old => new",
-	                 rg_cset_cword_in_cache, cword_in_cline);
-
-	       fa_display_cword_set (cset_in_cache, cword_in_cline, cword_set);
-	       fa_display_cword_set (cset_in_cache, cword_in_cline, new_cword_set);
-	    end
          end
       end else begin // !(bits_per_cword > valueOf (Wd_Data)) (ie full centry per flit)
          // each cache word can be sent in only one flit
-         Cache_Entry new_centry = tuple2(zeroExtend (mem_rsp.ruser), zeroExtend (mem_rsp.rdata));
+         tags = mem_rsp.ruser;
+         new_centry = tuple2(tags, zeroExtend (mem_rsp.rdata));
+         do_write = True;
 
          // Assert: rg_lower_64_full == True
          rg_lower_word64_full <= False;
          if (cfg_verbosity > 2)
             $display ("        64b fabric, smaller cword: new_centry 0x%0x", new_centry);
+      end
 
-	 CWord_in_CLine cword_in_cline = truncate (rg_cset_cword_in_cache);
-
+      if (do_write) begin
 	 // Update the State_and_CTag_CSet (BRAM port A) (if this is the first
 	 // response and not an error)
 	 if ((cword_in_cline == 0) && (! err_rsp)) begin
@@ -1774,7 +1731,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	    fa_display_cword_set (cset_in_cache, cword_in_cline, cword_set);
 	    fa_display_cword_set (cset_in_cache, cword_in_cline, new_cword_set);
-         end
+	 end
       end
    endrule: rl_cache_refill_rsps_loop
 
