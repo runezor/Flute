@@ -1817,6 +1817,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("    ", fshow (rd_data));
       end
 
+      // in RV32, we should always take this path, because we should never
+      // issue multi-flit IO requests on the fabric, because we assume a
+      // 64bit fabric which is able to deal with the widest request we
+      // would ever need to service (ie a capability-wide load)
       if (!rg_lower_word64_full && rd_data.rlast) begin // Single flit response
         let ld_val = fn_extract_and_extend_bytes(rg_width_code, rg_is_unsigned, zeroExtend(rg_addr[2:0]), tuple2(0, zeroExtend (rd_data.rdata)));
         rg_ld_val <= ld_val;
@@ -1961,6 +1965,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       end
       // Successful AMO read
       else begin
+         // in RV32, we should always take this path, because we should never
+         // issue multi-flit IO requests on the fabric, because we assume a
+         // 64bit fabric which is able to deal with the widest request we
+         // would ever need to service (ie a capability-wide load)
          if (!rg_lower_word64_full && !rd_data.rlast) begin
            rg_lower_word64_full <= True;
            rg_lower_word64 <= rd_data.rdata;
@@ -1993,6 +2001,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 	    if (cfg_verbosity > 1)
 	       $display ("    => rl_ST_AMO_response");
+         end
+`else
+         begin
+            $display ("Cache Error: made multi-flit IO AMO request in RV32");
          end
 `endif
       end
