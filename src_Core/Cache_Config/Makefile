@@ -37,6 +37,10 @@ RV32_8KB_2way:
 RV32_Sv32_8KB_2way:
 	./Gen_BSV_Cache_Decls.py  --yaml_file  RV32_Sv32_8KB_2way_args.yaml
 
+.PHONY: RV32_8KB_2way_512bLine
+RV32_8KB_2way:
+	./Gen_BSV_Cache_Decls.py  --yaml_file  RV32_8KB_2way_512bLine_args.yaml
+
 # ================================================================
 # For RV64
 

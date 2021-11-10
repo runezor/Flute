@@ -54,7 +54,7 @@ import AXI4Lite_Types :: *;
 // Id of requestor for 'coherent DMA' port into (optional) L2 cache
 
 typedef 6   Wd_Id_Dma;
-typedef 64  Wd_Addr_Dma;
+typedef XLEN Wd_Addr_Dma;
 typedef 512 Wd_Data_Dma;
 typedef 0   Wd_AW_User_Dma;
 typedef 0   Wd_W_User_Dma;
@@ -182,7 +182,10 @@ interface IMem_IFC;
              , Dii_Id seq_req
 `endif
                );    // { VM_Mode, ASID, PPN_for_page_table }
+
+`ifdef ISA_CHERI
    (* always_ready *)  method Action commit;
+`endif
 
    // CPU side: IMem response
    (* always_ready *)  method Bool     valid;
@@ -197,6 +200,7 @@ interface IMem_IFC;
    (* always_ready *)  method Bool     exc;
    (* always_ready *)  method Exc_Code exc_code;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
+
 `ifdef PERFORMANCE_MONITORING
    method EventsCache events;
 `endif
@@ -215,25 +219,26 @@ interface DMem_IFC;
 		       Bit #(5) amo_funct5,
 `endif
 		       Addr addr,
-               Tuple2#(Bool, Bit #(128)) store_value,
+               Tuple2#(Bool, Bit #(XLEN_2)) store_value,
 		       // The following  args for VM
 		       Priv_Mode  priv,
 		       Bit #(1)   sstatus_SUM,
 		       Bit #(1)   mstatus_MXR,
 		       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
+`ifdef ISA_CHERI
    (* always_ready *)  method Action commit;
+`endif
 
    // CPU side: DMem response
    (* always_ready *)  method Bool       valid;
-   (* always_ready *)  method Tuple2#(Bool, Bit #(128))  word128;      // Load-value
-   (* always_ready *)  method Tuple2#(Bool, Bit #(128))  st_amo_val;  // Final store-value for ST, SC, AMO
+   (* always_ready *)  method Tuple2#(Bool, Bit #(XLEN_2))  word128;      // Load-value
+   (* always_ready *)  method Tuple2#(Bool, Bit #(XLEN_2))  st_amo_val;  // Final store-value for ST, SC, AMO
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
 `ifdef PERFORMANCE_MONITORING
    method EventsCache events;
 `endif
 endinterface
-
 // ================================================================
 
 endpackage: Near_Mem_IFC

@@ -97,7 +97,7 @@ interface I_MMU_Cache_IFC;
    // CPU interface: response
    (* always_ready *)  method Bool       valid;
    (* always_ready *)  method WordXL     addr;  // req addr for which this is a response
-   (* always_ready *)  method Bit #(64)  inst;  // rd_val (instruction)
+   (* always_ready *)  method Instr      inst;  // rd_val (instruction)
    (* always_ready *)  method Bool       exc;
    (* always_ready *)  method Exc_Code   exc_code;
 
@@ -236,7 +236,7 @@ module mkI_MMU_Cache (I_MMU_Cache_IFC);
    Reg #(Bool)      crg_valid [2]    <- mkCReg (2, False);
    Reg #(Bool)      crg_exc [2]      <- mkCRegU (2);
    Reg #(Exc_Code)  crg_exc_code [2] <- mkCRegU (2);
-   Reg #(Bit #(64)) crg_ld_val [2]   <- mkCRegU (2);  // Load-val (instruction)
+   Reg #(Instr)     crg_ld_val [2]   <- mkCRegU (2);  // Load-val (instruction)
 
    // ****************************************************************
    // ****************************************************************
@@ -504,7 +504,7 @@ module mkI_MMU_Cache (I_MMU_Cache_IFC);
          unpack (ld_val);
       Bit #(TLog #(TDiv #(Bits_per_CWord, SizeOf #(WordXL)))) idx =
          truncate (crg_mmu_cache_req[0].va >> valueOf (TLog #(SizeOf #(WordXL))));
-      crg_ld_val [0]              <= respWordXL [idx];
+      crg_ld_val [0]              <= truncate (respWordXL [idx]);
       crg_exc [0]                 <= err;
       crg_exc_code [0]            <= fv_exc_code_access_fault (crg_mmu_cache_req [0]);
       crg_mmu_cache_req_state [0] <= REQ_STATE_EMPTY;
