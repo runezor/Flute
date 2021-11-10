@@ -342,7 +342,7 @@ function CWord_Set fn_update_cword_set (CWord_Set   old_cword_set,
 
    // Replace relevant bytes in new_cword
 
-   function CWord fn_update_cword (Bit #(n_) dummy)
+   function CWord fn_update_cword (CWord new_cword, Bit #(n_) dummy)
       provisos ( Add #(b__, n_, Bits_per_CWord)
                , Bits #(Vector #(TDiv#(Bits_per_CWord, n_), Bit#(n_)), Bits_per_CWord));
          Vector #(TDiv #(Bits_per_CWord, n_), Bit #(n_)) vec = unpack (zeroExtend (new_cword));
@@ -352,13 +352,13 @@ function CWord_Set fn_update_cword_set (CWord_Set   old_cword_set,
    endfunction
 
    case (width_code)
-      0: new_cword = fn_update_cword (8'b0);
-      1: new_cword = fn_update_cword (16'b0);
-      2: new_cword = fn_update_cword (32'b0);
-      3: new_cword = fn_update_cword (64'b0);
+      0: new_cword = fn_update_cword (new_cword, 8'b0);
+      1: new_cword = fn_update_cword (new_cword, 16'b0);
+      2: new_cword = fn_update_cword (new_cword, 32'b0);
+      3: new_cword = fn_update_cword (new_cword, 64'b0);
 `ifdef ISA_CHERI
 `ifdef RV64
-      4: new_cword = fn_update_cword (128'b0);
+      4: new_cword = fn_update_cword (new_cword, 128'b0);
 `endif
 `endif
    endcase
@@ -496,7 +496,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
    Reg #(WordXL)     rg_addr        <- mkRegU;    // VA or PA
    Reg #(Tuple2#(Bool, Bit #(XLEN_2))) rg_st_amo_val  <- mkRegU;    // Store-value for ST, SC, AMO
-   Tuple2 #(Bool, Bit #(XLEN_2)) ext_st_amo_val = tuple2 (tpl_1 (rg_st_amo_val), zeroExtend (tpl_2 (rg_st_amo_val)));
    Reg #(Bool)       rg_allow_cap <- mkRegU;      // Whether load result is allowed to be tagged by VM page bits
 
    // The following are needed for VM
@@ -1086,25 +1085,25 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
                   if (dw_commit) begin
 		    if (hit) begin
 		       // Update cache line in cache
-		      let new_word128_set = fn_update_cword_set (cword_set, way_hit, vm_xlate_result.pa, rg_width_code, ext_st_amo_val);
+		      let new_word128_set = fn_update_cword_set (cword_set, way_hit, vm_xlate_result.pa, rg_width_code, rg_st_amo_val);
                       ram_cword_set.a.put (bram_cmd_write, cset_cword_in_cache, new_word128_set);
 
 		      if (cfg_verbosity > 1) begin
-		         $display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, ext_st_amo_val);
+		         $display ("        Write-Cache-Hit: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
 		         $write   ("        New Word128_Set:");
 		         fa_display_cword_set (cset_in_cache, cword_in_cline, new_word128_set);
 		      end
 		    end
 		    else begin
 		       if (cfg_verbosity > 1)
-		          $display ("        Write-Cache-Miss: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, ext_st_amo_val);
+		          $display ("        Write-Cache-Miss: pa 0x%0h word128 0x%0h", vm_xlate_result.pa, rg_st_amo_val);
 		    end
 
 		    if (cfg_verbosity > 1)
-		       $display ("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h", rg_addr, ext_st_amo_val);
+		       $display ("        Write-Cache-Hit/Miss: eaddr 0x%0h word128 0x%0h", rg_addr, rg_st_amo_val);
 
 		    // For write-hits and write-misses, writeback data to memory (so cache remains clean)
-		    fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, ext_st_amo_val);
+		    fa_fabric_send_write_req (rg_width_code, vm_xlate_result.pa, rg_st_amo_val);
 
 		    // Provide write-response after 1-cycle delay (thus locking the cset for 1 cycle),
 		    // in case the next incoming request tries to read from the same SRAM address.
@@ -1662,7 +1661,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
             // then both sets of tags must be true
             // the zeroExtend is so that bsc is happy when compiling for RV32
             tags = mem_rsp.ruser & rg_lower_word64_user;
-            new_centry = tuple2(tags, extend_or_truncate({mem_rsp.rdata, rg_lower_word64}, valueOf (SizeOf #(CWord))));
+            new_centry = tuple2(tags, extend_or_truncate({mem_rsp.rdata, rg_lower_word64}));
             do_write = True;
 
             rg_lower_word64_full <= False;
@@ -1753,7 +1752,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       let ld_val = rg_ld_val;
       if (! rg_allow_cap) ld_val = tuple2 (False, tpl_2 (ld_val));
       dw_output_ld_val     <= ld_val;        // Irrelevant for ST; relevant for SC, AMO
-      dw_output_st_amo_val <= ext_st_amo_val;
+      dw_output_st_amo_val <= rg_st_amo_val;
 
 `ifdef WATCH_TOHOST
       // ----------------
@@ -1889,7 +1888,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 $display ("%0d: %s: rl_io_write_req; width_code 0x%0h  vaddr %0h  paddr %0h  word64 0x%0h",
 		   cur_cycle, d_or_i, rg_width_code, rg_addr, rg_pa, rg_st_amo_val);
 
-       fa_fabric_send_write_req (rg_width_code, rg_pa, ext_st_amo_val);
+       fa_fabric_send_write_req (rg_width_code, rg_pa, rg_st_amo_val);
 
       rg_state <= CACHE_ST_AMO_RSP;
 
@@ -1989,14 +1988,12 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    // Do the AMO op on the loaded value and the store value
 	    match {.new_ld_val,
 	           .new_st_val} = fn_amo_op (rg_width_code, rg_amo_funct5, rg_addr, tuple2(0, tpl_2(ld_val)), rg_st_amo_val);
-	    let ext_new_ld_val = tuple2 (tpl_1 (new_ld_val), zeroExtend (tpl_2 (new_ld_val)));
-	    let ext_new_st_val = tuple2 (tpl_1 (new_st_val), zeroExtend (tpl_2 (new_st_val)));
 
 	    // Write back new st_val to fabric
-	    fa_fabric_send_write_req (rg_width_code, rg_pa, ext_new_st_val);
+	    fa_fabric_send_write_req (rg_width_code, rg_pa, new_st_val);
 
-	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, ext_new_ld_val, rg_allow_cap);
-	    rg_ld_val <= ext_new_ld_val;
+	    fa_drive_IO_read_rsp (rg_width_code, rg_is_unsigned, rg_addr, new_ld_val, rg_allow_cap);
+	    rg_ld_val <= new_ld_val;
 	    rg_state  <= IO_READ_RSP;
 
 	    if (cfg_verbosity > 1)

@@ -223,7 +223,7 @@ module mkNear_Mem (Near_Mem_IFC);
 
       // CPU side: DMem response
       method Bool       valid      = dcache.valid;
-      method Tuple2#(Bool, Bit #(XLEN_2))  word128     = tuple2 (tpl_1 (dcache.cword), truncate (tpl_2 (dcache.cword)));
+      method Tuple2#(Bool, Bit #(XLEN_2))  word128     = dcache.cword;
 `ifdef ISA_A
       method Bit #(XLEN_2)  st_amo_val = truncate (tpl_2 (dcache.st_amo_val));
 `endif

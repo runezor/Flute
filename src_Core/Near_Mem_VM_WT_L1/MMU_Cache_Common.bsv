@@ -428,14 +428,14 @@ function Tuple2#(Bool, Bit #(XLEN_2)) fn_extract_and_extend_bytes (Bit #(3) f3, 
 `endif
       end
 
-      4: begin
 `ifdef RV64
 `ifdef ISA_CHERI
+      4: begin
          result_hi = truncate (centry >> {addr_lsbs + 8, 3'b0});
          tag = tpl_1(centry_tagged)[tag_idx] == 1'b1;
-`endif
-`endif
       end
+`endif
+`endif
    endcase
 
    return tuple2(tag, {result_hi, result_lo});
@@ -475,9 +475,9 @@ endfunction
 // Returns the value to be stored back to mem.
 
 `ifdef ISA_A
-function Tuple2 #(Tuple2#(Bool, Bit #(XLEN_2)),
-		  Tuple2 #(Bool, Bit#(XLEN_2))) fn_amo_op (
-		                        Bit #(3)   funct3,    // encodes data size (.W or .D)
+function Tuple2 #(Tuple2 #(Bool, Bit #(XLEN_2)),
+		  Tuple2 #(Bool, Bit #(XLEN_2))) fn_amo_op (
+					Bit #(3)   funct3,    // encodes data size (.W or .D)
 					Bit #(5)   funct5,    // encodes the AMO op
 					WordXL     addr,      // lsbs indicate which 32b W in 64b D (.W)
 					Cache_Entry ld_val,   // value loaded from mem
@@ -529,9 +529,10 @@ endfunction: fn_amo_op
 `endif
 
 
-function Bit #(n_) extend_or_truncate (Bit #(i_) val, Integer n_);
-   Bit #(TAdd #(n_, i_)) res = zeroExtend (val);
-   return truncate (res);
+function Bit #(n_) extend_or_truncate (Bit #(i_) val);
+   Bit #(n_) res = 0;
+   for (Integer i = 0; i < valueOf (TMin #(i_, n_)); i = i+1) res[i] = val[i];
+   return res;
 endfunction
 
 endpackage
