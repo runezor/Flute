@@ -670,13 +670,22 @@ instance FShow #(Data_Stage1_to_Stage2);
 `endif
       Fmt fmt =   $format ("data_to_Stage 2 {pc:%h  instr:%h  priv:%0d\n", pc, x.instr, x.priv);
       fmt = fmt + $format ("            op_stage2:", fshow (x.op_stage2), "  rd:%0d\n", x.rd);
-      fmt = fmt + $format ("            addr:%h  val1:%h  val2:%h}",
+      fmt = fmt + $format ("            addr:%h  val1:%h  val2:%h",
 			   x.addr, x.val1, x.val2);
 `ifdef ISA_F
       fmt = fmt + $format ("\n");
-      fmt = fmt + $format ("            fval1:%h  fval2:%h  fval3:%h}",
+      fmt = fmt + $format ("            fval1:%h  fval2:%h  fval3:%h",
 			   x.fval1, x.fval2, x.fval3);
 `endif
+`ifdef ISA_CHERI
+      if (x.check_enable) begin
+          fmt = fmt + $format("\n            bounds_check: checking [0x%h - 0x%h%s within 0x%h", x.check_address_low, x.check_address_high, x.check_inclusive ? ")" : "]", x.check_authority_idx);
+          fmt = fmt + $format("\n              0x%h = ", x.check_authority_idx, fshow(x.check_authority));
+      end else begin
+          fmt = fmt + $format("\n            no bounds_check");
+      end
+`endif
+      fmt = fmt + $format ("}");
       return fmt;
    endfunction
 endinstance
