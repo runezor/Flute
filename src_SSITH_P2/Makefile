@@ -44,14 +44,12 @@ SRC_CORE ?= $(REPO)/src_Core/Core
 
 BSC_COMPILATION_FLAGS += \
 	-D RV64 \
-	-D ISA_PRIV_M  -D ISA_PRIV_U  -D ISA_PRIV_S  \
-	-D SV39 \
+	-D ISA_PRIV_M \
 	-D RISCV \
 	-D CapWidth=128 -D CheriBusBytes=8 -D SMALL_TAG_CACHE \
 	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
 	-D ISA_CHERI \
 	-D PERFORMANCE_MONITORING \
-	-D ISA_PRIV_M  -D ISA_PRIV_S  -D ISA_PRIV_U  \
 	-D ISA_I  -D ISA_M  -D ISA_A  -D ISA_C  \
 	-D ISA_F -D ISA_D -D INCLUDE_FDIV  -D INCLUDE_FSQRT \
 	-D SHIFT_BARREL    \
