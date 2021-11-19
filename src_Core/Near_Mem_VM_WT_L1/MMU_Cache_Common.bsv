@@ -390,77 +390,54 @@ endfunction
 //  - a load-word (loaded from cache/mem)
 // result:
 //  - word with correct byte(s) shifted into LSBs and properly extended
-function Tuple2#(Bool, Bit #(128)) fn_extract_and_extend_bytes (Bit #(3) f3, Bool is_unsigned, WordXL byte_addr, Cache_Entry word128_tagged);
-   Bit #(64)  result_lo  = 0;
-   Bit #(64)  result_hi  = 0;
-   Bit #(4)  addr_lsbs = byte_addr [3:0];
+function Tuple2#(Bool, Bit #(XLEN_2)) fn_extract_and_extend_bytes (Bit #(3) f3, Bool is_unsigned, WordXL byte_addr, Cache_Entry centry_tagged);
+   Bit #(XLEN)  result_lo  = 0;
+   Bit #(XLEN)  result_hi  = 0;
+   Bit #(TLog #(Bytes_per_CWord))  addr_lsbs = truncate (byte_addr);
 
    Bool tag = False;
-   Bit #(128) word128 = tpl_2(word128_tagged);
+   Bit #(TLog #(Cache_Cap_Tag_Width)) tag_idx = truncateLSB (addr_lsbs);
+   let centry = tpl_2(centry_tagged);
 
    let u_s_extend = is_unsigned ? zeroExtend : signExtend;
 
+   result_lo = truncate (centry >> {addr_lsbs, 3'b0});
    case (f3)
-      0: case (addr_lsbs)
-		'h0: result_lo = u_s_extend (word128 [ 7: 0]);
-		'h1: result_lo = u_s_extend (word128 [15: 8]);
-		'h2: result_lo = u_s_extend (word128 [23:16]);
-		'h3: result_lo = u_s_extend (word128 [31:24]);
-		'h4: result_lo = u_s_extend (word128 [39:32]);
-		'h5: result_lo = u_s_extend (word128 [47:40]);
-		'h6: result_lo = u_s_extend (word128 [55:48]);
-		'h7: result_lo = u_s_extend (word128 [63:56]);
-		'h8: result_lo = u_s_extend (word128 [71:64]);
-		'h9: result_lo = u_s_extend (word128 [79:72]);
-		'ha: result_lo = u_s_extend (word128 [87:80]);
-		'hb: result_lo = u_s_extend (word128 [95:88]);
-		'hc: result_lo = u_s_extend (word128 [103:96]);
-		'hd: result_lo = u_s_extend (word128 [111:104]);
-		'he: result_lo = u_s_extend (word128 [119:112]);
-		'hf: result_lo = u_s_extend (word128 [127:120]);
-	     endcase
+      0: begin
+         Bit #(8) bit8 = truncate (result_lo);
+         result_lo = u_s_extend (bit8);
+      end
 
-      1: case (addr_lsbs)
-		'h0: result_lo = u_s_extend (word128 [15: 0]);
-		'h2: result_lo = u_s_extend (word128 [31:16]);
-		'h4: result_lo = u_s_extend (word128 [47:32]);
-		'h6: result_lo = u_s_extend (word128 [63:48]);
-		'h8: result_lo = u_s_extend (word128 [79:64]);
-		'ha: result_lo = u_s_extend (word128 [95:80]);
-		'hc: result_lo = u_s_extend (word128 [111:96]);
-		'he: result_lo = u_s_extend (word128 [127:112]);
-	     endcase
+      1: begin
+         Bit #(16) bit16 = truncate (result_lo);
+         result_lo = u_s_extend (bit16);
+      end
 
-      2: case (addr_lsbs)
-		'h0: result_lo = u_s_extend (word128 [31: 0]);
-		'h4: result_lo = u_s_extend (word128 [63:32]);
-		'h8: result_lo = u_s_extend (word128 [95:64]);
-		'hc: result_lo = u_s_extend (word128 [127:96]);
-	     endcase
+      2: begin
+         Bit #(32) bit32 = truncate (result_lo);
+         result_lo = u_s_extend (bit32);
+      end
 
-      3: case (addr_lsbs)
-		'h0: begin
-           result_lo = u_s_extend (word128 [63:0]);
+      3: begin
 `ifdef ISA_CHERI
-           if (valueOf(CLEN) == 64) tag = tpl_1(word128_tagged)[0] == 1'b1;
-`endif
+         if (valueOf (CLEN) == 64) begin
+            //result_hi = word128 >> {addr_lsbs + 4, 3'b0};
+            result_hi = truncate (centry >> {addr_lsbs + 4, 3'b0});
+            tag = tpl_1(centry_tagged)[tag_idx] == 1'b1;
          end
-		'h8: begin
-           result_lo = u_s_extend (word128 [127:64]);
-`ifdef ISA_CHERI
-           if (valueOf(CLEN) == 64) tag = tpl_1(word128_tagged)[1] == 1'b1;
 `endif
-         end
-	     endcase
+      end
 
+`ifdef RV64
+`ifdef ISA_CHERI
       4: begin
-            result_lo = word128[63:0];
-            result_hi = word128[127:64];
-`ifdef ISA_CHERI
-            tag = tpl_1(word128_tagged)[0] == 1'b1;
+         result_hi = truncate (centry >> {addr_lsbs + 8, 3'b0});
+         tag = tpl_1(centry_tagged)[tag_idx] == 1'b1;
+      end
 `endif
-         end
+`endif
    endcase
+
    return tuple2(tag, {result_hi, result_lo});
 endfunction
 
@@ -498,20 +475,20 @@ endfunction
 // Returns the value to be stored back to mem.
 
 `ifdef ISA_A
-function Tuple2 #(Tuple2#(Bool, Bit #(128)),
-		  Tuple2 #(Bool, Bit#(128))) fn_amo_op (
-		                        Bit #(3)   funct3,    // encodes data size (.W or .D)
+function Tuple2 #(Tuple2 #(Bool, Bit #(XLEN_2)),
+		  Tuple2 #(Bool, Bit #(XLEN_2))) fn_amo_op (
+					Bit #(3)   funct3,    // encodes data size (.W or .D)
 					Bit #(5)   funct5,    // encodes the AMO op
 					WordXL     addr,      // lsbs indicate which 32b W in 64b D (.W)
 					Cache_Entry ld_val,   // value loaded from mem
-					Tuple2#(Bool, Bit #(128)) st_val);   // Value from CPU reg Rs2
+					Tuple2#(Bool, Bit #(XLEN_2)) st_val);   // Value from CPU reg Rs2
    let extracted_q1 = fn_extract_and_extend_bytes(funct3, False, addr, ld_val);
-   Bit #(128) q1    = tpl_2(extracted_q1);
-   Bit #(128) q2    = tpl_2(st_val);
-   Bit #(64) w1     = truncate(q1);
-   Bit #(64) w2     = truncate(q2);
-   Int #(64) i1     = unpack (w1);    // Signed, for signed ops
-   Int #(64) i2     = unpack (w2);    // Signed, for signed ops
+   Bit #(XLEN_2) q1    = tpl_2(extracted_q1);
+   Bit #(XLEN_2) q2    = tpl_2(st_val);
+   Bit #(XLEN) w1     = truncate(q1);
+   Bit #(XLEN) w2     = truncate(q2);
+   Int #(XLEN) i1     = unpack (w1);    // Signed, for signed ops
+   Int #(XLEN) i2     = unpack (w2);    // Signed, for signed ops
    if (funct3 == f3_AMO_W) begin
       w1 = zeroExtend (w1 [31:0]);
       w2 = zeroExtend (w2 [31:0]);
@@ -519,36 +496,43 @@ function Tuple2 #(Tuple2#(Bool, Bit #(128)),
       i2 = unpack (signExtend (w2 [31:0]));
    end
    // new_st_val is new value to be stored back to mem (w1 op w2)
-   Bit#(128) new_st_val_128;
+   Bit#(XLEN_2) new_st_val_cap;
    Bool new_st_tag = False;
    Bool old_ld_tag = False;
    if (funct3 == f3_AMO_CAP) begin
-      new_st_val_128 = q2;
+      new_st_val_cap = q2;
       new_st_tag = tpl_1(st_val);
       old_ld_tag = tpl_1 (extracted_q1);
    end else begin
-     Bit #(64) new_st_val_64 = ?;
+     Bit #(XLEN) new_st_val = ?;
      case (funct5)
-        f5_AMO_SWAP: new_st_val_64 = w2;
-        f5_AMO_ADD:  new_st_val_64 = pack (i1 + i2);
-        f5_AMO_XOR:  new_st_val_64 = w1 ^ w2;
-        f5_AMO_AND:  new_st_val_64 = w1 & w2;
-        f5_AMO_OR:   new_st_val_64 = w1 | w2;
-        f5_AMO_MINU: new_st_val_64 = ((w1 < w2) ? w1 : w2);
-        f5_AMO_MAXU: new_st_val_64 = ((w1 > w2) ? w1 : w2);
-        f5_AMO_MIN:  new_st_val_64 = ((i1 < i2) ? w1 : w2);
-        f5_AMO_MAX:  new_st_val_64 = ((i1 > i2) ? w1 : w2);
+        f5_AMO_SWAP: new_st_val = w2;
+        f5_AMO_ADD:  new_st_val = pack (i1 + i2);
+        f5_AMO_XOR:  new_st_val = w1 ^ w2;
+        f5_AMO_AND:  new_st_val = w1 & w2;
+        f5_AMO_OR:   new_st_val = w1 | w2;
+        f5_AMO_MINU: new_st_val = ((w1 < w2) ? w1 : w2);
+        f5_AMO_MAXU: new_st_val = ((w1 > w2) ? w1 : w2);
+        f5_AMO_MIN:  new_st_val = ((i1 < i2) ? w1 : w2);
+        f5_AMO_MAX:  new_st_val = ((i1 > i2) ? w1 : w2);
      endcase
 
      if (funct3 == f3_AMO_W)
-       new_st_val_64 = zeroExtend (new_st_val_64 [31:0]);
+       new_st_val = zeroExtend (new_st_val [31:0]);
 
-     new_st_val_128 = zeroExtend(new_st_val_64);
+     new_st_val_cap = zeroExtend(new_st_val);
    end
 
    return tuple2 (tuple2(old_ld_tag, q1),
-                  tuple2(new_st_tag, zeroExtend(new_st_val_128)));
+                  tuple2(new_st_tag, zeroExtend(new_st_val_cap)));
 endfunction: fn_amo_op
 `endif
+
+
+function Bit #(n_) extend_or_truncate (Bit #(i_) val);
+   Bit #(n_) res = 0;
+   for (Integer i = 0; i < valueOf (TMin #(i_, n_)); i = i+1) res[i] = val[i];
+   return res;
+endfunction
 
 endpackage

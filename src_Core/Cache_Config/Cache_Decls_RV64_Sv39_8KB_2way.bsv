@@ -19,6 +19,7 @@ package Cache_Decls_RV64_Sv39_8KB_2way;
 
 // Basic ----------------
 
+typedef        64   Bits_per_PA;    // (basic)
 typedef       128   Bits_per_CWord;    // (basic)
 typedef        16   Bytes_per_CWord;    // Bits_per_CWord / 8
 typedef         4   Bits_per_Byte_in_CWord;    // log2 (Bytes_per_CWord)
@@ -59,6 +60,7 @@ typedef        52   Bits_per_CTag;    // Bits_per_PA - (Bits_per_CSet_in_Cache +
 
 // Basic ----------------
 
+Integer                   bits_per_pa =       64;    // (basic)
 Integer                bits_per_cword =      128;    // (basic)
 Integer               bytes_per_cword =       16;    // Bits_per_CWord / 8
 Integer        bits_per_byte_in_cword =        4;    // log2 (Bytes_per_CWord)

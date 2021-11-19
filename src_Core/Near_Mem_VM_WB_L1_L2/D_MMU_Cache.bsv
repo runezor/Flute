@@ -279,6 +279,9 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
    Reg #(Req_State)      crg_mmu_cache_req_state [2] <- mkCReg  (2, REQ_STATE_EMPTY);
    Reg #(MMU_Cache_Req)  crg_mmu_cache_req       [2] <- mkCRegU (2);
 
+   // Whether the last request was committed (or cancelled because of a CHERI exception)
+   Wire #(Bool)          dw_commit <- mkDWire (False);
+
    // ----------------------------------------------------------------
    // Outputs from this module
    // 'final_st_val' is the final stored value for ST, SC, AMO (for verification only)
@@ -364,6 +367,7 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 
       // Register it here and in MMIO module
       crg_mmu_cache_req [1] <= mmu_cache_req;
+      // we can still make these 2 requests even if the request does not get committed
       mmio.req (mmu_cache_req);
 `ifdef ISA_PRIV_S
       tlb.mv_vm_put_va(mmu_cache_req.va);
@@ -382,6 +386,8 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 	    $display ("    Probe cache (cache.ma_request_va)");
 
 	 // Start cache probe with VA
+         // it's fine to make this request even if the CPU does not commit
+         // its request
 	 cache.ma_request_va (mmu_cache_req.va);
 	 crg_mmu_cache_req_state [1] <= REQ_STATE_FULL_B;
       end
@@ -403,10 +409,25 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       if (verbosity >= 2) begin
 	 $display ("%0d: %m.rl_CPU_req_A", cur_cycle);
 	 $display ("    ", fshow_MMU_Cache_Req (mmu_cache_req));
+	 $display ("    commit: ", fshow (dw_commit));
       end
 
-      cache.ma_request_va (mmu_cache_req.va);
-      crg_mmu_cache_req_state [0] <= REQ_STATE_FULL_B;
+      // If the previous request was committed then we perform it, otherwise
+      // go back to idle
+      if (dw_commit) begin
+	 // perform the request
+	 if (verbosity >= 2) begin
+	    $display ("    commit is True, executing request");
+	 end
+	 cache.ma_request_va (mmu_cache_req.va);
+	 crg_mmu_cache_req_state[0] <= REQ_STATE_FULL_B;
+      end else begin
+	 // go back to idle
+	 if (verbosity >= 2) begin
+	    $display ("    commit is False, not executing request and going back to idle");
+	 end
+	 crg_mmu_cache_req_state[0] <= REQ_STATE_EMPTY;
+      end
    endrule
 
    // ================================================================
@@ -437,12 +458,17 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
       if (verbosity >= 2) begin
 	 $display ("%0d: %m.rl_CPU_req_B", cur_cycle);
 	 $display ("    ", fshow_MMU_Cache_Req (mmu_cache_req));
+	 $display ("    commit: ", fshow (dw_commit));
       end
 
       if (verbosity >= 3)
 	 $display ("    ", fshow_VM_Xlate_Result (vm_xlate_result));
 
-      if (! fn_is_aligned (mmu_cache_req.width_code, mmu_cache_req.va)) begin
+      if (!dw_commit) begin
+	 $display ("    commit is False, not executing request and going back to idle");
+	 crg_mmu_cache_req_state[0] <= REQ_STATE_EMPTY;
+      end
+      else if (! fn_is_aligned (mmu_cache_req.width_code, mmu_cache_req.va)) begin
 	 // Misaligned accesses not supported
 	 crg_valid [0]               <= True;
 	 crg_exc [0]                 <= True;
@@ -904,7 +930,9 @@ module mkD_MMU_Cache (D_MMU_Cache_IFC);
 					 };
       wire_mmu_cache_req <= mmu_cache_req;
    endmethod
-   method Action commit = noAction;
+   method Action commit;
+      dw_commit <= True;
+   endmethod
 
    method Bool  valid;
       return crg_valid [0];

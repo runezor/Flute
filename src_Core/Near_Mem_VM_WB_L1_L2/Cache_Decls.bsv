@@ -14,8 +14,8 @@ package Cache_Decls;
 import Cache_Decls_RV32_Sv32_8KB_2way :: *;
 export Cache_Decls_RV32_Sv32_8KB_2way :: *;
 `else
-import Cache_Decls_RV32_8KB_2way :: *;
-export Cache_Decls_RV32_8KB_2way :: *;
+import Cache_Decls_RV32_8KB_2way_512bLine :: *;
+export Cache_Decls_RV32_8KB_2way_512bLine :: *;
 `endif
 `endif
 

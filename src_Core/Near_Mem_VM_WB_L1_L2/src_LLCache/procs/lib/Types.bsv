@@ -45,11 +45,12 @@ import CHERICC_Fat::*;
 `ifdef RVFI_DII
 import RVFI_DII_Types::*;
 `endif
+import Cache_Decls :: *;
 
-typedef 64 AddrSz;
+typedef Bits_per_PA AddrSz;
 typedef Bit#(AddrSz) Addr;
 
-typedef 64 DataSz;
+typedef Bits_per_CWord DataSz;
 typedef Bit#(DataSz) Data;
 typedef TDiv#(DataSz, 8) DataBytes;
 typedef Vector#(DataBytes, Bool) ByteEn;
@@ -59,7 +60,7 @@ typedef struct {
 } TaggedData#(type tag_t, type data_t) deriving (Bits, FShow, Eq);
 function tag_t getTag(TaggedData#(tag_t, data_t) td) = td.tag;
 function data_t getData(TaggedData#(tag_t, data_t) td) = td.data;
-typedef Vector#(2, Data) MemData;
+typedef Vector#(TDiv #(Bits_per_CWord, DataSz), Data) MemData;
 typedef Bool MemTag;
 typedef SizeOf#(MemData) MemDataSz;
 typedef TDiv#(MemDataSz, 8) MemDataBytes;

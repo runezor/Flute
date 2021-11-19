@@ -358,7 +358,7 @@ module mkNear_Mem (Near_Mem_IFC);
       method Tuple2#(Instr,Dii_Id) instr =
          tuple2 (truncate (i_mmu_cache.inst), 0);
 `else
-      method Instr    instr          = truncate (i_mmu_cache.inst);
+      method Instr    instr          = i_mmu_cache.inst;
 `endif
       method Bool     exc            = i_mmu_cache.exc;
       method Exc_Code exc_code       = i_mmu_cache.exc_code;
@@ -375,7 +375,7 @@ module mkNear_Mem (Near_Mem_IFC);
 		      Bit #(5) amo_funct5,
 `endif
 			  Addr addr,
-              Tuple2#(Bool, Bit #(128)) store_value,
+              Tuple2#(Bool, Bit #(XLEN_2)) store_value,
 			  // The following  args for VM
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,

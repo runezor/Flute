@@ -207,7 +207,7 @@ module mkNear_Mem (Near_Mem_IFC);
 			  Bit #(5) amo_funct5,
 `endif
 			  Addr addr,
-              Tuple2#(Bool, Bit #(128)) store_value,
+              Tuple2#(Bool, Bit #(XLEN_2)) store_value,
 			  // The following  args for VM
 			  Priv_Mode  priv,
 			  Bit #(1)   sstatus_SUM,
@@ -223,9 +223,9 @@ module mkNear_Mem (Near_Mem_IFC);
 
       // CPU side: DMem response
       method Bool       valid      = dcache.valid;
-      method Tuple2#(Bool, Bit #(128))  word128     = dcache.cword;
+      method Tuple2#(Bool, Bit #(XLEN_2))  word128     = dcache.cword;
 `ifdef ISA_A
-      method Bit #(128)  st_amo_val = tpl_2(dcache.st_amo_val);
+      method Bit #(XLEN_2)  st_amo_val = truncate (tpl_2 (dcache.st_amo_val));
 `endif
       method Bool       exc        = dcache.exc;
       method Exc_Code   exc_code   = dcache.exc_code;

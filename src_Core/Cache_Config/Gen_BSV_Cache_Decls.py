@@ -387,6 +387,7 @@ def gen_decls (fout, size_not_val, items):
     fout.write ("\n" +
                 "// Basic ----------------\n" +
                 "\n")
+    gen_decl (fout, size_not_val, "Bits_per_PA", sel2 (items, "Bits_per_PA"))
     gen_decl (fout, size_not_val, "Bits_per_CWord", sel2 (items, "Bits_per_CWord"))
     gen_decl (fout, size_not_val, "Bytes_per_CWord", sel2 (items, "Bytes_per_CWord"))
     gen_decl (fout, size_not_val, "Bits_per_Byte_in_CWord", sel2 (items, "Bits_per_Byte_in_CWord"))

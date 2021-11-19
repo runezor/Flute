@@ -449,11 +449,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
             // For most AMOs we can just go ahead and do it
             if (rg_f5 != f5_AMO_SC) begin
                 info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
+                match {.res_tag, .res_data} = toMem (result);
                 match {.new_ld_val,
                        .new_st_val} = fn_amo_op (rg_stage2.mem_width_code,
                                                  rg_f5,
                                                  rg_stage2.addr & ~(~0 << rg_stage2.mem_width_code), // force aligned address as return from memory is already sliced appropriately (a 0 addr would just work)
-                                                 unpack(pack(toMem(result))),
+                                                 // put tag and data in bottom bits due to alignment on the line above
+                                                 tuple2 (zeroExtend (pack (res_tag)), zeroExtend (res_data)),
                                                  tuple2(False, zeroExtend(rg_stage2.info_RVFI_s1.mem_wdata))
                                                 );
                 info_RVFI_s2.stage1.mem_wdata = truncate(pack(tpl_2(new_st_val)));

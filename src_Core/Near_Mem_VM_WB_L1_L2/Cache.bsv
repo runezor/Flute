@@ -236,67 +236,50 @@ function CWord_Set fn_update_cword_set (CWord_Set   old_cword_set,
 					Way_in_CSet way,
 					Bit #(n)    addr,
 					Bit #(3)    width_code,
-					Tuple2 #(Bool, CWord) write)
-   provisos (Add#(_, 64, SizeOf #(CWord)));
-   match {.tag, .cword} = write;
+					Tuple2 #(Bool, Bit #(XLEN_2)) write)
+   provisos ( Add#(_, 64, SizeOf #(CWord))
+            , Add#(a__, TLog #(Bytes_per_CWord), n));
+   match {.tag, .wdata} = write;
 
    let old_cword    = old_cword_set [way];
 
    let new_cword_set = old_cword_set;
-   CWord new_cword     = tpl_2(old_cword);
+   CWord new_cword   = tpl_2 (old_cword);
 
-   Bit #(4) addr_lsbs  = addr [3:0];
+   Bit #(TLog #(Bytes_per_CWord)) addr_lsbs  = truncate (addr);
 
    // Replace relevant bytes in new_cword
+
+   function CWord fn_update_cword (CWord new_cword, Bit #(n_) dummy)
+      provisos ( Add #(b__, n_, Bits_per_CWord)
+               , Bits #(Vector #(TDiv#(Bits_per_CWord, n_), Bit#(n_)), Bits_per_CWord));
+         Vector #(TDiv #(Bits_per_CWord, n_), Bit #(n_)) vec = unpack (zeroExtend (new_cword));
+         Bit #(Bits_per_CWord) upd_val = zeroExtend (wdata);
+         vec[addr_lsbs >> valueOf (TLog #(TDiv #(n_, 8)))] = truncate (upd_val);
+         return pack (vec);
+   endfunction
+
    case (width_code)
-      0:  case (addr_lsbs)
-            'h0 : new_cword [ 7:0 ] = cword [7:0];
-            'h1 : new_cword [15:8 ] = cword [7:0];
-            'h2 : new_cword [23:16] = cword [7:0];
-            'h3 : new_cword [31:24] = cword [7:0];
-            'h4 : new_cword [39:32] = cword [7:0];
-            'h5 : new_cword [47:40] = cword [7:0];
-            'h6 : new_cword [55:48] = cword [7:0];
-            'h7 : new_cword [63:56] = cword [7:0];
-            'h8 : new_cword [71:64] = cword [7:0];
-            'h9 : new_cword [79:72] = cword [7:0];
-            'ha : new_cword [87:80] = cword [7:0];
-            'hb : new_cword [95:88] = cword [7:0];
-            'hc : new_cword [103:96] = cword [7:0];
-            'hd : new_cword [111:104] = cword [7:0];
-            'he : new_cword [119:112] = cword [7:0];
-            'hf : new_cword [127:120] = cword [7:0];
-        endcase
-      1:  case (addr_lsbs)
-            'h0 : new_cword [15:0 ] = cword [15:0];
-            'h2 : new_cword [31:16] = cword [15:0];
-            'h4 : new_cword [47:32] = cword [15:0];
-            'h6 : new_cword [63:48] = cword [15:0];
-            'h8 : new_cword [79:64] = cword [15:0];
-            'ha : new_cword [95:80] = cword [15:0];
-            'hc : new_cword [111:96] = cword [15:0];
-            'he : new_cword [127:112] = cword [15:0];
-        endcase
-      2:  case (addr_lsbs)
-            'h0 : new_cword [31:0] = cword [31:0];
-            'h4 : new_cword [63:32] = cword [31:0];
-            'h8 : new_cword [95:64] = cword [31:0];
-            'hc : new_cword [127:96] = cword [31:0];
-        endcase
-      3:  case (addr_lsbs)
-            'h0 : new_cword[63:0] = cword[63:0];
-            'h8 : new_cword[127:64] = cword[63:0];
-        endcase
-      4:  begin
-            new_cword[127:0] = cword;
-          end
+      0: new_cword = fn_update_cword (new_cword, 8'b0);
+      1: new_cword = fn_update_cword (new_cword, 16'b0);
+      2: new_cword = fn_update_cword (new_cword, 32'b0);
+      3: new_cword = fn_update_cword (new_cword, 64'b0);
+`ifdef ISA_CHERI
+`ifdef RV64
+      4: new_cword = fn_update_cword (new_cword, 128'b0);
+`endif
+`endif
    endcase
 
-   Bit#(Cache_Cap_Tag_Width) tags = tpl_1(old_cword);
+`ifdef ISA_CHERI
+   Bit#(Cache_Cap_Tag_Width) tags = tpl_1 (old_cword);
 
    //We assume that caps are the widest write width on the processor
    let overwritten_idx = addr_lsbs >> valueOf(TLog#(TDiv#(CLEN,8)));
    tags[overwritten_idx] = width_code == w_SIZE_CAP ? pack(tag) : 0;
+`else
+   let tags = 0;
+`endif
 
    new_cword_set [way] = tuple2(tags, new_cword);
    return new_cword_set;

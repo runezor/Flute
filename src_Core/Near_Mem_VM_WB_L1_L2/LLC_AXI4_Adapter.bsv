@@ -67,8 +67,7 @@ module mkLLC_AXi4_Adapter #(MemFifoClient #(idT, childT) llc)
    provisos(Bits#(idT, a__),
 	    Bits#(childT, b__),
 	    FShow#(ToMemMsg#(idT, childT)),
-	    FShow#(MemRsMsg#(idT, childT)),
-	    Add#(SizeOf#(Line), 0, 516)); // assert Line sz = 516
+	    FShow#(MemRsMsg#(idT, childT)));
 
    // Verbosity: 0: quiet; 2: LLC transactions; 3: loop detail
    Integer verbosity = 0;
@@ -164,15 +163,21 @@ module mkLLC_AXi4_Adapter #(MemFifoClient #(idT, childT) llc)
    rule rl_handle_read_req (llc.toM.first matches tagged Ld .ld
 			    &&& (ctr_wr_rsps_pending.value == 0)
 			    &&& rg_ddr4_ready);
+      // mask out the cache line byte offset in the address
+      Bit #(TLog #(TDiv #(512, 8))) addr_mask_lo = ~0;
+      Addr  addr_mask = ~zeroExtend (addr_mask_lo);
+      Addr  line_addr = ld.addr & addr_mask;              // Addr of containing cache line
+      Addr  offset    = zeroExtend ( { rg_rd_req_beat, 3'b_000 } );    // Addr offset of 64b word for this beat
+      fa_fabric_send_read_req (zeroExtend (line_addr | offset));
+
       if ((verbosity >= 2) && (rg_rd_req_beat == 0)) begin
 	 $display ("%0d: LLC_AXI4_Adapter.rl_handle_read_req: Ld request from LLC to memory: beat %0d",
 		   cur_cycle, rg_rd_req_beat);
 	 $display ("    ", fshow (ld));
+	 $display ("    line_addr: ", fshow (line_addr));
+	 $display ("    offset: ", fshow (offset));
+	 $display ("    addr_mask: ", fshow (addr_mask));
       end
-
-      Addr  line_addr = { ld.addr [63:6], 6'h0 };                      // Addr of containing cache line
-      Addr  offset    = zeroExtend ( { rg_rd_req_beat, 3'b_000 } );    // Addr offset of 64b word for this beat
-      fa_fabric_send_read_req (line_addr | offset);
 
       if (rg_rd_req_beat == 0)
 	 f_pending_reads.enq (ld);
@@ -204,7 +209,7 @@ module mkLLC_AXi4_Adapter #(MemFifoClient #(idT, childT) llc)
 
       if (rg_rd_rsp_beat == 7) begin
 	 let ldreq <- pop (f_pending_reads);
-     Bit #(4) final_tags = 0;
+     Bit #(CLineNumMemTaggedData) final_tags = 0;
      for (Integer i = 0; i < 4; i = i + 1)
          final_tags [i] = new_tags [2*i] & new_tags [2*i + 1];
 	 MemRsMsg #(idT, childT) resp = MemRsMsg {data:  CLine { tag: unpack (final_tags),
@@ -239,8 +244,8 @@ module mkLLC_AXi4_Adapter #(MemFifoClient #(idT, childT) llc)
 	 $display ("    ", fshow (wb));
       end
 
-      Addr       line_addr = { wb.addr [63:6], 6'h0 };    // Addr of containing cache line
-      Vector #(4, Bit #(1))  line_tags = unpack (pack (wb.data.tag));
+      Addr       line_addr = { truncateLSB (wb.addr), 6'h0 };    // Addr of containing cache line
+      Vector #(CLineNumMemTaggedData, Bit #(1))  line_tags = unpack (pack (wb.data.tag));
       Vector #(8, Bit #(64)) line_data = unpack (pack (wb.data.data));
       Vector #(8, Bit #(8)) line_bes = unpack (pack (wb.byteEn));
 
@@ -248,7 +253,7 @@ module mkLLC_AXi4_Adapter #(MemFifoClient #(idT, childT) llc)
       Bit #(64)  data64 = line_data [rg_wr_req_beat];
       Bit #(1)   capTag = line_tags [rg_wr_req_beat >> 1];
       Bit #(8)   strb8  = line_bes  [rg_wr_req_beat];
-      fa_fabric_send_write_req (line_addr | offset, strb8, data64, capTag);
+      fa_fabric_send_write_req (zeroExtend (line_addr | offset), strb8, data64, capTag);
 
       if (rg_wr_req_beat == 0)
 	 f_pending_writes.enq (wb);
