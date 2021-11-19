@@ -526,7 +526,7 @@ module mkCPU (CPU_IFC);
 	 rg_state <= CPU_RUNNING;
 
 	 if (cur_verbosity > 1)
-	    $display ("    fa_stageF_redirect: minstret:%0d  new_is_cap_mode:%b  new_pc:%0x  cur_priv:%0d, epoch %0d->%0d",
+	    $display ("    fa_stageF_redirect: minstret:%0d  new_pc:%0x  new_is_cap_mode:%b  cur_priv:%0d, epoch %0d->%0d",
 		      minstret, new_fetch_addr, new_is_cap_mode, rg_cur_priv, rg_epoch, new_epoch);
       endaction
    endfunction
