@@ -611,28 +611,29 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 		     || (csr_addr == csr_addr_mtval)
 		     || (csr_addr == csr_addr_mip)
 
-		     // TODO: Phys Mem Protection regs
-		     // (csr_addr == csr_pmpcfg0)
-		     // (csr_addr == csr_pmpcfg1)
-		     // (csr_addr == csr_pmpcfg2)
-		     // (csr_addr == csr_pmpcfg3)
+`ifdef INCLUDE_PMPS
+         || (csr_addr == csr_addr_pmpcfg0)
+         || ((csr_addr == csr_addr_pmpcfg1) && (xlen == 32))
+         || (csr_addr == csr_addr_pmpcfg2)
+         || ((csr_addr == csr_addr_pmpcfg3) && (xlen == 32))
 
-		     // (csr_addr == csr_pmpaddr0)
-		     // (csr_addr == csr_pmpaddr1)
-		     // (csr_addr == csr_pmpaddr2)
-		     // (csr_addr == csr_pmpaddr3)
-		     // (csr_addr == csr_pmpaddr4)
-		     // (csr_addr == csr_pmpaddr5)
-		     // (csr_addr == csr_pmpaddr6)
-		     // (csr_addr == csr_pmpaddr7)
-		     // (csr_addr == csr_pmpaddr8)
-		     // (csr_addr == csr_pmpaddr9)
-		     // (csr_addr == csr_pmpaddr10)
-		     // (csr_addr == csr_pmpaddr11)
-		     // (csr_addr == csr_pmpaddr12)
-		     // (csr_addr == csr_pmpaddr13)
-		     // (csr_addr == csr_pmpaddr14)
-		     // (csr_addr == csr_pmpaddr15)
+         || (csr_addr == csr_addr_pmpaddr0)
+         || (csr_addr == csr_addr_pmpaddr1)
+         || (csr_addr == csr_addr_pmpaddr2)
+         || (csr_addr == csr_addr_pmpaddr3)
+         || (csr_addr == csr_addr_pmpaddr4)
+         || (csr_addr == csr_addr_pmpaddr5)
+         || (csr_addr == csr_addr_pmpaddr6)
+         || (csr_addr == csr_addr_pmpaddr7)
+         || (csr_addr == csr_addr_pmpaddr8)
+         || (csr_addr == csr_addr_pmpaddr9)
+         || (csr_addr == csr_addr_pmpaddr10)
+         || (csr_addr == csr_addr_pmpaddr11)
+         || (csr_addr == csr_addr_pmpaddr12)
+         || (csr_addr == csr_addr_pmpaddr13)
+         || (csr_addr == csr_addr_pmpaddr14)
+         || (csr_addr == csr_addr_pmpaddr15)
+`endif
 
 		     || (csr_addr == csr_addr_mcycle)
 		     || (csr_addr == csr_addr_minstret)
@@ -1556,7 +1557,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `ifdef ISA_PRIV_S
       $display ("sie     = 0x%0h", csr_mie.mv_sie_read);
 `endif
-   endmethod      
+   endmethod
 endmodule
 
 // ================================================================

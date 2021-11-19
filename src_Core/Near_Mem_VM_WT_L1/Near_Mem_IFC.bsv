@@ -36,6 +36,7 @@ import Cur_Cycle :: *;
 import ISA_Decls :: *;
 
 import MMU_Cache_Common :: *;
+import PMPU_IFC         :: *;
 import AXI4_Types       :: *;
 import Fabric_Defs      :: *;
 
@@ -170,8 +171,10 @@ interface Near_Mem_IFC;
    (* always_ready *)
    method Bit #(8) mv_status;
 
+   // CSR reads and writes of PMPs
+   interface PMPU_CSR_IFC  pmp_csrs;
 endinterface
-   
+
 // ================================================================
 // Cache flush specs
 
