@@ -37,6 +37,7 @@ import ISA_Decls :: *;
 
 import MMU_Cache_Common :: *;
 import AXI4             :: *;
+import PMPU_IFC         :: *;
 import Fabric_Defs      :: *;
 import Cache_Decls      :: *;
 
@@ -154,6 +155,8 @@ interface Near_Mem_IFC;
    (* always_ready *)
    method Bit #(8) mv_status;
 
+   // CSR reads and writes of PMPs
+   interface PMPU_CSR_IFC  pmp_csrs;
 endinterface
 
 typedef TDiv#(Bits_per_CWord, CLEN) Cache_Cap_Tag_Width;

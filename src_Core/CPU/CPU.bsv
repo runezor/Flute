@@ -105,6 +105,10 @@ import Near_Mem_Caches :: *;
 import Near_Mem_TCM :: *;
 `endif
 
+`ifdef INCLUDE_PMPS
+import PMPU_IFC :: *;
+`endif
+
 `ifdef INCLUDE_GDB_CONTROL
 import Debug_Module   :: *;
 import DM_CPU_Req_Rsp :: *;
@@ -1510,12 +1514,23 @@ module mkCPU (CPU_IFC);
 	 // Read the CSR only if Rd is not 0
 	 WordXL csr_val = ?;
 	 if (rd != 0) begin
-	    begin
-	       // Note: csr_regfile.read should become ActionValue if it acquires side effects
-	       let m_csr_val = csr_regfile.read_csr (csr_addr);
-	       csr_val   = fromMaybe (?, m_csr_val);
-	    end
-	 end
+`ifdef INCLUDE_PMPS
+      if (   (csr_addr == csr_addr_pmpcfg0)
+          || (csr_addr == csr_addr_pmpcfg1)
+          || (csr_addr == csr_addr_pmpcfg2)
+          || (csr_addr == csr_addr_pmpcfg3))
+         csr_val = near_mem.pmp_csrs.pmpcfg_read (csr_addr [1:0]);
+      else if (   (csr_addr >= csr_addr_pmpaddr0)
+         && (csr_addr <= csr_addr_pmpaddr15))
+         csr_val = near_mem.pmp_csrs.pmpaddr_read (csr_addr [3:0]);
+      else
+`endif
+      begin
+         // Note: csr_regfile.read should become ActionValue if it acquires side effects
+         let m_csr_val = csr_regfile.read_csr (csr_addr);
+         csr_val   = fromMaybe (?, m_csr_val);
+      end
+   end
 
 	 // Writeback to GPR file
 	 let new_rd_val = csr_val;
@@ -1527,9 +1542,23 @@ module mkCPU (CPU_IFC);
 `endif
 
 	 // Writeback to CSR file
-	 let csr_write_result <- csr_regfile.mav_csr_write (csr_addr, rs1_val);
-	 let new_csr_val       = csr_write_result.new_csr_value;
-	 let m_new_mstatus     = csr_write_result.m_new_csr_value2;
+   WordXL new_csr_val = ?;
+`ifdef INCLUDE_PMPS
+   if (   (csr_addr == csr_addr_pmpcfg0)
+       || (csr_addr == csr_addr_pmpcfg1)
+       || (csr_addr == csr_addr_pmpcfg2)
+       || (csr_addr == csr_addr_pmpcfg3))
+      new_csr_val <- near_mem.pmp_csrs.pmpcfg_write (csr_addr [1:0], rs1_val);
+   else if (   (csr_addr >= csr_addr_pmpaddr0)
+      && (csr_addr <= csr_addr_pmpaddr15))
+      new_csr_val <- near_mem.pmp_csrs.pmpaddr_write (csr_addr [3:0], rs1_val);
+   else
+`endif
+         begin
+      let csr_write_result <- csr_regfile.mav_csr_write (csr_addr, rs1_val);
+      new_csr_val       = csr_write_result.new_csr_value;
+      let m_new_mstatus         = csr_write_result.m_new_csr_value2;
+   end
 
 	 // Accounting
 	 csr_regfile.csr_minstret_incr;

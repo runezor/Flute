@@ -73,6 +73,12 @@ import Cache_Decls      :: *;
 import TLB :: *;
 `endif
 
+import PMPU_IFC :: *;
+`ifdef INCLUDE_PMPS
+   import PMPU     :: *;
+`else
+   import PMPU_Null :: *;
+`endif
 import SoC_Map      :: *;
 import AXI4         :: *;
 import SourceSink   :: *;
@@ -131,6 +137,9 @@ interface MMU_Cache_IFC #(numeric type mID);
 
    // TLB flush
    method Action tlb_flush;
+
+   // CSR reads and writes of PMPs
+   interface PMPU_CSR_IFC  pmp_csrs;
 
    // Fabric master interface
    interface AXI4_Master #( mID, Wd_Addr, Wd_Data
@@ -465,6 +474,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
    // Fabric request/response
    let masterPortShim <- mkAXI4ShimFF;
+
+   // PMP Unit (Physical Memory Protection Unit)
+   PMPU_IFC pmpu <- mkPMPU;
 
 `ifdef ISA_PRIV_S
    // The TLB
@@ -862,6 +874,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `endif
 
       if (f_reset_reqs.first == REQUESTOR_RESET_IFC) begin
+   pmpu.server_reset.request.put (?);
 	 masterPortShim.clear;
 	 ctr_wr_rsps_pending.clear;
       end
@@ -885,6 +898,11 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       if (rg_cset_in_cache == fromInteger (csets_per_cache - 1)) begin
 	 // This is the last cset; exit the loop
 	 let requestor <- pop (f_reset_reqs);
+
+   if (requestor == REQUESTOR_RESET_IFC) begin
+      let tok <- pmpu.server_reset.response.get;
+   end
+
 	 f_reset_rsps.enq (requestor);
 	 rg_state <= MODULE_READY;
 
@@ -914,33 +932,10 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
       EventsCache events = unpack (0);
 `endif
 
-      let new_state = rg_state;
-      let new_exc_code = rg_exc_code;
+      //let new_state = rg_state;
+      //let new_exc_code = rg_exc_code;
 
       // Print some initial information for debugging
-      if (cfg_verbosity > 1) begin
-	 $display ("%0d: %s: rl_probe_and_immed_rsp; eaddr %0h", cur_cycle, d_or_i, rg_addr);
-
-`ifdef ISA_PRIV_S
-`ifdef RV32
-	 if (vm_mode != satp_mode_RV32_bare)
-	    $display ("        Priv:%0d  SATP:{mode %0d asid %0h pa %0h}  VA:%0h.%0h.%0h",
-		      rg_priv, vm_mode, asid, satp_pa, vpn_1, vpn_0, offset);
-`elsif SV39
-	 if (vm_mode != satp_mode_RV64_bare)
-	    $display ("        Priv:%0d  SATP:{mode %0d asid %0h pa %0h}  VA:%0h.%0h.%0h",
-		      rg_priv, vm_mode, asid, satp_pa, vpn_1, vpn_0, offset);
-`endif
-`endif
-	 $display ("        eaddr = {CTag 0x%0h  CSet 0x%0h  CWord 0x%0h  Byte 0x%0h}",
-		   fn_PA_to_CTag (fn_WordXL_to_PA (rg_addr)),
-		   cset_in_cache,
-		   cword_in_cline,
-		   byte_in_cword);
-	 fa_display_state_and_ctag_cset (cset_in_cache, state_and_ctag_cset);
-	 fa_display_cword_set (cset_in_cache, cword_in_cline, cword_set);
-      end
-
       // ----------------
       // Virtual Memory translation
 
@@ -963,13 +958,13 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 `ifdef ISA_PRIV_S
       // ---- TLB miss
       if (vm_xlate_result.outcome == VM_XLATE_TLB_MISS) begin
-	 new_state = PTW_START;
+	 rg_state <= PTW_START;
       end
 
       // ---- TLB translation exception
       else if (vm_xlate_result.outcome == VM_XLATE_EXCEPTION) begin
-	 new_state = MODULE_EXCEPTION_RSP;
-	 new_exc_code = vm_xlate_result.exc_code;
+	 rg_state <= MODULE_EXCEPTION_RSP;
+	 rg_exc_code <= vm_xlate_result.exc_code;
       end else
 `endif
 `ifdef RVFI_DII
@@ -979,7 +974,6 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 new_exc_code = (((rg_op == CACHE_LD) || is_AMO_LR) ? exc_code_LOAD_ACCESS_FAULT : exc_code_STORE_AMO_ACCESS_FAULT);
       end else
 `endif
-
       // ---- vm_xlate_result.outcome == VM_XLATE_OK
       begin
 `ifdef ISA_PRIV_S
@@ -993,10 +987,30 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 rg_allow_cap <= vm_allow_cap;
 	 let is_mem_addr = soc_map.m_is_mem_addr (fv_PA_to_Fabric_Addr (vm_xlate_result.pa));
 
+   // Check PMP permissions
+   // Note: rg_priv has already been adjusted in CPU_Stage2 for MSTATUS.MPRV and MSTATUS.MPP
+   Access_RWX rwx= (dmem_not_imem
+        ? ((rg_op == CACHE_LD) ? Access_RWX_R : Access_RWX_W)
+        : Access_RWX_X);
+   Bool pmp_ok <- pmpu.permitted (vm_xlate_result.pa, f3_SIZE_W, rg_priv, rwx);
+
+   // PMP exception
+   if (! pmp_ok) begin
+      rg_state    <= MODULE_EXCEPTION_RSP;
+      rg_exc_code <= access_exc_code;
+   end
+`ifdef ISA_CHERI
+      // ---- Cancelled by Cap exception
+   else if (!dw_commit) begin
+        rg_state <= MODULE_EXCEPTION_RSP;
+        rg_exc_code <= exc_code_CHERI;
+      end
+`endif
+
 	 // Access to non-memory
-	 if (dmem_not_imem && (! is_mem_addr)) begin
+	 else if (dmem_not_imem && (! is_mem_addr)) begin
 	    // IO requests
-	    new_state = IO_REQ;
+	    rg_state <= IO_REQ;
 
 	    if (cfg_verbosity > 1)
 	       $display ("    => IO_REQ");
@@ -1030,7 +1044,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       end
 	       else begin
 		  // Cache miss; start cache-line refill
-		  new_state = CACHE_START_REFILL;
+		  rg_state <= CACHE_START_REFILL;
 		  if (cfg_verbosity > 1)
 		     $display ("        Read Miss: -> CACHE_START_REFILL.");
 `ifdef ISA_A
@@ -1107,7 +1121,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
 		    // Provide write-response after 1-cycle delay (thus locking the cset for 1 cycle),
 		    // in case the next incoming request tries to read from the same SRAM address.
-		    new_state = CACHE_ST_AMO_RSP;
+		    rg_state <= CACHE_ST_AMO_RSP;
 
 		    if (cfg_verbosity > 1)
 		       $display ("        => rl_write_response");
@@ -1128,7 +1142,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	    else begin
 	       if (! hit || !dw_commit) begin
 		  // Cache miss; AMOs are only done in the cache, so first refill the cache-line
-		  new_state = CACHE_START_REFILL;
+		  rg_state <= CACHE_START_REFILL;
 		  if (cfg_verbosity > 1)
 		     $display ("        AMO Miss: -> CACHE_START_REFILL.");
 	       end
@@ -1171,21 +1185,14 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 		  // in case the next incoming request tries to read from the same address.
 		  rg_ld_val     <= new_ld_val;
 		  rg_st_amo_val <= new_st_val;
-		  new_state      = CACHE_ST_AMO_RSP;
+		  rg_state      <= CACHE_ST_AMO_RSP;
 	       end
 	    end
 `endif
 	 end
       end
-`ifdef ISA_CHERI
-      // ---- Cancelled by Cap exception
-      if (!dw_commit) begin
-        new_state = MODULE_EXCEPTION_RSP;
-        new_exc_code = exc_code_CHERI;
-      end
-`endif
-      rg_state <= new_state;
-      rg_exc_code <= new_exc_code;
+      //rg_state <= new_state;
+      //rg_exc_code <= new_exc_code;
 `ifdef PERFORMANCE_MONITORING
       aw_events [1] <= events;
 `endif
@@ -1222,12 +1229,24 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       PA           vpn_1_pa            = (zeroExtend (vpn_1) << bits_per_byte_in_wordxl);
       PA           lev_1_pte_pa        = satp_pa + vpn_1_pa;
+      Bool pmp_ok       <- pmpu.permitted (lev_1_pte_pa, f3_SIZE_W, s_Priv_Mode, Access_RWX_R);
+
+      if (pmp_ok) begin
       PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
       Fabric_Addr  lev_1_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
       fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 4, 0);
 
       rg_pte_pa <= lev_1_pte_pa;
       rg_state  <= PTW_LEVEL_1;
+      end
+      else begin
+   rg_exc_code <= access_exc_code;
+   rg_state    <= MODULE_EXCEPTION_RSP;
+   if (cfg_verbosity > 1)
+      $display ("%0d: %s.rl_start_tlb_refill: for eaddr 0x%0h: pte_pa 0x%0h: PTP denial: access exception %0d",
+          cur_cycle, d_or_i, rg_addr, rg_pte_pa, access_exc_code);
+      end
+
 `elsif SV39    // ifdef RV32
 
       // RV64.Sv39: Page Table top is at Level 2
@@ -1238,12 +1257,23 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 
       PA           vpn_2_pa            = (zeroExtend (vpn_2) << bits_per_byte_in_wordxl);
       PA           lev_2_pte_pa        = satp_pa + vpn_2_pa;
+      Bool pmp_ok       <- pmpu.permitted (lev_2_pte_pa, f3_SIZE_D, s_Priv_Mode, Access_RWX_R);
+
+      if (pmp_ok) begin
       PA           lev_2_pte_pa_w64    = { lev_2_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
       Fabric_Addr  lev_2_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_2_pte_pa_w64);
       fa_fabric_send_read_req (lev_2_pte_pa_w64_fa, 8, 0);
 
       rg_pte_pa <= lev_2_pte_pa;
       rg_state  <= PTW_LEVEL_2;
+      end
+      else begin
+   rg_exc_code <= access_exc_code;
+   rg_state    <= MODULE_EXCEPTION_RSP;
+   if (cfg_verbosity > 1)
+      $display ("%0d: %s.rl_start_tlb_refill: for eaddr 0x%0h: pte_pa 0x%0h: PTP denial: access exception %0d",
+          cur_cycle, d_or_i, rg_addr, rg_pte_pa, access_exc_code);
+      end
 `endif         // elsif SV39
 
    endrule
@@ -1295,12 +1325,23 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 PA           lev_1_PTN_pa        = fn_PPN_and_Offset_to_PA (ppn, 12'b0);
 	 PA           vpn_1_pa            = (zeroExtend (vpn_1) << bits_per_byte_in_wordxl);
 	 PA           lev_1_pte_pa        = lev_1_PTN_pa + vpn_1_pa;
-	 PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
-	 Fabric_Addr  lev_1_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
-	 fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 8, 0);
+   Bool pmp_ok       <- pmpu.permitted (lev_1_pte_pa, f3_SIZE_D, s_Priv_Mode, Access_RWX_R);
 
-	 rg_pte_pa <= lev_1_pte_pa;
-	 rg_state  <= PTW_LEVEL_1;
+   if (pmp_ok) begin
+     PA           lev_1_pte_pa_w64    = { lev_1_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
+     Fabric_Addr  lev_1_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_1_pte_pa_w64);
+	   fa_fabric_send_read_req (lev_1_pte_pa_w64_fa, 8, 0);
+
+     rg_pte_pa <= lev_1_pte_pa;
+     rg_state  <= PTW_LEVEL_1;
+    end
+   else begin
+      rg_exc_code <= access_exc_code;
+      rg_state    <= MODULE_EXCEPTION_RSP;
+      if (cfg_verbosity > 1)
+         $display ("%0d: %s.rl_ptw_level_2: for eaddr 0x%0h: pte_pa 0x%0h: PTP denial: access exception %0d",
+       cur_cycle, d_or_i, rg_addr, rg_pte_pa, access_exc_code);
+   end
       end
 
       // Leaf PTE pointing at address-space gigapage
@@ -1391,16 +1432,19 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	 PA           lev_0_pte_pa_w64    = { lev_0_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
 	 Fabric_Addr  lev_0_pte_pa_w64_fa = fv_PA_to_Fabric_Addr (lev_0_pte_pa_w64);
 `ifdef SV32
-	 AXI4_Size    axi4_size           = 4;
+   MemReqSize   mem_req_size = f3_SIZE_W;
+	 AXI4_Size    axi4_size           = axsize_4;
 `else
-	 AXI4_Size    axi4_size           = 8;
+   MemReqSize   mem_req_size = f3_SIZE_D;
+	 AXI4_Size    axi4_size           = axsize_8;
 `endif
-	 fa_fabric_send_read_req (lev_0_pte_pa_w64_fa, axi4_size, 0);
+   Bool pmp_ok <- pmpu.permitted (lev_0_pte_pa, mem_req_size, s_Priv_Mode, Access_RWX_R);
 
-	 rg_pte_pa <= lev_0_pte_pa;
-	 rg_state  <= PTW_LEVEL_0;
-
-      end
+   if (pmp_ok) begin
+      PA           lev_0_pte_pa_w64    = { lev_0_pte_pa [pa_sz - 1 : 3], 3'b0 };    // 64b-aligned addr
+      Fabric_Addr  lev_0_pte_pa_w64_fa = fn_PA_to_Fabric_Addr (lev_0_pte_pa_w64);
+      fa_fabric_send_read_req (lev_0_pte_pa_w64_fa, axi4_size);
+   end
 
       // Leaf PTE pointing at address-space megapage
       // (permissions will be checked on subsequent TLB hit)
@@ -1429,6 +1473,7 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
 	       $display ("%0d: %s.rl_ptw_level_1: for eaddr 0x%0h: pte 0x%0h @ 0x%0h: leaf PTE for megapage",
 			 cur_cycle, d_or_i, rg_addr, pte, rg_pte_pa);
 	       $display ("    Addr Space megapage pa: 0x%0h", addr_space_page_pa);
+   end
 	    end
 	 end
       end
@@ -2258,6 +2303,9 @@ module mkMMU_Cache  #(parameter Bool dmem_not_imem,
    method Action tlb_flush;
       pw_tlb_flush_req.send;
    endmethod
+
+   // CSR reads and writes of PMPs
+   interface PMPU_CSR_IFC  pmp_csrs = pmpu.pmp_csrs;
 
    // Fabric master interface
    interface mem_master = masterPortShim.master;
