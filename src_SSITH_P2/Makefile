@@ -43,10 +43,10 @@ SRC_CORE ?= $(REPO)/src_Core/Core
 # RISC-V config macros passed into Bluespec 'bsc' compiler
 
 BSC_COMPILATION_FLAGS += \
-	-D RV64 \
+	-D RV32 \
 	-D ISA_PRIV_M \
 	-D RISCV \
-	-D CapWidth=128 -D CheriBusBytes=8 -D SMALL_TAG_CACHE \
+	-D CapWidth=64 -D CheriBusBytes=8 -D SMALL_TAG_CACHE \
 	-D CheriMasterIDWidth=1 -D CheriTransactionIDWidth=5 \
 	-D ISA_CHERI \
 	-D PERFORMANCE_MONITORING \
@@ -61,7 +61,7 @@ BSC_COMPILATION_FLAGS += \
 	-D XILINX_BSCAN  -D XILINX_XCVU9P  -D JTAG_TAP
 
 # CHERI paramters
-CAPSIZE = 128
+CAPSIZE = 64
 TAGS_STRUCT = 0 64
 TAGS_ALIGN = 32
 #================================================================
