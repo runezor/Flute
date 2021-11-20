@@ -41,7 +41,7 @@ SRC_CORE ?= $(REPO)/src_Core/Core
 # RISC-V config macros passed into Bluespec 'bsc' compiler
 
 BSC_COMPILATION_FLAGS += \
-	-D RV64 \
+	-D RV32 \
 	-D ISA_PRIV_M  -D ISA_PRIV_U \
 	-D INCLUDE_PMPS \
 	-D ISA_I  -D ISA_M  -D ISA_A  -D ISA_C  \
