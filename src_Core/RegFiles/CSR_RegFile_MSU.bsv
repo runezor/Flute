@@ -825,12 +825,12 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 `ifdef RV32
 	 if ((csr_addr_mhpmcounter3 <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31)) begin
 	    let new_value = { ctrs [csr_addr - csr_addr_mhpmcounter3][63:32], wordxl };
-	    perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3, new_value);
+	    perf_counters.write_counter (truncate (pack (csr_addr - csr_addr_mhpmcounter3)), new_value);
 	    new_csr_value = wordxl;
 	 end
 	 else if ((csr_addr_mhpmcounter3h <= csr_addr) && (csr_addr <= csr_addr_mhpmcounter31h)) begin
 	    let new_value = { wordxl, ctrs [csr_addr - csr_addr_mhpmcounter3h][31:0] };
-	    perf_counters.write_counter (csr_addr - csr_addr_mhpmcounter3h, new_value);
+	    perf_counters.write_counter (truncate (pack (csr_addr - csr_addr_mhpmcounter3h)), new_value);
 	    new_csr_value = wordxl;
 	 end
 `else
