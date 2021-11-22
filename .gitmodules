@@ -10,3 +10,6 @@
 [submodule "src_Verifier/BSV-RVFI-DII"]
 	path = src_Verifier/BSV-RVFI-DII
 	url = https://github.com/CTSRD-CHERI/BSV-RVFI-DII.git
+[submodule "libs/RISCV_HPM_Events"]
+	path = libs/RISCV_HPM_Events
+	url = https://github.com/CTSRD-CHERI/RISCV_HPM_Events.git

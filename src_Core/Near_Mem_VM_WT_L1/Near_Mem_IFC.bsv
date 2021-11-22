@@ -42,6 +42,7 @@ import Cache_Decls      :: *;
 
 `ifdef PERFORMANCE_MONITORING
 import PerformanceMonitor :: *;
+import StatCounters :: *;
 `endif
 
 `ifdef INCLUDE_DMEM_SLAVE
@@ -82,9 +83,6 @@ typedef struct {
    Bool evt_EVICT;
 } EventsCache deriving (Bits, FShow);
 
-instance BitVectorable #(EventsCache, 1, m) provisos (Bits #(EventsCache, m));
-      function to_vector = struct_to_vector;
-endinstance
 `endif
 
 interface Near_Mem_IFC;
@@ -202,7 +200,7 @@ interface IMem_IFC;
    (* always_ready *)  method WordXL   tval;        // can be different from PC
 
 `ifdef PERFORMANCE_MONITORING
-   method EventsCache events;
+   method EventsL1I events;
 `endif
 endinterface
 
@@ -235,7 +233,7 @@ interface DMem_IFC;
    (* always_ready *)  method Exc_Code   exc_code;
 
 `ifdef PERFORMANCE_MONITORING
-   method EventsCache events;
+   method EventsL1D events;
 `endif
 endinterface
 

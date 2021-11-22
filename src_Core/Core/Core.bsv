@@ -88,6 +88,7 @@ import TV_Taps :: *;
 import PerformanceMonitor :: *;
 import Monitored :: *;
 import AXI4_Events_BitVectorable_Instance :: *; // the lesser evil
+import StatCounters :: *;
 `endif
 
 // ================================================================
@@ -110,8 +111,8 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    let imem_master = extendIDFields(zeroMasterUserFields(delay_shim.master), 0);
 
 `ifdef PERFORMANCE_MONITORING
-   Vector #(7, Bit #(1)) tag_cache_evts = replicate (0);
-   Vector #(7, Bit #(1)) tag_cache_master_evts = replicate (0);
+   EventsCacheCore tag_cache_evts = unpack (0);
+   AXI4_Master_Events master_evts = unpack (0);
 `endif
    // set the appropriate axi4_mem_shim_{master, slave} ifc
 `ifdef ISA_CHERI
@@ -120,8 +121,8 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    let axi4_mem_shim <- mkAXI4Shim;
 `ifdef PERFORMANCE_MONITORING
 `define TAG_CACHE_EVENTS_EXTERNAL
-   Wire #(Vector #(7, Bit #(1))) w_tag_cache_master_evts <- mkBypassWire ();
-   tag_cache_master_evts = w_tag_cache_master_evts;
+   Wire #(AXI4_Master_Events) w_master_evts <- mkBypassWire ();
+   master_evts = w_master_evts;
 `endif
 `else
    // CHERI, handle tags internally with a tagController
@@ -144,7 +145,15 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 `ifndef NO_TAG_CACHE
    let axi4_mem_shim_master_monitor <- monitorAXI4_Master (axi4_mem_shim_master);
    axi4_mem_shim_master = axi4_mem_shim_master_monitor.ifc;
-   tag_cache_master_evts = to_vector (axi4_mem_shim_master_monitor.events);
+   AXI4_Events ext_master_evts = axi4_mem_shim_master_monitor.events;
+   master_evts.evt_AW_FLIT = zeroExtend(pack(ext_master_evts.evt_AW_FLIT));
+   master_evts.evt_W_FLIT = zeroExtend(pack(ext_master_evts.evt_W_FLIT));
+   master_evts.evt_W_FLIT_FINAL = zeroExtend(pack(ext_master_evts.evt_W_FLIT_FINAL));
+   master_evts.evt_B_FLIT = zeroExtend(pack(ext_master_evts.evt_B_FLIT));
+   master_evts.evt_AR_FLIT = zeroExtend(pack(ext_master_evts.evt_AR_FLIT));
+   master_evts.evt_R_FLIT = zeroExtend(pack(ext_master_evts.evt_R_FLIT));
+   master_evts.evt_R_FLIT_FINAL = zeroExtend(pack(ext_master_evts.evt_R_FLIT_FINAL));
+
 `endif
 `endif
 `endif
@@ -453,10 +462,16 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
 `ifdef PERFORMANCE_MONITORING
    rule rl_relay_external_events;
-      Vector #(7, Bit #(1)) slave_events = to_vector (axi4_mem_shim_slave_monitor.events);
-      // Append 3 7-bit vectors.  tag_cache_master_evts at index 0x0, slave_events at offset 0x7, and tag_cache_evts at offset 0xE.
-      let events = append (tag_cache_evts, append (slave_events, tag_cache_master_evts));
-      cpu.relay_external_events (to_large_vector (events));
+      AXI4_Events ext_slave_evts= axi4_mem_shim_slave_monitor.events;
+      AXI4_Slave_Events slave_evts = unpack(0);
+      slave_evts.evt_AW_FLIT = zeroExtend(pack(ext_slave_evts.evt_AW_FLIT));
+      slave_evts.evt_W_FLIT = zeroExtend(pack(ext_slave_evts.evt_W_FLIT));
+      slave_evts.evt_W_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_W_FLIT_FINAL));
+      slave_evts.evt_B_FLIT = zeroExtend(pack(ext_slave_evts.evt_B_FLIT));
+      slave_evts.evt_AR_FLIT = zeroExtend(pack(ext_slave_evts.evt_AR_FLIT));
+      slave_evts.evt_R_FLIT = zeroExtend(pack(ext_slave_evts.evt_R_FLIT));
+      slave_evts.evt_R_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_R_FLIT_FINAL));
+      cpu.relay_external_events (slave_evts, master_evts, tag_cache_evts);
    endrule
 `endif
 
@@ -538,7 +553,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
 
 `ifdef TAG_CACHE_EVENTS_EXTERNAL
    method Action send_tag_cache_master_events (Vector #(6, Bit #(1)) events);
-      w_tag_cache_master_evts <= events;
+      w_master_evts <= events;
    endmethod
 `endif
 
@@ -577,20 +592,20 @@ endmodule: mkCore
 (* synthesize *)
 module mkCore_Synth (Core_IFC_Synth #(N_External_Interrupt_Sources));
    let core <- mkCore;
-   let cpu_imem_master_synth <- toAXI4_Master_Synth (core.cpu_imem_master);
-   let core_mem_master_synth <- toAXI4_Master_Synth (core.core_mem_master);
+   let cpu_imem_master_sig <- toAXI4_Master_Sig (core.cpu_imem_master);
+   let core_mem_master_sig <- toAXI4_Master_Sig (core.core_mem_master);
 `ifdef INCLUDE_DMEM_SLAVE
-   let cpu_dmem_slave_synth <- toAXI4Lite_Slave_Synth (core.cpu_dmem_slave);
+   let cpu_dmem_slave_sig <- toAXI4Lite_Slave_Sig (core.cpu_dmem_slave);
 `endif
-   let dma_server_synth <- toAXI4_Slave_Synth (core.dma_server);
+   let dma_server_sig <- toAXI4_Slave_Sig (core.dma_server);
 
    interface cpu_reset_server = core.cpu_reset_server;
-   interface cpu_imem_master = cpu_imem_master_synth;
-   interface core_mem_master = core_mem_master_synth;
+   interface cpu_imem_master = cpu_imem_master_sig;
+   interface core_mem_master = core_mem_master_sig;
 `ifdef INCLUDE_DMEM_SLAVE
-   interface cpu_dmem_slave = cpu_dmem_slave_synth;
+   interface cpu_dmem_slave = cpu_dmem_slave_sig;
 `endif
-   interface dma_server = dma_server_synth;
+   interface dma_server = dma_server_sig;
    interface core_external_interrupt_sources = core.core_external_interrupt_sources;
    method nmi_req = core.nmi_req;
 `ifdef INCLUDE_TANDEM_VERIF
