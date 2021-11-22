@@ -191,7 +191,7 @@ CSR_Addr   csr_addr_mccsr     = 12'hBC0;    // Machine Capability Control and St
 // ================================================================
 // The width of individual counters
 
-`ifndef REPROT_WIDTH
+`ifndef REPORT_WIDTH
 `define REPORT_WIDTH 64
 `endif
 typedef `REPORT_WIDTH Report_Width;

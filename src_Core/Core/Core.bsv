@@ -465,13 +465,13 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
       AXI4_Events ext_slave_evts= axi4_mem_shim_slave_monitor.events;
       AXI4_Slave_Events slave_evts = unpack(0);
       slave_evts.evt_AW_FLIT = zeroExtend(pack(ext_slave_evts.evt_AW_FLIT));
-   slave_evts.evt_W_FLIT = zeroExtend(pack(ext_slave_evts.evt_W_FLIT));
-   slave_evts.evt_W_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_W_FLIT_FINAL));
-   slave_evts.evt_B_FLIT = zeroExtend(pack(ext_slave_evts.evt_B_FLIT));
-   slave_evts.evt_AR_FLIT = zeroExtend(pack(ext_slave_evts.evt_AR_FLIT));
-   slave_evts.evt_R_FLIT = zeroExtend(pack(ext_slave_evts.evt_R_FLIT));
-   slave_evts.evt_R_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_R_FLIT_FINAL));
-   cpu.relay_external_events (slave_evts, master_evts, tag_cache_evts);
+      slave_evts.evt_W_FLIT = zeroExtend(pack(ext_slave_evts.evt_W_FLIT));
+      slave_evts.evt_W_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_W_FLIT_FINAL));
+      slave_evts.evt_B_FLIT = zeroExtend(pack(ext_slave_evts.evt_B_FLIT));
+      slave_evts.evt_AR_FLIT = zeroExtend(pack(ext_slave_evts.evt_AR_FLIT));
+      slave_evts.evt_R_FLIT = zeroExtend(pack(ext_slave_evts.evt_R_FLIT));
+      slave_evts.evt_R_FLIT_FINAL = zeroExtend(pack(ext_slave_evts.evt_R_FLIT_FINAL));
+      cpu.relay_external_events (slave_evts, master_evts, tag_cache_evts);
    endrule
 `endif
 

@@ -576,11 +576,7 @@ module mkMMU_ICache(MMU_ICache_IFC);
   method mv_status = cache.mv_status;
   method events = evts;
 endmodule
-//(* synthesize *)
-//module mkMMU_DCache(MMU_DCache_IFC);
-//  let cache <- mkMMU_Cache(True, fabric_2x3_default_mid);
-//  return cache;
-//endmodule
+
 module mkMMU_Cache  #(parameter Bool dmem_not_imem,
                       parameter Bit#(mID) default_mid)  (MMU_Cache_IFC#(mID));
 
