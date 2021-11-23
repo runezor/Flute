@@ -85,7 +85,7 @@ import RVFI_DII :: *;
 
 // ================================================================
 
-export  MMU_Cache_IFC (..), MMU_ICache_IFC (..), MMU_DCache_IFC (..), MMU_DICache_IFC (..);
+export  MMU_Cache_IFC (..), MMU_ICache_IFC (..), MMU_DCache_IFC (..);
 export  mkMMU_Cache, mkMMU_ICache, mkMMU_DCache;
 
 // ================================================================
@@ -162,81 +162,22 @@ interface MMU_Cache_IFC #(numeric type mID);
 
 endinterface
 
-
-interface MMU_DICache_IFC#(numeric type mID, type evtsT);
-   method Action set_verbosity (Bit #(4) verbosity);
-
-   // Reset request/response
-   interface Server #(Token, Token) server_reset;
-
-   // CPU interface: request
-   (* always_ready *)
-   method Action  req (CacheOp op,
-                       Bit #(3) width_code,
-               Bool is_unsigned,
-`ifdef ISA_A
-                       Bit #(5) amo_funct5,
-`endif
-                       Addr addr,
-               Tuple2#(Bool, Bit#(128)) st_value,
-                       // The following  args for VM
-                       Priv_Mode  priv,
-                       Bit #(1)   sstatus_SUM,
-                       Bit #(1)   mstatus_MXR,
-                       WordXL     satp);    // { VM_Mode, ASID, PPN_for_page_table }
-
-`ifdef ISA_CHERI
-   // CPU interface: commit previous request
-   (* always_ready *)
-   method Action commit;
-`endif
-
-   // CPU interface: response
-   (* always_ready *)  method Bool       valid;
-   (* always_ready *)  method WordXL     addr;        // req addr for which this is a response
-   (* always_ready *)  method Tuple2 #(Bool, CWord) cword; // rd_val data for LD, LR, AMO, SC success/fail result)
-   (* always_ready *)  method Tuple2 #(Bool, CWord) st_amo_val; // Final stored value for ST, SC, AMO
-   (* always_ready *)  method Bool       exc;
-   (* always_ready *)  method Exc_Code   exc_code;
-
-   // Cache flush request/response
-   interface Server #(Token, Token) server_flush;
-
-   // TLB flush
-   method Action tlb_flush;
-
-   // Fabric master interface
-   interface AXI4_Master #( mID, Wd_Addr, Wd_Data
-                          , Wd_AW_User, Wd_W_User, Wd_B_User
-                          , Wd_AR_User, Wd_R_User) mem_master;
-
-`ifdef PERFORMANCE_MONITORING
-   method evtsT events;
-`endif
-
-   // ----------------------------------------------------------------
-   // Misc. control and status
-
-   // ----------------
-   // For ISA tests: watch memory writes to <tohost> addr
-
-`ifdef WATCH_TOHOST
-   method Action set_watch_tohost (Bool watch_tohost, Bit #(64) tohost_addr);
-   method Bit #(64) mv_tohost_value;
-`endif
-
-   // Inform core that DDR4 has been initialized and is ready to accept requests
-   method Action ma_ddr4_ready;
-
-   // Misc. status; 0 = running, no error
-   (* always_ready *)
-   method Bit #(8) mv_status;
-
-endinterface
+typedef MMU_Cache_IFC#(Wd_MId_2x3) MMU_DCache_IFC;
+typedef MMU_Cache_IFC#(Wd_MId) MMU_ICache_IFC;
 
 
-typedef MMU_DICache_IFC#(Wd_MId_2x3, EventsL1D) MMU_DCache_IFC;
-typedef MMU_DICache_IFC#(Wd_MId, EventsL1I) MMU_ICache_IFC;
+(* synthesize *)
+module mkMMU_ICache(MMU_ICache_IFC);
+    let cache <- mkMMU_Cache(False, fabric_default_mid);
+    return cache;
+endmodule
+
+(* synthesize *)
+module mkMMU_DCache(MMU_DCache_IFC);
+    let cache <- mkMMU_Cache(True, fabric_2x3_default_mid);
+    return cache;
+endmodule
+
 
 // ****************************************************************
 // ****************************************************************
@@ -501,81 +442,6 @@ endfunction
 // ****************************************************************
 // The module implementation
 
-(* synthesize *)
-module mkMMU_DCache(MMU_DCache_IFC);
-  MMU_Cache_IFC#(Wd_MId_2x3) cache <- mkMMU_Cache(False, fabric_2x3_default_mid);
-  EventsL1D evts = EventsL1D { evt_LD           : zeroExtend(pack(cache.events.evt_LD))
-                             , evt_LD_MISS      : zeroExtend(pack(cache.events.evt_LD_MISS))
-                             , evt_LD_MISS_LAT  : zeroExtend(pack(cache.events.evt_LD_MISS_LAT))
-                             , evt_ST           : zeroExtend(pack(cache.events.evt_ST))
-                             , evt_ST_MISS      : zeroExtend(pack(cache.events.evt_ST_MISS))
-                             , evt_ST_MISS_LAT  : zeroExtend(pack(cache.events.evt_ST_MISS_LAT))
-                             , evt_AMO          : zeroExtend(pack(cache.events.evt_AMO))
-                             , evt_AMO_MISS     : zeroExtend(pack(cache.events.evt_AMO_MISS))
-                             , evt_AMO_MISS_LAT : zeroExtend(pack(cache.events.evt_AMO_MISS_LAT))
-                             , evt_TLB          : zeroExtend(pack(cache.events.evt_TLB))
-                             , evt_TLB_MISS     : zeroExtend(pack(cache.events.evt_TLB_MISS))
-                             , evt_TLB_MISS_LAT : zeroExtend(pack(cache.events.evt_TLB_MISS_LAT))
-                             , evt_TLB_FLUSH    : zeroExtend(pack(cache.events.evt_TLB_FLUSH))
-                             , evt_EVICT        : zeroExtend(pack(cache.events.evt_EVICT))
-                             };
-  method set_verbosity = cache.set_verbosity;
-  interface server_reset = cache.server_reset;
-  method req = cache.req;
-`ifdef ISA_CHERI
-  method commit = cache.commit;
-`endif
-  method valid = cache.valid;
-  method addr = cache.addr;
-  method cword = cache.cword;
-  method st_amo_val = cache.st_amo_val;
-  method exc = cache.exc;
-  method exc_code = cache.exc_code;
-  interface server_flush = cache.server_flush;
-  method tlb_flush = cache.tlb_flush;
-  interface mem_master = cache.mem_master;
-`ifdef WATCH_TOHOST
-  method set_watch_tohost = cache.set_watch_tohost;
-  method mv_tohost_value = cache.mv_tohost_value;
-`endif
-  method ma_ddr4_ready = cache.ma_ddr4_ready;
-  method mv_status = cache.mv_status;
-  method events = evts;
-endmodule
-(* synthesize *)
-module mkMMU_ICache(MMU_ICache_IFC);
-  MMU_Cache_IFC#(Wd_MId) cache <- mkMMU_Cache(True, fabric_default_mid);
-  EventsL1I evts = EventsL1I { evt_LD           : zeroExtend(pack(cache.events.evt_LD))
-                             , evt_LD_MISS      : zeroExtend(pack(cache.events.evt_LD_MISS))
-                             , evt_LD_MISS_LAT  : zeroExtend(pack(cache.events.evt_LD_MISS_LAT))
-                             , evt_TLB          : zeroExtend(pack(cache.events.evt_TLB))
-                             , evt_TLB_MISS     : zeroExtend(pack(cache.events.evt_TLB_MISS))
-                             , evt_TLB_MISS_LAT : zeroExtend(pack(cache.events.evt_TLB_MISS_LAT))
-                             , evt_TLB_FLUSH    : zeroExtend(pack(cache.events.evt_TLB_FLUSH))
-                             };
-  method set_verbosity = cache.set_verbosity;
-  interface server_reset = cache.server_reset;
-  method req = cache.req;
-`ifdef ISA_CHERI
-  method commit = cache.commit;
-`endif
-  method valid = cache.valid;
-  method addr = cache.addr;
-  method cword = cache.cword;
-  method st_amo_val = cache.st_amo_val;
-  method exc = cache.exc;
-  method exc_code = cache.exc_code;
-  interface server_flush = cache.server_flush;
-  method tlb_flush = cache.tlb_flush;
-  interface mem_master = cache.mem_master;
-`ifdef WATCH_TOHOST
-  method set_watch_tohost = cache.set_watch_tohost;
-  method mv_tohost_value = cache.mv_tohost_value;
-`endif
-  method ma_ddr4_ready = cache.ma_ddr4_ready;
-  method mv_status = cache.mv_status;
-  method events = evts;
-endmodule
 
 module mkMMU_Cache  #(parameter Bool dmem_not_imem,
                       parameter Bit#(mID) default_mid)  (MMU_Cache_IFC#(mID));
