@@ -51,16 +51,16 @@ interface CSR_MIP_IFC;
    method ActionValue #(WordXL) mav_uip_write (MISA  misa, WordXL  wordxl);
 `endif
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action m_external_interrupt_req (Bool req);
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action s_external_interrupt_req (Bool req);
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action software_interrupt_req (Bool req);
 
-   (* always_ready, always_enabled *)
+   (* always_ready *)
    method Action timer_interrupt_req (Bool req);
 endinterface
 
