@@ -85,7 +85,7 @@ import RVFI_DII :: *;
 
 // ================================================================
 
-export  MMU_Cache_IFC (..), MMU_ICache_IFC (..), MMU_DCache_IFC (..), MMU_DICache_IFC (..);
+export  MMU_Cache_IFC (..), MMU_ICache_IFC (..), MMU_DCache_IFC (..);
 export  mkMMU_Cache, mkMMU_ICache, mkMMU_DCache;
 
 // ================================================================
@@ -162,8 +162,10 @@ interface MMU_Cache_IFC #(numeric type mID);
 
 endinterface
 
+typedef MMU_Cache_IFC#(Wd_MId_2x3) MMU_DCache_IFC;
+typedef MMU_Cache_IFC#(Wd_MId) MMU_ICache_IFC;
 
-interface MMU_DICache_IFC#(numeric type mID, type evtsT);
+/*interface MMU_DICache_IFC#(numeric type mID, type evtsT);
    method Action set_verbosity (Bit #(4) verbosity);
 
    // Reset request/response
@@ -232,11 +234,28 @@ interface MMU_DICache_IFC#(numeric type mID, type evtsT);
    (* always_ready *)
    method Bit #(8) mv_status;
 
-endinterface
+endinterface*/
 
-
+/*
+`ifdef PERFORMANCE_MONITORING
 typedef MMU_DICache_IFC#(Wd_MId_2x3, EventsL1D) MMU_DCache_IFC;
 typedef MMU_DICache_IFC#(Wd_MId, EventsL1I) MMU_ICache_IFC;
+`endif
+*/
+
+
+(* synthesize *)
+module mkMMU_ICache(MMU_ICache_IFC);
+    let cache <- mkMMU_Cache(False, fabric_default_mid);
+    return cache;
+endmodule
+
+(* synthesize *)
+module mkMMU_DCache(MMU_DCache_IFC);
+    let cache <- mkMMU_Cache(True, fabric_2x3_default_mid);
+    return cache;
+endmodule
+
 
 // ****************************************************************
 // ****************************************************************
@@ -496,9 +515,11 @@ endfunction
 // ****************************************************************
 // The module implementation
 
+/*
 (* synthesize *)
 module mkMMU_DCache(MMU_DCache_IFC);
   MMU_Cache_IFC#(Wd_MId_2x3) cache <- mkMMU_Cache(False, fabric_2x3_default_mid);
+`ifdef PERFORMANCE_MONITORING
   EventsL1D evts = EventsL1D { evt_LD           : zeroExtend(pack(cache.events.evt_LD))
                              , evt_LD_MISS      : zeroExtend(pack(cache.events.evt_LD_MISS))
                              , evt_LD_MISS_LAT  : zeroExtend(pack(cache.events.evt_LD_MISS_LAT))
@@ -514,6 +535,7 @@ module mkMMU_DCache(MMU_DCache_IFC);
                              , evt_TLB_FLUSH    : zeroExtend(pack(cache.events.evt_TLB_FLUSH))
                              , evt_EVICT        : zeroExtend(pack(cache.events.evt_EVICT))
                              };
+`endif
   method set_verbosity = cache.set_verbosity;
   interface server_reset = cache.server_reset;
   method req = cache.req;
@@ -535,7 +557,9 @@ module mkMMU_DCache(MMU_DCache_IFC);
 `endif
   method ma_ddr4_ready = cache.ma_ddr4_ready;
   method mv_status = cache.mv_status;
+`ifdef PERFORMANCE_MONITORING
   method events = evts;
+`endif
 endmodule
 (* synthesize *)
 module mkMMU_ICache(MMU_ICache_IFC);
@@ -571,6 +595,7 @@ module mkMMU_ICache(MMU_ICache_IFC);
   method mv_status = cache.mv_status;
   method events = evts;
 endmodule
+*/
 
 module mkMMU_Cache  #(parameter Bool dmem_not_imem,
                       parameter Bit#(mID) default_mid)  (MMU_Cache_IFC#(mID));

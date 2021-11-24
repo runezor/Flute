@@ -117,6 +117,39 @@ module mkNear_Mem (Near_Mem_IFC);
 	 $display ("%0d: Near_Mem.rl_reset_complete", cur_cycle);
    endrule
 
+`ifdef PERFORMANCE_MONITORING
+   function EventsL1I convertToEventsL1I(EventsCache ev);
+       EventsL1I evts = EventsL1I { evt_LD           : zeroExtend(pack(ev.evt_LD))
+                                  , evt_LD_MISS      : zeroExtend(pack(ev.evt_LD_MISS))
+                                  , evt_LD_MISS_LAT  : zeroExtend(pack(ev.evt_LD_MISS_LAT))
+                                  , evt_TLB          : zeroExtend(pack(ev.evt_TLB))
+                                  , evt_TLB_MISS     : zeroExtend(pack(ev.evt_TLB_MISS))
+                                  , evt_TLB_MISS_LAT : zeroExtend(pack(ev.evt_TLB_MISS_LAT))
+                                  , evt_TLB_FLUSH    : zeroExtend(pack(ev.evt_TLB_FLUSH))
+                                  };
+       return evts;
+   endfunction
+
+   function EventsL1D convertToEventsL1D(EventsCache ev);
+       EventsL1D evts = EventsL1D { evt_LD           : zeroExtend(pack(ev.evt_LD))
+                                  , evt_LD_MISS      : zeroExtend(pack(ev.evt_LD_MISS))
+                                  , evt_LD_MISS_LAT  : zeroExtend(pack(ev.evt_LD_MISS_LAT))
+                                  , evt_ST           : zeroExtend(pack(ev.evt_ST))
+                                  , evt_ST_MISS      : zeroExtend(pack(ev.evt_ST_MISS))
+                                  , evt_ST_MISS_LAT  : zeroExtend(pack(ev.evt_ST_MISS_LAT))
+                                  , evt_AMO          : zeroExtend(pack(ev.evt_AMO))
+                                  , evt_AMO_MISS     : zeroExtend(pack(ev.evt_AMO_MISS))
+                                  , evt_AMO_MISS_LAT : zeroExtend(pack(ev.evt_AMO_MISS_LAT))
+                                  , evt_TLB          : zeroExtend(pack(ev.evt_TLB))
+                                  , evt_TLB_MISS     : zeroExtend(pack(ev.evt_TLB_MISS))
+                                  , evt_TLB_MISS_LAT : zeroExtend(pack(ev.evt_TLB_MISS_LAT))
+                                  , evt_TLB_FLUSH    : zeroExtend(pack(ev.evt_TLB_FLUSH))
+                                  , evt_EVICT        : zeroExtend(pack(ev.evt_EVICT))
+                                  };
+       return evts;
+   endfunction
+`endif
+
    // ----------------
    // SFENCE_VMA
 
@@ -191,7 +224,7 @@ module mkNear_Mem (Near_Mem_IFC);
       method WordXL   tval           = icache.addr;
 
 `ifdef PERFORMANCE_MONITORING
-      method EventsL1I events = icache.events;
+      method EventsL1I events = convertToEventsL1I(icache.events);
 `endif
    endinterface
 
@@ -235,7 +268,7 @@ module mkNear_Mem (Near_Mem_IFC);
       method Exc_Code   exc_code   = dcache.exc_code;
 
 `ifdef PERFORMANCE_MONITORING
-      method EventsL1D events = dcache.events;
+      method EventsL1D events = convertToEventsL1D(dcache.events);
 `endif
    endinterface
 
