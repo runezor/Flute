@@ -1954,7 +1954,7 @@ function ALU_Outputs fv_CHERI (ALU_Inputs inputs, WordXL ddc_base);
 
             val1_source = MODIFY_OFFSET;
 
-            next_pc   = cs1_offset;
+            next_pc   = cs1_offset + pack(offset);
             auth_base = cs1_base;
             auth_idx  = {0,inputs.rs1_idx};
             auth_cap  = cs1_val;
