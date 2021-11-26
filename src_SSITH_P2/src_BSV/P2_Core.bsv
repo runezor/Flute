@@ -85,11 +85,11 @@ interface P2_Core_IFC;
    // Core CPU interfaces
 
    // CPU IMem to Fabric master interface
-   interface AXI4_Master_Synth #(Wd_MId, Wd_Addr, Wd_Data,
+   interface AXI4_Master_Sig #(Wd_MId, Wd_Addr, Wd_Data,
                                  0, 0, 0, 0, 0) master0;
 
    // CPU DMem (incl. I/O) to Fabric master interface
-   interface AXI4_Master_Synth #( Wd_MId_ext, Wd_Addr, Wd_Data
+   interface AXI4_Master_Sig #( Wd_MId_ext, Wd_Addr, Wd_Data
                                 , Wd_AW_User_ext, Wd_W_User_ext, Wd_B_User_ext
                                 , Wd_AR_User_ext, Wd_R_User_ext) master1;
 
@@ -101,7 +101,7 @@ interface P2_Core_IFC;
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
 
-   interface AXI4Lite_Slave_Synth #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) slave0;
+   interface AXI4Lite_Slave_Sig #(Wd_Addr, Wd_Data, 0, 0, 0, 0, 0) slave0;
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
@@ -145,7 +145,7 @@ module mkP2_Core (P2_Core_IFC);
       core.nmi_req (False);
    endrule
 
-   AXI4_Master_Synth #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
+   AXI4_Master_Sig #( Wd_Id_Dma, Wd_Addr_Dma, Wd_Data_Dma
                       , Wd_AW_User_Dma, Wd_W_User_Dma, Wd_B_User_Dma
                       , Wd_AR_User_Dma, Wd_R_User_Dma) dummy = culDeSac;
    mkConnection (dummy, core.dma_server);
@@ -277,7 +277,7 @@ module mkP2_Core (P2_Core_IFC);
    // ----------------------------------------------------------------
    // Optional AXI4-Lite D-cache slave interface
 
-   interface AXI4Lite_Slave_Synth slave0 = core.cpu_dmem_slave;
+   interface AXI4Lite_Slave_Sig slave0 = core.cpu_dmem_slave;
 `endif
 
 `ifdef INCLUDE_TANDEM_VERIF
