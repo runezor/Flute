@@ -196,7 +196,7 @@ module mkSoC_Top (SoC_Top_IFC);
       master_vector = newVector;
 
    // CPU IMem master to fabric
-   master_vector[imem_master_num] = zeroMasterUserFields(extendIDFields(core.cpu_imem_master, 0));
+   master_vector[imem_master_num] = prepend_AXI4_Master_id(0, zero_AXI4_Master_user(core.cpu_imem_master));
 
    // CPU DMem master to fabric
    master_vector[dmem_master_num] = core.core_mem_master;
@@ -225,16 +225,16 @@ module mkSoC_Top (SoC_Top_IFC);
 
    // Fabric to Boot ROM
    mkConnection(boot_rom_axi4_deburster.master, boot_rom.slave);
-   slave_vector[boot_rom_slave_num] = zeroSlaveUserFields(boot_rom_axi4_deburster.slave);
+   slave_vector[boot_rom_slave_num] = zero_AXI4_Slave_user(boot_rom_axi4_deburster.slave);
    route_vector[boot_rom_slave_num] = soc_map.m_boot_rom_addr_range;
 
    // Fabric to Mem Controller
    mkConnection(mem0_controller_axi4_deburster.master, mem0_controller.slave);
-   slave_vector[mem0_controller_slave_num] = zeroSlaveUserFields(mem0_controller_axi4_deburster.slave);
+   slave_vector[mem0_controller_slave_num] = zero_AXI4_Slave_user(mem0_controller_axi4_deburster.slave);
    route_vector[mem0_controller_slave_num] = soc_map.m_mem0_controller_addr_range;
 
    // Fabric to UART0
-   slave_vector[uart0_slave_num] = zeroSlaveUserFields(uart0.slave);
+   slave_vector[uart0_slave_num] = zero_AXI4_Slave_user(uart0.slave);
    route_vector[uart0_slave_num] = soc_map.m_uart0_addr_range;
 
 `ifdef HTIF_MEMORY

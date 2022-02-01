@@ -109,7 +109,7 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
    let cpu_imem = cpu.imem_master;
    AXI4_Shim#(5,64,64,0,1,0,0,1) delay_shim <- mkAXI4ShimSizedFIFOF4; // Prevent a combinatorial path after the icache
    mkConnection(delay_shim.slave, cpu_imem);
-   let imem_master = extendIDFields(zeroMasterUserFields(delay_shim.master), 0);
+   let imem_master = prepend_AXI4_Master_id (0, zero_AXI4_Master_user (delay_shim.master));
 
 `ifdef PERFORMANCE_MONITORING
    EventsTGC tag_cache_evts = unpack (0);
@@ -424,8 +424,8 @@ module mkCore (Core_IFC #(N_External_Interrupt_Sources));
                       , Wd_AW_User, Wd_W_User, Wd_B_User
                       , Wd_AR_User, Wd_R_User)) slave_vector = newVector;
    slave_vector[default_slave_num]     = axi4_mem_shim_slave;
-   slave_vector[near_mem_io_slave_num] = zeroSlaveUserFields (near_mem_io.axi4_slave);
-   slave_vector[plic_slave_num]        = zeroSlaveUserFields (plic.axi4_slave);
+   slave_vector[near_mem_io_slave_num] = zero_AXI4_Slave_user (near_mem_io.axi4_slave);
+   slave_vector[plic_slave_num]        = zero_AXI4_Slave_user (plic.axi4_slave);
 
    function Vector#(Num_Slaves_2x3, Bool) route_2x3 (Bit#(Wd_Addr) addr);
       Vector#(Num_Slaves_2x3, Bool) res = replicate(False);
