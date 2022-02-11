@@ -20,7 +20,7 @@ package GPR_RegFile;
 // ================================================================
 // Exports
 
-export GPR_RegFile_IFC (..), mkGPR_RegFile, RegAddr, getGPRAddr, addrToName;
+export GPR_RegFile_IFC (..), mkGPR_RegFile, RegAddr, getPhysRegAddr, regAddrToName;
 
 // ================================================================
 // BSV library imports
@@ -112,13 +112,13 @@ typedef Bit#(`REG_SIZE) RegAddr;
 // ================================================================
 // Address conversion
 // Prefix=0 => Using standard integer GPR
-function RegAddr getGPRAddr(RegName name, Bit#(m) prefix)
+function RegAddr getPhysRegAddr(RegName name, Bit#(m) prefix)
    provisos(Add#(5, m, `REG_SIZE));
    Bit#(`REG_SIZE) addr = {name, prefix};
    return addr;
 endfunction
 
-function Bit#(5) addrToName(RegAddr addr);
+function Bit#(5) regAddrToName(RegAddr addr);
    return truncate(pack(addr));
 endfunction
 
