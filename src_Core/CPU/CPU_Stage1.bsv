@@ -21,6 +21,8 @@ import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
 import ConfigReg    :: *;
+import V_Decoder    :: *;
+import V_ALU        :: *;
 
 // ----------------
 // BSV additional libs
@@ -73,6 +75,72 @@ interface CPU_Stage1_IFC;
 endinterface
 
 // ================================================================
+// Spoofed ALU output, for overloading 
+CF_Info cf_info_base = CF_Info {cf_op       : CF_None,
+				from_PC     : ?,
+				taken       : ?,
+				fallthru_PC : ?,
+				taken_PC    : ?};
+
+ALU_Outputs alu_output_vector
+= ALU_Outputs {control   : CONTROL_STRAIGHT,
+	       exc_code  : exc_code_ILLEGAL_INSTRUCTION,
+`ifdef ISA_CHERI
+               cheri_exc_code: exc_code_CHERI_None,
+               cheri_exc_reg:  ?,
+`endif
+               op_stage2 : OP_Stage2_ALU, //Just forwards results
+               rd        : ?,
+               addr      : ?,
+               val1      : ?,
+               val2      : ?,
+	       val1_fast : ?,
+	       val2_fast : ?,
+`ifdef ISA_F
+               fval1       : ?,
+               fval2       : ?,
+               fval3       : ?,
+               rd_in_fpr   : False,
+               rs_frm_fpr  : False,
+               val1_frm_gpr: False,
+               rm          : ?,
+`endif
+`ifdef ISA_CHERI
+               cap_val1  : ?,
+               cap_val2  : ?,
+               val1_cap_not_int: False,
+               val2_cap_not_int: False,
+
+               pcc : ?,
+
+               check_enable       : False,
+               check_authority    : ?,
+               check_authority_idx : ?,
+               check_address_low  : ?,
+               check_address_high : ?,
+               check_inclusive    : ?,
+               check_exact_enable : False,
+`ifndef PERFORMANCE_MONITORING
+               check_exact_success : ?,
+`else
+               check_exact_success : True,
+               set_offset_in_bounds : True,
+`endif
+
+               mem_allow_cap      : False,
+`endif
+
+               mem_width_code     : ?,
+               mem_unsigned       : False,
+
+               cf_info     : cf_info_base
+
+`ifdef INCLUDE_TANDEM_VERIF
+             , trace_data: ?
+`endif
+                            };
+   
+// ================================================================
 // Implementation module
 
 module mkCPU_Stage1 #(Bit #(4)         verbosity,
@@ -123,8 +191,56 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    let decoded_instr  = rg_stage_input.decoded_instr;
    let funct3         = decoded_instr.funct3;
 
+      // Vector handling
+   let v_instr = rg_stage_input.v_decoded;
+   Bool is_vector_instr = True;
+   Bool is_rd_vector = False;
+
+   Bit#(5) rs1_vector_addr_i = 0;
+   Bit#(5) rs2_vector_addr = 0;
+   Bool vs1_imm = False;
+   Bit#(5) vs1_imm_val = 0;
+
+   let rs1_addr = get_GPR_reg_addr(decoded_instr.rs1);
+   let rs2_addr = get_GPR_reg_addr(decoded_instr.rs2);
+
+   case (v_instr) matches
+					tagged Invalid_V_instr .i: begin
+						is_vector_instr = False;
+					end
+               tagged Load_V_instr .i: begin
+                  rs1_addr = get_GPR_reg_addr(i.rs1);
+                  is_rd_vector = True;
+               end
+               tagged Store_V_instr .i: begin
+                  rs1_addr = get_GPR_reg_addr(i.rs1);
+                  rs2_addr = get_vec_reg_addr(i.vs3);
+                  is_rd_vector = False;
+               end
+					tagged Vsetvl_V_instr .i: begin
+                  rs1_addr = get_GPR_reg_addr(0);
+                  rs2_addr = get_GPR_reg_addr(0);
+					end
+					tagged Arith_V_instr .a: begin //TODO: MOVE ME
+                  case (a.load1) matches
+                     tagged Payload_addr .r: begin
+                        rs1_addr = get_vec_reg_addr(pack(r));
+                     end
+                     tagged Payload_immediate .i: begin
+                        rs1_vector_addr_i = 0;
+                        vs1_imm_val = pack(i);
+                        vs1_imm = True;
+                     end
+                  endcase
+                  is_rd_vector = True;
+						rs2_addr = get_vec_reg_addr(pack(a.load2));
+					end
+	endcase
+
    // Register rs1 read and bypass
-   let rs1 = getPhysRegAddr(decoded_instr.rs1,0);
+   //Todo load immediate correctly
+   //Todo clean up
+   let rs1 = rs1_addr;
    let rs1_val = gpr_regfile.read_rs1 (rs1);
    match { .busy1a, .rs1a } = fn_gpr_bypass (bypass_from_stage3, rs1, rs1_val);
    match { .busy1b, .rs1b } = fn_gpr_bypass (bypass_from_stage2, rs1, rs1a);
@@ -136,7 +252,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `endif
 
    // Register rs2 read and bypass
-   let rs2 = getPhysRegAddr(decoded_instr.rs2,0);
+   let rs2 = rs2_addr;
    let rs2_val = gpr_regfile.read_rs2 (rs2);
    match { .busy2a, .rs2a } = fn_gpr_bypass (bypass_from_stage3, rs2, rs2_val);
    match { .busy2b, .rs2b } = fn_gpr_bypass (bypass_from_stage2, rs2, rs2a);
@@ -163,7 +279,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    WordFL frs2_val_bypassed = frs2b;
 
    // FP Register rs3 read and bypass
-   let rs3 = getPhysRegAddr(decoded_instr.rs3, 0);
+   let rs3 = get_GPR_reg_addr(decoded_instr.rs3);
    let frs3_val = fpr_regfile.read_rs3 (rs3);
    match { .fbusy3a, .frs3a } = fn_fpr_bypass (fbypass_from_stage3, rs3, frs3_val);
    match { .fbusy3b, .frs3b } = fn_fpr_bypass (fbypass_from_stage2, rs3, frs3a);
@@ -189,8 +305,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `ifdef ISA_CHERI
 				cap_rs1_val    : rs1_val_bypassed,
 				cap_rs2_val    : rs2_val_bypassed,
-				rs1_idx        : regAddrToName(rs1),
-				rs2_idx        : regAddrToName(rs2),
+				rs1_idx        : reg_addr_to_name(rs1),
+				rs2_idx        : reg_addr_to_name(rs2),
 				rs1_val        : getAddr(rs1_val_bypassed),
 				rs2_val        : getAddr(rs2_val_bypassed),
 `else
@@ -209,7 +325,72 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 				mstatus        : csr_regfile.read_mstatus,
 				misa           : csr_regfile.read_misa };
 
-   let alu_outputs = fv_ALU (alu_inputs);
+   let alu_outputs = alu_output_vector;
+
+   let rvfi_MWD_send_as_vec = False;
+   let blabla = True;
+   Bit#(64) rvfi_MWD_vec = 0;
+   if (is_vector_instr) begin
+      //Let's start by checking mstatus
+      if (False && csr_regfile.read_mstatus[24:23]==0)
+         //We only throw a trap in these cases, to match with spike
+         case (v_instr) matches
+               tagged Arith_V_instr .instr: begin
+                  rvfi_MWD_vec = csr_regfile.read_mstatus+7; 
+                  alu_outputs.control = CONTROL_TRAP; 
+                  rvfi_MWD_send_as_vec = True; 
+                  alu_outputs.rs_frm_fpr = False;
+                  blabla = False;
+               end
+					tagged Vsetvl_V_instr .instr: begin
+                  rvfi_MWD_vec = csr_regfile.read_mstatus+7; 
+                  alu_outputs.control = CONTROL_TRAP; 
+                  rvfi_MWD_send_as_vec = True; 
+                  alu_outputs.rs_frm_fpr = False;
+                  blabla = False;
+					end
+         endcase
+      else begin
+         case (v_instr) matches
+               tagged Arith_V_instr .instr: begin
+                  //Not sure if this is right
+                  Bit#(64) vs1_val = getAddr(rs1_val_bypassed);
+                  if (vs1_imm == True)
+                     vs1_val = zeroExtend(vs1_imm_val);
+                  let val = vector_compute(vs1_val, getAddr(rs2_val_bypassed), instr);
+
+                  //Uses constant output :)
+                  alu_outputs = alu_output_vector;
+                  alu_outputs.rd = unpack(pack(instr.dest));
+                  alu_outputs.val1 = val;
+               end
+					tagged Vsetvl_V_instr .instr: begin
+                  alu_outputs = alu_output_vector;
+                  alu_outputs.rd = unpack(pack(instr.dest));
+                  alu_outputs.val1 = 8; //TODO FIX
+					end
+               tagged Load_V_instr .instr: begin
+                  //Todo: Probably spoof an alu_input with load
+                  //And then send off vector thingy
+                  alu_outputs = fv_vector_LD(instr.dest, getAddr(rs1_val_bypassed));
+                  alu_outputs.cap_val2 = nullCap;
+               end
+               tagged Store_V_instr .instr: begin
+                  //Todo: Probably spoof an alu_input with load
+                  //And then send off vector thingy
+                  alu_outputs = fv_vector_ST(getAddr(rs1_val_bypassed), getAddr(rs2_val_bypassed), rs2_val_bypassed);
+                  alu_outputs.rd = 0;
+                  rvfi_MWD_vec = get_element_zeroextended(getAddr(rs2_val_bypassed), 7, Bit_8); //Todo: fix me
+                  rvfi_MWD_send_as_vec = True;
+               end
+	      endcase
+      end 
+                  rvfi_MWD_vec = csr_regfile.read_mstatus+7;
+   end else begin
+      alu_outputs = fv_ALU (alu_inputs);
+   end
+   
+   let rd_addr = is_rd_vector?get_vec_reg_addr(alu_outputs.rd):get_GPR_reg_addr(alu_outputs.rd);
 
    let fall_through_pc = getPC(rg_pcc) + (rg_stage_input.is_i32_not_i16 ? 4 : 2);
 
@@ -231,8 +412,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    CapMem cap_val2 = cast(tmp_val2);
    let info_RVFI = Data_RVFI_Stage1 {
                        instr:          rg_stage_input.instr_or_instr_C,
-                       rs1_addr:       regAddrToName(rs1),
-                       rs2_addr:       regAddrToName(rs2),
+                       rs1_addr:       reg_addr_to_rfvi_name(rs1),
+                       rs2_addr:       reg_addr_to_rfvi_name(rs2),
 `ifdef ISA_CHERI
                        rs1_data:       getAddr(rs1_val_bypassed),
                        rs2_data:       getAddr(rs2_val_bypassed),
@@ -243,18 +424,18 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                        pc_rdata:       getPC(rg_pcc),
                        pc_wdata:       getPC(next_pcc_local),
 `ifdef ISA_F
-                       mem_wdata:      alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : truncate(cap_val2),
+                       mem_wdata:      blabla?(alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : (rvfi_MWD_send_as_vec?rvfi_MWD_vec:truncate(cap_val2))):rvfi_MWD_vec,
 `else
                        mem_wdata:      truncate(cap_val2),
 `endif
-                       rd_addr:        alu_outputs.rd,
+                       rd_addr:        blabla?reg_addr_to_rfvi_name(rd_addr):8,
                        rd_alu:         (alu_outputs.op_stage2 == OP_Stage2_ALU),
-                       rd_wdata_alu:   alu_outputs.val1,
-                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)
+                       rd_wdata_alu:   blabla?alu_outputs.val1:255, //todo: Important 
+                       mem_addr:       (!blabla)?zeroExtend(rvfi_MWD_vec[(41):(40)]):((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)
 `ifdef ISA_A
                                      || (alu_outputs.op_stage2 == OP_Stage2_AMO)
 `endif
-                                       ) ? alu_outputs.addr : 0};
+                       ) ? (is_vector_instr?alu_outputs.addr+7:alu_outputs.addr) : 0};
 `endif
 
    let data_to_stage2 = Data_Stage1_to_Stage2 {
@@ -268,7 +449,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                instr_seq     : rg_stage_input.instr_seq,
 `endif
 					       op_stage2     : alu_outputs.op_stage2,
-					       rd            : getPhysRegAddr(alu_outputs.rd,0),
+					       rd            : rd_addr, 
 					       addr          : alu_outputs.addr,
                                                mem_width_code: alu_outputs.mem_width_code,
                                                mem_unsigned  : alu_outputs.mem_unsigned,
@@ -310,7 +491,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `ifdef RVFI
                                                info_RVFI_s1  : info_RVFI,
 `endif
-					       priv          : cur_priv };
+					       priv          : cur_priv,
+                      is_vec_store: rvfi_MWD_send_as_vec };
 
 `ifdef ISA_CHERI
    let fetch_exc = checkValid(rg_pcc, getTop(toCapPipe(rg_pcc)), rg_stage_input.is_i32_not_i16);
