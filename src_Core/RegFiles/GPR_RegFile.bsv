@@ -20,7 +20,7 @@ package GPR_RegFile;
 // ================================================================
 // Exports
 
-export GPR_RegFile_IFC (..), mkGPR_RegFile, RegAddr, getPhysRegAddr, regAddrToName;
+export GPR_RegFile_IFC (..), mkGPR_RegFile, RegAddr, get_GPR_reg_addr, get_vec_reg_addr, reg_addr_to_name, reg_addr_to_rfvi_name;
 
 // ================================================================
 // BSV library imports
@@ -46,7 +46,7 @@ import CHERICC_Fat :: *;
 
 // ================================================================
 
-`define REG_SIZE 7
+`define REG_ADDR_SIZE 6 
 `ifdef ISA_CHERI
 `define INTERNAL_REG_TYPE CapReg
 `define EXTERNAL_REG_TYPE_OUT CapPipe
@@ -106,20 +106,31 @@ endinterface
 // Major states of mkGPR_RegFile module
 
 typedef enum { RF_RESET_START, RF_RESETTING, RF_RUNNING } RF_State deriving (Eq, Bits, FShow);
-typedef Bit#(`REG_SIZE) RegAddr;
+typedef Bit#(`REG_ADDR_SIZE) RegAddr;
 
 
 // ================================================================
 // Address conversion
 // Prefix=0 => Using standard integer GPR
-function RegAddr getPhysRegAddr(RegName name, Bit#(m) prefix)
-   provisos(Add#(5, m, `REG_SIZE));
-   Bit#(`REG_SIZE) addr = {name, prefix};
+function RegAddr get_GPR_reg_addr(RegName name);
+   Bit#(`REG_ADDR_SIZE) addr = zeroExtend(name);
    return addr;
 endfunction
 
-function Bit#(5) regAddrToName(RegAddr addr);
+function RegAddr get_vec_reg_addr(Bit#(5) name);
+   Bit#(`REG_ADDR_SIZE) addr = {1,name};
+   return addr;
+endfunction
+
+function Bit#(5) reg_addr_to_name(RegAddr addr);
    return truncate(pack(addr));
+endfunction
+
+function Bit#(5) reg_addr_to_rfvi_name(RegAddr addr);
+   if (addr[5]==0)
+      return truncate(pack(addr));
+   else
+      return 0;
 endfunction
 
 

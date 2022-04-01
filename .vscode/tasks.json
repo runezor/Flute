@@ -1,0 +1,32 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "tasks": [
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "../TestRig/utils/scripts/runTestRIG.py -a flute -b sail --path-to-flute /Volumes/Workspace/part-II/Flute/builds/RV64ACDFIMSUxCHERI_RVFI_DII_Flute_bluesim/exe_HW_sim",
+            "group": "build",
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make -C builds/RV64ACDFIMSUxCHERI_RVFI_DII_Flute_bluesim compile simulator",
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "../TestRig/utils/scripts/runTestRIG.py -a flute -b sail -r rv64ixcheri --path-to-flute /Volumes/Workspace/part-II/Flute/builds/RV64ACDFIMSUxCHERI_RVFI_DII_Flute_bluesim/exe_HW_sim --path-to-QCVEngine /Volumes/Workspace/part-II/TestRig/vengines/QuickCheckVEngine/dist-newstyle/build/aarch64-osx/ghc-8.10.7/QCVEngine-0.1.0.0/x/QCVEngine/build/QCVEngine/QCVEngine",
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+        },
+    ]
+}

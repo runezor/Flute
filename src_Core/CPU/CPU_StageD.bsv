@@ -19,6 +19,7 @@ import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
 import ConfigReg    :: *;
+import V_Decoder    :: *;
 
 // ----------------
 // BSV additional libs
@@ -97,6 +98,7 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 
    function Output_StageD fv_out;
       let decoded_instr = fv_decode (instr);
+      let v_decoding = v_decode(instr);
 
       Output_StageD  output_stageD = ?;
 
@@ -125,7 +127,8 @@ module mkCPU_StageD #(Bit #(4)  verbosity, MISA misa)
 							       instr_or_instr_C: instr_or_instr_C,
 							       pred_fetch_addr:rg_data.pred_fetch_addr,
 							       pred_is_cap_mode:rg_data.pred_is_cap_mode,
-							       decoded_instr:  decoded_instr};
+							       decoded_instr:  decoded_instr,
+                            v_decoded:      v_decoding};
       end
 
       return output_stageD;

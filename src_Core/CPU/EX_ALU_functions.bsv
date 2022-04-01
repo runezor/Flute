@@ -25,7 +25,9 @@ export
 ALU_Inputs (..),
 ALU_Outputs (..),
 Output_Select,
-fv_ALU;
+fv_ALU,
+fv_vector_LD,
+fv_vector_ST;
 
 // ================================================================
 // BSV library imports
@@ -806,6 +808,88 @@ function ALU_Outputs fv_AUIPC (ALU_Inputs inputs);
    return alu_outputs;
 endfunction
 
+
+// ----------------------------------------------------------------
+// VECTOR LOAD + STORE
+
+function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, Bit#(64) addr);
+   let alu_outputs = alu_outputs_base;
+
+   alu_outputs.op_stage2 = OP_Stage2_LD;
+   alu_outputs.control   = CONTROL_STRAIGHT;
+   alu_outputs.rd        = regDestination;
+   alu_outputs.addr      = unpack(addr);
+   alu_outputs.mem_width_code = 3; //11 -> 64? Hopefully
+   alu_outputs.mem_unsigned = True; //Should set to unsigned
+
+   alu_outputs.rd_in_fpr = False;
+
+   //alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, False, True, ?);
+
+   //Todo: Explain this pls
+   //Todo: Maybe just set this to false?
+   alu_outputs.check_enable = True;
+   //alu_outputs.check_authority = authority;
+   //alu_outputs.check_authority_idx = authIdx;
+   alu_outputs.check_address_low = unpack(addr);
+   alu_outputs.check_address_high = zeroExtend(unpack(addr)) + (1 << 3);
+   alu_outputs.check_inclusive = True;
+   alu_outputs.mem_allow_cap = True;
+
+//TODO: TRACING???
+/*`ifdef INCLUDE_TANDEM_VERIF
+   // Normal trace output (if no trap)
+`ifdef ISA_F
+   if (alu_outputs.rd_in_fpr)
+      alu_outputs.trace_data = mkTrace_F_LOAD (fall_through_pc (inputs),
+					       fv_trace_isize (inputs),
+					       fv_trace_instr (inputs),
+					       inputs.decoded_instr.rd,
+					       ?,
+					       eaddr,
+                                               inputs.mstatus);
+   else
+`endif
+      alu_outputs.trace_data = mkTrace_I_LOAD (fall_through_pc (inputs),
+					       fv_trace_isize (inputs),
+					       fv_trace_instr (inputs),
+					       inputs.decoded_instr.rd,
+					       ?,
+					       eaddr);
+`endif*/
+   return alu_outputs;
+endfunction
+
+function ALU_Outputs fv_vector_ST (Bit#(64) addr, Bit#(64) vector_val, CapPipe vector_val_cap);
+   // Signed version of rs1_val
+   let alu_outputs = alu_outputs_base;
+   alu_outputs.control   = CONTROL_STRAIGHT;
+   alu_outputs.op_stage2 = OP_Stage2_ST;
+   alu_outputs.addr      = unpack(addr);
+   alu_outputs.mem_width_code = 3; //64 opefully
+   alu_outputs.mem_unsigned = True;
+
+   alu_outputs.val2      = vector_val;
+
+   `ifdef ISA_CHERI
+      alu_outputs.cap_val2      = vector_val_cap;
+      alu_outputs.val2_cap_not_int = True; //TODO: HELP?
+   `endif
+
+
+   alu_outputs.rd_in_fpr = False;
+
+   //Todo: Explain this pls
+   //Todo: Maybe just set this to false?
+   alu_outputs.check_enable = True;
+   alu_outputs.check_address_low = unpack(addr);
+   alu_outputs.check_address_high = zeroExtend(unpack(addr)) + (1 << 3);
+   alu_outputs.check_inclusive = True;
+   alu_outputs.mem_allow_cap = True;
+
+   return alu_outputs;
+endfunction
+
 // ----------------------------------------------------------------
 // LOAD
 
@@ -813,7 +897,7 @@ function ALU_Outputs fv_LD (ALU_Inputs inputs, Maybe#(Bit#(3)) size);
    // Signed versions of rs1_val and rs2_val
    let opcode = inputs.decoded_instr.opcode;
    IntXL s_rs1_val = unpack (inputs.rs1_val);
-   IntXL s_rs2_val = unpack (inputs.rs2_val);
+   //IntXL s_rs2_val = unpack (inputs.rs2_val);
 
    IntXL  imm_s = extend (unpack (inputs.decoded_instr.imm12_I));
 `ifdef ISA_CHERI

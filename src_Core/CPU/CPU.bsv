@@ -42,6 +42,7 @@ import GetPut       :: *;
 import ClientServer :: *;
 import Connectable  :: *;
 import ConfigReg    :: *;
+import V_isa        :: *;
 
 // ----------------
 // BSV additional libs
@@ -1341,7 +1342,7 @@ module mkCPU (CPU_IFC);
 	 // Writeback to GPR file
 	 let new_rd_val = scr_val;
 
-	 gpr_regfile.write_rd (getPhysRegAddr(rd,0), new_rd_val);
+	 gpr_regfile.write_rd (get_GPR_reg_addr(rd), new_rd_val);
 
    CapPipe new_scr_val_unpacked = cast(scr_val);
 
@@ -1459,7 +1460,8 @@ module mkCPU (CPU_IFC);
       let stage2_asr = getHardPerms(toCapPipe(rg_trap_info.epcc)).accessSysRegs;
       AccessPerms permitted = csr_regfile.access_permitted_1 (rg_cur_priv, csr_addr, read_not_write);
 
-      if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
+      let is_vector_csr = (csr_addr==csr_addr_vl);//Duct tap
+      if (!is_vector_csr && (! permitted.exists || (permitted.requires_asr && !stage2_asr))) begin
 	 rg_state <= CPU_TRAP;
 
          if (permitted.exists) begin // Failed because of ASR
@@ -1488,12 +1490,12 @@ module mkCPU (CPU_IFC);
 	 end
 
 	 // Writeback to GPR file
-	 let new_rd_val = csr_val;
+	 let new_rd_val = stage1.out.data_to_stage2.is_vsetvl_instr?stage1.out.data_to_stage2.vsetvl_output:csr_val;
 
 `ifdef ISA_CHERI
-	 gpr_regfile.write_rd (getPhysRegAddr(rd,0), nullWithAddr(new_rd_val));
+	 gpr_regfile.write_rd (get_GPR_reg_addr(rd), nullWithAddr(new_rd_val));
 `else
-	 gpr_regfile.write_rd (getPhysRegAddr(rd,0), new_rd_val);
+	 gpr_regfile.write_rd (get_GPR_reg_addr(rd), new_rd_val);
 `endif
 
 	 // Writeback to CSR file
@@ -1631,9 +1633,9 @@ module mkCPU (CPU_IFC);
 	 // Writeback to GPR file
 	 let new_rd_val = csr_val;
 `ifdef ISA_CHERI
-	 gpr_regfile.write_rd (getPhysRegAddr(rd,0), nullWithAddr(new_rd_val));
+	 gpr_regfile.write_rd (get_GPR_reg_addr(rd), nullWithAddr(new_rd_val));
 `else
-	 gpr_regfile.write_rd (getPhysRegAddr(rd,0), new_rd_val);
+	 gpr_regfile.write_rd (get_GPR_reg_addr(rd), new_rd_val);
 `endif
 
 	 // Writeback to CSR file, but only if rs1 != 0

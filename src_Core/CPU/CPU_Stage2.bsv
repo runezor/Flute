@@ -461,7 +461,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
                 info_RVFI_s2.stage1.mem_wdata = truncate(pack(tpl_2(new_st_val)));
             // For SC however we do need to check that it was successful, otherwise we've not written.
             end else begin
-                info_RVFI_s2.mem_wmask = ((int_ret_val != 0) ? getMemMask(rg_stage2.mem_width_code,rg_stage2.addr) : 0);
+               if (rg_stage2.is_vec_store) //TODO: Ducttape
+                  if (rg_stage2.op_stage2 == OP_Stage2_ST)
+                     info_RVFI_s2.mem_wmask = rg_stage2.vec_wmask;
+                  else 
+                     info_RVFI_s2.mem_wmask = 0;
+               else
+                  info_RVFI_s2.mem_wmask = ((int_ret_val != 0) ? getMemMask(rg_stage2.mem_width_code,rg_stage2.addr) : 0);
             end
         end
         data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
@@ -519,7 +525,13 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 data_to_stage3.rd_val   = 0;
 `endif
 	 let info_RVFI_s2 = info_RVFI_s2_base;
-	 info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
+    if (rg_stage2.is_vec_store) //TODO: Ducttape
+                  if (rg_stage2.op_stage2 == OP_Stage2_ST)
+                     info_RVFI_s2.mem_wmask = rg_stage2.vec_wmask;
+                  else 
+                     info_RVFI_s2.mem_wmask = 0;
+    else
+	   info_RVFI_s2.mem_wmask = getMemMask(rg_stage2.mem_width_code,rg_stage2.addr);
 	 data_to_stage3.info_RVFI_s2 = info_RVFI_s2;
 `else
 	 data_to_stage3.rd_val   = ?;

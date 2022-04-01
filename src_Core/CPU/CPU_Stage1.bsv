@@ -23,6 +23,8 @@ import ClientServer :: *;
 import ConfigReg    :: *;
 import V_Decoder    :: *;
 import V_ALU        :: *;
+import V_isa        :: *;
+
 
 // ----------------
 // BSV additional libs
@@ -191,7 +193,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    let decoded_instr  = rg_stage_input.decoded_instr;
    let funct3         = decoded_instr.funct3;
 
-      // Vector handling
+   // Vector handling
    let v_instr = rg_stage_input.v_decoded;
    Bool is_vector_instr = True;
    Bool is_rd_vector = False;
@@ -328,38 +330,41 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    let alu_outputs = alu_output_vector;
 
    let rvfi_MWD_send_as_vec = False;
-   let blabla = True;
+   let is_vsetvl_instr = False;
+   let vsetvl_output = 0;
+   Bit#(64) vec_mem_offset = 0;
    Bit#(64) rvfi_MWD_vec = 0;
+   let overide_input_instr = False;
+   Bit#(32) instr_override = 0;
+   let vsew_r = csr_regfile.read_csr_port2(csr_addr_vl);
+   Bit#(64) vec_wmask = ?;
+   V_size vsew = ?;
+   if (vsew_r matches tagged Valid .vsew_w) vsew = unpack(truncate(vsew_w));
+
    if (is_vector_instr) begin
       //Let's start by checking mstatus
-      if (False && csr_regfile.read_mstatus[24:23]==0)
+      if (csr_regfile.read_mstatus[24:23]==0)
          //We only throw a trap in these cases, to match with spike
          case (v_instr) matches
                tagged Arith_V_instr .instr: begin
-                  rvfi_MWD_vec = csr_regfile.read_mstatus+7; 
                   alu_outputs.control = CONTROL_TRAP; 
                   rvfi_MWD_send_as_vec = True; 
                   alu_outputs.rs_frm_fpr = False;
-                  blabla = False;
                end
 					tagged Vsetvl_V_instr .instr: begin
-                  rvfi_MWD_vec = csr_regfile.read_mstatus+7; 
                   alu_outputs.control = CONTROL_TRAP; 
                   rvfi_MWD_send_as_vec = True; 
                   alu_outputs.rs_frm_fpr = False;
-                  blabla = False;
 					end
          endcase
       else begin
          case (v_instr) matches
                tagged Arith_V_instr .instr: begin
-                  //Not sure if this is right
                   Bit#(64) vs1_val = getAddr(rs1_val_bypassed);
                   if (vs1_imm == True)
                      vs1_val = zeroExtend(vs1_imm_val);
-                  let val = vector_compute(vs1_val, getAddr(rs2_val_bypassed), instr);
 
-                  //Uses constant output :)
+                  let val = vector_compute(vs1_val, getAddr(rs2_val_bypassed), instr, vsew);
                   alu_outputs = alu_output_vector;
                   alu_outputs.rd = unpack(pack(instr.dest));
                   alu_outputs.val1 = val;
@@ -367,25 +372,39 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 					tagged Vsetvl_V_instr .instr: begin
                   alu_outputs = alu_output_vector;
                   alu_outputs.rd = unpack(pack(instr.dest));
-                  alu_outputs.val1 = 8; //TODO FIX
+                  let vsew = instr.vsew;
+                  alu_outputs.control   = CONTROL_CSRR_W;
+                  //CSRR_W logic in Flute reads directly from the instruction, so we have to override it
+                  instr_override[31:20] = csr_addr_vl; //Sets csr address
+                  instr_override[19:15] = zeroExtend(pack(vsew)); //Sets rs1 zeroExtend(pack(vsew))
+                  instr_override[14:12] = f3_CSRRWI; //Sets funct3
+                  instr_override[11:7] = instr.dest; //Sets rd
+                  overide_input_instr = True;
+                  is_vsetvl_instr = True;
+                  vsetvl_output = 64>>(pack(vsew)+3);
+                  //alu_outputs.val1 = 64>>(pack(vsew)+3);
+                  //alu_outputs.val1 = 2;
 					end
                tagged Load_V_instr .instr: begin
-                  //Todo: Probably spoof an alu_input with load
-                  //And then send off vector thingy
+                  //Uses a standard load
                   alu_outputs = fv_vector_LD(instr.dest, getAddr(rs1_val_bypassed));
+                  //Adds to the mem addr calculation to match with spike
+                  vec_mem_offset = zeroExtend(8-(get_size_of_sew(vsew)>>3));
                   alu_outputs.cap_val2 = nullCap;
                end
                tagged Store_V_instr .instr: begin
-                  //Todo: Probably spoof an alu_input with load
+                  //Uses a standard store
                   //And then send off vector thingy
                   alu_outputs = fv_vector_ST(getAddr(rs1_val_bypassed), getAddr(rs2_val_bypassed), rs2_val_bypassed);
                   alu_outputs.rd = 0;
-                  rvfi_MWD_vec = get_element_zeroextended(getAddr(rs2_val_bypassed), 7, Bit_8); //Todo: fix me
+                  //Adds to the mem addr calculation to match with spike
+                  vec_mem_offset = zeroExtend(8-(get_size_of_sew(vsew)>>3));
+                  vec_wmask = (1<<(1<<pack(vsew)))-1;//8: 1, 16: 11, 32: 1111, and so on
+                  //Makes sure that MWD matches Spike
                   rvfi_MWD_send_as_vec = True;
                end
 	      endcase
-      end 
-                  rvfi_MWD_vec = csr_regfile.read_mstatus+7;
+      end
    end else begin
       alu_outputs = fv_ALU (alu_inputs);
    end
@@ -424,18 +443,18 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                        pc_rdata:       getPC(rg_pcc),
                        pc_wdata:       getPC(next_pcc_local),
 `ifdef ISA_F
-                       mem_wdata:      blabla?(alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : (rvfi_MWD_send_as_vec?rvfi_MWD_vec:truncate(cap_val2))):rvfi_MWD_vec,
+                       mem_wdata:      alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : (rvfi_MWD_send_as_vec?get_last_vec_el_ze(getAddr(rs2_val_bypassed), vsew):truncate(cap_val2)),
 `else
                        mem_wdata:      truncate(cap_val2),
 `endif
-                       rd_addr:        blabla?reg_addr_to_rfvi_name(rd_addr):8,
+                       rd_addr:        reg_addr_to_rfvi_name(rd_addr),
                        rd_alu:         (alu_outputs.op_stage2 == OP_Stage2_ALU),
-                       rd_wdata_alu:   blabla?alu_outputs.val1:255, //todo: Important 
-                       mem_addr:       (!blabla)?zeroExtend(rvfi_MWD_vec[(41):(40)]):((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)
+                       rd_wdata_alu:   alu_outputs.val1, //todo: Important 
+                       mem_addr:       ((alu_outputs.op_stage2 == OP_Stage2_LD) || (alu_outputs.op_stage2 == OP_Stage2_ST)
 `ifdef ISA_A
                                      || (alu_outputs.op_stage2 == OP_Stage2_AMO)
 `endif
-                       ) ? (is_vector_instr?alu_outputs.addr+7:alu_outputs.addr) : 0};
+                       ) ? (is_vector_instr?alu_outputs.addr+vec_mem_offset:alu_outputs.addr) : 0};
 `endif
 
    let data_to_stage2 = Data_Stage1_to_Stage2 {
@@ -444,7 +463,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `else
                                                pc:        rg_stage_input.pc,
 `endif
-					       instr         : rg_stage_input.instr,
+					       instr         : overide_input_instr?instr_override:rg_stage_input.instr,
 `ifdef RVFI_DII
                                                instr_seq     : rg_stage_input.instr_seq,
 `endif
@@ -492,7 +511,10 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                info_RVFI_s1  : info_RVFI,
 `endif
 					       priv          : cur_priv,
-                      is_vec_store: rvfi_MWD_send_as_vec };
+                      is_vec_store: rvfi_MWD_send_as_vec,
+                      is_vsetvl_instr: is_vsetvl_instr,
+                      vsetvl_output: vsetvl_output,
+                      vec_wmask: vec_wmask };
 
 `ifdef ISA_CHERI
    let fetch_exc = checkValid(rg_pcc, getTop(toCapPipe(rg_pcc)), rg_stage_input.is_i32_not_i16);
