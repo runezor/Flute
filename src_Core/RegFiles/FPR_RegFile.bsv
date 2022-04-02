@@ -124,9 +124,6 @@ module mkFPR_RegFile (FPR_RegFile_IFC);
    endinterface
 
    // FPR read
-   /*method WordFL read_rs1 (RegName rs1);
-      return (regfile.sub (rs1));
-   endmethod*/
    //Compatibility
    method WordFL read_rs1 (RegAddr rs1);
       RegName rn = unpack(truncate(pack(rs1)));
@@ -134,27 +131,18 @@ module mkFPR_RegFile (FPR_RegFile_IFC);
    endmethod
 
    // FPR read
-   /*method WordFL read_rs1_port2 (RegName rs1);        // For debugger access only
-      return (regfile.sub (rs1));
-   endmethod*/
-   //Compatibility
+   //Compatibility, todo: move into GPR
    method WordFL read_rs1_port2 (RegAddr rs1);
       RegName rn = unpack(truncate(pack(rs1)));
       return (regfile.sub (rn));
    endmethod
 
-   /*method WordFL read_rs2 (RegName rs2);
-      return (regfile.sub (rs2));
-   endmethod*/
    //Compatibility
    method WordFL read_rs2 (RegAddr rs2);
       RegName rn = unpack(truncate(pack(rs2)));
       return (regfile.sub (rn));
    endmethod
 
-   /*method WordFL read_rs3 (RegName rs3);
-      return (regfile.sub (rs3));
-   endmethod*/
    //Compatibility
    method WordFL read_rs3 (RegAddr rs3);
       RegName rn = unpack(truncate(pack(rs3)));
@@ -162,9 +150,6 @@ module mkFPR_RegFile (FPR_RegFile_IFC);
    endmethod
 
    // FPR write
-   /*method Action write_rd (RegName rd, WordFL rd_val);
-      regfile.upd (rd, rd_val);
-   endmethod*/
    //Compatibility
    method Action write_rd (RegAddr rd, WordFL rd_val);
       RegName rd = unpack(truncate(pack(rd)));

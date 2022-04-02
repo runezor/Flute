@@ -111,7 +111,6 @@ typedef Bit#(`REG_ADDR_SIZE) RegAddr;
 
 // ================================================================
 // Address conversion
-// Prefix=0 => Using standard integer GPR
 function RegAddr get_GPR_addr(RegName name);
    Bit#(`REG_ADDR_SIZE) addr = zeroExtend(name);
    return addr;
