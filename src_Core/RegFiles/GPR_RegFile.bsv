@@ -113,7 +113,7 @@ typedef Bit#(`REG_ADDR_SIZE) RegAddr;
 // Address conversion
 // Prefix=0 => Using standard integer GPR
 function RegAddr get_GPR_reg_addr(RegName name);
-   Bit#(`REG_ADDR_SIZE) addr = zeroExtend(name);
+   Bit#(`REG_ADDR_SIZE) addr = {0,name};
    return addr;
 endfunction
 
@@ -170,7 +170,7 @@ module mkGPR_RegFile (GPR_RegFile_IFC);
 `ifdef INITIAL_CONTENTS
       regfile.upd (rg_j, `INITIAL_CONTENTS);
       rg_j <= rg_j + 1;
-      if (rg_j == 31)
+      if (rg_j == 63)
 	 rg_state <= RF_RUNNING;
 `else
       rg_state <= RF_RUNNING;

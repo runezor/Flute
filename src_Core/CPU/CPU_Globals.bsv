@@ -634,7 +634,7 @@ typedef struct {
    Data_RVFI_Stage1 info_RVFI_s1;
 `endif
 Bool is_vec_store;
-Bit#(64) vec_wmask;
+Bit#(TDiv#(ISA_Decls::MEMWIDTH, 8)) vec_wmask;
 Bool is_vsetvl_instr;
 Bit#(XLEN) vsetvl_output;
    } Data_Stage1_to_Stage2

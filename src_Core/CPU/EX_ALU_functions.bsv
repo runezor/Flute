@@ -860,16 +860,16 @@ function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, Bit#(64) addr);
    return alu_outputs;
 endfunction
 
-function ALU_Outputs fv_vector_ST (Bit#(64) addr, Bit#(64) vector_val, CapPipe vector_val_cap);
+function ALU_Outputs fv_vector_ST (Bit#(64) addr, CapPipe vector_val_cap);
    // Signed version of rs1_val
    let alu_outputs = alu_outputs_base;
    alu_outputs.control   = CONTROL_STRAIGHT;
    alu_outputs.op_stage2 = OP_Stage2_ST;
    alu_outputs.addr      = unpack(addr);
-   alu_outputs.mem_width_code = 3; //64 opefully
+   alu_outputs.mem_width_code = 3; //64
    alu_outputs.mem_unsigned = True;
 
-   alu_outputs.val2      = vector_val;
+   alu_outputs.val2      = getAddr(vector_val_cap);
 
    `ifdef ISA_CHERI
       alu_outputs.cap_val2      = vector_val_cap;
