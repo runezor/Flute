@@ -20,18 +20,6 @@ REPO ?= ..
 ARCH ?= RV64ACDFIMSUxCHERI
 
 # ================================================================
-# Cache implementation options
-#     WT_L1:    Write-Through, L1 only
-#     WB_L1:    Write-Back, L1 only
-#     WB_L1_L2: Write-Back, L1 and L2, cache coherent
-#     TCM:      Tightly-coupled memory (no caches)
-
-# NEAR_MEM_VM_DIR=Near_Mem_VM_WT_L1
-# NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1
-NEAR_MEM_VM_DIR=Near_Mem_VM_WB_L1_L2
-# NEAR_MEM_VM_DIR=Near_Mem_TCM
-
-# ================================================================
 # CORE implementation options
 #   Use 'Core_v2' with WB_L1_L2 cache, otherwise use 'Core'
 #   XXX no cherification work has happened in Core_v2 XXX
