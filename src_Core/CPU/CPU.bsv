@@ -1460,7 +1460,7 @@ module mkCPU (CPU_IFC);
       let stage2_asr = getHardPerms(toCapPipe(rg_trap_info.epcc)).accessSysRegs;
       AccessPerms permitted = csr_regfile.access_permitted_1 (rg_cur_priv, csr_addr, read_not_write);
 
-      let is_vector_csr = (csr_addr==csr_addr_vl);//Duct tap
+      let is_vector_csr = (csr_addr==csr_addr_vl);
       if (!is_vector_csr && (! permitted.exists || (permitted.requires_asr && !stage2_asr))) begin
 	 rg_state <= CPU_TRAP;
 
