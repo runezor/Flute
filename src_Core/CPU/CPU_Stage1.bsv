@@ -198,19 +198,19 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    Bool is_vector_instr = True;
    Bool is_rd_vector = False;
 
-   let rs1_addr = get_GPR_reg_addr(decoded_instr.rs1);
-   let rs2_addr = get_GPR_reg_addr(decoded_instr.rs2);
+   let rs1_addr = get_GPR_addr(decoded_instr.rs1);
+   let rs2_addr = get_GPR_addr(decoded_instr.rs2);
 
    case (v_instr) matches                           // todo: Move inside ALU?
 					tagged Invalid_V_instr .i: begin
 						is_vector_instr = False;
 					end
                tagged Load_V_instr .i: begin
-                  rs1_addr = get_GPR_reg_addr(i.rs1);
+                  rs1_addr = get_GPR_addr(i.rs1);
                   is_rd_vector = True;
                end
                tagged Store_V_instr .i: begin
-                  rs1_addr = get_GPR_reg_addr(i.rs1);
+                  rs1_addr = get_GPR_addr(i.rs1);
                   rs2_addr = get_vec_reg_addr(i.vs3);
                   is_rd_vector = False;
                end
@@ -220,7 +220,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 					tagged Arith_V_instr .a: begin
                   case (a.load1) matches
                      tagged Payload_addr_GPR .r: begin
-                        rs1_addr = get_GPR_reg_addr(r.addr);
+                        rs1_addr = get_GPR_addr(r.addr);
                      end
                      tagged Payload_addr_vec .r: begin
                         rs1_addr = get_vec_reg_addr(r.addr);
@@ -273,7 +273,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
    WordFL frs2_val_bypassed = frs2b;
 
    // FP Register rs3 read and bypass
-   let rs3 = get_GPR_reg_addr(decoded_instr.rs3);
+   let rs3 = get_GPR_addr(decoded_instr.rs3);
    let frs3_val = fpr_regfile.read_rs3 (rs3);
    match { .fbusy3a, .frs3a } = fn_fpr_bypass (fbypass_from_stage3, rs3, frs3_val);
    match { .fbusy3b, .frs3b } = fn_fpr_bypass (fbypass_from_stage2, rs3, frs3a);
