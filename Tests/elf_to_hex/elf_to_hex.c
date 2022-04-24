@@ -331,10 +331,10 @@ int main (int argc, char *argv [])
     c_mem_load_elf (argv [1], "_start", "exit", "tohost");
 
     if (min_addr < BASE_ADDR_B) {
-		printf("MIN ADAADASDA");
+		printf("Min address outside bounds, it is: %d, whereas the base is: %d",min_addr, BASE_ADDR_B);
 	}
     if (MAX_MEM_ADDR_1GB <= max_addr) {
-		printf("MAX ADAADASDA");
+		printf("Max address too large, it is: %d, whereas the max is: %d", max_addr, MAX_MEM_ADDR_1GB);
 	}
     if ((min_addr < BASE_ADDR_B) || (MAX_MEM_ADDR_1GB <= max_addr)) {
 	print_usage (stderr, argc, argv);

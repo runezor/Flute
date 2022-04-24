@@ -1052,7 +1052,6 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    case (csr_addr)
 	       // User mode csrs
 			csr_addr_vl: begin
-	    				$display ("    KARL YOU HIT THE VECTORSTUFF CSRR AAAA NEW VAL : 0x%0h",wordxl);
 					  rg_vectorstuff <= wordxl;
 			end
 `ifdef ISA_F

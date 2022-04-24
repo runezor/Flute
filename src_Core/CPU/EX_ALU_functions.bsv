@@ -812,29 +812,33 @@ endfunction
 // ----------------------------------------------------------------
 // VECTOR LOAD + STORE
 
-function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, Bit#(64) addr);
+function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, CapPipe addr_reg, RegName addr_reg_idx, CapPipe ddc, Bool cap_mode);
    let alu_outputs = alu_outputs_base;
 
    alu_outputs.op_stage2 = OP_Stage2_LD;
    alu_outputs.control   = CONTROL_STRAIGHT;
    alu_outputs.rd        = regDestination;
-   alu_outputs.addr      = unpack(addr);
-   alu_outputs.mem_width_code = 3; //11 -> 64? Hopefully
-   alu_outputs.mem_unsigned = True; //Should set to unsigned
+
+   alu_outputs.mem_width_code = 3;//w_SIZE_CAP; //size 64
+   alu_outputs.mem_unsigned = True;
 
    alu_outputs.rd_in_fpr = False;
+   let authority = cap_mode ? addr_reg : ddc;
+   let authorityIdx = cap_mode ? {0,addr_reg_idx} : {1,scr_addr_DDC};
+   WordXL eaddr = cap_mode ? getAddr(addr_reg) : getAddr(ddc) + getAddr(addr_reg);
 
-   //alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, False, True, ?);
+   alu_outputs.addr      = eaddr;
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, False, True, ?);
 
    //Todo: Explain this pls
    //Todo: Maybe just set this to false?
-   alu_outputs.check_enable = True;
    //alu_outputs.check_authority = authority;
    //alu_outputs.check_authority_idx = authIdx;
-   alu_outputs.check_address_low = unpack(addr);
+   /*alu_outputs.check_address_low = unpack(addr);
    alu_outputs.check_address_high = zeroExtend(unpack(addr)) + (1 << 3);
    alu_outputs.check_inclusive = True;
    alu_outputs.mem_allow_cap = True;
+   alu_outputs.check_enable = True;*/
 
 //TODO: TRACING???
 /*`ifdef INCLUDE_TANDEM_VERIF
@@ -860,32 +864,44 @@ function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, Bit#(64) addr);
    return alu_outputs;
 endfunction
 
-function ALU_Outputs fv_vector_ST (Bit#(64) addr, CapPipe vector_val_cap);
+function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPipe vector_val_cap, CapPipe ddc, Bool cap_mode);
    // Signed version of rs1_val
    let alu_outputs = alu_outputs_base;
    alu_outputs.control   = CONTROL_STRAIGHT;
    alu_outputs.op_stage2 = OP_Stage2_ST;
-   alu_outputs.addr      = unpack(addr);
-   alu_outputs.mem_width_code = 3; //64
+
+   alu_outputs.mem_width_code = 3;//w_SIZE_CAP;w_SIZE_CAP; //64
    alu_outputs.mem_unsigned = True;
 
+   alu_outputs.rd_in_fpr = False;
+   let authority = cap_mode ? addr_reg : ddc;
+   let authorityIdx = cap_mode ? {0,addr_reg_idx} : {1,scr_addr_DDC};
+      WordXL eaddr = cap_mode ? getAddr(addr_reg) : getAddr(ddc) + getAddr(addr_reg);
+
+
    alu_outputs.val2      = getAddr(vector_val_cap);
+
+
 
    `ifdef ISA_CHERI
       alu_outputs.cap_val2      = vector_val_cap;
       alu_outputs.val2_cap_not_int = True; //TODO: HELP?
    `endif
 
+   alu_outputs.addr      = eaddr;
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, True, False, vector_val_cap);
+
+
 
    alu_outputs.rd_in_fpr = False;
 
    //Todo: Explain this pls
    //Todo: Maybe just set this to false?
-   alu_outputs.check_enable = True;
+   /*alu_outputs.check_enable = True;
    alu_outputs.check_address_low = unpack(addr);
    alu_outputs.check_address_high = zeroExtend(unpack(addr)) + (1 << 3);
    alu_outputs.check_inclusive = True;
-   alu_outputs.mem_allow_cap = True;
+   alu_outputs.mem_allow_cap = True;*/
 
    return alu_outputs;
 endfunction
