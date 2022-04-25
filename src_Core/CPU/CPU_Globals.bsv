@@ -632,9 +632,11 @@ typedef struct {
 `endif
 `ifdef RVFI
    Data_RVFI_Stage1 info_RVFI_s1;
+   Bit#(TDiv#(ISA_Decls::MEMWIDTH, 8)) vec_wmask;
+`else
+   Bit#(64) vec_wmask;
 `endif
 Bool is_vec_store;
-Bit#(TDiv#(ISA_Decls::MEMWIDTH, 8)) vec_wmask;
 Bool is_vsetvl_instr;
 Bit#(XLEN) vsetvl_output;
    } Data_Stage1_to_Stage2

@@ -349,7 +349,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   alu_outputs.control = CONTROL_TRAP; 
                   rvfi_MWD_send_as_vec = True; 
                   alu_outputs.rs_frm_fpr = False;
-                  rd_addr = get_GPR_reg_addr(instr.dest);
+                  rd_addr = get_GPR_addr(instr.dest);
 					end
          endcase
       else begin
@@ -380,7 +380,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   overide_input_instr = True;
                   is_vsetvl_instr = True;
                   vsetvl_output = 64>>(pack(vsew)+3);
-                  rd_addr = get_GPR_reg_addr(instr.dest);
+                  rd_addr = get_GPR_addr(instr.dest);
 					end
                tagged Load_V_instr .instr: begin
                   //Uses a standard load
@@ -400,15 +400,25 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   //Adds to the mem addr calculation to match with spike
                   vec_mem_offset = zeroExtend(8-(get_size_of_sew(vsew)>>3));
                   vec_wmask = (1<<(1<<pack(vsew)))-1;//8: 1, 16: 11, 32: 1111, and so on
+
+                  //Call fromCapMem to unpack into pipeline format
+                  //Only fill the necessary fields
+                  //Tocapmem, fromcapmem pdr32
+                  //Unpack capability, fill extra fields with rubbish
+                  //Or make pipelineval type a union
+
                   //vec_wmask = 64-1;
                   //Makes sure that MWD matches Spike
+
+
+                  
                   rvfi_MWD_send_as_vec = True;
                end
 	      endcase
       end
    end else begin
       alu_outputs = fv_ALU (alu_inputs);
-      rd_addr = get_GPR_reg_addr(alu_outputs.rd);
+      rd_addr = get_GPR_addr(alu_outputs.rd);
    end
 
    let fall_through_pc = getPC(rg_pcc) + (rg_stage_input.is_i32_not_i16 ? 4 : 2);
@@ -474,7 +484,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                mem_unsigned  : alu_outputs.mem_unsigned,
 `ifdef ISA_CHERI
                                                mem_allow_cap : alu_outputs.mem_allow_cap,
-                                               val1          : alu_outputs.val1_cap_not_int ? embed_cap(alu_outputs.cap_val1): embed_int(alu_outputs.val1),
+                                               val1          : alu_outputs.val1_cap_embed_cap ? embed_cap(alu_outputs.cap_val1): embed_int(alu_outputs.val1),
                                                val2          : alu_outputs.val2_cap_not_int ? embed_cap(alu_outputs.cap_val2): embed_int(alu_outputs.val2),
 `else
                                                val1          : alu_outputs.val1,
