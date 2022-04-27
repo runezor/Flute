@@ -412,7 +412,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    // CSR reads (no side effect)
    // Returns Invalid for invalid CSR addresses or access-mode violations
 
-   function Maybe #(Word) fv_csxr_read (CSR_Addr csr_addr);
+   function Maybe #(Word) fv_csr_read (CSR_Addr csr_addr);
       Maybe #(Word)  m_csr_value = tagged Invalid;
 
       if ((csr_hpmcounter3 <= csr_addr) && (csr_addr <= csr_hpmcounter31))

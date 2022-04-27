@@ -70,7 +70,7 @@ function RVFI_DII_Execution #(XLEN,MEMWIDTH) getRVFIInfoCondensed(
         rvfi_insn:      s1.instr,
         rvfi_rs1_addr:  s1.rs1_addr,
         rvfi_rs2_addr:  s1.rs2_addr,
-`ifdef ISA_F //TODO: FIX MEEEE
+`ifdef ISA_F
         rvfi_rd_addr:   data_s2_s3.rd_in_fpr ? 0 : (data_s2_s3.rd_valid ? s1.rd_addr : 0),
 `else
         rvfi_rd_addr:   reg_addr_to_name(data_s2_s3.rd_valid ? data_s2_s3.rd : 0),

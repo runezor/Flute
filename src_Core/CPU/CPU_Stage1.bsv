@@ -232,8 +232,6 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	endcase
 
    // Register rs1 read and bypass
-   //Todo load immediate correctly
-   //Todo clean up
    let rs1 = rs1_addr;
    let rs1_val = gpr_regfile.read_rs1 (rs1);
    match { .busy1a, .rs1a } = fn_gpr_bypass (bypass_from_stage3, rs1, rs1_val);
@@ -342,13 +340,11 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                tagged Arith_V_instr .instr: begin
                   alu_outputs.control = CONTROL_TRAP; 
                   rvfi_MWD_send_as_vec = True; 
-                  alu_outputs.rs_frm_fpr = False;
                   rd_addr = get_vec_reg_addr(instr.dest.addr);
                end
 					tagged Vsetvl_V_instr .instr: begin
                   alu_outputs.control = CONTROL_TRAP; 
                   rvfi_MWD_send_as_vec = True; 
-                  alu_outputs.rs_frm_fpr = False;
                   rd_addr = get_GPR_addr(instr.dest);
 					end
          endcase
@@ -358,14 +354,8 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   Bit#(64) vs1 = getAddr(rs1_val_bypassed);
                   Bit#(64) vs2 = getAddr(rs2_val_bypassed);
 
-                  //Bit#(128) vs1 = truncate(pack(rs1_val_bypassed));
-                  //Bit#(128) vs2 = truncate(pack(rs2_val_bypassed));
-
                   let val = vector_compute(vs1, vs2, instr, vsew);
-                  alu_outputs = alu_output_vector;
                   alu_outputs.val1 = val;
-                  //alu_outputs.val1_cap_not_int = True;
-                  //alu_outputs.cap_val1 = unpack(zeroExtend(pack(val)));
                   rd_addr = get_vec_reg_addr(instr.dest.addr);
                end
 					tagged Vsetvl_V_instr .instr: begin
@@ -400,18 +390,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   //Adds to the mem addr calculation to match with spike
                   vec_mem_offset = zeroExtend(8-(get_size_of_sew(vsew)>>3));
                   vec_wmask = (1<<(1<<pack(vsew)))-1;//8: 1, 16: 11, 32: 1111, and so on
-
-                  //Call fromCapMem to unpack into pipeline format
-                  //Only fill the necessary fields
-                  //Tocapmem, fromcapmem pdr32
-                  //Unpack capability, fill extra fields with rubbish
-                  //Or make pipelineval type a union
-
-                  //vec_wmask = 64-1;
                   //Makes sure that MWD matches Spike
-
-
-                  
                   rvfi_MWD_send_as_vec = True;
                end
 	      endcase
@@ -484,7 +463,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                                                mem_unsigned  : alu_outputs.mem_unsigned,
 `ifdef ISA_CHERI
                                                mem_allow_cap : alu_outputs.mem_allow_cap,
-                                               val1          : alu_outputs.val1_cap_embed_cap ? embed_cap(alu_outputs.cap_val1): embed_int(alu_outputs.val1),
+                                               val1          : alu_outputs.val1_cap_not_int ? embed_cap(alu_outputs.cap_val1): embed_int(alu_outputs.val1),
                                                val2          : alu_outputs.val2_cap_not_int ? embed_cap(alu_outputs.cap_val2): embed_int(alu_outputs.val2),
 `else
                                                val1          : alu_outputs.val1,
