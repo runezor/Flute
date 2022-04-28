@@ -38,6 +38,16 @@
                 "reveal": "silent"
             },
         },
+        {
+            "label": "test3",
+            "type": "shell",
+            "command": "../TestRig/utils/scripts/runTestRIG.py -a spike -b flute --path-to-QCVEngine /Volumes/Workspace/part-II/TestRig/vengines/QuickCheckVEngine/dist-newstyle/build/aarch64-osx/ghc-8.10.7/QCVEngine-0.1.0.0/x/QCVEngine/build/QCVEngine/QCVEngine -r rv64isfdvxcheri --test-include-regex vector --path-to-flute /Volumes/Workspace/part-II/flute-temp/Flute/builds/RV64ACDFIMSUxCHERIxRVFI_DII_RVFI_DII_Flute_bluesim/exe_HW_sim --implementation-A-log .log --no-shrink --test-len 1000",
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+        },
     ]
 }
 

@@ -848,6 +848,7 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
 `endif
 
    alu_outputs.val2      = getAddr(vector_val_cap);
+   alu_outputs.val1      = 0; //REMOVE
 
 `ifdef ISA_CHERI
    alu_outputs.cap_val2      = vector_val_cap;
