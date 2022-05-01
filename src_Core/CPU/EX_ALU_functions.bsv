@@ -814,14 +814,14 @@ endfunction
 // ----------------------------------------------------------------
 // STORE
 
-function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPipe vector_val_cap, CapPipe ddc, Bool cap_mode);
+function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPipe vector_val_cap, CapPipe ddc, Bool cap_mode, Bit#(3) w);
    // Signed version of rs1_val
    IntXL  s_rs1_val = unpack(getAddr(addr_reg));
-   IntXL  imm_s     = 0;
+
 `ifdef ISA_CHERI
    let authority = cap_mode ? addr_reg : ddc;
    let authorityIdx = cap_mode ? {0,addr_reg_idx} : {1,scr_addr_DDC};
-   WordXL eaddr = cap_mode ? getAddr(addr_reg) + pack(imm_s) : getAddr(ddc) + getAddr(addr_reg) + pack(imm_s);
+   WordXL eaddr = cap_mode ? getAddr(addr_reg) : getAddr(ddc) + getAddr(addr_reg) ;
 `else
    WordXL eaddr = pack (s_rs1_val + imm_s);
 `endif
@@ -834,7 +834,7 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
 
    // FP stores are not legal unless the MSTATUS.FS bit is set
    Bool legal_FP_ST = True;
-   let width_code = w_SIZE_CAP;
+   let width_code = w;
 
    alu_outputs.control   = ((legal_ST && legal_FP_ST) ? CONTROL_STRAIGHT
                                                       : CONTROL_TRAP);
@@ -844,11 +844,10 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
    alu_outputs.mem_unsigned = False;
 
 `ifdef ISA_CHERI
-   alu_outputs = spoofValidDereference(alu_outputs, ddc, authorityIdx, eaddr, width_code, True, False, vector_val_cap);
+   alu_outputs = spoofValidDereference(alu_outputs, ddc, authorityIdx, eaddr, width_code, True, False, vector_val_cap); //TODO: REMOVE
 `endif
 
    alu_outputs.val2      = getAddr(vector_val_cap);
-   alu_outputs.val1      = 0; //REMOVE
 
 `ifdef ISA_CHERI
    alu_outputs.cap_val2      = vector_val_cap;
@@ -868,14 +867,14 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
 endfunction
 
 
-function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, CapPipe addr_reg, RegName addr_reg_idx, CapPipe ddc, Bool cap_mode);
+function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, CapPipe addr_reg, RegName addr_reg_idx, CapPipe ddc, Bool cap_mode, Bit#(3) w);
    let alu_outputs = alu_outputs_base;
 
    alu_outputs.op_stage2 = OP_Stage2_LD;
    alu_outputs.control   = CONTROL_STRAIGHT;
    alu_outputs.rd        = regDestination;
 
-   alu_outputs.mem_width_code = 3;//w_SIZE_CAP; //size 64
+   alu_outputs.mem_width_code = w;//w_SIZE_CAP; //size 64
    alu_outputs.mem_unsigned = True;
 
    alu_outputs.rd_in_fpr = False;
@@ -1140,6 +1139,7 @@ function ALU_Outputs fv_ST (ALU_Inputs inputs);
    alu_outputs.addr      = eaddr;
    alu_outputs.mem_width_code = width_code;
    alu_outputs.mem_unsigned = False;
+   alu_outputs.rd = 0;
 
 `ifdef ISA_CHERI
    alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, width_code, True, False, inputs.cap_rs2_val);

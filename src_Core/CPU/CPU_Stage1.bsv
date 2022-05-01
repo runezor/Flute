@@ -215,7 +215,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   is_rd_vector = False;
                end
 					tagged Vsetvl_V_instr .i: begin
-                  //No data fetching necessary
+                  rs1_addr = get_GPR_addr(i.rs1);
 					end
 					tagged Arith_V_instr .a: begin
                   case (a.load1) matches
@@ -321,71 +321,99 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 
    let alu_outputs = alu_output_vector;
 
-   let rvfi_MWD_send_as_vec = False;
+
    let is_vsetvl_instr = False;
    let rd_addr = 0;
    let vsetvl_output = 0;
    Bit#(64) vec_mem_offset = 0;
+   let rvfi_MWD_send_as_vec = False;
    Bit#(64) rvfi_MWD_vec = 0;
-   let overide_input_instr = False;
+   let override_input_instr = False;
    Bit#(32) instr_override = 0;
-   let vsew_r = csr_regfile.read_csr_port2(csr_addr_vl);
+   let vector_csr_m = csr_regfile.read_csr_port2(csr_addr_vl);
    let vec_wmask = ?;
+   Bit#(3) vec_width = ?;
    V_el_size vsew = ?;
-   if (vsew_r matches tagged Valid .vsew_w) vsew = unpack(truncate(vsew_w));
+
+   if (vector_csr_m matches tagged Valid .vector_csr) begin
+      vsew = unpack(vector_csr[2:0]);
+      vec_width = unpack(vector_csr[5:3]);
+   end
 
    if (is_vector_instr) begin
       //Let's start by checking mstatus
-      if (csr_regfile.read_mstatus[24:23]==0)
+      if (csr_regfile.read_mstatus[24:23]==0) begin
          //We only throw a trap in these cases, to match with spike
          case (v_instr) matches
                tagged Arith_V_instr .instr: begin
                   alu_outputs.control = CONTROL_TRAP; 
-                  rvfi_MWD_send_as_vec = True; 
+                  //rvfi_MWD_send_as_vec = True; 
                   alu_outputs.rs_frm_fpr = False;
                   rd_addr = get_vec_reg_addr(instr.dest.addr);
                end
 					tagged Vsetvl_V_instr .instr: begin
                   alu_outputs.control = CONTROL_TRAP; 
-                  rvfi_MWD_send_as_vec = True; 
+                  //rvfi_MWD_send_as_vec = True; 
                   alu_outputs.rs_frm_fpr = False;
                   rd_addr = get_GPR_addr(instr.dest);
 					end
          endcase
+      end
       else begin
          case (v_instr) matches
                tagged Arith_V_instr .instr: begin
-                  Bit#(64) vs1 = getAddr(rs1_val_bypassed);
-                  Bit#(64) vs2 = getAddr(rs2_val_bypassed);
+		            CapMem capMem1 = cast ( (rs1_val_bypassed));
+		            CapMem capMem2 = cast ( (rs2_val_bypassed));
 
-                  //Bit#(128) vs1 = truncate(pack(rs1_val_bypassed));
-                  //Bit#(128) vs2 = truncate(pack(rs2_val_bypassed));
+                  Bit#(128) vs1 = truncate(pack(capMem1));
+                  Bit#(128) vs2 = truncate(pack(capMem2));
 
                   let val = vector_compute(vs1, vs2, instr, vsew);
-                  alu_outputs = alu_output_vector;
-                  alu_outputs.val1 = val;
-                  //alu_outputs.val1_cap_not_int = True;
-                  //alu_outputs.cap_val1 = unpack(zeroExtend(pack(val)));
+                  CapMem out = unpack({1, val});
+
+                  alu_outputs.val1_cap_not_int = True;
+                  alu_outputs.cap_val1 = cast(out);
+
                   rd_addr = get_vec_reg_addr(instr.dest.addr);
                end
 					tagged Vsetvl_V_instr .instr: begin
                   alu_outputs = alu_output_vector;
                   let vsew = instr.vsew;
+                  Bit#(64) csr_pack=0;
+                  csr_pack[2:0] = pack(vsew);
+
+                  //Computes the width
+                  let avl=getAddr(rs1_val_bypassed);
+                  let avl_l = 0;
+                  if (avl==1)
+                     avl_l = 0;
+                  if (avl==2)
+                     avl_l = 1;
+                  if (avl==4)
+                     avl_l = 2;
+                  if (avl==8)
+                     avl_l = 3;
+                  if (avl==16)
+                     avl_l = 4;
+
+                  csr_pack[5:3] = truncate(avl_l+pack(vsew)); //Width code
+
                   alu_outputs.control   = CONTROL_CSRR_W;
                   //CSRR_W logic in Flute reads directly from the instruction, so we have to override it
-                  instr_override[31:20] = csr_addr_vl;            //Sets csr address
-                  instr_override[19:15] = zeroExtend(pack(vsew)); //Sets rs1 zeroExtend(pack(vsew))
-                  instr_override[14:12] = f3_CSRRWI;              //Sets funct3
-                  instr_override[11:7] = instr.dest;              //Sets rd
-                  overide_input_instr = True;
+                  instr_override[31:20] = csr_addr_vl; //Sets csr address
+                  //instr_override[19:15] = 1;    //Sets rs1 zeroExtend(pack(vsew))
+                  instr_override[14:12] = f3_CSRRW;    //Sets funct3
+                  instr_override[11:7] = instr.dest;   //Sets rd
+                  override_input_instr = True;
                   is_vsetvl_instr = True;
-                  vsetvl_output = 64>>(pack(vsew)+3);
+                  vsetvl_output = avl;
                   rd_addr = get_GPR_addr(instr.dest);
+                  alu_outputs.val1 = csr_pack;
 					end
                tagged Load_V_instr .instr: begin
                   //Uses a standard load
                   Bool is_cap_mode = getFlags(toCapPipe(rg_pcc))[0] == 1;
-                  alu_outputs = fv_vector_LD(instr.dest, rs1_val_bypassed, reg_addr_to_name(rs1_addr), ddc, is_cap_mode);
+                  alu_outputs = fv_vector_LD(instr.dest, rs1_val_bypassed, reg_addr_to_name(rs1_addr), ddc, is_cap_mode, vec_width);
                   //Adds to the mem addr calculation to match with spike
                   vec_mem_offset = zeroExtend(8-(get_size_of_sew(vsew)>>3));
                   alu_outputs.cap_val2 = nullCap;
@@ -395,21 +423,29 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   //Uses a standard store
                   //And then send off vector thingy
                   Bool is_cap_mode = getFlags(toCapPipe(rg_pcc))[0] == 1;
-                  alu_outputs = fv_vector_ST(rs1_val_bypassed, reg_addr_to_name(rs1_addr), rs2_val_bypassed, ddc, is_cap_mode);
-                  alu_outputs.rd = 0;
+                  //rs1 = address
+                  //rs2 = value to store
+
+                  
+                  alu_outputs = fv_vector_ST(rs1_val_bypassed, reg_addr_to_name(rs1_addr), rs2_val_bypassed, ddc, is_cap_mode, vec_width);
                   //Adds to the mem addr calculation to match with spike
-                  vec_mem_offset = zeroExtend(8-(get_size_of_sew(vsew)>>3));
+                  vec_mem_offset = zeroExtend((1<<vec_width)-(get_size_of_sew(vsew)>>3));
                   vec_wmask = (1<<(1<<pack(vsew)))-1;//8: 1, 16: 11, 32: 1111, and so on
 
                   //Call fromCapMem to unpack into pipeline format
+
                   //Only fill the necessary fields
                   //Tocapmem, fromcapmem pdr32
                   //Unpack capability, fill extra fields with rubbish
                   //Or make pipelineval type a union
-
-                  //vec_wmask = 64-1;
                   //Makes sure that MWD matches Spike
+
+
+		            CapMem capMem2 = cast ( (rs2_val_bypassed));
+                  Bit#(128) vs2 = truncate(pack(capMem2));
                   rvfi_MWD_send_as_vec = True;
+                  let no_of_elements = (1<<vec_width)>>pack(vsew);
+                  rvfi_MWD_vec = truncate(get_vec_el_ze(vs2, no_of_elements-1, vsew));
                end
 	      endcase
       end
@@ -450,7 +486,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                        pc_rdata:       getPC(rg_pcc),
                        pc_wdata:       getPC(next_pcc_local),
 `ifdef ISA_F
-                       mem_wdata:      alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : (rvfi_MWD_send_as_vec?truncate(get_last_vec_el_ze(zeroExtend(getAddr(rs2_val_bypassed)), vsew)):truncate(cap_val2)),
+                       mem_wdata:      alu_outputs.rs_frm_fpr ? alu_outputs.fval2 : (rvfi_MWD_send_as_vec?rvfi_MWD_vec:truncate(cap_val2)),
 `else
                        mem_wdata:      truncate(cap_val2),
 `endif
@@ -470,7 +506,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 `else
                                                pc:        rg_stage_input.pc,
 `endif
-					       instr         : overide_input_instr?instr_override:rg_stage_input.instr,
+					       instr         : override_input_instr?instr_override:rg_stage_input.instr,
 `ifdef RVFI_DII
                                                instr_seq     : rg_stage_input.instr_seq,
 `endif
