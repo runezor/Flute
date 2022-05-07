@@ -2336,7 +2336,7 @@ module mkCPU (CPU_IFC);
    rule rl_debug_read_gpr ((rg_state == CPU_DEBUG_MODE) && (! f_gpr_reqs.first.write));
       let req <- pop (f_gpr_reqs);
       Bit #(5) regname = req.address;
-      let data = gpr_regfile.read_rs1_port2 (regname);
+      let data = gpr_regfile.read_rs1_port2 (get_GPR_addr(regname));
       let rsp = DM_CPU_Rsp {ok: True, data: getAddr(data)};
       f_gpr_rsps.enq (rsp);
       if (cur_verbosity > 1)
@@ -2348,7 +2348,7 @@ module mkCPU (CPU_IFC);
       let req <- pop (f_gpr_reqs);
       Bit #(5) regname = req.address;
       CapReg data = setAddrUnsafe(almightyCap, req.data); // XXX Debug bypasses cap safety
-      gpr_regfile.write_rd (regname, data);
+      gpr_regfile.write_rd (get_GPR_addr(regname), data);
 
       let rsp = DM_CPU_Rsp {ok: True, data: ?};
       f_gpr_rsps.enq (rsp);
@@ -2373,7 +2373,7 @@ module mkCPU (CPU_IFC);
    rule rl_debug_read_fpr ((rg_state == CPU_DEBUG_MODE) && (! f_fpr_reqs.first.write));
       let req <- pop (f_fpr_reqs);
       Bit #(5) regname = req.address;
-      let data = fpr_regfile.read_rs1_port2 (regname);
+      let data = fpr_regfile.read_rs1_port2 (get_GPR_addr(regname));
       let rsp = DM_CPU_Rsp {ok: True, data: data};
       f_fpr_rsps.enq (rsp);
       if (cur_verbosity > 1)
@@ -2385,7 +2385,7 @@ module mkCPU (CPU_IFC);
       let req <- pop (f_fpr_reqs);
       Bit #(5) regname = req.address;
       let data = req.data;
-      fpr_regfile.write_rd (regname, data);
+      fpr_regfile.write_rd (get_GPR_addr(regname), data);
 
       let rsp = DM_CPU_Rsp {ok: True, data: ?};
       f_fpr_rsps.enq (rsp);
