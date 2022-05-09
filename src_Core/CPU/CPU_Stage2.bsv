@@ -462,7 +462,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
                 info_RVFI_s2.stage1.mem_wdata = truncate(pack(tpl_2(new_st_val)));
             // For SC however we do need to check that it was successful, otherwise we've not written.
             end else begin
-               if (rg_stage2.is_vec_store) //TODO: Ducttape
+               if (rg_stage2.is_vec_store)
                   if (rg_stage2.op_stage2 == OP_Stage2_ST)
                      info_RVFI_s2.mem_wmask = rg_stage2.vec_wmask;
                   else 
@@ -526,7 +526,7 @@ module mkCPU_Stage2 #(Bit #(4)         verbosity,
 	 data_to_stage3.rd_val   = 0;
 `endif
 	 let info_RVFI_s2 = info_RVFI_s2_base;
-    if (rg_stage2.is_vec_store) //TODO: Ducttape
+    if (rg_stage2.is_vec_store)
                   if (rg_stage2.op_stage2 == OP_Stage2_ST)
                      info_RVFI_s2.mem_wmask = rg_stage2.vec_wmask;
                   else 

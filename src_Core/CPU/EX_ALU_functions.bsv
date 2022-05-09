@@ -826,8 +826,6 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
    WordXL eaddr = pack (s_rs1_val + imm_s);
 `endif
 
-   //let opcode = inputs.decoded_instr.opcode;
-   //let funct3 = inputs.decoded_instr.funct3;
    Bool legal_ST = True;
 
    let alu_outputs = alu_outputs_base;
@@ -843,16 +841,12 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
    alu_outputs.mem_width_code = width_code;
    alu_outputs.mem_unsigned = False;
 
-`ifdef ISA_CHERI
-   alu_outputs = spoofValidDereference(alu_outputs, ddc, authorityIdx, eaddr, width_code, True, False, vector_val_cap); //TODO: REMOVE
-`endif
+   alu_outputs = checkValidDereference(alu_outputs, ddc, authorityIdx, eaddr, width_code, True, False, vector_val_cap);
 
    alu_outputs.val2      = getAddr(vector_val_cap);
 
-`ifdef ISA_CHERI
    alu_outputs.cap_val2      = vector_val_cap;
    alu_outputs.val2_cap_not_int = width_code == w_SIZE_CAP;
-`endif
 
 `ifdef INCLUDE_TANDEM_VERIF
    // Normal trace output (if no trap)
@@ -884,105 +878,6 @@ function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, CapPipe addr_reg, Reg
 
    alu_outputs.addr      = eaddr;
    alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, False, True, ?);
-
-   //Todo: Explain this pls
-   //Todo: Maybe just set this to false?
-   //alu_outputs.check_authority = authority;
-   //alu_outputs.check_authority_idx = authIdx;
-   /*alu_outputs.check_address_low = unpack(addr);
-   alu_outputs.check_address_high = zeroExtend(unpack(addr)) + (1 << 3);
-   alu_outputs.check_inclusive = True;
-   alu_outputs.mem_allow_cap = True;
-   alu_outputs.check_enable = True;*/
-
-//TODO: TRACING???
-/*`ifdef INCLUDE_TANDEM_VERIF
-   // Normal trace output (if no trap)
-`ifdef ISA_F
-   if (alu_outputs.rd_in_fpr)
-      alu_outputs.trace_data = mkTrace_F_LOAD (fall_through_pc (inputs),
-					       fv_trace_isize (inputs),
-					       fv_trace_instr (inputs),
-					       inputs.decoded_instr.rd,
-					       ?,
-					       eaddr,
-                                               inputs.mstatus);
-   else
-`endif
-      alu_outputs.trace_data = mkTrace_I_LOAD (fall_through_pc (inputs),
-					       fv_trace_isize (inputs),
-					       fv_trace_instr (inputs),
-					       inputs.decoded_instr.rd,
-					       ?,
-					       eaddr);
-`endif*/
-   return alu_outputs;
-endfunction
-
-function ALU_Outputs spoofValidDereference(ALU_Outputs alu_outputs, CapPipe authority, Bit#(6) authIdx, WordXL base, Bit#(3) widthCode, Bool isStore, Bool isLoad, CapPipe data);
-   /*if (!isValidCap(authority)) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_Tag);
-   end else if (getKind(authority) != UNSEALED) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_Seal);
-   end else if (isLoad && !getHardPerms(authority).permitLoad) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_RPerm);
-   end else if (isStore && !getHardPerms(authority).permitStore) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_WPerm);
-   end else if (isStore && widthCode == w_SIZE_CAP && isValidCap(data) && !getHardPerms(authority).permitStoreCap) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_SCPerm);
-   end else if (isStore && widthCode == w_SIZE_CAP && isValidCap(data) && !getHardPerms(data).global && !getHardPerms(authority).permitStoreLocalCap) begin
-       alu_outputs = fv_CHERI_exc(alu_outputs, authIdx, exc_code_CHERI_SCLocalPerm);
-   end*/
-
-
-   alu_outputs.check_enable = True;
-   alu_outputs.check_authority = authority;
-   alu_outputs.check_authority_idx = authIdx;
-   alu_outputs.check_address_low = base;
-   alu_outputs.check_address_high = zeroExtend(base) + (1 << widthCode);
-   alu_outputs.check_inclusive = True;
-
-       alu_outputs.mem_allow_cap = True;
-   return alu_outputs;
-endfunction
-
-function ALU_Outputs fv_vector_ST_old (CapPipe addr_reg, RegName addr_reg_idx, CapPipe vector_val_cap, CapPipe ddc, Bool cap_mode);
-   // Signed version of rs1_val
-   let alu_outputs = alu_outputs_base;
-   alu_outputs.control   = CONTROL_STRAIGHT;
-   alu_outputs.op_stage2 = OP_Stage2_ST;
-
-   alu_outputs.mem_width_code = w_SIZE_CAP;//w_SIZE_CAP;w_SIZE_CAP; //64
-   alu_outputs.mem_unsigned = True;
-
-   alu_outputs.rd_in_fpr = False;
-   let authority = cap_mode ? addr_reg : ddc;
-   let authorityIdx = cap_mode ? {0,addr_reg_idx} : {1,scr_addr_DDC};
-      WordXL eaddr = cap_mode ? getAddr(addr_reg) : getAddr(ddc) + getAddr(addr_reg);
-
-
-   alu_outputs.val2      = getAddr(vector_val_cap);
-
-   `ifdef ISA_CHERI
-      alu_outputs.cap_val2      = ddc;
-      alu_outputs.val2_cap_not_int = True; //TODO: HELP?
-   `endif
-
-   alu_outputs.addr      = eaddr;
-   alu_outputs.rs_frm_fpr = False;
-   //alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, True, False, vector_val_cap);
-
-
-
-   alu_outputs.rd_in_fpr = False;
-
-   //Todo: Explain this pls
-   //Todo: Maybe just set this to false?
-   /*alu_outputs.check_enable = True;
-   alu_outputs.check_address_low = unpack(addr);
-   alu_outputs.check_address_high = zeroExtend(unpack(addr)) + (1 << 3);
-   alu_outputs.check_inclusive = True;
-   alu_outputs.mem_allow_cap = True;*/
 
    return alu_outputs;
 endfunction

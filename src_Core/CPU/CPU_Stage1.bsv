@@ -232,8 +232,6 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
 	endcase
 
    // Register rs1 read and bypass
-   //Todo load immediate correctly
-   //Todo clean up
    let rs1 = rs1_addr;
    let rs1_val = gpr_regfile.read_rs1 (rs1);
    match { .busy1a, .rs1a } = fn_gpr_bypass (bypass_from_stage3, rs1, rs1_val);
