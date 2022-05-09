@@ -856,8 +856,6 @@ function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPi
    alu_outputs.addr      = eaddr;
    alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, True, False, vector_val_cap);
 
-
-
    alu_outputs.rd_in_fpr = False;
 
    return alu_outputs;
