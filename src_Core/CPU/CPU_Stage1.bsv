@@ -367,7 +367,7 @@ module mkCPU_Stage1 #(Bit #(4)         verbosity,
                   Bit#(128) vs2 = truncate(pack(capMem2));
 
                   let val = vector_compute(vs1, vs2, instr, vsew);
-                  CapMem out = unpack({1, val});
+                  CapMem out = unpack({0, val});
 
                   alu_outputs.val1_cap_not_int = True;
                   alu_outputs.cap_val1 = cast(out);
