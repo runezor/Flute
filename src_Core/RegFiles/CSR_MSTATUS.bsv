@@ -276,8 +276,10 @@ function WordXL fv_fixup_mstatus (MISA misa, WordXL  wordxl);
 				mpie, wpri_6, spie, upie,
 				mie,  wpri_2, sie,  uie};
 
+   Bit #(32) status = {wordxl[32:24], fixed_up_val_23};
+
    WordXL fixed_up_val = (( zeroExtend (sd) << mstatus_sd_bitpos)
-			  | zeroExtend (fixed_up_val_23));
+			  | zeroExtend(status));
 
    if (misa.mxl == misa_mxl_64)
       fixed_up_val = (  (zeroExtend (sxl) << mstatus_sxl_bitpos)

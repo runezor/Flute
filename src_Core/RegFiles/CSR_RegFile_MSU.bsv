@@ -35,6 +35,7 @@ import Vector       :: *;
 import FIFOF        :: *;
 import GetPut       :: *;
 import ClientServer :: *;
+import V_isa        :: *;
 
 // BSV additional libs
 
@@ -511,6 +512,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
    Reg #(CapPipe)   rg_dpcc      <- mkCSRReg;
    Reg #(WordXL)    rg_dscratch0 <- mkCSRReg;
    Reg #(WordXL)    rg_dscratch1 <- mkCSRReg;
+   Reg #(WordXL)    rg_vec       <- mkCSRReg;
 
    // Non-maskable interrupt
    Reg #(Bool)    rg_nmi <- mkReg (False);
@@ -988,6 +990,7 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	    csr_addr_dscratch1:  m_csr_value = tagged Valid rg_dscratch1;
 `endif
 
+	    csr_addr_vl:  m_csr_value = tagged Valid rg_vec;
 	    default: m_csr_value = tagged Invalid;
 	 endcase
       end
@@ -1048,6 +1051,9 @@ module mkCSR_RegFile (CSR_RegFile_IFC);
 	 else
 	    case (csr_addr)
 	       // User mode csrs
+			csr_addr_vl: begin
+					  rg_vec <= wordxl;
+			end
 `ifdef ISA_F
 	       csr_addr_fflags:     begin
 				       new_csr_value = zeroExtend (wordxl [4:0]);

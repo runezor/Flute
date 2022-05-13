@@ -7,22 +7,25 @@
 // Standard C includes
 
 #include <stdio.h>
+#include <vector>
 #include <stdlib.h>
 #include <stdint.h>
 #include <inttypes.h>
 #include <string.h>
 #include <fcntl.h>
-#include <gelf.h>
+//#include <elf_repl.h>
+#include <libelf/gelf.h>
 
 // ================================================================
 // Memory buffer into which we load the ELF file before
 // writing it back out to the output file.
 
 // 1 Gigabyte size
-// #define MAX_MEM_SIZE (((uint64_t) 0x400) * ((uint64_t) 0x400) * ((uint64_t) 0x400))
+//#define MAX_MEM_SIZE (((uint64_t) 0x400) * ((uint64_t) 0x400) * ((uint64_t) 0x400))
 #define MAX_MEM_SIZE ((uint64_t) 0x90000000)
 
-uint8_t mem_buf [MAX_MEM_SIZE];
+//uint8_t mem_buf [MAX_MEM_SIZE];
+std::vector<uint8_t> mem_buf(MAX_MEM_SIZE,0);
 
 // Features of the ELF binary
 int       bitwidth;
@@ -322,11 +325,17 @@ int main (int argc, char *argv [])
     }
 
     // Zero out the memory buffer before loading the ELF file
-    bzero (mem_buf, MAX_MEM_SIZE);
+    //bzero (mem_buf, MAX_MEM_SIZE);
     // bzero (& (mem_buf [BASE_ADDR_B]), MAX_MEM_SIZE - BASE_ADDR_B);
 
     c_mem_load_elf (argv [1], "_start", "exit", "tohost");
 
+    if (min_addr < BASE_ADDR_B) {
+		printf("Min address outside bounds, it is: %d, whereas the base is: %d",min_addr, BASE_ADDR_B);
+	}
+    if (MAX_MEM_ADDR_1GB <= max_addr) {
+		printf("Max address too large, it is: %d, whereas the max is: %d", max_addr, MAX_MEM_ADDR_1GB);
+	}
     if ((min_addr < BASE_ADDR_B) || (MAX_MEM_ADDR_1GB <= max_addr)) {
 	print_usage (stderr, argc, argv);
 	exit (1);

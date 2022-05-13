@@ -20,6 +20,7 @@ package CPU_Globals;
 // Project imports
 
 import ISA_Decls :: *;
+import V_Decoder :: *;
 import GPR_RegFile :: *;
 
 `ifdef ISA_CHERI
@@ -402,6 +403,7 @@ typedef struct {
    WordXL         pred_fetch_addr;    // Predicted next pc
    Bool           pred_is_cap_mode;   // Predicted encoding mode (cap or integer)
    Decoded_Instr  decoded_instr;
+   V_instr        v_decoded;
    } Data_StageD_to_Stage1
 deriving (Bits);
 
@@ -630,7 +632,13 @@ typedef struct {
 `endif
 `ifdef RVFI
    Data_RVFI_Stage1 info_RVFI_s1;
+   Bit#(TDiv#(ISA_Decls::MEMWIDTH, 8)) vec_wmask;
+`else
+   Bit#(64) vec_wmask;
 `endif
+Bool is_vec_store;
+Bool is_vsetvl_instr;
+Bit#(XLEN) vsetvl_output;
    } Data_Stage1_to_Stage2
 deriving (Bits);
 

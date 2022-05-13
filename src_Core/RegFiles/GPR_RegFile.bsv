@@ -19,8 +19,7 @@ package GPR_RegFile;
 
 // ================================================================
 // Exports
-
-export GPR_RegFile_IFC (..), mkGPR_RegFile, RegAddr, get_GPR_addr, reg_addr_to_name;
+export GPR_RegFile_IFC (..), mkGPR_RegFile, RegAddr, get_GPR_addr, get_vec_reg_addr, reg_addr_to_name, reg_addr_to_rfvi_name;
 
 // ================================================================
 // BSV library imports
@@ -111,13 +110,26 @@ typedef Bit#(`REG_ADDR_SIZE) RegAddr;
 
 // ================================================================
 // Address conversion
+// Prefix=0 => Using standard integer GPR
 function RegAddr get_GPR_addr(RegName name);
-   Bit#(`REG_ADDR_SIZE) addr = zeroExtend(name);
+   Bit#(`REG_ADDR_SIZE) addr = {0,name};
+   return addr;
+endfunction
+
+function RegAddr get_vec_reg_addr(Bit#(5) name);
+   Bit#(`REG_ADDR_SIZE) addr = {1,name};
    return addr;
 endfunction
 
 function Bit#(5) reg_addr_to_name(RegAddr addr);
    return truncate(pack(addr));
+endfunction
+
+function Bit#(5) reg_addr_to_rfvi_name(RegAddr addr);
+   if (addr[5]==0)
+      return truncate(pack(addr));
+   else
+      return 0;
 endfunction
 
 // ================================================================
@@ -156,7 +168,7 @@ module mkGPR_RegFile (GPR_RegFile_IFC);
 `ifdef INITIAL_CONTENTS
       regfile.upd (rg_j, `INITIAL_CONTENTS);
       rg_j <= rg_j + 1;
-      if (rg_j == 31)
+      if (rg_j == 63)
 	 rg_state <= RF_RUNNING;
 `else
       rg_state <= RF_RUNNING;

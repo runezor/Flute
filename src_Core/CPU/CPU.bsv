@@ -42,6 +42,7 @@ import GetPut       :: *;
 import ClientServer :: *;
 import Connectable  :: *;
 import ConfigReg    :: *;
+import V_isa        :: *;
 
 // ----------------
 // BSV additional libs
@@ -1340,7 +1341,6 @@ module mkCPU (CPU_IFC);
 
 	 // Writeback to GPR file
 	 let new_rd_val = scr_val;
-
 	 gpr_regfile.write_rd (get_GPR_addr(rd), new_rd_val);
 
    CapPipe new_scr_val_unpacked = cast(scr_val);
@@ -1459,7 +1459,8 @@ module mkCPU (CPU_IFC);
       let stage2_asr = getHardPerms(toCapPipe(rg_trap_info.epcc)).accessSysRegs;
       AccessPerms permitted = csr_regfile.access_permitted_1 (rg_cur_priv, csr_addr, read_not_write);
 
-      if (! permitted.exists || (permitted.requires_asr && !stage2_asr)) begin
+      let is_vector_csr = (csr_addr==csr_addr_vl);
+      if (!is_vector_csr && (! permitted.exists || (permitted.requires_asr && !stage2_asr))) begin
 	 rg_state <= CPU_TRAP;
 
          if (permitted.exists) begin // Failed because of ASR
@@ -1488,7 +1489,7 @@ module mkCPU (CPU_IFC);
 	 end
 
 	 // Writeback to GPR file
-	 let new_rd_val = csr_val;
+	 let new_rd_val = stage1.out.data_to_stage2.is_vsetvl_instr?stage1.out.data_to_stage2.vsetvl_output:csr_val;
 
 `ifdef ISA_CHERI
 	 gpr_regfile.write_rd (get_GPR_addr(rd), nullWithAddr(new_rd_val));
@@ -2335,7 +2336,7 @@ module mkCPU (CPU_IFC);
    rule rl_debug_read_gpr ((rg_state == CPU_DEBUG_MODE) && (! f_gpr_reqs.first.write));
       let req <- pop (f_gpr_reqs);
       Bit #(5) regname = req.address;
-      let data = gpr_regfile.read_rs1_port2 (regname);
+      let data = gpr_regfile.read_rs1_port2 (get_GPR_addr(regname));
       let rsp = DM_CPU_Rsp {ok: True, data: getAddr(data)};
       f_gpr_rsps.enq (rsp);
       if (cur_verbosity > 1)
@@ -2347,7 +2348,7 @@ module mkCPU (CPU_IFC);
       let req <- pop (f_gpr_reqs);
       Bit #(5) regname = req.address;
       CapReg data = setAddrUnsafe(almightyCap, req.data); // XXX Debug bypasses cap safety
-      gpr_regfile.write_rd (regname, data);
+      gpr_regfile.write_rd (get_GPR_addr(regname), data);
 
       let rsp = DM_CPU_Rsp {ok: True, data: ?};
       f_gpr_rsps.enq (rsp);
@@ -2372,7 +2373,7 @@ module mkCPU (CPU_IFC);
    rule rl_debug_read_fpr ((rg_state == CPU_DEBUG_MODE) && (! f_fpr_reqs.first.write));
       let req <- pop (f_fpr_reqs);
       Bit #(5) regname = req.address;
-      let data = fpr_regfile.read_rs1_port2 (regname);
+      let data = fpr_regfile.read_rs1_port2 (get_GPR_addr(regname));
       let rsp = DM_CPU_Rsp {ok: True, data: data};
       f_fpr_rsps.enq (rsp);
       if (cur_verbosity > 1)
@@ -2384,7 +2385,7 @@ module mkCPU (CPU_IFC);
       let req <- pop (f_fpr_reqs);
       Bit #(5) regname = req.address;
       let data = req.data;
-      fpr_regfile.write_rd (regname, data);
+      fpr_regfile.write_rd (get_GPR_addr(regname), data);
 
       let rsp = DM_CPU_Rsp {ok: True, data: ?};
       f_fpr_rsps.enq (rsp);

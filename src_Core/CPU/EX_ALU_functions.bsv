@@ -25,7 +25,9 @@ export
 ALU_Inputs (..),
 ALU_Outputs (..),
 Output_Select,
-fv_ALU;
+fv_ALU,
+fv_vector_LD,
+fv_vector_ST;
 
 // ================================================================
 // BSV library imports
@@ -803,6 +805,59 @@ function ALU_Outputs fv_AUIPC (ALU_Inputs inputs);
 					  inputs.decoded_instr.rd,
 					  rd_val);
 `endif
+   return alu_outputs;
+endfunction
+
+
+// ----------------------------------------------------------------
+// VECTOR LOAD + STORE
+
+function ALU_Outputs fv_vector_LD (Bit#(5) regDestination, CapPipe addr_reg, RegName addr_reg_idx, CapPipe ddc, Bool cap_mode);
+   let alu_outputs = alu_outputs_base;
+
+   alu_outputs.op_stage2 = OP_Stage2_LD;
+   alu_outputs.control   = CONTROL_STRAIGHT;
+   alu_outputs.rd        = regDestination;
+
+   alu_outputs.mem_width_code = 3;//w_SIZE_CAP; //size 64
+   alu_outputs.mem_unsigned = True;
+
+   alu_outputs.rd_in_fpr = False;
+   let authority = cap_mode ? addr_reg : ddc;
+   let authorityIdx = cap_mode ? {0,addr_reg_idx} : {1,scr_addr_DDC};
+   WordXL eaddr = cap_mode ? getAddr(addr_reg) : getAddr(ddc) + getAddr(addr_reg);
+
+   alu_outputs.addr      = eaddr;
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, False, True, ?);
+
+   return alu_outputs;
+endfunction
+
+function ALU_Outputs fv_vector_ST (CapPipe addr_reg, RegName addr_reg_idx, CapPipe vector_val_cap, CapPipe ddc, Bool cap_mode);
+   let alu_outputs = alu_outputs_base;
+   alu_outputs.control   = CONTROL_STRAIGHT;
+   alu_outputs.op_stage2 = OP_Stage2_ST;
+
+   alu_outputs.mem_width_code = 3;//64 bit
+   alu_outputs.mem_unsigned = True;
+
+   alu_outputs.rd_in_fpr = False;
+   let authority = cap_mode ? addr_reg : ddc;
+   let authorityIdx = cap_mode ? {0,addr_reg_idx} : {1,scr_addr_DDC};
+      WordXL eaddr = cap_mode ? getAddr(addr_reg) : getAddr(ddc) + getAddr(addr_reg);
+
+   alu_outputs.val2      = getAddr(vector_val_cap);
+
+   `ifdef ISA_CHERI
+      alu_outputs.cap_val2      = vector_val_cap;
+      alu_outputs.val2_cap_not_int = False;
+   `endif
+
+   alu_outputs.addr      = eaddr;
+   alu_outputs = checkValidDereference(alu_outputs, authority, authorityIdx, eaddr, alu_outputs.mem_width_code, True, False, vector_val_cap);
+
+   alu_outputs.rd_in_fpr = False;
+
    return alu_outputs;
 endfunction
 
